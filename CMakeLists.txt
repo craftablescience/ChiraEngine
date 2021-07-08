@@ -9,7 +9,7 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(glfw)
 
-add_executable(BasicGameEngine main.cpp)
+add_executable(BasicGameEngine example/demo.cpp src/engine.cpp src/engine.h src/input.cpp src/input.h)
 target_link_libraries(BasicGameEngine ${OPENGL_LIBRARIES} glfw)
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
