@@ -3,27 +3,27 @@
 
 
 #include <list>
+#include <functional>
 
 class keybind {
-    typedef void (*funcptr)();
 public:
-    keybind(int button, funcptr function);
+    std::function<void ()> fire;
+    keybind(int button, int action, const std::function<void ()>& function);
     [[nodiscard]] int getButton() const {
         return this->button;
     }
-    void fire();
+    [[nodiscard]] int getAction() const {
+        return this->action;
+    }
 private:
     int button;
-    funcptr function;
+    int action;
 };
 
 class input {
 public:
-    input();
-    explicit input(std::list<keybind> &keybinds);
-    void addKeybind(keybind keybind);
-private:
     std::list<keybind> keybinds;
+    void addKeybind(const keybind& keybind);
 };
 
 

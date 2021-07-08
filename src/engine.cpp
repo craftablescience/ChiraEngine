@@ -8,13 +8,17 @@ static void debugPrint(const std::string &string) {
 #endif
 }
 
+input engine::inputManager;
+
 void engine::error_callback(int error, const char* description) {
     fprintf(stderr, "Error %d: %s\n", error, description);
 }
 
-void engine::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
+void engine::key_callback(GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
+    for (const keybind& i : engine::inputManager.keybinds) {
+        if (i.getButton() == key && i.getAction() == action) {
+            i.fire();
+        }
     }
 }
 
@@ -33,7 +37,7 @@ void engine::start() {
         exit(EXIT_FAILURE);
     }
     glfwMakeContextCurrent(this->window);
-    glfwSetKeyCallback(this->window, key_callback);
+    glfwSetKeyCallback(this->window, engine::key_callback);
 
 #if DEBUG
     int major, minor, rev;
