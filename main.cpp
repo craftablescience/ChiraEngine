@@ -11,9 +11,15 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }
 }
 
+static void debugPrint(const char* string) {
+#if DEBUG
+    printf(string);
+#endif
+}
+
 int main() {
     if (!glfwInit()) {
-        std::cout << "Error: GLFW not defined" << std::endl;
+        printf("Error: GLFW not defined");
         exit(EXIT_FAILURE);
     }
     glfwSetErrorCallback(error_callback);
@@ -22,11 +28,17 @@ int main() {
     GLFWwindow* window = glfwCreateWindow(640, 480, "Basic Game Engine", nullptr, nullptr);
     if (!window) {
         glfwTerminate();
-        std::cout << "Error: Window creation failed" << std::endl;
+        printf("Error: Window creation failed\n");
         exit(EXIT_FAILURE);
     }
     glfwMakeContextCurrent(window);
     glfwSetKeyCallback(window, key_callback);
+
+#if DEBUG
+    int major, minor, rev;
+    glfwGetVersion(&major, &minor, &rev);
+    printf("Using GLFW v%d.%d.%d \n", major, minor, rev);
+#endif
 
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
@@ -41,6 +53,7 @@ int main() {
         glfwPollEvents();
     }
 
+    debugPrint("Gracefully exiting...");
     glfwDestroyWindow(window);
     glfwTerminate();
     exit(EXIT_SUCCESS);

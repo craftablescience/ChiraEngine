@@ -14,3 +14,6 @@ target_link_libraries(BasicGameEngine ${OPENGL_LIBRARIES} glfw)
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
 
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-DDEBUG)
+endif()
