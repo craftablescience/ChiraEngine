@@ -11,10 +11,14 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }
 }
 
-static void debugPrint(const char* string) {
+static void debugPrint(const std::string &string) {
 #if DEBUG
     printf(string);
 #endif
+}
+
+static void render() {
+    // Engine code here
 }
 
 int main() {
@@ -47,8 +51,10 @@ int main() {
     glfwSwapInterval(1);
 
     while (!glfwWindowShouldClose(window)) {
-        // Engine code here lol
         glClear(GL_COLOR_BUFFER_BIT);
+
+        render();
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
