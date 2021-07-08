@@ -12,5 +12,5 @@ add_subdirectory(glfw)
 add_executable(BasicGameEngine main.cpp)
 target_link_libraries(BasicGameEngine ${OPENGL_LIBRARIES} glfw)
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static -lopengl32")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
 
