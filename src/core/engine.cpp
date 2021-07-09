@@ -1,6 +1,8 @@
-#include <GLFW/glfw3.h>
-#include <iostream>
 #include "engine.h"
+
+#if __has_include(<windows.h>)
+#include <windows.h>
+#endif
 
 static void debugPrint(const std::string &string) {
 #if DEBUG
@@ -23,6 +25,12 @@ void engine::key_callback(GLFWwindow* glfwWindow, int key, int scancode, int act
 }
 
 void engine::start() {
+#ifdef WIN32
+#if RELEASE
+    FreeConsole();
+#endif
+#endif
+
     if (!glfwInit()) {
         std::cerr << "Error: GLFW not defined" << std::endl;
         exit(EXIT_FAILURE);
