@@ -19,7 +19,6 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(third_party/json)
 
 # BASICGAMEENGINE
-include(src/config/CMakeLists.txt)
 include(src/core/CMakeLists.txt)
 include(src/input/CMakeLists.txt)
 include(src/shader/CMakeLists.txt)

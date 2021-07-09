@@ -1,15 +1,17 @@
-#ifndef BASICGAMEENGINE_SHADERBASE_H
-#define BASICGAMEENGINE_SHADERBASE_H
+#ifndef BASICGAMEENGINE_SHADERFILE_H
+#define BASICGAMEENGINE_SHADERFILE_H
 
 
 #include <string>
 #include <glad/gl.h>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include "../utility/glObject.h"
 
-class shaderBase : public glObject {
+class shaderFile : public glObject {
 public:
-    shaderBase(unsigned int type, const char* source, bool isFilePath = true);
+    shaderFile(unsigned int type, const std::string& source, bool isFilePath = true);
     void compileShader();
     [[nodiscard]] unsigned int getType() const;
 protected:
@@ -22,4 +24,4 @@ private:
 };
 
 
-#endif //BASICGAMEENGINE_SHADERBASE_H
+#endif //BASICGAMEENGINE_SHADERFILE_H

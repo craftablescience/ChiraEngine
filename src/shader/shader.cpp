@@ -1,6 +1,6 @@
 #include "shader.h"
 
-shader::shader(shaderBase vert, shaderBase frag) : glObject() {
+shader::shader(shaderFile vert, shaderFile frag) : glObject() {
     this->handle = glCreateProgram();
     vert.compileShader();
     glAttachShader(this->handle, vert.getHandle());

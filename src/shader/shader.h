@@ -2,12 +2,12 @@
 #define BASICGAMEENGINE_SHADER_H
 
 
-#include "shaderBase.h"
+#include "shaderFile.h"
 #include "../utility/glObject.h"
 
 class shader : public glObject {
 public:
-    shader(shaderBase vert, shaderBase frag);
+    shader(shaderFile vert, shaderFile frag);
     void use();
 private:
     void checkForCompilationErrors() const;
