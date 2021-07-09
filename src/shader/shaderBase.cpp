@@ -4,7 +4,6 @@ shaderBase::shaderBase(unsigned int type, const char* source, bool isFilePath) :
     this->type = type;
     this->handle = glCreateShader(type);
     this->compiled = false;
-    this->discarded = false;
 }
 
 void shaderBase::compileShader() {
