@@ -16,6 +16,10 @@ void engine::error_callback(int error, const char* description) {
     fprintf(stderr, "Error %d: %s\n", error, description);
 }
 
+void engine::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
 void engine::key_callback(GLFWwindow* glfwWindow, int key, int scancode, int action, int mods) {
     for (const keybind& i : engine::inputManager.keybinds) {
         if (i.getButton() == key && i.getAction() == action) {
@@ -39,7 +43,7 @@ void engine::start() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    this->window = glfwCreateWindow(640, 480, "Basic Game Engine", nullptr, nullptr);
+    this->window = glfwCreateWindow(1280, 720, "Basic Game Engine", nullptr, nullptr);
     if (!this->window) {
         std::cerr << "Error: Window creation failed" << std::endl;
         glfwTerminate();
@@ -54,12 +58,17 @@ void engine::start() {
     printf("Using GLFW v%d.%d.%d \n", major, minor, rev);
 #endif
 
-    gladLoadGL(glfwGetProcAddress);
+    if (!gladLoadGL(glfwGetProcAddress)) {
+        std::cerr << "Error: OpenGL 3.3 Core must be available to run this program" << std::endl;
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
 
     int width, height;
     glfwGetFramebufferSize(this->window, &width, &height);
     glViewport(0, 0, width, height);
-    glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glfwSwapInterval(1);
 
     while (!glfwWindowShouldClose(this->window)) {

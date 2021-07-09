@@ -4,9 +4,9 @@
 
 class glObject {
 public:
-    explicit glObject(int glHandle);
+    [[nodiscard]] unsigned int getHandle() const;
 protected:
-    int handle;
+    unsigned int handle;
 };
 
 
