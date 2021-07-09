@@ -36,12 +36,13 @@ void engine::start() {
         exit(EXIT_FAILURE);
     }
     glfwSetErrorCallback(error_callback);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     this->window = glfwCreateWindow(640, 480, "Basic Game Engine", nullptr, nullptr);
     if (!this->window) {
-        glfwTerminate();
         std::cerr << "Error: Window creation failed" << std::endl;
+        glfwTerminate();
         exit(EXIT_FAILURE);
     }
     glfwMakeContextCurrent(this->window);
@@ -53,6 +54,8 @@ void engine::start() {
     printf("Using GLFW v%d.%d.%d \n", major, minor, rev);
 #endif
 
+    gladLoadGL(glfwGetProcAddress);
+
     int width, height;
     glfwGetFramebufferSize(this->window, &width, &height);
     glViewport(0, 0, width, height);
@@ -60,7 +63,7 @@ void engine::start() {
     glfwSwapInterval(1);
 
     while (!glfwWindowShouldClose(this->window)) {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         this->render();
 
