@@ -28,7 +28,9 @@ void engine::processInput(GLFWwindow* inputWindow) {
 }
 
 void engine::init() {
-    // compile shaders, add textures, etc.
+    for (shader* i : this->shaders) {
+        i->compile();
+    }
 }
 
 void engine::start(const std::string& iconPath) {
@@ -102,6 +104,10 @@ void engine::stop() const {
     glfwDestroyWindow(this->window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
+}
+
+void engine::addShader(shader* s) {
+    this->shaders.push_back(s);
 }
 
 void engine::setIcon(const std::string& iconPath) {

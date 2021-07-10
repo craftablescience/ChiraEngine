@@ -7,9 +7,12 @@
 
 class shader : public glObject {
 public:
-    shader(shaderFile vert, shaderFile frag);
+    shader(const std::string& vert, const std::string& frag);
+    void compile();
     void use();
 private:
+    shaderFile vert;
+    shaderFile frag;
     void checkForCompilationErrors() const;
 };
 

@@ -1,10 +1,16 @@
 #include "shader.h"
 
-shader::shader(shaderFile vert, shaderFile frag) : glObject() {
+shader::shader(const std::string& vertex, const std::string& fragment)
+    : glObject(), vert(GL_VERTEX_SHADER, vertex), frag(GL_FRAGMENT_SHADER, fragment) {
+    this->handle = -1;
+}
+
+void shader::compile() {
+    if (this->handle >= 0) return;
     this->handle = glCreateProgram();
-    vert.compileShader();
+    vert.compile();
     glAttachShader(this->handle, vert.getHandle());
-    frag.compileShader();
+    frag.compile();
     glAttachShader(this->handle, frag.getHandle());
     glLinkProgram(this->handle);
 #if DEBUG
@@ -20,7 +26,8 @@ void shader::checkForCompilationErrors() const {
     glGetProgramiv(this->handle, GL_LINK_STATUS, &success);
     if(!success) {
         glGetProgramInfoLog(this->handle, 512, nullptr, infoLog);
-        std::cerr << "Error: shader linking failed.\nDetails: " << infoLog << std::endl;
+        std::cerr << "Error: shader linking failed." << std::endl;
+        std::cerr << infoLog << std::endl;
     }
 }
 

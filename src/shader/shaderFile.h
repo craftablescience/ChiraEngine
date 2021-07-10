@@ -12,13 +12,12 @@
 class shaderFile : public glObject {
 public:
     shaderFile(unsigned int type, const std::string& source, bool isFilePath = true);
-    void compileShader();
+    void compile();
     [[nodiscard]] unsigned int getType() const;
 protected:
     unsigned int type;
     const char* source{};
 private:
-    bool compiled;
     static std::string loadSourceFromFile(const std::string& filepath);
     void checkForCompilationErrors() const;
 };
