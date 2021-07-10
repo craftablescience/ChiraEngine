@@ -78,6 +78,14 @@ void engine::start(const std::string& iconPath) {
         exit(EXIT_FAILURE);
     }
 
+#if DEBUG
+    int vertexAttributes, textureUnits;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &vertexAttributes);
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
+    std::cout << "OpenGL: Maximum number of vertex attributes is " << vertexAttributes << std::endl;
+    std::cout << "OpenGL: Maximum number of texture units is " << textureUnits << std::endl;
+#endif
+
     int width, height;
     glfwGetFramebufferSize(this->window, &width, &height);
     glViewport(0, 0, width, height);
