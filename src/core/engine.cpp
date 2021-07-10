@@ -156,7 +156,7 @@ void engine::setIcon(const std::string& iconPath) {
 }
 
 void engine::callRegisteredFunctions(const std::list<std::function<void(engine*)>> *list) {
-    for (const std::function<void(engine*)>& i : *list) {
-        i(this);
+    for (const std::function<void(engine*)>& func : *list) {
+        func(this);
     }
 }
