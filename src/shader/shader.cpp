@@ -37,6 +37,70 @@ void shader::use() {
     glUseProgram(this->handle);
 }
 
+void shader::setUniform(const std::string& name, bool value) const {
+    glUniform1i(glGetUniformLocation(this->handle, name.c_str()), (int) value);
+}
+
+void shader::setUniform(const std::string& name, int value) const {
+    glUniform1i(glGetUniformLocation(this->handle, name.c_str()), value);
+}
+
+void shader::setUniform(const std::string& name, unsigned int value) const {
+    glUniform1ui(glGetUniformLocation(this->handle, name.c_str()), value);
+}
+
+void shader::setUniform(const std::string& name, float value) const {
+    glUniform1f(glGetUniformLocation(this->handle, name.c_str()), value);
+}
+
+void shader::setUniform(const std::string& name, bool value1, bool value2) const {
+    glUniform2i(glGetUniformLocation(this->handle, name.c_str()), (int) value1, (int) value2);
+}
+
+void shader::setUniform(const std::string& name, int value1, int value2) const {
+    glUniform2i(glGetUniformLocation(this->handle, name.c_str()), value1, value2);
+}
+
+void shader::setUniform(const std::string& name, unsigned int value1, unsigned int value2) const {
+    glUniform2ui(glGetUniformLocation(this->handle, name.c_str()), value1, value2);
+}
+
+void shader::setUniform(const std::string& name, float value1, float value2) const {
+    glUniform2f(glGetUniformLocation(this->handle, name.c_str()), value1, value2);
+}
+
+void shader::setUniform(const std::string& name, bool value1, bool value2, bool value3) const {
+    glUniform3i(glGetUniformLocation(this->handle, name.c_str()), (int) value1, (int) value2, (int) value3);
+}
+
+void shader::setUniform(const std::string& name, int value1, int value2, int value3) const {
+    glUniform3i(glGetUniformLocation(this->handle, name.c_str()), value1, value2, value3);
+}
+
+void shader::setUniform(const std::string& name, unsigned int value1, unsigned int value2, unsigned int value3) const {
+    glUniform3ui(glGetUniformLocation(this->handle, name.c_str()), value1, value2, value3);
+}
+
+void shader::setUniform(const std::string& name, float value1, float value2, float value3) const {
+    glUniform3f(glGetUniformLocation(this->handle, name.c_str()), value1, value2, value3);
+}
+
+void shader::setUniform(const std::string& name, bool value1, bool value2, bool value3, bool value4) const {
+    glUniform4i(glGetUniformLocation(this->handle, name.c_str()), (int) value1, (int) value2, (int) value3, (int) value4);
+}
+
+void shader::setUniform(const std::string& name, int value1, int value2, int value3, int value4) const {
+    glUniform4i(glGetUniformLocation(this->handle, name.c_str()), value1, value2, value3, value4);
+}
+
+void shader::setUniform(const std::string& name, unsigned int value1, unsigned int value2, unsigned int value3, unsigned int value4) const {
+    glUniform4ui(glGetUniformLocation(this->handle, name.c_str()), value1, value2, value3, value4);
+}
+
+void shader::setUniform(const std::string& name, float value1, float value2, float value3, float value4) const {
+    glUniform4f(glGetUniformLocation(this->handle, name.c_str()), value1, value2, value3, value4);
+}
+
 void shader::discard() {
     glDeleteProgram(this->handle);
 }
