@@ -2,29 +2,38 @@
 #define BASICGAMEENGINE_ENGINE_H
 
 
-#include <glad/gl.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <iostream>
-#include "../input/input.h"
-#include "../utility/image.h"
+#include <map>
+#include <functional>
+#include <list>
 #include "../shader/shader.h"
+#include "../input/keybind.h"
+
+class keybind;
 
 class engine {
 public:
     void init();
     void start(const std::string& iconPath = "");
     void render();
-    void stop() const;
-    void addShader(shader* s);
+    void stop();
+    void addKeybind(const keybind& keybind);
+    void addShader(const std::string& name, shader* s);
+    shader* getShader(const std::string& name);
+    void addInitFunction(const std::function<void(engine*)>& init);
+    void addRenderFunction(const std::function<void(engine*)>& render);
+    void addStopFunction(const std::function<void(engine*)>& stop);
     // NOTE: PNGs must have a bit depth of 8 or less* (less not tested)
     void setIcon(const std::string& iconPath);
-    void setInputManager(input* newInput);
-    input* getInputManager();
+    void callRegisteredFunctions(const std::list<std::function<void(engine*)>>* list);
 private:
     GLFWwindow* window = nullptr;
-    input inputManager;
-    std::list<shader*> shaders;
+    std::list<std::function<void(engine*)>> initFunctions;
+    std::list<std::function<void(engine*)>> renderFunctions;
+    std::list<std::function<void(engine*)>> stopFunctions;
+    std::list<keybind> keybinds;
+    std::map<std::string, shader*> shaders;
     bool started = false;
     void processInput(GLFWwindow* inputWindow);
     static void errorCallback(int error, const char* description);

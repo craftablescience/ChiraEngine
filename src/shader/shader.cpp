@@ -1,4 +1,6 @@
 #include "shader.h"
+#include "glad/gl.h"
+#include <iostream>
 
 shader::shader(const std::string& vertex, const std::string& fragment)
     : glObject(), vert(GL_VERTEX_SHADER, vertex), frag(GL_FRAGMENT_SHADER, fragment) {
@@ -33,4 +35,8 @@ void shader::checkForCompilationErrors() const {
 
 void shader::use() {
     glUseProgram(this->handle);
+}
+
+void shader::discard() {
+    glDeleteProgram(this->handle);
 }

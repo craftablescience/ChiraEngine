@@ -3,10 +3,6 @@
 
 
 #include <string>
-#include <glad/gl.h>
-#include <iostream>
-#include <fstream>
-#include <sstream>
 #include "../utility/glObject.h"
 
 class shaderFile : public glObject {

@@ -10,6 +10,7 @@ public:
     shader(const std::string& vert, const std::string& frag);
     void compile();
     void use();
+    void discard();
 private:
     shaderFile vert;
     shaderFile frag;

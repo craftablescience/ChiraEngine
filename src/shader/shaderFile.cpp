@@ -1,4 +1,8 @@
 #include "shaderFile.h"
+#include <glad/gl.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 shaderFile::shaderFile(unsigned int type, const std::string& source, bool isFilePath) : glObject() {
     this->type = type;

@@ -1,5 +1,9 @@
 #include "engine.h"
 
+#include <glad/gl.h>
+#include <iostream>
+#include "../utility/image.h"
+
 #include <cassert>
 #if __has_include(<windows.h>)
 #include <windows.h>
@@ -20,17 +24,18 @@ void engine::framebufferSizeCallback(GLFWwindow* window, int width, int height) 
 }
 
 void engine::processInput(GLFWwindow* inputWindow) {
-    for (const keybind& i : this->inputManager.keybinds) {
+    for (const keybind& i : this->keybinds) {
         if (glfwGetKey(inputWindow, i.getButton()) == i.getAction()) {
-            i.fire();
+            i.fire(this);
         }
     }
 }
 
 void engine::init() {
-    for (shader* i : this->shaders) {
-        i->compile();
+    for (auto const& [name, shader] : this->shaders) {
+        shader->compile();
     }
+    callRegisteredFunctions(&(this->initFunctions));
 }
 
 void engine::start(const std::string& iconPath) {
@@ -96,18 +101,42 @@ void engine::start(const std::string& iconPath) {
 }
 
 void engine::render() {
-    // Empty now
+    callRegisteredFunctions(&(this->renderFunctions));
 }
 
-void engine::stop() const {
+void engine::stop() {
     debugPrint("Gracefully exiting...");
+    for (auto const& [name, shader] : this->shaders) {
+        shader->discard();
+    }
+    callRegisteredFunctions(&(this->stopFunctions));
     glfwDestroyWindow(this->window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
 
-void engine::addShader(shader* s) {
-    this->shaders.push_back(s);
+void engine::addKeybind(const keybind& keybind) {
+    this->keybinds.push_back(keybind);
+}
+
+void engine::addShader(const std::string& name, shader* s) {
+    this->shaders.insert_or_assign(name, s);
+}
+
+shader* engine::getShader(const std::string& name) {
+    return this->shaders.at(name);
+}
+
+void engine::addInitFunction(const std::function<void(engine*)>& init) {
+    this->initFunctions.push_back(init);
+}
+
+void engine::addRenderFunction(const std::function<void(engine*)>& render) {
+    this->renderFunctions.push_back(render);
+}
+
+void engine::addStopFunction(const std::function<void(engine*)>& stop) {
+    this->stopFunctions.push_back(stop);
 }
 
 void engine::setIcon(const std::string& iconPath) {
@@ -126,10 +155,8 @@ void engine::setIcon(const std::string& iconPath) {
     glfwSetWindowIcon(this->window, 1, images);
 }
 
-void engine::setInputManager(input* newInput) {
-    this->inputManager = *newInput;
-}
-
-input* engine::getInputManager() {
-    return &(this->inputManager);
+void engine::callRegisteredFunctions(const std::list<std::function<void(engine*)>> *list) {
+    for (const std::function<void(engine*)>& i : *list) {
+        i(this);
+    }
 }

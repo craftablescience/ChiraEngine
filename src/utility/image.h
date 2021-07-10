@@ -7,7 +7,7 @@
 class image {
 public:
     image(const std::string& filepath, int* width, int* height, int* fileChannels, int desiredChannels);
-    ~image();
+    virtual ~image();
     [[nodiscard]] unsigned char* getData();
 protected:
     unsigned char* data;

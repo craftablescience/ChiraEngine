@@ -3,11 +3,14 @@
 
 
 #include <functional>
+#include "../core/engine.h"
+
+class engine;
 
 class keybind {
 public:
-    std::function<void ()> fire;
-    keybind(int button, int action, const std::function<void ()>& function);
+    std::function<void(engine*)> fire;
+    keybind(int button, int action, const std::function<void(engine*)>& function);
     [[nodiscard]] int getButton() const;
     [[nodiscard]] int getAction() const;
 private:
