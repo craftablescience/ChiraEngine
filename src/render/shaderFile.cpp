@@ -6,7 +6,6 @@
 
 shaderFile::shaderFile(unsigned int type, const std::string& source, bool isFilePath) : glObject() {
     this->type = type;
-    this->handle = -1;
     if (!isFilePath) {
         this->source = source;
     } else {
@@ -14,8 +13,12 @@ shaderFile::shaderFile(unsigned int type, const std::string& source, bool isFile
     }
 }
 
+shaderFile::~shaderFile() {
+    if (this->handle != -1) glDeleteShader(this->handle);
+}
+
 void shaderFile::compile() {
-    if (this->handle >= 0) return;
+    if (this->handle != -1) return;
     this->handle = glCreateShader(type);
     char* code = &this->source[0];
     glShaderSource(this->handle, 1, &code, nullptr);
@@ -23,6 +26,10 @@ void shaderFile::compile() {
 #if DEBUG
     this->checkForCompilationErrors();
 #endif
+}
+
+void shaderFile::discard() {
+    glDeleteShader(this->handle);
 }
 
 std::string shaderFile::loadSourceFromFile(const std::string& filepath) {

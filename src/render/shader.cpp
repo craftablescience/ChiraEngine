@@ -3,12 +3,10 @@
 #include <iostream>
 
 shader::shader(const std::string& vertex, const std::string& fragment)
-    : glObject(), vert(GL_VERTEX_SHADER, vertex), frag(GL_FRAGMENT_SHADER, fragment) {
-    this->handle = -1;
-}
+    : glObject(), vert(GL_VERTEX_SHADER, vertex), frag(GL_FRAGMENT_SHADER, fragment) {}
 
 void shader::compile() {
-    if (this->handle >= 0) return;
+    if (this->handle != -1) return;
     this->handle = glCreateProgram();
     vert.compile();
     glAttachShader(this->handle, vert.getHandle());
@@ -18,8 +16,8 @@ void shader::compile() {
 #if DEBUG
     this->checkForCompilationErrors();
 #endif
-    glDeleteShader(vert.getHandle());
-    glDeleteShader(frag.getHandle());
+    vert.discard();
+    frag.discard();
 }
 
 void shader::checkForCompilationErrors() const {

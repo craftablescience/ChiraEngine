@@ -8,7 +8,9 @@
 #include <map>
 #include <functional>
 #include <list>
-#include "../shader/shader.h"
+#include <memory>
+#include "../render/shader.h"
+#include "../render/texture.h"
 #include "../input/keybind.h"
 
 class keybind;
@@ -22,6 +24,8 @@ public:
     void addKeybind(const keybind& keybind);
     void addShader(const std::string& name, shader* s);
     shader* getShader(const std::string& name);
+    void addTexture(const std::string& name, texture* t);
+    texture* getTexture(const std::string& name);
     void addInitFunction(const std::function<void(engine*)>& init);
     void addRenderFunction(const std::function<void(engine*)>& render);
     void addStopFunction(const std::function<void(engine*)>& stop);
@@ -34,7 +38,7 @@ private:
     std::list<std::function<void(engine*)>> renderFunctions;
     std::list<std::function<void(engine*)>> stopFunctions;
     std::list<keybind> keybinds;
-    std::map<std::string, shader*> shaders;
+    std::map<std::string, std::unique_ptr<glCompilable>> glObjects;
     bool started = false;
     void processInput(GLFWwindow* inputWindow);
     static void errorCallback(int error, const char* description);

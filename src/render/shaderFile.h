@@ -8,7 +8,9 @@
 class shaderFile : public glObject {
 public:
     shaderFile(unsigned int type, const std::string& source, bool isFilePath = true);
-    void compile();
+    virtual ~shaderFile();
+    void compile() override;
+    void discard() override;
     [[nodiscard]] unsigned int getType() const;
 protected:
     unsigned int type;

@@ -32,8 +32,8 @@ void engine::processInput(GLFWwindow* inputWindow) {
 }
 
 void engine::init() {
-    for (auto const& [name, shader] : this->shaders) {
-        shader->compile();
+    for (auto const& [name, object] : this->glObjects) {
+        object.get()->compile();
     }
     callRegisteredFunctions(&(this->initFunctions));
 }
@@ -114,8 +114,8 @@ void engine::render() {
 
 void engine::stop() {
     debugPrint("Gracefully exiting...");
-    for (auto const& [name, shader] : this->shaders) {
-        shader->discard();
+    for (auto const& [name, object] : this->glObjects) {
+        object->discard();
     }
     callRegisteredFunctions(&(this->stopFunctions));
     glfwDestroyWindow(this->window);
@@ -128,11 +128,19 @@ void engine::addKeybind(const keybind& keybind) {
 }
 
 void engine::addShader(const std::string& name, shader* s) {
-    this->shaders.insert_or_assign(name, s);
+    this->glObjects.insert(std::make_pair("shaders/" + name, s));
 }
 
 shader* engine::getShader(const std::string& name) {
-    return this->shaders.at(name);
+    return (shader*) this->glObjects.at("shaders/" + name).get();
+}
+
+void engine::addTexture(const std::string& name, texture* t) {
+    this->glObjects.insert(std::make_pair("textures/" + name, t));
+}
+
+texture* engine::getTexture(const std::string& name) {
+    return (texture*) this->glObjects.at("textures/" + name).get();
 }
 
 void engine::addInitFunction(const std::function<void(engine*)>& init) {

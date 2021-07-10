@@ -8,7 +8,7 @@
 class shader : public glObject {
 public:
     shader(const std::string& vert, const std::string& frag);
-    void compile();
+    void compile() override;
     void use();
     void setUniform(const std::string& name, bool value) const;
     void setUniform(const std::string& name, unsigned int value) const;
@@ -26,7 +26,7 @@ public:
     void setUniform(const std::string& name, unsigned int value1, unsigned int value2, unsigned int value3, unsigned int value4) const;
     void setUniform(const std::string& name, int value1, int value2, int value3, int value4) const;
     void setUniform(const std::string& name, float value1, float value2, float value3, float value4) const;
-    void discard();
+    void discard() override;
 private:
     shaderFile vert;
     shaderFile frag;

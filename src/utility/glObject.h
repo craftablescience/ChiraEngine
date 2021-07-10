@@ -2,11 +2,13 @@
 #define BASICGAMEENGINE_GLOBJECT_H
 
 
-class glObject {
+#include "glCompilable.h"
+
+class glObject : public glCompilable {
 public:
     [[nodiscard]] int getHandle() const;
 protected:
-    int handle;
+    int handle = -1;
 };
 
 
