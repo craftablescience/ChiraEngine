@@ -7,18 +7,25 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "../input/input.h"
+#include "../utility/image.h"
 
 class engine {
 public:
-    static input inputManager;
-    void start();
+    void init();
+    void start(const std::string& iconPath = "");
     void render();
     void stop() const;
+    // NOTE: PNGs must have a bit depth of 8 or less* (less not tested)
+    void setIcon(const std::string& iconPath);
+    void setInputManager(input* newInput);
+    input* getInputManager();
 private:
     GLFWwindow* window = nullptr;
-    static void error_callback(int error, const char* description);
-    static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-    static void key_callback(GLFWwindow* glfwWindow, int key, int scancode, int action, int mods);
+    input inputManager;
+    bool started = false;
+    void processInput(GLFWwindow* inputWindow);
+    static void errorCallback(int error, const char* description);
+    static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 };
 
 

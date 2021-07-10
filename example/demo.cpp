@@ -8,6 +8,6 @@ static void stopEngine() {
 
 int main() {
     keybind esc(GLFW_KEY_ESCAPE, GLFW_PRESS, stopEngine);
-    engine::inputManager.addKeybind(esc);
-    obj.start();
+    obj.getInputManager()->addKeybind(esc);
+    obj.start("resources/images/icon.png");
 }
