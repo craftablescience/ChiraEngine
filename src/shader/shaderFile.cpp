@@ -8,16 +8,17 @@ shaderFile::shaderFile(unsigned int type, const std::string& source, bool isFile
     this->type = type;
     this->handle = -1;
     if (!isFilePath) {
-        this->source = source.c_str();
+        this->source = source;
     } else {
-        this->source = shaderFile::loadSourceFromFile(source).c_str();
+        this->source = shaderFile::loadSourceFromFile(source);
     }
 }
 
 void shaderFile::compile() {
     if (this->handle >= 0) return;
     this->handle = glCreateShader(type);
-    glShaderSource(this->handle, 1, &(this->source), nullptr);
+    char* code = &this->source[0];
+    glShaderSource(this->handle, 1, &code, nullptr);
     glCompileShader(this->handle);
 #if DEBUG
     this->checkForCompilationErrors();

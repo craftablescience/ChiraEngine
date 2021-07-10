@@ -12,7 +12,7 @@ public:
     [[nodiscard]] unsigned int getType() const;
 protected:
     unsigned int type;
-    const char* source{};
+    std::string source;
 private:
     static std::string loadSourceFromFile(const std::string& filepath);
     void checkForCompilationErrors() const;
