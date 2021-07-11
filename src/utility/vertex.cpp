@@ -1,30 +1,21 @@
 #include "vertex.h"
-#include <cmath>
 
-vertex::vertex(float a, float b) {
-    this->x = a;
-    this->y = b;
-    this->z = NAN;
+position::position(GLfloat x, GLfloat y, GLfloat z) {
+    this->x = x;
+    this->y = y;
+    this->z = z;
 }
 
-vertex::vertex(float a, float b, float c) {
-    this->x = a;
-    this->y = b;
-    this->z = c;
+normal::normal(GLfloat r, GLfloat g, GLfloat b) {
+    this->r = r;
+    this->g = g;
+    this->b = b;
 }
 
-int vertex::getSizeOf() const {
-    if (std::isnan(this->z)) {
-        return (2 * sizeof(float));
-    } else {
-        return (3 * sizeof(float));
-    }
+uv::uv(GLfloat u, GLfloat v) {
+    this->u = u;
+    this->v = v;
 }
 
-bool vertex::is2D() const {
-    return std::isnan(this->z);
-}
-
-bool vertex::is3D() const {
-    return !std::isnan(this->z);
-}
+vertex::vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat u, GLfloat v)
+    : position(x, y, z), normal(r, g, b), uv(u, v) {}

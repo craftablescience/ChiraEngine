@@ -4,13 +4,26 @@
 
 #include "glad/gl.h"
 
-struct vertex {
+struct position {
     GLfloat x, y, z;
-    vertex(float a, float b);
-    vertex(float a, float b, float c);
-    [[nodiscard]] int getSizeOf() const;
-    [[nodiscard]] bool is2D() const;
-    [[nodiscard]] bool is3D() const;
+    position(GLfloat x, GLfloat y, GLfloat z);
+};
+
+struct normal {
+    GLfloat r, g, b;
+    normal(GLfloat r, GLfloat g, GLfloat b);
+};
+
+struct uv {
+    GLfloat u, v;
+    uv(GLfloat u, GLfloat v);
+};
+
+struct vertex {
+    position position;
+    normal normal;
+    uv uv;
+    vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat u, GLfloat v);
 };
 
 
