@@ -8,6 +8,7 @@
 class shader : public glObject {
 public:
     shader(const std::string& vert, const std::string& frag);
+    virtual ~shader();
     void compile() override;
     void use();
     void setUniform(const std::string& name, bool value) const;

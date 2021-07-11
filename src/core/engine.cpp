@@ -83,6 +83,7 @@ int vertexAttributes, textureUnits;
     glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(this->window, this->framebufferSizeCallback);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(1);
 
     for (auto const& [name, object] : this->glObjects) {

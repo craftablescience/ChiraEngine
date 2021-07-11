@@ -9,12 +9,13 @@
 
 class mesh : public glRenderable {
 public:
-    explicit mesh(meshLoader* loader, const std::string& filepath);
+    explicit mesh(meshLoader* loader, const std::string& filepath, int depthFunc = GL_LEQUAL);
     virtual ~mesh();
     void compile() override;
     void discard() override;
     void render() override;
 private:
+    int depthFunc;
     meshLoader* loader;
     std::string filepath;
     unsigned int vboHandle, vaoHandle, eboHandle;

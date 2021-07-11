@@ -5,6 +5,10 @@
 shader::shader(const std::string& vertex, const std::string& fragment)
     : glObject(), vert(GL_VERTEX_SHADER, vertex), frag(GL_FRAGMENT_SHADER, fragment) {}
 
+shader::~shader() {
+    if (this->handle != -1) glDeleteProgram(this->handle);
+}
+
 void shader::compile() {
     if (this->handle != -1) return;
     this->handle = glCreateProgram();
@@ -100,5 +104,5 @@ void shader::setUniform(const std::string& name, float value1, float value2, flo
 }
 
 void shader::discard() {
-    glDeleteProgram(this->handle);
+    if (this->handle != -1) glDeleteProgram(this->handle);
 }

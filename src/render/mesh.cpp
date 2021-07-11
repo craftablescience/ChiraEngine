@@ -1,7 +1,8 @@
 #include "mesh.h"
 #include "glad/gl.h"
 
-mesh::mesh(meshLoader* loader, const std::string& filepath) : vertices(), indices() {
+mesh::mesh(meshLoader* loader, const std::string& filepath, int depthFunc) : vertices(), indices() {
+    this->depthFunc = depthFunc;
     this->loader = loader;
     this->filepath = filepath;
     this->vboHandle = -1;
@@ -50,6 +51,7 @@ void mesh::discard() {
 }
 
 void mesh::render() {
+    glDepthFunc(this->depthFunc);
     glBindVertexArray(this->vaoHandle);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }

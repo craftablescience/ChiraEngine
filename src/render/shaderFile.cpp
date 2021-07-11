@@ -29,7 +29,7 @@ void shaderFile::compile() {
 }
 
 void shaderFile::discard() {
-    glDeleteShader(this->handle);
+    if (this->handle != -1) glDeleteShader(this->handle);
 }
 
 std::string shaderFile::loadSourceFromFile(const std::string& filepath) {

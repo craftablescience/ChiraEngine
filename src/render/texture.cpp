@@ -11,7 +11,7 @@ texture::texture(const std::string& filepath) {
 }
 
 texture::~texture() {
-    delete this->file;
+    if (this->handle != 0) delete this->file;
 }
 
 void texture::compile() {
@@ -20,7 +20,7 @@ void texture::compile() {
 }
 
 void texture::discard() {
-    delete this->file;
+    if (this->handle != 0) delete this->file;
 }
 
 void texture::setTextureUnit(int textureUnit) {

@@ -31,14 +31,11 @@ void texture2d::compile() {
 }
 
 void texture2d::use() {
+    if (this->handle == 0) return;
     if (this->activeTextureUnit == -1) {
         glActiveTexture(GL_TEXTURE0);
     } else {
         glActiveTexture(this->activeTextureUnit);
     }
     glBindTexture(GL_TEXTURE_2D, this->handle);
-}
-
-void texture2d::discard() {
-    texture::discard();
 }
