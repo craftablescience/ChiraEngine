@@ -1,8 +1,7 @@
 #include "engine.h"
 
-#include <glad/gl.h>
 #include <iostream>
-#include "../utility/image.h"
+#include "../loader/image.h"
 
 #include <cassert>
 #if __has_include(<windows.h>)
@@ -31,14 +30,7 @@ void engine::processInput(GLFWwindow* inputWindow) {
     }
 }
 
-void engine::init() {
-    for (auto const& [name, object] : this->glObjects) {
-        object.get()->compile();
-    }
-    callRegisteredFunctions(&(this->initFunctions));
-}
-
-void engine::start(const std::string& iconPath) {
+void engine::init(const std::string& iconPath) {
     this->started = true;
 #ifdef WIN32
 #if RELEASE
@@ -79,7 +71,7 @@ void engine::start(const std::string& iconPath) {
     }
 
 #if DEBUG
-    int vertexAttributes, textureUnits;
+int vertexAttributes, textureUnits;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &vertexAttributes);
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
     std::cout << "OpenGL: Maximum number of vertex attributes is " << vertexAttributes << std::endl;
@@ -93,8 +85,13 @@ void engine::start(const std::string& iconPath) {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glfwSwapInterval(1);
 
-    this->init();
+    for (auto const& [name, object] : this->glObjects) {
+        object.get()->compile();
+    }
+    callRegisteredFunctions(&(this->initFunctions));
+}
 
+void engine::run() {
     while (!glfwWindowShouldClose(this->window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this->processInput(this->window);
@@ -143,6 +140,14 @@ texture* engine::getTexture(const std::string& name) {
     return (texture*) this->glObjects.at("textures/" + name).get();
 }
 
+void engine::addMesh(const std::string& name, mesh* m) {
+    this->glObjects.insert(std::make_pair("meshes/" + name, m));
+}
+
+mesh* engine::getMesh(const std::string& name) {
+    return (mesh*) this->glObjects.at("meshes/" + name).get();
+}
+
 void engine::addInitFunction(const std::function<void(engine*)>& init) {
     this->initFunctions.push_back(init);
 }
@@ -161,7 +166,7 @@ void engine::setIcon(const std::string& iconPath) {
 #endif
     GLFWimage images[1];
     int width, height, bitsPerPixel;
-    image icon(iconPath, &width, &height, &bitsPerPixel, 4);
+    image icon(iconPath, &width, &height, &bitsPerPixel, 4, false);
 #if DEBUG
     assert(icon.getData());
 #endif
@@ -171,8 +176,12 @@ void engine::setIcon(const std::string& iconPath) {
     glfwSetWindowIcon(this->window, 1, images);
 }
 
-void engine::callRegisteredFunctions(const std::list<std::function<void(engine*)>> *list) {
+void engine::callRegisteredFunctions(const std::vector<std::function<void(engine*)>> *list) {
     for (const std::function<void(engine*)>& func : *list) {
         func(this);
     }
+}
+
+bool engine::isStarted() const {
+    return this->started;
 }

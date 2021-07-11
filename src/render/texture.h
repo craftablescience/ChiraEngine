@@ -2,7 +2,7 @@
 #define BASICGAMEENGINE_TEXTURE_H
 
 
-#include "../utility/image.h"
+#include "../loader/image.h"
 #include "../utility/glCompilable.h"
 
 class texture : public glCompilable {

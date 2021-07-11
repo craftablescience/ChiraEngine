@@ -29,6 +29,7 @@ include(third_party/stb/CMakeLists.txt)
 # BASICGAMEENGINE
 include(src/core/CMakeLists.txt)
 include(src/input/CMakeLists.txt)
+include(src/loader/CMakeLists.txt)
 include(src/render/CMakeLists.txt)
 include(src/utility/CMakeLists.txt)
 add_executable(${PROJECT_NAME} example/demo.cpp ${ENGINE_SOURCES})

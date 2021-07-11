@@ -1,9 +1,11 @@
 #include <iostream>
 #include "texture2d.h"
-#include "glad/gl.h"
 
-texture2d::texture2d(const std::string& file, int format, bool mipmaps) : texture(file) {
+texture2d::texture2d(const std::string& file, int format, int wrapModeU, int wrapModeV, int filterMode, bool mipmaps) : texture(file) {
     this->format = format;
+    this->wrapModeU = wrapModeU;
+    this->wrapModeV = wrapModeV;
+    this->filterMode = filterMode;
     this->mipmaps = mipmaps;
 }
 
@@ -11,14 +13,10 @@ void texture2d::compile() {
     if (this->handle != 0) return;
     texture::compile();
     glBindTexture(GL_TEXTURE_2D, this->handle);
-
-    // todo: move repeat options to constructor
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    // todo: move filtering options to constructor
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrapModeU);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrapModeV);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->filterMode);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->filterMode);
 
     if (this->file->getData()) {
         glTexImage2D(GL_TEXTURE_2D, 0, this->format, this->width, this->height, 0, this->format, GL_UNSIGNED_BYTE, this->file->getData());

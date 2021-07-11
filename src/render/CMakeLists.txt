@@ -6,4 +6,6 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/texture.cpp
         ${CMAKE_CURRENT_LIST_DIR}/texture.h
         ${CMAKE_CURRENT_LIST_DIR}/texture2d.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/texture2d.h)
+        ${CMAKE_CURRENT_LIST_DIR}/texture2d.h
+        ${CMAKE_CURRENT_LIST_DIR}/mesh.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/mesh.h)
