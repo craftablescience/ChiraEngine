@@ -6,17 +6,17 @@
 
 struct position {
     GLfloat x, y, z;
-    position(GLfloat x, GLfloat y, GLfloat z);
+    explicit position(GLfloat x = 0, GLfloat y = 0, GLfloat z = 0);
 };
 
 struct normal {
     GLfloat r, g, b;
-    normal(GLfloat r, GLfloat g, GLfloat b);
+    explicit normal(GLfloat r = 1, GLfloat g = 1, GLfloat b = 1);
 };
 
 struct uv {
     GLfloat u, v;
-    uv(GLfloat u, GLfloat v);
+    explicit uv(GLfloat u = 0, GLfloat v = 0);
 };
 
 struct vertex {
@@ -24,6 +24,9 @@ struct vertex {
     normal normal;
     uv uv;
     vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat u, GLfloat v);
+    vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b);
+    vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v);
+    vertex();
 };
 
 
