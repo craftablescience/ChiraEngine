@@ -3,6 +3,7 @@
 
 
 #include "shaderFile.h"
+#include <glm/glm.hpp>
 #include "../utility/glObject.h"
 
 class shader : public glObject {
@@ -27,6 +28,7 @@ public:
     void setUniform(const std::string& name, unsigned int value1, unsigned int value2, unsigned int value3, unsigned int value4) const;
     void setUniform(const std::string& name, int value1, int value2, int value3, int value4) const;
     void setUniform(const std::string& name, float value1, float value2, float value3, float value4) const;
+    void setUniform(const std::string& name, glm::mat4* value) const;
     void discard() override;
 private:
     shaderFile vert;
