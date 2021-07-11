@@ -19,6 +19,9 @@ set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(third_party/glfw)
 
+# GLM
+add_subdirectory(third_party/glm)
+
 # NLOHMANN_JSON
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(third_party/json)
@@ -37,7 +40,7 @@ add_executable(${PROJECT_NAME} example/demo.cpp ${ENGINE_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE third_party/glad/include)
 target_include_directories(${PROJECT_NAME} PRIVATE ${OPENGL_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PRIVATE third_party/stb)
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glfw nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glfw nlohmann_json::nlohmann_json glm::glm)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
 
