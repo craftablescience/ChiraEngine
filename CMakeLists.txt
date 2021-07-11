@@ -45,8 +45,13 @@ target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glfw nlohmann_json::nl
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
 
 # Copy example resources
-add_custom_target(copyResources ALL
+add_custom_target(copyEngineResources ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/basicgameengine/
+        ${CMAKE_BINARY_DIR}/resources/basicgameengine/)
+add_dependencies(${PROJECT_NAME} copyEngineResources)
+add_custom_target(copyDemoResources ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/example/resources/
         ${CMAKE_BINARY_DIR}/resources/)
-add_dependencies(${PROJECT_NAME} copyResources)
+add_dependencies(${PROJECT_NAME} copyDemoResources)

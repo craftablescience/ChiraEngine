@@ -18,6 +18,7 @@ class keybind;
 
 class engine {
 public:
+    engine();
     void init(const std::string& iconPath = "");
     void run();
     void render();
@@ -36,6 +37,8 @@ public:
     void setIcon(const std::string& iconPath);
     void callRegisteredFunctions(const std::vector<std::function<void(engine*)>>* list);
     [[nodiscard]] bool isStarted() const;
+    std::string getResourcesDirectory() const;
+    void setResourcesDirectory(const std::string& resourcesDirectory);
 private:
     GLFWwindow* window = nullptr;
     std::vector<std::function<void(engine*)>> initFunctions;
@@ -43,6 +46,7 @@ private:
     std::vector<std::function<void(engine*)>> stopFunctions;
     std::vector<keybind> keybinds;
     std::map<std::string, std::unique_ptr<glCompilable>> glObjects;
+    std::string resourcesDirectoryPath;
     bool started = false;
     void processInput(GLFWwindow* inputWindow);
     static void errorCallback(int error, const char* description);

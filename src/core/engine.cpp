@@ -14,6 +14,10 @@ static void debugPrint(const std::string &string) {
 #endif
 }
 
+engine::engine() {
+    this->resourcesDirectoryPath = "resources/basicgameengine/";
+}
+
 void engine::errorCallback(int error, const char* description) {
     std::fprintf(stderr, "Error %d: %s\n", error, description);
 }
@@ -53,8 +57,11 @@ void engine::init(const std::string& iconPath) {
         exit(EXIT_FAILURE);
     }
     glfwMakeContextCurrent(this->window);
-    if (!iconPath.empty()) {
-        // todo: load icon from a settings module rather than an argument
+
+    // todo: load icon from a settings module rather than an argument
+    if (iconPath.empty()) {
+        this->setIcon(this->getResourcesDirectory() + "textures/ui/icon.png");
+    } else {
         this->setIcon(iconPath);
     }
 
@@ -185,4 +192,12 @@ void engine::callRegisteredFunctions(const std::vector<std::function<void(engine
 
 bool engine::isStarted() const {
     return this->started;
+}
+
+std::string engine::getResourcesDirectory() const {
+    return this->resourcesDirectoryPath;
+}
+
+void engine::setResourcesDirectory(const std::string& resourcesDirectory) {
+    this->resourcesDirectoryPath = resourcesDirectory;
 }

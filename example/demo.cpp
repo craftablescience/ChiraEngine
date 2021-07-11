@@ -2,6 +2,9 @@
 #include "../src/render/texture2d.h"
 #include "../src/loader/debugMeshLoader.h"
 
+// temp
+static glm::mat4 mat(1.0);
+
 static void stopEngine(engine* engine) {
     engine->stop();
 }
@@ -17,12 +20,16 @@ static void disableWireframe(engine* engine) {
 static void init(engine* engine) {
     engine->getShader("triangle")->use();
     engine->getShader("triangle")->setUniform("ourTexture", 0);
+#if DEBUG
+    glClearColor(0.0f, 0.0f, 0.3f, 1.0f);
+#endif
 }
 
 static void render(engine* engine) {
     engine->getTexture("triangle")->use();
-    engine->getShader("triangle")->use();
-    engine->getMesh("triangle")->render();
+    engine->getShader("triangle")->setUniform("p", &mat);
+    engine->getShader("triangle")->setUniform("v", &mat);
+    engine->getMesh("triangle")->render(engine->getShader("triangle"));
 }
 
 /*
@@ -41,20 +48,21 @@ int main() {
     engine.addKeybind(noWire);
     engine.addKeybind(wire);
 
-    shader triangleShader("resources/shaders/triangle.vsh", "resources/shaders/triangle.fsh");
+    shader triangleShader(engine.getResourcesDirectory() + "shaders/unlit.vsh",
+                          engine.getResourcesDirectory() + "shaders/unlit.fsh");
     engine.addShader("triangle", &triangleShader);
 
-    texture2d triangleTex("resources/images/crate.jpg", GL_RGB);
+    texture2d triangleTex("resources/demo/textures/crate.jpg", GL_RGB);
     engine.addTexture("triangle", &triangleTex);
 
     debugMeshLoader meshLoader;
-    mesh triangleMesh(&meshLoader, "debug, this parameter is unused");
+    mesh triangleMesh(&meshLoader, "cube");
     engine.addMesh("triangle", &triangleMesh);
 
     engine.addInitFunction(init);
     engine.addRenderFunction(render);
     //engine.addStopFunction(stop);
 
-    engine.init("resources/images/icon.png");
+    engine.init();
     engine.run();
 }
