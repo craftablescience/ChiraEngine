@@ -5,19 +5,12 @@
 #include "glad/gl.h"
 
 struct vertex {
-    [[nodiscard]] virtual int getSizeOf() const = 0;
-};
-
-struct vertex2 : public vertex {
-    GLfloat u, v;
-    vertex2(float a, float b);
-    [[nodiscard]] int getSizeOf() const override;
-};
-
-struct vertex3 : public vertex {
     GLfloat x, y, z;
-    vertex3(float a, float b, float c);
-    [[nodiscard]] int getSizeOf() const override;
+    vertex(float a, float b);
+    vertex(float a, float b, float c);
+    [[nodiscard]] int getSizeOf() const;
+    [[nodiscard]] bool is2D() const;
+    [[nodiscard]] bool is3D() const;
 };
 
 
