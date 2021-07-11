@@ -26,4 +26,7 @@ vertex::vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b)
 vertex::vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v)
     : position(x, y, z), normal(), uv(u, v) {}
 
+vertex::vertex(GLfloat x, GLfloat y, GLfloat z)
+    : position(x, y, z), normal(), uv() {}
+
 vertex::vertex() : position(), normal(), uv() {}
