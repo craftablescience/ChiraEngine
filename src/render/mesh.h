@@ -13,7 +13,7 @@ public:
     virtual ~mesh();
     void compile() override;
     void discard() override;
-    void render() override;
+    void render(shader* shader) override;
 private:
     int depthFunc;
     meshLoader* loader;

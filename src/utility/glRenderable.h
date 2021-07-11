@@ -3,11 +3,18 @@
 
 
 #include "glCompilable.h"
+#include "../render/shader.h"
+#include <glm/glm.hpp>
 
 class glRenderable : public glCompilable {
-    virtual void compile() = 0;
-    virtual void discard() = 0;
-    virtual void render() = 0;
+public:
+    glRenderable() : model(1.0f) {}
+    virtual void render(shader* shader) = 0;
+    glm::mat4* getModel() {
+        return &(this->model);
+    };
+protected:
+    glm::mat4 model;
 };
 
 
