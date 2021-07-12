@@ -9,6 +9,7 @@ class engine;
 
 class keybind {
 public:
+    // todo: allow keybinds to have multiple fire buttons
     std::function<void(engine*)> fire;
     keybind(int button, int action, const std::function<void(engine*)>& function);
     [[nodiscard]] int getButton() const;
