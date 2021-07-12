@@ -55,7 +55,7 @@ private:
     std::string resourcesDirectoryPath;
     bool started = false;
     double lastTime, currentTime;
-    void processInput(GLFWwindow* inputWindow);
+    void processKeybinds();
     // NOTE: PNGs must have a bit depth of 8 or less* (less not tested)
     void setIcon(const std::string& iconPath);
     static void errorCallback(int error, const char* description);

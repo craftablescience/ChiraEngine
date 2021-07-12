@@ -28,10 +28,12 @@ void engine::framebufferSizeCallback(GLFWwindow* window, int width, int height) 
     glViewport(0, 0, width, height);
 }
 
-void engine::processInput(GLFWwindow* inputWindow) {
-    for (const keybind& i : this->keybinds) {
-        if (glfwGetKey(inputWindow, i.getButton()) == i.getAction()) {
-            i.fire(this);
+void engine::processKeybinds() {
+    for (keybind& key : this->keybinds) {
+        if (glfwGetKey(this->window, key.getButton()) == key.getAction()) {
+            key.run(this);
+        } else if (key.wasJustFired()) {
+            key.unstick();
         }
     }
 }
@@ -97,7 +99,9 @@ int vertexAttributes, textureUnits;
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(1);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GLFW_TRUE);
 
     for (auto const& [name, object] : this->glObjects) {
         object.get()->compile();
@@ -111,7 +115,7 @@ void engine::run() {
 
     while (!glfwWindowShouldClose(this->window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        this->processInput(this->window);
+        this->processKeybinds();
 
         this->render();
 

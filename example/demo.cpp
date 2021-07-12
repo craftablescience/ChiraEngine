@@ -18,14 +18,14 @@ int main() {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     });
     bool capturedMouse = true;
-    keybind tab(GLFW_KEY_TAB, , [&capturedMouse](class engine* e) {
+    keybind tab(GLFW_KEY_TAB, GLFW_PRESS, [&capturedMouse](class engine* e) {
         if (capturedMouse) {
             e->freeMouse();
         } else {
             e->captureMouse();
         }
         capturedMouse = !capturedMouse;
-    });
+    }, false);
     engine.addKeybind(esc);
     engine.addKeybind(noWire);
     engine.addKeybind(wire);
