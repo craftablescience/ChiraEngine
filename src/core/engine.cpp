@@ -276,7 +276,9 @@ abstractCamera* engine::getCamera() const {
 }
 
 void engine::setCamera(abstractCamera* newCamera) {
+    if (this->camera) this->camera->setCurrent(false);
     this->camera = newCamera;
+    this->camera->setCurrent(true);
 }
 
 void engine::callRegisteredFunctions(const std::vector<std::function<void(engine*)>> *list) {
