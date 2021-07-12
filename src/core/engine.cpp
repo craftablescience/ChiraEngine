@@ -6,6 +6,10 @@
 #include <windows.h>
 #endif
 
+#include "imgui.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
+
 static void debugPrint(const std::string &string) {
 #if DEBUG
     std::cout << string << std::endl;
@@ -171,6 +175,15 @@ int vertexAttributes, textureUnits;
     // don't do this at the start if you make a UI at some point
     this->captureMouse();
 
+#if DEBUG
+    IMGUI_CHECKVERSION();
+#endif
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void) io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(this->window, true);
+    ImGui_ImplOpenGL3_Init("#version 330 core");
+
     for (auto const& [name, object] : this->glObjects) {
         object.get()->compile();
     }
@@ -203,6 +216,18 @@ void engine::render() {
         }
     }
     callRegisteredFunctions(&(this->renderFunctions));
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+#if DEBUG
+    // todo: make console a la source
+    ImGui::ShowDemoWindow();
+#endif
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void engine::stop() {
@@ -211,6 +236,11 @@ void engine::stop() {
         object->discard();
     }
     callRegisteredFunctions(&(this->stopFunctions));
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
     glfwDestroyWindow(this->window);
     glfwTerminate();
     exit(EXIT_SUCCESS);

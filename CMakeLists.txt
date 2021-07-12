@@ -29,6 +29,23 @@ add_subdirectory(third_party/json)
 # STB
 include(third_party/stb/CMakeLists.txt)
 
+# IMGUI
+list(APPEND ENGINE_SOURCES
+        third_party/imgui/imconfig.h
+        third_party/imgui/imgui.cpp
+        third_party/imgui/imgui_demo.cpp
+        third_party/imgui/imgui_draw.cpp
+        third_party/imgui/imgui_internal.h
+        third_party/imgui/imgui_tables.cpp
+        third_party/imgui/imgui_widgets.cpp
+        third_party/imgui/imstb_rectpack.h
+        third_party/imgui/imstb_textedit.h
+        third_party/imgui/imstb_truetype.h
+        third_party/imgui/backends/imgui_impl_glfw.cpp
+        third_party/imgui/backends/imgui_impl_glfw.h
+        third_party/imgui/backends/imgui_impl_opengl3.cpp
+        third_party/imgui/backends/imgui_impl_opengl3.h)
+
 # BASICGAMEENGINE
 include(src/core/CMakeLists.txt)
 include(src/input/CMakeLists.txt)
@@ -40,6 +57,7 @@ add_executable(${PROJECT_NAME} example/demo.cpp ${ENGINE_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE third_party/glad/include)
 target_include_directories(${PROJECT_NAME} PRIVATE ${OPENGL_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PRIVATE third_party/stb)
+target_include_directories(${PROJECT_NAME} PRIVATE third_party/imgui)
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glfw nlohmann_json::nlohmann_json glm::glm)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
