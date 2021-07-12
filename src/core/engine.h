@@ -60,7 +60,7 @@ private:
     abstractCamera* camera;
     std::string resourcesDirectoryPath;
     bool started = false;
-    double lastTime, currentTime;
+    double lastTime, currentTime, lastMouseX, lastMouseY;
     // NOTE: PNGs must have a bit depth of 8 or less* (less not tested)
     void setIcon(const std::string& iconPath);
     static void errorCallback(int error, const char* description);

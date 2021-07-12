@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
+#include "../utility/axis.h"
 #include "../core/engine.h"
 #include "abstractCamera.h"
 
@@ -45,25 +46,7 @@ public:
         this->pitch = pitch;
         this->projection = glm::perspective(glm::radians(cam_ZOOM), screenWidth / screenHeight, 0.1f, 1024.0f);
         this->updateCameraVectors();
-
-        keybind f(GLFW_KEY_W, GLFW_REPEAT,
-                  [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, 0.0f, -1.0f), e->getDeltaTime());});
-        keybind b(GLFW_KEY_S, GLFW_REPEAT,
-                  [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, 0.0f, 1.0f), e->getDeltaTime());});
-        keybind l(GLFW_KEY_A, GLFW_REPEAT,
-                  [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(-1.0f, 0.0f, 0.0f), e->getDeltaTime());});
-        keybind r(GLFW_KEY_D, GLFW_REPEAT,
-                  [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(1.0f, 0.0f, 0.0f), e->getDeltaTime());});
-        keybind u(GLFW_KEY_SPACE, GLFW_REPEAT,
-                  [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, 1.0f, 0.0f), e->getDeltaTime());});
-        keybind d(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT,
-                  [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, -1.0f, 0.0f), e->getDeltaTime());});
-        engine->addKeybind(f);
-        engine->addKeybind(b);
-        engine->addKeybind(l);
-        engine->addKeybind(r);
-        engine->addKeybind(u);
-        engine->addKeybind(d);
+        freecam::setupKeybinds(engine);
     }
 
     explicit freecam(engine* engine,
@@ -87,38 +70,43 @@ public:
         this->pitch = pitch;
         this->projection = glm::perspective(glm::radians(cam_ZOOM), screenWidth / screenHeight, 0.1f, 1024.0f);
         this->updateCameraVectors();
-
-        keybind f(GLFW_KEY_W, GLFW_REPEAT,
-                  [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, 0.0f, -1.0f), e->getDeltaTime());});
-        keybind b(GLFW_KEY_S, GLFW_REPEAT,
-                  [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, 0.0f, 1.0f), e->getDeltaTime());});
-        keybind l(GLFW_KEY_A, GLFW_REPEAT,
-                  [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(-1.0f, 0.0f, 0.0f), e->getDeltaTime());});
-        keybind r(GLFW_KEY_D, GLFW_REPEAT,
-                  [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(1.0f, 0.0f, 0.0f), e->getDeltaTime());});
-        keybind u(GLFW_KEY_SPACE, GLFW_REPEAT,
-                  [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, 1.0f, 0.0f), e->getDeltaTime());});
-        keybind d(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT,
-                  [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, -1.0f, 0.0f), e->getDeltaTime());});
-        engine->addKeybind(f);
-        engine->addKeybind(b);
-        engine->addKeybind(l);
-        engine->addKeybind(r);
-        engine->addKeybind(u);
-        engine->addKeybind(d);
+        freecam::setupKeybinds(engine);
     }
 
     void translate(glm::vec3 offset, double delta) override {
         this->position += offset * (float)(movementSpeed * delta);
     }
 
+    void translateLocal(signedAxis axis, double delta) {
+        switch (axis) {
+            case XP:
+                this->position -= glm::normalize(glm::cross(this->front, this->up)) * this->movementSpeed * (float) delta;
+                break;
+            case XN:
+                this->position += glm::normalize(glm::cross(this->front, this->up)) * this->movementSpeed * (float) delta;
+                break;
+            case YP:
+                this->position += this->movementSpeed * this->up * (float) delta;
+                break;
+            case YN:
+                this->position -= this->movementSpeed * this->up * (float) delta;
+                break;
+            case ZP:
+                this->position += this->movementSpeed * this->front * (float) delta;
+                break;
+            case ZN:
+                this->position -= this->movementSpeed * this->front * (float) delta;
+                break;
+        }
+    }
+
     void rotate(float rotation, axis rotationAxis, double delta) override {
         switch (rotationAxis) {
             case axis::X:
-                yaw += rotation;
+                yaw += rotation * (float) delta;
                 break;
             case axis::Y:
-                pitch += rotation;
+                pitch += rotation * (float) delta;
                 break;
             case axis::Z:
             default:
@@ -145,25 +133,10 @@ public:
     }
 
     glm::mat4* getViewMatrix() override {
+        this->updateCameraVectors();
         this->view = glm::lookAt(position, position + front, up);
         return abstractCamera::getViewMatrix();
     }
-    /*
-    void processMouseMovement(float xOffset, float yOffset, GLboolean constrainPitch = true) {
-        xOffset *= mouseSensitivity;
-        yOffset *= mouseSensitivity;
-
-        yaw   += xOffset;
-        pitch += yOffset;
-
-        if (constrainPitch) {
-            if (pitch > 89.5f)
-                pitch = 89.5f;
-            if (pitch < -89.5f)
-                pitch = -89.5f;
-        }
-    }
-    */
 private:
     void updateCameraVectors() {
         glm::vec3 newFront;
@@ -174,6 +147,46 @@ private:
         // also, re-calculate the right and up vector
         right = glm::normalize(glm::cross(front, worldUp));
         up    = glm::normalize(glm::cross(right, front));
+    }
+
+    static void setupKeybinds(engine* engine) {
+        keybind f(GLFW_KEY_W, GLFW_REPEAT,[](class engine* e) -> void {
+            dynamic_cast<freecam*>(e->getCamera())->translateLocal(ZP, e->getDeltaTime());
+        });
+        keybind b(GLFW_KEY_S, GLFW_REPEAT,[](class engine* e) -> void {
+            dynamic_cast<freecam*>(e->getCamera())->translateLocal(ZN, e->getDeltaTime());
+        });
+        keybind l(GLFW_KEY_A, GLFW_REPEAT,[](class engine* e) -> void {
+            dynamic_cast<freecam*>(e->getCamera())->translateLocal(XP, e->getDeltaTime());
+        });
+        keybind r(GLFW_KEY_D, GLFW_REPEAT,[](class engine* e) -> void {
+            dynamic_cast<freecam*>(e->getCamera())->translateLocal(XN, e->getDeltaTime());
+        });
+        keybind u(GLFW_KEY_SPACE, GLFW_REPEAT,[](class engine* e) -> void {
+            dynamic_cast<freecam*>(e->getCamera())->translateLocal(YP, e->getDeltaTime());
+        });
+        keybind d(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT,[](class engine* e) -> void {
+            dynamic_cast<freecam*>(e->getCamera())->translateLocal(YN, e->getDeltaTime());
+        });
+        engine->addKeybind(f);
+        engine->addKeybind(b);
+        engine->addKeybind(l);
+        engine->addKeybind(r);
+        engine->addKeybind(u);
+        engine->addKeybind(d);
+        mousebind look(MOVE, [](class engine* e, double xOffset, double yOffset){
+            xOffset *= cam_SENSITIVITY;
+            yOffset *= cam_SENSITIVITY;
+            auto* cam = dynamic_cast<freecam*>(e->getCamera());
+            cam->yaw += (float) xOffset;
+            // todo: make invert y-axis a setting
+            cam->pitch -= (float) yOffset;
+            if (cam->pitch > 89.5f)
+                cam->pitch = 89.5f;
+            if (cam->pitch < -89.5f)
+                cam->pitch = -89.5f;
+        });
+        engine->addMousebind(look);
     }
 };
 

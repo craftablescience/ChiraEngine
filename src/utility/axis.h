@@ -8,5 +8,13 @@ enum axis {
     Z
 };
 
+enum signedAxis {
+    XP,
+    XN,
+    YP,
+    YN,
+    ZP,
+    ZN
+};
 
 #endif //BASICGAMEENGINE_AXIS_H

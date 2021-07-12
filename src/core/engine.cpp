@@ -17,6 +17,8 @@ engine::engine() {
     this->resourcesDirectoryPath = "resources/basicgameengine/";
     this->lastTime = 0;
     this->currentTime = 0;
+    this->lastMouseX = -1;
+    this->lastMouseY = -1;
     this->camera = nullptr;
 }
 
@@ -65,18 +67,23 @@ void engine::mouseButtonRepeatingCallback() {
 
 void engine::mouseMovementCallback(GLFWwindow* window, double xPos, double yPos) {
     auto* e = static_cast<engine*>(glfwGetWindowUserPointer(window));
+
+    if (e->lastMouseX == -1) e->lastMouseX = xPos;
+    if (e->lastMouseY == -1) e->lastMouseY = yPos;
+
     int width, height;
     glfwGetWindowSize(e->window, &width, &height);
-    double lastX = (double) width  / 2;
-    double lastY = (double) height / 2;
-    double xOffset = xPos - lastX;
-    double yOffset = yPos - lastY;
+    double xOffset = xPos - e->lastMouseX;
+    double yOffset = yPos - e->lastMouseY;
 
     for (mousebind& bind : *e->getMousebinds()) {
         if (bind.getType() == MOVE) {
             bind.run(e, xOffset, yOffset);
         }
     }
+
+    e->lastMouseX = xPos;
+    e->lastMouseY = yPos;
 }
 
 void engine::mouseScrollCallback(GLFWwindow* window, double xPos, double yPos) {
@@ -161,6 +168,8 @@ int vertexAttributes, textureUnits;
     glfwSetMouseButtonCallback(window, mouseButtonCallback);
     glfwSetCursorPosCallback(this->window, mouseMovementCallback);
     glfwSetScrollCallback(this->window, mouseScrollCallback);
+    // don't do this at the start if you make a UI at some point
+    this->captureMouse();
 
     for (auto const& [name, object] : this->glObjects) {
         object.get()->compile();
