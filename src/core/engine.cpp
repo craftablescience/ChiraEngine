@@ -31,7 +31,7 @@ void engine::framebufferSizeCallback(GLFWwindow* window, int width, int height) 
 void engine::keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     auto* e = static_cast<engine*>(glfwGetWindowUserPointer(window));
     if (action == GLFW_REPEAT) return;
-    for (keybind& k : e->keybinds) {
+    for (keybind& k : *e->getKeybinds()) {
         if (k.getButton() == key && k.getAction() == action) {
             k.run(e);
         }
@@ -42,6 +42,47 @@ void engine::keyboardRepeatingCallback() {
     for (keybind& k : this->keybinds) {
         if (glfwGetKey(this->window, k.getButton()) && k.getAction() == GLFW_REPEAT) {
             k.run(this);
+        }
+    }
+}
+
+void engine::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+    auto* e = static_cast<engine*>(glfwGetWindowUserPointer(window));
+    for (keybind& k : *e->getKeybinds()) {
+        if (k.getButton() == button && k.getAction() == action) {
+            k.run(e);
+        }
+    }
+}
+
+void engine::mouseButtonRepeatingCallback() {
+    for (keybind& k : this->keybinds) {
+        if (glfwGetMouseButton(this->window, k.getButton()) && k.getAction() == GLFW_REPEAT) {
+            k.run(this);
+        }
+    }
+}
+
+void engine::mouseMovementCallback(GLFWwindow* window, double xPos, double yPos) {
+    auto* e = static_cast<engine*>(glfwGetWindowUserPointer(window));
+    int width, height;
+    glfwGetWindowSize(e->window, &width, &height);
+    double lastX = (double) width  / 2;
+    double lastY = (double) height / 2;
+    double xOffset = xPos - lastX;
+    double yOffset = yPos - lastY;
+
+    for (mousebind& bind : *e->getMousebinds()) {
+        if (bind.getType() == mouseActions.MOVE) {
+            bind.run(e, xOffset, yOffset);
+        }
+    }
+}
+
+void engine::mouseScrollCallback(GLFWwindow* window, double xPos, double yPos) {
+    for (mousebind& bind : *e->getMousebinds()) {
+        if (bind.getType() == mouseActions.SCROLL) {
+            bind.run(e, xPos, yPos);
         }
     }
 }
@@ -109,7 +150,16 @@ int vertexAttributes, textureUnits;
     glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(1);
 
+    glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GLFW_TRUE);
+    glfwSetInputMode(this->window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
+    if (glfwRawMouseMotionSupported()) {
+        // todo: this should be a setting
+        glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+    }
     glfwSetKeyCallback(this->window, keyboardCallback);
+    glfwSetMouseButtonCallback(window, mouseButtonCallback);
+    glfwSetCursorPosCallback(this->window, mouseMovementCallback);
+    glfwSetScrollCallback(this->window, mouseScrollCallback);
 
     for (auto const& [name, object] : this->glObjects) {
         object.get()->compile();
@@ -123,10 +173,11 @@ void engine::run() {
 
     while (!glfwWindowShouldClose(this->window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        this->keyboardRepeatingCallback();
         this->render();
         glfwSwapBuffers(this->window);
         glfwPollEvents();
+        this->keyboardRepeatingCallback();
+        this->mouseButtonRepeatingCallback();
     }
 
     this->stop();
@@ -157,6 +208,18 @@ void engine::stop() {
 
 void engine::addKeybind(const keybind& keybind) {
     this->keybinds.push_back(keybind);
+}
+
+std::vector<keybind>* engine::getKeybinds() {
+    return &(this->keybinds);
+}
+
+void engine::addMousebind(const mousebind& mousebind) {
+    this->mousebinds.push_back(mousebind);
+}
+
+std::vector<mousebind>* engine::getMousebinds() {
+    return &(this->mousebinds);
 }
 
 void engine::addShader(const std::string& name, shader* s) {

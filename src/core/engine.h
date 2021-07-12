@@ -13,9 +13,11 @@
 #include "../render/texture.h"
 #include "../render/mesh.h"
 #include "../input/keybind.h"
+#include "../input/mousebind.h"
 #include "../render/abstractCamera.h"
 
 class keybind;
+class mouseBind;
 
 class engine {
 public:
@@ -25,6 +27,9 @@ public:
     void render();
     void stop();
     void addKeybind(const keybind& keybind);
+    std::vector<keybind>* getKeybinds();
+    void addMousebind(const mousebind& mousebind);
+    std::vector<mousebind>* getMousebinds();
     void addShader(const std::string& name, shader* s);
     shader* getShader(const std::string& name);
     void addTexture(const std::string& name, texture* t);
@@ -50,6 +55,7 @@ private:
     std::vector<std::function<void(engine*)>> renderFunctions;
     std::vector<std::function<void(engine*)>> stopFunctions;
     std::vector<keybind> keybinds;
+    std::vector<mousebind> mousebinds;
     std::map<std::string, std::unique_ptr<glCompilable>> glObjects;
     abstractCamera* camera;
     std::string resourcesDirectoryPath;
@@ -61,6 +67,10 @@ private:
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
     static void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     void keyboardRepeatingCallback();
+    static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+    void mouseButtonRepeatingCallback();
+    static void mouseMovementCallback(GLFWwindow* window, double xPos, double yPos);
+    static void mouseScrollCallback(GLFWwindow* window, double xPos, double yPos);
 };
 
 
