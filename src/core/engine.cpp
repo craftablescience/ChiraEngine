@@ -1,8 +1,6 @@
 #include "engine.h"
 
 #include <iostream>
-#include "../loader/image.h"
-
 #include <cassert>
 #if __has_include(<windows.h>)
 #include <windows.h>
@@ -15,11 +13,15 @@ static void debugPrint(const std::string &string) {
 }
 
 engine::engine() {
+    // todo: make a resources loading system
     this->resourcesDirectoryPath = "resources/basicgameengine/";
+    this->lastTime = 0;
+    this->currentTime = 0;
+    this->camera = nullptr;
 }
 
 void engine::errorCallback(int error, const char* description) {
-    std::fprintf(stderr, "Error %d: %s\n", error, description);
+    std::fprintf(stderr, "GLFW error %d: %s\n", error, description);
 }
 
 void engine::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
@@ -50,6 +52,7 @@ void engine::init(const std::string& iconPath) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    // todo: load window size, fullscreen from a settings module
     this->window = glfwCreateWindow(1280, 720, "Basic Game Engine", nullptr, nullptr);
     if (!this->window) {
         std::cerr << "Error: Window creation failed" << std::endl;
@@ -81,6 +84,7 @@ void engine::init(const std::string& iconPath) {
 int vertexAttributes, textureUnits;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &vertexAttributes);
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
+    // todo: make logger module
     std::cout << "OpenGL: Maximum number of vertex attributes is " << vertexAttributes << std::endl;
     std::cout << "OpenGL: Maximum number of texture units is " << textureUnits << std::endl;
 #endif
@@ -89,9 +93,11 @@ int vertexAttributes, textureUnits;
     glfwGetFramebufferSize(this->window, &width, &height);
     glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(this->window, this->framebufferSizeCallback);
+    // todo: add set/get for clear color
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(1);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     for (auto const& [name, object] : this->glObjects) {
         object.get()->compile();
@@ -100,6 +106,9 @@ int vertexAttributes, textureUnits;
 }
 
 void engine::run() {
+    this->lastTime = this->currentTime;
+    this->currentTime = glfwGetTime();
+
     while (!glfwWindowShouldClose(this->window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this->processInput(this->window);
@@ -114,6 +123,14 @@ void engine::run() {
 }
 
 void engine::render() {
+    this->lastTime = this->currentTime;
+    this->currentTime = glfwGetTime();
+    for (auto const& [name, object] : this->glObjects) {
+        if (name.rfind("shader", 0) == 0) {
+            dynamic_cast<shader*>(object.get())->setUniform("p", this->getCamera()->getProjectionMatrix());
+            dynamic_cast<shader*>(object.get())->setUniform("v", this->getCamera()->getViewMatrix());
+        }
+    }
     callRegisteredFunctions(&(this->renderFunctions));
 }
 
@@ -168,6 +185,39 @@ void engine::addStopFunction(const std::function<void(engine*)>& stop) {
     this->stopFunctions.push_back(stop);
 }
 
+abstractCamera* engine::getCamera() const {
+    if (!this->camera) {
+        throw std::runtime_error("Error: must set camera in engine::setCamera");
+    }
+    return this->camera;
+}
+
+void engine::setCamera(abstractCamera* newCamera) {
+    this->camera = newCamera;
+}
+
+void engine::callRegisteredFunctions(const std::vector<std::function<void(engine*)>> *list) {
+    for (const std::function<void(engine*)>& func : *list) {
+        func(this);
+    }
+}
+
+bool engine::isStarted() const {
+    return this->started;
+}
+
+double engine::getDeltaTime() const {
+    return this->currentTime - this->lastTime;
+}
+
+std::string engine::getResourcesDirectory() const {
+    return this->resourcesDirectoryPath;
+}
+
+void engine::setResourcesDirectory(const std::string& resourcesDirectory) {
+    this->resourcesDirectoryPath = resourcesDirectory;
+}
+
 void engine::setIcon(const std::string& iconPath) {
 #if DEBUG
     assert(this->started);
@@ -184,20 +234,10 @@ void engine::setIcon(const std::string& iconPath) {
     glfwSetWindowIcon(this->window, 1, images);
 }
 
-void engine::callRegisteredFunctions(const std::vector<std::function<void(engine*)>> *list) {
-    for (const std::function<void(engine*)>& func : *list) {
-        func(this);
-    }
+void engine::captureMouse() const {
+    glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
-bool engine::isStarted() const {
-    return this->started;
-}
-
-std::string engine::getResourcesDirectory() const {
-    return this->resourcesDirectoryPath;
-}
-
-void engine::setResourcesDirectory(const std::string& resourcesDirectory) {
-    this->resourcesDirectoryPath = resourcesDirectory;
+void engine::freeMouse() const {
+    glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }

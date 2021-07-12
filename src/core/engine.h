@@ -13,6 +13,7 @@
 #include "../render/texture.h"
 #include "../render/mesh.h"
 #include "../input/keybind.h"
+#include "../render/abstractCamera.h"
 
 class keybind;
 
@@ -33,12 +34,16 @@ public:
     void addInitFunction(const std::function<void(engine*)>& init);
     void addRenderFunction(const std::function<void(engine*)>& render);
     void addStopFunction(const std::function<void(engine*)>& stop);
-    // NOTE: PNGs must have a bit depth of 8 or less* (less not tested)
-    void setIcon(const std::string& iconPath);
+    abstractCamera* getCamera() const;
+    void setCamera(abstractCamera* newCamera);
     void callRegisteredFunctions(const std::vector<std::function<void(engine*)>>* list);
     [[nodiscard]] bool isStarted() const;
+    // NOTE: only guaranteed to work after run() in a render method
+    double getDeltaTime() const;
     std::string getResourcesDirectory() const;
     void setResourcesDirectory(const std::string& resourcesDirectory);
+    void captureMouse() const;
+    void freeMouse() const;
 private:
     GLFWwindow* window = nullptr;
     std::vector<std::function<void(engine*)>> initFunctions;
@@ -46,9 +51,13 @@ private:
     std::vector<std::function<void(engine*)>> stopFunctions;
     std::vector<keybind> keybinds;
     std::map<std::string, std::unique_ptr<glCompilable>> glObjects;
+    abstractCamera* camera;
     std::string resourcesDirectoryPath;
     bool started = false;
+    double lastTime, currentTime;
     void processInput(GLFWwindow* inputWindow);
+    // NOTE: PNGs must have a bit depth of 8 or less* (less not tested)
+    void setIcon(const std::string& iconPath);
     static void errorCallback(int error, const char* description);
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 };
