@@ -17,7 +17,7 @@
 #include "../render/abstractCamera.h"
 
 class keybind;
-class mouseBind;
+class mousebind;
 
 class engine {
 public:

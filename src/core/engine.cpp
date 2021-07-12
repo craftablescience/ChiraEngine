@@ -57,7 +57,7 @@ void engine::mouseButtonCallback(GLFWwindow* window, int button, int action, int
 
 void engine::mouseButtonRepeatingCallback() {
     for (keybind& k : this->keybinds) {
-        if (glfwGetMouseButton(this->window, k.getButton()) && k.getAction() == GLFW_REPEAT) {
+        if (k.isMouse() && (glfwGetMouseButton(this->window, k.getButton()) && k.getAction() == GLFW_REPEAT)) {
             k.run(this);
         }
     }
@@ -73,15 +73,16 @@ void engine::mouseMovementCallback(GLFWwindow* window, double xPos, double yPos)
     double yOffset = yPos - lastY;
 
     for (mousebind& bind : *e->getMousebinds()) {
-        if (bind.getType() == mouseActions.MOVE) {
+        if (bind.getType() == MOVE) {
             bind.run(e, xOffset, yOffset);
         }
     }
 }
 
 void engine::mouseScrollCallback(GLFWwindow* window, double xPos, double yPos) {
+    auto* e = static_cast<engine*>(glfwGetWindowUserPointer(window));
     for (mousebind& bind : *e->getMousebinds()) {
-        if (bind.getType() == mouseActions.SCROLL) {
+        if (bind.getType() == SCROLL) {
             bind.run(e, xPos, yPos);
         }
     }
