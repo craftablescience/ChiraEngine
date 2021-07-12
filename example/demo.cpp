@@ -8,13 +8,13 @@
 int main() {
     engine engine;
 
-    keybind esc(GLFW_KEY_ESCAPE, GLFW_PRESS, [](class engine* e){
+    keybind esc(GLFW_KEY_ESCAPE, GLFW_PRESS, [](class engine* e) {
         e->stop();
     });
-    keybind noWire(GLFW_KEY_1, GLFW_PRESS, [](class engine* e){
+    keybind noWire(GLFW_KEY_1, GLFW_PRESS, [](class engine* e) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     });
-    keybind wire(GLFW_KEY_2, GLFW_PRESS, [](class engine* e){
+    keybind wire(GLFW_KEY_2, GLFW_PRESS, [](class engine* e) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     });
     bool capturedMouse = true;
@@ -46,7 +46,7 @@ int main() {
     freecam player{&engine, 1280, 720, glm::vec3(0.0f, 0.0f, 0.0f)};
     engine.setCamera(&player);
 
-    engine.addInitFunction([](class engine* e){
+    engine.addInitFunction([](class engine* e) {
         e->getShader("triangle")->use();
         e->getShader("triangle")->setUniform("ourTexture", 0);
 #if DEBUG
@@ -54,7 +54,7 @@ int main() {
 #endif
     });
 
-    engine.addRenderFunction([](class engine* e){
+    engine.addRenderFunction([](class engine* e) {
         e->getTexture("triangle")->use();
         *e->getMesh("triangle")->getModel() = glm::rotate(*e->getMesh("triangle")->getModel(), (float)(0.5f * e->getDeltaTime()), glm::vec3(1.0f, 0.0f, 0.0f));
         e->getMesh("triangle")->render(e->getShader("triangle"));

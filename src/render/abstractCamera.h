@@ -17,10 +17,17 @@ public:
     virtual glm::mat4* getViewMatrix() {
         return &(this->view);
     }
+    [[nodiscard]] bool isCurrent() const {
+        return this->current;
+    }
+    void setCurrent(bool newCurrent) {
+        this->current = newCurrent;
+    }
 protected:
     glm::mat4 projection;
     glm::mat4 view;
     glm::vec3 position;
+    bool current;
 };
 
 

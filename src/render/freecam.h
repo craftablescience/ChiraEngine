@@ -150,23 +150,29 @@ private:
     }
 
     static void setupKeybinds(engine* engine) {
-        keybind f(GLFW_KEY_W, GLFW_REPEAT,[](class engine* e) -> void {
-            dynamic_cast<freecam*>(e->getCamera())->translateLocal(ZP, e->getDeltaTime());
+        keybind f(GLFW_KEY_W, GLFW_REPEAT,[](class engine* e) {
+            if (dynamic_cast<freecam*>(e->getCamera())->isCurrent())
+                dynamic_cast<freecam*>(e->getCamera())->translateLocal(ZP, e->getDeltaTime());
         });
-        keybind b(GLFW_KEY_S, GLFW_REPEAT,[](class engine* e) -> void {
-            dynamic_cast<freecam*>(e->getCamera())->translateLocal(ZN, e->getDeltaTime());
+        keybind b(GLFW_KEY_S, GLFW_REPEAT,[](class engine* e) {
+            if (dynamic_cast<freecam*>(e->getCamera())->isCurrent())
+                dynamic_cast<freecam*>(e->getCamera())->translateLocal(ZN, e->getDeltaTime());
         });
-        keybind l(GLFW_KEY_A, GLFW_REPEAT,[](class engine* e) -> void {
-            dynamic_cast<freecam*>(e->getCamera())->translateLocal(XP, e->getDeltaTime());
+        keybind l(GLFW_KEY_A, GLFW_REPEAT,[](class engine* e) {
+            if (dynamic_cast<freecam*>(e->getCamera())->isCurrent())
+                dynamic_cast<freecam*>(e->getCamera())->translateLocal(XP, e->getDeltaTime());
         });
-        keybind r(GLFW_KEY_D, GLFW_REPEAT,[](class engine* e) -> void {
-            dynamic_cast<freecam*>(e->getCamera())->translateLocal(XN, e->getDeltaTime());
+        keybind r(GLFW_KEY_D, GLFW_REPEAT,[](class engine* e) {
+            if (dynamic_cast<freecam*>(e->getCamera())->isCurrent())
+                dynamic_cast<freecam*>(e->getCamera())->translateLocal(XN, e->getDeltaTime());
         });
-        keybind u(GLFW_KEY_SPACE, GLFW_REPEAT,[](class engine* e) -> void {
-            dynamic_cast<freecam*>(e->getCamera())->translateLocal(YP, e->getDeltaTime());
+        keybind u(GLFW_KEY_SPACE, GLFW_REPEAT,[](class engine* e) {
+            if (dynamic_cast<freecam*>(e->getCamera())->isCurrent())
+                dynamic_cast<freecam*>(e->getCamera())->translateLocal(YP, e->getDeltaTime());
         });
-        keybind d(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT,[](class engine* e) -> void {
-            dynamic_cast<freecam*>(e->getCamera())->translateLocal(YN, e->getDeltaTime());
+        keybind d(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT,[](class engine* e) {
+            if (dynamic_cast<freecam*>(e->getCamera())->isCurrent())
+                dynamic_cast<freecam*>(e->getCamera())->translateLocal(YN, e->getDeltaTime());
         });
         engine->addKeybind(f);
         engine->addKeybind(b);
@@ -174,17 +180,19 @@ private:
         engine->addKeybind(r);
         engine->addKeybind(u);
         engine->addKeybind(d);
-        mousebind look(MOVE, [](class engine* e, double xOffset, double yOffset){
-            xOffset *= cam_SENSITIVITY;
-            yOffset *= cam_SENSITIVITY;
+        mousebind look(MOVE, [](class engine* e, double xOffset, double yOffset) {
             auto* cam = dynamic_cast<freecam*>(e->getCamera());
-            cam->yaw += (float) xOffset;
-            // todo: make invert y-axis a setting
-            cam->pitch -= (float) yOffset;
-            if (cam->pitch > 89.5f)
-                cam->pitch = 89.5f;
-            if (cam->pitch < -89.5f)
-                cam->pitch = -89.5f;
+            if (cam->isCurrent()) {
+                xOffset *= cam_SENSITIVITY;
+                yOffset *= cam_SENSITIVITY;
+                cam->yaw += (float) xOffset;
+                // todo: make invert y-axis a setting
+                cam->pitch -= (float) yOffset;
+                if (cam->pitch > 89.5f)
+                    cam->pitch = 89.5f;
+                if (cam->pitch < -89.5f)
+                    cam->pitch = -89.5f;
+            }
         });
         engine->addMousebind(look);
     }
