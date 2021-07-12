@@ -47,6 +47,7 @@ list(APPEND ENGINE_SOURCES
         third_party/imgui/backends/imgui_impl_opengl3.h)
 
 # BASICGAMEENGINE
+include(src/config/CMakeLists.txt)
 include(src/core/CMakeLists.txt)
 include(src/input/CMakeLists.txt)
 include(src/loader/CMakeLists.txt)
