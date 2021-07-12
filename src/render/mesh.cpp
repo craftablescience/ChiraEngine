@@ -55,5 +55,5 @@ void mesh::render(shader* shader) {
     shader->setUniform("m", &(this->model));
     glDepthFunc(this->depthFunc);
     glBindVertexArray(this->vaoHandle);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
 }
