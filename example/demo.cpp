@@ -17,19 +17,9 @@ int main() {
     keybind wire(GLFW_KEY_2, GLFW_PRESS, [](class engine* e) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     });
-    bool capturedMouse = true;
-    keybind tab(GLFW_KEY_TAB, GLFW_PRESS, [&capturedMouse](class engine* e) {
-        if (capturedMouse) {
-            e->freeMouse();
-        } else {
-            e->captureMouse();
-        }
-        capturedMouse = !capturedMouse;
-    });
     engine.addKeybind(esc);
     engine.addKeybind(noWire);
     engine.addKeybind(wire);
-    engine.addKeybind(tab);
 
     shader triangleShader(engine.getResourcesDirectory() + "shaders/unlit.vsh",
                           engine.getResourcesDirectory() + "shaders/unlit.fsh");

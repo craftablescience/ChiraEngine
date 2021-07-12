@@ -20,14 +20,21 @@ public:
     [[nodiscard]] bool isCurrent() const {
         return this->current;
     }
-    void setCurrent(bool newCurrent) {
+    virtual void setCurrent(bool newCurrent) {
         this->current = newCurrent;
+    }
+    [[nodiscard]] bool isActive() const {
+        return this->active;
+    }
+    virtual void setActive(bool newActive) {
+        this->active = newActive;
     }
 protected:
     glm::mat4 projection;
     glm::mat4 view;
     glm::vec3 position;
     bool current;
+    bool active;
 };
 
 
