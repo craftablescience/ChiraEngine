@@ -55,11 +55,12 @@ private:
     std::string resourcesDirectoryPath;
     bool started = false;
     double lastTime, currentTime;
-    void processKeybinds();
     // NOTE: PNGs must have a bit depth of 8 or less* (less not tested)
     void setIcon(const std::string& iconPath);
     static void errorCallback(int error, const char* description);
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+    static void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    void keyboardRepeatingCallback();
 };
 
 

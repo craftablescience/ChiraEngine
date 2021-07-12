@@ -28,12 +28,20 @@ void engine::framebufferSizeCallback(GLFWwindow* window, int width, int height) 
     glViewport(0, 0, width, height);
 }
 
-void engine::processKeybinds() {
-    for (keybind& key : this->keybinds) {
-        if (glfwGetKey(this->window, key.getButton()) == key.getAction()) {
-            key.run(this);
-        } else if (key.wasJustFired()) {
-            key.unstick();
+void engine::keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    auto* e = static_cast<engine*>(glfwGetWindowUserPointer(window));
+    if (action == GLFW_REPEAT) return;
+    for (keybind& k : e->keybinds) {
+        if (k.getButton() == key && k.getAction() == action) {
+            k.run(e);
+        }
+    }
+}
+
+void engine::keyboardRepeatingCallback() {
+    for (keybind& k : this->keybinds) {
+        if (glfwGetKey(this->window, k.getButton()) && k.getAction() == GLFW_REPEAT) {
+            k.run(this);
         }
     }
 }
@@ -62,6 +70,7 @@ void engine::init(const std::string& iconPath) {
         exit(EXIT_FAILURE);
     }
     glfwMakeContextCurrent(this->window);
+    glfwSetWindowUserPointer(this->window, this);
 
     // todo: load icon from a settings module rather than an argument
     if (iconPath.empty()) {
@@ -100,8 +109,7 @@ int vertexAttributes, textureUnits;
     glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(1);
 
-    glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GLFW_TRUE);
+    glfwSetKeyCallback(this->window, keyboardCallback);
 
     for (auto const& [name, object] : this->glObjects) {
         object.get()->compile();
@@ -115,10 +123,8 @@ void engine::run() {
 
     while (!glfwWindowShouldClose(this->window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        this->processKeybinds();
-
+        this->keyboardRepeatingCallback();
         this->render();
-
         glfwSwapBuffers(this->window);
         glfwPollEvents();
     }

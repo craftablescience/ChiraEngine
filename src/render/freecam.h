@@ -46,17 +46,17 @@ public:
         this->projection = glm::perspective(glm::radians(cam_ZOOM), screenWidth / screenHeight, 0.1f, 1024.0f);
         this->updateCameraVectors();
 
-        keybind f(GLFW_KEY_W, GLFW_PRESS,
+        keybind f(GLFW_KEY_W, GLFW_REPEAT,
                   [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, 0.0f, -1.0f), e->getDeltaTime());});
-        keybind b(GLFW_KEY_S, GLFW_PRESS,
+        keybind b(GLFW_KEY_S, GLFW_REPEAT,
                   [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, 0.0f, 1.0f), e->getDeltaTime());});
-        keybind l(GLFW_KEY_A, GLFW_PRESS,
+        keybind l(GLFW_KEY_A, GLFW_REPEAT,
                   [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(-1.0f, 0.0f, 0.0f), e->getDeltaTime());});
-        keybind r(GLFW_KEY_D, GLFW_PRESS,
+        keybind r(GLFW_KEY_D, GLFW_REPEAT,
                   [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(1.0f, 0.0f, 0.0f), e->getDeltaTime());});
-        keybind u(GLFW_KEY_SPACE, GLFW_PRESS,
+        keybind u(GLFW_KEY_SPACE, GLFW_REPEAT,
                   [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, 1.0f, 0.0f), e->getDeltaTime());});
-        keybind d(GLFW_KEY_LEFT_SHIFT, GLFW_PRESS,
+        keybind d(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT,
                   [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, -1.0f, 0.0f), e->getDeltaTime());});
         engine->addKeybind(f);
         engine->addKeybind(b);
@@ -88,17 +88,17 @@ public:
         this->projection = glm::perspective(glm::radians(cam_ZOOM), screenWidth / screenHeight, 0.1f, 1024.0f);
         this->updateCameraVectors();
 
-        keybind f(GLFW_KEY_W, GLFW_PRESS,
+        keybind f(GLFW_KEY_W, GLFW_REPEAT,
                   [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, 0.0f, -1.0f), e->getDeltaTime());});
-        keybind b(GLFW_KEY_S, GLFW_PRESS,
+        keybind b(GLFW_KEY_S, GLFW_REPEAT,
                   [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, 0.0f, 1.0f), e->getDeltaTime());});
-        keybind l(GLFW_KEY_A, GLFW_PRESS,
+        keybind l(GLFW_KEY_A, GLFW_REPEAT,
                   [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(-1.0f, 0.0f, 0.0f), e->getDeltaTime());});
-        keybind r(GLFW_KEY_D, GLFW_PRESS,
+        keybind r(GLFW_KEY_D, GLFW_REPEAT,
                   [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(1.0f, 0.0f, 0.0f), e->getDeltaTime());});
-        keybind u(GLFW_KEY_SPACE, GLFW_PRESS,
+        keybind u(GLFW_KEY_SPACE, GLFW_REPEAT,
                   [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, 1.0f, 0.0f), e->getDeltaTime());});
-        keybind d(GLFW_KEY_LEFT_SHIFT, GLFW_PRESS,
+        keybind d(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT,
                   [](class engine* e) -> void {e->getCamera()->translate(glm::vec3(0.0f, -1.0f, 0.0f), e->getDeltaTime());});
         engine->addKeybind(f);
         engine->addKeybind(b);

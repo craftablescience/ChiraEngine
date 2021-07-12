@@ -25,7 +25,7 @@ int main() {
             e->captureMouse();
         }
         capturedMouse = !capturedMouse;
-    }, false);
+    });
     engine.addKeybind(esc);
     engine.addKeybind(noWire);
     engine.addKeybind(wire);
