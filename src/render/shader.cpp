@@ -4,7 +4,7 @@
 #include <iostream>
 
 shader::shader(const std::string& vertex, const std::string& fragment)
-    : glObject(), vert(GL_VERTEX_SHADER, vertex), frag(GL_FRAGMENT_SHADER, fragment) {}
+    : handleObject(), vert(GL_VERTEX_SHADER, vertex), frag(GL_FRAGMENT_SHADER, fragment) {}
 
 shader::~shader() {
     if (this->handle != -1) glDeleteProgram(this->handle);

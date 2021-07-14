@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-shaderFile::shaderFile(unsigned int type, const std::string& source, bool isFilePath) : glObject() {
+shaderFile::shaderFile(unsigned int type, const std::string& source, bool isFilePath) : handleObject() {
     this->type = type;
     if (!isFilePath) {
         this->source = source;

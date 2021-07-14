@@ -3,9 +3,9 @@
 
 
 #include "../loader/image.h"
-#include "../utility/glCompilable.h"
+#include "../utility/compilable.h"
 
-class texture : public glCompilable {
+class texture : public compilable {
 public:
     explicit texture(const std::string& file);
     virtual ~texture();

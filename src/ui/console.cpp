@@ -4,6 +4,9 @@
 #include "imgui.h"
 
 console::console() : InputBuf() {
+    // todo: this doesn't stop rendering when disabled
+    // todo: this needs to have a VGUI theme for nostalgia
+
     ClearLog();
     HistoryPos = -1;
 
@@ -145,11 +148,9 @@ void console::Render() {
     ImGui::Separator();
 
     // Command-line
-    ImGui::Text("Input:");
-    ImGui::SameLine();
     bool reclaim_focus = false;
     ImGuiInputTextFlags input_text_flags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory;
-    if (ImGui::InputText("", InputBuf, IM_ARRAYSIZE(InputBuf), input_text_flags, &TextEditCallbackStub, (void*)this)) {
+    if (ImGui::InputText(" | Input", InputBuf, IM_ARRAYSIZE(InputBuf), input_text_flags, &TextEditCallbackStub, (void*)this)) {
         char* s = InputBuf;
         Strtrim(s);
         if (s[0])
@@ -172,39 +173,33 @@ void console::ExecCommand(const char* command_line) {
     // Insert into history. First find match and delete it, so it can be pushed to the back.
     // This isn't trying to be smart or optimal
     HistoryPos = -1;
-    for (int i = History.Size - 1; i >= 0; i--)
-        if (Stricmp(History[i], command_line) == 0)
-        {
+    for (int i = History.Size - 1; i >= 0; i--) {
+        if (Stricmp(History[i], command_line) == 0) {
             free(History[i]);
             History.erase(History.begin() + i);
             break;
         }
+    }
     History.push_back(Strdup(command_line));
 
-        // Process command
-        if (Stricmp(command_line, "CLEAR") == 0)
-        {
-            ClearLog();
+    // Process command
+    if (Stricmp(command_line, "CLEAR") == 0) {
+        ClearLog();
+    } else if (Stricmp(command_line, "HELP") == 0) {
+        AddLog("Commands:");
+        for (int i = 0; i < Commands.Size; i++) {
+            AddLog("- %s", Commands[i]);
         }
-        else if (Stricmp(command_line, "HELP") == 0)
-        {
-            AddLog("Commands:");
-            for (int i = 0; i < Commands.Size; i++)
-                AddLog("- %s", Commands[i]);
+    } else if (Stricmp(command_line, "HISTORY") == 0) {
+        int first = History.Size - 10;
+        for (int i = first > 0 ? first : 0; i < History.Size; i++) {
+            AddLog("%3d: %s\n", i, History[i]);
         }
-        else if (Stricmp(command_line, "HISTORY") == 0)
-        {
-            int first = History.Size - 10;
-            for (int i = first > 0 ? first : 0; i < History.Size; i++)
-                AddLog("%3d: %s\n", i, History[i]);
-        }
-        else
-        {
-            AddLog("Unknown command: '%s'\n", command_line);
-        }
-
-        // On command input, we scroll to bottom even if AutoScroll==false
-        ScrollToBottom = true;
+    } else {
+        AddLog("Unknown command: '%s'\n", command_line);
+    }
+    // On command input, we scroll to bottom even if AutoScroll==false
+    ScrollToBottom = true;
 }
 
 void console::setEnabled(bool enabled) {

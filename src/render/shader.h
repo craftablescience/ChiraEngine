@@ -4,9 +4,9 @@
 
 #include "shaderFile.h"
 #include <glm/glm.hpp>
-#include "../utility/glObject.h"
+#include "../utility/handleObject.h"
 
-class shader : public glObject {
+class shader : public handleObject {
 public:
     shader(const std::string& vert, const std::string& frag);
     virtual ~shader();

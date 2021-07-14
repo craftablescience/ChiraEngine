@@ -4,10 +4,10 @@
 
 #include <vector>
 #include <string>
-#include "../utility/glRenderable.h"
+#include "../utility/renderable.h"
 #include "../loader/meshLoader.h"
 
-class mesh : public glRenderable {
+class mesh : public renderable {
 public:
     explicit mesh(meshLoader* loader, const std::string& filepath, int depthFunc = GL_LEQUAL);
     virtual ~mesh();

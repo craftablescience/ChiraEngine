@@ -181,7 +181,7 @@ void engine::init(const std::string& iconPath) {
     ImGui_ImplGlfw_InitForOpenGL(this->window, true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
 
-    for (auto const& [name, object] : this->glObjects) {
+    for (auto const& [name, object] : this->compilableObjects) {
         object.get()->compile();
     }
     callRegisteredFunctions(&(this->initFunctions));
@@ -210,7 +210,7 @@ void engine::run() {
 void engine::render() {
     this->lastTime = this->currentTime;
     this->currentTime = glfwGetTime();
-    for (auto const& [name, object] : this->glObjects) {
+    for (auto const& [name, object] : this->compilableObjects) {
         if (name.rfind("shader", 0) == 0) {
             dynamic_cast<shader*>(object.get())->setUniform("p", this->getCamera()->getProjectionMatrix());
             dynamic_cast<shader*>(object.get())->setUniform("v", this->getCamera()->getViewMatrix());
@@ -233,7 +233,7 @@ void engine::render() {
 
 void engine::stop() {
     this->logInfoImportant("BASICGAMEENGINE", "Gracefully exiting...");
-    for (auto const& [name, object] : this->glObjects) {
+    for (auto const& [name, object] : this->compilableObjects) {
         object->discard();
     }
     callRegisteredFunctions(&(this->stopFunctions));
@@ -264,27 +264,27 @@ std::vector<mousebind>* engine::getMousebinds() {
 }
 
 void engine::addShader(const std::string& name, shader* s) {
-    this->glObjects.insert(std::make_pair("shaders/" + name, s));
+    this->compilableObjects.insert(std::make_pair("shaders/" + name, s));
 }
 
 shader* engine::getShader(const std::string& name) {
-    return (shader*) this->glObjects.at("shaders/" + name).get();
+    return (shader*) this->compilableObjects.at("shaders/" + name).get();
 }
 
 void engine::addTexture(const std::string& name, texture* t) {
-    this->glObjects.insert(std::make_pair("textures/" + name, t));
+    this->compilableObjects.insert(std::make_pair("textures/" + name, t));
 }
 
 texture* engine::getTexture(const std::string& name) {
-    return (texture*) this->glObjects.at("textures/" + name).get();
+    return (texture*) this->compilableObjects.at("textures/" + name).get();
 }
 
 void engine::addMesh(const std::string& name, mesh* m) {
-    this->glObjects.insert(std::make_pair("meshes/" + name, m));
+    this->compilableObjects.insert(std::make_pair("meshes/" + name, m));
 }
 
 mesh* engine::getMesh(const std::string& name) {
-    return (mesh*) this->glObjects.at("meshes/" + name).get();
+    return (mesh*) this->compilableObjects.at("meshes/" + name).get();
 }
 
 void engine::addInitFunction(const std::function<void(engine*)>& init) {

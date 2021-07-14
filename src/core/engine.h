@@ -62,7 +62,7 @@ private:
     std::vector<std::function<void(engine*,const std::string&,const std::string&)>> loggerFunctions;
     std::vector<keybind> keybinds;
     std::vector<mousebind> mousebinds;
-    std::map<std::string, std::unique_ptr<glCompilable>> glObjects;
+    std::map<std::string, std::unique_ptr<compilable>> compilableObjects;
     abstractCamera* camera;
     logger logger;
     console consoleUI;

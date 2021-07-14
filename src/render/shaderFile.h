@@ -3,9 +3,9 @@
 
 
 #include <string>
-#include "../utility/glObject.h"
+#include "../utility/handleObject.h"
 
-class shaderFile : public glObject {
+class shaderFile : public handleObject {
 public:
     shaderFile(unsigned int type, const std::string& source, bool isFilePath = true);
     virtual ~shaderFile();
