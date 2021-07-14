@@ -15,6 +15,7 @@
 #include "../input/keybind.h"
 #include "../input/mousebind.h"
 #include "../render/abstractCamera.h"
+#include "../utility/logger.h"
 
 class keybind;
 class mousebind;
@@ -47,6 +48,7 @@ public:
     double getDeltaTime() const;
     std::string getResourcesDirectory() const;
     void setResourcesDirectory(const std::string& resourcesDirectory);
+    void addLogHook(const std::function<void(engine*,const std::string&,const std::string&)>& function);
     void captureMouse() const;
     void freeMouse() const;
 private:
@@ -54,15 +56,23 @@ private:
     std::vector<std::function<void(engine*)>> initFunctions;
     std::vector<std::function<void(engine*)>> renderFunctions;
     std::vector<std::function<void(engine*)>> stopFunctions;
+    std::vector<std::function<void(engine*,const std::string&,const std::string&)>> loggerFunctions;
     std::vector<keybind> keybinds;
     std::vector<mousebind> mousebinds;
     std::map<std::string, std::unique_ptr<glCompilable>> glObjects;
     abstractCamera* camera;
+    logger logger;
     std::string resourcesDirectoryPath;
     bool started = false;
     double lastTime, currentTime, lastMouseX, lastMouseY;
     // NOTE: PNGs must have a bit depth of 8 or less* (less not tested)
     void setIcon(const std::string& iconPath);
+    void logInfo(const std::string& source, const std::string& message);
+    void logInfoImportant(const std::string& source, const std::string& message);
+    void logOutput(const std::string& source, const std::string& message);
+    void logWarning(const std::string& source, const std::string& message);
+    void logError(const std::string& source, const std::string& message);
+    void runLogHooks(const std::string& source, const std::string& message);
     static void errorCallback(int error, const char* description);
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
     static void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);

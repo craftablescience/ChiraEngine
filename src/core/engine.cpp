@@ -11,13 +11,7 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
-static void debugPrint(const std::string &string) {
-#if DEBUG
-    std::cout << string << std::endl;
-#endif
-}
-
-engine::engine() {
+engine::engine() : logger() {
     // todo: make a resources loading system
     this->resourcesDirectoryPath = "resources/basicgameengine/";
     this->lastTime = 0;
@@ -28,7 +22,9 @@ engine::engine() {
 }
 
 void engine::errorCallback(int error, const char* description) {
+#if DEBUG
     std::fprintf(stderr, "GLFW error %d: %s\n", error, description);
+#endif
 }
 
 void engine::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
@@ -103,13 +99,14 @@ void engine::mouseScrollCallback(GLFWwindow* window, double xPos, double yPos) {
 void engine::init(const std::string& iconPath) {
     this->started = true;
 #ifdef WIN32
+    system(("chcp " + std::to_string(CP_UTF8) + " > nul").c_str());
 #if RELEASE
     FreeConsole();
 #endif
 #endif
 
     if (!glfwInit()) {
-        std::cerr << "Error: GLFW not defined" << std::endl;
+        this->logger.logError("GLFW", "GLFW not defined");
         exit(EXIT_FAILURE);
     }
     glfwSetErrorCallback(this->errorCallback);
@@ -119,7 +116,7 @@ void engine::init(const std::string& iconPath) {
     // todo: load window size, fullscreen from a settings module
     this->window = glfwCreateWindow(1280, 720, "Basic Game Engine", nullptr, nullptr);
     if (!this->window) {
-        std::cerr << "Error: Window creation failed" << std::endl;
+        this->logger.logError("GLFW", "Window creation failed");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -136,22 +133,21 @@ void engine::init(const std::string& iconPath) {
 #if DEBUG
     int major, minor, rev;
     glfwGetVersion(&major, &minor, &rev);
-    printf("Using GLFW v%d.%d.%d \n", major, minor, rev);
+    this->logger.logInfoImportant("GLFW", "Using GLFW v" + std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(rev));
 #endif
 
     if (!gladLoadGL(glfwGetProcAddress)) {
-        std::cerr << "Error: OpenGL 3.3 Core must be available to run this program" << std::endl;
+        this->logger.logError("OpenGL", "OpenGL 3.3 Core must be available to run this program");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
 
 #if DEBUG
-int vertexAttributes, textureUnits;
+    int vertexAttributes, textureUnits;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &vertexAttributes);
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
-    // todo: make logger module
-    std::cout << "OpenGL: Maximum number of vertex attributes is " << vertexAttributes << std::endl;
-    std::cout << "OpenGL: Maximum number of texture units is " << textureUnits << std::endl;
+    this->logInfo("OpenGL", "Maximum number of vertex attributes is " + std::to_string(vertexAttributes));
+    this->logInfo("OpenGL", "Maximum number of texture units is " + std::to_string(textureUnits));
 #endif
 
     int width, height;
@@ -232,7 +228,7 @@ void engine::render() {
 }
 
 void engine::stop() {
-    debugPrint("Gracefully exiting...");
+    this->logInfoImportant("BASICGAMEENGINE", "Gracefully exiting...");
     for (auto const& [name, object] : this->glObjects) {
         object->discard();
     }
@@ -348,6 +344,41 @@ void engine::setIcon(const std::string& iconPath) {
     images[0].height = height;
     images[0].pixels = icon.getData();
     glfwSetWindowIcon(this->window, 1, images);
+}
+
+void engine::logInfo(const std::string& source, const std::string& message) {
+    this->logger.logInfo(source, message);
+    this->runLogHooks(source, message);
+}
+
+void engine::logInfoImportant(const std::string& source, const std::string& message) {
+    this->logger.logInfoImportant(source, message);
+    this->runLogHooks(source, message);
+}
+
+void engine::logOutput(const std::string& source, const std::string& message) {
+    this->logger.logOutput(source, message);
+    this->runLogHooks(source, message);
+}
+
+void engine::logWarning(const std::string& source, const std::string& message) {
+    this->logger.logWarning(source, message);
+    this->runLogHooks(source, message);
+}
+
+void engine::logError(const std::string& source, const std::string& message) {
+    this->logger.logError(source, message);
+    this->runLogHooks(source, message);
+}
+
+void engine::addLogHook(const std::function<void(engine*,const std::string&,const std::string&)>& function) {
+    this->loggerFunctions.push_back(function);
+}
+
+void engine::runLogHooks(const std::string& source, const std::string& message) {
+    for (const std::function<void(engine*,const std::string&,const std::string&)>& function : this->loggerFunctions) {
+        function(this, source, message);
+    }
 }
 
 void engine::captureMouse() const {
