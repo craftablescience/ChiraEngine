@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(BasicGameEngine)
 find_package(OpenGL REQUIRED)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 # Definitions
 if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -52,6 +52,7 @@ include(src/core/CMakeLists.txt)
 include(src/input/CMakeLists.txt)
 include(src/loader/CMakeLists.txt)
 include(src/render/CMakeLists.txt)
+include(src/ui/CMakeLists.txt)
 include(src/utility/CMakeLists.txt)
 add_executable(${PROJECT_NAME} example/demo.cpp ${ENGINE_SOURCES})
 

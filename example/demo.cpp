@@ -17,6 +17,10 @@ int main() {
     keybind wire(GLFW_KEY_2, GLFW_PRESS, [](class engine* e) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     });
+    keybind console(GLFW_KEY_G, GLFW_PRESS, [](class engine* e) {
+        // todo: does not do anything
+        e->showConsole(!e->getConsole()->getEnabled());
+    });
     engine.addKeybind(esc);
     engine.addKeybind(noWire);
     engine.addKeybind(wire);

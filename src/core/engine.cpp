@@ -185,6 +185,10 @@ void engine::init(const std::string& iconPath) {
         object.get()->compile();
     }
     callRegisteredFunctions(&(this->initFunctions));
+
+#if DEBUG
+    this->showConsole(true);
+#endif
 }
 
 void engine::run() {
@@ -219,8 +223,8 @@ void engine::render() {
     ImGui::NewFrame();
 
 #if DEBUG
-    // todo: make console a la source
-    ImGui::ShowDemoWindow();
+    if (this->consoleUI.getEnabled())
+        this->consoleUI.Render();
 #endif
 
     ImGui::Render();
@@ -387,4 +391,12 @@ void engine::captureMouse() const {
 
 void engine::freeMouse() const {
     glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}
+
+void engine::showConsole(bool shouldShow) {
+    this->consoleUI.setEnabled(shouldShow);
+}
+
+const console* engine::getConsole() const {
+    return &(this->consoleUI);
 }

@@ -15,6 +15,7 @@
 #include "../input/keybind.h"
 #include "../input/mousebind.h"
 #include "../render/abstractCamera.h"
+#include "../ui/console.h"
 #include "../utility/logger.h"
 
 class keybind;
@@ -51,6 +52,8 @@ public:
     void addLogHook(const std::function<void(engine*,const std::string&,const std::string&)>& function);
     void captureMouse() const;
     void freeMouse() const;
+    void showConsole(bool shouldShow);
+    const console* getConsole() const;
 private:
     GLFWwindow* window = nullptr;
     std::vector<std::function<void(engine*)>> initFunctions;
@@ -62,6 +65,7 @@ private:
     std::map<std::string, std::unique_ptr<glCompilable>> glObjects;
     abstractCamera* camera;
     logger logger;
+    console consoleUI;
     std::string resourcesDirectoryPath;
     bool started = false;
     double lastTime, currentTime, lastMouseX, lastMouseY;
