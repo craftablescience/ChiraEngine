@@ -49,17 +49,17 @@ public:
     double getDeltaTime() const;
     std::string getResourcesDirectory() const;
     void setResourcesDirectory(const std::string& resourcesDirectory);
-    void addLogHook(const std::function<void(engine*,const std::string&,const std::string&)>& function);
+    void addLogHook(const std::function<void(engine*,const loggerType,const std::string&,const std::string&)>& function);
     void captureMouse() const;
     void freeMouse() const;
     void showConsole(bool shouldShow);
-    const console* getConsole() const;
+    console* getConsole();
 private:
     GLFWwindow* window = nullptr;
     std::vector<std::function<void(engine*)>> initFunctions;
     std::vector<std::function<void(engine*)>> renderFunctions;
     std::vector<std::function<void(engine*)>> stopFunctions;
-    std::vector<std::function<void(engine*,const std::string&,const std::string&)>> loggerFunctions;
+    std::vector<std::function<void(engine*,const loggerType,const std::string&,const std::string&)>> loggerFunctions;
     std::vector<keybind> keybinds;
     std::vector<mousebind> mousebinds;
     std::map<std::string, std::unique_ptr<compilable>> compilableObjects;
@@ -76,7 +76,7 @@ private:
     void logOutput(const std::string& source, const std::string& message);
     void logWarning(const std::string& source, const std::string& message);
     void logError(const std::string& source, const std::string& message);
-    void runLogHooks(const std::string& source, const std::string& message);
+    void runLogHooks(const loggerType type, const std::string& source, const std::string& message);
     static void errorCallback(int error, const char* description);
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
     static void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);

@@ -21,20 +21,26 @@ public:
     virtual void logWarning(const std::string& source, const std::string& message) = 0;
     virtual void logError(const std::string& source, const std::string& message) = 0;
     static std::string formatMessage(loggerType type, const std::string& source, const std::string& message) {
+        // NOTE: This formatting is pretty much hardcoded, try to stick to it
         switch (type) {
             case INFO:
-                return "[*][" + source + "] " + message;
+                return INFO_PREFIX + "[" + source + "] " + message;
             case INFO_IMPORTANT:
-                return "[!][" + source + "] " + message;
+                return INFO_IMPORTANT_PREFIX + "[" + source + "] " + message;
             case OUTPUT:
-                return "[O][" + source + "] " + message;
+                return OUTPUT_PREFIX + "[" + source + "] " + message;
             case WARNING:
-                return "[W][" + source + "] " + message;
+                return WARNING_PREFIX + "[" + source + "] " + message;
             case ERROR:
-                return "[E][" + source + "] " + message;
+                return ERROR_PREFIX + "[" + source + "] " + message;
         }
         return "";
     }
+    static inline std::string INFO_PREFIX = "[*]";
+    static inline std::string INFO_IMPORTANT_PREFIX = "[!]";
+    static inline std::string OUTPUT_PREFIX = "[O]";
+    static inline std::string WARNING_PREFIX = "[W]";
+    static inline std::string ERROR_PREFIX = "[E]";
 };
 
 class logger : public abstractLogger {

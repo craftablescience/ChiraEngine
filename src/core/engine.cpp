@@ -105,8 +105,20 @@ void engine::init(const std::string& iconPath) {
 #endif
 #endif
 
+    this->addLogHook([](engine* e, const loggerType type, const std::string& source, const std::string& message) {
+        e->getConsole()->engineLoggingHook(type, source, message);
+    });
+
+    /*
+    this->logInfo("test", "info");
+    this->logInfoImportant("test", "info_important");
+    this->logOutput("test", "output");
+    this->logWarning("test", "warning");
+    this->logError("test", "error");
+    */
+
     if (!glfwInit()) {
-        this->logger.logError("GLFW", "GLFW not defined");
+        this->logError("GLFW", "GLFW not defined");
         exit(EXIT_FAILURE);
     }
     glfwSetErrorCallback(this->errorCallback);
@@ -116,7 +128,7 @@ void engine::init(const std::string& iconPath) {
     // todo: load window size, fullscreen from a settings module
     this->window = glfwCreateWindow(1280, 720, "Basic Game Engine", nullptr, nullptr);
     if (!this->window) {
-        this->logger.logError("GLFW", "Window creation failed");
+        this->logError("GLFW", "Window creation failed");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -133,11 +145,11 @@ void engine::init(const std::string& iconPath) {
 #if DEBUG
     int major, minor, rev;
     glfwGetVersion(&major, &minor, &rev);
-    this->logger.logInfoImportant("GLFW", "Using GLFW v" + std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(rev));
+    this->logInfoImportant("GLFW", "Using GLFW v" + std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(rev));
 #endif
 
     if (!gladLoadGL(glfwGetProcAddress)) {
-        this->logger.logError("OpenGL", "OpenGL 3.3 Core must be available to run this program");
+        this->logError("OpenGL", "OpenGL 3.3 Core must be available to run this program");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -185,10 +197,6 @@ void engine::init(const std::string& iconPath) {
         object.get()->compile();
     }
     callRegisteredFunctions(&(this->initFunctions));
-
-#if DEBUG
-    this->showConsole(true);
-#endif
 }
 
 void engine::run() {
@@ -223,8 +231,9 @@ void engine::render() {
     ImGui::NewFrame();
 
 #if DEBUG
-    if (this->consoleUI.getEnabled())
-        this->consoleUI.Render();
+    if (this->getConsole()->getEnabled()) {
+        this->getConsole()->render();
+    }
 #endif
 
     ImGui::Render();
@@ -232,7 +241,7 @@ void engine::render() {
 }
 
 void engine::stop() {
-    this->logInfoImportant("BASICGAMEENGINE", "Gracefully exiting...");
+    this->logInfoImportant("BasicGameEngine", "Gracefully exiting...");
     for (auto const& [name, object] : this->compilableObjects) {
         object->discard();
     }
@@ -352,36 +361,36 @@ void engine::setIcon(const std::string& iconPath) {
 
 void engine::logInfo(const std::string& source, const std::string& message) {
     this->logger.logInfo(source, message);
-    this->runLogHooks(source, message);
+    this->runLogHooks(INFO, source, message);
 }
 
 void engine::logInfoImportant(const std::string& source, const std::string& message) {
     this->logger.logInfoImportant(source, message);
-    this->runLogHooks(source, message);
+    this->runLogHooks(INFO_IMPORTANT, source, message);
 }
 
 void engine::logOutput(const std::string& source, const std::string& message) {
     this->logger.logOutput(source, message);
-    this->runLogHooks(source, message);
+    this->runLogHooks(OUTPUT, source, message);
 }
 
 void engine::logWarning(const std::string& source, const std::string& message) {
     this->logger.logWarning(source, message);
-    this->runLogHooks(source, message);
+    this->runLogHooks(WARNING, source, message);
 }
 
 void engine::logError(const std::string& source, const std::string& message) {
     this->logger.logError(source, message);
-    this->runLogHooks(source, message);
+    this->runLogHooks((loggerType) 4, source, message);
 }
 
-void engine::addLogHook(const std::function<void(engine*,const std::string&,const std::string&)>& function) {
+void engine::addLogHook(const std::function<void(engine*,const loggerType,const std::string&,const std::string&)>& function) {
     this->loggerFunctions.push_back(function);
 }
 
-void engine::runLogHooks(const std::string& source, const std::string& message) {
-    for (const std::function<void(engine*,const std::string&,const std::string&)>& function : this->loggerFunctions) {
-        function(this, source, message);
+void engine::runLogHooks(const loggerType type, const std::string& source, const std::string& message) {
+    for (const std::function<void(engine*,const loggerType,const std::string&,const std::string&)>& function : this->loggerFunctions) {
+        function(this, type, source, message);
     }
 }
 
@@ -394,9 +403,9 @@ void engine::freeMouse() const {
 }
 
 void engine::showConsole(bool shouldShow) {
-    this->consoleUI.setEnabled(shouldShow);
+    this->getConsole()->setEnabled(shouldShow);
 }
 
-const console* engine::getConsole() const {
+console* engine::getConsole() {
     return &(this->consoleUI);
 }
