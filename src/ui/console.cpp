@@ -67,16 +67,16 @@ void console::render() {
             ImVec4 color;
             bool has_color = false;
             if (strstr(item, abstractLogger::INFO_IMPORTANT_PREFIX.c_str())) {
-                color = ImVec4(0.13f, 0.55f, 0.13f, 1.0f);
+                color = ImVec4(0.13f, 0.77f, 0.13f, 1.0f);
                 has_color = true;
             } else if (strstr(item, abstractLogger::OUTPUT_PREFIX.c_str())) {
-                color = ImVec4(0.0f, 0.0f, 0.8f, 1.0f);
+                color = ImVec4(0.3f, 0.3f, 1.0f, 1.0f);
                 has_color = true;
             } else if (strstr(item, abstractLogger::WARNING_PREFIX.c_str())) {
                 color = ImVec4(1.0f, 0.84f, 0.0f, 1.0f);
                 has_color = true;
             } else if (strstr(item, abstractLogger::ERROR_PREFIX.c_str())) {
-                color = ImVec4(0.7f, 0.0f, 0.0f, 1.0f);
+                color = ImVec4(1.0f, 0.2f, 0.2f, 1.0f);
                 has_color = true;
             }
             if (has_color) {
