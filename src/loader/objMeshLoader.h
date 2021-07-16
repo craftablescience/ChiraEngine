@@ -4,10 +4,10 @@
 
 #include <vector>
 #include <string>
-#include "meshLoader.h"
+#include "abstractMeshLoader.h"
 #include "../utility/vertex.h"
 
-class objMeshLoader : public meshLoader {
+class objMeshLoader : public abstractMeshLoader {
 public:
     void loadMesh(const std::string& filepath, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) override;
 private:

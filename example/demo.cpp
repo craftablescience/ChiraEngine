@@ -2,13 +2,12 @@
 #include <glm/ext/matrix_transform.hpp>
 #include "../src/core/engine.h"
 #include "../src/render/texture2d.h"
-#include "../src/loader/debugMeshLoader.h"
 #include "../src/loader/objMeshLoader.h"
 #include "../src/render/freecam.h"
 
 int main() {
     engine engine;
-
+    objMeshLoader objMeshLoader;
     engine.getSettingsLoader()->setValue("engine", "title", std::string("Demo Window"), true, false);
 
     engine.addKeybind(keybind(GLFW_KEY_ESCAPE, GLFW_PRESS, [](class engine* e) {
@@ -28,12 +27,11 @@ int main() {
                        engine.getResourcesDirectory() + "shaders/unlit.fsh");
     engine.addShader("unlit", &unlitShader);
 
-    texture2d crate("resources/demo/textures/crate.jpg", GL_RGB);
-    engine.addTexture("crate", &crate);
+    texture2d crateTex("resources/demo/textures/crate.jpg", GL_RGB);
+    engine.addTexture("crate", &crateTex);
 
-    objMeshLoader objMeshLoader;
-    mesh teapot(&objMeshLoader, engine.getResourcesDirectory() + "meshes/teapot.obj");
-    engine.addMesh("teapot", &teapot);
+    mesh teapotMesh(&objMeshLoader, engine.getResourcesDirectory() + "meshes/teapot.obj");
+    engine.addMesh("teapot", &teapotMesh);
 
     freecam player{&engine, glm::vec3(0.0f, 0.0f, 0.0f)};
     engine.setCamera(&player);
@@ -45,18 +43,10 @@ int main() {
         engine::setBackgroundColor(0.0f, 0.0f, 0.3f, 1.0f);
 #endif
     });
-
     engine.addRenderFunction([](class engine* e) {
         e->getTexture("crate")->use();
-        /*
-        *e->getMesh("triangle")->getModel() = glm::rotate(
-                *e->getMesh("triangle")->getModel(),
-                (float)(0.5f * e->getDeltaTime()), glm::vec3(1.0f, 0.0f, 0.0f));
-        e->getMesh("triangle")->render(e->getShader("triangle"));
-        */
         e->getMesh("teapot")->render(e->getShader("unlit"));
     });
-
     engine.init();
     engine.run();
 }

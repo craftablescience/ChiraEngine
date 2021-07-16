@@ -1,15 +1,15 @@
-#ifndef BASICGAMEENGINE_MESHLOADER_H
-#define BASICGAMEENGINE_MESHLOADER_H
+#ifndef BASICGAMEENGINE_ABSTRACTMESHLOADER_H
+#define BASICGAMEENGINE_ABSTRACTMESHLOADER_H
 
 
 #include <vector>
 #include <string>
 #include "../utility/vertex.h"
 
-class meshLoader {
+class abstractMeshLoader {
 public:
     virtual void loadMesh(const std::string& filepath, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) = 0;
 };
 
 
-#endif //BASICGAMEENGINE_MESHLOADER_H
+#endif //BASICGAMEENGINE_ABSTRACTMESHLOADER_H

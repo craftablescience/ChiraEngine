@@ -52,7 +52,7 @@ void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* v
             std::string data = line.substr(2);
             std::replace(data.begin(), data.end(), '/', ' ');
             std::istringstream iss(data);
-            int p0, p1, p2, t0, t1, t2, n0, n1, n2;
+            int p0, p1, p2, t0 = 0, t1 = 0, t2 = 0, n0, n1, n2;
             if (includeUVs) {
                 iss >> p0 >> t0 >> n0 >> p1 >> t1 >> n1 >> p2 >> t2 >> n2;
                 p0 -= 1;

@@ -1,6 +1,6 @@
 #include "mesh.h"
 
-mesh::mesh(meshLoader* loader, const std::string& filepath, int depthFunc) : renderable(), vertices(), indices() {
+mesh::mesh(abstractMeshLoader* loader, const std::string& filepath, int depthFunc) : renderable(), vertices(), indices() {
     this->depthFunc = depthFunc;
     this->loader = loader;
     this->filepath = filepath;
