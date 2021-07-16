@@ -18,6 +18,7 @@ const float cam_ZOOM        =  45.0f;
 
 // Largely taken from https://learnopengl.com/Getting-started/Camera
 class freecam : public abstractCamera {
+    // todo: split this into a perspectiveCamera class
 public:
     glm::vec3 front;
     glm::vec3 up;
@@ -161,37 +162,31 @@ private:
     }
 
     static void setupKeybinds(engine* engine) {
-        keybind f(GLFW_KEY_W, GLFW_REPEAT,[](class engine* e) {
+        engine->addKeybind(keybind(GLFW_KEY_W, GLFW_REPEAT,[](class engine* e) {
             auto* cam = dynamic_cast<freecam*>(e->getCamera());
             if (cam->isCurrent() && cam->isActive()) cam->translateLocal(ZP, e->getDeltaTime());
-        });
-        keybind b(GLFW_KEY_S, GLFW_REPEAT,[](class engine* e) {
+        }));
+        engine->addKeybind(keybind(GLFW_KEY_S, GLFW_REPEAT,[](class engine* e) {
             auto* cam = dynamic_cast<freecam*>(e->getCamera());
             if (cam->isCurrent() && cam->isActive()) cam->translateLocal(ZN, e->getDeltaTime());
-        });
-        keybind l(GLFW_KEY_A, GLFW_REPEAT,[](class engine* e) {
+        }));
+        engine->addKeybind(keybind(GLFW_KEY_A, GLFW_REPEAT,[](class engine* e) {
             auto* cam = dynamic_cast<freecam*>(e->getCamera());
             if (cam->isCurrent() && cam->isActive()) cam->translateLocal(XP, e->getDeltaTime());
-        });
-        keybind r(GLFW_KEY_D, GLFW_REPEAT,[](class engine* e) {
+        }));
+        engine->addKeybind(keybind(GLFW_KEY_D, GLFW_REPEAT,[](class engine* e) {
             auto* cam = dynamic_cast<freecam*>(e->getCamera());
             if (cam->isCurrent() && cam->isActive()) cam->translateLocal(XN, e->getDeltaTime());
-        });
-        keybind u(GLFW_KEY_SPACE, GLFW_REPEAT,[](class engine* e) {
+        }));
+        engine->addKeybind(keybind(GLFW_KEY_SPACE, GLFW_REPEAT,[](class engine* e) {
             auto* cam = dynamic_cast<freecam*>(e->getCamera());
             if (cam->isCurrent() && cam->isActive()) cam->translateLocal(YP, e->getDeltaTime());
-        });
-        keybind d(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT,[](class engine* e) {
+        }));
+        engine->addKeybind(keybind(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT,[](class engine* e) {
             auto* cam = dynamic_cast<freecam*>(e->getCamera());
             if (cam->isCurrent() && cam->isActive()) cam->translateLocal(YN, e->getDeltaTime());
-        });
-        engine->addKeybind(f);
-        engine->addKeybind(b);
-        engine->addKeybind(l);
-        engine->addKeybind(r);
-        engine->addKeybind(u);
-        engine->addKeybind(d);
-        mousebind look(MOVE, [](class engine* e, double xOffset, double yOffset) {
+        }));
+        engine->addMousebind(mousebind(MOVE, [](class engine* e, double xOffset, double yOffset) {
             auto* cam = dynamic_cast<freecam*>(e->getCamera());
             if (cam->isCurrent() && cam->isActive()) {
                 xOffset *= cam_SENSITIVITY;
@@ -209,9 +204,8 @@ private:
                 if (cam->pitch < -89.5f)
                     cam->pitch = -89.5f;
             }
-        });
-        engine->addMousebind(look);
-        keybind tab(GLFW_KEY_TAB, GLFW_PRESS, [](class engine* e) {
+        }));
+        engine->addKeybind(keybind(GLFW_KEY_TAB, GLFW_PRESS, [](class engine* e) {
             if (dynamic_cast<freecam*>(e->getCamera())->capturedMouse) {
                 e->freeMouse();
                 dynamic_cast<freecam*>(e->getCamera())->setActive(false);
@@ -219,8 +213,7 @@ private:
                 e->captureMouse();
                 dynamic_cast<freecam*>(e->getCamera())->setActive(true);
             }
-        });
-        engine->addKeybind(tab);
+        }));
     }
 };
 
