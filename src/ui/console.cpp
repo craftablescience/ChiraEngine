@@ -111,8 +111,8 @@ bool console::getEnabled() const {
 void console::setTheme() {
     ImVec4* colors = ImGui::GetStyle().Colors;
 
-    colors[ImGuiCol_WindowBg]              = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
-    colors[ImGuiCol_ChildBg]               = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
+    colors[ImGuiCol_WindowBg]              = ImVec4(0.46f, 0.46f, 0.46f, 0.95f);
+    colors[ImGuiCol_ChildBg]               = ImVec4(0.33f, 0.33f, 0.33f, 0.80f);
     colors[ImGuiCol_ModalWindowDimBg]      = ImVec4(0.33f, 0.33f, 0.33f, 0.80f);
     colors[ImGuiCol_PopupBg]               = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
     colors[ImGuiCol_Border]                = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
