@@ -57,11 +57,18 @@ vertex::vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v)
 vertex::vertex(GLfloat x, GLfloat y, GLfloat z)
     : pos(x, y, z), norm(), col(), uvMap() {}
 
-vertex::vertex(const struct position& pos, const struct normal& norm, const struct color& col, const struct uv& tex) {
-    this->pos = pos;
-    this->norm = norm;
-    this->col = col;
-    this->uvMap = tex;
+vertex::vertex(const struct position& newPos, const struct normal& newNorm, const struct color& newCol, const struct uv& newTex) {
+    this->pos.x = newPos.x;
+    this->pos.y = newPos.y;
+    this->pos.z = newPos.z;
+    this->norm.r = newNorm.r;
+    this->norm.g = newNorm.g;
+    this->norm.b = newNorm.b;
+    this->col.r = newCol.r;
+    this->col.g = newCol.g;
+    this->col.b = newCol.b;
+    this->uvMap.u = newTex.u;
+    this->uvMap.v = newTex.v;
 }
 
 vertex::vertex() : pos(), norm(), col(), uvMap() {}
