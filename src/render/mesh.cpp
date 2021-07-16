@@ -32,12 +32,15 @@ void mesh::compile() {
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, position));
     glEnableVertexAttribArray(0);
-    // color attribute
+    // normal attribute
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, normal));
     glEnableVertexAttribArray(1);
-    // texture coord attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, uv));
+    // color attribute
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, color));
     glEnableVertexAttribArray(2);
+    // texture coord attribute
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, uv));
+    glEnableVertexAttribArray(3);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -55,5 +58,5 @@ void mesh::render(shader* shader) {
     shader->setUniform("m", &(this->model));
     glDepthFunc(this->depthFunc);
     glBindVertexArray(this->vaoHandle);
-    glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, (int) this->indices.size(), GL_UNSIGNED_INT, nullptr);
 }

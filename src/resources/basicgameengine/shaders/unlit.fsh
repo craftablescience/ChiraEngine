@@ -2,6 +2,7 @@
 out vec4 FragColor;
 
 in vec3 oColor;
+in vec3 oNormal;
 in vec2 oTexCoord;
 
 uniform sampler2D texture0;

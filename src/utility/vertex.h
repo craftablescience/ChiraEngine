@@ -11,7 +11,12 @@ struct position {
 
 struct normal {
     GLfloat r, g, b;
-    explicit normal(GLfloat r = 1, GLfloat g = 1, GLfloat b = 1);
+    explicit normal(GLfloat r = 0, GLfloat g = 0, GLfloat b = 0);
+};
+
+struct color {
+    GLfloat r, g, b;
+    explicit color(GLfloat r = 1, GLfloat g = 1, GLfloat b = 1);
 };
 
 struct uv {
@@ -22,7 +27,10 @@ struct uv {
 struct vertex {
     position position;
     normal normal;
+    color color;
     uv uv;
+    vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat rr, GLfloat gg, GLfloat bb, GLfloat u, GLfloat v);
+    vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat rr, GLfloat gg, GLfloat bb);
     vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat u, GLfloat v);
     vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b);
     vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v);
