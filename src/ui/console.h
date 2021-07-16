@@ -16,6 +16,7 @@ public:
     void render();
     void setEnabled(bool enabled);
     [[nodiscard]] bool getEnabled() const;
+    static void setTheme();
 private:
     ImVector<char*> items;
     ImVector<char*> history;

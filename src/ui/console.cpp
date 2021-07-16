@@ -1,7 +1,6 @@
 #include "console.h"
 
 console::console() {
-    // todo: this needs to have a Valve GUI theme for nostalgia
     this->clearLog();
     this->historyPos = -1;
     this->autoScroll = true;
@@ -49,6 +48,7 @@ void console::engineLoggingHook(const loggerType type, const std::string& source
 }
 
 void console::render() {
+    console::setTheme();
     ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_FirstUseEver);
     if (!ImGui::Begin("Console", &(this->isEnabled))) {
         ImGui::End();
@@ -106,4 +106,45 @@ void console::setEnabled(bool enabled) {
 
 bool console::getEnabled() const {
     return this->isEnabled;
+}
+
+void console::setTheme() {
+    ImVec4* colors = ImGui::GetStyle().Colors;
+
+    colors[ImGuiCol_WindowBg]              = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
+    colors[ImGuiCol_ChildBg]               = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
+    colors[ImGuiCol_ModalWindowDimBg]      = ImVec4(0.33f, 0.33f, 0.33f, 0.80f);
+    colors[ImGuiCol_PopupBg]               = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
+    colors[ImGuiCol_Border]                = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
+    colors[ImGuiCol_BorderShadow]          = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
+    colors[ImGuiCol_FrameBg]               = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
+    colors[ImGuiCol_FrameBgHovered]        = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
+    colors[ImGuiCol_FrameBgActive]         = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
+    colors[ImGuiCol_TitleBg]               = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
+    colors[ImGuiCol_TitleBgActive]         = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
+    colors[ImGuiCol_TitleBgCollapsed]      = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
+    colors[ImGuiCol_ScrollbarBg]           = ImVec4(0.13f, 0.13f, 0.13f, 1.00f);
+    colors[ImGuiCol_ScrollbarGrab]         = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+    colors[ImGuiCol_ScrollbarGrabHovered]  = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+    colors[ImGuiCol_ScrollbarGrabActive]   = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+    colors[ImGuiCol_CheckMark]             = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+    colors[ImGuiCol_Button]                = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
+    colors[ImGuiCol_ButtonHovered]         = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
+    colors[ImGuiCol_ButtonActive]          = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
+    colors[ImGuiCol_Separator]             = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
+    colors[ImGuiCol_SeparatorHovered]      = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
+    colors[ImGuiCol_SeparatorActive]       = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
+    colors[ImGuiCol_ResizeGrip]            = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
+    colors[ImGuiCol_ResizeGripHovered]     = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
+    colors[ImGuiCol_ResizeGripActive]      = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.FrameBorderSize   = 1.0f;
+    style.WindowRounding    = 4.0f;
+    style.ChildRounding     = 0.0f;
+    style.FrameRounding     = 0.0f;
+    style.PopupRounding     = 0.0f;
+    style.ScrollbarRounding = 4.0f;
+    style.GrabRounding      = 0.0f;
+    style.TabRounding       = 0.0f;
 }
