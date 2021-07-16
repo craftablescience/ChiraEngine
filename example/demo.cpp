@@ -3,6 +3,7 @@
 #include "../src/core/engine.h"
 #include "../src/render/texture2d.h"
 #include "../src/loader/debugMeshLoader.h"
+#include "../src/loader/objMeshLoader.h"
 #include "../src/render/freecam.h"
 
 int main() {
@@ -23,34 +24,37 @@ int main() {
         e->showConsole(!e->getConsole()->getEnabled());
     }));
 
-    shader triangleShader(engine.getResourcesDirectory() + "shaders/unlit.vsh",
-                          engine.getResourcesDirectory() + "shaders/unlit.fsh");
-    engine.addShader("triangle", &triangleShader);
+    shader unlitShader(engine.getResourcesDirectory() + "shaders/unlit.vsh",
+                       engine.getResourcesDirectory() + "shaders/unlit.fsh");
+    engine.addShader("unlit", &unlitShader);
 
-    texture2d triangleTex("resources/demo/textures/crate.jpg", GL_RGB);
-    engine.addTexture("triangle", &triangleTex);
+    texture2d crate("resources/demo/textures/crate.jpg", GL_RGB);
+    engine.addTexture("crate", &crate);
 
-    debugMeshLoader meshLoader;
-    mesh triangleMesh(&meshLoader, "cube");
-    engine.addMesh("triangle", &triangleMesh);
+    objMeshLoader objMeshLoader;
+    mesh teapot(&objMeshLoader, engine.getResourcesDirectory() + "meshes/teapot.obj");
+    engine.addMesh("teapot", &teapot);
 
     freecam player{&engine, glm::vec3(0.0f, 0.0f, 0.0f)};
     engine.setCamera(&player);
 
     engine.addInitFunction([](class engine* e) {
-        e->getShader("triangle")->use();
-        e->getShader("triangle")->setUniform("ourTexture", 0);
+        e->getShader("unlit")->use();
+        e->getShader("unlit")->setUniform("ourTexture", 0);
 #if DEBUG
-        glClearColor(0.0f, 0.0f, 0.3f, 1.0f);
+        engine::setBackgroundColor(0.0f, 0.0f, 0.3f, 1.0f);
 #endif
     });
 
     engine.addRenderFunction([](class engine* e) {
-        e->getTexture("triangle")->use();
+        e->getTexture("crate")->use();
+        /*
         *e->getMesh("triangle")->getModel() = glm::rotate(
                 *e->getMesh("triangle")->getModel(),
                 (float)(0.5f * e->getDeltaTime()), glm::vec3(1.0f, 0.0f, 0.0f));
         e->getMesh("triangle")->render(e->getShader("triangle"));
+        */
+        e->getMesh("teapot")->render(e->getShader("unlit"));
     });
 
     engine.init();

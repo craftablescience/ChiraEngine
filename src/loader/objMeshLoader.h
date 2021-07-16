@@ -3,12 +3,15 @@
 
 
 #include <vector>
+#include <string>
 #include "meshLoader.h"
 #include "../utility/vertex.h"
 
 class objMeshLoader : public meshLoader {
 public:
     void loadMesh(const std::string& filepath, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) override;
+private:
+    static void addVertex(const vertex& v, std::vector<vertex>* vertices, std::vector<unsigned int>* indices);
 };
 
 
