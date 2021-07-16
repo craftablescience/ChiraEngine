@@ -40,25 +40,32 @@ bool operator==(const uv &uv1, const uv &uv2) {
 }
 
 vertex::vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat rr, GLfloat gg, GLfloat bb, GLfloat u, GLfloat v)
-    : position(x, y, z), normal(r, g, b), color(rr, gg, bb), uv(u, v) {}
+    : pos(x, y, z), norm(r, g, b), col(rr, gg, bb), uvMap(u, v) {}
 
 vertex::vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat rr, GLfloat gg, GLfloat bb)
-    : position(x, y, z), normal(r, g, b), color(rr, gg, bb), uv() {}
+    : pos(x, y, z), norm(r, g, b), col(rr, gg, bb), uvMap() {}
 
 vertex::vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat u, GLfloat v)
-    : position(x, y, z), normal(r, g, b), color(), uv(u, v) {}
+    : pos(x, y, z), norm(r, g, b), col(), uvMap(u, v) {}
 
 vertex::vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b)
-    : position(x, y, z), normal(r, g, b), color(), uv() {}
+    : pos(x, y, z), norm(r, g, b), col(), uvMap() {}
 
 vertex::vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v)
-    : position(x, y, z), normal(), color(), uv(u, v) {}
+    : pos(x, y, z), norm(), col(), uvMap(u, v) {}
 
 vertex::vertex(GLfloat x, GLfloat y, GLfloat z)
-    : position(x, y, z), normal(), color(), uv() {}
+    : pos(x, y, z), norm(), col(), uvMap() {}
 
-vertex::vertex() : position(), normal(), color(), uv() {}
+vertex::vertex(const struct position& pos, const struct normal& norm, const struct color& col, const struct uv& tex) {
+    this->pos = pos;
+    this->norm = norm;
+    this->col = col;
+    this->uvMap = tex;
+}
+
+vertex::vertex() : pos(), norm(), col(), uvMap() {}
 
 bool operator==(const vertex &v1, const vertex &v2) {
-    return v1.position == v2.position && v1.normal == v2.normal && v1.color == v2.color && v1.uv == v2.uv;
+    return v1.pos == v2.pos && v1.norm == v2.norm && v1.col == v2.col && v1.uvMap == v2.uvMap;
 }

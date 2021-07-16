@@ -29,16 +29,17 @@ struct uv {
 };
 
 struct vertex {
-    position position;
-    normal normal;
-    color color;
-    uv uv;
+    position pos;
+    normal norm;
+    color col;
+    uv uvMap;
     vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat rr, GLfloat gg, GLfloat bb, GLfloat u, GLfloat v);
     vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat rr, GLfloat gg, GLfloat bb);
     vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat u, GLfloat v);
     vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b);
     vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat u, GLfloat v);
     vertex(GLfloat x, GLfloat y, GLfloat z);
+    explicit vertex(const struct position& pos, const struct normal& norm, const struct color& col, const struct uv& tex);
     vertex();
     friend bool operator==(const vertex& v1, const vertex& v2);
 };
