@@ -14,6 +14,7 @@
 #include "../render/mesh.h"
 #include "../input/keybind.h"
 #include "../input/mousebind.h"
+#include "../loader/abstractSettingsLoader.h"
 #include "../render/abstractCamera.h"
 #include "../ui/console.h"
 #include "../utility/logger.h"
@@ -24,10 +25,12 @@ class mousebind;
 class engine {
 public:
     engine();
+    virtual ~engine();
     void init(const std::string& iconPath = "");
     void run();
     void render();
     void stop();
+    static void setBackgroundColor(float r, float g, float b, float a);
     void addKeybind(const keybind& keybind);
     std::vector<keybind>* getKeybinds();
     void addMousebind(const mousebind& mousebind);
@@ -43,6 +46,8 @@ public:
     void addStopFunction(const std::function<void(engine*)>& stop);
     abstractCamera* getCamera() const;
     void setCamera(abstractCamera* newCamera);
+    abstractSettingsLoader* getSettingsLoader();
+    void setSettingsLoader(abstractSettingsLoader* settingsLoader);
     void callRegisteredFunctions(const std::vector<std::function<void(engine*)>>* list);
     [[nodiscard]] bool isStarted() const;
     // NOTE: only guaranteed to work after run() in a render method
@@ -54,6 +59,11 @@ public:
     void freeMouse() const;
     void showConsole(bool shouldShow);
     console* getConsole();
+    void logInfo(const std::string& source, const std::string& message);
+    void logInfoImportant(const std::string& source, const std::string& message);
+    void logOutput(const std::string& source, const std::string& message);
+    void logWarning(const std::string& source, const std::string& message);
+    void logError(const std::string& source, const std::string& message);
 private:
     GLFWwindow* window = nullptr;
     std::vector<std::function<void(engine*)>> initFunctions;
@@ -63,19 +73,16 @@ private:
     std::vector<keybind> keybinds;
     std::vector<mousebind> mousebinds;
     std::map<std::string, std::unique_ptr<compilable>> compilableObjects;
-    abstractCamera* camera;
+    abstractCamera* camera = nullptr;
+    abstractSettingsLoader* settingsLoader = nullptr;
     logger logger;
     console consoleUI;
     std::string resourcesDirectoryPath;
     bool started = false;
     double lastTime, currentTime, lastMouseX, lastMouseY;
+    void setSettingsLoaderDefaults();
     // NOTE: PNGs must have a bit depth of 8 or less* (less not tested)
     void setIcon(const std::string& iconPath);
-    void logInfo(const std::string& source, const std::string& message);
-    void logInfoImportant(const std::string& source, const std::string& message);
-    void logOutput(const std::string& source, const std::string& message);
-    void logWarning(const std::string& source, const std::string& message);
-    void logError(const std::string& source, const std::string& message);
     void runLogHooks(const loggerType type, const std::string& source, const std::string& message);
     static void errorCallback(int error, const char* description);
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);

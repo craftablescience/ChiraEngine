@@ -10,15 +10,20 @@
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
+#include "../loader/jsonSettingsLoader.h"
 
 engine::engine() : logger() {
     // todo: make a resources loading system
-    this->resourcesDirectoryPath = "resources/basicgameengine/";
+    this->setResourcesDirectory("resources/basicgameengine/");
+    this->setSettingsLoader(new jsonSettingsLoader("settings.json"));
     this->lastTime = 0;
     this->currentTime = 0;
     this->lastMouseX = -1;
     this->lastMouseY = -1;
-    this->camera = nullptr;
+}
+
+engine::~engine() {
+    delete this->settingsLoader;
 }
 
 void engine::errorCallback(int error, const char* description) {
@@ -125,8 +130,19 @@ void engine::init(const std::string& iconPath) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    // todo: load window size, fullscreen from a settings module
-    this->window = glfwCreateWindow(1280, 720, "Basic Game Engine", nullptr, nullptr);
+    int windowWidth = 1600;
+    this->settingsLoader->getValue("graphics", "windowWidth", &windowWidth);
+    int windowHeight = 900;
+    this->settingsLoader->getValue("graphics", "windowHeight", &windowHeight);
+    bool fullscreen = false;
+    this->settingsLoader->getValue("graphics", "fullscreen", &fullscreen);
+    std::string title = "Basic Game Engine";
+    this->settingsLoader->getValue("engine", "title", &title);
+    this->window = glfwCreateWindow(windowWidth,
+                                    windowHeight,
+                                    title.c_str(),
+                                    fullscreen ? glfwGetPrimaryMonitor() : nullptr,
+                                    nullptr);
     if (!this->window) {
         this->logError("GLFW", "Window creation failed");
         glfwTerminate();
@@ -135,17 +151,19 @@ void engine::init(const std::string& iconPath) {
     glfwMakeContextCurrent(this->window);
     glfwSetWindowUserPointer(this->window, this);
 
-    // todo: load icon from a settings module rather than an argument
-    if (iconPath.empty()) {
-        this->setIcon(this->getResourcesDirectory() + "textures/ui/icon.png");
+    if (this->settingsLoader->hasValue("engine", "iconPath")) {
+        std::string path{};
+        this->settingsLoader->getValue("engine", "iconPath", &path);
+        this->setIcon(this->getResourcesDirectory() + path);
     } else {
+        this->logWarning("BasicGameEngine", "You should not unset the iconPath property unless you are a trained professional!");
         this->setIcon(iconPath);
     }
 
 #if DEBUG
     int major, minor, rev;
     glfwGetVersion(&major, &minor, &rev);
-    this->logInfoImportant("GLFW", "Using GLFW v" + std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(rev));
+    this->logInfo("GLFW", "Using GLFW v" + std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(rev));
 #endif
 
     if (!gladLoadGL(glfwGetProcAddress)) {
@@ -166,16 +184,16 @@ void engine::init(const std::string& iconPath) {
     glfwGetFramebufferSize(this->window, &width, &height);
     glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(this->window, this->framebufferSizeCallback);
-    // todo: add set/get for clear color
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    engine::setBackgroundColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(1);
 
     glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GLFW_TRUE);
     glfwSetInputMode(this->window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
-    if (glfwRawMouseMotionSupported()) {
-        // todo: this should be a setting
-        glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+    bool rawMouseMotion = false;
+    this->settingsLoader->getValue("input", "rawMouseMotion", &rawMouseMotion);
+    if (glfwRawMouseMotionSupported() && rawMouseMotion) {
+        glfwSetInputMode(this->window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
     }
     glfwSetKeyCallback(this->window, keyboardCallback);
     glfwSetMouseButtonCallback(window, mouseButtonCallback);
@@ -256,6 +274,10 @@ void engine::stop() {
     exit(EXIT_SUCCESS);
 }
 
+void engine::setBackgroundColor(float r, float g, float b, float a) {
+    glClearColor(r, g, b, a);
+}
+
 void engine::addKeybind(const keybind& keybind) {
     this->keybinds.push_back(keybind);
 }
@@ -319,6 +341,34 @@ void engine::setCamera(abstractCamera* newCamera) {
     if (this->camera) this->camera->setCurrent(false);
     this->camera = newCamera;
     this->camera->setCurrent(true);
+}
+
+abstractSettingsLoader* engine::getSettingsLoader() {
+    if (!this->settingsLoader) {
+        throw std::runtime_error("Error: settings loader is not defined at this time");
+    }
+    return this->settingsLoader;
+}
+
+void engine::setSettingsLoader(abstractSettingsLoader* newSettingsLoader) {
+    delete this->settingsLoader;
+    this->settingsLoader = newSettingsLoader;
+    this->setSettingsLoaderDefaults();
+}
+
+void engine::setSettingsLoaderDefaults() {
+    this->settingsLoader->load();
+    this->settingsLoader->addCategory("engine");
+    this->settingsLoader->setValue("engine", "iconPath", std::string("textures/ui/icon.png"), false, false);
+    this->settingsLoader->setValue("engine", "title", std::string("Basic Game Engine"), false, false);
+    this->settingsLoader->addCategory("input");
+    this->settingsLoader->setValue("input", "rawMouseMotion", true, false, false);
+    this->settingsLoader->setValue("input", "invertYAxis", false, false, false);
+    this->settingsLoader->addCategory("graphics");
+    this->settingsLoader->setValue("graphics", "windowWidth", 1600, false, false);
+    this->settingsLoader->setValue("graphics", "windowHeight", 900, false, false);
+    this->settingsLoader->setValue("graphics", "fullscreen", false, false, false);
+    this->settingsLoader->save();
 }
 
 void engine::callRegisteredFunctions(const std::vector<std::function<void(engine*)>> *list) {

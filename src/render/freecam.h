@@ -30,8 +30,6 @@ public:
     float zoom;
 
     explicit freecam(engine* engine,
-                    float screenWidth,
-                    float screenHeight,
                     glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
                     glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
                     float yaw = cam_YAW,
@@ -44,7 +42,11 @@ public:
         worldUp = up;
         this->yaw = yaw;
         this->pitch = pitch;
-        this->projection = glm::perspective(glm::radians(cam_ZOOM), screenWidth / screenHeight, 0.1f, 1024.0f);
+        int windowWidth = 1600;
+        engine->getSettingsLoader()->getValue("graphics", "windowWidth", &windowWidth);
+        int windowHeight = 900;
+        engine->getSettingsLoader()->getValue("graphics", "windowHeight", &windowHeight);
+        this->projection = glm::perspective(glm::radians(cam_ZOOM), (float) windowWidth / (float) windowHeight, 0.1f, 1024.0f);
         this->updateCameraVectors();
         this->active = true;
         freecam::setupKeybinds(engine);
@@ -193,8 +195,13 @@ private:
                 xOffset *= cam_SENSITIVITY;
                 yOffset *= cam_SENSITIVITY;
                 cam->yaw += (float) xOffset;
-                // todo: make invert y-axis a setting
-                cam->pitch -= (float) yOffset;
+                bool invertYAxis = false;
+                e->getSettingsLoader()->getValue("input", "invertYAxis", &invertYAxis);
+                if (invertYAxis) {
+                    cam->pitch += (float) yOffset;
+                } else {
+                    cam->pitch -= (float) yOffset;
+                }
                 if (cam->pitch > 89.5f)
                     cam->pitch = 89.5f;
                 if (cam->pitch < -89.5f)
