@@ -53,8 +53,6 @@ public:
     }
 
     explicit freecam(engine* engine,
-                    float screenWidth,
-                    float screenHeight,
                     float posX = 0.0f,
                     float posY = 0.0f,
                     float posZ = 0.0f,
@@ -71,7 +69,11 @@ public:
         worldUp = glm::vec3(upX, upY, upZ);
         this->yaw = yaw;
         this->pitch = pitch;
-        this->projection = glm::perspective(glm::radians(cam_ZOOM), screenWidth / screenHeight, 0.1f, 1024.0f);
+        int windowWidth = 1600;
+        engine->getSettingsLoader()->getValue("graphics", "windowWidth", &windowWidth);
+        int windowHeight = 900;
+        engine->getSettingsLoader()->getValue("graphics", "windowHeight", &windowHeight);
+        this->projection = glm::perspective(glm::radians(cam_ZOOM), (float) windowWidth / (float) windowHeight, 0.1f, 1024.0f);
         this->updateCameraVectors();
         this->active = true;
         freecam::setupKeybinds(engine);
