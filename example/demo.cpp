@@ -1,5 +1,3 @@
-#include <glm/ext/matrix_clip_space.hpp>
-#include <glm/ext/matrix_transform.hpp>
 #include "../src/core/engine.h"
 #include "../src/render/texture2d.h"
 #include "../src/loader/objMeshLoader.h"
@@ -33,7 +31,7 @@ int main() {
     mesh teapotMesh(&objMeshLoader, engine.getResourcesDirectory() + "meshes/teapot.obj");
     engine.addMesh("teapot", &teapotMesh);
 
-    freecam player{&engine, glm::vec3(0.0f, 0.0f, 0.0f)};
+    freecam player{&engine};
     engine.setCamera(&player);
 
     engine.addInitFunction([](class engine* e) {
