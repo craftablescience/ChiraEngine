@@ -101,7 +101,7 @@ void engine::mouseScrollCallback(GLFWwindow* window, double xPos, double yPos) {
     }
 }
 
-void engine::init(const std::string& iconPath) {
+void engine::init() {
     this->started = true;
 #ifdef WIN32
     system(("chcp " + std::to_string(CP_UTF8) + " > nul").c_str());
@@ -157,7 +157,6 @@ void engine::init(const std::string& iconPath) {
         this->setIcon(this->getResourcesDirectory() + path);
     } else {
         this->logWarning("BasicGameEngine", "You should not unset the iconPath property unless you are a trained professional!");
-        this->setIcon(iconPath);
     }
 
 #if DEBUG
@@ -199,8 +198,6 @@ void engine::init(const std::string& iconPath) {
     glfwSetMouseButtonCallback(window, mouseButtonCallback);
     glfwSetCursorPosCallback(this->window, mouseMovementCallback);
     glfwSetScrollCallback(this->window, mouseScrollCallback);
-    // don't do this at the start if you make a UI at some point
-    this->captureMouse();
 
 #if DEBUG
     IMGUI_CHECKVERSION();
@@ -453,12 +450,19 @@ void engine::runLogHooks(const loggerType type, const std::string& source, const
     }
 }
 
-void engine::captureMouse() const {
-    glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+void engine::captureMouse(bool capture) {
+    this->mouseCaptured = capture;
+    if (capture) {
+        glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
+    } else {
+        glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+    }
 }
 
-void engine::freeMouse() const {
-    glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+bool engine::isMouseCaptured() const {
+    return this->mouseCaptured;
 }
 
 void engine::showConsole(bool shouldShow) {

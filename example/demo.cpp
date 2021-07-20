@@ -6,7 +6,7 @@
 int main() {
     engine engine;
     objMeshLoader objMeshLoader;
-    engine.getSettingsLoader()->setValue("engine", "title", std::string("Demo Window"), true, false);
+    engine.getSettingsLoader()->setValue("engine", "title", std::string("Demo Window"), true, true);
 
     engine.addKeybind(keybind(GLFW_KEY_ESCAPE, GLFW_PRESS, [](class engine* e) {
         e->stop();
@@ -40,6 +40,7 @@ int main() {
 #if DEBUG
         engine::setBackgroundColor(0.0f, 0.0f, 0.3f, 1.0f);
 #endif
+        e->captureMouse(true);
     });
     engine.addRenderFunction([](class engine* e) {
         e->getTexture("crate")->use();

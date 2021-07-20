@@ -14,3 +14,5 @@ add_custom_target(copyDemoResources ALL
         ${CMAKE_CURRENT_SOURCE_DIR}/resources/
         ${CMAKE_BINARY_DIR}/example/resources/)
 add_dependencies(BasicGameEngineDemo copyDemoResources)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")

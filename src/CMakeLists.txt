@@ -1,3 +1,4 @@
+# OpenGL
 find_package(OpenGL REQUIRED)
 
 # GLAD
@@ -51,5 +52,3 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PUBLIC third_party/stb)
 target_include_directories(${PROJECT_NAME} PUBLIC third_party/imgui)
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glad glfw nlohmann_json::nlohmann_json glm::glm)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")

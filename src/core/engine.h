@@ -26,7 +26,7 @@ class engine {
 public:
     engine();
     virtual ~engine();
-    void init(const std::string& iconPath = "");
+    void init();
     void run();
     void render();
     void stop();
@@ -55,8 +55,8 @@ public:
     std::string getResourcesDirectory() const;
     void setResourcesDirectory(const std::string& resourcesDirectory);
     void addLogHook(const std::function<void(engine*,const loggerType,const std::string&,const std::string&)>& function);
-    void captureMouse() const;
-    void freeMouse() const;
+    void captureMouse(bool capture);
+    bool isMouseCaptured() const;
     void showConsole(bool shouldShow);
     console* getConsole();
     void logInfo(const std::string& source, const std::string& message);
@@ -74,6 +74,7 @@ private:
     std::vector<mousebind> mousebinds;
     std::map<std::string, std::unique_ptr<compilable>> compilableObjects;
     abstractCamera* camera = nullptr;
+    bool mouseCaptured = false;
     abstractSettingsLoader* settingsLoader = nullptr;
     logger logger;
     console consoleUI;

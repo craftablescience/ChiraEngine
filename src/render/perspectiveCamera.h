@@ -11,6 +11,7 @@
 class perspectiveCamera : public abstractCamera {
 public:
     explicit perspectiveCamera(engine* engine, float newYaw, float newPitch, glm::vec3 newPosition, glm::vec3 currentUp = glm::vec3(0.0f, 1.0f, 0.0f), float newZoom = 45.0f);
+    void init(engine* engine) override;
     void translate(glm::vec3 offset, float amount, double delta) override;
     void translateLocal(signedAxis axis, float amount, double delta);
     void rotate(float rotation, axis rotationAxis, double delta) override;
