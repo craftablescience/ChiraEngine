@@ -9,7 +9,7 @@ freecam::freecam(engine* engine, float newYaw, float newPitch, glm::vec3 newPosi
 
 void freecam::init(engine *engine) {
     perspectiveCamera::init(engine);
-    this->active = engine->isMouseCaptured();
+    this->setActive(engine->isMouseCaptured());
 }
 
 void freecam::translate(glm::vec3 offset, double delta) {

@@ -34,13 +34,14 @@ int main() {
     freecam player{&engine};
     engine.setCamera(&player);
 
-    engine.addInitFunction([](class engine* e) {
+    engine.addInitFunction([&player](class engine* e) {
         e->getShader("unlit")->use();
         e->getShader("unlit")->setUniform("ourTexture", 0);
 #if DEBUG
         engine::setBackgroundColor(0.0f, 0.0f, 0.3f, 1.0f);
 #endif
         e->captureMouse(true);
+        player.init(e);
     });
     engine.addRenderFunction([](class engine* e) {
         e->getTexture("crate")->use();
