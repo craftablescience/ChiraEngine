@@ -8,13 +8,21 @@ find_package(OpenGL REQUIRED)
 add_subdirectory(third_party/glad)
 
 # GLFW
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_DOCS     OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(third_party/glfw)
 
 # GLM
 add_subdirectory(third_party/glm)
+
+# OpenAL-Soft
+set(ALSOFT_EXAMPLES         OFF CACHE BOOL "" FORCE)
+set(ALSOFT_INSTALL_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(ALSOFT_NO_CONFIG_UTIL   OFF CACHE BOOL "" FORCE)
+set(ALSOFT_UTILS            OFF CACHE BOOL "" FORCE)
+set(ALSOFT_INSTALL_UTILS    OFF CACHE BOOL "" FORCE)
+add_subdirectory(third_party/openalsoft)
 
 # NLOHMANN_JSON
 set(JSON_BuildTests OFF CACHE INTERNAL "")
@@ -57,4 +65,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC third_party/glad/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PUBLIC third_party/stb)
 target_include_directories(${PROJECT_NAME} PUBLIC third_party/imgui)
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glad glfw nlohmann_json::nlohmann_json glm::glm)
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glad glfw nlohmann_json::nlohmann_json glm::glm OpenAL)

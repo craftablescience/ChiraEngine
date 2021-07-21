@@ -10,3 +10,6 @@
 [submodule "src/third_party/imgui"]
 	path = src/third_party/imgui
 	url = https://github.com/ocornut/imgui
+[submodule "src/third_party/openalsoft"]
+	path = src/third_party/openalsoft
+	url = https://github.com/kcat/openal-soft
