@@ -35,7 +35,11 @@ int main() {
     engine.setCamera(&player);
 
     engine.addInitFunction([&player](class engine* e) {
-        e->getScriptProvider("angelscript")->addScript(new angelscriptHolder{"resources/demo/scripts/testScript.as"});
+        bool angelscriptEnabled = true;
+        e->getSettingsLoader()->getValue("scripting", "angelscript", &angelscriptEnabled);
+        if (angelscriptEnabled) {
+            e->getScriptProvider("angelscript")->addScript(new angelscriptHolder{"resources/demo/scripts/testScript.as"});
+        }
 
         e->getShader("unlit")->use();
         e->getShader("unlit")->setUniform("ourTexture", 0);
