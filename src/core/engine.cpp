@@ -1,7 +1,6 @@
 #include "engine.h"
 
 #include <iostream>
-#include <cassert>
 #if __has_include(<windows.h>)
 #include <windows.h>
 #endif
@@ -309,7 +308,7 @@ void engine::addShader(const std::string& name, shader* s) {
 
 shader* engine::getShader(const std::string& name) {
     if (this->compilableObjects.count("shaders/" + name) == 0) {
-        throw std::runtime_error("Error: shader \"" + name + "\" is not recognized, check that you registered it properly!");
+        this->logError("engine::getShader", "Shader " + name + " is not recognized, check that you registered it properly!\"");
     }
     return (shader*) this->compilableObjects.at("shaders/" + name).get();
 }
@@ -320,7 +319,7 @@ void engine::addTexture(const std::string& name, texture* t) {
 
 texture* engine::getTexture(const std::string& name) {
     if (this->compilableObjects.count("textures/" + name) == 0) {
-        throw std::runtime_error("Error: texture \"" + name + "\" is not recognized, check that you registered it properly!");
+        this->logError("engine::getTexture", "Texture " + name + " is not recognized, check that you registered it properly!\"");
     }
     return (texture*) this->compilableObjects.at("textures/" + name).get();
 }
@@ -331,7 +330,7 @@ void engine::addMesh(const std::string& name, mesh* m) {
 
 mesh* engine::getMesh(const std::string& name) {
     if (this->compilableObjects.count("meshes/" + name) == 0) {
-        throw std::runtime_error("Error: mesh \"" + name + "\" is not recognized, check that you registered it properly!");
+        this->logError("engine::getMesh", "Mesh " + name + " is not recognized, check that you registered it properly!\"");
     }
     return (mesh*) this->compilableObjects.at("meshes/" + name).get();
 }
@@ -340,9 +339,9 @@ void engine::addScriptProvider(const std::string& name, angelscriptProvider* scr
     this->scriptProviders.insert(std::make_pair(name, scriptProvider));
 }
 
-angelscriptProvider* engine::getScriptProvider(const std::string& name) {
+abstractScriptProvider* engine::getScriptProvider(const std::string& name) {
     if (this->scriptProviders.count(name) == 0) {
-        throw std::runtime_error("Error: script provider \"" + name + "\" is not recognized, check that you registered it properly!");
+        this->logError("engine::getScriptProvider", "Script provider " + name + " is not recognized, check that you registered it properly!\"");
     }
     return (angelscriptProvider*) this->scriptProviders.at(name).get();
 }
