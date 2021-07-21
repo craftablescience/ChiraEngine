@@ -1,4 +1,10 @@
-add_executable(BasicGameEngineDemo demo.cpp)
+list(APPEND DEMO_SOURCES ${CMAKE_CURRENT_LIST_DIR}/demo.cpp)
+
+if(WIN32)
+    list(APPEND DEMO_SOURCES ${CMAKE_CURRENT_LIST_DIR}/resources/demo/win32/project.rc)
+endif()
+
+add_executable(BasicGameEngineDemo ${DEMO_SOURCES})
 target_link_libraries(BasicGameEngineDemo BasicGameEngine)
 
 # Resources provided by the engine
