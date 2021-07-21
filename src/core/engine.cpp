@@ -216,11 +216,13 @@ void engine::init() {
         scriptProvider->initProvider();
 
         if (name == "angelscript") {
-            auto* angel = dynamic_cast<angelscriptProvider*>(scriptProvider.get());
+            auto* angel = (angelscriptProvider*) scriptProvider.get();
 
             angel->registerGlobalFunction(engine::setBackgroundColor, "setBackgroundColor");
 
             angel->asEngine->RegisterGlobalFunction("void captureMouse(bool)", asMETHOD(engine, captureMouse), asCALL_THISCALL_ASGLOBAL, this);
+            angel->asEngine->RegisterGlobalFunction("bool isMouseCaptured()", asMETHOD(engine, isMouseCaptured), asCALL_THISCALL_ASGLOBAL, this);
+            angel->asEngine->RegisterGlobalFunction("void showConsole(bool)", asMETHOD(engine, showConsole), asCALL_THISCALL_ASGLOBAL, this);
         }
 
         scriptProvider->initScripts();

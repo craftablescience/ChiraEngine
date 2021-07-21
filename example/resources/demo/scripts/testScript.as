@@ -1,8 +1,15 @@
+//float x = 0.0;
+
 void init() {
     print("script initiated");
-    setBackgroundColor(0,1,0,1);
 }
 
-void render(double delta) {}
+void render(double delta) {
+//    x += float(delta);
+//    while (x > 1) {
+//        x -= 1;
+//    }
+//    setBackgroundColor(0.0, 0.0, x, 1.0);
+}
 
 void stop() {}
