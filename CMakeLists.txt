@@ -10,4 +10,8 @@ elseif(CMAKE_BUILD_TYPE MATCHES Release)
 endif()
 
 add_subdirectory(src)
-add_subdirectory(example)
+
+option(ADD_EXAMPLE_CODE "Compile example programs" ON)
+if(${ADD_EXAMPLE_CODE})
+    add_subdirectory(example)
+endif()
