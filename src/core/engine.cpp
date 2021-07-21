@@ -213,7 +213,17 @@ void engine::init() {
     this->callRegisteredFunctions(&(this->initFunctions));
 
     for (auto const& [name, scriptProvider] : this->scriptProviders) {
-        scriptProvider->init();
+        scriptProvider->initProvider();
+
+        if (name == "angelscript") {
+            auto* angel = dynamic_cast<angelscriptProvider*>(scriptProvider.get());
+
+            angel->registerGlobalFunction(engine::setBackgroundColor, "setBackgroundColor");
+
+            angel->asEngine->RegisterGlobalFunction("void captureMouse(bool)", asMETHOD(engine, captureMouse), asCALL_THISCALL_ASGLOBAL, this);
+        }
+
+        scriptProvider->initScripts();
     }
 }
 
@@ -335,7 +345,7 @@ mesh* engine::getMesh(const std::string& name) {
     return (mesh*) this->compilableObjects.at("meshes/" + name).get();
 }
 
-void engine::addScriptProvider(const std::string& name, angelscriptProvider* scriptProvider) {
+void engine::addScriptProvider(const std::string& name, abstractScriptProvider* scriptProvider) {
     this->scriptProviders.insert(std::make_pair(name, scriptProvider));
 }
 
@@ -343,7 +353,7 @@ abstractScriptProvider* engine::getScriptProvider(const std::string& name) {
     if (this->scriptProviders.count(name) == 0) {
         this->logError("engine::getScriptProvider", "Script provider " + name + " is not recognized, check that you registered it properly!\"");
     }
-    return (angelscriptProvider*) this->scriptProviders.at(name).get();
+    return (abstractScriptProvider*) this->scriptProviders.at(name).get();
 }
 
 void engine::addInitFunction(const std::function<void(engine*)>& init) {

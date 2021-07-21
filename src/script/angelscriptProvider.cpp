@@ -13,7 +13,7 @@ angelscriptProvider::angelscriptProvider(engine* engine) {
     this->started = false;
 }
 
-void angelscriptProvider::init() {
+void angelscriptProvider::initProvider() {
     this->asEngine = asCreateScriptEngine();
     int r;
 
@@ -27,9 +27,10 @@ void angelscriptProvider::init() {
     RegisterScriptMathComplex(this->asEngine);
     RegisterStdString(this->asEngine);
 
-    r = this->asEngine->RegisterGlobalFunction("void print(const string& in)", asFUNCTION(this->print), asCALL_CDECL);
-    assert(r >= 0);
+    this->registerGlobalFunction(angelscriptProvider::print, "print");
+}
 
+void angelscriptProvider::initScripts() {
     for (auto const& script : this->scripts) {
         script->init(this);
     }
