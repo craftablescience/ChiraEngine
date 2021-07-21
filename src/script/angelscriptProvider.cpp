@@ -3,9 +3,11 @@
 #include <scriptany/scriptany.h>
 #include <scriptarray/scriptarray.h>
 #include <scriptdictionary/scriptdictionary.h>
+#include <scripthandle/scripthandle.h>
 #include <scriptmath/scriptmath.h>
 #include <scriptmath/scriptmathcomplex.h>
 #include <scriptstdstring/scriptstdstring.h>
+#include <weakref/weakref.h>
 
 angelscriptProvider::angelscriptProvider(engine* engine) {
     if (!angelscriptProvider::gameEngine) {
@@ -27,6 +29,8 @@ void angelscriptProvider::initProvider() {
     RegisterScriptDictionary(this->asEngine);
     RegisterScriptMath(this->asEngine);
     RegisterScriptMathComplex(this->asEngine);
+    RegisterScriptHandle(this->asEngine);
+    RegisterScriptWeakRef(this->asEngine);
     RegisterScriptAny(this->asEngine);
 
     this->registerGlobalFunction(angelscriptProvider::print, "print");

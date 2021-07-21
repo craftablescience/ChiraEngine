@@ -85,6 +85,9 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptdictionary/scriptdictionary.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptdictionary/scriptdictionary.cpp
 
+        ${CMAKE_CURRENT_LIST_DIR}/addons/scripthandle/scripthandle.h
+        ${CMAKE_CURRENT_LIST_DIR}/addons/scripthandle/scripthandle.cpp
+
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptmath/scriptmath.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptmath/scriptmath.cpp
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptmath/scriptmathcomplex.h
@@ -92,4 +95,7 @@ list(APPEND ENGINE_SOURCES
 
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptstdstring/scriptstdstring.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptstdstring/scriptstdstring.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/addons/scriptstdstring/scriptstdstring_utils.cpp)
+        ${CMAKE_CURRENT_LIST_DIR}/addons/scriptstdstring/scriptstdstring_utils.cpp
+
+        ${CMAKE_CURRENT_LIST_DIR}/addons/weakref/weakref.h
+        ${CMAKE_CURRENT_LIST_DIR}/addons/weakref/weakref.cpp)
