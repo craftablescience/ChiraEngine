@@ -2,6 +2,7 @@
 #include <datetime/datetime.h>
 #include <scriptany/scriptany.h>
 #include <scriptarray/scriptarray.h>
+#include <scriptdictionary/scriptdictionary.h>
 #include <scriptmath/scriptmath.h>
 #include <scriptmath/scriptmathcomplex.h>
 #include <scriptstdstring/scriptstdstring.h>
@@ -21,11 +22,12 @@ void angelscriptProvider::initProvider() {
     assert(r >= 0);
 
     RegisterScriptDateTime(this->asEngine);
-    RegisterScriptAny(this->asEngine);
+    RegisterStdString(this->asEngine);
     RegisterScriptArray(this->asEngine, true);
+    RegisterScriptDictionary(this->asEngine);
     RegisterScriptMath(this->asEngine);
     RegisterScriptMathComplex(this->asEngine);
-    RegisterStdString(this->asEngine);
+    RegisterScriptAny(this->asEngine);
 
     this->registerGlobalFunction(angelscriptProvider::print, "print");
 }

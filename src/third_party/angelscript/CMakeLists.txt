@@ -82,6 +82,9 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptbuilder/scriptbuilder.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptbuilder/scriptbuilder.cpp
 
+        ${CMAKE_CURRENT_LIST_DIR}/addons/scriptdictionary/scriptdictionary.h
+        ${CMAKE_CURRENT_LIST_DIR}/addons/scriptdictionary/scriptdictionary.cpp
+
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptmath/scriptmath.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptmath/scriptmath.cpp
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptmath/scriptmathcomplex.h
