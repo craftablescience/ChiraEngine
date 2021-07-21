@@ -16,11 +16,13 @@
 #include "../input/mousebind.h"
 #include "../loader/abstractSettingsLoader.h"
 #include "../render/abstractCamera.h"
+#include "../script/angelscriptProvider.h"
 #include "../ui/console.h"
 #include "../utility/logger.h"
 
 class keybind;
 class mousebind;
+class angelscriptProvider;
 
 class engine {
 public:
@@ -41,6 +43,8 @@ public:
     texture* getTexture(const std::string& name);
     void addMesh(const std::string& name, mesh* t);
     mesh* getMesh(const std::string& name);
+    void addScriptProvider(const std::string& name, angelscriptProvider* scriptProvider);
+    angelscriptProvider* getScriptProvider(const std::string& name);
     void addInitFunction(const std::function<void(engine*)>& init);
     void addRenderFunction(const std::function<void(engine*)>& render);
     void addStopFunction(const std::function<void(engine*)>& stop);
@@ -70,6 +74,7 @@ private:
     std::vector<std::function<void(engine*)>> renderFunctions;
     std::vector<std::function<void(engine*)>> stopFunctions;
     std::vector<std::function<void(engine*,const loggerType,const std::string&,const std::string&)>> loggerFunctions;
+    std::map<std::string, std::unique_ptr<angelscriptProvider>> scriptProviders;
     std::vector<keybind> keybinds;
     std::vector<mousebind> mousebinds;
     std::map<std::string, std::unique_ptr<compilable>> compilableObjects;

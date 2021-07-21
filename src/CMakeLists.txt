@@ -1,3 +1,6 @@
+# AngelScript
+include(third_party/angelscript/CMakeLists.txt)
+
 # OpenGL
 find_package(OpenGL REQUIRED)
 
@@ -43,10 +46,13 @@ include(core/CMakeLists.txt)
 include(input/CMakeLists.txt)
 include(loader/CMakeLists.txt)
 include(render/CMakeLists.txt)
+include(script/CMakeLists.txt)
 include(ui/CMakeLists.txt)
 include(utility/CMakeLists.txt)
 add_library(${PROJECT_NAME} ${ENGINE_SOURCES})
 
+target_include_directories(${PROJECT_NAME} PUBLIC third_party/angelscript/include)
+target_include_directories(${PROJECT_NAME} PUBLIC third_party/angelscript/addons)
 target_include_directories(${PROJECT_NAME} PUBLIC third_party/glad/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PUBLIC third_party/stb)

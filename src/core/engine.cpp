@@ -12,7 +12,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "../loader/jsonSettingsLoader.h"
 
-engine::engine() : logger() {
+engine::engine() : logger(), scriptProviders() {
     // todo: make a resources loading system
     this->setResourcesDirectory("resources/basicgameengine/");
     this->setSettingsLoader(new jsonSettingsLoader("settings.json"));
@@ -114,13 +114,11 @@ void engine::init() {
         e->getConsole()->engineLoggingHook(type, source, message);
     });
 
-    /*
-    this->logInfo("test", "info");
-    this->logInfoImportant("test", "info_important");
-    this->logOutput("test", "output");
-    this->logWarning("test", "warning");
-    this->logError("test", "error");
-    */
+    bool angelscriptEnabled = true;
+    this->settingsLoader->getValue("scripting", "angelscript", &angelscriptEnabled);
+    if (angelscriptEnabled) {
+        this->addScriptProvider("angelscript", new angelscriptProvider{this});
+    }
 
     if (!glfwInit()) {
         this->logError("GLFW", "GLFW not defined");
@@ -130,6 +128,7 @@ void engine::init() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
     int windowWidth = 1600;
     this->settingsLoader->getValue("graphics", "windowWidth", &windowWidth);
     int windowHeight = 900;
@@ -207,11 +206,16 @@ void engine::init() {
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(this->window, true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
+    this->logInfo("ImGUI", "ImGUI loaded successfully");
 
     for (auto const& [name, object] : this->compilableObjects) {
         object.get()->compile();
     }
-    callRegisteredFunctions(&(this->initFunctions));
+    this->callRegisteredFunctions(&(this->initFunctions));
+
+    for (auto const& [name, scriptProvider] : this->scriptProviders) {
+        scriptProvider->init();
+    }
 }
 
 void engine::run() {
@@ -251,12 +255,20 @@ void engine::render() {
     }
 #endif
 
+    for (auto const& [name, scriptProvider] : this->scriptProviders) {
+        scriptProvider->render(this->getDeltaTime());
+    }
+
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void engine::stop() {
     this->logInfoImportant("BasicGameEngine", "Gracefully exiting...");
+
+    for (auto const& [name, scriptProvider] : this->scriptProviders) {
+        scriptProvider->stop();
+    }
     for (auto const& [name, object] : this->compilableObjects) {
         object->discard();
     }
@@ -324,6 +336,17 @@ mesh* engine::getMesh(const std::string& name) {
     return (mesh*) this->compilableObjects.at("meshes/" + name).get();
 }
 
+void engine::addScriptProvider(const std::string& name, angelscriptProvider* scriptProvider) {
+    this->scriptProviders.insert(std::make_pair(name, scriptProvider));
+}
+
+angelscriptProvider* engine::getScriptProvider(const std::string& name) {
+    if (this->scriptProviders.count(name) == 0) {
+        throw std::runtime_error("Error: script provider \"" + name + "\" is not recognized, check that you registered it properly!");
+    }
+    return (angelscriptProvider*) this->scriptProviders.at(name).get();
+}
+
 void engine::addInitFunction(const std::function<void(engine*)>& init) {
     this->initFunctions.push_back(init);
 }
@@ -374,10 +397,12 @@ void engine::setSettingsLoaderDefaults() {
     this->settingsLoader->setValue("graphics", "windowWidth", 1600, false, false);
     this->settingsLoader->setValue("graphics", "windowHeight", 900, false, false);
     this->settingsLoader->setValue("graphics", "fullscreen", false, false, false);
+    this->settingsLoader->addCategory("scripting");
+    this->settingsLoader->setValue("scripting", "angelscript", true, false, false);
     this->settingsLoader->save();
 }
 
-void engine::callRegisteredFunctions(const std::vector<std::function<void(engine*)>> *list) {
+void engine::callRegisteredFunctions(const std::vector<std::function<void(engine*)>>* list) {
     for (const std::function<void(engine*)>& func : *list) {
         func(this);
     }
