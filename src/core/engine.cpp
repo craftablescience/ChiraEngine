@@ -11,7 +11,10 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "../loader/jsonSettingsLoader.h"
 
-engine::engine() : logger(), scriptProviders() {
+logger engine::logger{};
+std::vector<std::function<void(const loggerType,const std::string&,const std::string&)>> engine::loggerFunctions{};
+
+engine::engine() : scriptProviders() {
     // todo: make a resources loading system
     this->setResourcesDirectory("resources/basicgameengine/");
     this->setSettingsLoader(new jsonSettingsLoader("settings.json"));
@@ -109,18 +112,18 @@ void engine::init() {
 #endif
 #endif
 
-    this->addLogHook([](engine* e, const loggerType type, const std::string& source, const std::string& message) {
-        e->getConsole()->engineLoggingHook(type, source, message);
+    engine::addLogHook([this](const loggerType type, const std::string& source, const std::string& message) {
+        this->getConsole()->engineLoggingHook(type, source, message);
     });
 
     bool angelscriptEnabled = true;
     this->settingsLoader->getValue("scripting", "angelscript", &angelscriptEnabled);
     if (angelscriptEnabled) {
-        this->addScriptProvider("angelscript", new angelscriptProvider{this});
+        this->addScriptProvider("angelscript", new angelscriptProvider{});
     }
 
     if (!glfwInit()) {
-        this->logError("GLFW", "GLFW not defined");
+        engine::logError("GLFW", "GLFW not defined");
         exit(EXIT_FAILURE);
     }
     glfwSetErrorCallback(this->errorCallback);
@@ -142,7 +145,7 @@ void engine::init() {
                                     fullscreen ? glfwGetPrimaryMonitor() : nullptr,
                                     nullptr);
     if (!this->window) {
-        this->logError("GLFW", "Window creation failed");
+        engine::logError("GLFW", "Window creation failed");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -154,17 +157,17 @@ void engine::init() {
         this->settingsLoader->getValue("engine", "iconPath", &path);
         this->setIcon(this->getResourcesDirectory() + path);
     } else {
-        this->logWarning("BasicGameEngine", "You should not unset the iconPath property unless you are a trained professional!");
+        engine::logWarning("BasicGameEngine", "You should not unset the iconPath property unless you are a trained professional!");
     }
 
 #if DEBUG
     int major, minor, rev;
     glfwGetVersion(&major, &minor, &rev);
-    this->logInfo("GLFW", "Using GLFW v" + std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(rev));
+    engine::logInfo("GLFW", "Using GLFW v" + std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(rev));
 #endif
 
     if (!gladLoadGL(glfwGetProcAddress)) {
-        this->logError("OpenGL", "OpenGL 3.3 Core must be available to run this program");
+        engine::logError("OpenGL", "OpenGL 3.3 Core must be available to run this program");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -173,8 +176,8 @@ void engine::init() {
     int vertexAttributes, textureUnits;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &vertexAttributes);
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
-    this->logInfo("OpenGL", "Maximum number of vertex attributes is " + std::to_string(vertexAttributes));
-    this->logInfo("OpenGL", "Maximum number of texture units is " + std::to_string(textureUnits));
+    engine::logInfo("OpenGL", "Maximum number of vertex attributes is " + std::to_string(vertexAttributes));
+    engine::logInfo("OpenGL", "Maximum number of texture units is " + std::to_string(textureUnits));
 #endif
 
     int width, height;
@@ -205,7 +208,7 @@ void engine::init() {
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(this->window, true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
-    this->logInfo("ImGUI", "ImGUI loaded successfully");
+    engine::logInfo("ImGUI", "ImGUI loaded successfully");
 
     for (auto const& [name, object] : this->compilableObjects) {
         object.get()->compile();
@@ -275,7 +278,7 @@ void engine::render() {
 }
 
 void engine::stop() {
-    this->logInfoImportant("BasicGameEngine", "Gracefully exiting...");
+    engine::logInfoImportant("BasicGameEngine", "Gracefully exiting...");
 
     for (auto const& [name, scriptProvider] : this->scriptProviders) {
         scriptProvider->stop();
@@ -320,7 +323,7 @@ void engine::addShader(const std::string& name, shader* s) {
 
 shader* engine::getShader(const std::string& name) {
     if (this->compilableObjects.count("shaders/" + name) == 0) {
-        this->logError("engine::getShader", "Shader " + name + " is not recognized, check that you registered it properly!\"");
+        engine::logError("engine::getShader", "Shader " + name + " is not recognized, check that you registered it properly!\"");
     }
     return (shader*) this->compilableObjects.at("shaders/" + name).get();
 }
@@ -331,7 +334,7 @@ void engine::addTexture(const std::string& name, texture* t) {
 
 texture* engine::getTexture(const std::string& name) {
     if (this->compilableObjects.count("textures/" + name) == 0) {
-        this->logError("engine::getTexture", "Texture " + name + " is not recognized, check that you registered it properly!\"");
+        engine::logError("engine::getTexture", "Texture " + name + " is not recognized, check that you registered it properly!\"");
     }
     return (texture*) this->compilableObjects.at("textures/" + name).get();
 }
@@ -342,7 +345,7 @@ void engine::addMesh(const std::string& name, mesh* m) {
 
 mesh* engine::getMesh(const std::string& name) {
     if (this->compilableObjects.count("meshes/" + name) == 0) {
-        this->logError("engine::getMesh", "Mesh " + name + " is not recognized, check that you registered it properly!\"");
+        engine::logError("engine::getMesh", "Mesh " + name + " is not recognized, check that you registered it properly!\"");
     }
     return (mesh*) this->compilableObjects.at("meshes/" + name).get();
 }
@@ -353,7 +356,7 @@ void engine::addScriptProvider(const std::string& name, abstractScriptProvider* 
 
 abstractScriptProvider* engine::getScriptProvider(const std::string& name) {
     if (this->scriptProviders.count(name) == 0) {
-        this->logError("engine::getScriptProvider", "Script provider " + name + " is not recognized, check that you registered it properly!\"");
+        engine::logError("engine::getScriptProvider", "Script provider " + name + " is not recognized, check that you registered it properly!\"");
     }
     return (abstractScriptProvider*) this->scriptProviders.at(name).get();
 }
@@ -452,37 +455,37 @@ void engine::setIcon(const std::string& iconPath) {
 }
 
 void engine::logInfo(const std::string& source, const std::string& message) {
-    this->logger.logInfo(source, message);
-    this->runLogHooks(INFO, source, message);
+    engine::logger.logInfo(source, message);
+    engine::runLogHooks(INFO, source, message);
 }
 
 void engine::logInfoImportant(const std::string& source, const std::string& message) {
-    this->logger.logInfoImportant(source, message);
-    this->runLogHooks(INFO_IMPORTANT, source, message);
+    engine::logger.logInfoImportant(source, message);
+    engine::runLogHooks(INFO_IMPORTANT, source, message);
 }
 
 void engine::logOutput(const std::string& source, const std::string& message) {
-    this->logger.logOutput(source, message);
-    this->runLogHooks(OUTPUT, source, message);
+    engine::logger.logOutput(source, message);
+    engine::runLogHooks(OUTPUT, source, message);
 }
 
 void engine::logWarning(const std::string& source, const std::string& message) {
-    this->logger.logWarning(source, message);
-    this->runLogHooks(WARNING, source, message);
+    engine::logger.logWarning(source, message);
+    engine::runLogHooks(WARNING, source, message);
 }
 
 void engine::logError(const std::string& source, const std::string& message) {
-    this->logger.logError(source, message);
-    this->runLogHooks((loggerType) 4, source, message);
+    engine::logger.logError(source, message);
+    engine::runLogHooks((loggerType) 4, source, message);
 }
 
-void engine::addLogHook(const std::function<void(engine*,const loggerType,const std::string&,const std::string&)>& function) {
-    this->loggerFunctions.push_back(function);
+void engine::addLogHook(const std::function<void(const loggerType,const std::string&,const std::string&)>& function) {
+    engine::loggerFunctions.push_back(function);
 }
 
 void engine::runLogHooks(const loggerType type, const std::string& source, const std::string& message) {
-    for (const std::function<void(engine*,const loggerType,const std::string&,const std::string&)>& function : this->loggerFunctions) {
-        function(this, type, source, message);
+    for (const std::function<void(const loggerType,const std::string&,const std::string&)>& function : engine::loggerFunctions) {
+        function(type, source, message);
     }
 }
 

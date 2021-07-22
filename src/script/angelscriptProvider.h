@@ -12,11 +12,10 @@
 #include "angelscriptHelpers.h"
 
 class angelscriptHolder;
-class engine;
 
 class angelscriptProvider : public abstractScriptProvider {
 public:
-    explicit angelscriptProvider(engine* gameEngine);
+    angelscriptProvider();
     void initProvider() override;
     void initScripts() override;
     void render(double delta) override;
@@ -36,7 +35,6 @@ public:
     static void print(const std::string& message);
     static void messageCallback(const asSMessageInfo* msg, void* param);
 
-    static inline engine* gameEngine = nullptr;
     asIScriptEngine* asEngine = nullptr;
 private:
     bool started;

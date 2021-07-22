@@ -9,10 +9,7 @@
 #include <scriptstdstring/scriptstdstring.h>
 #include <weakref/weakref.h>
 
-angelscriptProvider::angelscriptProvider(engine* engine) {
-    if (!angelscriptProvider::gameEngine) {
-        angelscriptProvider::gameEngine = engine;
-    }
+angelscriptProvider::angelscriptProvider() {
     this->started = false;
 }
 
@@ -63,15 +60,15 @@ void angelscriptProvider::addScript(angelscriptHolder* script) {
 }
 
 void angelscriptProvider::print(const std::string& message) {
-    angelscriptProvider::gameEngine->logOutput("AngelScript", message);
+    engine::logOutput("AngelScript", message);
 }
 
 void angelscriptProvider::messageCallback(const asSMessageInfo* msg, void* param) {
     if (msg->type == asMSGTYPE_INFORMATION) {
-        angelscriptProvider::gameEngine->logOutput( "AngelScript",std::string(msg->section) + " (" + std::to_string(msg->row) + ", " + std::to_string(msg->col) + "): " + msg->message);
+        engine::logOutput( "AngelScript",std::string(msg->section) + " (" + std::to_string(msg->row) + ", " + std::to_string(msg->col) + "): " + msg->message);
     } else if (msg->type == asMSGTYPE_WARNING) {
-        angelscriptProvider::gameEngine->logWarning("AngelScript",std::string(msg->section) + " (" + std::to_string(msg->row) + ", " + std::to_string(msg->col) + "): " + msg->message);
+        engine::logWarning("AngelScript",std::string(msg->section) + " (" + std::to_string(msg->row) + ", " + std::to_string(msg->col) + "): " + msg->message);
     } else if (msg->type == asMSGTYPE_ERROR) {
-        angelscriptProvider::gameEngine->logError(  "AngelScript",std::string(msg->section) + " (" + std::to_string(msg->row) + ", " + std::to_string(msg->col) + "): " + msg->message);
+        engine::logError(  "AngelScript",std::string(msg->section) + " (" + std::to_string(msg->row) + ", " + std::to_string(msg->col) + "): " + msg->message);
     }
 }

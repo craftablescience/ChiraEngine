@@ -23,7 +23,6 @@
 
 class keybind;
 class mousebind;
-class angelscriptProvider;
 
 class engine {
 public:
@@ -59,22 +58,22 @@ public:
     double getDeltaTime() const;
     std::string getResourcesDirectory() const;
     void setResourcesDirectory(const std::string& resourcesDirectory);
-    void addLogHook(const std::function<void(engine*,const loggerType,const std::string&,const std::string&)>& function);
+    static void addLogHook(const std::function<void(const loggerType,const std::string&,const std::string&)>& function);
     void captureMouse(bool capture);
     bool isMouseCaptured() const;
     void showConsole(bool shouldShow);
     console* getConsole();
-    void logInfo(const std::string& source, const std::string& message);
-    void logInfoImportant(const std::string& source, const std::string& message);
-    void logOutput(const std::string& source, const std::string& message);
-    void logWarning(const std::string& source, const std::string& message);
-    void logError(const std::string& source, const std::string& message);
+    static void logInfo(const std::string& source, const std::string& message);
+    static void logInfoImportant(const std::string& source, const std::string& message);
+    static void logOutput(const std::string& source, const std::string& message);
+    static void logWarning(const std::string& source, const std::string& message);
+    static void logError(const std::string& source, const std::string& message);
 private:
     GLFWwindow* window = nullptr;
     std::vector<std::function<void(engine*)>> initFunctions;
     std::vector<std::function<void(engine*)>> renderFunctions;
     std::vector<std::function<void(engine*)>> stopFunctions;
-    std::vector<std::function<void(engine*,const loggerType,const std::string&,const std::string&)>> loggerFunctions;
+    static std::vector<std::function<void(const loggerType,const std::string&,const std::string&)>> loggerFunctions;
     std::map<std::string, std::unique_ptr<abstractScriptProvider>> scriptProviders;
     std::vector<keybind> keybinds;
     std::vector<mousebind> mousebinds;
@@ -82,7 +81,7 @@ private:
     abstractCamera* camera = nullptr;
     bool mouseCaptured = false;
     abstractSettingsLoader* settingsLoader = nullptr;
-    logger logger;
+    static logger logger;
     console consoleUI;
     std::string resourcesDirectoryPath;
     bool started = false;
@@ -90,7 +89,7 @@ private:
     void setSettingsLoaderDefaults();
     // NOTE: PNGs must have a bit depth of 8 or less* (less not tested)
     void setIcon(const std::string& iconPath);
-    void runLogHooks(const loggerType type, const std::string& source, const std::string& message);
+    static void runLogHooks(const loggerType type, const std::string& source, const std::string& message);
     static void errorCallback(int error, const char* description);
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
     static void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
