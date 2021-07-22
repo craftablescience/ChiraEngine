@@ -21,15 +21,15 @@ int main() {
         e->showConsole(!e->getConsole()->getEnabled());
     }));
 
-    shader unlitShader(engine.getResourcesDirectory() + "shaders/unlit.vsh",
-                       engine.getResourcesDirectory() + "shaders/unlit.fsh");
-    engine.addShader("unlit", &unlitShader);
 
-    texture2d crateTex("resources/demo/textures/crate.jpg", GL_RGB);
-    engine.addTexture("crate", &crateTex);
-
-    mesh teapotMesh(&objMeshLoader, engine.getResourcesDirectory() + "meshes/teapot.obj");
-    engine.addMesh("teapot", &teapotMesh);
+    engine.addShader("unlit", new shader(
+            engine.getResourcesDirectory() + "shaders/unlit.vsh",
+            engine.getResourcesDirectory() + "shaders/unlit.fsh"));
+    engine.addTexture("crate", new texture2d(
+            "resources/demo/textures/crate.jpg", GL_RGB));
+    engine.addMesh("teapot", new mesh(
+            &objMeshLoader,
+            engine.getResourcesDirectory() + "meshes/teapot.obj"));
 
     freecam player{&engine};
     engine.setCamera(&player);
