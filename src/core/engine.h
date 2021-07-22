@@ -26,8 +26,7 @@ class mousebind;
 
 class engine {
 public:
-    engine();
-    virtual ~engine();
+    engine(const std::string& configPath = "settings.json");
     void init();
     void run();
     void render();
@@ -80,7 +79,7 @@ private:
     std::map<std::string, std::unique_ptr<compilable>> compilableObjects;
     abstractCamera* camera = nullptr;
     bool mouseCaptured = false;
-    abstractSettingsLoader* settingsLoader = nullptr;
+    std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
     static logger logger;
     console consoleUI;
     std::string resourcesDirectoryPath;

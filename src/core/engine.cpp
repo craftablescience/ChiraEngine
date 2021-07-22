@@ -14,18 +14,14 @@
 logger engine::logger{};
 std::vector<std::function<void(const loggerType,const std::string&,const std::string&)>> engine::loggerFunctions{};
 
-engine::engine() : scriptProviders() {
+engine::engine(const std::string& configPath) : scriptProviders() {
     // todo: make a resources loading system
     this->setResourcesDirectory("resources/basicgameengine/");
-    this->setSettingsLoader(new jsonSettingsLoader("settings.json"));
+    this->setSettingsLoader(new jsonSettingsLoader(configPath));
     this->lastTime = 0;
     this->currentTime = 0;
     this->lastMouseX = -1;
     this->lastMouseY = -1;
-}
-
-engine::~engine() {
-    delete this->settingsLoader;
 }
 
 void engine::errorCallback(int error, const char* description) {
@@ -390,12 +386,11 @@ abstractSettingsLoader* engine::getSettingsLoader() {
     if (!this->settingsLoader) {
         throw std::runtime_error("Error: settings loader is not defined at this time");
     }
-    return this->settingsLoader;
+    return this->settingsLoader.get();
 }
 
 void engine::setSettingsLoader(abstractSettingsLoader* newSettingsLoader) {
-    delete this->settingsLoader;
-    this->settingsLoader = newSettingsLoader;
+    this->settingsLoader.reset(newSettingsLoader);
     this->setSettingsLoaderDefaults();
 }
 
