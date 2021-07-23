@@ -13,3 +13,9 @@
 [submodule "src/third_party/openalsoft"]
 	path = src/third_party/openalsoft
 	url = https://github.com/kcat/openal-soft
+[submodule "src/third_party/ogg"]
+	path = src/third_party/ogg
+	url = https://github.com/xiph/ogg
+[submodule "src/third_party/vorbis"]
+	path = src/third_party/vorbis
+	url = https://github.com/xiph/vorbis
