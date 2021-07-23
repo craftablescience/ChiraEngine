@@ -80,6 +80,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC third_party/angelscript/includ
 target_include_directories(${PROJECT_NAME} PUBLIC third_party/angelscript/addons)
 target_include_directories(${PROJECT_NAME} PUBLIC third_party/glad/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PUBLIC third_party/ogg/include)
+target_include_directories(${PROJECT_NAME} PUBLIC third_party/vorbis/include)
 target_include_directories(${PROJECT_NAME} PUBLIC third_party/stb)
 target_include_directories(${PROJECT_NAME} PUBLIC third_party/imgui)
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${ENGINE_LINK_LIBRARIES})
