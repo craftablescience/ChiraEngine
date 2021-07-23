@@ -6,15 +6,18 @@ find_package(OpenGL REQUIRED)
 
 # GLAD
 add_subdirectory(third_party/glad)
+list(APPEND ENGINE_LINK_LIBRARIES glad)
 
 # GLFW
 set(GLFW_BUILD_DOCS     OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(third_party/glfw)
+list(APPEND ENGINE_LINK_LIBRARIES glfw)
 
 # GLM
 add_subdirectory(third_party/glm)
+list(APPEND ENGINE_LINK_LIBRARIES glm::glm)
 
 # OPENAL
 set(ALSOFT_EXAMPLES         OFF CACHE BOOL "" FORCE)
@@ -26,17 +29,21 @@ set(ALSOFT_REQUIRE_OPENSL   OFF CACHE BOOL "" FORCE)
 set(ALSOFT_REQUIRE_OBOE     OFF CACHE BOOL "" FORCE)
 set(ALSOFT_REQUIRE_SDL2     OFF CACHE BOOL "" FORCE)
 add_subdirectory(third_party/openalsoft)
+list(APPEND ENGINE_LINK_LIBRARIES OpenAL)
 
 # LIBOGG
 set(INSTALL_DOCS OFF CACHE BOOL "" FORCE)
 add_subdirectory(third_party/ogg)
+list(APPEND ENGINE_LINK_LIBRARIES ogg)
 
 # LIBVORBIS
 add_subdirectory(third_party/vorbis)
+list(APPEND ENGINE_LINK_LIBRARIES vorbis vorbisenc vorbisfile)
 
 # NLOHMANN_JSON
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(third_party/json)
+list(APPEND ENGINE_LINK_LIBRARIES nlohmann_json::nlohmann_json)
 
 # STB
 include(third_party/stb/CMakeLists.txt)
@@ -75,4 +82,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC third_party/glad/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PUBLIC third_party/stb)
 target_include_directories(${PROJECT_NAME} PUBLIC third_party/imgui)
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} glad glfw glm::glm OpenAL nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} ${ENGINE_LINK_LIBRARIES})
