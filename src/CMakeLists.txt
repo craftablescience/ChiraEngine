@@ -1,7 +1,7 @@
-# AngelScript
+# ANGELSCRIPT
 include(third_party/angelscript/CMakeLists.txt)
 
-# OpenGL
+# OPENGL
 find_package(OpenGL REQUIRED)
 
 # GLAD
@@ -16,13 +16,23 @@ add_subdirectory(third_party/glfw)
 # GLM
 add_subdirectory(third_party/glm)
 
-# OpenAL-Soft
+# OPENAL
 set(ALSOFT_EXAMPLES         OFF CACHE BOOL "" FORCE)
 set(ALSOFT_INSTALL_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(ALSOFT_NO_CONFIG_UTIL   OFF CACHE BOOL "" FORCE)
 set(ALSOFT_UTILS            OFF CACHE BOOL "" FORCE)
 set(ALSOFT_INSTALL_UTILS    OFF CACHE BOOL "" FORCE)
+set(ALSOFT_REQUIRE_OPENSL   OFF CACHE BOOL "" FORCE)
+set(ALSOFT_REQUIRE_OBOE     OFF CACHE BOOL "" FORCE)
+set(ALSOFT_REQUIRE_SDL2     OFF CACHE BOOL "" FORCE)
 add_subdirectory(third_party/openalsoft)
+
+# LIBOGG
+set(INSTALL_DOCS OFF CACHE BOOL "" FORCE)
+add_subdirectory(third_party/ogg)
+
+# LIBVORBIS
+add_subdirectory(third_party/vorbis)
 
 # NLOHMANN_JSON
 set(JSON_BuildTests OFF CACHE INTERNAL "")
