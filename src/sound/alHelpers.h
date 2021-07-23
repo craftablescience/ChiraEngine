@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_ALHELPERS_H
-#define BASICGAMEENGINE_ALHELPERS_H
-
+#pragma once
 
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -18,7 +16,7 @@
 bool alCheckForErrors(const std::string& filename, const std::uint_fast32_t line) {
     ALenum error = alGetError();
     if (error != AL_NO_ERROR) {
-        std::string out = "In " + filename + " at line " + line + ": ";
+        std::string out = "In " + filename + " at line " + std::to_string(line) + ": ";
         switch (error) {
             case AL_INVALID_NAME:
                 out += "AL_INVALID_NAME: a bad name (ID) was passed to an OpenAL function";
@@ -70,7 +68,7 @@ auto alCallImpl(const char* filename,
 bool alcCheckForErrors(const std::string& filename, const std::uint_fast32_t line, ALCdevice* device) {
     ALCenum error = alcGetError(device);
     if (error != ALC_NO_ERROR) {
-        std::string out = "In " + filename + " at line " + line + ": ";
+        std::string out = "In " + filename + " at line " + std::to_string(line) + ": ";
         switch (error) {
             case ALC_INVALID_VALUE:
                 out += "ALC_INVALID_VALUE: an invalid value was passed to an OpenAL function";
@@ -131,6 +129,3 @@ bool alcGetAvailableDevices(std::vector<std::string>& devicesVec, ALCdevice* dev
     } while(*(ptr + 1) != '\0');
     return true;
 }
-
-
-#endif //BASICGAMEENGINE_ALHELPERS_H
