@@ -6,6 +6,9 @@
 
 // todo: sounds are not 3d (check if this is a stereo/mono issue)
 // todo: sounds cannot be played after stop() is ran
+// todo: make class name(s) more consistent
+// todo: if sound is stereo and 3d, log warning
+// todo: add WAV sound loader
 
 bool oggFileStream::init(const std::string& filename) {
     return this->init(filename, 1.0f, 1.0f, glm::vec3{}, soundType::EFFECT, false, true);
