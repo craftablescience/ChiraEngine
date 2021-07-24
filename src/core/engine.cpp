@@ -354,7 +354,18 @@ abstractScriptProvider* engine::getScriptProvider(const std::string& name) {
     if (this->scriptProviders.count(name) == 0) {
         engine::logError("engine::getScriptProvider", "Script provider " + name + " is not recognized, check that you registered it properly!\"");
     }
-    return (abstractScriptProvider*) this->scriptProviders.at(name).get();
+    return this->scriptProviders.at(name).get();
+}
+
+void engine::addSoundManager(const std::string& name, abstractSoundManager* scriptProvider) {
+    this->soundManagers.insert(std::make_pair(name, scriptProvider));
+}
+
+abstractSoundManager* engine::getSoundManager(const std::string& name) {
+    if (this->soundManagers.count(name) == 0) {
+        engine::logError("engine::getSoundManager", "Sound manager " + name + " is not recognized, check that you registered it properly!\"");
+    }
+    return this->soundManagers.at(name).get();
 }
 
 void engine::addInitFunction(const std::function<void(engine*)>& init) {

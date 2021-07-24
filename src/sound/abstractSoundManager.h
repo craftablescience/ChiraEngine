@@ -14,5 +14,5 @@ public:
     virtual void addSound(const std::string& soundName, abstractSound* sound) = 0;
     virtual abstractSound* getSound(const std::string& soundName) = 0;
 protected:
-    std::map<std::string,std::unique_ptr<abstractSound>> sounds;
+    std::map<std::string, std::unique_ptr<abstractSound>> sounds;
 };
