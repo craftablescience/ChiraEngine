@@ -319,7 +319,7 @@ void engine::addShader(const std::string& name, shader* s) {
 
 shader* engine::getShader(const std::string& name) {
     if (this->compilableObjects.count("shaders/" + name) == 0) {
-        engine::logError("engine::getShader", "Shader " + name + " is not recognized, check that you registered it properly!\"");
+        engine::logError("engine::getShader", "Shader " + name + " is not recognized, check that you registered it properly");
     }
     return (shader*) this->compilableObjects.at("shaders/" + name).get();
 }
@@ -330,7 +330,7 @@ void engine::addTexture(const std::string& name, texture* t) {
 
 texture* engine::getTexture(const std::string& name) {
     if (this->compilableObjects.count("textures/" + name) == 0) {
-        engine::logError("engine::getTexture", "Texture " + name + " is not recognized, check that you registered it properly!\"");
+        engine::logError("engine::getTexture", "Texture " + name + " is not recognized, check that you registered it properly");
     }
     return (texture*) this->compilableObjects.at("textures/" + name).get();
 }
@@ -341,7 +341,7 @@ void engine::addMesh(const std::string& name, mesh* m) {
 
 mesh* engine::getMesh(const std::string& name) {
     if (this->compilableObjects.count("meshes/" + name) == 0) {
-        engine::logError("engine::getMesh", "Mesh " + name + " is not recognized, check that you registered it properly!\"");
+        engine::logError("engine::getMesh", "Mesh " + name + " is not recognized, check that you registered it properly");
     }
     return (mesh*) this->compilableObjects.at("meshes/" + name).get();
 }
@@ -352,7 +352,7 @@ void engine::addScriptProvider(const std::string& name, abstractScriptProvider* 
 
 abstractScriptProvider* engine::getScriptProvider(const std::string& name) {
     if (this->scriptProviders.count(name) == 0) {
-        engine::logError("engine::getScriptProvider", "Script provider " + name + " is not recognized, check that you registered it properly!\"");
+        engine::logError("engine::getScriptProvider", "Script provider " + name + " is not recognized, check that you registered it properly");
     }
     return this->scriptProviders.at(name).get();
 }
@@ -363,7 +363,7 @@ void engine::addSoundManager(const std::string& name, abstractSoundManager* scri
 
 abstractSoundManager* engine::getSoundManager(const std::string& name) {
     if (this->soundManagers.count(name) == 0) {
-        engine::logError("engine::getSoundManager", "Sound manager " + name + " is not recognized, check that you registered it properly!\"");
+        engine::logError("engine::getSoundManager", "Sound manager " + name + " is not recognized, check that you registered it properly");
     }
     return this->soundManagers.at(name).get();
 }
@@ -382,7 +382,7 @@ void engine::addStopFunction(const std::function<void(engine*)>& stop) {
 
 abstractCamera* engine::getCamera() const {
     if (!this->camera) {
-        throw std::runtime_error("Error: must set camera in engine::setCamera");
+        engine::logWarning("engine::getCamera", "Must set camera in engine::setCamera for this call to function");
     }
     return this->camera;
 }
