@@ -46,7 +46,7 @@ int main() {
         }
 
         auto* sound = new oggFileStream();
-        sound->init("resources/demo/sounds/helloWorld.ogg");
+        sound->init("resources/demo/sounds/helloWorldCut.ogg");
         e->getSoundManager()->addSound("helloWorld", sound);
 
         e->getShader("unlit")->use();

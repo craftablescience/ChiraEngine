@@ -4,6 +4,9 @@
 
 #include "oggFileStream.h"
 
+// todo: sounds are not 3d (check if this is a stereo/mono issue)
+// todo: sounds cannot be played after stop() is ran
+
 bool oggFileStream::init(const std::string& filename) {
     return this->init(filename, 1.0f, 1.0f, glm::vec3{}, soundType::EFFECT, false, true);
 }
@@ -50,15 +53,14 @@ bool oggFileStream::init(const std::string& filename, float pitch_, float gain_,
     alCall(alGenSources, 1, &this->audioData.source);
     alCall(alSourcef, this->audioData.source, AL_PITCH, this->pitch);
     alCall(alSourcef, this->audioData.source, AL_GAIN, this->gain);
-    if (this->is3d) {
+    if (!this->is3d) {
         alSourcei(this->audioData.source, AL_SOURCE_RELATIVE, AL_TRUE);
         alCall(alSource3f, this->audioData.source, AL_POSITION, 0, 0, 0);
     } else {
-        alSourcei(this->audioData.source, AL_SOURCE_RELATIVE, AL_FALSE);
         alCall(alSource3f, this->audioData.source, AL_POSITION, this->position.x, this->position.y, this->position.z);
     }
     alCall(alSource3f, this->audioData.source, AL_VELOCITY, 0, 0, 0);
-    alCall(alSourcei, this->audioData.source, AL_LOOPING, AL_FALSE);
+    alCall(alSourcei, this->audioData.source, AL_LOOPING, AL_FALSE); // Looping is handled manually later
 
     alCall(alGenBuffers, OGG_NUM_BUFFERS, &this->audioData.buffers[0]);
 
