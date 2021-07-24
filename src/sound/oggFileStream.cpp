@@ -150,7 +150,11 @@ void oggFileStream::update() {
             } else if (result == OV_EINVAL) {
                 engine::logError("OGG", "OV_EINVAL found in update of buffer in " + this->audioData.filename);
                 break;
-            } else if (result == 0 && this->loop) {
+            } else if (result == 0) {
+                if (!this->loop) {
+                    this->stop();
+                    return;
+                }
                 std::int32_t seekResult = ov_raw_seek(&this->audioData.oggVorbisFile, 0);
                 switch (seekResult) {
                     case OV_ENOSEEK:
