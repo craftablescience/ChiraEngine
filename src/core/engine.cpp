@@ -383,6 +383,7 @@ void engine::addStopFunction(const std::function<void(engine*)>& stop) {
 abstractCamera* engine::getCamera() const {
     if (!this->camera) {
         engine::logWarning("engine::getCamera", "Must set camera in engine::setCamera for this call to function");
+        return nullptr;
     }
     return this->camera;
 }
@@ -395,7 +396,8 @@ void engine::setCamera(abstractCamera* newCamera) {
 
 abstractSettingsLoader* engine::getSettingsLoader() {
     if (!this->settingsLoader) {
-        throw std::runtime_error("Error: settings loader is not defined at this time");
+        engine::logWarning("engine::getSettingsLoader", "Must set settings loader in engine::setSettingsLoader for this call to function");
+        return nullptr;
     }
     return this->settingsLoader.get();
 }
