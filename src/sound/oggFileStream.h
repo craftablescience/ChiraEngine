@@ -39,9 +39,9 @@ class oggFileStream : public abstractSound {
 public:
     bool init(const std::string& filename);
     bool init(const std::string& filename, float pitch_, float gain_, const glm::vec3& position_, soundType type_, bool loop_, bool is3d_) override;
-    void play() const override;
+    void play() override;
     void update() override;
-    void stop() const override;
+    void stop() override;
     void discard() override;
 private:
     static std::size_t readOggVorbisCallback(void* destination, std::size_t size1, std::size_t size2, void* fileHandle);

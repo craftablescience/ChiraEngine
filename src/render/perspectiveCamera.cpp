@@ -1,5 +1,6 @@
 #include "perspectiveCamera.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
 perspectiveCamera::perspectiveCamera(engine* engine, float newYaw, float newPitch, glm::vec3 newPosition, glm::vec3 currentUp, float newZoom) :
@@ -60,10 +61,23 @@ void perspectiveCamera::setPosition(glm::vec3 newPosition) {
     this->position = newPosition;
 }
 
+glm::vec3 perspectiveCamera::getPosition() {
+    return this->position;
+}
+
 void perspectiveCamera::setRotation(glm::vec3 rotation) {
     this->yaw = rotation.x;
     this->pitch = rotation.y;
     this->updateCameraVectors();
+}
+
+glm::vec3 perspectiveCamera::getRotation() {
+    const auto* matrix = (const float*) glm::value_ptr(*this->getViewMatrix());
+    return glm::vec3(matrix[1], matrix[2], matrix[3]);
+}
+
+glm::vec3 perspectiveCamera::getUpVector() {
+    return this->up;
 }
 
 void perspectiveCamera::setScreenDimensions(int width, int height) {

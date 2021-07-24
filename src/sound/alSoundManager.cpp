@@ -40,12 +40,12 @@ void alSoundManager::stop() {
     }
 }
 
-void alSoundManager::setListenerPosition(float x, float y, float z) {
-    alListener3f(AL_POSITION, x, y, z);
+void alSoundManager::setListenerPosition(glm::vec3 newPosition) {
+    alListener3f(AL_POSITION, newPosition.x, newPosition.y, newPosition.z);
 }
 
-void alSoundManager::setListenerRotation(float x, float y, float z) {
-    float vec[6] = {x, y, z, 0.0f, 1.0f, 0.0f};
+void alSoundManager::setListenerRotation(glm::vec3 newRotation, glm::vec3 up) {
+    float vec[6] = {newRotation.x, newRotation.y, newRotation.z, up.x, up.y, up.z};
     alListenerfv(AL_ORIENTATION, vec);
 }
 

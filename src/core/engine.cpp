@@ -207,17 +207,17 @@ void engine::init() {
     ImGui_ImplOpenGL3_Init("#version 330 core");
     engine::logInfo("ImGUI", "ImGUI loaded successfully");
 
-    for (auto const& [name, object] : this->compilableObjects) {
-        object.get()->compile();
-    }
-    this->callRegisteredFunctions(&(this->initFunctions));
-
     bool openalEnabled = true;
     this->settingsLoader->getValue("scripting", "angelscript", &openalEnabled);
     if (openalEnabled) {
         this->setSoundManager(new alSoundManager{});
     }
     this->soundManager->init();
+
+    for (auto const& [name, object] : this->compilableObjects) {
+        object.get()->compile();
+    }
+    this->callRegisteredFunctions(&(this->initFunctions));
 
     for (auto const& [name, scriptProvider] : this->scriptProviders) {
         scriptProvider->initProvider();
@@ -243,6 +243,8 @@ void engine::run() {
     while (!glfwWindowShouldClose(this->window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this->render();
+        this->soundManager->setListenerPosition(this->getCamera()->getPosition());
+        this->soundManager->setListenerRotation(this->getCamera()->getRotation(), this->getCamera()->getUpVector());
         this->soundManager->update();
         glfwSwapBuffers(this->window);
         glfwPollEvents();

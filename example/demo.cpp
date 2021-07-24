@@ -2,6 +2,7 @@
 #include "../src/render/texture2d.h"
 #include "../src/loader/objMeshLoader.h"
 #include "../src/render/freecam.h"
+#include "../src/sound/oggFileStream.h"
 
 int main() {
     engine engine;
@@ -20,7 +21,9 @@ int main() {
     engine.addKeybind(keybind(GLFW_KEY_GRAVE_ACCENT, GLFW_PRESS, [](class engine* e) {
         e->showConsole(!e->getConsole()->getEnabled());
     }));
-
+    engine.addKeybind(keybind(GLFW_KEY_M, GLFW_PRESS, [](class engine* e) {
+        e->getSoundManager()->getSound("helloWorld")->play();
+    }));
 
     engine.addShader("unlit", new shader(
             engine.getResourcesDirectory() + "shaders/unlit.vsh",
@@ -41,6 +44,10 @@ int main() {
             ((angelscriptProvider*) e->getScriptProvider("angelscript"))->addScript(
                     new angelscriptHolder{"resources/demo/scripts/testScript.as"});
         }
+
+        auto* sound = new oggFileStream();
+        sound->init("resources/demo/sounds/helloWorld.ogg");
+        e->getSoundManager()->addSound("helloWorld", sound);
 
         e->getShader("unlit")->use();
         e->getShader("unlit")->setUniform("ourTexture", 0);

@@ -4,13 +4,6 @@
 
 #include "oggFileStream.h"
 
-/*
- * This code is largely copied verbatim from:
- * https://indiegamedev.net/2020/01/16/how-to-stream-ogg-files-with-openal-in-c/
- * It has been modified to fit in the context of a sound manager.
- * This code was in the public domain and was not under any licenses or restrictions.
- */
-
 bool oggFileStream::init(const std::string& filename) {
     return this->init(filename, 1.0f, 1.0f, glm::vec3{}, soundType::EFFECT, false, true);
 }
@@ -122,9 +115,12 @@ bool oggFileStream::init(const std::string& filename, float pitch_, float gain_,
     return true;
 }
 
-void oggFileStream::play() const {
-    alCall(alSourceStop, this->audioData.source);
-    alCall(alSourcePlay, this->audioData.source);
+void oggFileStream::play() {
+    if (!this->playing) {
+        this->playing = true;
+        alCall(alSourceStop, this->audioData.source);
+        alCall(alSourcePlay, this->audioData.source);
+    }
 }
 
 void oggFileStream::update() {
@@ -154,7 +150,7 @@ void oggFileStream::update() {
             } else if (result == OV_EINVAL) {
                 engine::logError("OGG", "OV_EINVAL found in update of buffer in " + this->audioData.filename);
                 break;
-            } else if (result == 0) {
+            } else if (result == 0 && this->loop) {
                 std::int32_t seekResult = ov_raw_seek(&this->audioData.oggVorbisFile, 0);
                 switch (seekResult) {
                     case OV_ENOSEEK:
@@ -202,11 +198,15 @@ void oggFileStream::update() {
     }
 }
 
-void oggFileStream::stop() const {
+void oggFileStream::stop() {
     alCall(alSourceStop, this->audioData.source);
+    this->playing = false;
 }
 
 void oggFileStream::discard() {
+    if (this->playing) {
+        this->stop();
+    }
     alCall(alDeleteSources, 1, &this->audioData.source);
     for (auto buffer : this->audioData.buffers) {
         alCall(alDeleteBuffers, 1, &buffer);

@@ -16,7 +16,10 @@ public:
     void translateLocal(signedAxis axis, float amount, double delta);
     void rotate(float rotation, axis rotationAxis, double delta) override;
     void setPosition(glm::vec3 newPosition) override;
+    glm::vec3 getPosition() override;
     void setRotation(glm::vec3 rotation) override;
+    glm::vec3 getRotation() override;
+    glm::vec3 getUpVector() override;
     void setScreenDimensions(int width, int height) override;
     glm::mat4* getViewMatrix() override;
 protected:

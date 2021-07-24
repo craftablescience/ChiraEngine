@@ -10,7 +10,10 @@ public:
     virtual void translate(glm::vec3 offset, float amount, double delta) = 0;
     virtual void rotate(float rotation, axis rotationAxis, double delta) = 0;
     virtual void setPosition(glm::vec3 position) = 0;
+    virtual glm::vec3 getPosition() = 0;
     virtual void setRotation(glm::vec3 rotation) = 0;
+    virtual glm::vec3 getRotation() = 0;
+    virtual glm::vec3 getUpVector() = 0;
     virtual void setScreenDimensions(int width, int height) = 0;
     virtual glm::mat4* getProjectionMatrix() {
         return &(this->projection);

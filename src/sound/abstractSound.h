@@ -9,9 +9,9 @@ enum soundType {
 class abstractSound {
 public:
     virtual bool init(const std::string& filename, float pitch_, float gain_, const glm::vec3& position_, soundType type_, bool loop_, bool is3d_) = 0;
-    virtual void play() const = 0;
+    virtual void play() = 0;
     virtual void update() = 0;
-    virtual void stop() const = 0;
+    virtual void stop() = 0;
     virtual void discard() = 0;
 
     void setPitch(float newPitch) {
@@ -31,6 +31,9 @@ public:
     }
     [[nodiscard]] bool is3D() const {
         return this->is3d;
+    }
+    [[nodiscard]] bool isPlaying() const {
+        return this->playing;
     }
 
     void setPosition(const glm::vec3& newPosition) {
@@ -54,4 +57,5 @@ protected:
     soundType type;
     bool loop;
     bool is3d;
+    bool playing = false;
 };
