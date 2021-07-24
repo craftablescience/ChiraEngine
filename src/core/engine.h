@@ -1,6 +1,8 @@
 #ifndef BASICGAMEENGINE_ENGINE_H
 #define BASICGAMEENGINE_ENGINE_H
 
+// todo: use #pragma once throughout project
+
 
 #include "glad/gl.h"
 #define GLFW_INCLUDE_NONE
