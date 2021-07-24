@@ -45,8 +45,8 @@ public:
     mesh* getMesh(const std::string& name);
     void addScriptProvider(const std::string& name, abstractScriptProvider* scriptProvider);
     abstractScriptProvider* getScriptProvider(const std::string& name);
-    void addSoundManager(const std::string& name, abstractSoundManager* soundManager);
-    abstractSoundManager* getSoundManager(const std::string& name);
+    void setSoundManager(abstractSoundManager* newSoundManager);
+    abstractSoundManager* getSoundManager();
     void addInitFunction(const std::function<void(engine*)>& init);
     void addRenderFunction(const std::function<void(engine*)>& render);
     void addStopFunction(const std::function<void(engine*)>& stop);
@@ -77,7 +77,7 @@ private:
     std::vector<std::function<void(engine*)>> stopFunctions;
     static std::vector<std::function<void(const loggerType,const std::string&,const std::string&)>> loggerFunctions;
     std::map<std::string, std::unique_ptr<abstractScriptProvider>> scriptProviders;
-    std::map<std::string, std::unique_ptr<abstractSoundManager>> soundManagers;
+    std::unique_ptr<abstractSoundManager> soundManager;
     std::vector<keybind> keybinds;
     std::vector<mousebind> mousebinds;
     std::map<std::string, std::unique_ptr<compilable>> compilableObjects;

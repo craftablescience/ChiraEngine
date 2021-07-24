@@ -10,6 +10,7 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "../loader/jsonSettingsLoader.h"
+#include "../sound/alSoundManager.h"
 
 logger engine::logger{};
 std::vector<std::function<void(const loggerType,const std::string&,const std::string&)>> engine::loggerFunctions{};
@@ -211,6 +212,13 @@ void engine::init() {
     }
     this->callRegisteredFunctions(&(this->initFunctions));
 
+    bool openalEnabled = true;
+    this->settingsLoader->getValue("scripting", "angelscript", &openalEnabled);
+    if (openalEnabled) {
+        this->setSoundManager(new alSoundManager{});
+    }
+    this->soundManager->init();
+
     for (auto const& [name, scriptProvider] : this->scriptProviders) {
         scriptProvider->initProvider();
 
@@ -235,6 +243,7 @@ void engine::run() {
     while (!glfwWindowShouldClose(this->window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this->render();
+        this->soundManager->update();
         glfwSwapBuffers(this->window);
         glfwPollEvents();
         this->keyboardRepeatingCallback();
@@ -283,6 +292,8 @@ void engine::stop() {
         object->discard();
     }
     callRegisteredFunctions(&(this->stopFunctions));
+
+    this->soundManager->stop();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -357,15 +368,16 @@ abstractScriptProvider* engine::getScriptProvider(const std::string& name) {
     return this->scriptProviders.at(name).get();
 }
 
-void engine::addSoundManager(const std::string& name, abstractSoundManager* scriptProvider) {
-    this->soundManagers.insert(std::make_pair(name, scriptProvider));
+void engine::setSoundManager(abstractSoundManager* newSoundManager) {
+    this->soundManager.reset(newSoundManager);
 }
 
-abstractSoundManager* engine::getSoundManager(const std::string& name) {
-    if (this->soundManagers.count(name) == 0) {
-        engine::logError("engine::getSoundManager", "Sound manager " + name + " is not recognized, check that you registered it properly");
+abstractSoundManager* engine::getSoundManager() {
+    if (!this->soundManager) {
+        engine::logWarning("engine::getSoundManager", "Must set sound manager in engine::setSoundManager for this call to function");
+        return nullptr;
     }
-    return this->soundManagers.at(name).get();
+    return this->soundManager.get();
 }
 
 void engine::addInitFunction(const std::function<void(engine*)>& init) {
@@ -412,6 +424,8 @@ void engine::setSettingsLoaderDefaults() {
     this->settingsLoader->addCategory("engine");
     this->settingsLoader->setValue("engine", "iconPath", std::string("textures/ui/icon.png"), false, false);
     this->settingsLoader->setValue("engine", "title", std::string("Basic Game Engine"), false, false);
+    this->settingsLoader->addCategory("audio");
+    this->settingsLoader->setValue("audio", "openal", true, false, false);
     this->settingsLoader->addCategory("input");
     this->settingsLoader->setValue("input", "rawMouseMotion", true, false, false);
     this->settingsLoader->setValue("input", "invertYAxis", false, false, false);
