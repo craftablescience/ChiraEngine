@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_ABSTRACTSCRIPTPROVIDER_H
-#define BASICGAMEENGINE_ABSTRACTSCRIPTPROVIDER_H
-
+#pragma once
 
 class abstractScriptProvider {
 public:
@@ -9,6 +7,3 @@ public:
     virtual void render(double delta) = 0;
     virtual void stop() = 0;
 };
-
-
-#endif //BASICGAMEENGINE_ABSTRACTSCRIPTPROVIDER_H

@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_CONSOLE_H
-#define BASICGAMEENGINE_CONSOLE_H
-
+#pragma once
 
 #include <string>
 #include "imgui.h"
@@ -25,6 +23,3 @@ private:
     bool scrollToBottom;
     bool isEnabled;
 };
-
-
-#endif //BASICGAMEENGINE_CONSOLE_H

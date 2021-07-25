@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_LOGGER_H
-#define BASICGAMEENGINE_LOGGER_H
-
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -75,6 +73,3 @@ public:
 #endif
     }
 };
-
-
-#endif //BASICGAMEENGINE_LOGGER_H

@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_ANGELSCRIPTPROVIDER_H
-#define BASICGAMEENGINE_ANGELSCRIPTPROVIDER_H
-
+#pragma once
 
 #include <angelscript.h>
 #include <string>
@@ -40,6 +38,3 @@ private:
     bool started;
     std::vector<std::unique_ptr<angelscriptHolder>> scripts;
 };
-
-
-#endif //BASICGAMEENGINE_ANGELSCRIPTPROVIDER_H

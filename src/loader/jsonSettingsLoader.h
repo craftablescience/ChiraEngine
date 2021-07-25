@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_JSONSETTINGSLOADER_H
-#define BASICGAMEENGINE_JSONSETTINGSLOADER_H
-
+#pragma once
 
 #include <fstream>
 #include "nlohmann/json.hpp"
@@ -31,6 +29,3 @@ public:
 private:
     nlohmann::json settings;
 };
-
-
-#endif //BASICGAMEENGINE_JSONSETTINGSLOADER_H

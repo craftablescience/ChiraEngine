@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_SHADERFILE_H
-#define BASICGAMEENGINE_SHADERFILE_H
-
+#pragma once
 
 #include <string>
 #include "../utility/handleObject.h"
@@ -19,6 +17,3 @@ private:
     static std::string loadSourceFromFile(const std::string& filepath);
     void checkForCompilationErrors() const;
 };
-
-
-#endif //BASICGAMEENGINE_SHADERFILE_H

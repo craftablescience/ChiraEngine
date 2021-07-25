@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_ABSTRACTFILESETTINGSLOADER_H
-#define BASICGAMEENGINE_ABSTRACTFILESETTINGSLOADER_H
-
+#pragma once
 
 #include <string>
 #include "abstractSettingsLoader.h"
@@ -20,6 +18,3 @@ public:
 private:
     std::string filepath;
 };
-
-
-#endif //BASICGAMEENGINE_ABSTRACTFILESETTINGSLOADER_H

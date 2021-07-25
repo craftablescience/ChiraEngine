@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_TEXTURE2D_H
-#define BASICGAMEENGINE_TEXTURE2D_H
-
+#pragma once
 
 #include "texture.h"
 #include "glad/gl.h"
@@ -17,6 +15,3 @@ private:
     int filterMode;
     bool mipmaps;
 };
-
-
-#endif //BASICGAMEENGINE_TEXTURE2D_H

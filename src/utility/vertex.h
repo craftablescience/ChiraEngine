@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_VERTEX_H
-#define BASICGAMEENGINE_VERTEX_H
-
+#pragma once
 
 #include "glad/gl.h"
 
@@ -43,6 +41,3 @@ struct vertex {
     vertex();
     friend bool operator==(const vertex& v1, const vertex& v2);
 };
-
-
-#endif //BASICGAMEENGINE_VERTEX_H

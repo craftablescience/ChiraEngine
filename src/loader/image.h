@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_IMAGE_H
-#define BASICGAMEENGINE_IMAGE_H
-
+#pragma once
 
 #include <string>
 
@@ -12,6 +10,3 @@ public:
 protected:
     unsigned char* data;
 };
-
-
-#endif //BASICGAMEENGINE_IMAGE_H

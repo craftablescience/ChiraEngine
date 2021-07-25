@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_RENDERABLE_H
-#define BASICGAMEENGINE_RENDERABLE_H
-
+#pragma once
 
 #include "compilable.h"
 #include "../render/shader.h"
@@ -16,6 +14,3 @@ public:
 protected:
     glm::mat4 model;
 };
-
-
-#endif //BASICGAMEENGINE_RENDERABLE_H

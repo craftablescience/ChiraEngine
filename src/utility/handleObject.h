@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_HANDLEOBJECT_H
-#define BASICGAMEENGINE_HANDLEOBJECT_H
-
+#pragma once
 
 #include "compilable.h"
 
@@ -10,6 +8,3 @@ public:
 protected:
     int handle = -1;
 };
-
-
-#endif //BASICGAMEENGINE_HANDLEOBJECT_H

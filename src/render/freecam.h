@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_FREECAM_H
-#define BASICGAMEENGINE_FREECAM_H
-
+#pragma once
 
 #include <glad/gl.h>
 #include <glm/glm.hpp>
@@ -23,6 +21,3 @@ protected:
     bool capturedMouse = false;
     void setupKeybinds(engine* engine) const;
 };
-
-
-#endif //BASICGAMEENGINE_FREECAM_H

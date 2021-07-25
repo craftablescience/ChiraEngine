@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_MESH_H
-#define BASICGAMEENGINE_MESH_H
-
+#pragma once
 
 #include <vector>
 #include <string>
@@ -22,6 +20,3 @@ private:
     std::vector<vertex> vertices;
     std::vector<unsigned int> indices;
 };
-
-
-#endif //BASICGAMEENGINE_MESH_H

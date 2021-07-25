@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_ANGELSCRIPTHOLDER_H
-#define BASICGAMEENGINE_ANGELSCRIPTHOLDER_H
-
+#pragma once
 
 #include "angelscriptProvider.h"
 
@@ -25,6 +23,3 @@ private:
     asIScriptFunction* renderFunc = nullptr;
     asIScriptFunction* stopFunc = nullptr;
 };
-
-
-#endif //BASICGAMEENGINE_ANGELSCRIPTHOLDER_H

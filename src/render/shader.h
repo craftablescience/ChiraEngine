@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_SHADER_H
-#define BASICGAMEENGINE_SHADER_H
-
+#pragma once
 
 #include "shaderFile.h"
 #include <glm/glm.hpp>
@@ -35,6 +33,3 @@ private:
     shaderFile frag;
     void checkForCompilationErrors() const;
 };
-
-
-#endif //BASICGAMEENGINE_SHADER_H

@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_ANGELSCRIPTHELPERS_H
-#define BASICGAMEENGINE_ANGELSCRIPTHELPERS_H
-
+#pragma once
 
 #include <string>
 #include <sstream>
@@ -121,6 +119,3 @@ template<typename R, typename... ArgTypes>
 struct asTypeString<R(*)(ArgTypes...)> : asTypeString<R(ArgTypes...)> {
     explicit asTypeString(const std::string &name_) : asTypeString<R(ArgTypes...)>(name_) {}
 };
-
-
-#endif //BASICGAMEENGINE_ANGELSCRIPTHELPERS_H

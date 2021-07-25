@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_MOUSEBIND_H
-#define BASICGAMEENGINE_MOUSEBIND_H
-
+#pragma once
 
 #include <functional>
 #include "../core/engine.h"
@@ -21,6 +19,3 @@ private:
     mouseActions type;
     std::function<void(engine*,double,double)> fire;
 };
-
-
-#endif //BASICGAMEENGINE_MOUSEBIND_H

@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_OBJMESHLOADER_H
-#define BASICGAMEENGINE_OBJMESHLOADER_H
-
+#pragma once
 
 #include <vector>
 #include <string>
@@ -13,6 +11,3 @@ public:
 private:
     static void addVertex(const vertex& v, std::vector<vertex>* vertices, std::vector<unsigned int>* indices);
 };
-
-
-#endif //BASICGAMEENGINE_OBJMESHLOADER_H

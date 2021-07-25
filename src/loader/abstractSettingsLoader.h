@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_ABSTRACTSETTINGSLOADER_H
-#define BASICGAMEENGINE_ABSTRACTSETTINGSLOADER_H
-
+#pragma once
 
 #include <string>
 
@@ -26,6 +24,3 @@ public:
     virtual void load() = 0;
     virtual void save() = 0;
 };
-
-
-#endif //BASICGAMEENGINE_ABSTRACTSETTINGSLOADER_H

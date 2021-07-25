@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_KEYBIND_H
-#define BASICGAMEENGINE_KEYBIND_H
-
+#pragma once
 
 #include <functional>
 #include "../core/engine.h"
@@ -21,6 +19,3 @@ private:
     bool mouse;
     std::function<void(engine*)> fire;
 };
-
-
-#endif //BASICGAMEENGINE_KEYBIND_H

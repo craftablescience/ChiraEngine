@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_AXIS_H
-#define BASICGAMEENGINE_AXIS_H
-
+#pragma once
 
 enum axis {
     X,
@@ -16,5 +14,3 @@ enum signedAxis {
     ZP,
     ZN
 };
-
-#endif //BASICGAMEENGINE_AXIS_H

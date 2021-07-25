@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_ABSTRACTCAMERA_H
-#define BASICGAMEENGINE_ABSTRACTCAMERA_H
-
+#pragma once
 
 #include "../utility/axis.h"
 
@@ -40,6 +38,3 @@ protected:
     bool current;
     bool active;
 };
-
-
-#endif //BASICGAMEENGINE_ABSTRACTCAMERA_H

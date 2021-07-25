@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_TEXTURE_H
-#define BASICGAMEENGINE_TEXTURE_H
-
+#pragma once
 
 #include "../loader/image.h"
 #include "../utility/compilable.h"
@@ -22,6 +20,3 @@ protected:
     int height;
     int bitDepth;
 };
-
-
-#endif //BASICGAMEENGINE_TEXTURE_H

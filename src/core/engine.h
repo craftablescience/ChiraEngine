@@ -1,8 +1,4 @@
-#ifndef BASICGAMEENGINE_ENGINE_H
-#define BASICGAMEENGINE_ENGINE_H
-
-// todo: use #pragma once throughout project
-
+#pragma once
 
 #include "glad/gl.h"
 #define GLFW_INCLUDE_NONE
@@ -104,6 +100,3 @@ private:
     static void mouseMovementCallback(GLFWwindow* window, double xPos, double yPos);
     static void mouseScrollCallback(GLFWwindow* window, double xPos, double yPos);
 };
-
-
-#endif //BASICGAMEENGINE_ENGINE_H

@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_PERSPECTIVECAMERA_H
-#define BASICGAMEENGINE_PERSPECTIVECAMERA_H
-
+#pragma once
 
 #include <glm/glm.hpp>
 #include "../utility/axis.h"
@@ -33,6 +31,3 @@ protected:
     float zoom;
     void updateCameraVectors();
 };
-
-
-#endif //BASICGAMEENGINE_PERSPECTIVECAMERA_H

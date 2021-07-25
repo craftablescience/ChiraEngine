@@ -1,6 +1,4 @@
-#ifndef BASICGAMEENGINE_DEBUGMESHLOADER_H
-#define BASICGAMEENGINE_DEBUGMESHLOADER_H
-
+#pragma once
 
 #include <vector>
 #include "abstractMeshLoader.h"
@@ -10,6 +8,3 @@ class debugMeshLoader : public abstractMeshLoader {
 public:
     void loadMesh(const std::string& filepath, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) override;
 };
-
-
-#endif //BASICGAMEENGINE_DEBUGMESHLOADER_H
