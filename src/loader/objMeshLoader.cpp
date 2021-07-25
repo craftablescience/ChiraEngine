@@ -2,6 +2,7 @@
 #include <sstream>
 #include <algorithm>
 #include "objMeshLoader.h"
+#include "../core/engine.h"
 
 void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
     std::vector<position> vertexBuffer;
@@ -18,7 +19,7 @@ void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* v
             vertexBuffer.push_back(pos);
         } else if (line.substr(0,3) == "vt ") {
             uv uv;
-            std::istringstream iss(line.substr(3));
+            std::istringstream iss(line.substr(2));
             iss >> uv.u >> uv.v;
             uvBuffer.push_back(uv);
         } else if (line.substr(0,3) == "vn ") {
@@ -35,22 +36,22 @@ void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* v
                 count++;
             }
             if (count > 3) {
-                throw std::runtime_error("Error loading mesh: OBJ file must be triangulated");
+                engine::logError("OBJ", "OBJ file " + filepath + " is not triangulated");
             }
             // Figure out if UVs are included
             bool includeUVs = true;
-            std::istringstream uss(line.substr(2));
+            std::string data = line.substr(2);
+            std::replace(data.begin(), data.end(), '/', ' ');
+            std::istringstream uss(data);
             unsigned int i;
             unsigned int c = 0;
-            while (ss >> i) {
+            while (uss >> i) {
                 c++;
             }
             if (c < 9) {
                 includeUVs = false;
             }
             // Parse
-            std::string data = line.substr(2);
-            std::replace(data.begin(), data.end(), '/', ' ');
             std::istringstream iss(data);
             int p0, p1, p2, t0 = 0, t1 = 0, t2 = 0, n0, n1, n2;
             if (includeUVs) {
