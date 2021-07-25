@@ -4,8 +4,6 @@
 
 #include "oggFileSound.h"
 
-// todo: add WAV sound loader
-
 bool oggFileSound::init(const std::string& filename) {
     return this->init(filename, 1.0f, 1.0f, glm::vec3{}, soundType::EFFECT, false, true);
 }
