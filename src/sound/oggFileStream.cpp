@@ -7,7 +7,6 @@
 // todo: sounds are not 3d (check if this is a stereo/mono issue)
 // todo: sounds cannot be played after stop() is ran
 // todo: make class name(s) more consistent
-// todo: if sound is stereo and 3d, log warning
 // todo: add WAV sound loader
 
 bool oggFileStream::init(const std::string& filename) {
@@ -115,6 +114,11 @@ bool oggFileStream::init(const std::string& filename, float pitch_, float gain_,
         }
         alCall(alBufferData, this->audioData.buffers[i], this->audioData.format, data, dataSoFar, this->audioData.sampleRate);
     }
+
+    if (this->is3d && this->audioData.channels > 1) {
+        engine::logWarning("OGG", "Stereo audio will not sound like it is playing from a 3D source");
+    }
+
     alCall(alSourceQueueBuffers, this->audioData.source, OGG_NUM_BUFFERS, &this->audioData.buffers[0]);
     delete[] data;
     return true;
