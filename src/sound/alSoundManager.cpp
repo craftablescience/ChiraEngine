@@ -1,5 +1,5 @@
 #include "alSoundManager.h"
-#include "oggFileStream.h"
+#include "oggFileSound.h"
 
 alSoundManager::~alSoundManager() {
     if (!alcCall(alcMakeContextCurrent, this->contextCurrent, this->device, nullptr)) {

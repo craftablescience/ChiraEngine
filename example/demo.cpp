@@ -2,7 +2,7 @@
 #include "../src/render/texture2d.h"
 #include "../src/loader/objMeshLoader.h"
 #include "../src/render/freecam.h"
-#include "../src/sound/oggFileStream.h"
+#include "../src/sound/oggFileSound.h"
 
 int main() {
     engine engine;
@@ -45,7 +45,7 @@ int main() {
                     new angelscriptHolder{"resources/demo/scripts/testScript.as"});
         }
 
-        auto* sound = new oggFileStream();
+        auto* sound = new oggFileSound();
         sound->init("resources/demo/sounds/helloWorldCutMono.ogg");
         e->getSoundManager()->addSound("helloWorld", sound);
 

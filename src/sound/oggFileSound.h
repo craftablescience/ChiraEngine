@@ -35,7 +35,7 @@ struct oggStreamData {
     std::size_t duration;
 };
 
-class oggFileStream : public abstractSound {
+class oggFileSound : public abstractSound {
 public:
     bool init(const std::string& filename);
     bool init(const std::string& filename, float pitch_, float gain_, const glm::vec3& position_, soundType type_, bool loop_, bool is3d_) override;

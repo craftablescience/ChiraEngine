@@ -2,17 +2,16 @@
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
 #pragma ide diagnostic ignored "cppcoreguidelines-narrowing-conversions"
 
-#include "oggFileStream.h"
+#include "oggFileSound.h"
 
 // todo: sounds cannot be played after stop() is ran
-// todo: make class name(s) more consistent
 // todo: add WAV sound loader
 
-bool oggFileStream::init(const std::string& filename) {
+bool oggFileSound::init(const std::string& filename) {
     return this->init(filename, 1.0f, 1.0f, glm::vec3{}, soundType::EFFECT, false, true);
 }
 
-bool oggFileStream::init(const std::string& filename, float pitch_, float gain_, const glm::vec3& position_, soundType type_, bool loop_, bool is3d_) {
+bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, const glm::vec3& position_, soundType type_, bool loop_, bool is3d_) {
     this->pitch = pitch_;
     this->gain = gain_;
     this->setPosition(position_);
@@ -123,7 +122,7 @@ bool oggFileStream::init(const std::string& filename, float pitch_, float gain_,
     return true;
 }
 
-void oggFileStream::play() {
+void oggFileSound::play() {
     if (!this->playing) {
         this->playing = true;
         alCall(alSourceStop, this->audioData.source);
@@ -131,7 +130,7 @@ void oggFileStream::play() {
     }
 }
 
-void oggFileStream::update() {
+void oggFileSound::update() {
     ALint buffersProcessed = 0;
     alCall(alSourcef, this->audioData.source, AL_PITCH, this->pitch);
     alCall(alSourcef, this->audioData.source, AL_GAIN, this->gain);
@@ -210,12 +209,12 @@ void oggFileStream::update() {
     }
 }
 
-void oggFileStream::stop() {
+void oggFileSound::stop() {
     alCall(alSourceStop, this->audioData.source);
     this->playing = false;
 }
 
-void oggFileStream::discard() {
+void oggFileSound::discard() {
     if (this->playing) {
         this->stop();
     }
@@ -225,7 +224,7 @@ void oggFileStream::discard() {
     }
 }
 
-std::size_t oggFileStream::readOggVorbisCallback(void* destination, std::size_t size1, std::size_t size2, void* fileHandle) {
+std::size_t oggFileSound::readOggVorbisCallback(void* destination, std::size_t size1, std::size_t size2, void* fileHandle) {
     auto* audioData = reinterpret_cast<oggStreamData*>(fileHandle);
     ALsizei length = size1 * size2;
     if (audioData->sizeConsumed + length > audioData->size) {
@@ -261,7 +260,7 @@ std::size_t oggFileStream::readOggVorbisCallback(void* destination, std::size_t 
     return length;
 }
 
-std::int32_t oggFileStream::seekOggVorbisCallback(void* fileHandle, ogg_int64_t to, std::int32_t type) {
+std::int32_t oggFileSound::seekOggVorbisCallback(void* fileHandle, ogg_int64_t to, std::int32_t type) {
     auto* audioData = reinterpret_cast<oggStreamData*>(fileHandle);
     switch (type) {
         case SEEK_CUR:
@@ -287,7 +286,7 @@ std::int32_t oggFileStream::seekOggVorbisCallback(void* fileHandle, ogg_int64_t 
     return 0;
 }
 
-long int oggFileStream::tellOggVorbisCallback(void* fileHandle) {
+long int oggFileSound::tellOggVorbisCallback(void* fileHandle) {
     return reinterpret_cast<oggStreamData*>(fileHandle)->sizeConsumed;
 }
 
