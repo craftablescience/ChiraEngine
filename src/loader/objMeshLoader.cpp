@@ -95,7 +95,6 @@ void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* v
 
 void objMeshLoader::addVertex(const vertex& v, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
     // todo: properly use EBOs
-    // todo: figure out why it breaks for some models
     vertices->push_back(v);
     if (!indices->empty()) {
         indices->push_back(indices->at(indices->size() - 1) + 1);
