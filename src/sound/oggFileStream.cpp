@@ -4,7 +4,6 @@
 
 #include "oggFileStream.h"
 
-// todo: sounds are not 3d (check if this is a stereo/mono issue)
 // todo: sounds cannot be played after stop() is ran
 // todo: make class name(s) more consistent
 // todo: add WAV sound loader
