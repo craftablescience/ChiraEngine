@@ -4,7 +4,6 @@
 
 #include "oggFileSound.h"
 
-// todo: sounds cannot be played after stop() is ran
 // todo: add WAV sound loader
 
 bool oggFileSound::init(const std::string& filename) {
@@ -74,6 +73,10 @@ bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, 
         engine::logError("OGG", "File at " + filename + " is false");
         return false;
     }
+    return this->readFile(filename);
+}
+
+bool oggFileSound::readFile(const std::string& filename) {
     char* data = new char[OGG_BUFFER_SIZE];
     for (std::uint8_t i = 0; i < OGG_NUM_BUFFERS; ++i) {
         std::int32_t dataSoFar = 0;
@@ -124,6 +127,10 @@ bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, 
 
 void oggFileSound::play() {
     if (!this->playing) {
+        if (this->hasBeenPlayedPreviously) {
+            this->seekBeginning();
+            this->readFile(this->audioData.filename);
+        }
         this->playing = true;
         alCall(alSourceStop, this->audioData.source);
         alCall(alSourcePlay, this->audioData.source);
@@ -162,32 +169,7 @@ void oggFileSound::update() {
                     this->stop();
                     return;
                 }
-                std::int32_t seekResult = ov_raw_seek(&this->audioData.oggVorbisFile, 0);
-                switch (seekResult) {
-                    case OV_ENOSEEK:
-                        engine::logError("OGG", "OV_ENOSEEK found when trying to loop through " + this->audioData.filename);
-                        break;
-                    case OV_EINVAL:
-                        engine::logError("OGG", "OV_EINVAL found when trying to loop through " + this->audioData.filename);
-                        break;
-                    case OV_EREAD:
-                        engine::logError("OGG", "OV_EREAD found when trying to loop through " + this->audioData.filename);
-                        break;
-                    case OV_EFAULT:
-                        engine::logError("OGG", "OV_EFAULT found when trying to loop through " + this->audioData.filename);
-                        break;
-                    case OV_EOF:
-                        engine::logError("OGG", "OV_EOF found when trying to loop through " + this->audioData.filename);
-                        break;
-                    case OV_EBADLINK:
-                        engine::logError("OGG", "OV_EBADLINK found when trying to loop through " + this->audioData.filename);
-                        break;
-                    default:
-                        if (seekResult != 0) {
-                            engine::logError("OGG", "Unknown error encountered in ov_raw_seek in " + this->audioData.filename);
-                            return;
-                        }
-                }
+                this->seekBeginning();
             }
             sizeRead += result;
         }
@@ -203,15 +185,46 @@ void oggFileSound::update() {
         alCall(alGetSourcei, this->audioData.source, AL_SOURCE_STATE, &state);
         if (state != AL_PLAYING) {
             alCall(alSourceStop, this->audioData.source);
-            alCall(alSourcePlay, this->audioData.source);
+            if (this->loop) {
+                alCall(alSourcePlay, this->audioData.source);
+            }
         }
         delete[] data;
+    }
+}
+
+void oggFileSound::seekBeginning() {
+    std::int32_t seekResult = ov_raw_seek(&this->audioData.oggVorbisFile, 0);
+    switch (seekResult) {
+        case OV_ENOSEEK:
+            engine::logError("OGG", "OV_ENOSEEK found when trying to loop through " + this->audioData.filename);
+            break;
+        case OV_EINVAL:
+            engine::logError("OGG", "OV_EINVAL found when trying to loop through " + this->audioData.filename);
+            break;
+        case OV_EREAD:
+            engine::logError("OGG", "OV_EREAD found when trying to loop through " + this->audioData.filename);
+            break;
+        case OV_EFAULT:
+            engine::logError("OGG", "OV_EFAULT found when trying to loop through " + this->audioData.filename);
+            break;
+        case OV_EOF:
+            engine::logError("OGG", "OV_EOF found when trying to loop through " + this->audioData.filename);
+            break;
+        case OV_EBADLINK:
+            engine::logError("OGG", "OV_EBADLINK found when trying to loop through " + this->audioData.filename);
+            break;
+        default:
+            if (seekResult != 0) {
+                engine::logError("OGG", "Unknown error encountered in ov_raw_seek in " + this->audioData.filename);
+            }
     }
 }
 
 void oggFileSound::stop() {
     alCall(alSourceStop, this->audioData.source);
     this->playing = false;
+    this->hasBeenPlayedPreviously = true;
 }
 
 void oggFileSound::discard() {

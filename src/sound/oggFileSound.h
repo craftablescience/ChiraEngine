@@ -44,8 +44,11 @@ public:
     void stop() override;
     void discard() override;
 private:
+    bool readFile(const std::string& filename);
+    void seekBeginning();
     static std::size_t readOggVorbisCallback(void* destination, std::size_t size1, std::size_t size2, void* fileHandle);
     static std::int32_t seekOggVorbisCallback(void* fileHandle, ogg_int64_t to, std::int32_t type);
     static long int tellOggVorbisCallback(void* fileHandle);
     oggStreamData audioData{};
+    bool hasBeenPlayedPreviously = false; // fixes bug where sound cannot be played twice
 };
