@@ -36,4 +36,6 @@ and if you import this project into CLion it will immediately be ready to run, w
 ## Usage
 Make sure to copy the `src/resources` folder to the executable directory in your buildscript, or it will fail due to missing assets.
 
-Look at the files in the `example` directory for more information.
+A good example buildscript and application can be found at:
+
+[https://github.com/craftablescience/ChiraEditor/tree/4ba7fc8098e6d74fbc6951b2daa0d232ba809251](https://github.com/craftablescience/ChiraEditor/tree/4ba7fc8098e6d74fbc6951b2daa0d232ba809251)
