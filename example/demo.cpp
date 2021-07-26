@@ -1,5 +1,4 @@
 #include "../src/core/engine.h"
-#include "../src/core/virtualFileSystem.h"
 #include "../src/render/texture2d.h"
 #include "../src/loader/objMeshLoader.h"
 #include "../src/render/freecam.h"
