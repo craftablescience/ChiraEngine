@@ -13,6 +13,8 @@
  * This code is largely copied verbatim from:
  * https://indiegamedev.net/2020/01/16/how-to-stream-ogg-files-with-openal-in-c/
  * It has been modified to fit in the context of a sound manager.
+ * It has also been modified to be able to optionally disable looping,
+ * and to be able to play the same sound more than once.
  * This code was in the public domain and was not under any licenses or restrictions.
  */
 
