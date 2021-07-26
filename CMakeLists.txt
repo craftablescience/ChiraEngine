@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(BasicGameEngine)
+project(ChiraEngine)
 set(CMAKE_CXX_STANDARD 17)
 
 # Definitions

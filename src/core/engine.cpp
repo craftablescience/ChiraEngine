@@ -154,7 +154,7 @@ void engine::init() {
         this->settingsLoader->getValue("engine", "iconPath", &path);
         this->setIcon(path);
     } else {
-        engine::logWarning("BasicGameEngine", "You should not unset the iconPath property unless you are a trained professional!");
+        engine::logWarning("ChiraEngine", "You should not unset the iconPath property unless you are a trained professional!");
     }
 
 #if DEBUG
@@ -285,7 +285,7 @@ void engine::render() {
 }
 
 void engine::stop() {
-    engine::logInfoImportant("BasicGameEngine", "Gracefully exiting...");
+    engine::logInfoImportant("ChiraEngine", "Gracefully exiting...");
 
     for (auto const& [name, scriptProvider] : this->scriptProviders) {
         scriptProvider->stop();

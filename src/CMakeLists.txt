@@ -65,7 +65,7 @@ list(APPEND ENGINE_SOURCES
         third_party/imgui/backends/imgui_impl_opengl3.cpp
         third_party/imgui/backends/imgui_impl_opengl3.h)
 
-# BASICGAMEENGINE
+# CHIRAENGINE
 include(config/CMakeLists.txt)
 include(core/CMakeLists.txt)
 include(input/CMakeLists.txt)
