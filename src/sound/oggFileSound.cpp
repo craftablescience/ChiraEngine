@@ -3,6 +3,7 @@
 #pragma ide diagnostic ignored "cppcoreguidelines-narrowing-conversions"
 
 #include "oggFileSound.h"
+#include "../core/virtualFileSystem.h"
 
 bool oggFileSound::init(const std::string& filename) {
     return this->init(filename, 1.0f, 1.0f, glm::vec3{}, soundType::EFFECT, false, true);
@@ -16,8 +17,8 @@ bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, 
     this->loop = loop_;
     this->is3d = is3d_;
 
-    this->audioData.filename = filename;
-    this->audioData.file.open(filename, std::ios::binary);
+    this->audioData.filename = virtualFileSystem::getSoundPath(filename);
+    this->audioData.file.open(this->audioData.filename, std::ios::binary);
     if (!this->audioData.file.is_open()) {
         engine::logError("OGG", "Could not open " + filename);
         return false;
@@ -71,7 +72,7 @@ bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, 
         engine::logError("OGG", "File at " + filename + " is false");
         return false;
     }
-    return this->readFile(filename);
+    return this->readFile(this->audioData.filename);
 }
 
 bool oggFileSound::readFile(const std::string& filename) {

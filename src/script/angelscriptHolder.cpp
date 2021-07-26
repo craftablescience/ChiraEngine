@@ -2,6 +2,10 @@
 #include <angelscript.h>
 #include <scriptbuilder/scriptbuilder.h>
 
+angelscriptHolder::angelscriptHolder(const std::string& path) {
+    this->filepath = virtualFileSystem::getScriptPath(path);
+}
+
 angelscriptHolder::~angelscriptHolder() {
     this->scriptContext->Release();
 }

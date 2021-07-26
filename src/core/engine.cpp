@@ -13,11 +13,17 @@
 #include "../sound/alSoundManager.h"
 
 logger engine::logger{};
-std::vector<std::function<void(const loggerType,const std::string&,const std::string&)>> engine::loggerFunctions{};
+std::vector<std::function<void(const loggerType, const std::string&, const std::string&)>> engine::loggerFunctions{};
 
 engine::engine(const std::string& configPath) : scriptProviders() {
-    // todo: make a resources loading system
-    this->setResourcesDirectory("resources/basicgameengine/");
+#ifdef WIN32
+#if DEBUG
+    system(("chcp " + std::to_string(CP_UTF8) + " > nul").c_str());
+#else
+    FreeConsole();
+#endif
+#endif
+    virtualFileSystem::addResourceDirectory(ENGINE_FILESYSTEM_PREFIX);
     this->setSettingsLoader(new jsonSettingsLoader(configPath));
     this->lastTime = 0;
     this->currentTime = 0;
@@ -102,12 +108,6 @@ void engine::mouseScrollCallback(GLFWwindow* window, double xPos, double yPos) {
 
 void engine::init() {
     this->started = true;
-#ifdef WIN32
-    system(("chcp " + std::to_string(CP_UTF8) + " > nul").c_str());
-#if RELEASE
-    FreeConsole();
-#endif
-#endif
 
     engine::addLogHook([this](const loggerType type, const std::string& source, const std::string& message) {
         this->getConsole()->engineLoggingHook(type, source, message);
@@ -152,7 +152,7 @@ void engine::init() {
     if (this->settingsLoader->hasValue("engine", "iconPath")) {
         std::string path{};
         this->settingsLoader->getValue("engine", "iconPath", &path);
-        this->setIcon(this->getResourcesDirectory() + path);
+        this->setIcon(path);
     } else {
         engine::logWarning("BasicGameEngine", "You should not unset the iconPath property unless you are a trained professional!");
     }
@@ -424,7 +424,7 @@ void engine::setSettingsLoader(abstractSettingsLoader* newSettingsLoader) {
 void engine::setSettingsLoaderDefaults() {
     this->settingsLoader->load();
     this->settingsLoader->addCategory("engine");
-    this->settingsLoader->setValue("engine", "iconPath", std::string("textures/ui/icon.png"), false, false);
+    this->settingsLoader->setValue("engine", "iconPath", std::string("ui/icon.png"), false, false);
     this->settingsLoader->setValue("engine", "title", std::string("Basic Game Engine"), false, false);
     this->settingsLoader->addCategory("audio");
     this->settingsLoader->setValue("audio", "openal", true, false, false);
@@ -454,21 +454,13 @@ double engine::getDeltaTime() const {
     return this->currentTime - this->lastTime;
 }
 
-std::string engine::getResourcesDirectory() const {
-    return this->resourcesDirectoryPath;
-}
-
-void engine::setResourcesDirectory(const std::string& resourcesDirectory) {
-    this->resourcesDirectoryPath = resourcesDirectory;
-}
-
 void engine::setIcon(const std::string& iconPath) {
 #if DEBUG
     assert(this->started);
 #endif
     GLFWimage images[1];
     int width, height, bitsPerPixel;
-    image icon(iconPath, &width, &height, &bitsPerPixel, 4, false);
+    image icon(virtualFileSystem::getTexturePath(iconPath), &width, &height, &bitsPerPixel, 4, false);
 #if DEBUG
     assert(icon.getData());
 #endif

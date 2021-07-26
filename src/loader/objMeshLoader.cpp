@@ -1,15 +1,15 @@
 #include <fstream>
-#include <sstream>
 #include <algorithm>
 #include "objMeshLoader.h"
 #include "../core/engine.h"
+#include "../core/virtualFileSystem.h"
 
 void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
     std::vector<position> vertexBuffer;
     std::vector<uv> uvBuffer;
     std::vector<normal> normalBuffer;
 
-    std::ifstream input(filepath);
+    std::ifstream input(virtualFileSystem::getMeshPath(filepath));
     std::string line;
     while (std::getline(input, line)) {
         if (line.substr(0,2) == "v ") {

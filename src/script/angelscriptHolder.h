@@ -1,14 +1,13 @@
 #pragma once
 
 #include "angelscriptProvider.h"
+#include "../core/virtualFileSystem.h"
 
 class angelscriptProvider;
 
 class angelscriptHolder {
 public:
-    explicit angelscriptHolder(const std::string& path) {
-        this->filepath = path;
-    }
+    explicit angelscriptHolder(const std::string& path);
     virtual ~angelscriptHolder();
     void init(angelscriptProvider* provider);
     void render(angelscriptProvider* provider, double delta);

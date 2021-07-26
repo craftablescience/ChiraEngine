@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "../core/virtualFileSystem.h"
 
 shaderFile::shaderFile(unsigned int type, const std::string& source, bool isFilePath) : handleObject() {
     this->type = type;
@@ -33,7 +34,7 @@ void shaderFile::discard() {
 }
 
 std::string shaderFile::loadSourceFromFile(const std::string& filepath) {
-    std::ifstream file(filepath);
+    std::ifstream file(virtualFileSystem::getShaderPath(filepath));
     if (!file.is_open()) {
         std::cerr << "Error: shader file at " << filepath << " unreadable!" << std::endl;
         return "";

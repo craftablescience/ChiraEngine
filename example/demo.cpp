@@ -1,4 +1,5 @@
 #include "../src/core/engine.h"
+#include "../src/core/virtualFileSystem.h"
 #include "../src/render/texture2d.h"
 #include "../src/loader/objMeshLoader.h"
 #include "../src/render/freecam.h"
@@ -6,6 +7,8 @@
 
 int main() {
     engine engine;
+    virtualFileSystem::addResourceDirectory("resources/demo/");
+
     objMeshLoader objMeshLoader;
     engine.getSettingsLoader()->setValue("engine", "title", std::string("Demo Window"), true, true);
 
@@ -25,14 +28,9 @@ int main() {
         e->getSoundManager()->getSound("helloWorld")->play();
     }));
 
-    engine.addShader("unlit", new shader(
-            engine.getResourcesDirectory() + "shaders/unlit.vsh",
-            engine.getResourcesDirectory() + "shaders/unlit.fsh"));
-    engine.addTexture("crate", new texture2d(
-            "resources/demo/textures/crate.jpg", GL_RGB));
-    engine.addMesh("teapot", new mesh(
-            &objMeshLoader,
-            engine.getResourcesDirectory() + "meshes/teapot.obj"));
+    engine.addShader("unlit", new shader("unlit.vsh", "unlit.fsh"));
+    engine.addTexture("crate", new texture2d("crate.jpg", GL_RGB));
+    engine.addMesh("teapot", new mesh(&objMeshLoader, "teapot.obj"));
 
     freecam player{&engine};
     engine.setCamera(&player);
@@ -41,12 +39,11 @@ int main() {
         bool angelscriptEnabled = true;
         e->getSettingsLoader()->getValue("scripting", "angelscript", &angelscriptEnabled);
         if (angelscriptEnabled) {
-            ((angelscriptProvider*) e->getScriptProvider("angelscript"))->addScript(
-                    new angelscriptHolder{"resources/demo/scripts/testScript.as"});
+            ((angelscriptProvider*) e->getScriptProvider("angelscript"))->addScript(new angelscriptHolder{"testScript.as"});
         }
 
         auto* sound = new oggFileSound();
-        sound->init("resources/demo/sounds/helloWorldCutMono.ogg");
+        sound->init("helloWorldCutMono.ogg");
         e->getSoundManager()->addSound("helloWorld", sound);
 
         e->getShader("unlit")->use();

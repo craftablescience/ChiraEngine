@@ -56,8 +56,6 @@ public:
     [[nodiscard]] bool isStarted() const;
     // NOTE: only guaranteed to work after run() in a render method
     double getDeltaTime() const;
-    std::string getResourcesDirectory() const;
-    void setResourcesDirectory(const std::string& resourcesDirectory);
     static void addLogHook(const std::function<void(const loggerType,const std::string&,const std::string&)>& function);
     void captureMouse(bool capture);
     bool isMouseCaptured() const;
@@ -84,7 +82,6 @@ private:
     std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
     static logger logger;
     console consoleUI;
-    std::string resourcesDirectoryPath;
     bool started = false;
     double lastTime, currentTime, lastMouseX, lastMouseY;
     void setSettingsLoaderDefaults();
