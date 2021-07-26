@@ -35,7 +35,7 @@ int main() {
     freecam player{&engine};
     engine.setCamera(&player);
 
-    engine.addInitFunction([&player](class engine* e) {
+    engine.addInitFunction([](class engine* e) {
         bool angelscriptEnabled = true;
         e->getSettingsLoader()->getValue("scripting", "angelscript", &angelscriptEnabled);
         if (angelscriptEnabled) {
@@ -52,7 +52,6 @@ int main() {
         engine::setBackgroundColor(0.0f, 0.0f, 0.3f, 1.0f);
 #endif
         e->captureMouse(true);
-        player.init(e);
     });
     engine.addRenderFunction([](class engine* e) {
         e->getTexture("crate")->use();

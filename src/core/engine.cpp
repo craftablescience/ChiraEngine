@@ -234,6 +234,8 @@ void engine::init() {
 
         scriptProvider->initScripts();
     }
+
+    this->getCamera()->init(this);
 }
 
 void engine::run() {

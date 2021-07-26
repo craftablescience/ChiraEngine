@@ -7,7 +7,7 @@ freecam::freecam(engine* engine, float newYaw, float newPitch, glm::vec3 newPosi
     }
 }
 
-void freecam::init(engine *engine) {
+void freecam::init(engine* engine) {
     perspectiveCamera::init(engine);
     this->setActive(engine->isMouseCaptured());
 }
