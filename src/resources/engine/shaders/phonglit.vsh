@@ -7,17 +7,21 @@ layout (location = 3) in vec2 iTexCoord;
 out vec3 oColor;
 out vec3 oNormal;
 out vec2 oTexCoord;
-out vec3 oWorldPos;
+out vec3 oWorldPosition;
+out vec3 oLightPosition;
 
 uniform mat4 m;
 uniform mat4 v;
 uniform mat4 p;
 
-void main()
-{
+uniform vec3 lightPosition;
+
+
+void main() {
     gl_Position = p * v * m * vec4(iPos, 1.0);
     oColor = iColor;
-    oNormal = mat3(transpose(inverse(m))) * iNormal;
+    oNormal = mat3(transpose(inverse(v * m))) * iNormal;
     oTexCoord = iTexCoord;
-    oWorldPos = vec3(m * vec4(iPos, 1.0));
+    oWorldPosition = vec3(v * m * vec4(iPos, 1.0));
+    oLightPosition = vec3(v * vec4(lightPosition, 1.0));
 }

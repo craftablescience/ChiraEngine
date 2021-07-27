@@ -264,8 +264,6 @@ void engine::render() {
         if (name.rfind("shader", 0) == 0) {
             dynamic_cast<shader*>(object.get())->setUniform("p", this->getCamera()->getProjectionMatrix());
             dynamic_cast<shader*>(object.get())->setUniform("v", this->getCamera()->getViewMatrix());
-            glm::vec3 pos = this->getCamera()->getPosition();
-            dynamic_cast<shader*>(object.get())->setUniform("viewerPosition", pos.x, pos.y, pos.z);
         }
     }
     callRegisteredFunctions(&(this->renderFunctions));

@@ -49,6 +49,10 @@ int main() {
         e->getShader("phonglit")->setUniform("texture0", 0);
         e->getShader("phonglit")->setUniform("lightColor", 1.0f, 1.0f, 1.0f);
         e->getShader("phonglit")->setUniform("lightPosition", 0.0f, 5.0f, 0.0f);
+        e->getShader("phonglit")->setUniform("material.ambient", 0.1f, 0.1f, 0.1f);
+        e->getShader("phonglit")->setUniform("material.diffuse", 0.8f, 0.8f, 0.8f);
+        e->getShader("phonglit")->setUniform("material.specular", 0.3f, 0.3f, 0.3f);
+        e->getShader("phonglit")->setUniform("material.shininess", 32.0f);
 #if DEBUG
         engine::setBackgroundColor(0.0f, 0.0f, 0.3f, 1.0f);
 #endif
