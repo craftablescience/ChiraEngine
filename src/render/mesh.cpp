@@ -1,8 +1,9 @@
 #include "mesh.h"
 
-mesh::mesh(abstractMeshLoader* loader, const std::string& filepath, int depthFunc_, bool backfaceCulling_) : renderable(), vertices(), indices() {
+mesh::mesh(abstractMeshLoader* loader, const std::string& filepath, int depthFunc_, bool backfaceCulling_, int cullType_) : renderable(), vertices(), indices() {
     this->depthFunc = depthFunc_;
     this->backfaceCulling = backfaceCulling_;
+    this->cullType = cullType_;
     this->loader = loader;
     this->filepath = filepath;
     this->vboHandle = -1;
@@ -60,6 +61,7 @@ void mesh::render(shader* shader) {
     glDepthFunc(this->depthFunc);
     if (this->backfaceCulling) {
         glEnable(GL_CULL_FACE);
+        glCullFace(this->cullType);
     } else {
         glDisable(GL_CULL_FACE);
     }
