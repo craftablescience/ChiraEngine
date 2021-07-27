@@ -7,13 +7,14 @@
 
 class mesh : public renderable {
 public:
-    explicit mesh(abstractMeshLoader* loader, const std::string& filepath, int depthFunc = GL_LEQUAL);
+    explicit mesh(abstractMeshLoader* loader, const std::string& filepath, int depthFunc_ = GL_LEQUAL, bool backfaceCulling_ = true);
     virtual ~mesh();
     void compile() override;
     void discard() override;
     void render(shader* shader) override;
 private:
     int depthFunc;
+    bool backfaceCulling;
     abstractMeshLoader* loader;
     std::string filepath;
     unsigned int vboHandle, vaoHandle, eboHandle;

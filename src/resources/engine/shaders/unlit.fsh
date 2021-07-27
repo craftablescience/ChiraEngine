@@ -6,6 +6,7 @@ in vec3 oNormal;
 in vec2 oTexCoord;
 
 uniform sampler2D texture0;
+uniform vec3 viewerPosition;
 
 void main()
 {

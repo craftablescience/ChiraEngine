@@ -27,7 +27,7 @@ int main() {
         e->getSoundManager()->getSound("helloWorld")->play();
     }));
 
-    engine.addShader("unlit", new shader("unlit.vsh", "unlit.fsh"));
+    engine.addShader("phonglit", new shader("phonglit.vsh", "phonglit.fsh"));
     engine.addTexture("crate", new texture2d("crate.jpg", GL_RGB));
     engine.addMesh("teapot", new mesh(&objMeshLoader, "teapot.obj"));
 
@@ -45,8 +45,10 @@ int main() {
         sound->init("helloWorldCutMono.ogg");
         e->getSoundManager()->addSound("helloWorld", sound);
 
-        e->getShader("unlit")->use();
-        e->getShader("unlit")->setUniform("ourTexture", 0);
+        e->getShader("phonglit")->use();
+        e->getShader("phonglit")->setUniform("texture0", 0);
+        e->getShader("phonglit")->setUniform("lightColor", 1.0f, 1.0f, 1.0f);
+        e->getShader("phonglit")->setUniform("lightPosition", 0.0f, 5.0f, 0.0f);
 #if DEBUG
         engine::setBackgroundColor(0.0f, 0.0f, 0.3f, 1.0f);
 #endif
@@ -54,7 +56,7 @@ int main() {
     });
     engine.addRenderFunction([](class engine* e) {
         e->getTexture("crate")->use();
-        e->getMesh("teapot")->render(e->getShader("unlit"));
+        e->getMesh("teapot")->render(e->getShader("phonglit"));
     });
     engine.init();
     engine.run();
