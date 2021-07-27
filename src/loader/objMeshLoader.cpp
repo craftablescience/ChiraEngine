@@ -2,7 +2,6 @@
 #include <algorithm>
 #include "objMeshLoader.h"
 #include "../core/engine.h"
-#include "../core/virtualFileSystem.h"
 
 void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
     std::vector<position> vertexBuffer;
@@ -11,6 +10,7 @@ void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* v
 
     std::ifstream input(virtualFileSystem::getMeshPath(filepath));
     std::string line;
+    unsigned int currentIndex = 0;
     while (std::getline(input, line)) {
         if (line.substr(0,2) == "v ") {
             position pos;
@@ -66,14 +66,14 @@ void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* v
                 t2 -= 1;
                 n2 -= 1;
                 addVertex(vertex(vertexBuffer[p0].x, vertexBuffer[p0].y, vertexBuffer[p0].z,
-                                    normalBuffer[n0].r, normalBuffer[n0].g, normalBuffer[n0].b,
-                                    uvBuffer[t0].u, uvBuffer[t0].v), vertices, indices);
+                                 normalBuffer[n0].r, normalBuffer[n0].g, normalBuffer[n0].b,
+                                 uvBuffer[t0].u, uvBuffer[t0].v), &currentIndex, vertices, indices);
                 addVertex(vertex(vertexBuffer[p1].x, vertexBuffer[p1].y, vertexBuffer[p1].z,
-                                    normalBuffer[n1].r, normalBuffer[n1].g, normalBuffer[n1].b,
-                                    uvBuffer[t1].u, uvBuffer[t1].v), vertices, indices);
+                                 normalBuffer[n1].r, normalBuffer[n1].g, normalBuffer[n1].b,
+                                 uvBuffer[t1].u, uvBuffer[t1].v), &currentIndex, vertices, indices);
                 addVertex(vertex(vertexBuffer[p2].x, vertexBuffer[p2].y, vertexBuffer[p2].z,
-                                    normalBuffer[n2].r, normalBuffer[n2].g, normalBuffer[n2].b,
-                                    uvBuffer[t2].u, uvBuffer[t2].v), vertices, indices);
+                                 normalBuffer[n2].r, normalBuffer[n2].g, normalBuffer[n2].b,
+                                 uvBuffer[t2].u, uvBuffer[t2].v), &currentIndex, vertices, indices);
             } else {
                 iss >> p0 >> n0 >> p1 >> n1 >> p2 >> n2;
                 p0 -= 1;
@@ -83,36 +83,27 @@ void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* v
                 p2 -= 1;
                 n2 -= 1;
                 addVertex(vertex(vertexBuffer[p0].x, vertexBuffer[p0].y, vertexBuffer[p0].z,
-                                    normalBuffer[n0].r, normalBuffer[n0].g, normalBuffer[n0].b), vertices, indices);
+                                 normalBuffer[n0].r, normalBuffer[n0].g, normalBuffer[n0].b),
+                                 &currentIndex, vertices, indices);
                 addVertex(vertex(vertexBuffer[p1].x, vertexBuffer[p1].y, vertexBuffer[p1].z,
-                                    normalBuffer[n1].r, normalBuffer[n1].g, normalBuffer[n1].b), vertices, indices);
+                                 normalBuffer[n1].r, normalBuffer[n1].g, normalBuffer[n1].b),
+                                 &currentIndex, vertices, indices);
                 addVertex(vertex(vertexBuffer[p2].x, vertexBuffer[p2].y, vertexBuffer[p2].z,
-                                    normalBuffer[n2].r, normalBuffer[n2].g, normalBuffer[n2].b), vertices, indices);
+                                 normalBuffer[n2].r, normalBuffer[n2].g, normalBuffer[n2].b),
+                                 &currentIndex, vertices, indices);
             }
         }
     }
 }
 
-void objMeshLoader::addVertex(const vertex& v, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
-    // todo: properly use EBOs
-    vertices->push_back(v);
-    if (!indices->empty()) {
-        indices->push_back(indices->at(indices->size() - 1) + 1);
-    } else {
-        indices->push_back(0);
-    }
-    /*
+void objMeshLoader::addVertex(const vertex& v, unsigned int* currentIndex, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
     auto position = std::find(vertices->begin(), vertices->end(), v);
     if (position != vertices->end()) {
         unsigned int index = position - vertices->begin();
         indices->push_back(index);
     } else {
         vertices->push_back(v);
-        if (!indices->empty()) {
-            indices->push_back(indices->at(indices->size() - 1) + 1);
-        } else {
-            indices->push_back(0);
-        }
+        indices->push_back(*currentIndex);
+        *currentIndex += 1;
     }
-    */
 }
