@@ -4,17 +4,24 @@ layout (location = 1) in vec3 iNormal;
 layout (location = 2) in vec3 iColor;
 layout (location = 3) in vec2 iTexCoord;
 
+struct Light {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    vec3 position;
+};
+
 out vec3 oColor;
 out vec3 oNormal;
 out vec2 oTexCoord;
 out vec3 oWorldPosition;
-out vec3 oLightPosition;
+out Light oLight;
 
 uniform mat4 m;
 uniform mat4 v;
 uniform mat4 p;
 
-uniform vec3 lightPosition;
+uniform Light light;
 
 
 void main() {
@@ -23,5 +30,6 @@ void main() {
     oNormal = mat3(transpose(inverse(v * m))) * iNormal;
     oTexCoord = iTexCoord;
     oWorldPosition = vec3(v * m * vec4(iPos, 1.0));
-    oLightPosition = vec3(v * vec4(lightPosition, 1.0));
+    oLight = light;
+    oLight.position = vec3(v * vec4(light.position, 1.0));
 }

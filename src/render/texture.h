@@ -7,10 +7,11 @@ class texture : public compilable {
 public:
     explicit texture(const std::string& file);
     virtual ~texture();
-    virtual void compile();
+    void compile() override;
     void discard() override;
     virtual void use() = 0;
     void setTextureUnit(int textureUnit);
+    [[nodiscard]] int getTextureUnit() const;
     [[nodiscard]] unsigned int getHandle() const;
 protected:
     unsigned int handle = 0;

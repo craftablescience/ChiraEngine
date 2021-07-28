@@ -12,6 +12,11 @@ texture2d::texture2d(const std::string& file, int format, int wrapModeU, int wra
 void texture2d::compile() {
     if (this->handle != 0) return;
     texture::compile();
+    if (this->activeTextureUnit == -1) {
+        glActiveTexture(GL_TEXTURE0);
+    } else {
+        glActiveTexture(this->activeTextureUnit);
+    }
     glBindTexture(GL_TEXTURE_2D, this->handle);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrapModeU);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrapModeV);

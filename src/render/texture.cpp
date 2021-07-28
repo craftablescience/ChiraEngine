@@ -28,6 +28,10 @@ void texture::setTextureUnit(int textureUnit) {
     this->activeTextureUnit = textureUnit;
 }
 
+int texture::getTextureUnit() const {
+    return this->activeTextureUnit;
+}
+
 unsigned int texture::getHandle() const {
     return this->handle;
 }

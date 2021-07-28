@@ -3,12 +3,14 @@
 #include "../src/loader/objMeshLoader.h"
 #include "../src/render/freecam.h"
 #include "../src/sound/oggFileSound.h"
+#include "../src/loader/debugMeshLoader.h"
 
 int main() {
     engine engine;
     virtualFileSystem::addResourceDirectory("resources/demo/");
 
     objMeshLoader objMeshLoader;
+    debugMeshLoader debugMeshLoader;
     engine.getSettingsLoader()->setValue("engine", "title", std::string("Demo Window"), true, true);
 
     engine.addKeybind(keybind(GLFW_KEY_ESCAPE, GLFW_PRESS, [](class engine* e) {
@@ -28,8 +30,10 @@ int main() {
     }));
 
     engine.addShader("phonglit", new shader("phonglit.vsh", "phonglit.fsh"));
-    engine.addTexture("crate", new texture2d("crate.jpg", GL_RGB));
-    engine.addMesh("teapot", new mesh(&objMeshLoader, "teapot.obj"));
+    engine.addTexture("container_diffuse", new texture2d("container_diffuse.png", GL_RGBA));
+    engine.addTexture("container_specular", new texture2d("container_specular.png", GL_RGBA));
+    engine.getTexture("container_specular")->setTextureUnit(GL_TEXTURE1);
+    engine.addMesh("cube", new mesh(&objMeshLoader, "teapot.obj"));
 
     freecam player{&engine};
     engine.setCamera(&player);
@@ -46,21 +50,23 @@ int main() {
         e->getSoundManager()->addSound("helloWorld", sound);
 
         e->getShader("phonglit")->use();
-        e->getShader("phonglit")->setUniform("texture0", 0);
-        e->getShader("phonglit")->setUniform("lightColor", 1.0f, 1.0f, 1.0f);
-        e->getShader("phonglit")->setUniform("lightPosition", 0.0f, 5.0f, 0.0f);
-        e->getShader("phonglit")->setUniform("material.ambient", 0.1f, 0.1f, 0.1f);
-        e->getShader("phonglit")->setUniform("material.diffuse", 0.8f, 0.8f, 0.8f);
-        e->getShader("phonglit")->setUniform("material.specular", 0.3f, 0.3f, 0.3f);
+        e->getShader("phonglit")->setUniform("material.diffuse", 0);
+        e->getShader("phonglit")->setUniform("material.specular", 1);
         e->getShader("phonglit")->setUniform("material.shininess", 32.0f);
+        e->getShader("phonglit")->setUniform("light.ambient", 0.1f, 0.1f, 0.1f);
+        e->getShader("phonglit")->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);
+        e->getShader("phonglit")->setUniform("light.specular", 1.0f, 1.0f, 1.0f);
+        e->getShader("phonglit")->setUniform("light.position", 0.0f, 5.0f, 0.0f);
+
 #if DEBUG
         engine::setBackgroundColor(0.0f, 0.0f, 0.3f, 1.0f);
 #endif
         e->captureMouse(true);
     });
     engine.addRenderFunction([](class engine* e) {
-        e->getTexture("crate")->use();
-        e->getMesh("teapot")->render(e->getShader("phonglit"));
+        e->getTexture("container_diffuse")->use();
+        e->getTexture("container_specular")->use();
+        e->getMesh("cube")->render(e->getShader("phonglit"));
     });
     engine.init();
     engine.run();
