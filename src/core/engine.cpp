@@ -14,8 +14,11 @@
 
 logger engine::logger{};
 std::vector<std::function<void(const loggerType, const std::string&, const std::string&)>> engine::loggerFunctions{};
+std::map<std::string, std::unique_ptr<shader>> engine::shaders{};
+std::map<std::string, std::unique_ptr<texture>> engine::textures{};
+std::map<std::string, std::unique_ptr<mesh>> engine::meshes{};
 
-engine::engine(const std::string& configPath) : scriptProviders() {
+engine::engine(const std::string& configPath) : scriptProviders{} {
 #ifdef WIN32
 #if DEBUG
     system(("chcp " + std::to_string(CP_UTF8) + " > nul").c_str());
@@ -217,9 +220,13 @@ void engine::init() {
     }
     this->soundManager->init();
 
-    for (auto const& [name, object] : this->compilableObjects) {
+    for (auto const& [name, object] : engine::shaders) {
         object.get()->compile();
     }
+    for (auto const& [name, object] : engine::textures) {
+        object.get()->compile();
+    }
+
     this->callRegisteredFunctions(&(this->initFunctions));
 
     for (auto const& [name, scriptProvider] : this->scriptProviders) {
@@ -237,8 +244,6 @@ void engine::init() {
 
         scriptProvider->initScripts();
     }
-
-    this->getCamera()->init(this);
 }
 
 void engine::run() {
@@ -248,8 +253,8 @@ void engine::run() {
     while (!glfwWindowShouldClose(this->window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this->render();
-        this->soundManager->setListenerPosition(this->getCamera()->getPosition());
-        this->soundManager->setListenerRotation(this->getCamera()->getRotation(), this->getCamera()->getUpVector());
+        this->soundManager->setListenerPosition(this->getWorld()->getCamera()->getPosition());
+        this->soundManager->setListenerRotation(this->getWorld()->getCamera()->getRotation(), this->getWorld()->getCamera()->getUpVector());
         this->soundManager->update();
         glfwSwapBuffers(this->window);
         glfwPollEvents();
@@ -263,11 +268,9 @@ void engine::run() {
 void engine::render() {
     this->lastTime = this->currentTime;
     this->currentTime = glfwGetTime();
-    for (auto const& [name, object] : this->compilableObjects) {
-        if (name.rfind("shader", 0) == 0) {
-            dynamic_cast<shader*>(object.get())->setUniform("p", this->getCamera()->getProjectionMatrix());
-            dynamic_cast<shader*>(object.get())->setUniform("v", this->getCamera()->getViewMatrix());
-        }
+    for (auto const& [name, object] : engine::shaders) {
+        object->setUniform("p", this->getWorld()->getCamera()->getProjectionMatrix());
+        object->setUniform("v", this->getWorld()->getCamera()->getViewMatrix());
     }
     callRegisteredFunctions(&(this->renderFunctions));
 
@@ -285,6 +288,8 @@ void engine::render() {
         scriptProvider->render(this->getDeltaTime());
     }
 
+    this->world->render();
+
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -295,11 +300,17 @@ void engine::stop() {
     for (auto const& [name, scriptProvider] : this->scriptProviders) {
         scriptProvider->stop();
     }
-    for (auto const& [name, object] : this->compilableObjects) {
+
+    for (auto const& [name, object] : engine::textures) {
         object->discard();
     }
+    for (auto const& [name, object] : engine::shaders) {
+        object->discard();
+    }
+
     callRegisteredFunctions(&(this->stopFunctions));
 
+    this->world->discard();
     this->soundManager->stop();
 
     ImGui_ImplOpenGL3_Shutdown();
@@ -332,36 +343,36 @@ std::vector<mousebind>* engine::getMousebinds() {
 }
 
 void engine::addShader(const std::string& name, shader* s) {
-    this->compilableObjects.insert(std::make_pair("shaders/" + name, s));
+    engine::shaders.insert(std::make_pair(name, s));
 }
 
 shader* engine::getShader(const std::string& name) {
-    if (this->compilableObjects.count("shaders/" + name) == 0) {
+    if (engine::shaders.count(name) == 0) {
         engine::logError("engine::getShader", "Shader " + name + " is not recognized, check that you registered it properly");
     }
-    return (shader*) this->compilableObjects.at("shaders/" + name).get();
+    return engine::shaders.at(name).get();
 }
 
 void engine::addTexture(const std::string& name, texture* t) {
-    this->compilableObjects.insert(std::make_pair("textures/" + name, t));
+    engine::textures.insert(std::make_pair(name, t));
 }
 
 texture* engine::getTexture(const std::string& name) {
-    if (this->compilableObjects.count("textures/" + name) == 0) {
+    if (engine::textures.count(name) == 0) {
         engine::logError("engine::getTexture", "Texture " + name + " is not recognized, check that you registered it properly");
     }
-    return (texture*) this->compilableObjects.at("textures/" + name).get();
+    return engine::textures.at(name).get();
 }
 
 void engine::addMesh(const std::string& name, mesh* m) {
-    this->compilableObjects.insert(std::make_pair("meshes/" + name, m));
+    engine::meshes.insert(std::make_pair(name, m));
 }
 
 mesh* engine::getMesh(const std::string& name) {
-    if (this->compilableObjects.count("meshes/" + name) == 0) {
+    if (engine::meshes.count(name) == 0) {
         engine::logError("engine::getMesh", "Mesh " + name + " is not recognized, check that you registered it properly");
     }
-    return (mesh*) this->compilableObjects.at("meshes/" + name).get();
+    return engine::meshes.at(name).get();
 }
 
 void engine::addScriptProvider(const std::string& name, abstractScriptProvider* scriptProvider) {
@@ -399,22 +410,6 @@ void engine::addStopFunction(const std::function<void(engine*)>& stop) {
     this->stopFunctions.push_back(stop);
 }
 
-abstractCamera* engine::getCamera() const {
-    if (!this->camera) {
-        engine::logWarning("engine::getCamera", "Must set camera in engine::setCamera for this call to function");
-        return nullptr;
-    }
-    return this->camera.get();
-}
-
-void engine::setCamera(abstractCamera* newCamera) {
-    if (this->camera) {
-        this->camera->setCurrent(false);
-    }
-    this->camera.reset(newCamera);
-    this->camera->setCurrent(true);
-}
-
 abstractSettingsLoader* engine::getSettingsLoader() {
     if (!this->settingsLoader) {
         engine::logWarning("engine::getSettingsLoader", "Must set settings loader in engine::setSettingsLoader for this call to function");
@@ -426,6 +421,19 @@ abstractSettingsLoader* engine::getSettingsLoader() {
 void engine::setSettingsLoader(abstractSettingsLoader* newSettingsLoader) {
     this->settingsLoader.reset(newSettingsLoader);
     this->setSettingsLoaderDefaults();
+}
+
+world* engine::getWorld() {
+    if (!this->world) {
+        engine::logWarning("engine::getWorld", "Must set world in engine::setWorld for this call to function");
+        return nullptr;
+    }
+    return this->world.get();
+}
+
+void engine::setWorld(class world* newWorld) {
+    this->world.reset(newWorld);
+    this->world->compile();
 }
 
 void engine::setSettingsLoaderDefaults() {

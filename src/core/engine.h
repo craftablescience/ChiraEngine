@@ -19,13 +19,14 @@
 #include "../sound/abstractSoundManager.h"
 #include "../ui/console.h"
 #include "../utility/logger.h"
+#include "world.h"
 
 class keybind;
 class mousebind;
 
 class engine {
 public:
-    engine(const std::string& configPath = "settings.json");
+    explicit engine(const std::string& configPath = "settings.json");
     void init();
     void run();
     void render();
@@ -35,12 +36,12 @@ public:
     std::vector<keybind>* getKeybinds();
     void addMousebind(const mousebind& mousebind);
     std::vector<mousebind>* getMousebinds();
-    void addShader(const std::string& name, shader* s);
-    shader* getShader(const std::string& name);
-    void addTexture(const std::string& name, texture* t);
-    texture* getTexture(const std::string& name);
-    void addMesh(const std::string& name, mesh* t);
-    mesh* getMesh(const std::string& name);
+    static void addShader(const std::string& name, shader* s);
+    static shader* getShader(const std::string& name);
+    static void addTexture(const std::string& name, texture* t);
+    static texture* getTexture(const std::string& name);
+    static void addMesh(const std::string& name, mesh* t);
+    static mesh* getMesh(const std::string& name);
     void addScriptProvider(const std::string& name, abstractScriptProvider* scriptProvider);
     abstractScriptProvider* getScriptProvider(const std::string& name);
     void setSoundManager(abstractSoundManager* newSoundManager);
@@ -48,17 +49,17 @@ public:
     void addInitFunction(const std::function<void(engine*)>& init);
     void addRenderFunction(const std::function<void(engine*)>& render);
     void addStopFunction(const std::function<void(engine*)>& stop);
-    abstractCamera* getCamera() const;
-    void setCamera(abstractCamera* newCamera);
     abstractSettingsLoader* getSettingsLoader();
     void setSettingsLoader(abstractSettingsLoader* settingsLoader);
+    class world* getWorld();
+    void setWorld(world* newWorld);
     void callRegisteredFunctions(const std::vector<std::function<void(engine*)>>* list);
     [[nodiscard]] bool isStarted() const;
     // NOTE: only guaranteed to work after run() in a render method
-    double getDeltaTime() const;
+    [[nodiscard]] double getDeltaTime() const;
     static void addLogHook(const std::function<void(const loggerType,const std::string&,const std::string&)>& function);
     void captureMouse(bool capture);
-    bool isMouseCaptured() const;
+    [[nodiscard]] bool isMouseCaptured() const;
     void showConsole(bool shouldShow);
     console* getConsole();
     static void logInfo(const std::string& source, const std::string& message);
@@ -76,10 +77,12 @@ private:
     std::unique_ptr<abstractSoundManager> soundManager;
     std::vector<keybind> keybinds;
     std::vector<mousebind> mousebinds;
-    std::map<std::string, std::unique_ptr<compilable>> compilableObjects;
-    std::unique_ptr<abstractCamera> camera;
+    static std::map<std::string, std::unique_ptr<shader>> shaders;
+    static std::map<std::string, std::unique_ptr<texture>> textures;
+    static std::map<std::string, std::unique_ptr<mesh>> meshes;
     bool mouseCaptured = false;
     std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
+    std::unique_ptr<world> world = nullptr;
     static logger logger;
     console consoleUI;
     bool started = false;
@@ -87,7 +90,7 @@ private:
     void setSettingsLoaderDefaults();
     // NOTE: PNGs must have a bit depth of 8 or less* (less not tested)
     void setIcon(const std::string& iconPath);
-    static void runLogHooks(const loggerType type, const std::string& source, const std::string& message);
+    static void runLogHooks(loggerType type, const std::string& source, const std::string& message);
     static void errorCallback(int error, const char* description);
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
     static void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);

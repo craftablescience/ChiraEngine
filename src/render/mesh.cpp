@@ -1,4 +1,5 @@
 #include "mesh.h"
+#include "../core/engine.h"
 
 mesh::mesh(abstractMeshLoader* loader, const std::string& filepath, int depthFunc_, bool backfaceCulling_, int cullType_) : renderable(), vertices(), indices() {
     this->depthFunc = depthFunc_;
@@ -15,6 +16,10 @@ mesh::~mesh() {
     glDeleteVertexArrays(1, &(this->vaoHandle));
     glDeleteBuffers(1, &(this->vboHandle));
     glDeleteBuffers(1, &(this->eboHandle));
+}
+
+void mesh::setShader(const std::string& shader_) {
+    this->shader = shader_;
 }
 
 void mesh::compile() {
@@ -54,10 +59,22 @@ void mesh::discard() {
     glDeleteBuffers(1, &(this->eboHandle));
 }
 
-void mesh::render(shader* shader) {
-    // todo: pass a "material" object instead of a shader
-    shader->use();
-    shader->setUniform("m", &(this->model));
+void mesh::render(class shader* shader_) {
+    shader_->use();
+    shader_->setUniform("m", &(this->model));
+    this->renderUtility();
+}
+
+void mesh::render() {
+    engine::getShader(this->shader)->use();
+    engine::getShader(this->shader)->setUniform("m", &(this->model));
+    this->renderUtility();
+}
+
+void mesh::renderUtility() {
+    for (const auto& f : this->preRenderCallbacks) {
+        f();
+    }
     glDepthFunc(this->depthFunc);
     if (this->backfaceCulling) {
         glEnable(GL_CULL_FACE);
@@ -67,4 +84,8 @@ void mesh::render(shader* shader) {
     }
     glBindVertexArray(this->vaoHandle);
     glDrawElements(GL_TRIANGLES, (int) this->indices.size(), GL_UNSIGNED_INT, nullptr);
+}
+
+void mesh::addPreRenderCallback(const std::function<void()>& function) {
+    this->preRenderCallbacks.push_back(function);
 }

@@ -1,9 +1,13 @@
 #pragma once
 
+#include <glm/glm.hpp>
 #include "../utility/axis.h"
+
+class engine;
 
 class abstractCamera {
 public:
+    virtual ~abstractCamera() = default;
     virtual void init(engine* engine) = 0;
     virtual void translate(glm::vec3 offset, float amount, double delta) = 0;
     virtual void rotate(float rotation, axis rotationAxis, double delta) = 0;
