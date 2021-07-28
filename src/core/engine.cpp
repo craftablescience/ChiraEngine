@@ -400,16 +400,18 @@ void engine::addStopFunction(const std::function<void(engine*)>& stop) {
 }
 
 abstractCamera* engine::getCamera() const {
-    if (!this->camera) {
+    if (!this->camera.get()) {
         engine::logWarning("engine::getCamera", "Must set camera in engine::setCamera for this call to function");
         return nullptr;
     }
-    return this->camera;
+    return this->camera.get();
 }
 
 void engine::setCamera(abstractCamera* newCamera) {
-    if (this->camera) this->camera->setCurrent(false);
-    this->camera = newCamera;
+    if (this->camera.get()) {
+        this->camera->setCurrent(false);
+    }
+    this->camera.reset(newCamera);
     this->camera->setCurrent(true);
 }
 

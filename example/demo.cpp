@@ -3,14 +3,12 @@
 #include "../src/loader/objMeshLoader.h"
 #include "../src/render/freecam.h"
 #include "../src/sound/oggFileSound.h"
-#include "../src/loader/debugMeshLoader.h"
 
 int main() {
     engine engine;
     virtualFileSystem::addResourceDirectory("resources/demo/");
 
     objMeshLoader objMeshLoader;
-    debugMeshLoader debugMeshLoader;
     engine.getSettingsLoader()->setValue("engine", "title", std::string("Demo Window"), true, true);
 
     engine.addKeybind(keybind(GLFW_KEY_ESCAPE, GLFW_PRESS, [](class engine* e) {
@@ -35,8 +33,7 @@ int main() {
     engine.getTexture("container_specular")->setTextureUnit(GL_TEXTURE1);
     engine.addMesh("cube", new mesh(&objMeshLoader, "teapot.obj"));
 
-    freecam player{&engine};
-    engine.setCamera(&player);
+    engine.setCamera(new freecam{&engine});
 
     engine.addInitFunction([](class engine* e) {
         bool angelscriptEnabled = true;

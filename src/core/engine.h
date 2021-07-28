@@ -77,7 +77,7 @@ private:
     std::vector<keybind> keybinds;
     std::vector<mousebind> mousebinds;
     std::map<std::string, std::unique_ptr<compilable>> compilableObjects;
-    abstractCamera* camera = nullptr;
+    std::unique_ptr<abstractCamera> camera;
     bool mouseCaptured = false;
     std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
     static logger logger;
