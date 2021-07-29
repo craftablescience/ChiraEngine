@@ -1,12 +1,13 @@
 #include "mesh.h"
 #include "../core/engine.h"
 
-mesh::mesh(abstractMeshLoader* loader, const std::string& filepath, int depthFunc_, bool backfaceCulling_, int cullType_) : renderable(), vertices(), indices() {
+mesh::mesh(abstractMeshLoader* loader, const std::string& filepath_, const std::string& material_, int depthFunc_, bool backfaceCulling_, int cullType_) : renderable(), vertices(), indices() {
     this->depthFunc = depthFunc_;
     this->backfaceCulling = backfaceCulling_;
     this->cullType = cullType_;
     this->loader = loader;
-    this->filepath = filepath;
+    this->filepath = filepath_;
+    this->material = material_;
     this->vboHandle = -1;
     this->vaoHandle = -1;
     this->eboHandle = -1;
@@ -18,8 +19,12 @@ mesh::~mesh() {
     glDeleteBuffers(1, &(this->eboHandle));
 }
 
-void mesh::setShader(const std::string& shader_) {
-    this->shader = shader_;
+void mesh::setMaterial(const std::string& material_) {
+    this->material = material_;
+}
+
+std::string mesh::getMaterial() {
+    return this->material;
 }
 
 void mesh::compile() {
@@ -59,22 +64,14 @@ void mesh::discard() {
     glDeleteBuffers(1, &(this->eboHandle));
 }
 
-void mesh::render(class shader* shader_) {
-    shader_->use();
-    shader_->setUniform("m", &(this->model));
-    this->renderUtility();
+void mesh::render(shader* shader_) {
+    this->render();
 }
 
 void mesh::render() {
-    engine::getShader(this->shader)->use();
-    engine::getShader(this->shader)->setUniform("m", &(this->model));
-    this->renderUtility();
-}
+    engine::getMaterial(this->material)->use();
+    engine::getMaterial(this->material)->getShader()->setUniform("m", &(this->model));
 
-void mesh::renderUtility() {
-    for (const auto& f : this->preRenderCallbacks) {
-        f();
-    }
     glDepthFunc(this->depthFunc);
     if (this->backfaceCulling) {
         glEnable(GL_CULL_FACE);
@@ -84,8 +81,4 @@ void mesh::renderUtility() {
     }
     glBindVertexArray(this->vaoHandle);
     glDrawElements(GL_TRIANGLES, (int) this->indices.size(), GL_UNSIGNED_INT, nullptr);
-}
-
-void mesh::addPreRenderCallback(const std::function<void()>& function) {
-    this->preRenderCallbacks.push_back(function);
 }

@@ -3,6 +3,7 @@
 #include "../src/loader/objMeshLoader.h"
 #include "../src/render/freecam.h"
 #include "../src/sound/oggFileSound.h"
+#include "../src/render/phongMaterial.h"
 
 int main() {
     engine engine;
@@ -29,16 +30,9 @@ int main() {
 
     engine::addTexture("container_diffuse", new texture2d("container_diffuse.png", GL_RGBA));
     engine::addTexture("container_specular", new texture2d("container_specular.png", GL_RGBA));
-    engine::getTexture("container_specular")->setTextureUnit(GL_TEXTURE1);
-
     engine::addShader("phonglit", new shader("phonglit.vsh", "phonglit.fsh"));
-    engine::getShader("phonglit")->addPreUseCallback([](){
-        engine::getTexture("container_diffuse")->use();
-        engine::getTexture("container_specular")->use();
-    });
-
-    engine::addMesh("cube", new mesh(&objMeshLoader, "teapot.obj"));
-    engine::getMesh("cube")->setShader("phonglit");
+    engine::addMaterial("phongMaterial", new phongMaterial{"phonglit", "container_diffuse", "container_specular"});
+    engine::addMesh("cube", new mesh(&objMeshLoader, "teapot.obj", "phongMaterial"));
 
     engine.addInitFunction([](class engine* e) {
         e->captureMouse(true);

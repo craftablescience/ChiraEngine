@@ -17,6 +17,7 @@ std::vector<std::function<void(const loggerType, const std::string&, const std::
 std::map<std::string, std::unique_ptr<shader>> engine::shaders{};
 std::map<std::string, std::unique_ptr<texture>> engine::textures{};
 std::map<std::string, std::unique_ptr<mesh>> engine::meshes{};
+std::map<std::string, std::unique_ptr<abstractMaterial>> engine::materials{};
 
 engine::engine(const std::string& configPath) : scriptProviders{} {
 #ifdef WIN32
@@ -373,6 +374,17 @@ mesh* engine::getMesh(const std::string& name) {
         engine::logError("engine::getMesh", "Mesh " + name + " is not recognized, check that you registered it properly");
     }
     return engine::meshes.at(name).get();
+}
+
+void engine::addMaterial(const std::string& name, abstractMaterial* m) {
+    engine::materials.insert(std::make_pair(name, m));
+}
+
+abstractMaterial* engine::getMaterial(const std::string& name) {
+    if (engine::materials.count(name) == 0) {
+        engine::logError("engine::getMaterial", "Material " + name + " is not recognized, check that you registered it properly");
+    }
+    return engine::materials.at(name).get();
 }
 
 void engine::addScriptProvider(const std::string& name, abstractScriptProvider* scriptProvider) {

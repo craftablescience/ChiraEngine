@@ -20,9 +20,11 @@
 #include "../ui/console.h"
 #include "../utility/logger.h"
 #include "world.h"
+#include "../render/abstractMaterial.h"
 
 class keybind;
 class mousebind;
+class abstractMaterial;
 
 class engine {
 public:
@@ -42,6 +44,8 @@ public:
     static texture* getTexture(const std::string& name);
     static void addMesh(const std::string& name, mesh* t);
     static mesh* getMesh(const std::string& name);
+    static void addMaterial(const std::string& name, abstractMaterial* t);
+    static abstractMaterial* getMaterial(const std::string& name);
     void addScriptProvider(const std::string& name, abstractScriptProvider* scriptProvider);
     abstractScriptProvider* getScriptProvider(const std::string& name);
     void setSoundManager(abstractSoundManager* newSoundManager);
@@ -80,6 +84,7 @@ private:
     static std::map<std::string, std::unique_ptr<shader>> shaders;
     static std::map<std::string, std::unique_ptr<texture>> textures;
     static std::map<std::string, std::unique_ptr<mesh>> meshes;
+    static std::map<std::string, std::unique_ptr<abstractMaterial>> materials;
     bool mouseCaptured = false;
     std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
     std::unique_ptr<world> world = nullptr;
