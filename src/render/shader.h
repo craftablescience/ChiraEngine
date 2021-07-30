@@ -12,7 +12,6 @@ public:
     virtual ~shader();
     void compile() override;
     void use();
-    void addPreUseCallback(const std::function<void()>& function);
     void setUniform(const std::string& name, bool value) const;
     void setUniform(const std::string& name, unsigned int value) const;
     void setUniform(const std::string& name, int value) const;
@@ -34,6 +33,5 @@ public:
 private:
     shaderFile vert;
     shaderFile frag;
-    std::vector<std::function<void()>> functions;
     void checkForCompilationErrors() const;
 };

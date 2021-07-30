@@ -1,7 +1,7 @@
 #include "mesh.h"
 #include "../core/engine.h"
 
-mesh::mesh(abstractMeshLoader* loader, const std::string& filepath_, const std::string& material_, int depthFunc_, bool backfaceCulling_, int cullType_) : renderable(), vertices(), indices() {
+mesh::mesh(abstractMeshLoader* loader, const std::string& filepath_, const std::string& material_, int depthFunc_, bool backfaceCulling_, int cullType_) : compilable(), model(1.0f), vertices(), indices() {
     this->depthFunc = depthFunc_;
     this->backfaceCulling = backfaceCulling_;
     this->cullType = cullType_;
@@ -62,10 +62,6 @@ void mesh::discard() {
     glDeleteVertexArrays(1, &(this->vaoHandle));
     glDeleteBuffers(1, &(this->vboHandle));
     glDeleteBuffers(1, &(this->eboHandle));
-}
-
-void mesh::render(shader* shader_) {
-    this->render();
 }
 
 void mesh::render() {

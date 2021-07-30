@@ -37,14 +37,7 @@ void shader::checkForCompilationErrors() const {
 }
 
 void shader::use() {
-    for (const auto& f : this->functions) {
-        f();
-    }
     glUseProgram(this->handle);
-}
-
-void shader::addPreUseCallback(const std::function<void()>& function) {
-    this->functions.push_back(function);
 }
 
 void shader::setUniform(const std::string& name, bool value) const {
