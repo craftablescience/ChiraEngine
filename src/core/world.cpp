@@ -73,12 +73,7 @@ void world::render() {
     }
     for (const auto& string : this->meshes) {
         if (this->lightsDirty) {
-            for (const auto& x : this->lights) {
-                if (instanceof<directionalLight>(x.get())) {
-                    // todo: figure out how to change lighting (maybe a forwardLitShader? think about it)
-                    // engine::getMesh(string)->getMaterial()->getShader()->setUniform("", 0);
-                }
-            }
+            engine::getMesh(string)->getMaterial()->updateLighting(this->lights);
             this->lightsDirty = false;
         }
         engine::getMesh(string)->render();

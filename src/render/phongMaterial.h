@@ -16,6 +16,9 @@ public:
         engine::getTexture(this->specular)->use();
         engine::getShader(this->shader)->use();
     }
+    void updateLighting(const std::vector<std::unique_ptr<abstractLight>>& lights) override {
+        // todo: pass all lighting info to the material (this one)
+    }
 private:
     std::string diffuse;
     std::string specular;
