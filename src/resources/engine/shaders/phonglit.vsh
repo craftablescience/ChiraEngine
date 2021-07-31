@@ -11,11 +11,13 @@ struct Light {
     vec3 position;
 };
 
-out vec3 oColor;
-out vec3 oNormal;
-out vec2 oTexCoord;
-out vec3 oWorldPosition;
-out Light oLight;
+out VS_OUT {
+    vec3 Color;
+    vec3 Normal;
+    vec2 TexCoord;
+    vec3 WorldPosition;
+    Light lightOut;
+} o;
 
 uniform mat4 m;
 uniform mat4 v;
@@ -26,10 +28,10 @@ uniform Light light;
 
 void main() {
     gl_Position = p * v * m * vec4(iPos, 1.0);
-    oColor = iColor;
-    oNormal = mat3(transpose(inverse(v * m))) * iNormal;
-    oTexCoord = iTexCoord;
-    oWorldPosition = vec3(v * m * vec4(iPos, 1.0));
-    oLight = light;
-    oLight.position = vec3(v * vec4(light.position, 1.0));
+    o.Color = iColor;
+    o.Normal = mat3(transpose(inverse(v * m))) * iNormal;
+    o.TexCoord = iTexCoord;
+    o.WorldPosition = vec3(v * m * vec4(iPos, 1.0));
+    o.lightOut = light;
+    o.lightOut.position = vec3(v * vec4(light.position, 1.0));
 }

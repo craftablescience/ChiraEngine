@@ -13,11 +13,13 @@ struct Light {
     vec3 position;
 };
 
-in vec3 oColor;
-in vec3 oNormal;
-in vec2 oTexCoord;
-in vec3 oWorldPosition;
-in Light oLight;
+in VS_OUT {
+    vec3 Color;
+    vec3 Normal;
+    vec2 TexCoord;
+    vec3 WorldPosition;
+    Light lightOut;
+} i;
 
 out vec4 FragColor;
 
@@ -25,17 +27,17 @@ uniform Material material;
 
 
 void main() {
-    vec4 ambientResult = vec4(oLight.ambient, 1.0) * texture(material.diffuse, oTexCoord);
+    vec4 ambientResult = vec4(i.lightOut.ambient, 1.0) * texture(material.diffuse, i.TexCoord);
 
-    vec3 normal = normalize(oNormal);
-    vec3 lightDirection = normalize(oLight.position - oWorldPosition);
+    vec3 normal = normalize(i.Normal);
+    vec3 lightDirection = normalize(i.lightOut.position - i.WorldPosition);
     float diff = max(dot(normal, lightDirection), 0.0);
-    vec4 diffuseResult = vec4(oLight.diffuse, 1.0) * (diff * texture(material.diffuse, oTexCoord));
+    vec4 diffuseResult = vec4(i.lightOut.diffuse, 1.0) * (diff * texture(material.diffuse, i.TexCoord));
 
-    vec3 viewDirection = normalize(-oWorldPosition);
+    vec3 viewDirection = normalize(-i.WorldPosition);
     vec3 reflectDirection = reflect(-lightDirection, normal);
     float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
-    vec4 specular = vec4(oLight.specular, 1.0) * (spec * texture(material.specular, oTexCoord));
+    vec4 specular = vec4(i.lightOut.specular, 1.0) * (spec * texture(material.specular, i.TexCoord));
 
-    FragColor = vec4(oColor, 1.0) * (ambientResult + diffuseResult + specular);
+    FragColor = vec4(i.Color, 1.0) * (ambientResult + diffuseResult + specular);
 }

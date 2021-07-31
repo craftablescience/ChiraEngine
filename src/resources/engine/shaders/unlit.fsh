@@ -1,14 +1,16 @@
 #version 330 core
 out vec4 FragColor;
 
-in vec3 oColor;
-in vec3 oNormal;
-in vec2 oTexCoord;
+in VS_OUT {
+    vec3 oColor;
+    vec3 oNormal;
+    vec2 oTexCoord;
+} i;
 
 uniform sampler2D texture0;
 uniform vec3 viewerPosition;
 
 void main()
 {
-    FragColor = texture(texture0, oTexCoord) * vec4(oColor, 1.0);
+    FragColor = texture(texture0, i.TexCoord) * vec4(i.Color, 1.0);
 }
