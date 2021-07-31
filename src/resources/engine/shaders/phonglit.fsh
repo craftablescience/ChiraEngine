@@ -4,6 +4,7 @@ struct Material {
     sampler2D diffuse;
     sampler2D specular;
     float shininess;
+    float lambertFactor; // between 0 and 1
 };
 
 struct Light {
@@ -31,7 +32,7 @@ void main() {
 
     vec3 normal = normalize(i.Normal);
     vec3 lightDirection = normalize(i.lightOut.position - i.WorldPosition);
-    float diff = max(dot(normal, lightDirection), 0.0);
+    float diff = max(dot(normal, lightDirection), 0.0) * material.lambertFactor + (1.0 - material.lambertFactor);
     vec4 diffuseResult = vec4(i.lightOut.diffuse, 1.0) * (diff * texture(material.diffuse, i.TexCoord));
 
     vec3 viewDirection = normalize(-i.WorldPosition);
