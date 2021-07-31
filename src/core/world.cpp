@@ -1,7 +1,7 @@
 #include "world.h"
+#include "helpers.h"
 
-world::world(class engine* e, abstractCamera* camera) : meshes{} {
-    this->compiled = false;
+world::world(class engine* e, abstractCamera* camera) {
     this->engine = e;
     this->setCamera(camera);
 }
@@ -9,7 +9,7 @@ world::world(class engine* e, abstractCamera* camera) : meshes{} {
 world::~world() {
     delete this->camera;
     if (this->compiled) {
-        for (auto &string : this->meshes) {
+        for (const auto &string : this->meshes) {
             engine::getMesh(string)->discard();
         }
     }
@@ -39,9 +39,19 @@ void world::addMesh(const std::string& mesh) {
     }
 }
 
+unsigned int world::addLight(abstractLight* light) {
+    this->lights.emplace_back(light);
+    this->lightsDirty = true;
+    return this->lights.size() - 1;
+}
+
+abstractLight* world::getLight(unsigned int lightId) {
+    return this->lights.at(lightId).get();
+}
+
 void world::compile() {
     if (!this->compiled) {
-        for (auto& string : this->meshes) {
+        for (const auto& string : this->meshes) {
             engine::getMesh(string)->compile();
         }
         this->compiled = true;
@@ -50,7 +60,7 @@ void world::compile() {
 
 void world::discard() {
     if (this->compiled) {
-        for (auto& string : this->meshes) {
+        for (const auto& string : this->meshes) {
             engine::getMesh(string)->discard();
         }
         this->compiled = false;
@@ -61,7 +71,16 @@ void world::render() {
     if (!this->compiled) {
         this->compile();
     }
-    for (auto& string : this->meshes) {
+    for (const auto& string : this->meshes) {
+        if (this->lightsDirty) {
+            for (const auto& x : this->lights) {
+                if (instanceof<directionalLight>(x.get())) {
+                    // todo: figure out how to change lighting (maybe a forwardLitShader? think about it)
+                    // engine::getMesh(string)->getMaterial()->getShader()->setUniform("", 0);
+                }
+            }
+            this->lightsDirty = false;
+        }
         engine::getMesh(string)->render();
     }
 }
