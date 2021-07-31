@@ -25,6 +25,7 @@
 class keybind;
 class mousebind;
 class abstractMaterial;
+class mesh;
 
 class engine {
 public:

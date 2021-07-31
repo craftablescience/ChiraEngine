@@ -23,8 +23,8 @@ void mesh::setMaterial(const std::string& material_) {
     this->material = material_;
 }
 
-std::string mesh::getMaterial() {
-    return this->material;
+abstractMaterial* mesh::getMaterial() {
+    return engine::getMaterial(this->material);
 }
 
 void mesh::compile() {
