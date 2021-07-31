@@ -2,8 +2,9 @@
 #include <glad/gl.h>
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include "../core/virtualFileSystem.h"
+
+// todo: add variable preprocessing and #include preprocessing
 
 shaderFile::shaderFile(unsigned int type, const std::string& source, bool isFilePath) : handleObject() {
     this->type = type;
