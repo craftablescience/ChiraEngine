@@ -12,5 +12,5 @@ public:
     virtual void updateLighting(const std::vector<std::unique_ptr<abstractLight>>& lights) = 0;
     virtual shader* getShader();
 protected:
-    std::string shader;
+    std::string shaderName;
 };

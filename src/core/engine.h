@@ -88,8 +88,8 @@ private:
     static std::map<std::string, std::unique_ptr<abstractMaterial>> materials;
     bool mouseCaptured = false;
     std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
-    std::unique_ptr<world> world = nullptr;
-    static logger logger;
+    std::unique_ptr<world> worldPtr;
+    static logger chiraLogger;
     console consoleUI;
     bool started = false;
     double lastTime, currentTime, lastMouseX, lastMouseY;

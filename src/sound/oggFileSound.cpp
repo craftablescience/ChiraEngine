@@ -80,7 +80,7 @@ bool oggFileSound::readFile(const std::string& filename) {
     for (std::uint8_t i = 0; i < OGG_NUM_BUFFERS; ++i) {
         std::int32_t dataSoFar = 0;
         while (dataSoFar < OGG_BUFFER_SIZE) {
-            std::int32_t result = ov_read(&this->audioData.oggVorbisFile, &data[dataSoFar], OGG_BUFFER_SIZE - dataSoFar, 0, 2, 1, &this->audioData.oggCurrentSection);
+            std::int32_t result = ov_read(&this->audioData.oggVorbisFile, &data[dataSoFar], OGG_BUFFER_SIZE - dataSoFar, 0, 2, 1, reinterpret_cast<int*>(&this->audioData.oggCurrentSection));
             switch (result) {
                 case OV_HOLE:
                     engine::logError("OGG", "OV_HOLE found in initial read of buffer " + std::to_string(i) + " in file " + filename);
@@ -153,7 +153,7 @@ void oggFileSound::update() {
         memset(data, 0, OGG_BUFFER_SIZE);
         std::int32_t sizeRead = 0;
         while (sizeRead < OGG_BUFFER_SIZE) {
-            std::int32_t result = ov_read(&this->audioData.oggVorbisFile, &data[sizeRead], OGG_BUFFER_SIZE - sizeRead, 0, 2, 1, &this->audioData.oggCurrentSection);
+            std::int32_t result = ov_read(&this->audioData.oggVorbisFile, &data[sizeRead], OGG_BUFFER_SIZE - sizeRead, 0, 2, 1, reinterpret_cast<int*>(&this->audioData.oggCurrentSection));
             if (result == OV_HOLE) {
                 engine::logError("OGG", "OV_HOLE found in update of buffer in " + this->audioData.filename);
                 break;

@@ -19,6 +19,6 @@ bool keybind::isMouse() const {
     return this->mouse;
 }
 
-void keybind::run(engine* engine) {
-    this->fire(engine);
+void keybind::run(engine* enginePtr) {
+    this->fire(enginePtr);
 }

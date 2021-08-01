@@ -1,8 +1,7 @@
 #include "world.h"
-#include "helpers.h"
 
-world::world(class engine* e, abstractCamera* camera) {
-    this->engine = e;
+world::world(engine* e, abstractCamera* camera) {
+    this->enginePtr = e;
     this->setCamera(camera);
 }
 
@@ -28,7 +27,7 @@ void world::setCamera(abstractCamera* newCamera) {
         this->camera->setCurrent(false);
     }
     this->camera = newCamera;
-    this->camera->init(this->engine);
+    this->camera->init(this->enginePtr);
     this->camera->setCurrent(true);
 }
 

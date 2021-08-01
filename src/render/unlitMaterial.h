@@ -4,6 +4,6 @@
 
 class unlitMaterial : public abstractMaterial {
     void use() override {
-        this->shader->use();
+        this->shaderName->use();
     }
 };

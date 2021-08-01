@@ -12,7 +12,7 @@ public:
     [[nodiscard]] int getButton() const;
     [[nodiscard]] int getAction() const;
     [[nodiscard]] bool isMouse() const;
-    void run(engine* engine);
+    void run(engine* enginePtr);
 private:
     int button;
     int action;

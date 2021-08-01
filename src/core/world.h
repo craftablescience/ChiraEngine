@@ -23,7 +23,7 @@ public:
 private:
     bool compiled = false;
     bool lightsDirty = false;
-    engine* engine;
+    engine* enginePtr;
     abstractCamera* camera = nullptr;
     std::vector<std::string> meshes{};
     std::vector<std::unique_ptr<abstractLight>> lights;

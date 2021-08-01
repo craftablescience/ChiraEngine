@@ -14,7 +14,7 @@ public:
     void use() override {
         engine::getTexture(this->diffuse)->use();
         engine::getTexture(this->specular)->use();
-        engine::getShader(this->shader)->use();
+        engine::getShader(this->shaderName)->use();
     }
     void updateLighting(const std::vector<std::unique_ptr<abstractLight>>& lights) override {
         // todo: pass all lighting info to the material (this one)

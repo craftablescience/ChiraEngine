@@ -12,7 +12,7 @@
 #include "../loader/jsonSettingsLoader.h"
 #include "../sound/alSoundManager.h"
 
-logger engine::logger{};
+logger engine::chiraLogger{};
 std::vector<std::function<void(const loggerType, const std::string&, const std::string&)>> engine::loggerFunctions{};
 std::map<std::string, std::unique_ptr<shader>> engine::shaders{};
 std::map<std::string, std::unique_ptr<texture>> engine::textures{};
@@ -289,7 +289,7 @@ void engine::render() {
         scriptProvider->render(this->getDeltaTime());
     }
 
-    this->world->render();
+    this->worldPtr->render();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -311,7 +311,7 @@ void engine::stop() {
 
     callRegisteredFunctions(&(this->stopFunctions));
 
-    this->world->discard();
+    this->worldPtr->discard();
     this->soundManager->stop();
 
     ImGui_ImplOpenGL3_Shutdown();
@@ -436,16 +436,16 @@ void engine::setSettingsLoader(abstractSettingsLoader* newSettingsLoader) {
 }
 
 world* engine::getWorld() {
-    if (!this->world) {
+    if (!this->worldPtr) {
         engine::logWarning("engine::getWorld", "Must set world in engine::setWorld for this call to function");
         return nullptr;
     }
-    return this->world.get();
+    return this->worldPtr.get();
 }
 
 void engine::setWorld(class world* newWorld) {
-    this->world.reset(newWorld);
-    this->world->compile();
+    this->worldPtr.reset(newWorld);
+    this->worldPtr->compile();
 }
 
 void engine::setSettingsLoaderDefaults() {
@@ -498,27 +498,27 @@ void engine::setIcon(const std::string& iconPath) {
 }
 
 void engine::logInfo(const std::string& source, const std::string& message) {
-    engine::logger.logInfo(source, message);
+    engine::chiraLogger.logInfo(source, message);
     engine::runLogHooks(INFO, source, message);
 }
 
 void engine::logInfoImportant(const std::string& source, const std::string& message) {
-    engine::logger.logInfoImportant(source, message);
+    engine::chiraLogger.logInfoImportant(source, message);
     engine::runLogHooks(INFO_IMPORTANT, source, message);
 }
 
 void engine::logOutput(const std::string& source, const std::string& message) {
-    engine::logger.logOutput(source, message);
+    engine::chiraLogger.logOutput(source, message);
     engine::runLogHooks(OUTPUT, source, message);
 }
 
 void engine::logWarning(const std::string& source, const std::string& message) {
-    engine::logger.logWarning(source, message);
+    engine::chiraLogger.logWarning(source, message);
     engine::runLogHooks(WARNING, source, message);
 }
 
 void engine::logError(const std::string& source, const std::string& message) {
-    engine::logger.logError(source, message);
+    engine::chiraLogger.logError(source, message);
     engine::runLogHooks((loggerType) 4, source, message);
 }
 
