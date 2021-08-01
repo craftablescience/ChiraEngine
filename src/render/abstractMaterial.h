@@ -2,8 +2,9 @@
 
 #include <string>
 #include <vector>
-#include "../core/engine.h"
+#include <memory>
 #include "light.h"
+#include "shader.h"
 
 class abstractMaterial {
 public:

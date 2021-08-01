@@ -24,8 +24,6 @@
 
 class keybind;
 class mousebind;
-class abstractMaterial;
-class mesh;
 
 class engine {
 public:
@@ -74,23 +72,23 @@ public:
     static void logError(const std::string& source, const std::string& message);
 private:
     GLFWwindow* window = nullptr;
-    std::vector<std::function<void(engine*)>> initFunctions;
-    std::vector<std::function<void(engine*)>> renderFunctions;
-    std::vector<std::function<void(engine*)>> stopFunctions;
-    static std::vector<std::function<void(const loggerType,const std::string&,const std::string&)>> loggerFunctions;
-    std::map<std::string, std::unique_ptr<abstractScriptProvider>> scriptProviders;
-    std::unique_ptr<abstractSoundManager> soundManager;
-    std::vector<keybind> keybinds;
-    std::vector<mousebind> mousebinds;
-    static std::map<std::string, std::unique_ptr<shader>> shaders;
-    static std::map<std::string, std::unique_ptr<texture>> textures;
-    static std::map<std::string, std::unique_ptr<mesh>> meshes;
-    static std::map<std::string, std::unique_ptr<abstractMaterial>> materials;
+    std::vector<std::function<void(engine*)>> initFunctions{};
+    std::vector<std::function<void(engine*)>> renderFunctions{};
+    std::vector<std::function<void(engine*)>> stopFunctions{};
+    static inline std::vector<std::function<void(const loggerType,const std::string&,const std::string&)>> loggerFunctions{};
+    std::map<std::string, std::unique_ptr<abstractScriptProvider>> scriptProviders{};
+    std::unique_ptr<abstractSoundManager> soundManager = nullptr;
+    std::vector<keybind> keybinds{};
+    std::vector<mousebind> mousebinds{};
+    static inline std::map<std::string, std::unique_ptr<shader>> shaders{};
+    static inline std::map<std::string, std::unique_ptr<texture>> textures{};
+    static inline std::map<std::string, std::unique_ptr<mesh>> meshes{};
+    static inline std::map<std::string, std::unique_ptr<abstractMaterial>> materials{};
     bool mouseCaptured = false;
     std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
-    std::unique_ptr<world> worldPtr;
-    static logger chiraLogger;
-    console consoleUI;
+    std::unique_ptr<world> worldPtr = nullptr;
+    static inline logger chiraLogger{};
+    console consoleUI{};
     bool started = false;
     double lastTime, currentTime, lastMouseX, lastMouseY;
     void setSettingsLoaderDefaults();

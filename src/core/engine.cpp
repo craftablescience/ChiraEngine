@@ -12,14 +12,7 @@
 #include "../loader/jsonSettingsLoader.h"
 #include "../sound/alSoundManager.h"
 
-logger engine::chiraLogger{};
-std::vector<std::function<void(const loggerType, const std::string&, const std::string&)>> engine::loggerFunctions{};
-std::map<std::string, std::unique_ptr<shader>> engine::shaders{};
-std::map<std::string, std::unique_ptr<texture>> engine::textures{};
-std::map<std::string, std::unique_ptr<mesh>> engine::meshes{};
-std::map<std::string, std::unique_ptr<abstractMaterial>> engine::materials{};
-
-engine::engine(const std::string& configPath) : scriptProviders{} {
+engine::engine(const std::string& configPath) {
 #ifdef WIN32
 #if DEBUG
     system(("chcp " + std::to_string(CP_UTF8) + " > nul").c_str());
@@ -221,16 +214,16 @@ void engine::init() {
     }
     this->soundManager->init();
 
-    for (auto const& [name, object] : engine::shaders) {
-        object.get()->compile();
+    for (const auto& [name, object] : engine::shaders) {
+        object->compile();
     }
-    for (auto const& [name, object] : engine::textures) {
-        object.get()->compile();
+    for (const auto& [name, object] : engine::textures) {
+        object->compile();
     }
 
     this->callRegisteredFunctions(&(this->initFunctions));
 
-    for (auto const& [name, scriptProvider] : this->scriptProviders) {
+    for (const auto& [name, scriptProvider] : this->scriptProviders) {
         scriptProvider->initProvider();
 
         if (name == "angelscript") {
@@ -269,9 +262,9 @@ void engine::run() {
 void engine::render() {
     this->lastTime = this->currentTime;
     this->currentTime = glfwGetTime();
-    for (auto const& [name, object] : engine::shaders) {
-        object->setUniform("p", this->getWorld()->getCamera()->getProjectionMatrix());
-        object->setUniform("v", this->getWorld()->getCamera()->getViewMatrix());
+    for (const auto& [name, shader] : engine::shaders) {
+        shader->setUniform("p", this->getWorld()->getCamera()->getProjectionMatrix());
+        shader->setUniform("v", this->getWorld()->getCamera()->getViewMatrix());
     }
     callRegisteredFunctions(&(this->renderFunctions));
 
@@ -285,7 +278,7 @@ void engine::render() {
     }
 #endif
 
-    for (auto const& [name, scriptProvider] : this->scriptProviders) {
+    for (const auto& [name, scriptProvider] : this->scriptProviders) {
         scriptProvider->render(this->getDeltaTime());
     }
 
@@ -298,14 +291,14 @@ void engine::render() {
 void engine::stop() {
     engine::logInfoImportant("ChiraEngine", "Gracefully exiting...");
 
-    for (auto const& [name, scriptProvider] : this->scriptProviders) {
+    for (const auto& [name, scriptProvider] : this->scriptProviders) {
         scriptProvider->stop();
     }
 
-    for (auto const& [name, object] : engine::textures) {
+    for (const auto& [name, object] : engine::textures) {
         object->discard();
     }
-    for (auto const& [name, object] : engine::shaders) {
+    for (const auto& [name, object] : engine::shaders) {
         object->discard();
     }
 

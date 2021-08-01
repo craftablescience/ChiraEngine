@@ -8,7 +8,7 @@ world::world(engine* e, abstractCamera* camera) {
 world::~world() {
     delete this->camera;
     if (this->compiled) {
-        for (const auto &string : this->meshes) {
+        for (const auto& string : this->meshes) {
             engine::getMesh(string)->discard();
         }
     }

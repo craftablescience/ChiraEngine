@@ -21,8 +21,8 @@ add_custom_target(copyDemoResources ALL
         ${CMAKE_BINARY_DIR}/example/resources/)
 add_dependencies(ChiraEngineDemo copyDemoResources)
 
-if(${MSVC})
+if(MSVC)
     target_link_libraries(ChiraEngineDemo -static)
-else()
+elseif(NOT LINUX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
 endif()

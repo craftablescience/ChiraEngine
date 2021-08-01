@@ -5,9 +5,9 @@
 
 class phongMaterial : public abstractMaterial {
 public:
-    phongMaterial(const std::string& shader, const std::string& diffuse, const std::string& specular) : abstractMaterial(shader) {
-        this->diffuse = diffuse;
-        this->specular = specular;
+    phongMaterial(const std::string& shader, const std::string& diffuse_, const std::string& specular_) : abstractMaterial(shader) {
+        this->diffuse = diffuse_;
+        this->specular = specular_;
         engine::getTexture(this->diffuse)->setTextureUnit(GL_TEXTURE0);
         engine::getTexture(this->specular)->setTextureUnit(GL_TEXTURE1);
     }

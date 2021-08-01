@@ -8,9 +8,6 @@ mesh::mesh(abstractMeshLoader* loader, const std::string& filepath_, const std::
     this->loader = loader;
     this->filepath = filepath_;
     this->material = material_;
-    this->vboHandle = -1;
-    this->vaoHandle = -1;
-    this->eboHandle = -1;
 }
 
 mesh::~mesh() {
