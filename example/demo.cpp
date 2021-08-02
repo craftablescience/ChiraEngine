@@ -31,8 +31,8 @@ int main() {
     engine::addTexture("container_diffuse", new texture2d("container_diffuse.png", GL_RGBA));
     engine::addTexture("container_specular", new texture2d("container_specular.png", GL_RGBA));
     engine::addShader("phonglit", new shader("phonglit.vsh", "phonglit.fsh"));
-    engine::addMaterial("phongMaterial", new phongMaterial{"phonglit", "container_diffuse", "container_specular"});
-    engine::addMesh("cube", new mesh(&objMeshLoader, "teapot.obj", "phongMaterial"));
+    engine::addMaterial("phonglit", new phongMaterial{"phonglit", "container_diffuse", "container_specular"});
+    engine::addMesh("cube", new mesh(&objMeshLoader, "teapot.obj", "phonglit"));
 
     engine.addInitFunction([](class engine* e) {
         e->captureMouse(true);

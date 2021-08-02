@@ -220,6 +220,9 @@ void engine::init() {
     for (const auto& [name, object] : engine::textures) {
         object->compile();
     }
+    for (const auto& [name, object] : engine::materials) {
+        object->compile();
+    }
 
     this->callRegisteredFunctions(&(this->initFunctions));
 

@@ -10,8 +10,11 @@ public:
     phongMaterial(const std::string& shader_, std::string diffuse_, std::string specular_) : abstractMaterial(shader_), diffuse(std::move(diffuse_)), specular(std::move(specular_)) {
         engine::getTexture(this->diffuse)->setTextureUnit(GL_TEXTURE0);
         engine::getTexture(this->specular)->setTextureUnit(GL_TEXTURE1);
-        engine::getShader(shader_)->setUniform("material.diffuse", 0);
-        engine::getShader(shader_)->setUniform("material.specular", 1);
+    }
+    void compile() override {
+        engine::getShader(this->shaderName)->use();
+        engine::getShader(this->shaderName)->setUniform("material.diffuse", 0);
+        engine::getShader(this->shaderName)->setUniform("material.specular", 1);
     }
     void use() override {
         engine::getTexture(this->diffuse)->use();
