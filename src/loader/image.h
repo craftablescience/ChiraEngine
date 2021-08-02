@@ -1,13 +1,10 @@
 #pragma once
 
 #include <string>
+#include "abstractImage.h"
 
-class image {
+class image : public abstractImage {
 public:
     image(const std::string& filepath, int* width, int* height, int* fileChannels, int desiredChannels, bool vflip = true);
-    virtual ~image();
-    [[nodiscard]] virtual unsigned char* getData();
-protected:
-    image();
-    unsigned char* data;
+    ~image() override;
 };
