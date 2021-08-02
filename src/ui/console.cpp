@@ -38,10 +38,10 @@ void console::engineLoggingHook(const loggerType type, const std::string& source
         case OUTPUT:
             this->addLog(abstractLogger::OUTPUT_PREFIX + "[" + source + "] " + message);
             break;
-        case WARNING:
+        case WARN:
             this->addLog(abstractLogger::WARNING_PREFIX + "[" + source + "] " + message);
             break;
-        case ERROR:
+        case ERR:
             this->addLog(abstractLogger::ERROR_PREFIX + "[" + source + "] " + message);
             break;
     }

@@ -7,8 +7,8 @@ enum loggerType {
     INFO,           // white
     INFO_IMPORTANT, // green
     OUTPUT,         // blue
-    WARNING,        // yellow
-    ERROR           // red
+    WARN,        // yellow
+    ERR           // red
 };
 
 class abstractLogger {
@@ -27,9 +27,9 @@ public:
                 return INFO_IMPORTANT_PREFIX + "[" + source + "] " + message;
             case OUTPUT:
                 return OUTPUT_PREFIX + "[" + source + "] " + message;
-            case WARNING:
+            case WARN:
                 return WARNING_PREFIX + "[" + source + "] " + message;
-            case ERROR:
+            case ERR:
                 return ERROR_PREFIX + "[" + source + "] " + message;
         }
         return "";
@@ -63,13 +63,13 @@ public:
 
     void logWarning(const std::string& source, const std::string& message) override {
 #if DEBUG
-        std::cout << "\x1B[33m" << formatMessage(WARNING, source, message) << "\033[0m" << std::endl;
+        std::cout << "\x1B[33m" << formatMessage(WARN, source, message) << "\033[0m" << std::endl;
 #endif
     }
 
     void logError(const std::string& source, const std::string& message) override {
 #if DEBUG
-        std::cout << "\x1B[31m" << formatMessage(ERROR, source, message) << "\033[0m" << std::endl;
+        std::cout << "\x1B[31m" << formatMessage(ERR, source, message) << "\033[0m" << std::endl;
 #endif
     }
 };

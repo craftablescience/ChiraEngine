@@ -515,12 +515,12 @@ void engine::logOutput(const std::string& source, const std::string& message) {
 
 void engine::logWarning(const std::string& source, const std::string& message) {
     engine::chiraLogger.logWarning(source, message);
-    engine::runLogHooks(WARNING, source, message);
+    engine::runLogHooks(WARN, source, message);
 }
 
 void engine::logError(const std::string& source, const std::string& message) {
     engine::chiraLogger.logError(source, message);
-    engine::runLogHooks((loggerType) 4, source, message);
+    engine::runLogHooks(ERR, source, message);
 }
 
 void engine::addLogHook(const std::function<void(const loggerType,const std::string&,const std::string&)>& function) {
