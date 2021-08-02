@@ -49,11 +49,9 @@ int main() {
         sound->init("helloWorldCutMono.ogg");
         e->getSoundManager()->addSound("helloWorld", sound);
 
+        ((phongMaterial*) engine::getMaterial("phonglit"))->setShininess();
+        ((phongMaterial*) engine::getMaterial("phonglit"))->setLambertFactor();
         engine::getShader("phonglit")->use();
-        engine::getShader("phonglit")->setUniform("material.diffuse", 0);
-        engine::getShader("phonglit")->setUniform("material.specular", 1);
-        engine::getShader("phonglit")->setUniform("material.shininess", 32.0f);
-        engine::getShader("phonglit")->setUniform("material.lambertFactor", 1.0f);
         engine::getShader("phonglit")->setUniform("light.ambient", 0.1f, 0.1f, 0.1f);
         engine::getShader("phonglit")->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);
         engine::getShader("phonglit")->setUniform("light.specular", 1.0f, 1.0f, 1.0f);
