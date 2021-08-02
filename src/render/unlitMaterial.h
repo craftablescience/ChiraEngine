@@ -5,7 +5,7 @@
 
 class unlitMaterial : public abstractMaterial {
 public:
-    explicit unlitMaterial(const shader& shader_) : abstractMaterial(shader_) {}
+    explicit unlitMaterial(const std::string& shader_) : abstractMaterial(shader_) {}
     void use() override {
         engine::getShader(this->shaderName)->use();
     }
