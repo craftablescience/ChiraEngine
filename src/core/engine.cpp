@@ -470,6 +470,10 @@ void engine::callRegisteredFunctions(const std::vector<std::function<void(engine
     }
 }
 
+const GLFWwindow* engine::getWindow() const {
+    return this->window;
+}
+
 bool engine::isStarted() const {
     return this->started;
 }

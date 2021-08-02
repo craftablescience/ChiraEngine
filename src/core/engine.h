@@ -54,9 +54,10 @@ public:
     void addStopFunction(const std::function<void(engine*)>& stop);
     abstractSettingsLoader* getSettingsLoader();
     void setSettingsLoader(abstractSettingsLoader* settingsLoader);
-    class world* getWorld();
+    world* getWorld();
     void setWorld(world* newWorld);
     void callRegisteredFunctions(const std::vector<std::function<void(engine*)>>* list);
+    [[nodiscard]] const GLFWwindow* getWindow() const;
     [[nodiscard]] bool isStarted() const;
     // NOTE: only guaranteed to work after run() in a render method
     [[nodiscard]] double getDeltaTime() const;
