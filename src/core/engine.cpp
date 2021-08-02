@@ -269,11 +269,12 @@ void engine::render() {
         shader->setUniform("p", this->getWorld()->getCamera()->getProjectionMatrix());
         shader->setUniform("v", this->getWorld()->getCamera()->getViewMatrix());
     }
-    callRegisteredFunctions(&(this->renderFunctions));
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+
+    callRegisteredFunctions(&(this->renderFunctions));
 
 #if DEBUG
     if (this->getConsole()->getEnabled()) {
