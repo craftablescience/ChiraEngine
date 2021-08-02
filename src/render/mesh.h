@@ -26,6 +26,7 @@ private:
     int depthFunc;
     bool backfaceCulling;
     int cullType;
+    bool compiled = false;
     abstractMeshLoader* loader;
     std::string filepath;
     std::string material;

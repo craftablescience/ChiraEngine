@@ -4,24 +4,15 @@
 
 texture::texture(const std::string& filepath) {
     int w, h, bd;
-    this->file = new image(virtualFileSystem::getTexturePath(filepath), &w, &h, &bd, 0);
+    this->file.reset(new image(virtualFileSystem::getTexturePath(filepath), &w, &h, &bd, 0));
     this->width = w;
     this->height = h;
     this->bitDepth = bd;
-    this->activeTextureUnit = -1;
-}
-
-texture::~texture() {
-    if (this->handle != 0) delete this->file;
 }
 
 void texture::compile() {
     if (this->handle != 0) return;
     glGenTextures(1, &(this->handle));
-}
-
-void texture::discard() {
-    if (this->handle != 0) delete this->file;
 }
 
 void texture::setTextureUnit(int textureUnit) {

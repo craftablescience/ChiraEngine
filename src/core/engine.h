@@ -80,10 +80,10 @@ private:
     std::unique_ptr<abstractSoundManager> soundManager = nullptr;
     std::vector<keybind> keybinds{};
     std::vector<mousebind> mousebinds{};
-    static inline std::map<std::string, std::unique_ptr<shader>> shaders{};
-    static inline std::map<std::string, std::unique_ptr<texture>> textures{};
-    static inline std::map<std::string, std::unique_ptr<mesh>> meshes{};
-    static inline std::map<std::string, std::unique_ptr<abstractMaterial>> materials{};
+    static inline std::map<const std::string, std::unique_ptr<shader>> shaders{};
+    static inline std::map<const std::string, std::unique_ptr<texture>> textures{};
+    static inline std::map<const std::string, std::unique_ptr<mesh>> meshes{};
+    static inline std::map<const std::string, std::unique_ptr<abstractMaterial>> materials{};
     bool mouseCaptured = false;
     std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
     std::unique_ptr<world> worldPtr = nullptr;

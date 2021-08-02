@@ -23,6 +23,6 @@ add_dependencies(ChiraEngineDemo copyDemoResources)
 
 if(MSVC)
     target_link_libraries(ChiraEngineDemo -static)
-elseif(NOT LINUX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
+elseif(NOT UNIX)
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
 endif()

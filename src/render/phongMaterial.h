@@ -1,13 +1,13 @@
 #pragma once
 
+#include <utility>
+
 #include "abstractMaterial.h"
 #include "../core/engine.h"
 
 class phongMaterial : public abstractMaterial {
 public:
-    phongMaterial(const std::string& shader, const std::string& diffuse_, const std::string& specular_) : abstractMaterial(shader) {
-        this->diffuse = diffuse_;
-        this->specular = specular_;
+    phongMaterial(const std::string& shader, std::string diffuse_, std::string specular_) : abstractMaterial(shader), diffuse(std::move(diffuse_)), specular(std::move(specular_)) {
         engine::getTexture(this->diffuse)->setTextureUnit(GL_TEXTURE0);
         engine::getTexture(this->specular)->setTextureUnit(GL_TEXTURE1);
     }

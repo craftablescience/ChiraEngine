@@ -11,9 +11,11 @@ mesh::mesh(abstractMeshLoader* loader, const std::string& filepath_, const std::
 }
 
 mesh::~mesh() {
-    glDeleteVertexArrays(1, &(this->vaoHandle));
-    glDeleteBuffers(1, &(this->vboHandle));
-    glDeleteBuffers(1, &(this->eboHandle));
+    if (this->compiled) {
+        glDeleteVertexArrays(1, &(this->vaoHandle));
+        glDeleteBuffers(1, &(this->vboHandle));
+        glDeleteBuffers(1, &(this->eboHandle));
+    }
 }
 
 void mesh::setMaterial(const std::string& material_) {
@@ -25,6 +27,8 @@ abstractMaterial* mesh::getMaterial() {
 }
 
 void mesh::compile() {
+    if (this->compiled) return;
+
     this->loader->loadMesh(this->filepath, &this->vertices, &this->indices);
 
     glGenVertexArrays(1, &(this->vaoHandle));
@@ -53,12 +57,16 @@ void mesh::compile() {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+
+    this->compiled = true;
 }
 
 void mesh::discard() {
-    glDeleteVertexArrays(1, &(this->vaoHandle));
-    glDeleteBuffers(1, &(this->vboHandle));
-    glDeleteBuffers(1, &(this->eboHandle));
+    if (this->compiled) {
+        glDeleteVertexArrays(1, &(this->vaoHandle));
+        glDeleteBuffers(1, &(this->vboHandle));
+        glDeleteBuffers(1, &(this->eboHandle));
+    }
 }
 
 void mesh::render() {
