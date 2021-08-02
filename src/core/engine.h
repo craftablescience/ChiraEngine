@@ -24,6 +24,7 @@
 
 class keybind;
 class mousebind;
+class world;
 
 class engine {
 public:
