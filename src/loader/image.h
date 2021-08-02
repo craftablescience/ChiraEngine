@@ -8,5 +8,6 @@ public:
     virtual ~image();
     [[nodiscard]] virtual unsigned char* getData();
 protected:
+    image();
     unsigned char* data;
 };
