@@ -1,4 +1,6 @@
 # Chira Engine
+![Discord](https://img.shields.io/discord/678074864346857482?label=Discord&logo=Discord&logoColor=%23FFFFFF&style=flat-square)
+
 A fully customizable (and heavily work-in-progress) game engine written in C++17.
 
 ## Features
