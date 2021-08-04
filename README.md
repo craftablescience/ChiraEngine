@@ -1,4 +1,6 @@
 # Chira Engine
+![Discord](https://img.shields.io/discord/678074864346857482?label=Discord&logo=Discord&logoColor=%23FFFFFF&style=flat-square)
+
 A fully customizable (and heavily work-in-progress) game engine written in C++17.
 
 ## Features
@@ -30,12 +32,17 @@ Again, the goal of the engine is to have as much customization as possible, whil
 - stb_image
 
 ## Compilation
-I have only tested compiling this project in CLion. This is the recommended IDE for developing the application,
-and if you import this project into CLion it will immediately be ready to run, with no further configuration necessary.
+- **CLion (recommended)**: The project will compile without any prior configuration.
+
+- Visual Studio 2019: You will need to install the following components:
+
+![image](https://user-images.githubusercontent.com/26600014/128105644-cfa92f30-dc96-4476-a4c9-8d8b5f3ce129.png)
+
+Additionally, compiling with MSVC will produce an error for x64 targets, due to a bug with AngelScript. I strongly recommend compiling with MinGW if you can help it, or targeting x86 if you can't.
 
 ## Usage
 Make sure to copy the `src/resources` folder to the executable directory in your buildscript, or it will fail due to missing assets.
 
 A good example buildscript and application can be found at:
 
-[https://github.com/craftablescience/ChiraEditor/tree/4ba7fc8098e6d74fbc6951b2daa0d232ba809251](https://github.com/craftablescience/ChiraEditor/tree/4ba7fc8098e6d74fbc6951b2daa0d232ba809251)
+[https://github.com/craftablescience/ChiraEditor](https://github.com/craftablescience/ChiraEditor)
