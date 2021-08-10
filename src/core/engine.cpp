@@ -10,6 +10,7 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "../loader/jsonSettingsLoader.h"
+#include "../loader/image.h"
 #include "../sound/alSoundManager.h"
 
 engine::engine(const std::string& configPath) {

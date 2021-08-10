@@ -9,6 +9,14 @@ texture2d::texture2d(const std::string& file, int format, int wrapModeU, int wra
     this->mipmaps = mipmaps;
 }
 
+texture2d::texture2d(abstractImage* image, int w, int h, int bd, int format, int wrapModeU, int wrapModeV, int filterMode, bool mipmaps) : texture(image, w, h, bd) {
+    this->format = format;
+    this->wrapModeU = wrapModeU;
+    this->wrapModeV = wrapModeV;
+    this->filterMode = filterMode;
+    this->mipmaps = mipmaps;
+}
+
 void texture2d::compile() {
     if (this->handle != 0) return;
     texture::compile();
