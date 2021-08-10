@@ -28,68 +28,42 @@ void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* v
             iss >> normal.r >> normal.g >> normal.b;
             normalBuffer.push_back(normal);
         } else if (line.substr(0,2) == "f ") {
-            // Check to make sure it is triangulated
-            std::istringstream ss(line.substr(2));
-            std::string word;
-            unsigned int count = 0;
-            while (ss >> word) {
-                count++;
-            }
-            if (count > 3) {
-                engine::logError("OBJ", "OBJ file " + filepath + " is not triangulated");
-            }
-            // Figure out if UVs are included
-            bool includeUVs = true;
+            // this line has 10 zeroes to check if OBJ is triangulated concisely
+            int objIndices[] = {0,0,0,0,0,0,0,0,0,0};
             std::string data = line.substr(2);
             std::replace(data.begin(), data.end(), '/', ' ');
-            std::istringstream uss(data);
-            unsigned int i;
-            unsigned int c = 0;
-            while (uss >> i) {
-                c++;
-            }
-            if (c < 9) {
-                includeUVs = false;
-            }
-            // Parse
             std::istringstream iss(data);
-            int p0, p1, p2, t0 = 0, t1 = 0, t2 = 0, n0, n1, n2;
+            unsigned short counter = 0;
+            bool includeUVs = false;
+            while (iss >> objIndices[counter]) {
+                objIndices[counter] -= 1;
+                if (counter >= 9) {
+                    engine::logWarning("OBJ", "OBJ file " + filepath + " is not triangulated");
+                    break;
+                } else if (counter >= 6) {
+                    includeUVs = true;
+                }
+                counter++;
+            }
             if (includeUVs) {
-                iss >> p0 >> t0 >> n0 >> p1 >> t1 >> n1 >> p2 >> t2 >> n2;
-                p0 -= 1;
-                t0 -= 1;
-                n0 -= 1;
-                p1 -= 1;
-                t1 -= 1;
-                n1 -= 1;
-                p2 -= 1;
-                t2 -= 1;
-                n2 -= 1;
-                addVertex(vertex(vertexBuffer[p0].x, vertexBuffer[p0].y, vertexBuffer[p0].z,
-                                 normalBuffer[n0].r, normalBuffer[n0].g, normalBuffer[n0].b,
-                                 uvBuffer[t0].u, uvBuffer[t0].v), &currentIndex, vertices, indices);
-                addVertex(vertex(vertexBuffer[p1].x, vertexBuffer[p1].y, vertexBuffer[p1].z,
-                                 normalBuffer[n1].r, normalBuffer[n1].g, normalBuffer[n1].b,
-                                 uvBuffer[t1].u, uvBuffer[t1].v), &currentIndex, vertices, indices);
-                addVertex(vertex(vertexBuffer[p2].x, vertexBuffer[p2].y, vertexBuffer[p2].z,
-                                 normalBuffer[n2].r, normalBuffer[n2].g, normalBuffer[n2].b,
-                                 uvBuffer[t2].u, uvBuffer[t2].v), &currentIndex, vertices, indices);
+                addVertex(vertex(vertexBuffer[objIndices[0]].x, vertexBuffer[objIndices[0]].y, vertexBuffer[objIndices[0]].z,
+                                 normalBuffer[objIndices[2]].r, normalBuffer[objIndices[2]].g, normalBuffer[objIndices[2]].b,
+                                 uvBuffer[objIndices[1]].u, uvBuffer[objIndices[1]].v), &currentIndex, vertices, indices);
+                addVertex(vertex(vertexBuffer[objIndices[3]].x, vertexBuffer[objIndices[3]].y, vertexBuffer[objIndices[3]].z,
+                                 normalBuffer[objIndices[5]].r, normalBuffer[objIndices[5]].g, normalBuffer[objIndices[5]].b,
+                                 uvBuffer[objIndices[4]].u, uvBuffer[objIndices[4]].v), &currentIndex, vertices, indices);
+                addVertex(vertex(vertexBuffer[objIndices[6]].x, vertexBuffer[objIndices[6]].y, vertexBuffer[objIndices[6]].z,
+                                 normalBuffer[objIndices[8]].r, normalBuffer[objIndices[8]].g, normalBuffer[objIndices[8]].b,
+                                 uvBuffer[objIndices[7]].u, uvBuffer[objIndices[7]].v), &currentIndex, vertices, indices);
             } else {
-                iss >> p0 >> n0 >> p1 >> n1 >> p2 >> n2;
-                p0 -= 1;
-                n0 -= 1;
-                p1 -= 1;
-                n1 -= 1;
-                p2 -= 1;
-                n2 -= 1;
-                addVertex(vertex(vertexBuffer[p0].x, vertexBuffer[p0].y, vertexBuffer[p0].z,
-                                 normalBuffer[n0].r, normalBuffer[n0].g, normalBuffer[n0].b),
+                addVertex(vertex(vertexBuffer[objIndices[0]].x, vertexBuffer[objIndices[0]].y, vertexBuffer[objIndices[0]].z,
+                                 normalBuffer[objIndices[1]].r, normalBuffer[objIndices[1]].g, normalBuffer[objIndices[1]].b),
                                  &currentIndex, vertices, indices);
-                addVertex(vertex(vertexBuffer[p1].x, vertexBuffer[p1].y, vertexBuffer[p1].z,
-                                 normalBuffer[n1].r, normalBuffer[n1].g, normalBuffer[n1].b),
+                addVertex(vertex(vertexBuffer[objIndices[2]].x, vertexBuffer[objIndices[2]].y, vertexBuffer[objIndices[2]].z,
+                                 normalBuffer[objIndices[3]].r, normalBuffer[objIndices[3]].g, normalBuffer[objIndices[3]].b),
                                  &currentIndex, vertices, indices);
-                addVertex(vertex(vertexBuffer[p2].x, vertexBuffer[p2].y, vertexBuffer[p2].z,
-                                 normalBuffer[n2].r, normalBuffer[n2].g, normalBuffer[n2].b),
+                addVertex(vertex(vertexBuffer[objIndices[4]].x, vertexBuffer[objIndices[4]].y, vertexBuffer[objIndices[4]].z,
+                                 normalBuffer[objIndices[5]].r, normalBuffer[objIndices[5]].g, normalBuffer[objIndices[5]].b),
                                  &currentIndex, vertices, indices);
             }
         }
