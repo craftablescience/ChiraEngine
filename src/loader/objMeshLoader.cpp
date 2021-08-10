@@ -29,7 +29,7 @@ void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* v
             normalBuffer.push_back(normal);
         } else if (line.substr(0,2) == "f ") {
             // this line has 10 zeroes to check if OBJ is triangulated concisely
-            int objIndices[] = {0,0,0,0,0,0,0,0,0,0};
+            int objIndices[10];
             std::string data = line.substr(2);
             std::replace(data.begin(), data.end(), '/', ' ');
             std::istringstream iss(data);
