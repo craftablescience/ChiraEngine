@@ -1,12 +1,13 @@
 #pragma once
 
 #include <memory>
-#include "../loader/image.h"
+#include "../loader/abstractImage.h"
 #include "../utility/compilable.h"
 
 class texture : public compilable {
 public:
     explicit texture(const std::string& file);
+    texture(abstractImage* image, int w, int h, int bd);
     void compile() override;
     virtual void use() = 0;
     void setTextureUnit(int textureUnit);
@@ -15,7 +16,7 @@ public:
 protected:
     unsigned int handle = 0;
     int activeTextureUnit = -1;
-    std::unique_ptr<image> file = nullptr;
+    std::unique_ptr<abstractImage> file = nullptr;
     int width;
     int height;
     int bitDepth;

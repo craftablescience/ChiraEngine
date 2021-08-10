@@ -1,7 +1,15 @@
-#include <iostream>
 #include "texture2d.h"
+#include "../core/engine.h"
 
 texture2d::texture2d(const std::string& file, int format, int wrapModeU, int wrapModeV, int filterMode, bool mipmaps) : texture(file) {
+    this->format = format;
+    this->wrapModeU = wrapModeU;
+    this->wrapModeV = wrapModeV;
+    this->filterMode = filterMode;
+    this->mipmaps = mipmaps;
+}
+
+texture2d::texture2d(abstractImage* image, int w, int h, int bd, int format, int wrapModeU, int wrapModeV, int filterMode, bool mipmaps) : texture(image, w, h, bd) {
     this->format = format;
     this->wrapModeU = wrapModeU;
     this->wrapModeV = wrapModeV;
@@ -29,9 +37,7 @@ void texture2d::compile() {
             glGenerateMipmap(GL_TEXTURE_2D);
         }
     } else {
-#if DEBUG
-        std::cerr << "Error: texture failed to compile. Missing image data." << std::endl;
-#endif
+        engine::logError("Texture2D", "Texture failed to compile. Missing image data");
     }
 }
 
