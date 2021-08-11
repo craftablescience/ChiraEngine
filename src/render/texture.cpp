@@ -1,11 +1,13 @@
 #include "texture.h"
+
+#include <memory>
 #include "glad/gl.h"
 #include "../loader/image.h"
 #include "../core/virtualFileSystem.h"
 
 texture::texture(const std::string& filepath) {
     int w, h, bd;
-    this->file.reset(new image(virtualFileSystem::getTexturePath(filepath), &w, &h, &bd, 0));
+    this->file = std::make_unique<image>(virtualFileSystem::getTexturePath(filepath), &w, &h, &bd, 0);
     this->width = w;
     this->height = h;
     this->bitDepth = bd;

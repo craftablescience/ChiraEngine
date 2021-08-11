@@ -31,7 +31,7 @@ void texture2d::compile() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->filterMode);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->filterMode);
 
-    if (this->file->getData()) {
+    if (this->file && this->file->getData()) {
         glTexImage2D(GL_TEXTURE_2D, 0, this->format, this->width, this->height, 0, this->format, GL_UNSIGNED_BYTE, this->file->getData());
         if (this->mipmaps) {
             glGenerateMipmap(GL_TEXTURE_2D);

@@ -9,7 +9,7 @@ public:
     texture2d(abstractImage* image, int w, int h, int bd, int format, int wrapModeU = GL_REPEAT, int wrapModeV = GL_REPEAT, int filterMode = GL_LINEAR, bool mipmaps = true);
     void compile() override;
     void use() override;
-private:
+protected:
     int format;
     int wrapModeU;
     int wrapModeV;
