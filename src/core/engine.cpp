@@ -1,9 +1,10 @@
 #include "engine.h"
 
-#include <iostream>
 #if __has_include(<windows.h>)
 #include <windows.h>
 #endif
+
+#include <iostream>
 
 #define IMGUI_USER_CONFIG "../../src/config/imguiConfig.h"
 #include "imgui.h"
@@ -215,9 +216,25 @@ void engine::init() {
     }
     this->soundManager->init();
 
+    if (this->settingsLoader->hasValue("engine", "maxPointLights")) {
+        int maxLights;
+        this->settingsLoader->getValue("engine", "maxPointLights", &maxLights);
+        shaderFile::addPreprocessorSymbol("MAX_POINT_LIGHTS", std::to_string(maxLights));
+    }
+    if (this->settingsLoader->hasValue("engine", "maxPointLights")) {
+        int maxLights;
+        this->settingsLoader->getValue("engine", "maxDirectionalLights", &maxLights);
+        shaderFile::addPreprocessorSymbol("MAX_DIRECTIONAL_LIGHTS", std::to_string(maxLights));
+    }
+    if (this->settingsLoader->hasValue("engine", "maxSpotLights")) {
+        int maxLights;
+        this->settingsLoader->getValue("engine", "maxSpotLights", &maxLights);
+        shaderFile::addPreprocessorSymbol("MAX_SPOT_LIGHTS", std::to_string(maxLights));
+    }
     for (const auto& [name, object] : engine::shaders) {
         object->compile();
     }
+
     for (const auto& [name, object] : engine::textures) {
         object->compile();
     }
@@ -450,7 +467,10 @@ void engine::setSettingsLoaderDefaults() {
     this->settingsLoader->load();
     this->settingsLoader->addCategory("engine");
     this->settingsLoader->setValue("engine", "iconPath", std::string("ui/icon.png"), false, false);
-    this->settingsLoader->setValue("engine", "title", std::string("Basic Game Engine"), false, false);
+    this->settingsLoader->setValue("engine", "title", std::string("ChiraEngine"), false, false);
+    this->settingsLoader->setValue("engine", "maxPointLights", 64, false, false);
+    this->settingsLoader->setValue("engine", "maxDirectionalLights", 4, false, false);
+    this->settingsLoader->setValue("engine", "maxSpotLights", 4, false, false);
     this->settingsLoader->addCategory("audio");
     this->settingsLoader->setValue("audio", "openal", true, false, false);
     this->settingsLoader->addCategory("input");
