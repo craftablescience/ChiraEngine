@@ -40,7 +40,7 @@ std::string shaderFile::loadSourceFromFile(const std::string& filepath) {
         std::cerr << "Error: shader file at " << filepath << " unreadable!" << std::endl;
         return "";
     } else {
-        std::stringstream buffer;
+        std::ostringstream buffer;
         buffer << file.rdbuf();
         file.close();
         std::string data = buffer.str();
@@ -50,7 +50,6 @@ std::string shaderFile::loadSourceFromFile(const std::string& filepath) {
             fullKey += shaderFile::preprocessorSuffix;
             data = std::regex_replace(data.data(), std::regex{fullKey}, value);
         }
-        engine::logInfo("s", data);
         return data;
     }
 }
