@@ -70,7 +70,11 @@ unsigned int shaderFile::getType() const {
 }
 
 void shaderFile::addPreprocessorSymbol(const std::string& name, const std::string& value) {
-    shaderFile::preprocessorSymbols.insert(std::pair<std::string, std::string>{name, value});
+    if (shaderFile::preprocessorSymbols.count(name) == 0) {
+        shaderFile::preprocessorSymbols.insert(std::pair<std::string, std::string>{name, value});
+    } else {
+        shaderFile::preprocessorSymbols[name] = value;
+    }
 }
 
 void shaderFile::setPreprocessorPrefix(const std::string& prefix) {
