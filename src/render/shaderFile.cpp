@@ -2,10 +2,10 @@
 #include <glad/gl.h>
 #include <iostream>
 #include <fstream>
+#include <regex>
 #include "../core/virtualFileSystem.h"
 
-// todo: add variable preprocessing and #include preprocessing
-
+// todo: add #include preprocessing
 shaderFile::shaderFile(unsigned int type, const std::string& source, bool isFilePath) : handleObject() {
     this->type = type;
     if (!isFilePath) {
@@ -44,6 +44,13 @@ std::string shaderFile::loadSourceFromFile(const std::string& filepath) {
         buffer << file.rdbuf();
         file.close();
         std::string data = buffer.str();
+        for (const auto& [key, value] : shaderFile::preprocessorSymbols) {
+            std::string fullKey = shaderFile::preprocessorPrefix;
+            fullKey += key;
+            fullKey += shaderFile::preprocessorSuffix;
+            data = std::regex_replace(data.data(), std::regex{fullKey}, value);
+        }
+        engine::logInfo("s", data);
         return data;
     }
 }
@@ -61,4 +68,16 @@ void shaderFile::checkForCompilationErrors() const {
 
 unsigned int shaderFile::getType() const {
     return this->type;
+}
+
+void shaderFile::addPreprocessorSymbol(const std::string& name, const std::string& value) {
+    shaderFile::preprocessorSymbols.insert(std::pair<std::string, std::string>{name, value});
+}
+
+void shaderFile::setPreprocessorPrefix(const std::string& prefix) {
+    shaderFile::preprocessorPrefix = prefix;
+}
+
+void shaderFile::setPreprocessorSuffix(const std::string& suffix) {
+    shaderFile::preprocessorSuffix = suffix;
 }

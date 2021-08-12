@@ -19,7 +19,7 @@
 #include "../sound/abstractSoundManager.h"
 #include "../ui/console.h"
 #include "../utility/logger.h"
-#include "world.h"
+#include "../render/world.h"
 #include "../render/abstractMaterial.h"
 
 class keybind;
