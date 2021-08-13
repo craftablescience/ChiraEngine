@@ -1,6 +1,11 @@
 # ANGELSCRIPT
 include(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/CMakeLists.txt)
 
+# DISCORD
+set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/discord)
+list(APPEND ENGINE_LINK_LIBRARIES discord-rpc)
+
 # OPENGL
 find_package(OpenGL REQUIRED)
 
@@ -68,6 +73,7 @@ list(APPEND ENGINE_SOURCES
 # CHIRAENGINE
 include(${CMAKE_CURRENT_SOURCE_DIR}/config/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/core/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/implementation/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/input/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/loader/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/render/CMakeLists.txt)
@@ -79,6 +85,7 @@ add_library(ChiraEngine ${ENGINE_SOURCES})
 
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/addons)
+target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/discord/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/include)
 target_include_directories(ChiraEngine PUBLIC ${OPENGL_INCLUDE_DIRS})
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/ogg/include)

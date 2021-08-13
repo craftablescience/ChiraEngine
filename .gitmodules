@@ -19,3 +19,6 @@
 [submodule "src/third_party/vorbis"]
 	path = src/third_party/vorbis
 	url = https://github.com/xiph/vorbis
+[submodule "src/third_party/discord"]
+	path = src/third_party/discord
+	url = https://github.com/discord/discord-rpc

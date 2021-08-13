@@ -13,6 +13,7 @@
 #include "../loader/jsonSettingsLoader.h"
 #include "../loader/image.h"
 #include "../sound/alSoundManager.h"
+#include "../implementation/discordRichPresence.h"
 
 engine::engine(const std::string& configPath) {
 #ifdef WIN32
@@ -275,6 +276,9 @@ void engine::run() {
         glfwPollEvents();
         this->keyboardRepeatingCallback();
         this->mouseButtonRepeatingCallback();
+        if (discordRichPresence::initialized()) {
+            discordRichPresence::updatePresence();
+        }
     }
 
     this->stop();
@@ -315,6 +319,10 @@ void engine::stop() {
 
     for (const auto& [name, scriptProvider] : this->scriptProviders) {
         scriptProvider->stop();
+    }
+
+    if (discordRichPresence::initialized()) {
+        discordRichPresence::shutdown();
     }
 
     for (const auto& [name, object] : engine::textures) {

@@ -4,6 +4,7 @@
 #include "../src/render/freecam.h"
 #include "../src/sound/oggFileSound.h"
 #include "../src/render/phongMaterial.h"
+#include "../src/implementation/discordRichPresence.h"
 
 int main() {
     engine engine;
@@ -35,6 +36,11 @@ int main() {
     engine::addMesh("cube", new mesh(&objMeshLoader, "teapot.obj", "phonglit"));
 
     engine.addInitFunction([](class engine* e) {
+        discordRichPresence::init("875778280899358720");
+        discordRichPresence::setLargeImage("main_logo");
+        discordRichPresence::setDetails("Demo App Running");
+        discordRichPresence::setState("https://discord.gg/ASgHFkX");
+
         e->captureMouse(true);
         e->setWorld(new world{e, new freecam{e}});
         e->getWorld()->addMesh("cube");
