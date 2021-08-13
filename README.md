@@ -6,6 +6,7 @@ A fully customizable (and heavily work-in-progress) game engine written in C++17
 ## Features
 There may be more that I have missed, but:
 - As extensible as possible: register custom logging hooks, scripting providers, sound providers, etc.
+- Hassle-free Discord Rich Presence
 - AngelScript support, with common function hooks and types registered
 - Hassle-free input system using C++11 lambdas (or a reference to a function, your choice)
 - Loads OBJ mesh files
