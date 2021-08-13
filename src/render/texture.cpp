@@ -1,6 +1,5 @@
 #include "texture.h"
 
-#include <memory>
 #include "glad/gl.h"
 #include "../loader/image.h"
 #include "../core/virtualFileSystem.h"

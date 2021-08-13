@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include "../loader/abstractImage.h"
 #include "../utility/compilable.h"
 
