@@ -38,7 +38,7 @@ void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* v
             while (iss >> objIndices[counter]) {
                 objIndices[counter] -= 1;
                 if (counter >= 9) {
-                    engine::logWarning("OBJ", "OBJ file " + filepath + " is not triangulated");
+                    chiraLogger::log(WARN, "OBJ", "OBJ file " + filepath + " is not triangulated");
                     break;
                 } else if (counter >= 6) {
                     includeUVs = true;

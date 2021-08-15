@@ -23,7 +23,7 @@ bool checkForALErrors(const std::string& filename, const std::uint_fast32_t line
             default:
                 out += "UNKNOWN AL ERROR: " + std::to_string(error);
         }
-        engine::logError("OpenAL", out);
+        chiraLogger::log(ERR, "OpenAL", out);
         return false;
     }
     return true;
@@ -52,7 +52,7 @@ bool checkForALCErrors(const std::string& filename, const std::uint_fast32_t lin
             default:
                 out += "UNKNOWN ALC ERROR: " + std::to_string(error);
         }
-        engine::logError("OpenAL", out);
+        chiraLogger::log(ERR, "OpenAL", out);
         return false;
     }
     return true;

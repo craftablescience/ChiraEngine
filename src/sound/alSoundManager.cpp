@@ -2,35 +2,35 @@
 
 alSoundManager::~alSoundManager() {
     if (!alcCall(alcMakeContextCurrent, this->contextCurrent, this->device, nullptr)) {
-        engine::logError("OpenAL", "Could not make context non-current");
+        chiraLogger::log(ERR, "OpenAL", "Could not make context non-current");
     }
     if (!alcCall(alcDestroyContext, this->device, this->context)) {
-        engine::logError("OpenAL", "Could not destroy context");
+        chiraLogger::log(ERR, "OpenAL", "Could not destroy context");
     }
     ALCboolean closed;
     if (!alcCall(alcCloseDevice, closed, this->device, this->device)) {
-        engine::logError("OpenAL", "Default device failed to close");
+        chiraLogger::log(ERR, "OpenAL", "Default device failed to close");
     }
 }
 
 void alSoundManager::init() {
     this->device = alcOpenDevice(nullptr);
     if (!this->device) {
-        engine::logWarning("OpenAL", "Default device failed to initialize");
+        chiraLogger::log(WARN, "OpenAL", "Default device failed to initialize");
         std::vector<std::string> devices{};
         alcGetAvailableDevices(devices, nullptr);
         if (devices.empty()) {
-            engine::logError("OpenAL", "No devices available!");
+            chiraLogger::log(ERR, "OpenAL", "No devices available!");
         } else {
-            engine::logWarning("OpenAL", "Using non-default device " + devices[0]);
+            chiraLogger::log(ERR, "OpenAL", "Using non-default device " + devices[0]);
             this->device = alcOpenDevice(devices[0].c_str());
         }
     }
     if (!alcCall(alcCreateContext, this->context, this->device, this->device, nullptr) || !this->context) {
-        engine::logError("OpenAL", "Could not create context");
+        chiraLogger::log(ERR, "OpenAL", "Could not create context");
     }
     if (!alcCall(alcMakeContextCurrent, this->contextCurrent, this->device, this->context) || this->contextCurrent != ALC_TRUE) {
-        engine::logError("OpenAL", "Could not make context current");
+        chiraLogger::log(ERR, "OpenAL", "Could not make context current");
     }
 }
 

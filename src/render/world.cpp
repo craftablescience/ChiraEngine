@@ -16,7 +16,7 @@ world::~world() {
 
 abstractCamera* world::getCamera() const {
     if (!this->camera) {
-        engine::logWarning("world::getCamera", "Must set camera in world::setCamera first");
+        chiraLogger::log(WARN, "world::getCamera", "Must set camera in world::setCamera first");
         return nullptr;
     }
     return this->camera;

@@ -37,7 +37,7 @@ void texture2d::compile() {
             glGenerateMipmap(GL_TEXTURE_2D);
         }
     } else {
-        engine::logError("Texture2D", "Texture failed to compile. Missing image data");
+        chiraLogger::log(ERR, "Texture2D", "Texture failed to compile. Missing image data");
     }
 }
 
