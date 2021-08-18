@@ -7,8 +7,6 @@
 #include "../utility/logger.h"
 #include "abstractResourceProvider.h"
 
-// todo: figure out what to do with meta-resources
-
 class resourceManager {
 public:
     static void addResourceProvider(const std::string& name, abstractResourceProvider* provider) {
@@ -42,7 +40,7 @@ public:
         return nullptr;
     }
 
-    static bool removeResourceIfUnused(const std::string& provider, const std::string& name) {
+    static bool removeIfUnused(const std::string& provider, const std::string& name) {
         // use_count will be 2 if one component is holding a pointer, and that will be the component asking for the removal
         if (resourceManager::resources[provider][name].use_count() <= 2) {
             resourceManager::resources[provider].erase(name);
@@ -53,8 +51,8 @@ public:
 
     // NOTE: Should only ever be called when the program closes
     static void releaseAllResources() noexcept {
-        resourceManager::providers.clear();
         resourceManager::resources.clear();
+        resourceManager::providers.clear();
     }
 private:
     static inline std::unordered_map<std::string, std::vector<std::unique_ptr<abstractResourceProvider>>> providers{};

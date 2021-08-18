@@ -2,7 +2,6 @@
 
 #include <string>
 #include <memory>
-#include <utility>
 #include "abstractResource.h"
 
 class abstractResourceProvider {

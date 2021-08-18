@@ -4,7 +4,6 @@
 
 /*
  * The destructor should discard the data
- * The name parameter must also be passed to the abstractResource constructor.
  */
 class abstractResource {
 public:
