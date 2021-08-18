@@ -21,7 +21,7 @@ target_link_libraries(${PROJECT_NAME} ChiraEngine)
 # Resources provided by the engine
 add_custom_target(copyEngineResources ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/engine/
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/engine/
         ${CMAKE_BINARY_DIR}/resources/engine/)
 add_dependencies(${PROJECT_NAME} copyEngineResources)
 

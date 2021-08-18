@@ -1,5 +1,7 @@
 #include "abstractMaterial.h"
+
 #include "../core/engine.h"
+#include "../resource/resourceManager.h"
 
 abstractMaterial::abstractMaterial(const std::string& shader_) {
     this->shaderName = shader_;

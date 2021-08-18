@@ -8,7 +8,7 @@
 #include "light.h"
 #include "../core/engine.h"
 
-class world : public compilable {
+class world {
 public:
     world(class engine* e, abstractCamera* camera);
     virtual ~world();
@@ -17,8 +17,8 @@ public:
     void addMesh(const std::string& mesh);
     unsigned int addLight(abstractLight* light);
     abstractLight* getLight(unsigned int lightId);
-    void compile() override;
-    void discard() override;
+    void compile();
+    void discard();
     void render();
 private:
     bool compiled = false;

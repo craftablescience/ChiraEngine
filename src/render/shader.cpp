@@ -1,28 +1,27 @@
 #include "shader.h"
-#include "glad/gl.h"
+
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
+#include "../resource/resourceManager.h"
 
-shader::shader(const std::string& vertex, const std::string& fragment)
-    : handleObject(), vert(GL_VERTEX_SHADER, vertex), frag(GL_FRAGMENT_SHADER, fragment) {}
+shader::shader(const std::string& provider, const std::string& vertex, const std::string& fragment) : handleObject() {
+    this->handle = glCreateProgram();
+    std::shared_ptr<shaderResource> vert = resourceManager::getUniqueResource<shaderResource>(provider, vertex, GL_VERTEX_SHADER);
+    glAttachShader(this->handle, vert->getHandle());
+    std::shared_ptr<shaderResource> frag = resourceManager::getUniqueResource<shaderResource>(provider, fragment, GL_FRAGMENT_SHADER);
+    glAttachShader(this->handle, frag->getHandle());
+    glLinkProgram(this->handle);
+#if DEBUG
+    this->checkForCompilationErrors();
+#endif
+}
 
 shader::~shader() {
     if (this->handle != -1) glDeleteProgram(this->handle);
 }
 
-void shader::compile() {
-    if (this->handle != -1) return;
-    this->handle = glCreateProgram();
-    vert.compile();
-    glAttachShader(this->handle, vert.getHandle());
-    frag.compile();
-    glAttachShader(this->handle, frag.getHandle());
-    glLinkProgram(this->handle);
-#if DEBUG
-    this->checkForCompilationErrors();
-#endif
-    vert.discard();
-    frag.discard();
+void shader::use() {
+    glUseProgram(this->handle);
 }
 
 void shader::checkForCompilationErrors() const {
@@ -34,10 +33,6 @@ void shader::checkForCompilationErrors() const {
         std::cerr << "Error: shader linking failed." << std::endl;
         std::cerr << infoLog << std::endl;
     }
-}
-
-void shader::use() {
-    glUseProgram(this->handle);
 }
 
 void shader::setUniform(const std::string& name, bool value) const {
@@ -106,8 +101,4 @@ void shader::setUniform(const std::string& name, float value1, float value2, flo
 
 void shader::setUniform(const std::string& name, glm::mat4* value) const {
     glUniformMatrix4fv(glGetUniformLocation(this->handle, name.c_str()), 1, GL_FALSE, glm::value_ptr(*value));
-}
-
-void shader::discard() {
-    if (this->handle != -1) glDeleteProgram(this->handle);
 }

@@ -14,6 +14,7 @@
 #include "../loader/image.h"
 #include "../sound/alSoundManager.h"
 #include "../implementation/discordRichPresence.h"
+#include "../resource/resourceManager.h"
 
 engine::engine(const std::string& configPath) {
 #ifdef WIN32
@@ -220,27 +221,17 @@ void engine::init() {
     if (this->settingsLoader->hasValue("engine", "maxPointLights")) {
         int maxLights;
         this->settingsLoader->getValue("engine", "maxPointLights", &maxLights);
-        shaderFile::addPreprocessorSymbol("MAX_POINT_LIGHTS", std::to_string(maxLights));
+        shaderResource::addPreprocessorSymbol("MAX_POINT_LIGHTS", std::to_string(maxLights));
     }
     if (this->settingsLoader->hasValue("engine", "maxPointLights")) {
         int maxLights;
         this->settingsLoader->getValue("engine", "maxDirectionalLights", &maxLights);
-        shaderFile::addPreprocessorSymbol("MAX_DIRECTIONAL_LIGHTS", std::to_string(maxLights));
+        shaderResource::addPreprocessorSymbol("MAX_DIRECTIONAL_LIGHTS", std::to_string(maxLights));
     }
     if (this->settingsLoader->hasValue("engine", "maxSpotLights")) {
         int maxLights;
         this->settingsLoader->getValue("engine", "maxSpotLights", &maxLights);
-        shaderFile::addPreprocessorSymbol("MAX_SPOT_LIGHTS", std::to_string(maxLights));
-    }
-    for (const auto& [name, object] : engine::shaders) {
-        object->compile();
-    }
-
-    for (const auto& [name, object] : engine::textures) {
-        object->compile();
-    }
-    for (const auto& [name, object] : engine::materials) {
-        object->compile();
+        shaderResource::addPreprocessorSymbol("MAX_SPOT_LIGHTS", std::to_string(maxLights));
     }
 
     this->callRegisteredFunctions(&(this->initFunctions));
@@ -287,10 +278,12 @@ void engine::run() {
 void engine::render() {
     this->lastTime = this->currentTime;
     this->currentTime = glfwGetTime();
+    /* todo: set shader globals (setProjection and setMatrix callback?)
     for (const auto& [name, shader] : engine::shaders) {
         shader->setUniform("p", this->getWorld()->getCamera()->getProjectionMatrix());
         shader->setUniform("v", this->getWorld()->getCamera()->getViewMatrix());
     }
+    */
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -325,17 +318,12 @@ void engine::stop() {
         discordRichPresence::shutdown();
     }
 
-    for (const auto& [name, object] : engine::textures) {
-        object->discard();
-    }
-    for (const auto& [name, object] : engine::shaders) {
-        object->discard();
-    }
-
     callRegisteredFunctions(&(this->stopFunctions));
 
     this->worldPtr->discard();
     this->soundManager->stop();
+
+    resourceManager::releaseAllResources();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -364,50 +352,6 @@ void engine::addMousebind(const mousebind& mousebind) {
 
 std::vector<mousebind>* engine::getMousebinds() {
     return &(this->mousebinds);
-}
-
-void engine::addShader(const std::string& name, shader* s) {
-    engine::shaders.insert(std::make_pair(name, s));
-}
-
-shader* engine::getShader(const std::string& name) {
-    if (engine::shaders.count(name) == 0) {
-        engine::logError("engine::getShader", "Shader " + name + " is not recognized, check that you registered it properly");
-    }
-    return engine::shaders.at(name).get();
-}
-
-void engine::addTexture(const std::string& name, texture* t) {
-    engine::textures.insert(std::make_pair(name, t));
-}
-
-texture* engine::getTexture(const std::string& name) {
-    if (engine::textures.count(name) == 0) {
-        engine::logError("engine::getTexture", "Texture " + name + " is not recognized, check that you registered it properly");
-    }
-    return engine::textures.at(name).get();
-}
-
-void engine::addMesh(const std::string& name, mesh* m) {
-    engine::meshes.insert(std::make_pair(name, m));
-}
-
-mesh* engine::getMesh(const std::string& name) {
-    if (engine::meshes.count(name) == 0) {
-        engine::logError("engine::getMesh", "Mesh " + name + " is not recognized, check that you registered it properly");
-    }
-    return engine::meshes.at(name).get();
-}
-
-void engine::addMaterial(const std::string& name, abstractMaterial* m) {
-    engine::materials.insert(std::make_pair(name, m));
-}
-
-abstractMaterial* engine::getMaterial(const std::string& name) {
-    if (engine::materials.count(name) == 0) {
-        engine::logError("engine::getMaterial", "Material " + name + " is not recognized, check that you registered it properly");
-    }
-    return engine::materials.at(name).get();
 }
 
 void engine::addScriptProvider(const std::string& name, abstractScriptProvider* scriptProvider) {

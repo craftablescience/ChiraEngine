@@ -38,14 +38,6 @@ public:
     std::vector<keybind>* getKeybinds();
     void addMousebind(const mousebind& mousebind);
     std::vector<mousebind>* getMousebinds();
-    static void addShader(const std::string& name, shader* s);
-    static shader* getShader(const std::string& name);
-    static void addTexture(const std::string& name, texture* t);
-    static texture* getTexture(const std::string& name);
-    static void addMesh(const std::string& name, mesh* t);
-    static mesh* getMesh(const std::string& name);
-    static void addMaterial(const std::string& name, abstractMaterial* t);
-    static abstractMaterial* getMaterial(const std::string& name);
     void addScriptProvider(const std::string& name, abstractScriptProvider* scriptProvider);
     abstractScriptProvider* getScriptProvider(const std::string& name);
     void setSoundManager(abstractSoundManager* newSoundManager);
@@ -82,10 +74,6 @@ private:
     std::unique_ptr<abstractSoundManager> soundManager = nullptr;
     std::vector<keybind> keybinds{};
     std::vector<mousebind> mousebinds{};
-    static inline std::map<const std::string, std::unique_ptr<shader>> shaders{};
-    static inline std::map<const std::string, std::unique_ptr<texture>> textures{};
-    static inline std::map<const std::string, std::unique_ptr<mesh>> meshes{};
-    static inline std::map<const std::string, std::unique_ptr<abstractMaterial>> materials{};
     bool mouseCaptured = false;
     std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
     std::unique_ptr<world> worldPtr = nullptr;

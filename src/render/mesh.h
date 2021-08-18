@@ -4,18 +4,17 @@
 #include <string>
 #include <functional>
 #include <glm/glm.hpp>
-#include "../utility/compilable.h"
 #include "../loader/abstractMeshLoader.h"
 #include "abstractMaterial.h"
 
-class mesh : public compilable {
+class mesh {
 public:
     explicit mesh(abstractMeshLoader* loader, const std::string& filepath_, const std::string& material_, int depthFunc_ = GL_LEQUAL, bool backfaceCulling_ = true, int cullType_ = GL_BACK);
     virtual ~mesh();
     void setMaterial(const std::string& material_);
     abstractMaterial* getMaterial();
-    void compile() override;
-    void discard() override;
+    void compile();
+    void discard();
     void render();
     glm::mat4* getModel() {
         return &(this->model);

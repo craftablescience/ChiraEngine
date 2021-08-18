@@ -3,13 +3,12 @@
 #include <memory>
 #include <string>
 #include "../loader/abstractImage.h"
-#include "../utility/compilable.h"
 
-class texture : public compilable {
+class texture {
 public:
     explicit texture(const std::string& file);
     texture(abstractImage* image, int w, int h, int bd);
-    void compile() override;
+    void compile();
     virtual void use() = 0;
     void setTextureUnit(int textureUnit);
     [[nodiscard]] int getTextureUnit() const;

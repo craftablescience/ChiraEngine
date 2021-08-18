@@ -10,8 +10,6 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/freecam.h
         ${CMAKE_CURRENT_LIST_DIR}/light.cpp
         ${CMAKE_CURRENT_LIST_DIR}/light.h
-        ${CMAKE_CURRENT_LIST_DIR}/shaderFile.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/shaderFile.h
         ${CMAKE_CURRENT_LIST_DIR}/shader.cpp
         ${CMAKE_CURRENT_LIST_DIR}/shader.h
         ${CMAKE_CURRENT_LIST_DIR}/texture.cpp
