@@ -1,6 +1,7 @@
 #pragma once
 
 #include "abstractResource.h"
+#include <string>
 #include <nlohmann/json.hpp>
 
 /*
@@ -25,7 +26,7 @@ class abstractMetaResource : public abstractResource {
 public:
     explicit abstractMetaResource(const std::string& provider_, const std::string& name_) : abstractResource(provider_, name_) {}
     void compile(std::unique_ptr<unsigned char> buffer, unsigned int bufferLength) final {
-        // todo: convert buffer to json, pass it to compile(props)
+        this->compile(nlohmann::json{std::string{buffer.get(), bufferLength}});
     }
     virtual void compile(const nlohmann::json& properties) = 0;
 };
