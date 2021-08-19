@@ -26,4 +26,5 @@ protected:
 private:
     static std::string loadSourceFromFile(const std::string& filepath);
     void checkForCompilationErrors() const;
+    void discardInternal();
 };
