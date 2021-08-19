@@ -34,4 +34,5 @@ private:
     shaderFile vert;
     shaderFile frag;
     void checkForCompilationErrors() const;
+    void discardInternal();
 };

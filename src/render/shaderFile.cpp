@@ -16,7 +16,7 @@ shaderFile::shaderFile(unsigned int type, const std::string& source, bool isFile
 }
 
 shaderFile::~shaderFile() {
-    if (this->handle != -1) glDeleteShader(this->handle);
+    discardInternal();
 }
 
 void shaderFile::compile() {
@@ -30,8 +30,15 @@ void shaderFile::compile() {
 #endif
 }
 
+void shaderFile::discardInternal() {
+    if (this->handle != -1) {
+        glDeleteShader(this->handle);
+        this->handle = -1;
+    }
+}
+
 void shaderFile::discard() {
-    if (this->handle != -1) glDeleteShader(this->handle);
+    this->discardInternal();
 }
 
 std::string shaderFile::loadSourceFromFile(const std::string& filepath) {

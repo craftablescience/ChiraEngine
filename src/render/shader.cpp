@@ -7,7 +7,7 @@ shader::shader(const std::string& vertex, const std::string& fragment)
     : handleObject(), vert(GL_VERTEX_SHADER, vertex), frag(GL_FRAGMENT_SHADER, fragment) {}
 
 shader::~shader() {
-    if (this->handle != -1) glDeleteProgram(this->handle);
+    discardInternal();
 }
 
 void shader::compile() {
@@ -109,5 +109,12 @@ void shader::setUniform(const std::string& name, glm::mat4* value) const {
 }
 
 void shader::discard() {
-    if (this->handle != -1) glDeleteProgram(this->handle);
+    this->discardInternal();
+}
+
+void shader::discardInternal() {
+    if (this->handle != -1) {
+        glDeleteProgram(this->handle);
+        this->handle = -1;
+    }
 }

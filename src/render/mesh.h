@@ -20,6 +20,8 @@ public:
     glm::mat4* getModel() {
         return &(this->model);
     };
+private:
+    void discardInternal();
 protected:
     glm::mat4 model;
 private:
