@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 # Definitions
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions(-DDEBUG)
-    if(UNIX)
+    if(UNIX OR MINGW)
         # On UNIX, build with debug friendly optimizations and debug symbols
         # On windows, just disable optimizations entirely
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Og -g")
@@ -17,7 +17,7 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 elseif(CMAKE_BUILD_TYPE MATCHES Release)
     add_definitions(-DRELEASE)
     # Build with max optimizations and don't omit stack ptr for debugging reasons
-    if(UNIX)
+    if(UNIX OR MINGW)
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -fno-omit-frame-pointer")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fno-omit-frame-pointer")
     elseif(MSVC)
@@ -54,4 +54,3 @@ add_custom_target(copyDemoResources ALL
         ${CMAKE_CURRENT_SOURCE_DIR}/example/resources/demo/
         ${CMAKE_BINARY_DIR}/resources/demo/)
 add_dependencies(${PROJECT_NAME} copyDemoResources)
-
