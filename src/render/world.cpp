@@ -1,4 +1,5 @@
 #include "world.h"
+#include "../resource/resourceManager.h"
 
 world::world(engine* e, abstractCamera* camera) {
     this->enginePtr = e;
@@ -7,11 +8,6 @@ world::world(engine* e, abstractCamera* camera) {
 
 world::~world() {
     delete this->camera;
-    if (this->compiled) {
-        for (const auto& string : this->meshes) {
-            engine::getMesh(string)->discard();
-        }
-    }
 }
 
 abstractCamera* world::getCamera() const {
@@ -31,50 +27,12 @@ void world::setCamera(abstractCamera* newCamera) {
     this->camera->setCurrent(true);
 }
 
-void world::addMesh(const std::string& mesh) {
-    this->meshes.push_back(mesh);
-    if (this->compiled) {
-        engine::getMesh(mesh)->compile();
-    }
-}
-
-unsigned int world::addLight(abstractLight* light) {
-    this->lights.emplace_back(light);
-    this->lightsDirty = true;
-    return this->lights.size() - 1;
-}
-
-abstractLight* world::getLight(unsigned int lightId) {
-    return this->lights.at(lightId).get();
-}
-
-void world::compile() {
-    if (!this->compiled) {
-        for (const auto& string : this->meshes) {
-            engine::getMesh(string)->compile();
-        }
-        this->compiled = true;
-    }
-}
-
-void world::discard() {
-    if (this->compiled) {
-        for (const auto& string : this->meshes) {
-            engine::getMesh(string)->discard();
-        }
-        this->compiled = false;
-    }
+void world::addMesh(const std::shared_ptr<mesh>& mesh_) {
+    this->meshes.push_back(mesh_);
 }
 
 void world::render() {
-    if (!this->compiled) {
-        this->compile();
-    }
-    for (const auto& string : this->meshes) {
-        if (this->lightsDirty) {
-            engine::getMesh(string)->getMaterial()->updateLighting(this->lights);
-            this->lightsDirty = false;
-        }
-        engine::getMesh(string)->render();
+    for (const auto& meshPtr : this->meshes) {
+        meshPtr->render();
     }
 }

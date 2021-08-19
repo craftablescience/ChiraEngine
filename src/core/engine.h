@@ -20,7 +20,7 @@
 #include "../ui/console.h"
 #include "../utility/logger.h"
 #include "../render/world.h"
-#include "../render/abstractMaterial.h"
+#include "../render/material.h"
 
 class keybind;
 class mousebind;

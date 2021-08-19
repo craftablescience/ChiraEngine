@@ -5,12 +5,18 @@
 #include "../src/sound/oggFileSound.h"
 #include "../src/render/phongMaterial.h"
 #include "../src/implementation/discordRichPresence.h"
+#include "../src/resource/resourceManager.h"
+#include "../src/resource/filesystemResourceProvider.h"
 
 int main() {
     engine engine;
+    resourceManager::addResourceProvider("filesystem", new filesystemResourceProvider{"filesystem", "resources/engine"});
+    resourceManager::addResourceProvider("filesystem", new filesystemResourceProvider{"filesystem", "resources/demo"});
+    virtualFileSystem::addResourceDirectory(ENGINE_FILESYSTEM_PREFIX);
     virtualFileSystem::addResourceDirectory("resources/demo/");
 
-    objMeshLoader objMeshLoader;
+    mesh::addMeshLoader("obj", new objMeshLoader{});
+
     engine.getSettingsLoader()->setValue("engine", "title", std::string("Demo Window"), true, true);
 
     engine.addKeybind(keybind(GLFW_KEY_ESCAPE, GLFW_PRESS, [](class engine* e) {
@@ -29,13 +35,10 @@ int main() {
         e->getSoundManager()->getSound("helloWorld")->play();
     }));
 
-    engine::addTexture("container_diffuse", new texture2d("container_diffuse.png", GL_RGBA));
-    engine::addTexture("container_specular", new texture2d("container_specular.png", GL_RGBA));
-    engine::addShader("phonglit", new shader("phonglit.vsh", "phonglit.fsh"));
-    engine::addMaterial("phonglit", new phongMaterial{"phonglit", "container_diffuse", "container_specular"});
-    engine::addMesh("cube", new mesh(&objMeshLoader, "teapot.obj", "phonglit"));
-
     engine.addInitFunction([](class engine* e) {
+        std::shared_ptr<phongMaterial> cubeMaterial = resourceManager::getResource<phongMaterial>("filesystem", "materials/cubeMaterial.json");
+        std::shared_ptr<mesh> cubeMesh = resourceManager::getResource<mesh>("filesystem", "meshes/cube.json", cubeMaterial);
+
         discordRichPresence::init("875778280899358720");
         discordRichPresence::setLargeImage("main_logo");
         discordRichPresence::setDetails("Demo App Running");
@@ -43,7 +46,7 @@ int main() {
 
         e->captureMouse(true);
         e->setWorld(new world{e, new freecam{e}});
-        e->getWorld()->addMesh("cube");
+        e->getWorld()->addMesh(cubeMesh);
 
         bool angelscriptEnabled = true;
         e->getSettingsLoader()->getValue("scripting", "angelscript", &angelscriptEnabled);
@@ -55,13 +58,14 @@ int main() {
         sound->init("helloWorldCutMono.ogg");
         e->getSoundManager()->addSound("helloWorld", sound);
 
-        ((phongMaterial*) engine::getMaterial("phonglit"))->setShininess();
-        ((phongMaterial*) engine::getMaterial("phonglit"))->setLambertFactor();
-        engine::getShader("phonglit")->use();
-        engine::getShader("phonglit")->setUniform("light.ambient", 0.1f, 0.1f, 0.1f);
-        engine::getShader("phonglit")->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);
-        engine::getShader("phonglit")->setUniform("light.specular", 1.0f, 1.0f, 1.0f);
-        engine::getShader("phonglit")->setUniform("light.position", 0.0f, 5.0f, 0.0f);
+        cubeMaterial->setShininess();
+        cubeMaterial->setLambertFactor();
+        std::shared_ptr<shader> cubeShader = cubeMaterial->getShader().lock();
+        cubeShader->use();
+        cubeShader->setUniform("light.ambient", 0.1f, 0.1f, 0.1f);
+        cubeShader->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);
+        cubeShader->setUniform("light.specular", 1.0f, 1.0f, 1.0f);
+        cubeShader->setUniform("light.position", 0.0f, 5.0f, 0.0f);
 
 #if DEBUG
         engine::setBackgroundColor(0.0f, 0.0f, 0.3f, 1.0f);

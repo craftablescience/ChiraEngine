@@ -2,16 +2,20 @@
 #include <algorithm>
 #include "objMeshLoader.h"
 #include "../core/engine.h"
+#include "../resource/stringResource.h"
+#include "../resource/resourceManager.h"
 
-void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
+void objMeshLoader::loadMesh(const std::string& provider, const std::string& name, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
     std::vector<position> vertexBuffer;
     std::vector<uv> uvBuffer;
     std::vector<normal> normalBuffer;
 
-    std::ifstream input(virtualFileSystem::getMeshPath(filepath));
+    std::shared_ptr<stringResource> meshData = resourceManager::getResource<stringResource>(provider, name);
+    std::istringstream meshDataStream = std::istringstream{meshData->getString()};
+
     std::string line;
     unsigned int currentIndex = 0;
-    while (std::getline(input, line)) {
+    while (std::getline(meshDataStream, line)) {
         if (line.substr(0,2) == "v ") {
             position pos;
             std::istringstream iss(line.substr(2));
@@ -38,7 +42,7 @@ void objMeshLoader::loadMesh(const std::string& filepath, std::vector<vertex>* v
             while (iss >> objIndices[counter]) {
                 objIndices[counter] -= 1;
                 if (counter >= 9) {
-                    engine::logWarning("OBJ", "OBJ file " + filepath + " is not triangulated");
+                    engine::logWarning("OBJ", "OBJ file " + name + " is not triangulated");
                     break;
                 } else if (counter >= 6) {
                     includeUVs = true;

@@ -4,12 +4,14 @@
 #include <functional>
 #include <vector>
 #include "../resource/shaderResource.h"
+#include "../resource/abstractMetaResource.h"
 #include "../utility/handleObject.h"
 
-class shader : public handleObject {
+class shader : public abstractMetaResource, public handleObject {
 public:
-    shader(const std::string& provider, const std::string& vert, const std::string& frag);
-    virtual ~shader();
+    shader(const std::string& provider_, const std::string& name_);
+    void compile(const nlohmann::json& properties) override;
+    ~shader() override;
     void use();
     void setUniform(const std::string& name, bool value) const;
     void setUniform(const std::string& name, unsigned int value) const;

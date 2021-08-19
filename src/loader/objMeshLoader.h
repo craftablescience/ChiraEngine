@@ -7,7 +7,7 @@
 
 class objMeshLoader : public abstractMeshLoader {
 public:
-    void loadMesh(const std::string& filepath, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) override;
+    void loadMesh(const std::string& provider, const std::string& name, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) override;
 private:
     static void addVertex(const vertex& v, unsigned int* currentIndex, std::vector<vertex>* vertices, std::vector<unsigned int>* indices);
 };

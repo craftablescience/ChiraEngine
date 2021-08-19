@@ -2,37 +2,18 @@
 
 #include <utility>
 
-#include "abstractMaterial.h"
+#include "material.h"
+#include "texture2d.h"
 #include "../core/engine.h"
 
-class phongMaterial : public abstractMaterial {
+class phongMaterial : public material {
 public:
-    phongMaterial(const std::string& shader_, std::string diffuse_, std::string specular_) : abstractMaterial(shader_), diffuse(std::move(diffuse_)), specular(std::move(specular_)) {
-        engine::getTexture(this->diffuse)->setTextureUnit(GL_TEXTURE0);
-        engine::getTexture(this->specular)->setTextureUnit(GL_TEXTURE1);
-    }
-    void compile() override {
-        engine::getShader(this->shaderName)->use();
-        engine::getShader(this->shaderName)->setUniform("material.diffuse", 0);
-        engine::getShader(this->shaderName)->setUniform("material.specular", 1);
-    }
-    void use() override {
-        engine::getTexture(this->diffuse)->use();
-        engine::getTexture(this->specular)->use();
-        engine::getShader(this->shaderName)->use();
-    }
-    void setShininess(float shininess = 32.0f) {
-        engine::getShader(this->shaderName)->use();
-        engine::getShader(this->shaderName)->setUniform("material.shininess", shininess);
-    }
-    void setLambertFactor(float lambertFactor = 1.0f) {
-        engine::getShader(this->shaderName)->use();
-        engine::getShader(this->shaderName)->setUniform("material.lambertFactor", lambertFactor);
-    }
-    void updateLighting(const std::vector<std::unique_ptr<abstractLight>>& lights) override {
-        // todo: pass all lighting info to the material (this one)
-    }
+    phongMaterial(const std::string& provider_, const std::string& name_) : material(provider_, name_) {}
+    void compile(const nlohmann::json& properties) override;
+    void use() override;
+    void setShininess(float shininess = 32.0f);
+    void setLambertFactor(float lambertFactor = 1.0f);
 private:
-    std::string diffuse;
-    std::string specular;
+    std::shared_ptr<texture2d> diffuse;
+    std::shared_ptr<texture2d> specular;
 };

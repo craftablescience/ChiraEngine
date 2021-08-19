@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "shader": "shaders/phonglit.json",
+    "diffuse": "textures/missing.png",
+    "specular": "textures/missing.png"
+  },
+  "properties": {
+    "diffuse_format": "RGBA",
+    "specular_format": "RGBA"
+  }
+}

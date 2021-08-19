@@ -10,7 +10,7 @@
 class resourceManager {
 public:
     static void addResourceProvider(const std::string& name, abstractResourceProvider* provider) {
-        if (resourceManager::providers.find(name) != resourceManager::providers.end()) {
+        if (resourceManager::providers.find(name) == resourceManager::providers.end()) {
             resourceManager::providers[name] = std::vector<std::unique_ptr<abstractResourceProvider>>{};
         }
         resourceManager::providers[name].emplace_back(provider);
@@ -51,7 +51,12 @@ public:
 
     // NOTE: Should only ever be called when the program closes
     static void releaseAllResources() noexcept {
-        resourceManager::resources.clear();
+        for (const auto& pair : resources) {
+            for (const auto& provider : pair.second) {
+                // This is bad practice, DO NOT EVER call this function until the very end
+                delete provider.second.get();
+            }
+        }
         resourceManager::providers.clear();
     }
 private:

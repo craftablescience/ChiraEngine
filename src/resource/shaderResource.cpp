@@ -5,6 +5,26 @@
 // todo: add #include preprocessing
 shaderResource::shaderResource(const std::string& provider_, const std::string& name_, unsigned int type_) : abstractResource(provider_, name_), handleObject(), type(type_) {}
 
+void shaderResource::compile(std::unique_ptr<unsigned char> buffer, unsigned int bufferLength) {
+    if (this->handle != -1) return;
+    this->handle = glCreateShader(type);
+    std::ostringstream oBuffer;
+    oBuffer << buffer.get();
+    this->data = oBuffer.str();
+    for (const auto& [key, value] : shaderResource::preprocessorSymbols) {
+        std::string fullKey = shaderResource::preprocessorPrefix;
+        fullKey += key;
+        fullKey += shaderResource::preprocessorSuffix;
+        this->data = std::regex_replace(this->data.data(), std::regex{fullKey}, value);
+    }
+    const char* dat = this->data.c_str();
+    glShaderSource(this->handle, 1, &dat, nullptr);
+    glCompileShader(this->handle);
+#if DEBUG
+    this->checkForCompilationErrors();
+#endif
+}
+
 shaderResource::~shaderResource() {
     if (this->handle != -1) glDeleteShader(this->handle);
     this->removeIfUnused();

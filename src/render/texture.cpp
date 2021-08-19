@@ -1,25 +1,20 @@
 #include "texture.h"
 
-#include "glad/gl.h"
+#include <glad/gl.h>
 #include "../loader/image.h"
-#include "../core/virtualFileSystem.h"
 
-texture::texture(const std::string& filepath) {
+texture::texture(const std::string& provider_, const std::string& name_) : abstractResource(provider_, name_) {}
+
+void texture::compile(std::unique_ptr<unsigned char> buffer, unsigned int bufferLen) {
+    this->compile(buffer.get(), bufferLen);
+}
+
+void texture::compile(unsigned char* buffer, unsigned int bufferLen) {
     int w, h, bd;
-    this->file = std::make_unique<image>(virtualFileSystem::getTexturePath(filepath), &w, &h, &bd, 0);
+    this->file = std::make_unique<image>(buffer, bufferLen, &w, &h, &bd);
     this->width = w;
     this->height = h;
     this->bitDepth = bd;
-}
-
-texture::texture(abstractImage* image, int w, int h, int bd) {
-    this->file.reset(image);
-    this->width = w;
-    this->height = h;
-    this->bitDepth = bd;
-}
-
-void texture::compile() {
     if (this->handle != 0) return;
     glGenTextures(1, &(this->handle));
 }

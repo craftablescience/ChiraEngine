@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "model": "meshes/teapot.obj"
+  },
+  "properties": {
+    "loader": "obj",
+    "depthFunction": "LEQUAL",
+    "backfaceCulling": true,
+    "cullType": "back"
+  }
+}

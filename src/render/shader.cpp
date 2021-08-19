@@ -4,11 +4,13 @@
 #include <iostream>
 #include "../resource/resourceManager.h"
 
-shader::shader(const std::string& provider, const std::string& vertex, const std::string& fragment) : handleObject() {
+shader::shader(const std::string& provider_, const std::string& name_) : abstractMetaResource(provider_, name_), handleObject() {}
+
+void shader::compile(const nlohmann::json& properties) {
     this->handle = glCreateProgram();
-    std::shared_ptr<shaderResource> vert = resourceManager::getUniqueResource<shaderResource>(provider, vertex, GL_VERTEX_SHADER);
+    std::shared_ptr<shaderResource> vert = resourceManager::getUniqueResource<shaderResource>(provider, properties["dependencies"]["vertex"], GL_VERTEX_SHADER);
     glAttachShader(this->handle, vert->getHandle());
-    std::shared_ptr<shaderResource> frag = resourceManager::getUniqueResource<shaderResource>(provider, fragment, GL_FRAGMENT_SHADER);
+    std::shared_ptr<shaderResource> frag = resourceManager::getUniqueResource<shaderResource>(provider, properties["dependencies"]["fragment"], GL_FRAGMENT_SHADER);
     glAttachShader(this->handle, frag->getHandle());
     glLinkProgram(this->handle);
 #if DEBUG
@@ -18,6 +20,7 @@ shader::shader(const std::string& provider, const std::string& vertex, const std
 
 shader::~shader() {
     if (this->handle != -1) glDeleteProgram(this->handle);
+    this->removeIfUnused();
 }
 
 void shader::use() {

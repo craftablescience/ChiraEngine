@@ -15,6 +15,7 @@
 #include "../sound/alSoundManager.h"
 #include "../implementation/discordRichPresence.h"
 #include "../resource/resourceManager.h"
+#include "../resource/filesystemResourceProvider.h"
 
 engine::engine(const std::string& configPath) {
 #ifdef WIN32
@@ -24,7 +25,6 @@ engine::engine(const std::string& configPath) {
     FreeConsole();
 #endif
 #endif
-    virtualFileSystem::addResourceDirectory(ENGINE_FILESYSTEM_PREFIX);
     this->setSettingsLoader(new jsonSettingsLoader(configPath));
     this->lastTime = 0;
     this->currentTime = 0;
@@ -320,10 +320,7 @@ void engine::stop() {
 
     callRegisteredFunctions(&(this->stopFunctions));
 
-    this->worldPtr->discard();
     this->soundManager->stop();
-
-    resourceManager::releaseAllResources();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -412,7 +409,6 @@ world* engine::getWorld() {
 
 void engine::setWorld(class world* newWorld) {
     this->worldPtr.reset(newWorld);
-    this->worldPtr->compile();
 }
 
 void engine::setSettingsLoaderDefaults() {

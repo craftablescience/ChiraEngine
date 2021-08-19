@@ -1,7 +1,6 @@
 #include "texture2d.h"
-#include "../core/engine.h"
 
-texture2d::texture2d(const std::string& file, int format, int wrapModeU, int wrapModeV, int filterMode, bool mipmaps) : texture(file) {
+texture2d::texture2d(const std::string& provider_, const std::string& name_, int format, int wrapModeU, int wrapModeV, int filterMode, bool mipmaps) : texture(provider_, name_) {
     this->format = format;
     this->wrapModeU = wrapModeU;
     this->wrapModeV = wrapModeV;
@@ -9,17 +8,9 @@ texture2d::texture2d(const std::string& file, int format, int wrapModeU, int wra
     this->mipmaps = mipmaps;
 }
 
-texture2d::texture2d(abstractImage* image, int w, int h, int bd, int format, int wrapModeU, int wrapModeV, int filterMode, bool mipmaps) : texture(image, w, h, bd) {
-    this->format = format;
-    this->wrapModeU = wrapModeU;
-    this->wrapModeV = wrapModeV;
-    this->filterMode = filterMode;
-    this->mipmaps = mipmaps;
-}
-
-void texture2d::compile() {
+void texture2d::compile(std::unique_ptr<unsigned char> buffer, unsigned int bufferLen) {
     if (this->handle != 0) return;
-    texture::compile();
+    texture::compile(buffer.get(), bufferLen);
     if (this->activeTextureUnit == -1) {
         glActiveTexture(GL_TEXTURE0);
     } else {
@@ -37,7 +28,8 @@ void texture2d::compile() {
             glGenerateMipmap(GL_TEXTURE_2D);
         }
     } else {
-        engine::logError("Texture2D", "Texture failed to compile. Missing image data");
+        // todo: use better logger in feat/wec-conversion
+        //engine::logError("Texture2D", "Texture failed to compile. Missing image data");
     }
 }
 
