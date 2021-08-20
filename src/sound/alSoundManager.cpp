@@ -1,5 +1,4 @@
 #include "alSoundManager.h"
-#include "oggFileSound.h"
 
 alSoundManager::~alSoundManager() {
     if (!alcCall(alcMakeContextCurrent, this->contextCurrent, this->device, nullptr)) {
@@ -17,7 +16,15 @@ alSoundManager::~alSoundManager() {
 void alSoundManager::init() {
     this->device = alcOpenDevice(nullptr);
     if (!this->device) {
-        engine::logError("OpenAL", "Default device failed to initialize");
+        engine::logWarning("OpenAL", "Default device failed to initialize");
+        std::vector<std::string> devices{};
+        alcGetAvailableDevices(devices, nullptr);
+        if (devices.empty()) {
+            engine::logError("OpenAL", "No devices available!");
+        } else {
+            engine::logWarning("OpenAL", "Using non-default device " + devices[0]);
+            this->device = alcOpenDevice(devices[0].c_str());
+        }
     }
     if (!alcCall(alcCreateContext, this->context, this->device, this->device, nullptr) || !this->context) {
         engine::logError("OpenAL", "Could not create context");
@@ -28,25 +35,31 @@ void alSoundManager::init() {
 }
 
 void alSoundManager::update() {
-    for (auto& [name, sound] : this->sounds) {
-        sound.get()->update();
+    if (this->context) {
+        for (const auto& sound : this->sounds) {
+            sound.second->update();
+        }
     }
 }
 
 void alSoundManager::stop() {
-    for (auto& [name, sound] : this->sounds) {
-        sound.get()->stop();
-        sound.get()->discard();
+    for (const auto& sound : this->sounds) {
+        sound.second->stop();
+        sound.second->discard();
     }
 }
 
-void alSoundManager::setListenerPosition(glm::vec3 newPosition) {
-    alListener3f(AL_POSITION, newPosition.x, newPosition.y, newPosition.z);
+void alSoundManager::setListenerPosition(const glm::vec3& newPosition) {
+    if (this->context) {
+        alListener3f(AL_POSITION, newPosition.x, newPosition.y, newPosition.z);
+    }
 }
 
-void alSoundManager::setListenerRotation(glm::vec3 newRotation, glm::vec3 up) {
-    float vec[6] = {newRotation.x, newRotation.y, newRotation.z, up.x, up.y, up.z};
-    alListenerfv(AL_ORIENTATION, vec);
+void alSoundManager::setListenerRotation(const glm::vec3& newRotation, const glm::vec3& up) {
+    if (this->context) {
+        float vec[6] = {newRotation.x, newRotation.y, newRotation.z, up.x, up.y, up.z};
+        alListenerfv(AL_ORIENTATION, vec);
+    }
 }
 
 void alSoundManager::addSound(const std::string& soundName, abstractSound* sound) {

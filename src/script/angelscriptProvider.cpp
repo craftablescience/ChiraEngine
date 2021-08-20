@@ -34,20 +34,20 @@ void angelscriptProvider::initProvider() {
 }
 
 void angelscriptProvider::initScripts() {
-    for (auto const& script : this->scripts) {
+    for (const auto& script : this->scripts) {
         script->init(this);
     }
     this->started = true;
 }
 
 void angelscriptProvider::render(double delta) {
-    for (auto const& script : this->scripts) {
+    for (const auto& script : this->scripts) {
         script->render(this, delta);
     }
 }
 
 void angelscriptProvider::stop() {
-    for (auto const& script : this->scripts) {
+    for (const auto& script : this->scripts) {
         script->stop(this);
     }
 }

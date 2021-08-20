@@ -58,7 +58,7 @@ bool checkForALCErrors(const std::string& filename, const std::uint_fast32_t lin
     return true;
 }
 
-[[maybe_unused]] bool alcGetAvailableDevices(std::vector<std::string>& devicesVec, ALCdevice* device) {
+bool alcGetAvailableDevices(std::vector<std::string>& devicesVec, ALCdevice* device) {
     const ALCchar* devices;
     if(!alcCall(alcGetString, devices, device, nullptr, ALC_DEVICE_SPECIFIER))
         return false;

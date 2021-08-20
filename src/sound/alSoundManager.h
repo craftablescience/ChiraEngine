@@ -11,8 +11,8 @@ public:
     void init() override;
     void update() override;
     void stop() override;
-    void setListenerPosition(glm::vec3 newPosition) override;
-    void setListenerRotation(glm::vec3 newRotation, glm::vec3 up) override;
+    void setListenerPosition(const glm::vec3& newPosition) override;
+    void setListenerRotation(const glm::vec3& newRotation, const glm::vec3& up) override;
     void addSound(const std::string& soundName, abstractSound* sound) override;
     abstractSound* getSound(const std::string& soundName) override;
 private:
