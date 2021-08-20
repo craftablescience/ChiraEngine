@@ -11,8 +11,9 @@ mesh::~mesh() {
         glDeleteVertexArrays(1, &(this->vaoHandle));
         glDeleteBuffers(1, &(this->vboHandle));
         glDeleteBuffers(1, &(this->eboHandle));
+        this->compiled = false;
+        this->vboHandle = this->eboHandle = this->vaoHandle = 0;
     }
-    this->removeIfUnused();
 }
 
 void mesh::compile(const nlohmann::json& properties) {

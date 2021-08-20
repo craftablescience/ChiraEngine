@@ -30,19 +30,19 @@ void console::addLog(const std::string& message) {
 void console::engineLoggingHook(const loggerType type, const std::string& source, const std::string& message) {
     switch (type) {
         case INFO:
-            this->addLog(abstractLogger::INFO_PREFIX + "[" + source + "] " + message);
+            this->addLog(chiraLogger::INFO_PREFIX + "[" + source + "] " + message);
             break;
         case INFO_IMPORTANT:
-            this->addLog(abstractLogger::INFO_IMPORTANT_PREFIX + "[" + source + "] " + message);
+            this->addLog(chiraLogger::INFO_IMPORTANT_PREFIX + "[" + source + "] " + message);
             break;
         case OUTPUT:
-            this->addLog(abstractLogger::OUTPUT_PREFIX + "[" + source + "] " + message);
+            this->addLog(chiraLogger::OUTPUT_PREFIX + "[" + source + "] " + message);
             break;
         case WARN:
-            this->addLog(abstractLogger::WARNING_PREFIX + "[" + source + "] " + message);
+            this->addLog(chiraLogger::WARNING_PREFIX + "[" + source + "] " + message);
             break;
         case ERR:
-            this->addLog(abstractLogger::ERROR_PREFIX + "[" + source + "] " + message);
+            this->addLog(chiraLogger::ERROR_PREFIX + "[" + source + "] " + message);
             break;
     }
 }
@@ -66,16 +66,16 @@ void console::render() {
             const char* item = this->items[i];
             ImVec4 color;
             bool has_color = false;
-            if (strstr(item, abstractLogger::INFO_IMPORTANT_PREFIX.c_str())) {
+            if (strstr(item, chiraLogger::INFO_IMPORTANT_PREFIX.c_str())) {
                 color = ImVec4(0.13f, 0.77f, 0.13f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, abstractLogger::OUTPUT_PREFIX.c_str())) {
+            } else if (strstr(item, chiraLogger::OUTPUT_PREFIX.c_str())) {
                 color = ImVec4(0.3f, 0.3f, 1.0f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, abstractLogger::WARNING_PREFIX.c_str())) {
+            } else if (strstr(item, chiraLogger::WARNING_PREFIX.c_str())) {
                 color = ImVec4(1.0f, 0.84f, 0.0f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, abstractLogger::ERROR_PREFIX.c_str())) {
+            } else if (strstr(item, chiraLogger::ERROR_PREFIX.c_str())) {
                 color = ImVec4(1.0f, 0.2f, 0.2f, 1.0f);
                 has_color = true;
             }

@@ -1,5 +1,7 @@
 #include "texture2d.h"
 
+#include "../utility/logger.h"
+
 texture2d::texture2d(const std::string& provider_, const std::string& name_, int format, int wrapModeU, int wrapModeV, int filterMode, bool mipmaps) : texture(provider_, name_) {
     this->format = format;
     this->wrapModeU = wrapModeU;
@@ -28,8 +30,7 @@ void texture2d::compile(std::unique_ptr<unsigned char> buffer, unsigned int buff
             glGenerateMipmap(GL_TEXTURE_2D);
         }
     } else {
-        // todo: use better logger in feat/wec-conversion
-        //engine::logError("Texture2D", "Texture failed to compile. Missing image data");
+        chiraLogger::log(ERR, "Texture2D", "Texture failed to compile. Missing image data");
     }
 }
 

@@ -17,7 +17,7 @@ int main() {
 
     mesh::addMeshLoader("obj", new objMeshLoader{});
 
-    engine.getSettingsLoader()->setValue("engine", "title", std::string("Demo Window"), true, true);
+    engine::getSettingsLoader()->setValue("engine", "title", std::string("Demo Window"), true, true);
 
     engine.addKeybind(keybind(GLFW_KEY_ESCAPE, GLFW_PRESS, [](class engine* e) {
         e->stop();
@@ -49,7 +49,7 @@ int main() {
         e->getWorld()->addMesh(cubeMesh);
 
         bool angelscriptEnabled = true;
-        e->getSettingsLoader()->getValue("scripting", "angelscript", &angelscriptEnabled);
+        engine::getSettingsLoader()->getValue("scripting", "angelscript", &angelscriptEnabled);
         if (angelscriptEnabled) {
             ((angelscriptProvider*) e->getScriptProvider("angelscript"))->addScript(new angelscriptHolder{"testScript.as"});
         }

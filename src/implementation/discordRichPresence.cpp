@@ -106,13 +106,13 @@ void discordRichPresence::shutdown() {
 }
 
 void discordRichPresence::callbackReady(const DiscordUser* connectedUser) {
-    engine::logInfo("Discord", "User " + std::string(connectedUser->username) + ":" + connectedUser->discriminator + " connected");
+    chiraLogger::log(INFO, "Discord", "User " + std::string(connectedUser->username) + ":" + connectedUser->discriminator + " connected");
 }
 
 void discordRichPresence::callbackDisconnected(int errcode, const char* message) {
-    engine::logWarning("Discord", "User disconnected, code " + std::to_string(errcode) + ": " + std::string(message));
+    chiraLogger::log(WARN, "Discord", "User disconnected, code " + std::to_string(errcode) + ": " + std::string(message));
 }
 
 void discordRichPresence::callbackError(int errcode, const char* message) {
-    engine::logError("Discord", "Error " + std::to_string(errcode) + ": " + std::string(message));
+    chiraLogger::log(ERR, "Discord", "Error " + std::to_string(errcode) + ": " + std::string(message));
 }

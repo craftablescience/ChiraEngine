@@ -57,7 +57,7 @@ void freecam::setupKeybinds(engine* engine) const {
             yOffset *= this->mouseSensitivity;
             cam->yaw += (float) xOffset;
             bool invertYAxis = false;
-            e->getSettingsLoader()->getValue("input", "invertYAxis", &invertYAxis);
+            engine::getSettingsLoader()->getValue("input", "invertYAxis", &invertYAxis);
             if (invertYAxis) {
                 cam->pitch += (float) yOffset;
             } else {

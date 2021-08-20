@@ -13,7 +13,9 @@ public:
     ~mesh() override;
     void compile(const nlohmann::json& properties) override;
     void render();
-    glm::mat4* getModel() {return &this->model;}
+    glm::mat4* getModel() {
+        return &this->model;
+    }
     static void addMeshLoader(const std::string& name, abstractMeshLoader* meshLoader);
     static abstractMeshLoader* getMeshLoader(const std::string& name);
 protected:

@@ -63,4 +63,4 @@ auto alcCallImpl(const char* filename,
     return checkForALCErrors(filename, line, device);
 }
 
-[[maybe_unused]] bool alcGetAvailableDevices(std::vector<std::string>& devicesVec, ALCdevice* device);
+bool alcGetAvailableDevices(std::vector<std::string>& devicesVec, ALCdevice* device);

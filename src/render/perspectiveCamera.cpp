@@ -1,9 +1,9 @@
 #include "perspectiveCamera.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 
-#pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
-perspectiveCamera::perspectiveCamera(engine* engine, float newYaw, float newPitch, glm::vec3 newPosition, glm::vec3 currentUp, float newZoom) :
-                                     yaw{newYaw}, pitch{newPitch}, position{newPosition}, worldUp{currentUp}, front{glm::vec3(0.0f, 0.0f, -1.0f)}, zoom{newZoom} {}
+perspectiveCamera::perspectiveCamera(engine* engine, float newYaw, float newPitch, glm::vec3 newPosition, glm::vec3 currentUp, float newZoom):
+    position{newPosition}, front{glm::vec3(0.0f, 0.0f, -1.0f)}, worldUp{currentUp}, yaw{newYaw}, pitch{newPitch}, zoom{newZoom} {}
 
 void perspectiveCamera::init(engine* engine) {
     int windowWidth = 1600;
@@ -90,9 +90,9 @@ glm::mat4* perspectiveCamera::getViewMatrix() {
 
 void perspectiveCamera::updateCameraVectors() {
     glm::vec3 newFront;
-    newFront.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
-    newFront.y = sin(glm::radians(this->pitch));
-    newFront.z = sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
+    newFront.x = (float) (cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch)));
+    newFront.y = (float) (sin(glm::radians(this->pitch)));
+    newFront.z = (float) (sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch)));
     this->front = glm::normalize(newFront);
     this->right = glm::normalize(glm::cross(this->front, this->worldUp));
     this->up = glm::normalize(glm::cross(this->right, this->front));

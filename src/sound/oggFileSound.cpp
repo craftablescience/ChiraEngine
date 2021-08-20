@@ -1,9 +1,4 @@
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunknown-pragmas"
-#pragma ide diagnostic ignored "cppcoreguidelines-narrowing-conversions"
-
 #include "oggFileSound.h"
-#include "../core/virtualFileSystem.h"
 
 bool oggFileSound::init(const std::string& filename) {
     return this->init(filename, 1.0f, 1.0f, glm::vec3{}, soundType::EFFECT, false, true);
@@ -20,12 +15,12 @@ bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, 
     this->audioData.filename = virtualFileSystem::getSoundPath(filename);
     this->audioData.file.open(this->audioData.filename, std::ios::binary);
     if (!this->audioData.file.is_open()) {
-        engine::logError("OGG", "Could not open " + filename);
+        chiraLogger::log(ERR, "OGG", "Could not open " + filename);
         return false;
     }
     this->audioData.file.seekg(0, std::ios_base::beg);
     this->audioData.file.ignore(std::numeric_limits<std::streamsize>::max());
-    this->audioData.size = this->audioData.file.gcount();
+    this->audioData.size = (ALsizei) this->audioData.file.gcount();
     this->audioData.file.clear();
     this->audioData.file.seekg(0, std::ios_base::beg);
     this->audioData.sizeConsumed = 0;
@@ -37,7 +32,7 @@ bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, 
     oggCallbacks.tell_func = tellOggVorbisCallback;
 
     if (ov_open_callbacks(reinterpret_cast<void*>(&this->audioData), &this->audioData.oggVorbisFile, nullptr, -1, oggCallbacks) < 0) {
-        engine::logError("OGG", "Could not open ov_open_callbacks for " + filename);
+        chiraLogger::log(ERR, "OGG", "Could not open ov_open_callbacks for " + filename);
         return false;
     }
 
@@ -46,7 +41,7 @@ bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, 
     this->audioData.channels = vorbisInfo->channels;
     this->audioData.bitsPerSample = 16;
     this->audioData.sampleRate = vorbisInfo->rate;
-    this->audioData.duration = ov_time_total(&this->audioData.oggVorbisFile, -1);
+    this->audioData.duration = (std::size_t) ov_time_total(&this->audioData.oggVorbisFile, -1);
 
     alCall(alGenSources, 1, &this->audioData.source);
     alCall(alSourcef, this->audioData.source, AL_PITCH, this->pitch);
@@ -63,13 +58,13 @@ bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, 
     alCall(alGenBuffers, OGG_NUM_BUFFERS, &this->audioData.buffers[0]);
 
     if (this->audioData.file.eof()) {
-        engine::logError("OGG", "Already reached EOF without loading data in " + filename);
+        chiraLogger::log(ERR, "OGG", "Already reached EOF without loading data in " + filename);
         return false;
     } else if(this->audioData.file.fail()) {
-        engine::logError("OGG", "Fail bit set in " + filename);
+        chiraLogger::log(ERR, "OGG", "Fail bit set in " + filename);
         return false;
     } else if (!this->audioData.file) {
-        engine::logError("OGG", "File at " + filename + " is false");
+        chiraLogger::log(ERR, "OGG", "File at " + filename + " is false");
         return false;
     }
     return this->readFile(this->audioData.filename);
@@ -83,16 +78,16 @@ bool oggFileSound::readFile(const std::string& filename) {
             std::int32_t result = ov_read(&this->audioData.oggVorbisFile, &data[dataSoFar], OGG_BUFFER_SIZE - dataSoFar, 0, 2, 1, reinterpret_cast<int*>(&this->audioData.oggCurrentSection));
             switch (result) {
                 case OV_HOLE:
-                    engine::logError("OGG", "OV_HOLE found in initial read of buffer " + std::to_string(i) + " in file " + filename);
+                    chiraLogger::log(ERR, "OGG", "OV_HOLE found in initial read of buffer " + std::to_string(i) + " in file " + filename);
                     break;
                 case OV_EBADLINK:
-                    engine::logError("OGG", "OV_EBADLINK found in initial read of buffer " + std::to_string(i) + " in file " + filename);
+                    chiraLogger::log(ERR, "OGG", "OV_EBADLINK found in initial read of buffer " + std::to_string(i) + " in file " + filename);
                     break;
                 case OV_EINVAL:
-                    engine::logError("OGG", "OV_EINVAL found in initial read of buffer " + std::to_string(i) + " in file " + filename);
+                    chiraLogger::log(ERR, "OGG", "OV_EINVAL found in initial read of buffer " + std::to_string(i) + " in file " + filename);
                     break;
                 case 0:
-                    engine::logError("OGG", "EOF found in initial read of buffer " + std::to_string(i) + " in file " + filename);
+                    chiraLogger::log(ERR, "OGG", "EOF found in initial read of buffer " + std::to_string(i) + " in file " + filename);
                     break;
                 default:
                     break;
@@ -108,7 +103,7 @@ bool oggFileSound::readFile(const std::string& filename) {
         } else if (this->audioData.channels == 2 && this->audioData.bitsPerSample == 16) {
             this->audioData.format = AL_FORMAT_STEREO16;
         } else {
-            engine::logError("OGG", "Unrecognized OGG format with channels " + std::to_string(this->audioData.channels) + ", " + std::to_string(this->audioData.bitsPerSample) + "bps, in file " + filename);
+            chiraLogger::log(ERR, "OGG", "Unrecognized OGG format with channels " + std::to_string(this->audioData.channels) + ", " + std::to_string(this->audioData.bitsPerSample) + "bps, in file " + filename);
             delete[] data;
             return false;
         }
@@ -116,7 +111,7 @@ bool oggFileSound::readFile(const std::string& filename) {
     }
 
     if (this->is3d && this->audioData.channels > 1) {
-        engine::logWarning("OGG", "Stereo audio will not sound like it is playing from a 3D source");
+        chiraLogger::log(WARN, "OGG", "Stereo audio will not sound like it is playing from a 3D source");
     }
 
     alCall(alSourceQueueBuffers, this->audioData.source, OGG_NUM_BUFFERS, &this->audioData.buffers[0]);
@@ -155,13 +150,13 @@ void oggFileSound::update() {
         while (sizeRead < OGG_BUFFER_SIZE) {
             std::int32_t result = ov_read(&this->audioData.oggVorbisFile, &data[sizeRead], OGG_BUFFER_SIZE - sizeRead, 0, 2, 1, reinterpret_cast<int*>(&this->audioData.oggCurrentSection));
             if (result == OV_HOLE) {
-                engine::logError("OGG", "OV_HOLE found in update of buffer in " + this->audioData.filename);
+                chiraLogger::log(ERR, "OGG", "OV_HOLE found in update of buffer in " + this->audioData.filename);
                 break;
             } else if (result == OV_EBADLINK) {
-                engine::logError("OGG", "OV_EBADLINK found in update of buffer in " + this->audioData.filename);
+                chiraLogger::log(ERR, "OGG", "OV_EBADLINK found in update of buffer in " + this->audioData.filename);
                 break;
             } else if (result == OV_EINVAL) {
-                engine::logError("OGG", "OV_EINVAL found in update of buffer in " + this->audioData.filename);
+                chiraLogger::log(ERR, "OGG", "OV_EINVAL found in update of buffer in " + this->audioData.filename);
                 break;
             } else if (result == 0) {
                 if (!this->loop) {
@@ -178,7 +173,7 @@ void oggFileSound::update() {
             alCall(alSourceQueueBuffers, this->audioData.source, 1, &buffer);
         }
         if (dataSizeToBuffer < OGG_BUFFER_SIZE) {
-            engine::logWarning("OGG", "Data missing in " + this->audioData.filename);
+            chiraLogger::log(WARN, "OGG", "Data missing in " + this->audioData.filename);
         }
         ALint state;
         alCall(alGetSourcei, this->audioData.source, AL_SOURCE_STATE, &state);
@@ -196,26 +191,26 @@ void oggFileSound::seekBeginning() {
     std::int32_t seekResult = ov_raw_seek(&this->audioData.oggVorbisFile, 0);
     switch (seekResult) {
         case OV_ENOSEEK:
-            engine::logError("OGG", "OV_ENOSEEK found when trying to loop through " + this->audioData.filename);
+            chiraLogger::log(ERR, "OGG", "OV_ENOSEEK found when trying to loop through " + this->audioData.filename);
             break;
         case OV_EINVAL:
-            engine::logError("OGG", "OV_EINVAL found when trying to loop through " + this->audioData.filename);
+            chiraLogger::log(ERR, "OGG", "OV_EINVAL found when trying to loop through " + this->audioData.filename);
             break;
         case OV_EREAD:
-            engine::logError("OGG", "OV_EREAD found when trying to loop through " + this->audioData.filename);
+            chiraLogger::log(ERR, "OGG", "OV_EREAD found when trying to loop through " + this->audioData.filename);
             break;
         case OV_EFAULT:
-            engine::logError("OGG", "OV_EFAULT found when trying to loop through " + this->audioData.filename);
+            chiraLogger::log(ERR, "OGG", "OV_EFAULT found when trying to loop through " + this->audioData.filename);
             break;
         case OV_EOF:
-            engine::logError("OGG", "OV_EOF found when trying to loop through " + this->audioData.filename);
+            chiraLogger::log(ERR, "OGG", "OV_EOF found when trying to loop through " + this->audioData.filename);
             break;
         case OV_EBADLINK:
-            engine::logError("OGG", "OV_EBADLINK found when trying to loop through " + this->audioData.filename);
+            chiraLogger::log(ERR, "OGG", "OV_EBADLINK found when trying to loop through " + this->audioData.filename);
             break;
         default:
             if (seekResult != 0) {
-                engine::logError("OGG", "Unknown error encountered in ov_raw_seek in " + this->audioData.filename);
+                chiraLogger::log(ERR, "OGG", "Unknown error encountered in ov_raw_seek in " + this->audioData.filename);
             }
     }
 }
@@ -238,14 +233,14 @@ void oggFileSound::discard() {
 
 std::size_t oggFileSound::readOggVorbisCallback(void* destination, std::size_t size1, std::size_t size2, void* fileHandle) {
     auto* audioData = reinterpret_cast<oggStreamData*>(fileHandle);
-    ALsizei length = size1 * size2;
+    auto length = (ALsizei) (size1 * size2);
     if (audioData->sizeConsumed + length > audioData->size) {
         length = audioData->size - audioData->sizeConsumed;
     }
     if (!audioData->file.is_open()) {
         audioData->file.open(audioData->filename, std::ios::binary);
         if (!audioData->file.is_open()) {
-            engine::logError("OGG", "Could not open " + audioData->filename);
+            chiraLogger::log(ERR, "OGG", "Could not open " + audioData->filename);
             return 0;
         }
     }
@@ -256,11 +251,11 @@ std::size_t oggFileSound::readOggVorbisCallback(void* destination, std::size_t s
         if (audioData->file.eof()) {
             audioData->file.clear();
         } else if (audioData->file.fail()) {
-            engine::logError("OGG", "Fail bit set in " + audioData->filename);
+            chiraLogger::log(ERR, "OGG", "Fail bit set in " + audioData->filename);
             audioData->file.clear();
             return 0;
         } else if (audioData->file.bad()) {
-            engine::logError("OGG", "File " + audioData->filename + " has bad bit set");
+            chiraLogger::log(ERR, "OGG", "File " + audioData->filename + " has bad bit set");
             audioData->file.clear();
             return 0;
         }
@@ -276,13 +271,13 @@ std::int32_t oggFileSound::seekOggVorbisCallback(void* fileHandle, ogg_int64_t t
     auto* audioData = reinterpret_cast<oggStreamData*>(fileHandle);
     switch (type) {
         case SEEK_CUR:
-            audioData->sizeConsumed += to;
+            audioData->sizeConsumed += (ALsizei) to;
             break;
         case SEEK_END:
-            audioData->sizeConsumed = audioData->size - to;
+            audioData->sizeConsumed = (ALsizei) (audioData->size - to);
             break;
         case SEEK_SET:
-            audioData->sizeConsumed = to;
+            audioData->sizeConsumed = (ALsizei) to;
             break;
         default:
             return -1;
@@ -301,5 +296,3 @@ std::int32_t oggFileSound::seekOggVorbisCallback(void* fileHandle, ogg_int64_t t
 long int oggFileSound::tellOggVorbisCallback(void* fileHandle) {
     return reinterpret_cast<oggStreamData*>(fileHandle)->sizeConsumed;
 }
-
-#pragma clang diagnostic pop

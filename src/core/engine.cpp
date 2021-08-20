@@ -25,7 +25,8 @@ engine::engine(const std::string& configPath) {
     FreeConsole();
 #endif
 #endif
-    this->setSettingsLoader(new jsonSettingsLoader(configPath));
+    virtualFileSystem::addResourceDirectory(ENGINE_FILESYSTEM_PREFIX);
+    engine::setSettingsLoader(new jsonSettingsLoader(configPath));
     this->lastTime = 0;
     this->currentTime = 0;
     this->lastMouseX = -1;
@@ -110,18 +111,18 @@ void engine::mouseScrollCallback(GLFWwindow* window, double xPos, double yPos) {
 void engine::init() {
     this->started = true;
 
-    engine::addLogHook([this](const loggerType type, const std::string& source, const std::string& message) {
+    chiraLogger::addCallback([this](const loggerType type, const std::string& source, const std::string& message) {
         this->getConsole()->engineLoggingHook(type, source, message);
     });
 
     bool angelscriptEnabled = true;
-    this->settingsLoader->getValue("scripting", "angelscript", &angelscriptEnabled);
+    engine::getSettingsLoader()->getValue("scripting", "angelscript", &angelscriptEnabled);
     if (angelscriptEnabled) {
         this->addScriptProvider("angelscript", new angelscriptProvider{});
     }
 
     if (!glfwInit()) {
-        engine::logError("GLFW", "GLFW not defined");
+        chiraLogger::log(ERR, "GLFW", "GLFW not defined");
         exit(EXIT_FAILURE);
     }
     glfwSetErrorCallback(this->errorCallback);
@@ -133,42 +134,42 @@ void engine::init() {
 #endif
 
     int windowWidth = 1600;
-    this->settingsLoader->getValue("graphics", "windowWidth", &windowWidth);
+    engine::getSettingsLoader()->getValue("graphics", "windowWidth", &windowWidth);
     int windowHeight = 900;
-    this->settingsLoader->getValue("graphics", "windowHeight", &windowHeight);
+    engine::getSettingsLoader()->getValue("graphics", "windowHeight", &windowHeight);
     bool fullscreen = false;
-    this->settingsLoader->getValue("graphics", "fullscreen", &fullscreen);
+    engine::getSettingsLoader()->getValue("graphics", "fullscreen", &fullscreen);
     std::string title = "Basic Game Engine";
-    this->settingsLoader->getValue("engine", "title", &title);
+    engine::getSettingsLoader()->getValue("engine", "title", &title);
     this->window = glfwCreateWindow(windowWidth,
                                     windowHeight,
                                     title.c_str(),
                                     fullscreen ? glfwGetPrimaryMonitor() : nullptr,
                                     nullptr);
     if (!this->window) {
-        engine::logError("GLFW", "Window creation failed");
+        chiraLogger::log(ERR, "GLFW", "Window creation failed");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
     glfwMakeContextCurrent(this->window);
     glfwSetWindowUserPointer(this->window, this);
 
-    if (this->settingsLoader->hasValue("engine", "iconPath")) {
+    if (engine::getSettingsLoader()->hasValue("engine", "iconPath")) {
         std::string path{};
-        this->settingsLoader->getValue("engine", "iconPath", &path);
+        engine::getSettingsLoader()->getValue("engine", "iconPath", &path);
         this->setIcon(path);
     } else {
-        engine::logWarning("ChiraEngine", "You should not unset the iconPath property unless you are a trained professional!");
+        chiraLogger::log(WARN, "ChiraEngine", "You should not unset the iconPath property unless you are a trained professional!");
     }
 
 #if DEBUG
     int major, minor, rev;
     glfwGetVersion(&major, &minor, &rev);
-    engine::logInfo("GLFW", "Using GLFW v" + std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(rev));
+    chiraLogger::log(INFO, "GLFW", "Using GLFW v" + std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(rev));
 #endif
 
     if (!gladLoadGL(glfwGetProcAddress)) {
-        engine::logError("OpenGL", "OpenGL 3.3 Core must be available to run this program");
+        chiraLogger::log(ERR, "OpenGL", "OpenGL 3.3 Core must be available to run this program");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -177,8 +178,8 @@ void engine::init() {
     int vertexAttributes, textureUnits;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &vertexAttributes);
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
-    engine::logInfo("OpenGL", "Maximum number of vertex attributes is " + std::to_string(vertexAttributes));
-    engine::logInfo("OpenGL", "Maximum number of texture units is " + std::to_string(textureUnits));
+    chiraLogger::log(INFO, "OpenGL", "Maximum number of vertex attributes is " + std::to_string(vertexAttributes));
+    chiraLogger::log(INFO, "OpenGL", "Maximum number of texture units is " + std::to_string(textureUnits));
 #endif
 
     int width, height;
@@ -192,7 +193,7 @@ void engine::init() {
     glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GLFW_TRUE);
     glfwSetInputMode(this->window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
     bool rawMouseMotion = false;
-    this->settingsLoader->getValue("input", "rawMouseMotion", &rawMouseMotion);
+    engine::getSettingsLoader()->getValue("input", "rawMouseMotion", &rawMouseMotion);
     if (glfwRawMouseMotionSupported() && rawMouseMotion) {
         glfwSetInputMode(this->window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
     }
@@ -209,28 +210,28 @@ void engine::init() {
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(this->window, true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
-    engine::logInfo("ImGUI", "ImGUI loaded successfully");
+    chiraLogger::log(INFO, "ImGUI", "ImGUI loaded successfully");
 
     bool openalEnabled = true;
-    this->settingsLoader->getValue("scripting", "angelscript", &openalEnabled);
+    engine::getSettingsLoader()->getValue("scripting", "angelscript", &openalEnabled);
     if (openalEnabled) {
         this->setSoundManager(new alSoundManager{});
     }
     this->soundManager->init();
 
-    if (this->settingsLoader->hasValue("engine", "maxPointLights")) {
+    if (engine::getSettingsLoader()->hasValue("engine", "maxPointLights")) {
         int maxLights;
-        this->settingsLoader->getValue("engine", "maxPointLights", &maxLights);
+        engine::getSettingsLoader()->getValue("engine", "maxPointLights", &maxLights);
         shaderResource::addPreprocessorSymbol("MAX_POINT_LIGHTS", std::to_string(maxLights));
     }
-    if (this->settingsLoader->hasValue("engine", "maxPointLights")) {
+    if (engine::getSettingsLoader()->hasValue("engine", "maxPointLights")) {
         int maxLights;
-        this->settingsLoader->getValue("engine", "maxDirectionalLights", &maxLights);
+        engine::getSettingsLoader()->getValue("engine", "maxDirectionalLights", &maxLights);
         shaderResource::addPreprocessorSymbol("MAX_DIRECTIONAL_LIGHTS", std::to_string(maxLights));
     }
-    if (this->settingsLoader->hasValue("engine", "maxSpotLights")) {
+    if (engine::getSettingsLoader()->hasValue("engine", "maxSpotLights")) {
         int maxLights;
-        this->settingsLoader->getValue("engine", "maxSpotLights", &maxLights);
+        engine::getSettingsLoader()->getValue("engine", "maxSpotLights", &maxLights);
         shaderResource::addPreprocessorSymbol("MAX_SPOT_LIGHTS", std::to_string(maxLights));
     }
 
@@ -308,7 +309,7 @@ void engine::render() {
 }
 
 void engine::stop() {
-    engine::logInfoImportant("ChiraEngine", "Gracefully exiting...");
+    chiraLogger::log(INFO_IMPORTANT, "ChiraEngine", "Gracefully exiting...");
 
     for (const auto& [name, scriptProvider] : this->scriptProviders) {
         scriptProvider->stop();
@@ -357,7 +358,7 @@ void engine::addScriptProvider(const std::string& name, abstractScriptProvider* 
 
 abstractScriptProvider* engine::getScriptProvider(const std::string& name) {
     if (this->scriptProviders.count(name) == 0) {
-        engine::logError("engine::getScriptProvider", "Script provider " + name + " is not recognized, check that you registered it properly");
+        chiraLogger::log(ERR, "engine::getScriptProvider", "Script provider " + name + " is not recognized, check that you registered it properly");
     }
     return this->scriptProviders.at(name).get();
 }
@@ -368,7 +369,7 @@ void engine::setSoundManager(abstractSoundManager* newSoundManager) {
 
 abstractSoundManager* engine::getSoundManager() {
     if (!this->soundManager) {
-        engine::logWarning("engine::getSoundManager", "Must set sound manager in engine::setSoundManager for this call to function");
+        chiraLogger::log(WARN, "engine::getSoundManager", "Must set sound manager in engine::setSoundManager for this call to function");
         return nullptr;
     }
     return this->soundManager.get();
@@ -387,21 +388,21 @@ void engine::addStopFunction(const std::function<void(engine*)>& stop) {
 }
 
 abstractSettingsLoader* engine::getSettingsLoader() {
-    if (!this->settingsLoader) {
-        engine::logWarning("engine::getSettingsLoader", "Must set settings loader in engine::setSettingsLoader for this call to function");
+    if (!engine::settingsLoader) {
+        chiraLogger::log(WARN, "engine::getSettingsLoader", "Must set settings loader in engine::setSettingsLoader for this call to function");
         return nullptr;
     }
-    return this->settingsLoader.get();
+    return engine::settingsLoader.get();
 }
 
 void engine::setSettingsLoader(abstractSettingsLoader* newSettingsLoader) {
-    this->settingsLoader.reset(newSettingsLoader);
-    this->setSettingsLoaderDefaults();
+    engine::settingsLoader.reset(newSettingsLoader);
+    engine::setSettingsLoaderDefaults();
 }
 
 world* engine::getWorld() {
     if (!this->worldPtr) {
-        engine::logWarning("engine::getWorld", "Must set world in engine::setWorld for this call to function");
+        chiraLogger::log(WARN, "engine::getWorld", "Must set world in engine::setWorld for this call to function");
         return nullptr;
     }
     return this->worldPtr.get();
@@ -412,25 +413,26 @@ void engine::setWorld(class world* newWorld) {
 }
 
 void engine::setSettingsLoaderDefaults() {
-    this->settingsLoader->load();
-    this->settingsLoader->addCategory("engine");
-    this->settingsLoader->setValue("engine", "iconPath", std::string("ui/icon.png"), false, false);
-    this->settingsLoader->setValue("engine", "title", std::string("ChiraEngine"), false, false);
-    this->settingsLoader->setValue("engine", "maxPointLights", 64, false, false);
-    this->settingsLoader->setValue("engine", "maxDirectionalLights", 4, false, false);
-    this->settingsLoader->setValue("engine", "maxSpotLights", 4, false, false);
-    this->settingsLoader->addCategory("audio");
-    this->settingsLoader->setValue("audio", "openal", true, false, false);
-    this->settingsLoader->addCategory("input");
-    this->settingsLoader->setValue("input", "rawMouseMotion", true, false, false);
-    this->settingsLoader->setValue("input", "invertYAxis", false, false, false);
-    this->settingsLoader->addCategory("graphics");
-    this->settingsLoader->setValue("graphics", "windowWidth", 1600, false, false);
-    this->settingsLoader->setValue("graphics", "windowHeight", 900, false, false);
-    this->settingsLoader->setValue("graphics", "fullscreen", false, false, false);
-    this->settingsLoader->addCategory("scripting");
-    this->settingsLoader->setValue("scripting", "angelscript", true, false, false);
-    this->settingsLoader->save();
+    engine::settingsLoader->load();
+    engine::settingsLoader->addCategory("engine");
+    engine::settingsLoader->setValue("engine", "iconPath", std::string("ui/icon.png"), false, false);
+    engine::settingsLoader->setValue("engine", "title", std::string("ChiraEngine"), false, false);
+    engine::settingsLoader->setValue("engine", "consoleColoredText", true, false, false);
+    engine::settingsLoader->setValue("engine", "maxPointLights", 64, false, false);
+    engine::settingsLoader->setValue("engine", "maxDirectionalLights", 4, false, false);
+    engine::settingsLoader->setValue("engine", "maxSpotLights", 4, false, false);
+    engine::settingsLoader->addCategory("audio");
+    engine::settingsLoader->setValue("audio", "openal", true, false, false);
+    engine::settingsLoader->addCategory("input");
+    engine::settingsLoader->setValue("input", "rawMouseMotion", true, false, false);
+    engine::settingsLoader->setValue("input", "invertYAxis", false, false, false);
+    engine::settingsLoader->addCategory("graphics");
+    engine::settingsLoader->setValue("graphics", "windowWidth", 1600, false, false);
+    engine::settingsLoader->setValue("graphics", "windowHeight", 900, false, false);
+    engine::settingsLoader->setValue("graphics", "fullscreen", false, false, false);
+    engine::settingsLoader->addCategory("scripting");
+    engine::settingsLoader->setValue("scripting", "angelscript", true, false, false);
+    engine::settingsLoader->save();
 }
 
 void engine::callRegisteredFunctions(const std::vector<std::function<void(engine*)>>* list) {
@@ -465,41 +467,6 @@ void engine::setIcon(const std::string& iconPath) {
     images[0].height = height;
     images[0].pixels = icon.getData();
     glfwSetWindowIcon(this->window, 1, images);
-}
-
-void engine::logInfo(const std::string& source, const std::string& message) {
-    engine::chiraLogger.logInfo(source, message);
-    engine::runLogHooks(INFO, source, message);
-}
-
-void engine::logInfoImportant(const std::string& source, const std::string& message) {
-    engine::chiraLogger.logInfoImportant(source, message);
-    engine::runLogHooks(INFO_IMPORTANT, source, message);
-}
-
-void engine::logOutput(const std::string& source, const std::string& message) {
-    engine::chiraLogger.logOutput(source, message);
-    engine::runLogHooks(OUTPUT, source, message);
-}
-
-void engine::logWarning(const std::string& source, const std::string& message) {
-    engine::chiraLogger.logWarning(source, message);
-    engine::runLogHooks(WARN, source, message);
-}
-
-void engine::logError(const std::string& source, const std::string& message) {
-    engine::chiraLogger.logError(source, message);
-    engine::runLogHooks(ERR, source, message);
-}
-
-void engine::addLogHook(const std::function<void(const loggerType,const std::string&,const std::string&)>& function) {
-    engine::loggerFunctions.push_back(function);
-}
-
-void engine::runLogHooks(const loggerType type, const std::string& source, const std::string& message) {
-    for (const std::function<void(const loggerType,const std::string&,const std::string&)>& function : engine::loggerFunctions) {
-        function(type, source, message);
-    }
 }
 
 void engine::captureMouse(bool capture) {

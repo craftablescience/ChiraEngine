@@ -38,7 +38,7 @@ std::string virtualFileSystem::getGenericPath(const std::string& path, const std
         }
     }
     if (error) {
-        engine::logWarning("VFS", "Path " + path + " does not exist");
+        chiraLogger::log(WARN, "VFS", "Path " + path + " does not exist");
     }
     return fallbackPrefix + path;
 }

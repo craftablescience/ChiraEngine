@@ -32,4 +32,5 @@ public:
     void setUniform(const std::string& name, glm::mat4* value) const;
 private:
     void checkForCompilationErrors() const;
+    void discardInternal();
 };

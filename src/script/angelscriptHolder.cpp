@@ -16,17 +16,17 @@ void angelscriptHolder::init(angelscriptProvider* provider) {
 
     r = builder.StartNewModule(provider->asEngine, this->filepath.c_str());
     if (r < 0) {
-        engine::logError("AngelScript", std::string("Unrecoverable error while starting a new module at \"") + this->filepath + "\"!");
+        chiraLogger::log(ERR, "AngelScript", std::string("Unrecoverable error while starting a new module at \"") + this->filepath + "\"!");
         return;
     }
     r = builder.AddSectionFromFile(this->filepath.c_str());
     if (r < 0) {
-        engine::logError("AngelScript", std::string("Unable to load script at \"") + this->filepath + "\"!");
+        chiraLogger::log(ERR, "AngelScript", std::string("Unable to load script at \"") + this->filepath + "\"!");
         return;
     }
     r = builder.BuildModule();
     if (r < 0) {
-        engine::logError("AngelScript", std::string("Script errors in \"") + this->filepath + "\" have forced compilation to fail!");
+        chiraLogger::log(ERR, "AngelScript", std::string("Script errors in \"") + this->filepath + "\" have forced compilation to fail!");
         return;
     }
 
@@ -34,17 +34,17 @@ void angelscriptHolder::init(angelscriptProvider* provider) {
     asIScriptModule* module = provider->asEngine->GetModule(this->filepath.c_str());
     this->initFunc = module->GetFunctionByDecl("void init()");
     if (this->initFunc == nullptr) {
-        engine::logError("AngelScript", std::string("Script at \"") + this->filepath + "\" does not have a \"void init()\" function!");
+        chiraLogger::log(ERR, "AngelScript", std::string("Script at \"") + this->filepath + "\" does not have a \"void init()\" function!");
         return;
     }
     this->renderFunc = module->GetFunctionByDecl("void render(double delta)");
     if (this->renderFunc == nullptr) {
-        engine::logError("AngelScript", std::string("Script at \"") + this->filepath + "\" does not have a \"void render(double delta)\" function!");
+        chiraLogger::log(ERR, "AngelScript", std::string("Script at \"") + this->filepath + "\" does not have a \"void render(double delta)\" function!");
         return;
     }
     this->stopFunc = module->GetFunctionByDecl("void stop()");
     if (this->stopFunc == nullptr) {
-        engine::logError("AngelScript", std::string("Script at \"") + this->filepath + "\" does not have a \"void stop()\" function!");
+        chiraLogger::log(ERR, "AngelScript", std::string("Script at \"") + this->filepath + "\" does not have a \"void stop()\" function!");
         return;
     }
 
@@ -52,7 +52,7 @@ void angelscriptHolder::init(angelscriptProvider* provider) {
     r = this->scriptContext->Execute();
     if (r != asEXECUTION_FINISHED) {
         if (r == asEXECUTION_EXCEPTION) {
-            engine::logError("AngelScript", std::string("An exception in \"") + this->filepath + "\" at INIT occurred: " + this->scriptContext->GetExceptionString());
+            chiraLogger::log(ERR, "AngelScript", std::string("An exception in \"") + this->filepath + "\" at INIT occurred: " + this->scriptContext->GetExceptionString());
         }
     }
 }
@@ -63,7 +63,7 @@ void angelscriptHolder::render(angelscriptProvider* provider, double delta) {
     int r = this->scriptContext->Execute();
     if (r != asEXECUTION_FINISHED) {
         if (r == asEXECUTION_EXCEPTION) {
-            engine::logError("AngelScript", std::string("An exception in \"") + this->filepath + "\" occurred: " + this->scriptContext->GetExceptionString());
+            chiraLogger::log(ERR, "AngelScript", std::string("An exception in \"") + this->filepath + "\" occurred: " + this->scriptContext->GetExceptionString());
         }
     }
 }
@@ -73,7 +73,7 @@ void angelscriptHolder::stop(angelscriptProvider* provider) {
     int r = this->scriptContext->Execute();
     if (r != asEXECUTION_FINISHED) {
         if (r == asEXECUTION_EXCEPTION) {
-            engine::logError("AngelScript", std::string("An exception in \"") + this->filepath + "\" occurred: " + this->scriptContext->GetExceptionString());
+            chiraLogger::log(ERR, "AngelScript", std::string("An exception in \"") + this->filepath + "\" occurred: " + this->scriptContext->GetExceptionString());
         }
     }
 }

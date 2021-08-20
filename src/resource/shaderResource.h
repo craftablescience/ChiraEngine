@@ -27,4 +27,5 @@ private:
     static inline std::string preprocessorSuffix = PREPROCESSOR_DEFAULT_SUFFIX;
     static inline std::unordered_map<std::string, std::string> preprocessorSymbols{};
     void checkForCompilationErrors() const;
+    void discardInternal();
 };
