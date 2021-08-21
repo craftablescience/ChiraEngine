@@ -2,7 +2,7 @@
 
 #include "../utility/logger.h"
 
-texture2d::texture2d(const std::string& provider_, const std::string& name_, int format, int wrapModeU, int wrapModeV, int filterMode, bool mipmaps) : texture(provider_, name_) {
+texture2d::texture2d(const std::string& provider_, const std::string& name_, int format, bool vFlip_, int wrapModeU, int wrapModeV, int filterMode, bool mipmaps) : texture(provider_, name_, vFlip_) {
     this->format = format;
     this->wrapModeU = wrapModeU;
     this->wrapModeV = wrapModeV;

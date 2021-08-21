@@ -67,5 +67,14 @@ int main() {
 #endif
     });
     engine.init();
+    /*
+    auto* tex = resourceManager::getResource<texture2d>("file", "textures/ui/icon.png", GL_RGBA, false);
+    engine.addRenderFunction([tex](class engine* e) {
+        ImGui::Begin("OpenGL Texture Text");
+        ImGui::Text("size = %d x %d", 512, 512);
+        ImGui::Image((void*)(intptr_t) tex->getHandle(), ImVec2(512, 512));
+        ImGui::End();
+    });
+    */
     engine.run();
 }

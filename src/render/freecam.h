@@ -18,6 +18,6 @@ public:
 protected:
     float movementSpeed;
     float mouseSensitivity;
-    bool capturedMouse = true;
+    bool capturedMouse = false;
     void setupKeybinds(engine* engine) const;
 };
