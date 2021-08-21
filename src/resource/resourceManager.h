@@ -63,7 +63,7 @@ public:
                 return resource;
             }
         }
-        chira::logger::log(ERR, "Resource Manager", "Resource " + provider + RESOURCE_ID_SEPARATOR + name + " was not found");
+        chira::logger::log(WARN, "Resource Manager", "Resource " + provider + RESOURCE_ID_SEPARATOR + name + " was not found");
         return nullptr;
     }
 
