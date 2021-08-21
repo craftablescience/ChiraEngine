@@ -1,6 +1,7 @@
 #include "shaderResource.h"
 
 #include "../utility/logger.h"
+#include <sstream>
 
 // todo: add #include preprocessing
 shaderResource::shaderResource(const std::string& provider_, const std::string& name_, int type_) : abstractResource(provider_, name_), handleObject(), type(type_) {}
