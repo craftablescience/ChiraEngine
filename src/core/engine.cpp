@@ -26,6 +26,7 @@ engine::engine(const std::string& configPath) {
 #endif
 #endif
     virtualFileSystem::addResourceDirectory(ENGINE_FILESYSTEM_PREFIX);
+    resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/engine"});
     engine::setSettingsLoader(new jsonSettingsLoader(configPath));
     this->lastTime = 0;
     this->currentTime = 0;
@@ -279,10 +280,6 @@ void engine::run() {
 void engine::render() {
     this->lastTime = this->currentTime;
     this->currentTime = glfwGetTime();
-    for (const auto& [name, shader] : engine::shaders) {
-        shader->setUniform("p", this->getWorld()->getCamera()->getProjectionMatrix());
-        shader->setUniform("v", this->getWorld()->getCamera()->getViewMatrix());
-    }
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();

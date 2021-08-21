@@ -33,6 +33,8 @@ void world::addMesh(mesh* mesh_) {
 
 void world::render() {
     for (const auto& meshPtr : this->meshes) {
+        meshPtr->getMaterial()->getShader()->setUniform("p", this->camera->getProjectionMatrix());
+        meshPtr->getMaterial()->getShader()->setUniform("v", this->camera->getViewMatrix());
         meshPtr->render();
     }
 }

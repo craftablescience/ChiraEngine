@@ -12,12 +12,7 @@ const std::string RESOURCE_ID_SEPARATOR = "://";
 class resourceManager {
     friend class engine;
 public:
-    static void addResourceProvider(const std::string& name, abstractResourceProvider* provider) {
-        if (resourceManager::providers.find(name) == resourceManager::providers.end()) {
-            resourceManager::providers[name] = std::vector<std::unique_ptr<abstractResourceProvider>>{};
-        }
-        resourceManager::providers[name].emplace_back(provider);
-    }
+    static void addResourceProvider(const std::string& name, abstractResourceProvider* provider);
 
     template<typename resourceType, typename... Params>
     static resourceType* getResource(const std::string& provider, const std::string& name, Params... params) {
@@ -68,25 +63,12 @@ public:
         return nullptr;
     }
 
-    static void removeResource(const std::string& provider, const std::string& name) {
-        resourceManager::resources[provider][name]->decrementRefCount();
-        if (resourceManager::resources[provider][name]->getRefCount() == 0) {
-            delete resourceManager::resources[provider][name];
-            resourceManager::resources[provider].erase(name);
-        }
-    }
+    static void removeResource(const std::string& provider, const std::string& name);
 protected:
     /*
      * Deletes ALL resources and providers. Should only ever be called once, when the program closes.
      */
-    static void discardAll() noexcept {
-        for (const auto& [providerName, resourceMap] : resources) {
-            for (const auto& [name, resource] : resourceMap) {
-                delete resource;
-            }
-        }
-        resourceManager::providers.clear();
-    }
+    static void discardAll();
 private:
     static inline std::unordered_map<std::string, std::vector<std::unique_ptr<abstractResourceProvider>>> providers{};
     static inline std::unordered_map<std::string, std::unordered_map<std::string, abstractResource*>> resources{};

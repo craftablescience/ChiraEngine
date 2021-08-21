@@ -68,10 +68,6 @@ private:
     std::vector<keybind> keybinds{};
     std::vector<mousebind> mousebinds{};
     static inline std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
-    static inline std::map<const std::string, std::unique_ptr<shader>> shaders{};
-    static inline std::map<const std::string, std::unique_ptr<texture>> textures{};
-    static inline std::map<const std::string, std::unique_ptr<mesh>> meshes{};
-    static inline std::map<const std::string, std::unique_ptr<material>> materials{};
     bool mouseCaptured = false;
     std::unique_ptr<world> worldPtr = nullptr;
     console consoleUI{};
