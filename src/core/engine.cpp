@@ -5,7 +5,6 @@
 #endif
 
 #include <iostream>
-
 #define IMGUI_USER_CONFIG "../../src/config/imguiConfig.h"
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
@@ -17,6 +16,8 @@
 #include "../resource/resourceManager.h"
 #include "../resource/filesystemResourceProvider.h"
 
+const std::string ENGINE_FILESYSTEM_PATH = "resources/engine";
+
 engine::engine(const std::string& configPath) {
 #ifdef WIN32
 #if DEBUG
@@ -25,8 +26,7 @@ engine::engine(const std::string& configPath) {
     FreeConsole();
 #endif
 #endif
-    virtualFileSystem::addResourceDirectory(ENGINE_FILESYSTEM_PREFIX);
-    resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/engine"});
+    resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", ENGINE_FILESYSTEM_PATH});
     engine::setSettingsLoader(new jsonSettingsLoader(configPath));
     this->lastTime = 0;
     this->currentTime = 0;
@@ -412,7 +412,7 @@ void engine::setWorld(class world* newWorld) {
 void engine::setSettingsLoaderDefaults() {
     engine::settingsLoader->load();
     engine::settingsLoader->addCategory("engine");
-    engine::settingsLoader->setValue("engine", "iconPath", std::string("ui/icon.png"), false, false);
+    engine::settingsLoader->setValue("engine", "iconPath", std::string(ENGINE_FILESYSTEM_PATH + "/textures/ui/icon.png"), false, false);
     engine::settingsLoader->setValue("engine", "title", std::string("ChiraEngine"), false, false);
     engine::settingsLoader->setValue("engine", "consoleColoredText", true, false, false);
     engine::settingsLoader->setValue("engine", "maxPointLights", 64, false, false);
@@ -456,7 +456,8 @@ void engine::setIcon(const std::string& iconPath) {
 #endif
     GLFWimage images[1];
     int width, height, bitsPerPixel;
-    image icon(virtualFileSystem::getTexturePath(iconPath), &width, &height, &bitsPerPixel, 4, false);
+    // todo: get file path in a better way
+    image icon(iconPath, &width, &height, &bitsPerPixel, 4, false);
 #if DEBUG
     assert(icon.getData());
 #endif

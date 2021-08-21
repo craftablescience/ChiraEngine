@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <functional>
-#include "../../core/engine.h"
+#include <memory>
 #include "abstractScriptProvider.h"
 #include "angelscriptHolder.h"
 #include "angelscriptHelpers.h"
@@ -36,5 +36,5 @@ public:
     asIScriptEngine* asEngine = nullptr;
 private:
     bool started;
-    std::vector<std::unique_ptr<angelscriptHolder>> scripts;
+    std::vector<std::unique_ptr<angelscriptHolder>> scripts{};
 };

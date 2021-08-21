@@ -21,6 +21,8 @@
 #include "../utility/logger.h"
 #include "../render/world.h"
 #include "../render/material.h"
+#include "../resource/resourceManager.h"
+
 
 class keybind;
 class mousebind;

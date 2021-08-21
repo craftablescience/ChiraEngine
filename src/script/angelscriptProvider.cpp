@@ -1,4 +1,6 @@
 #include "angelscriptProvider.h"
+
+#include "../utility/logger.h"
 #include <datetime/datetime.h>
 #include <scriptany/scriptany.h>
 #include <scriptarray/scriptarray.h>
@@ -15,10 +17,7 @@ angelscriptProvider::angelscriptProvider() {
 
 void angelscriptProvider::initProvider() {
     this->asEngine = asCreateScriptEngine();
-    int r;
-
-    r = this->asEngine->SetMessageCallback(asFUNCTION(this->messageCallback), nullptr, asCALL_CDECL);
-    assert(r >= 0);
+    this->asEngine->SetMessageCallback(asFUNCTION(this->messageCallback), nullptr, asCALL_CDECL);
 
     RegisterScriptDateTime(this->asEngine);
     RegisterStdString(this->asEngine);

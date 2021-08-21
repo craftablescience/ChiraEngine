@@ -7,6 +7,10 @@ void resourceManager::addResourceProvider(const std::string& name, abstractResou
     resourceManager::providers[name].emplace_back(provider);
 }
 
+abstractResourceProvider* resourceManager::getLatestResourceProvider(const std::string& name) {
+    return resourceManager::providers[name][resourceManager::providers[name].size() - 1].get();
+}
+
 void resourceManager::removeResource(const std::string& provider, const std::string& name) {
     resourceManager::resources[provider][name]->decrementRefCount();
     if (resourceManager::resources[provider][name]->getRefCount() == 0) {

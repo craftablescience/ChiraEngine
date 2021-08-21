@@ -1,9 +1,12 @@
 #include "angelscriptHolder.h"
+#include "../resource/filesystemResourceProvider.h"
+#include "../resource/resourceManager.h"
 #include <angelscript.h>
 #include <scriptbuilder/scriptbuilder.h>
 
 angelscriptHolder::angelscriptHolder(const std::string& path) {
-    this->filepath = virtualFileSystem::getScriptPath(path);
+    // todo: get file path in a better way
+    this->filepath = ((filesystemResourceProvider*) resourceManager::getLatestResourceProvider("file"))->getPath() + "/scripts/" + path;
 }
 
 angelscriptHolder::~angelscriptHolder() {

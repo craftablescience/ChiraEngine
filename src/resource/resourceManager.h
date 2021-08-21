@@ -14,6 +14,8 @@ class resourceManager {
 public:
     static void addResourceProvider(const std::string& name, abstractResourceProvider* provider);
 
+    static abstractResourceProvider* getLatestResourceProvider(const std::string& name);
+
     template<typename resourceType, typename... Params>
     static resourceType* getResource(const std::string& provider, const std::string& name, Params... params) {
         for (const auto& [resourceName, resourcePtr] : resourceManager::resources[provider]) {

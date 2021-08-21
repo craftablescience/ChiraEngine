@@ -2,17 +2,19 @@
 
 #include <string>
 #include "abstractSettingsLoader.h"
-#include "../core/virtualFileSystem.h"
+#include "../resource/filesystemResourceProvider.h"
+#include "../resource/resourceManager.h"
 
 class abstractFileSettingsLoader : public abstractSettingsLoader {
 public:
     explicit abstractFileSettingsLoader(const std::string& path) {
-        this->filepath = virtualFileSystem::getGenericPath(path, ENGINE_FILESYSTEM_PREFIX, false);
+        // todo: get file path in a better way
+        this->filepath = ((filesystemResourceProvider*) resourceManager::getLatestResourceProvider("file"))->getPath() + "/" + path;
     }
-    ~abstractFileSettingsLoader() override = default;
     void setFilePath(const std::string& path) {
-        this->filepath = virtualFileSystem::getGenericPath(path);
-    };
+        // todo: get file path in a better way
+        this->filepath = ((filesystemResourceProvider*) resourceManager::getLatestResourceProvider("file"))->getPath() + "/" + path;
+    }
     std::string getFilePath() {
         return this->filepath;
     }
