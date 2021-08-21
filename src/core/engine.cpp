@@ -19,7 +19,7 @@
 const std::string ENGINE_FILESYSTEM_PATH = "resources/engine";
 
 engine::engine(const std::string& configPath) {
-#ifdef WIN32
+#ifdef _WIN32
 #if DEBUG
     system(("chcp " + std::to_string(CP_UTF8) + " > nul").c_str());
 #else
