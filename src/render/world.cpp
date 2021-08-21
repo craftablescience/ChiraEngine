@@ -33,6 +33,7 @@ void world::addMesh(mesh* mesh_) {
 
 void world::render() {
     for (const auto& meshPtr : this->meshes) {
+        // todo: use a UBO or a callback to only set this on each shader once
         meshPtr->getMaterial()->getShader()->setUniform("p", this->camera->getProjectionMatrix());
         meshPtr->getMaterial()->getShader()->setUniform("v", this->camera->getViewMatrix());
         meshPtr->render();
