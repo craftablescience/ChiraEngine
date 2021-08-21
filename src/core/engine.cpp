@@ -315,13 +315,15 @@ void engine::stop() {
         scriptProvider->stop();
     }
 
+    callRegisteredFunctions(&(this->stopFunctions));
+
     if (discordRichPresence::initialized()) {
         discordRichPresence::shutdown();
     }
 
-    callRegisteredFunctions(&(this->stopFunctions));
-
     this->soundManager->stop();
+
+    resourceManager::discardAll();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

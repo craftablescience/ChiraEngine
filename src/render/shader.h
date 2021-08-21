@@ -4,10 +4,10 @@
 #include <functional>
 #include <vector>
 #include "../resource/shaderResource.h"
-#include "../resource/abstractMetaResource.h"
+#include "../resource/propertiesResource.h"
 #include "../utility/handleObject.h"
 
-class shader : public abstractMetaResource, public handleObject {
+class shader : public propertiesResource, public handleObject {
 public:
     shader(const std::string& provider_, const std::string& name_);
     void compile(const nlohmann::json& properties) override;
@@ -32,5 +32,4 @@ public:
     void setUniform(const std::string& name, glm::mat4* value) const;
 private:
     void checkForCompilationErrors() const;
-    void discardInternal();
 };

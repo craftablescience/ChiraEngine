@@ -71,7 +71,13 @@ int main() {
         engine::setBackgroundColor(0.0f, 0.0f, 0.3f, 1.0f);
 #endif
     });
-
     engine.init();
+
+    auto* cubeMaterial = resourceManager::getResource<phongMaterial>("filesystem", "materials/cubeMaterial.json");
+    auto* cubeMesh = resourceManager::getResource<mesh>("filesystem", "meshes/cube.json", cubeMaterial);
+    engine.addRenderFunction([cubeMesh](class engine* e) {
+        cubeMesh->render();
+    });
+
     engine.run();
 }

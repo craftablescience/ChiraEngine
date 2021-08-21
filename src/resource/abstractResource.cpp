@@ -2,10 +2,18 @@
 
 #include "resourceManager.h"
 
-void abstractResource::removeIfUnused() const {
-    resourceManager::removeIfUnused(this->provider, this->name);
+void abstractResource::release() const {
+    resourceManager::removeResource(this->provider, this->name);
 }
 
-abstractResource::~abstractResource() {
-    this->removeIfUnused();
+void abstractResource::incrementRefCount() {
+    this->refCount++;
+}
+
+void abstractResource::decrementRefCount() {
+    this->refCount--;
+}
+
+unsigned int abstractResource::getRefCount() const {
+    return this->refCount;
 }

@@ -2,14 +2,13 @@
 
 #include <memory>
 #include <string>
-#include "../resource/abstractMetaResource.h"
+#include "../resource/propertiesResource.h"
 #include "../loader/abstractImage.h"
 
 class texture : public abstractResource {
 public:
     texture(const std::string& provider_, const std::string& name_);
-    void compile(std::unique_ptr<unsigned char> buffer, unsigned int bufferLen) override;
-    void compile(unsigned char* buffer, unsigned int bufferLen);
+    void compile(unsigned char* buffer, std::size_t bufferLen) override;
     virtual void use() = 0;
     void setTextureUnit(int textureUnit);
     [[nodiscard]] int getTextureUnit() const;

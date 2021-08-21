@@ -7,7 +7,10 @@
 #include "../utility/logger.h"
 #include "abstractResourceProvider.h"
 
+const std::string RESOURCE_ID_SEPARATOR = "://";
+
 class resourceManager {
+    friend class engine;
 public:
     static void addResourceProvider(const std::string& name, abstractResourceProvider* provider) {
         if (resourceManager::providers.find(name) == resourceManager::providers.end()) {
@@ -26,6 +29,17 @@ public:
         return resourceManager::getUniqueResource<resourceType>(provider, name, params...);
     }
 
+    template<typename resourceType>
+    static resourceType* getCachedResource(const std::string& provider, const std::string& name) {
+        for (const auto& [resourceName, resourcePtr] : resourceManager::resources[provider]) {
+            if (name == resourceName) {
+                return dynamic_cast<resourceType*>(resourcePtr);
+            }
+        }
+        chira::logger::log(ERR, "Resource Manager", "Unable to find supposedly cached resource " + provider + RESOURCE_ID_SEPARATOR + name);
+        return nullptr;
+    }
+
     template<typename resourceType, typename... Params>
     static resourceType* getUniqueResource(const std::string& provider, const std::string& name, Params... params) {
         for (auto i = resourceManager::providers[provider].rbegin(); i < resourceManager::providers[provider].rend(); i++) {
@@ -36,27 +50,39 @@ public:
                 return dynamic_cast<resourceType*>(resourceManager::resources[provider][name]);
             }
         }
-        chira::logger::log(ERR, "RM", "Resource " + provider + "\\" + name + " was not found");
+        chira::logger::log(ERR, "Resource Manager", "Resource " + provider + RESOURCE_ID_SEPARATOR + name + " was not found");
         return nullptr;
     }
 
-    static bool removeIfUnused(const std::string& provider, const std::string& name) {
-        // use_count will be 2 if one component is holding a pointer, and that will be the component asking for the removal
-        if (resourceManager::resources[provider][name]/*.second*/ == 0) {
-            resourceManager::resources[provider].erase(name);
-            return true;
-        } else {
-            //resourceManager::resources[provider][name].second--;
-            return false;
+    template<typename resourceType, typename... Params>
+    static std::unique_ptr<resourceType> getResourceWithoutCaching(const std::string& provider, const std::string& name, Params... params) {
+        for (auto i = resourceManager::providers[provider].rbegin(); i < resourceManager::providers[provider].rend(); i++) {
+            auto res = i->get()->hasResource(name);
+            if (res) {
+                auto resource = std::make_unique<resourceType>(provider, name, params...);
+                i->get()->compileResource(name, resource.get());
+                return resource;
+            }
         }
+        chira::logger::log(ERR, "Resource Manager", "Resource " + provider + RESOURCE_ID_SEPARATOR + name + " was not found");
+        return nullptr;
     }
 
-    // NOTE: Should only ever be called when the program closes
-    static void releaseAllResources() noexcept {
-        for (const auto& pair : resources) {
-            for (const auto& provider : pair.second) {
-                // This is bad practice, DO NOT EVER call this function until the very end
-                delete provider.second;
+    static void removeResource(const std::string& provider, const std::string& name) {
+        resourceManager::resources[provider][name]->decrementRefCount();
+        if (resourceManager::resources[provider][name]->getRefCount() == 0) {
+            delete resourceManager::resources[provider][name];
+            resourceManager::resources[provider].erase(name);
+        }
+    }
+protected:
+    /*
+     * Deletes ALL resources and providers. Should only ever be called once, when the program closes.
+     */
+    static void discardAll() noexcept {
+        for (const auto& [providerName, resourceMap] : resources) {
+            for (const auto& [name, resource] : resourceMap) {
+                delete resource;
             }
         }
         resourceManager::providers.clear();

@@ -7,11 +7,12 @@
 #include "../loader/abstractMeshLoader.h"
 #include "material.h"
 
-class mesh : public abstractMetaResource {
+class mesh : public propertiesResource {
 public:
     explicit mesh(const std::string& provider_, const std::string& name_, material* material);
     ~mesh() override;
     void compile(const nlohmann::json& properties) override;
+    void release() const override;
     void render();
     glm::mat4* getModel() {
         return &this->model;
@@ -24,7 +25,6 @@ private:
     int depthFunction = GL_LEQUAL;
     bool backfaceCulling = true;
     int cullType = GL_BACK;
-    bool compiled = false;
     material* materialPtr;
     unsigned int vboHandle = -1, vaoHandle = -1, eboHandle = -1;
     std::vector<vertex> vertices;

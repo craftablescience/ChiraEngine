@@ -2,18 +2,15 @@
 
 #include "../resource/resourceManager.h"
 
-mesh::mesh(const std::string& provider_, const std::string& name_, material* material) : abstractMetaResource(provider_, name_), model(1.0f), vertices(), indices() {
+mesh::mesh(const std::string& provider_, const std::string& name_, material* material) : propertiesResource(provider_, name_), model(1.0f), vertices(), indices() {
     this->materialPtr = material;
 }
 
 mesh::~mesh() {
-    if (this->compiled) {
-        glDeleteVertexArrays(1, &(this->vaoHandle));
-        glDeleteBuffers(1, &(this->vboHandle));
-        glDeleteBuffers(1, &(this->eboHandle));
-        this->compiled = false;
-        this->vboHandle = this->eboHandle = this->vaoHandle = 0;
-    }
+    glDeleteVertexArrays(1, &(this->vaoHandle));
+    glDeleteBuffers(1, &(this->vboHandle));
+    glDeleteBuffers(1, &(this->eboHandle));
+    this->vboHandle = this->eboHandle = this->vaoHandle = 0;
 }
 
 void mesh::compile(const nlohmann::json& properties) {
@@ -55,14 +52,17 @@ void mesh::compile(const nlohmann::json& properties) {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+}
 
-    this->compiled = true;
+void mesh::release() const {
+    this->materialPtr->release();
+    abstractResource::release();
 }
 
 void mesh::render() {
     this->materialPtr->use();
     shader* s = this->materialPtr->getShader();
-    s->setUniform("m", &(this->model));
+    s->setUniform("m", &this->model);
 
     glDepthFunc(this->depthFunction);
     if (this->backfaceCulling) {

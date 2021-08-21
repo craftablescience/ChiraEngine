@@ -10,9 +10,8 @@ texture2d::texture2d(const std::string& provider_, const std::string& name_, int
     this->mipmaps = mipmaps;
 }
 
-void texture2d::compile(std::unique_ptr<unsigned char> buffer, unsigned int bufferLen) {
-    if (this->handle != 0) return;
-    texture::compile(buffer.get(), bufferLen);
+void texture2d::compile(unsigned char* buffer, std::size_t bufferLen) {
+    texture::compile(buffer, bufferLen);
     if (this->activeTextureUnit == -1) {
         glActiveTexture(GL_TEXTURE0);
     } else {

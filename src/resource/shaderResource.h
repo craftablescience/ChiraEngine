@@ -14,7 +14,7 @@ const std::string PREPROCESSOR_DEFAULT_SUFFIX = "#";
 class shaderResource : public abstractResource, public handleObject {
 public:
     shaderResource(const std::string& provider_, const std::string& name_, int type_);
-    void compile(std::unique_ptr<unsigned char> buffer, unsigned int bufferLength) override;
+    void compile(unsigned char* buffer, std::size_t bufferLength) override;
     ~shaderResource() override;
     [[nodiscard]] unsigned int getType() const;
     static void addPreprocessorSymbol(const std::string& name, const std::string& value);
@@ -27,5 +27,4 @@ private:
     static inline std::string preprocessorSuffix = PREPROCESSOR_DEFAULT_SUFFIX;
     static inline std::unordered_map<std::string, std::string> preprocessorSymbols{};
     void checkForCompilationErrors() const;
-    void discardInternal();
 };

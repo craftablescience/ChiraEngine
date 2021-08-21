@@ -22,7 +22,13 @@ void phongMaterial::compile(const nlohmann::json& properties) {
 void phongMaterial::use() {
     this->diffuse->use();
     this->specular->use();
-    this->shaderPtr->use();
+    material::use();
+}
+
+void phongMaterial::release() const {
+    this->diffuse->release();
+    this->specular->release();
+    material::release();
 }
 
 void phongMaterial::setShininess(float shininess) {

@@ -5,11 +5,11 @@
 // todo: add #include preprocessing
 shaderResource::shaderResource(const std::string& provider_, const std::string& name_, int type_) : abstractResource(provider_, name_), handleObject(), type(type_) {}
 
-void shaderResource::compile(std::unique_ptr<unsigned char> buffer, unsigned int bufferLength) {
+void shaderResource::compile(unsigned char* buffer, std::size_t bufferLength) {
     if (this->handle != -1) return;
     this->handle = glCreateShader(type);
     std::ostringstream oBuffer;
-    oBuffer << buffer.get();
+    oBuffer << buffer;
     this->data = oBuffer.str();
     for (const auto& [key, value] : shaderResource::preprocessorSymbols) {
         std::string fullKey = shaderResource::preprocessorPrefix;
@@ -27,7 +27,6 @@ void shaderResource::compile(std::unique_ptr<unsigned char> buffer, unsigned int
 
 shaderResource::~shaderResource() {
     if (this->handle != -1) glDeleteShader(this->handle);
-    this->removeIfUnused();
 }
 
 void shaderResource::checkForCompilationErrors() const {
@@ -36,7 +35,7 @@ void shaderResource::checkForCompilationErrors() const {
     glGetShaderiv(this->handle, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(this->handle, 512, nullptr, infoLog);
-        chira::logger::log(ERR, "ShaderResource", "Error: shader compilation failed. Type: " + std::to_string(this->type) + "\n" + infoLog);
+        chira::logger::log(ERR, "Shader Resource", "Error: shader compilation failed. Type: " + std::to_string(this->type) + "\n" + infoLog);
     }
 }
 
