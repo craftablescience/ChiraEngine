@@ -8,12 +8,10 @@
 class abstractFileSettingsLoader : public abstractSettingsLoader {
 public:
     explicit abstractFileSettingsLoader(const std::string& path) {
-        // todo: get file path in a better way
-        this->filepath = ((filesystemResourceProvider*) resourceManager::getLatestResourceProvider("file"))->getPath() + "/" + path;
+        this->filepath = ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file", path))->getPath() + "/" + path;
     }
     void setFilePath(const std::string& path) {
-        // todo: get file path in a better way
-        this->filepath = ((filesystemResourceProvider*) resourceManager::getLatestResourceProvider("file"))->getPath() + "/" + path;
+        this->filepath = ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file", path))->getPath() + "/" + path;
     }
     std::string getFilePath() {
         return this->filepath;

@@ -412,7 +412,7 @@ void engine::setWorld(class world* newWorld) {
 void engine::setSettingsLoaderDefaults() {
     engine::settingsLoader->load();
     engine::settingsLoader->addCategory("engine");
-    engine::settingsLoader->setValue("engine", "iconPath", std::string(ENGINE_FILESYSTEM_PATH + "/textures/ui/icon.png"), false, false);
+    engine::settingsLoader->setValue("engine", "iconPath", std::string("textures/ui/icon.png"), false, false);
     engine::settingsLoader->setValue("engine", "title", std::string("ChiraEngine"), false, false);
     engine::settingsLoader->setValue("engine", "consoleColoredText", true, false, false);
     engine::settingsLoader->setValue("engine", "maxPointLights", 64, false, false);
@@ -456,8 +456,9 @@ void engine::setIcon(const std::string& iconPath) {
 #endif
     GLFWimage images[1];
     int width, height, bitsPerPixel;
-    // todo: get file path in a better way
-    image icon(iconPath, &width, &height, &bitsPerPixel, 4, false);
+    image icon(
+            ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file", iconPath))->getPath() + "/" + iconPath,
+            &width, &height, &bitsPerPixel, 4, false);
 #if DEBUG
     assert(icon.getData());
 #endif
