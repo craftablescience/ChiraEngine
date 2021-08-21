@@ -30,7 +30,7 @@ void texture2d::compile(std::unique_ptr<unsigned char> buffer, unsigned int buff
             glGenerateMipmap(GL_TEXTURE_2D);
         }
     } else {
-        chiraLogger::log(ERR, "Texture2D", "Texture failed to compile. Missing image data");
+        chira::logger::log(ERR, "Texture2D", "Texture failed to compile. Missing image data");
     }
 }
 

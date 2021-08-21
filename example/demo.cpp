@@ -36,8 +36,8 @@ int main() {
     }));
 
     engine.addInitFunction([](class engine* e) {
-        std::shared_ptr<phongMaterial> cubeMaterial = resourceManager::getResource<phongMaterial>("filesystem", "materials/cubeMaterial.json");
-        std::shared_ptr<mesh> cubeMesh = resourceManager::getResource<mesh>("filesystem", "meshes/cube.json", cubeMaterial);
+        auto* cubeMaterial = resourceManager::getResource<phongMaterial>("filesystem", "materials/cubeMaterial.json");
+        auto* cubeMesh = resourceManager::getResource<mesh>("filesystem", "meshes/cube.json", cubeMaterial);
 
         discordRichPresence::init("875778280899358720");
         discordRichPresence::setLargeImage("main_logo");
@@ -60,7 +60,7 @@ int main() {
 
         cubeMaterial->setShininess();
         cubeMaterial->setLambertFactor();
-        std::shared_ptr<shader> cubeShader = cubeMaterial->getShader().lock();
+        shader* cubeShader = cubeMaterial->getShader();
         cubeShader->use();
         cubeShader->setUniform("light.ambient", 0.1f, 0.1f, 0.1f);
         cubeShader->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);

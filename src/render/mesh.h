@@ -9,7 +9,7 @@
 
 class mesh : public abstractMetaResource {
 public:
-    explicit mesh(const std::string& provider_, const std::string& name_, const std::shared_ptr<material>& material);
+    explicit mesh(const std::string& provider_, const std::string& name_, material* material);
     ~mesh() override;
     void compile(const nlohmann::json& properties) override;
     void render();
@@ -25,7 +25,7 @@ private:
     bool backfaceCulling = true;
     int cullType = GL_BACK;
     bool compiled = false;
-    std::shared_ptr<material> materialPtr;
+    material* materialPtr;
     unsigned int vboHandle = -1, vaoHandle = -1, eboHandle = -1;
     std::vector<vertex> vertices;
     std::vector<unsigned int> indices;

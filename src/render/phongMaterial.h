@@ -14,6 +14,6 @@ public:
     void setShininess(float shininess = 32.0f);
     void setLambertFactor(float lambertFactor = 1.0f);
 private:
-    std::shared_ptr<texture2d> diffuse;
-    std::shared_ptr<texture2d> specular;
+    texture2d* diffuse = nullptr;
+    texture2d* specular = nullptr;
 };

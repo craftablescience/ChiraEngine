@@ -17,36 +17,38 @@ public:
     }
 
     template<typename resourceType, typename... Params>
-    static std::shared_ptr<resourceType> getResource(const std::string& provider, const std::string& name, Params... params) {
+    static resourceType* getResource(const std::string& provider, const std::string& name, Params... params) {
         for (const auto& [resourceName, resourcePtr] : resourceManager::resources[provider]) {
             if (name == resourceName) {
-                return std::shared_ptr<resourceType>(std::dynamic_pointer_cast<resourceType>(resourcePtr));
+                return dynamic_cast<resourceType*>(resourcePtr);
             }
         }
         return resourceManager::getUniqueResource<resourceType>(provider, name, params...);
     }
 
     template<typename resourceType, typename... Params>
-    static std::shared_ptr<resourceType> getUniqueResource(const std::string& provider, const std::string& name, Params... params) {
+    static resourceType* getUniqueResource(const std::string& provider, const std::string& name, Params... params) {
         for (auto i = resourceManager::providers[provider].rbegin(); i < resourceManager::providers[provider].rend(); i++) {
             auto res = i->get()->hasResource(name);
             if (res) {
-                resourceManager::resources[provider][name] = std::make_shared<resourceType>(provider, name, params...);
+                resourceManager::resources[provider][name] = new resourceType{provider, name, params...};
                 i->get()->compileResource(name, resourceManager::resources[provider][name]);
-                return std::shared_ptr<resourceType>(std::dynamic_pointer_cast<resourceType>(resourceManager::resources[provider][name]));
+                return dynamic_cast<resourceType*>(resourceManager::resources[provider][name]);
             }
         }
-        chiraLogger::log(ERR, "RM", "Resource " + provider + "\\" + name + " was not found");
+        chira::logger::log(ERR, "RM", "Resource " + provider + "\\" + name + " was not found");
         return nullptr;
     }
 
     static bool removeIfUnused(const std::string& provider, const std::string& name) {
         // use_count will be 2 if one component is holding a pointer, and that will be the component asking for the removal
-        if (resourceManager::resources[provider][name].use_count() <= 2) {
+        if (resourceManager::resources[provider][name]/*.second*/ == 0) {
             resourceManager::resources[provider].erase(name);
             return true;
+        } else {
+            //resourceManager::resources[provider][name].second--;
+            return false;
         }
-        return false;
     }
 
     // NOTE: Should only ever be called when the program closes
@@ -54,12 +56,12 @@ public:
         for (const auto& pair : resources) {
             for (const auto& provider : pair.second) {
                 // This is bad practice, DO NOT EVER call this function until the very end
-                delete provider.second.get();
+                delete provider.second;
             }
         }
         resourceManager::providers.clear();
     }
 private:
     static inline std::unordered_map<std::string, std::vector<std::unique_ptr<abstractResourceProvider>>> providers{};
-    static inline std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<abstractResource>>> resources{};
+    static inline std::unordered_map<std::string, std::unordered_map<std::string, abstractResource*>> resources{};
 };

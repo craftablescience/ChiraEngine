@@ -3,7 +3,7 @@
 #include "../utility/logger.h"
 
 // todo: add #include preprocessing
-shaderResource::shaderResource(const std::string& provider_, const std::string& name_, unsigned int type_) : abstractResource(provider_, name_), handleObject(), type(type_) {}
+shaderResource::shaderResource(const std::string& provider_, const std::string& name_, int type_) : abstractResource(provider_, name_), handleObject(), type(type_) {}
 
 void shaderResource::compile(std::unique_ptr<unsigned char> buffer, unsigned int bufferLength) {
     if (this->handle != -1) return;
@@ -36,7 +36,7 @@ void shaderResource::checkForCompilationErrors() const {
     glGetShaderiv(this->handle, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(this->handle, 512, nullptr, infoLog);
-        chiraLogger::log(ERR, "ShaderResource", "Error: shader compilation failed. Type: " + std::to_string(this->type) + "\n" + infoLog);
+        chira::logger::log(ERR, "ShaderResource", "Error: shader compilation failed. Type: " + std::to_string(this->type) + "\n" + infoLog);
     }
 }
 

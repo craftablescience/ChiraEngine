@@ -11,7 +11,7 @@ void objMeshLoader::loadMesh(const std::string& provider, const std::string& nam
     std::vector<uv> uvBuffer;
     std::vector<normal> normalBuffer;
 
-    std::shared_ptr<stringResource> meshData = resourceManager::getResource<stringResource>(provider, name);
+    auto* meshData = resourceManager::getResource<stringResource>(provider, name);
     std::istringstream meshDataStream = std::istringstream{meshData->getString()};
 
     std::string line;
@@ -43,7 +43,7 @@ void objMeshLoader::loadMesh(const std::string& provider, const std::string& nam
             while (iss >> objIndices[counter]) {
                 objIndices[counter] -= 1;
                 if (counter >= 9) {
-                    chiraLogger::log(WARN, "OBJ", "OBJ file " + name + " is not triangulated");
+                    chira::logger::log(WARN, "OBJ", "OBJ file " + name + " is not triangulated");
                     break;
                 } else if (counter >= 6) {
                     includeUVs = true;

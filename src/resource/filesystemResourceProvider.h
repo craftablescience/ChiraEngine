@@ -14,7 +14,7 @@ public:
         // Note: update MinGW if compilation fails at this line
         return std::filesystem::exists(std::filesystem::current_path().string() + "/" + this->path + "/" + name);
     }
-    void compileResource(const std::string& name, const std::shared_ptr<abstractResource>& resource) override {
+    void compileResource(const std::string& name, abstractResource* resource) override {
         std::ifstream ifs((std::filesystem::current_path().string() + "/" + this->path + "/" + name).c_str(), std::ios::in | std::ios::binary | std::ios::ate);
         std::ifstream::pos_type fileSize = ifs.tellg();
         ifs.seekg(0, std::ios::beg);

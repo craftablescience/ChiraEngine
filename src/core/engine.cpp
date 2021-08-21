@@ -111,7 +111,7 @@ void engine::mouseScrollCallback(GLFWwindow* window, double xPos, double yPos) {
 void engine::init() {
     this->started = true;
 
-    chiraLogger::addCallback([this](const loggerType type, const std::string& source, const std::string& message) {
+    chira::logger::addCallback([this](const loggerType type, const std::string& source, const std::string& message) {
         this->getConsole()->engineLoggingHook(type, source, message);
     });
 
@@ -122,7 +122,7 @@ void engine::init() {
     }
 
     if (!glfwInit()) {
-        chiraLogger::log(ERR, "GLFW", "GLFW not defined");
+        chira::logger::log(ERR, "GLFW", "GLFW not defined");
         exit(EXIT_FAILURE);
     }
     glfwSetErrorCallback(this->errorCallback);
@@ -147,7 +147,7 @@ void engine::init() {
                                     fullscreen ? glfwGetPrimaryMonitor() : nullptr,
                                     nullptr);
     if (!this->window) {
-        chiraLogger::log(ERR, "GLFW", "Window creation failed");
+        chira::logger::log(ERR, "GLFW", "Window creation failed");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -159,17 +159,17 @@ void engine::init() {
         engine::getSettingsLoader()->getValue("engine", "iconPath", &path);
         this->setIcon(path);
     } else {
-        chiraLogger::log(WARN, "ChiraEngine", "You should not unset the iconPath property unless you are a trained professional!");
+        chira::logger::log(WARN, "ChiraEngine", "You should not unset the iconPath property unless you are a trained professional!");
     }
 
 #if DEBUG
     int major, minor, rev;
     glfwGetVersion(&major, &minor, &rev);
-    chiraLogger::log(INFO, "GLFW", "Using GLFW v" + std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(rev));
+    chira::logger::log(INFO, "GLFW", "Using GLFW v" + std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(rev));
 #endif
 
     if (!gladLoadGL(glfwGetProcAddress)) {
-        chiraLogger::log(ERR, "OpenGL", "OpenGL 3.3 Core must be available to run this program");
+        chira::logger::log(ERR, "OpenGL", "OpenGL 3.3 Core must be available to run this program");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -178,8 +178,8 @@ void engine::init() {
     int vertexAttributes, textureUnits;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &vertexAttributes);
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
-    chiraLogger::log(INFO, "OpenGL", "Maximum number of vertex attributes is " + std::to_string(vertexAttributes));
-    chiraLogger::log(INFO, "OpenGL", "Maximum number of texture units is " + std::to_string(textureUnits));
+    chira::logger::log(INFO, "OpenGL", "Maximum number of vertex attributes is " + std::to_string(vertexAttributes));
+    chira::logger::log(INFO, "OpenGL", "Maximum number of texture units is " + std::to_string(textureUnits));
 #endif
 
     int width, height;
@@ -210,7 +210,7 @@ void engine::init() {
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(this->window, true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
-    chiraLogger::log(INFO, "ImGUI", "ImGUI loaded successfully");
+    chira::logger::log(INFO, "ImGUI", "ImGUI loaded successfully");
 
     bool openalEnabled = true;
     engine::getSettingsLoader()->getValue("scripting", "angelscript", &openalEnabled);
@@ -309,7 +309,7 @@ void engine::render() {
 }
 
 void engine::stop() {
-    chiraLogger::log(INFO_IMPORTANT, "ChiraEngine", "Gracefully exiting...");
+    chira::logger::log(INFO_IMPORTANT, "ChiraEngine", "Gracefully exiting...");
 
     for (const auto& [name, scriptProvider] : this->scriptProviders) {
         scriptProvider->stop();
@@ -358,7 +358,7 @@ void engine::addScriptProvider(const std::string& name, abstractScriptProvider* 
 
 abstractScriptProvider* engine::getScriptProvider(const std::string& name) {
     if (this->scriptProviders.count(name) == 0) {
-        chiraLogger::log(ERR, "engine::getScriptProvider", "Script provider " + name + " is not recognized, check that you registered it properly");
+        chira::logger::log(ERR, "engine::getScriptProvider", "Script provider " + name + " is not recognized, check that you registered it properly");
     }
     return this->scriptProviders.at(name).get();
 }
@@ -369,7 +369,7 @@ void engine::setSoundManager(abstractSoundManager* newSoundManager) {
 
 abstractSoundManager* engine::getSoundManager() {
     if (!this->soundManager) {
-        chiraLogger::log(WARN, "engine::getSoundManager", "Must set sound manager in engine::setSoundManager for this call to function");
+        chira::logger::log(WARN, "engine::getSoundManager", "Must set sound manager in engine::setSoundManager for this call to function");
         return nullptr;
     }
     return this->soundManager.get();
@@ -389,7 +389,7 @@ void engine::addStopFunction(const std::function<void(engine*)>& stop) {
 
 abstractSettingsLoader* engine::getSettingsLoader() {
     if (!engine::settingsLoader) {
-        chiraLogger::log(WARN, "engine::getSettingsLoader", "Must set settings loader in engine::setSettingsLoader for this call to function");
+        chira::logger::log(WARN, "engine::getSettingsLoader", "Must set settings loader in engine::setSettingsLoader for this call to function");
         return nullptr;
     }
     return engine::settingsLoader.get();
@@ -402,7 +402,7 @@ void engine::setSettingsLoader(abstractSettingsLoader* newSettingsLoader) {
 
 world* engine::getWorld() {
     if (!this->worldPtr) {
-        chiraLogger::log(WARN, "engine::getWorld", "Must set world in engine::setWorld for this call to function");
+        chira::logger::log(WARN, "engine::getWorld", "Must set world in engine::setWorld for this call to function");
         return nullptr;
     }
     return this->worldPtr.get();

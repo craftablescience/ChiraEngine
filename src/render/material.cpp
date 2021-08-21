@@ -21,6 +21,6 @@ int material::getGLFormatFromString(const std::string& formatName) {
     return GL_RGBA;
 }
 
-std::weak_ptr<shader> material::getShader() {
+shader* material::getShader() {
     return this->shaderPtr;
 }

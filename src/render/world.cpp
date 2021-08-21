@@ -12,7 +12,7 @@ world::~world() {
 
 abstractCamera* world::getCamera() const {
     if (!this->camera) {
-        chiraLogger::log(WARN, "world::getCamera", "Must set camera in world::setCamera first");
+        chira::logger::log(WARN, "world::getCamera", "Must set camera in world::setCamera first");
         return nullptr;
     }
     return this->camera;
@@ -27,7 +27,7 @@ void world::setCamera(abstractCamera* newCamera) {
     this->camera->setCurrent(true);
 }
 
-void world::addMesh(const std::shared_ptr<mesh>& mesh_) {
+void world::addMesh(mesh* mesh_) {
     this->meshes.push_back(mesh_);
 }
 

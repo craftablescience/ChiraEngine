@@ -2,35 +2,35 @@
 
 alSoundManager::~alSoundManager() {
     if (!alcCall(alcMakeContextCurrent, this->contextCurrent, this->device, nullptr)) {
-        chiraLogger::log(ERR, "OpenAL", "Could not make context non-current");
+        chira::logger::log(ERR, "OpenAL", "Could not make context non-current");
     }
     if (!alcCall(alcDestroyContext, this->device, this->context)) {
-        chiraLogger::log(ERR, "OpenAL", "Could not destroy context");
+        chira::logger::log(ERR, "OpenAL", "Could not destroy context");
     }
     ALCboolean closed;
     if (!alcCall(alcCloseDevice, closed, this->device, this->device)) {
-        chiraLogger::log(ERR, "OpenAL", "Default device failed to close");
+        chira::logger::log(ERR, "OpenAL", "Default device failed to close");
     }
 }
 
 void alSoundManager::init() {
     this->device = alcOpenDevice(nullptr);
     if (!this->device) {
-        chiraLogger::log(WARN, "OpenAL", "Default device failed to initialize");
+        chira::logger::log(WARN, "OpenAL", "Default device failed to initialize");
         std::vector<std::string> devices{};
         alcGetAvailableDevices(devices, nullptr);
         if (devices.empty()) {
-            chiraLogger::log(ERR, "OpenAL", "No devices available!");
+            chira::logger::log(ERR, "OpenAL", "No devices available!");
         } else {
-            chiraLogger::log(ERR, "OpenAL", "Using non-default device " + devices[0]);
+            chira::logger::log(ERR, "OpenAL", "Using non-default device " + devices[0]);
             this->device = alcOpenDevice(devices[0].c_str());
         }
     }
     if (!alcCall(alcCreateContext, this->context, this->device, this->device, nullptr) || !this->context) {
-        chiraLogger::log(ERR, "OpenAL", "Could not create context");
+        chira::logger::log(ERR, "OpenAL", "Could not create context");
     }
     if (!alcCall(alcMakeContextCurrent, this->contextCurrent, this->device, this->context) || this->contextCurrent != ALC_TRUE) {
-        chiraLogger::log(ERR, "OpenAL", "Could not make context current");
+        chira::logger::log(ERR, "OpenAL", "Could not make context current");
     }
 }
 

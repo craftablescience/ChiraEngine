@@ -2,7 +2,7 @@
 
 #include "../resource/resourceManager.h"
 
-mesh::mesh(const std::string& provider_, const std::string& name_, const std::shared_ptr<material>& material) : abstractMetaResource(provider_, name_), model(1.0f), vertices(), indices() {
+mesh::mesh(const std::string& provider_, const std::string& name_, material* material) : abstractMetaResource(provider_, name_), model(1.0f), vertices(), indices() {
     this->materialPtr = material;
 }
 
@@ -61,7 +61,7 @@ void mesh::compile(const nlohmann::json& properties) {
 
 void mesh::render() {
     this->materialPtr->use();
-    std::shared_ptr<shader> s = this->materialPtr->getShader().lock();
+    shader* s = this->materialPtr->getShader();
     s->setUniform("m", &(this->model));
 
     glDepthFunc(this->depthFunction);
@@ -101,7 +101,7 @@ int mesh::getGLDepthFuncFromString(const std::string& depthFunc) {
     } else if (depthFunc == "NOTEQUAL") {
         return GL_NOTEQUAL;
     }
-    chiraLogger::log(WARN, "Mesh", "Invalid depth function value " + depthFunc);
+    chira::logger::log(WARN, "Mesh", "Invalid depth function value " + depthFunc);
     return GL_LEQUAL;
 }
 
@@ -113,6 +113,6 @@ int mesh::getGLCullTypeFromString(const std::string& cullType) {
     } else if (cullType == "FRONT_AND_BACK" || cullType == "BACK_AND_FRONT") {
         return GL_FRONT_AND_BACK;
     }
-    chiraLogger::log(WARN, "Mesh", "Invalid cull type value " + cullType);
+    chira::logger::log(WARN, "Mesh", "Invalid cull type value " + cullType);
     return GL_BACK;
 }

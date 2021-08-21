@@ -14,12 +14,12 @@ public:
     virtual ~world();
     [[nodiscard]] abstractCamera* getCamera() const;
     void setCamera(abstractCamera* newCamera);
-    void addMesh(const std::shared_ptr<mesh>& mesh_);
+    void addMesh(mesh* mesh_);
     void render();
 private:
     bool compiled = false;
     engine* enginePtr;
     abstractCamera* camera = nullptr;
-    std::vector<std::shared_ptr<mesh>> meshes{};
+    std::vector<mesh*> meshes{};
     std::vector<std::unique_ptr<abstractLight>> lights;
 };

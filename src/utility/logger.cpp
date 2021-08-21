@@ -1,6 +1,6 @@
 #include "logger.h"
 
-void chiraLogger::log(const loggerType& type, const std::string& source, const std::string& message) {
+void chira::logger::log(const loggerType& type, const std::string& source, const std::string& message) {
     switch (type) {
         case INFO:
             std::cout << INFO_PREFIX << "[" << source << "] " << message << std::endl;
@@ -18,15 +18,15 @@ void chiraLogger::log(const loggerType& type, const std::string& source, const s
             std::cout << "\x1B[31m" << ERROR_PREFIX << "[" << source << "] " << message << "\033[0m" << std::endl;
             break;
     }
-    chiraLogger::runLogHooks(type, source, message);
+    chira::logger::runLogHooks(type, source, message);
 }
 
-void chiraLogger::addCallback(const std::function<void(const loggerType,const std::string&,const std::string&)>& function) {
-    chiraLogger::callbacks.push_back(function);
+void chira::logger::addCallback(const std::function<void(const loggerType,const std::string&,const std::string&)>& function) {
+    chira::logger::callbacks.push_back(function);
 }
 
-void chiraLogger::runLogHooks(const loggerType& type, const std::string& source, const std::string& message) {
-    for (const std::function<void(const loggerType,const std::string&,const std::string&)>& function : chiraLogger::callbacks) {
+void chira::logger::runLogHooks(const loggerType& type, const std::string& source, const std::string& message) {
+    for (const std::function<void(const loggerType,const std::string&,const std::string&)>& function : chira::logger::callbacks) {
         function(type, source, message);
     }
 }
