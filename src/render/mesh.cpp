@@ -101,7 +101,7 @@ int mesh::getGLDepthFuncFromString(const std::string& depthFunc) {
     } else if (depthFunc == "NOTEQUAL") {
         return GL_NOTEQUAL;
     }
-    // todo: warn invalid value was passed with new logger
+    chiraLogger::log(WARN, "Mesh", "Invalid depth function value " + depthFunc);
     return GL_LEQUAL;
 }
 
@@ -113,6 +113,6 @@ int mesh::getGLCullTypeFromString(const std::string& cullType) {
     } else if (cullType == "FRONT_AND_BACK" || cullType == "BACK_AND_FRONT") {
         return GL_FRONT_AND_BACK;
     }
-    // todo: warn invalid value was passed with new logger
+    chiraLogger::log(WARN, "Mesh", "Invalid cull type value " + cullType);
     return GL_BACK;
 }

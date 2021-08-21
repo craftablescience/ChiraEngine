@@ -36,7 +36,7 @@ public:
                 return std::shared_ptr<resourceType>(std::dynamic_pointer_cast<resourceType>(resourceManager::resources[provider][name]));
             }
         }
-        // todo: use revamped logging system currently in feat/wec-conversion to log invalid resource paths
+        chiraLogger::log(ERR, "RM", "Resource " + provider + "\\" + name + " was not found");
         return nullptr;
     }
 
