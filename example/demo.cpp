@@ -72,12 +72,5 @@ int main() {
 #endif
     });
     engine.init();
-
-    auto* cubeMaterial = resourceManager::getResource<phongMaterial>("filesystem", "materials/cubeMaterial.json");
-    auto* cubeMesh = resourceManager::getResource<mesh>("filesystem", "meshes/cube.json", cubeMaterial);
-    engine.addRenderFunction([cubeMesh](class engine* e) {
-        cubeMesh->render();
-    });
-
     engine.run();
 }

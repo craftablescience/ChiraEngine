@@ -279,12 +279,10 @@ void engine::run() {
 void engine::render() {
     this->lastTime = this->currentTime;
     this->currentTime = glfwGetTime();
-    /* todo: set shader globals (setProjection and setMatrix callback?)
     for (const auto& [name, shader] : engine::shaders) {
         shader->setUniform("p", this->getWorld()->getCamera()->getProjectionMatrix());
         shader->setUniform("v", this->getWorld()->getCamera()->getViewMatrix());
     }
-    */
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
