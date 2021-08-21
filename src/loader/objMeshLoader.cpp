@@ -1,7 +1,8 @@
+#include "objMeshLoader.h"
+
 #include <fstream>
 #include <algorithm>
-#include "objMeshLoader.h"
-#include "../core/engine.h"
+#include <sstream>
 #include "../resource/stringResource.h"
 #include "../resource/resourceManager.h"
 
