@@ -10,8 +10,8 @@
 
 int main() {
     engine engine;
-    resourceManager::addResourceProvider("filesystem", new filesystemResourceProvider{"filesystem", "resources/engine"});
-    resourceManager::addResourceProvider("filesystem", new filesystemResourceProvider{"filesystem", "resources/demo"});
+    resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/engine"});
+    resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/demo"});
     virtualFileSystem::addResourceDirectory(ENGINE_FILESYSTEM_PREFIX);
     virtualFileSystem::addResourceDirectory("resources/demo/");
 
@@ -36,8 +36,8 @@ int main() {
     }));
 
     engine.addInitFunction([](class engine* e) {
-        auto* cubeMaterial = resourceManager::getResource<phongMaterial>("filesystem", "materials/cubeMaterial.json");
-        auto* cubeMesh = resourceManager::getResource<mesh>("filesystem", "meshes/cube.json", cubeMaterial);
+        auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file", "materials/cubeMaterial.json");
+        auto* cubeMesh = resourceManager::getResource<mesh>("file", "meshes/cube.json", cubeMaterial);
 
         discordRichPresence::init("875778280899358720");
         discordRichPresence::setLargeImage("main_logo");
