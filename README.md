@@ -22,7 +22,7 @@ Again, the goal of the engine is to have as much customization as possible, whil
 - AngelScript v2.34.0
 - Discord RPC
 - GLAD (OpenGL 4.6 Core, no extensions)
-- GLFW v3.4.0
+- GLFW v3.3.5
 - GLM v0.9.9.9
 - ImGUI v1.84.2
 - nlohmann_json v3.10.0
