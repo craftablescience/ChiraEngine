@@ -4,8 +4,8 @@
 A fully customizable (and heavily work-in-progress) game engine written in C++17.
 
 ## Features
-There may be more that I have missed, but:
-- Native Windows and Linux support (OpenGL 4.6 core)
+To summarize the major features:
+- Native Windows and Linux support (OpenGL 4.5 Core)
 - As extensible as possible: register custom logging hooks, scripting providers, sound providers, etc.
 - Robust resource loading and management, and custom resource providers can be registered
 - Hassle-free Discord Rich Presence
@@ -21,7 +21,7 @@ Again, the goal of the engine is to have as much customization as possible, whil
 ## Bundled Dependencies
 - AngelScript v2.34.0
 - Discord RPC
-- GLAD (OpenGL 4.6 Core, no extensions)
+- GLAD (OpenGL 4.5 Core, no extensions)
 - GLFW v3.3.5
 - GLM v0.9.9.9
 - ImGUI v1.84.2

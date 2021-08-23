@@ -38,7 +38,6 @@ int GLAD_GL_VERSION_4_2 = 0;
 int GLAD_GL_VERSION_4_3 = 0;
 int GLAD_GL_VERSION_4_4 = 0;
 int GLAD_GL_VERSION_4_5 = 0;
-int GLAD_GL_VERSION_4_6 = 0;
 
 
 
@@ -387,11 +386,9 @@ PFNGLMEMORYBARRIERBYREGIONPROC glad_glMemoryBarrierByRegion = NULL;
 PFNGLMINSAMPLESHADINGPROC glad_glMinSampleShading = NULL;
 PFNGLMULTIDRAWARRAYSPROC glad_glMultiDrawArrays = NULL;
 PFNGLMULTIDRAWARRAYSINDIRECTPROC glad_glMultiDrawArraysIndirect = NULL;
-PFNGLMULTIDRAWARRAYSINDIRECTCOUNTPROC glad_glMultiDrawArraysIndirectCount = NULL;
 PFNGLMULTIDRAWELEMENTSPROC glad_glMultiDrawElements = NULL;
 PFNGLMULTIDRAWELEMENTSBASEVERTEXPROC glad_glMultiDrawElementsBaseVertex = NULL;
 PFNGLMULTIDRAWELEMENTSINDIRECTPROC glad_glMultiDrawElementsIndirect = NULL;
-PFNGLMULTIDRAWELEMENTSINDIRECTCOUNTPROC glad_glMultiDrawElementsIndirectCount = NULL;
 PFNGLNAMEDBUFFERDATAPROC glad_glNamedBufferData = NULL;
 PFNGLNAMEDBUFFERSTORAGEPROC glad_glNamedBufferStorage = NULL;
 PFNGLNAMEDBUFFERSUBDATAPROC glad_glNamedBufferSubData = NULL;
@@ -418,7 +415,6 @@ PFNGLPOINTPARAMETERIVPROC glad_glPointParameteriv = NULL;
 PFNGLPOINTSIZEPROC glad_glPointSize = NULL;
 PFNGLPOLYGONMODEPROC glad_glPolygonMode = NULL;
 PFNGLPOLYGONOFFSETPROC glad_glPolygonOffset = NULL;
-PFNGLPOLYGONOFFSETCLAMPPROC glad_glPolygonOffsetClamp = NULL;
 PFNGLPOPDEBUGGROUPPROC glad_glPopDebugGroup = NULL;
 PFNGLPRIMITIVERESTARTINDEXPROC glad_glPrimitiveRestartIndex = NULL;
 PFNGLPROGRAMBINARYPROC glad_glProgramBinary = NULL;
@@ -498,7 +494,6 @@ PFNGLSCISSORINDEXEDVPROC glad_glScissorIndexedv = NULL;
 PFNGLSHADERBINARYPROC glad_glShaderBinary = NULL;
 PFNGLSHADERSOURCEPROC glad_glShaderSource = NULL;
 PFNGLSHADERSTORAGEBLOCKBINDINGPROC glad_glShaderStorageBlockBinding = NULL;
-PFNGLSPECIALIZESHADERPROC glad_glSpecializeShader = NULL;
 PFNGLSTENCILFUNCPROC glad_glStencilFunc = NULL;
 PFNGLSTENCILFUNCSEPARATEPROC glad_glStencilFuncSeparate = NULL;
 PFNGLSTENCILMASKPROC glad_glStencilMask = NULL;
@@ -1412,13 +1407,6 @@ static void glad_gl_load_GL_VERSION_4_5( GLADuserptrloadfunc load, void* userptr
     glad_glVertexArrayVertexBuffer = (PFNGLVERTEXARRAYVERTEXBUFFERPROC) load(userptr, "glVertexArrayVertexBuffer");
     glad_glVertexArrayVertexBuffers = (PFNGLVERTEXARRAYVERTEXBUFFERSPROC) load(userptr, "glVertexArrayVertexBuffers");
 }
-static void glad_gl_load_GL_VERSION_4_6( GLADuserptrloadfunc load, void* userptr) {
-    if(!GLAD_GL_VERSION_4_6) return;
-    glad_glMultiDrawArraysIndirectCount = (PFNGLMULTIDRAWARRAYSINDIRECTCOUNTPROC) load(userptr, "glMultiDrawArraysIndirectCount");
-    glad_glMultiDrawElementsIndirectCount = (PFNGLMULTIDRAWELEMENTSINDIRECTCOUNTPROC) load(userptr, "glMultiDrawElementsIndirectCount");
-    glad_glPolygonOffsetClamp = (PFNGLPOLYGONOFFSETCLAMPPROC) load(userptr, "glPolygonOffsetClamp");
-    glad_glSpecializeShader = (PFNGLSPECIALIZESHADERPROC) load(userptr, "glSpecializeShader");
-}
 
 
 
@@ -1575,7 +1563,6 @@ static int glad_gl_find_core_gl(void) {
     GLAD_GL_VERSION_4_3 = (major == 4 && minor >= 3) || major > 4;
     GLAD_GL_VERSION_4_4 = (major == 4 && minor >= 4) || major > 4;
     GLAD_GL_VERSION_4_5 = (major == 4 && minor >= 5) || major > 4;
-    GLAD_GL_VERSION_4_6 = (major == 4 && minor >= 6) || major > 4;
 
     return GLAD_MAKE_VERSION(major, minor);
 }
@@ -1606,7 +1593,6 @@ int gladLoadGLUserPtr( GLADuserptrloadfunc load, void *userptr) {
     glad_gl_load_GL_VERSION_4_3(load, userptr);
     glad_gl_load_GL_VERSION_4_4(load, userptr);
     glad_gl_load_GL_VERSION_4_5(load, userptr);
-    glad_gl_load_GL_VERSION_4_6(load, userptr);
 
     if (!glad_gl_find_extensions_gl(version)) return 0;
 
