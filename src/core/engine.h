@@ -23,7 +23,6 @@
 #include "../render/material.h"
 #include "../resource/resourceManager.h"
 
-
 class keybind;
 class mousebind;
 class world;

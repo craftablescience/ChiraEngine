@@ -1,6 +1,7 @@
 #include "shaderResource.h"
 
 #include "../utility/logger.h"
+#include "../config/glVersion.h"
 #include <sstream>
 
 // todo: add #include preprocessing
@@ -10,7 +11,7 @@ void shaderResource::compile(unsigned char* buffer, std::size_t bufferLength) {
     if (this->handle != -1) return;
     this->handle = glCreateShader(type);
     std::ostringstream oBuffer;
-    oBuffer << buffer;
+    oBuffer << chira::GL_VERSION_STRING << "\n\n" << buffer;
     this->data = oBuffer.str();
     for (const auto& [key, value] : shaderResource::preprocessorSymbols) {
         std::string fullKey = shaderResource::preprocessorPrefix;

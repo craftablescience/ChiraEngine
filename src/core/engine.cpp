@@ -1,20 +1,20 @@
 #include "engine.h"
 
-#if __has_include(<windows.h>)
-#include <windows.h>
-#endif
-
-#include <iostream>
 #define IMGUI_USER_CONFIG "../../src/config/imguiConfig.h"
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
+#include <iostream>
+#include "../config/glVersion.h"
 #include "../loader/jsonSettingsLoader.h"
 #include "../loader/image.h"
 #include "../sound/alSoundManager.h"
 #include "../implementation/discordRichPresence.h"
 #include "../resource/resourceManager.h"
 #include "../resource/filesystemResourceProvider.h"
+#if __has_include(<windows.h>)
+#include <windows.h>
+#endif
 
 const std::string ENGINE_FILESYSTEM_PATH = "resources/engine";
 
@@ -127,12 +127,9 @@ void engine::init() {
         exit(EXIT_FAILURE);
     }
     glfwSetErrorCallback(this->errorCallback);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, chira::GL_VERSION_MAJOR);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, chira::GL_VERSION_MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
 
     int windowWidth = 1600;
     engine::getSettingsLoader()->getValue("graphics", "windowWidth", &windowWidth);
@@ -170,7 +167,7 @@ void engine::init() {
 #endif
 
     if (!gladLoadGL(glfwGetProcAddress)) {
-        chira::logger::log(ERR, "OpenGL", "OpenGL 3.3 Core must be available to run this program");
+        chira::logger::log(ERR, "OpenGL", "OpenGL " + std::string(chira::GL_VERSION_STRING_PRETTY) + " must be available to run this program");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -210,7 +207,7 @@ void engine::init() {
     ImGuiIO& io = ImGui::GetIO(); (void) io;
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(this->window, true);
-    ImGui_ImplOpenGL3_Init("#version 330 core");
+    ImGui_ImplOpenGL3_Init(chira::GL_VERSION_STRING.data());
     chira::logger::log(INFO, "ImGUI", "ImGUI loaded successfully");
 
     bool openalEnabled = true;
