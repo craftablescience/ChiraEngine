@@ -5,6 +5,7 @@ A fully customizable (and heavily work-in-progress) game engine written in C++17
 
 ## Features
 There may be more that I have missed, but:
+- Native Windows and Linux support (currently using OpenGL 3.3 core)
 - As extensible as possible: register custom logging hooks, scripting providers, sound providers, etc.
 - Hassle-free Discord Rich Presence
 - AngelScript support, with common function hooks and types registered
@@ -33,7 +34,7 @@ Again, the goal of the engine is to have as much customization as possible, whil
 - stb_image
 
 ## Compilation
-- **CLion (recommended)**: The project will compile without any prior configuration.
+- **CLion (recommended)**: The project will compile without any prior configuration. If developing on Windows, you will need to install the Windows SDK (see below).
 
 - Visual Studio 2019: You will need to install the following components:
 
