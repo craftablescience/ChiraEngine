@@ -22,3 +22,6 @@
 [submodule "src/third_party/discord"]
 	path = src/third_party/discord
 	url = https://github.com/discord/discord-rpc
+[submodule ".\\src\\third_party\\bullet"]
+	path = .\\src\\third_party\\bullet
+	url = https://github.com/bulletphysics/bullet3
