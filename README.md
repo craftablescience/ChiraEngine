@@ -10,6 +10,7 @@ To summarize the major features:
 - Robust resource loading and management, and custom resource providers can be registered
 - Hassle-free Discord Rich Presence
 - AngelScript support, with common function hooks and types registered
+- Bullet physics engine built-in
 - Abstract input system using C++11 lambdas (or a reference to a function)
 - Settings manager, which saves to and loads from a JSON file (with smart overwriting) for modifiable settings without recompiling
 - Both AngelScript and OpenAL can be disabled in code and/or through the settings file
@@ -20,15 +21,16 @@ Again, the goal of the engine is to have as much customization as possible, whil
 
 ## Bundled Dependencies
 - AngelScript v2.34.0
+- Bullet v3.17
 - Discord RPC
 - GLAD (OpenGL 4.5 Core, no extensions)
 - GLFW v3.3.5
 - GLM v0.9.9.9
 - ImGUI v1.84.2
-- nlohmann_json v3.10.0
-- OpenAL Soft v1.21.1
 - libogg v1.3.5
 - libvorbis v1.3.7
+- nlohmann_json v3.10.0
+- OpenAL Soft v1.21.1
 - stb_image v2.27
 
 ## Compilation
