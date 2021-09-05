@@ -1,7 +1,5 @@
 # Project exclude paths
-cmake-build-debug/
-cmake-build-debug-coverage/
-cmake-build-release/
+cmake-build-*/
 build/
 
 .ccls-cache

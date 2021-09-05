@@ -29,12 +29,12 @@ void bulletPhysicsWorld::stop() {
     }
 }
 
-unsigned int bulletPhysicsWorld::addBoxCollider(const glm::vec3& bounds) {
-
+bulletColliderResource* bulletPhysicsWorld::addBoxCollider(const glm::vec3& bounds) {
+    return nullptr; //todo
 }
 
 void bulletPhysicsWorld::removeCollider(btCollisionShape* collider) {
-
+    //todo
 }
 
 void bulletPhysicsWorld::setGravity(const glm::vec3& gravity) {

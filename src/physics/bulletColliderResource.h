@@ -16,12 +16,13 @@ class bulletColliderResource : propertiesResource {
 public:
     bulletColliderResource(const std::string& provider_, const std::string& name_) : propertiesResource(provider_, name_) {}
     void compile(const nlohmann::json& properties) override {
+        this->mass = properties["properties"]["mass"];
+
         switch (bulletColliderResource::getBulletColliderTypeFromString(properties["properties"]["colliderType"])) {
             case BULLET_BOX:
                 float boundX = properties["properties"]["boundX"];
                 float boundY = properties["properties"]["boundY"];
                 float boundZ = properties["properties"]["boundZ"];
-                float mass = properties["properties"]["mass"];
 
                 this->collider = std::make_unique<btBoxShape>(btVector3(boundX, boundY, boundZ));
                 btTransform bodyTransform;
@@ -35,14 +36,15 @@ public:
                     this->collider->calculateLocalInertia(mass, localInertia);
                 }
 
-                auto* myMotionState = new btDefaultMotionState(bodyTransform);
-                auto* body = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(mass, myMotionState, this->collider.get(), localInertia));
-
                 //add the body to the dynamics world
-                dynamicsWorld->addRigidBody(body);
-
+                //dynamicsWorld->addRigidBody(body);
                 break;
         }
+    }
+    btRigidBody* getNewRigidBodyFromCollider() {
+        //auto* myMotionState = new btDefaultMotionState(bodyTransform);
+        //return new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(this->mass, myMotionState, this->collider.get(), localInertia));
+        return nullptr; // todo
     }
     static bulletColliderType getBulletColliderTypeFromString(const std::string& colliderTypeStr) {
         // todo: add all collider types
@@ -50,4 +52,5 @@ public:
     }
 private:
     std::unique_ptr<btCollisionShape> collider;
+    btScalar mass = 0.0;
 };
