@@ -1,4 +1,4 @@
-name: CMake
+name: Build (Debug)
 on:
   push:
     branches: [ main ]
@@ -18,7 +18,7 @@ jobs:
     - name:  Install Necessary Packages
       run:   |
              if [ "$RUNNER_OS" == "Linux" ]; then
-                  sudo apt install -y cmake build-essentials xorg-dev mesa-common-dev mesa-utils libasound2-dev libpulse-dev libjack-dev
+                  sudo apt install -y cmake build-essential xorg-dev mesa-common-dev mesa-utils libasound2-dev libpulse-dev libjack-dev
              elif [ "$RUNNER_OS" == "Windows" ]; then
                   echo "Windows should already have the necessary libraries..."
              else
