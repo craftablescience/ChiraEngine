@@ -33,10 +33,9 @@ jobs:
           make
           mingw-w64-x86_64-toolchain
           mingw-w64-x86_64-cmake
-          mingw-w64-x86_64-ninja
 
     - name: Configure CMake
-      run: cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+      run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
 
     - name: Build
       run: cmake --build build --config ${{matrix.build_type}}
@@ -44,7 +43,7 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: ChiraEngine-linux-${{matrix.build_type}}
+        name: ChiraEngine-windows-${{matrix.build_type}}
         path: |
-          ${{github.workspace}}\build\resources\
-          ${{github.workspace}}\build\ChiraEngineProject
+          '${{github.workspace}}'\build\resources\
+          '${{github.workspace}}'\build\ChiraEngineProject
