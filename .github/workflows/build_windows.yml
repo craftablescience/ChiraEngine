@@ -36,10 +36,10 @@ jobs:
           mingw-w64-x86_64-ninja
 
     - name: Configure CMake
-      run: cmake -G Ninja -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+      run: cmake -G Ninja -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
+      run: cmake --build ${{github.workspace}}\build --config ${{matrix.build_type}}
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
