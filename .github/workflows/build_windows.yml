@@ -45,5 +45,5 @@ jobs:
       with:
         name: ChiraEngine-windows-${{matrix.build_type}}
         path: |
-          '${{github.workspace}}\build\resources\'
-          '${{github.workspace}}\build\ChiraEngineProject'
+          '${{github.workspace}}\build\resources'
+          '${{github.workspace}}\build\ChiraEngineProject.exe'
