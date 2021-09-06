@@ -39,12 +39,12 @@ jobs:
       run: cmake -G Ninja -B ${{github.workspace}}\build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
 
     - name: Build
-      run: cmake --build ${{github.workspace}}\build --config ${{matrix.build_type}}
+      run: cmake --build build --config ${{matrix.build_type}}
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
         name: ChiraEngine-linux-${{matrix.build_type}}
         path: |
-          ${{github.workspace}}/build/resources/
-          ${{github.workspace}}/build/ChiraEngineProject
+          ${{github.workspace}}\build\resources\
+          ${{github.workspace}}\build\ChiraEngineProject
