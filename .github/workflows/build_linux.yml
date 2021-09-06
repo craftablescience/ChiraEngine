@@ -1,14 +1,16 @@
-name: Build (Linux | Debug)
+name: Build (Linux)
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-env:
-  BUILD_TYPE:
-    Debug
 jobs:
   build:
+    strategy:
+      matrix:
+        include:
+          - { build_type: Debug }
+          - { build_type: Release }
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository
@@ -21,13 +23,12 @@ jobs:
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: ChiraEngine-linux-debug
+        name: ChiraEngine-linux-${{matrix.build_type}}
         path: |
-          cmake-build-debug/resources
-          cmake-build-debug/ChiraEngineProject
+          ${{github.workspace}}/build
