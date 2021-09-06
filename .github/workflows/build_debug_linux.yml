@@ -9,30 +9,25 @@ env:
     Debug
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest ]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
     - name: Checkout Submodules
       run: git submodule update --init --recursive
     - name:  Install Necessary Packages
-      run:   |
-             if [ "$RUNNER_OS" == "Linux" ]; then
-                  sudo apt install -y cmake build-essential xorg-dev mesa-common-dev mesa-utils libasound2-dev libpulse-dev libjack-dev
-             elif [ "$RUNNER_OS" == "Windows" ]; then
-                  echo "Windows should already have the necessary libraries..."
-             else
-                  echo "$RUNNER_OS not supported"
-                  exit 1
-             fi
+      run: sudo apt install -y cmake build-essential xorg-dev mesa-common-dev mesa-utils libasound2-dev libpulse-dev libjack-dev
       shell: bash
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
     - name: Build
-      # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ChiraEngine-linux-debug
+        path: |
+          cmake-build-debug/resources
+          cmake-build-debug/ChiraEngineProject
