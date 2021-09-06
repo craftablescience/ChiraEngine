@@ -11,9 +11,7 @@ jobs:
   build:
     strategy:
       matrix:
-        runs-on:
-          - ubuntu-latest
-          - windows-latest
+        runs-on: [ ubuntu-latest, windows-latest ]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
