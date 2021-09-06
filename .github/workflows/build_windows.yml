@@ -13,8 +13,8 @@ jobs:
           - { build_type: Release }
     runs-on: windows-latest
     defaults:
-    run:
-      shell: msys2 {0}
+      run:
+        shell: msys2 {0}
     steps:
 
     - name: Checkout Repository
