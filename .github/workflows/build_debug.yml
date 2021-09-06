@@ -14,7 +14,10 @@ jobs:
         os: [ ubuntu-latest, windows-latest ]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+    - name: Checkout Submodules
+      run: git submodule update --init --recursive
     - name:  Install Necessary Packages
       run:   |
              if [ "$RUNNER_OS" == "Linux" ]; then
