@@ -1,6 +1,7 @@
 #include "oggFileSound.h"
 
 #include "../resource/filesystemResourceProvider.h"
+#include "../resource/resourceManager.h"
 
 bool oggFileSound::init(const std::string& filename) {
     return this->init(filename, 1.0f, 1.0f, glm::vec3{}, soundType::EFFECT, false, true);

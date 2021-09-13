@@ -6,6 +6,7 @@
 #include "../src/render/phongMaterial.h"
 #include "../src/implementation/discordRichPresence.h"
 #include "../src/resource/filesystemResourceProvider.h"
+#include "../src/resource/resourceManager.h"
 
 int main() {
     engine engine;
@@ -28,9 +29,11 @@ int main() {
         e->getSoundManager()->getSound("helloWorld")->play();
     }));
 
-    engine.addInitFunction([](class engine* e) {
+    mesh* cubeMesh;
+
+    engine.addInitFunction([&cubeMesh](class engine* e) {
         auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file", "materials/cubeMaterial.json");
-        auto* cubeMesh = resourceManager::getResource<mesh>("file", "meshes/teapot.json", cubeMaterial);
+        cubeMesh = resourceManager::getResource<mesh>("file", "meshes/teapot.json", cubeMaterial);
 
         discordRichPresence::init("875778280899358720");
         discordRichPresence::setLargeImage("main_logo");
@@ -38,8 +41,7 @@ int main() {
         discordRichPresence::setState("https://discord.gg/ASgHFkX");
 
         e->captureMouse(true);
-        e->setWorld(new world{e, new freecam{e}});
-        e->getWorld()->addMesh(cubeMesh);
+        e->setMainCamera(new freecam{e});
 
         bool angelscriptEnabled = true;
         engine::getSettingsLoader()->getValue("scripting", "angelscript", &angelscriptEnabled);
@@ -65,14 +67,17 @@ int main() {
 #endif
     });
     engine.init();
-    /*
+
     auto* tex = resourceManager::getResource<texture2d>("file", "textures/ui/icon.png", GL_RGBA, false);
-    engine.addRenderFunction([tex](class engine* e) {
+    engine.addRenderFunction([tex, cubeMesh](class engine* e) {
+        cubeMesh->getMaterial()->getShader()->setUniform("p", e->getMainCamera()->getProjectionMatrix());
+        cubeMesh->getMaterial()->getShader()->setUniform("v", e->getMainCamera()->getViewMatrix());
+        cubeMesh->render();
+
         ImGui::Begin("OpenGL Texture Text");
         ImGui::Text("size = %d x %d", 512, 512);
         ImGui::Image((void*)(intptr_t) tex->getHandle(), ImVec2(512, 512));
         ImGui::End();
     });
-    */
     engine.run();
 }

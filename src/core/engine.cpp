@@ -10,7 +10,6 @@
 #include "../loader/image.h"
 #include "../sound/alSoundManager.h"
 #include "../implementation/discordRichPresence.h"
-#include "../resource/resourceManager.h"
 #include "../resource/filesystemResourceProvider.h"
 #if __has_include(<windows.h>)
 #include <windows.h>
@@ -259,8 +258,8 @@ void engine::run() {
     while (!glfwWindowShouldClose(this->window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this->render();
-        this->soundManager->setListenerPosition(this->getWorld()->getCamera()->getPosition());
-        this->soundManager->setListenerRotation(this->getWorld()->getCamera()->getRotation(), this->getWorld()->getCamera()->getUpVector());
+        this->soundManager->setListenerPosition(this->getMainCamera()->getPosition());
+        this->soundManager->setListenerRotation(this->getMainCamera()->getRotation(), this->getMainCamera()->getUpVector());
         this->soundManager->update();
         glfwSwapBuffers(this->window);
         glfwPollEvents();
@@ -293,8 +292,6 @@ void engine::render() {
     for (const auto& [name, scriptProvider] : this->scriptProviders) {
         scriptProvider->render(this->getDeltaTime());
     }
-
-    this->worldPtr->render();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -406,16 +403,21 @@ void engine::setPhysicsProvider(abstractPhysicsProvider* newPhysicsProvider) {
     engine::physicsProvider.reset(newPhysicsProvider);
 }
 
-world* engine::getWorld() {
-    if (!this->worldPtr) {
-        chira::logger::log(WARN, "engine::getWorld", "Must set world in engine::setWorld for this call to function");
+abstractCamera* engine::getMainCamera() const {
+    if (!this->mainCamera) {
+        chira::logger::log(WARN, "engine::getMainCamera", "Must set camera in engine::setMainCamera first");
         return nullptr;
     }
-    return this->worldPtr.get();
+    return this->mainCamera;
 }
 
-void engine::setWorld(class world* newWorld) {
-    this->worldPtr.reset(newWorld);
+void engine::setMainCamera(abstractCamera* newCamera) {
+    if (this->mainCamera) {
+        this->mainCamera->setCurrent(false);
+    }
+    this->mainCamera = newCamera;
+    this->mainCamera->init(this);
+    this->mainCamera->setCurrent(true);
 }
 
 void engine::setSettingsLoaderDefaults() {

@@ -19,9 +19,7 @@
 #include "../sound/abstractSoundManager.h"
 #include "../ui/console.h"
 #include "../utility/logger.h"
-#include "../render/world.h"
 #include "../render/material.h"
-#include "../resource/resourceManager.h"
 #include "../physics/abstractPhysicsProvider.h"
 
 class keybind;
@@ -31,29 +29,38 @@ class world;
 class engine {
 public:
     explicit engine(const std::string& configPath = "settings.json");
+
     void init();
     void run();
     void render();
     void stop();
+
     static void setBackgroundColor(float r, float g, float b, float a);
+
     void addKeybind(const keybind& keybind);
     std::vector<keybind>* getKeybinds();
     void addMousebind(const mousebind& mousebind);
     std::vector<mousebind>* getMousebinds();
+
     void addScriptProvider(const std::string& name, abstractScriptProvider* scriptProvider);
     abstractScriptProvider* getScriptProvider(const std::string& name);
     void setSoundManager(abstractSoundManager* newSoundManager);
     abstractSoundManager* getSoundManager();
+
     void addInitFunction(const std::function<void(engine*)>& init);
     void addRenderFunction(const std::function<void(engine*)>& render);
     void addStopFunction(const std::function<void(engine*)>& stop);
+
     static abstractSettingsLoader* getSettingsLoader();
     static void setSettingsLoader(abstractSettingsLoader* newSettingsLoader);
     static abstractPhysicsProvider* getPhysicsProvider();
     static void setPhysicsProvider(abstractPhysicsProvider* newPhysicsProvider);
-    world* getWorld();
-    void setWorld(world* newWorld);
+
+    abstractCamera* getMainCamera() const;
+    void setMainCamera(abstractCamera* newCamera);
+
     void callRegisteredFunctions(const std::vector<std::function<void(engine*)>>* list);
+
     [[nodiscard]] const GLFWwindow* getWindow() const;
     [[nodiscard]] bool isStarted() const;
     // NOTE: only guaranteed to work after run() in a render method
@@ -74,7 +81,7 @@ private:
     static inline std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
     static inline std::unique_ptr<abstractPhysicsProvider> physicsProvider = nullptr;
     bool mouseCaptured = false;
-    std::unique_ptr<world> worldPtr = nullptr;
+    abstractCamera* mainCamera = nullptr; // This pointer should not be deleted, ever! It's a reference to a managed resource!
     console consoleUI{};
     bool started = false;
     double lastTime, currentTime, lastMouseX, lastMouseY;
