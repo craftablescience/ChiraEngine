@@ -1,0 +1,39 @@
+name: Build (Linux)
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - { build_type: Debug }
+          - { build_type: Release }
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Checkout Submodules
+      run: git submodule update --init --recursive
+
+    - name:  Install Necessary Packages
+      run: sudo apt install -y cmake build-essential xorg-dev mesa-common-dev mesa-utils libasound2-dev libpulse-dev libjack-dev
+      shell: bash
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ChiraEngine-linux-${{matrix.build_type}}
+        path: |
+          ${{github.workspace}}/build/resources/
+          ${{github.workspace}}/build/ChiraEngineProject

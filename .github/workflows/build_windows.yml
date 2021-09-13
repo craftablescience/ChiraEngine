@@ -1,0 +1,49 @@
+name: Build (Windows)
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - { build_type: Debug }
+          - { build_type: Release }
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Checkout Submodules
+      run: git submodule update --init --recursive
+      shell: cmd
+
+    - name: Install MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >-
+          make
+          mingw-w64-x86_64-toolchain
+          mingw-w64-x86_64-cmake
+
+    - name: Configure CMake
+      run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DLIBTYPE=STATIC
+
+    - name: Build
+      run: cmake --build build --config ${{matrix.build_type}}
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ChiraEngine-windows-${{matrix.build_type}}
+        path: |
+          ${{github.workspace}}\build\resources\
+          ${{github.workspace}}\build\ChiraEngineProject.exe
