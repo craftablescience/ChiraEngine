@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../resource/propertiesResource.h"
-#include "bulletPhysicsWorld.h"
+#include "bulletPhysicsProvider.h"
 #include <btBulletDynamicsCommon.h>
 
 enum bulletColliderType {

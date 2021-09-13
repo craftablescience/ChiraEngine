@@ -2,7 +2,7 @@
 
 #include <glm/vec3.hpp>
 
-class abstractPhysicsWorld {
+class abstractPhysicsProvider {
 public:
     virtual void updatePhysics(double delta) = 0;
     virtual void stop() = 0;

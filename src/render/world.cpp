@@ -1,5 +1,4 @@
 #include "world.h"
-#include "../resource/resourceManager.h"
 
 world::world(engine* e, abstractCamera* camera) {
     this->enginePtr = e;

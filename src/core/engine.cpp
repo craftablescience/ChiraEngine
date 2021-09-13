@@ -394,6 +394,18 @@ void engine::setSettingsLoader(abstractSettingsLoader* newSettingsLoader) {
     engine::setSettingsLoaderDefaults();
 }
 
+abstractPhysicsProvider* engine::getPhysicsProvider() {
+    if (!engine::physicsProvider) {
+        chira::logger::log(WARN, "engine::getPhysicsProvider", "Must set physics provider in engine::setPhysicsProvider for this call to function");
+        return nullptr;
+    }
+    return engine::physicsProvider.get();
+}
+
+void engine::setPhysicsProvider(abstractPhysicsProvider* newPhysicsProvider) {
+    engine::physicsProvider.reset(newPhysicsProvider);
+}
+
 world* engine::getWorld() {
     if (!this->worldPtr) {
         chira::logger::log(WARN, "engine::getWorld", "Must set world in engine::setWorld for this call to function");
@@ -410,7 +422,7 @@ void engine::setSettingsLoaderDefaults() {
     engine::settingsLoader->load();
     engine::settingsLoader->addCategory("engine");
     engine::settingsLoader->setValue("engine", "iconPath", std::string("textures/ui/icon.png"), false, false);
-    engine::settingsLoader->setValue("engine", "title", std::string("ChiraEngine"), false, false);
+    engine::settingsLoader->setValue("engine", "title", std::string("Chira Engine"), false, false);
     engine::settingsLoader->setValue("engine", "consoleColoredText", true, false, false);
     engine::settingsLoader->setValue("engine", "maxPointLights", 64, false, false);
     engine::settingsLoader->setValue("engine", "maxDirectionalLights", 4, false, false);

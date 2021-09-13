@@ -5,14 +5,12 @@
 #include "../src/sound/oggFileSound.h"
 #include "../src/render/phongMaterial.h"
 #include "../src/implementation/discordRichPresence.h"
-#include "../src/resource/resourceManager.h"
 #include "../src/resource/filesystemResourceProvider.h"
 
 int main() {
     engine engine;
     resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/demo"});
     mesh::addMeshLoader("obj", new objMeshLoader{});
-    engine::getSettingsLoader()->setValue("engine", "title", std::string("Demo Window"), true, true);
 
     engine.addKeybind(keybind(GLFW_KEY_ESCAPE, GLFW_PRESS, [](class engine* e) {
         e->stop();

@@ -1,6 +1,6 @@
-#include "bulletPhysicsWorld.h"
+#include "bulletPhysicsProvider.h"
 
-bulletPhysicsWorld::bulletPhysicsWorld() {
+bulletPhysicsProvider::bulletPhysicsProvider() {
     this->collisionConfiguration = std::make_unique<btDefaultCollisionConfiguration>();
     this->dispatcher = std::make_unique<btCollisionDispatcher>(collisionConfiguration.get());
     this->overlappingPairCache = std::make_unique<btDbvtBroadphase>();
@@ -13,11 +13,11 @@ bulletPhysicsWorld::bulletPhysicsWorld() {
     this->dynamicsWorld->setGravity(btVector3(0, -12, 0));
 }
 
-void bulletPhysicsWorld::updatePhysics(double delta) {
+void bulletPhysicsProvider::updatePhysics(double delta) {
     this->dynamicsWorld->stepSimulation((btScalar) delta, 4);
 }
 
-void bulletPhysicsWorld::stop() {
+void bulletPhysicsProvider::stop() {
     for (int i = this->dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--) {
         btCollisionObject* obj = this->dynamicsWorld->getCollisionObjectArray()[i];
         btRigidBody* body = btRigidBody::upcast(obj);
@@ -29,14 +29,14 @@ void bulletPhysicsWorld::stop() {
     }
 }
 
-bulletColliderResource* bulletPhysicsWorld::addBoxCollider(const glm::vec3& bounds) {
+bulletColliderResource* bulletPhysicsProvider::addBoxCollider(const glm::vec3& bounds) {
     return nullptr; //todo
 }
 
-void bulletPhysicsWorld::removeCollider(btCollisionShape* collider) {
+void bulletPhysicsProvider::removeCollider(btCollisionShape* collider) {
     //todo
 }
 
-void bulletPhysicsWorld::setGravity(const glm::vec3& gravity) {
+void bulletPhysicsProvider::setGravity(const glm::vec3& gravity) {
     this->dynamicsWorld->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
 }

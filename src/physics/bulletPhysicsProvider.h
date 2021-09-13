@@ -1,15 +1,15 @@
 #pragma once
 
-#include "abstractPhysicsWorld.h"
+#include "abstractPhysicsProvider.h"
 #include "bulletColliderResource.h"
 #include <memory>
 #include <vector>
 
 class bulletColliderResource;
 
-class bulletPhysicsWorld : public abstractPhysicsWorld {
+class bulletPhysicsProvider : public abstractPhysicsProvider {
 public:
-    bulletPhysicsWorld();
+    bulletPhysicsProvider();
     void updatePhysics(double delta) override;
     void stop() override;
     bulletColliderResource* addBoxCollider(const glm::vec3& bounds);

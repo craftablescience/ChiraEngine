@@ -22,6 +22,7 @@
 #include "../render/world.h"
 #include "../render/material.h"
 #include "../resource/resourceManager.h"
+#include "../physics/abstractPhysicsProvider.h"
 
 class keybind;
 class mousebind;
@@ -47,7 +48,9 @@ public:
     void addRenderFunction(const std::function<void(engine*)>& render);
     void addStopFunction(const std::function<void(engine*)>& stop);
     static abstractSettingsLoader* getSettingsLoader();
-    static void setSettingsLoader(abstractSettingsLoader* settingsLoader);
+    static void setSettingsLoader(abstractSettingsLoader* newSettingsLoader);
+    static abstractPhysicsProvider* getPhysicsProvider();
+    static void setPhysicsProvider(abstractPhysicsProvider* newPhysicsProvider);
     world* getWorld();
     void setWorld(world* newWorld);
     void callRegisteredFunctions(const std::vector<std::function<void(engine*)>>* list);
@@ -69,6 +72,7 @@ private:
     std::vector<keybind> keybinds{};
     std::vector<mousebind> mousebinds{};
     static inline std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
+    static inline std::unique_ptr<abstractPhysicsProvider> physicsProvider = nullptr;
     bool mouseCaptured = false;
     std::unique_ptr<world> worldPtr = nullptr;
     console consoleUI{};
