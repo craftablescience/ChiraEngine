@@ -8,7 +8,8 @@
 class abstractEntity {
 public:
     virtual void init() = 0;
-    virtual void render(double delta) = 0;
+    virtual void preRender(double delta) = 0;
+    virtual void postRender(double delta) = 0;
     virtual void stop() = 0;
     void addComponent(const std::string& name, abstractComponent* component);
     abstractComponent* getComponent(const std::string& name);
