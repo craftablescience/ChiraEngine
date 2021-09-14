@@ -35,6 +35,10 @@ public:
     void render();
     void stop();
 
+    void addInitFunction(const std::function<void(engine*)>& init);
+    void addRenderFunction(const std::function<void(engine*)>& render);
+    void addStopFunction(const std::function<void(engine*)>& stop);
+
     static void setBackgroundColor(float r, float g, float b, float a);
 
     void addKeybind(const keybind& keybind);
@@ -47,16 +51,12 @@ public:
     void setSoundManager(abstractSoundManager* newSoundManager);
     abstractSoundManager* getSoundManager();
 
-    void addInitFunction(const std::function<void(engine*)>& init);
-    void addRenderFunction(const std::function<void(engine*)>& render);
-    void addStopFunction(const std::function<void(engine*)>& stop);
-
     static abstractSettingsLoader* getSettingsLoader();
     static void setSettingsLoader(abstractSettingsLoader* newSettingsLoader);
     static abstractPhysicsProvider* getPhysicsProvider();
     static void setPhysicsProvider(abstractPhysicsProvider* newPhysicsProvider);
 
-    abstractCamera* getMainCamera() const;
+    [[nodiscard]] abstractCamera* getMainCamera() const;
     void setMainCamera(abstractCamera* newCamera);
 
     void callRegisteredFunctions(const std::vector<std::function<void(engine*)>>* list);

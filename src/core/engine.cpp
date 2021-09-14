@@ -323,6 +323,18 @@ void engine::stop() {
     exit(EXIT_SUCCESS);
 }
 
+void engine::addInitFunction(const std::function<void(engine*)>& init) {
+    this->initFunctions.push_back(init);
+}
+
+void engine::addRenderFunction(const std::function<void(engine*)>& render) {
+    this->renderFunctions.push_back(render);
+}
+
+void engine::addStopFunction(const std::function<void(engine*)>& stop) {
+    this->stopFunctions.push_back(stop);
+}
+
 void engine::setBackgroundColor(float r, float g, float b, float a) {
     glClearColor(r, g, b, a);
 }
@@ -364,18 +376,6 @@ abstractSoundManager* engine::getSoundManager() {
         return nullptr;
     }
     return this->soundManager.get();
-}
-
-void engine::addInitFunction(const std::function<void(engine*)>& init) {
-    this->initFunctions.push_back(init);
-}
-
-void engine::addRenderFunction(const std::function<void(engine*)>& render) {
-    this->renderFunctions.push_back(render);
-}
-
-void engine::addStopFunction(const std::function<void(engine*)>& stop) {
-    this->stopFunctions.push_back(stop);
 }
 
 abstractSettingsLoader* engine::getSettingsLoader() {
