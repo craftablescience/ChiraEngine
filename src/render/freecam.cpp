@@ -28,61 +28,75 @@ void freecam::setActive(bool newActive) {
 void freecam::setupKeybinds(engine* engine) const {
     engine->addKeybind(keybind(GLFW_KEY_W, GLFW_REPEAT,[](class engine* e) {
         if (e->getMainCamera()->isCurrent() && e->getMainCamera()->isActive()) {
-            ((freecam*) e->getMainCamera())->translateLocal(ZP, e->getDeltaTime());
+            if (auto* cam = dynamic_cast<freecam*>(e->getMainCamera())) {
+                cam->translateLocal(ZP, e->getDeltaTime());
+            }
         }
     }));
     engine->addKeybind(keybind(GLFW_KEY_S, GLFW_REPEAT,[](class engine* e) {
         if (e->getMainCamera()->isCurrent() && e->getMainCamera()->isActive()) {
-            ((freecam*) e->getMainCamera())->translateLocal(ZN, e->getDeltaTime());
+            if (auto* cam = dynamic_cast<freecam*>(e->getMainCamera())) {
+                cam->translateLocal(ZN, e->getDeltaTime());
+            }
         }
     }));
     engine->addKeybind(keybind(GLFW_KEY_A, GLFW_REPEAT,[](class engine* e) {
         if (e->getMainCamera()->isCurrent() && e->getMainCamera()->isActive()) {
-            ((freecam*) e->getMainCamera())->translateLocal(XP, e->getDeltaTime());
+            if (auto* cam = dynamic_cast<freecam*>(e->getMainCamera())) {
+                cam->translateLocal(XP, e->getDeltaTime());
+            }
         }
     }));
     engine->addKeybind(keybind(GLFW_KEY_D, GLFW_REPEAT,[](class engine* e) {
         if (e->getMainCamera()->isCurrent() && e->getMainCamera()->isActive()) {
-            ((freecam*) e->getMainCamera())->translateLocal(XN, e->getDeltaTime());
+            if (auto* cam = dynamic_cast<freecam*>(e->getMainCamera())) {
+                cam->translateLocal(XN, e->getDeltaTime());
+            }
         }
     }));
     engine->addKeybind(keybind(GLFW_KEY_SPACE, GLFW_REPEAT,[](class engine* e) {
         if (e->getMainCamera()->isCurrent() && e->getMainCamera()->isActive()) {
-            ((freecam*) e->getMainCamera())->translateLocal(YP, e->getDeltaTime());
+            if (auto* cam = dynamic_cast<freecam*>(e->getMainCamera())) {
+                cam->translateLocal(YP, e->getDeltaTime());
+            }
         }
     }));
     engine->addKeybind(keybind(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT,[](class engine* e) {
         if (e->getMainCamera()->isCurrent() && e->getMainCamera()->isActive()) {
-            ((freecam*) e->getMainCamera())->translateLocal(YN, e->getDeltaTime());
+            if (auto* cam = dynamic_cast<freecam*>(e->getMainCamera())) {
+                cam->translateLocal(YN, e->getDeltaTime());
+            }
         }
     }));
     engine->addMousebind(mousebind(MOVE, [this](class engine* e, double xOffset, double yOffset) {
         if (e->getMainCamera()->isCurrent() && e->getMainCamera()->isActive()) {
-            auto* cam = (freecam*) e->getMainCamera();
-            xOffset *= this->mouseSensitivity;
-            yOffset *= this->mouseSensitivity;
-            cam->yaw += (float) xOffset;
-            bool invertYAxis = false;
-            engine::getSettingsLoader()->getValue("input", "invertYAxis", &invertYAxis);
-            if (invertYAxis) {
-                cam->pitch += (float) yOffset;
-            } else {
-                cam->pitch -= (float) yOffset;
+            if (auto* cam = dynamic_cast<freecam*>(e->getMainCamera())) {
+                xOffset *= this->mouseSensitivity;
+                yOffset *= this->mouseSensitivity;
+                cam->yaw += (float) xOffset;
+                bool invertYAxis = false;
+                engine::getSettingsLoader()->getValue("input", "invertYAxis", &invertYAxis);
+                if (invertYAxis) {
+                    cam->pitch += (float) yOffset;
+                } else {
+                    cam->pitch -= (float) yOffset;
+                }
+                if (cam->pitch > 89.5f)
+                    cam->pitch = 89.5f;
+                if (cam->pitch < -89.5f)
+                    cam->pitch = -89.5f;
             }
-            if (cam->pitch > 89.5f)
-                cam->pitch = 89.5f;
-            if (cam->pitch < -89.5f)
-                cam->pitch = -89.5f;
         }
     }));
     engine->addKeybind(keybind(GLFW_KEY_TAB, GLFW_PRESS, [](class engine* e) {
-        abstractCamera* cam = e->getMainCamera();
-        if (cam->isActive()) {
-            e->captureMouse(false);
-            cam->setActive(false);
-        } else {
-            e->captureMouse(true);
-            cam->setActive(true);
+        if (auto* cam = dynamic_cast<freecam*>(e->getMainCamera())) {
+            if (cam->isActive()) {
+                e->captureMouse(false);
+                cam->setActive(false);
+            } else {
+                e->captureMouse(true);
+                cam->setActive(true);
+            }
         }
     }));
 }
