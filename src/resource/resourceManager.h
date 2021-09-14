@@ -1,13 +1,14 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <vector>
 #include <memory>
 #include "../utility/logger.h"
 #include "abstractResourceProvider.h"
 
-const std::string RESOURCE_ID_SEPARATOR = "://";
+constexpr std::string_view RESOURCE_ID_SEPARATOR = "://";
 
 class resourceManager {
     friend class engine;
@@ -35,7 +36,7 @@ public:
                 return dynamic_cast<resourceType*>(resourcePtr);
             }
         }
-        chira::logger::log(ERR, "Resource Manager", "Unable to find supposedly cached resource " + provider + RESOURCE_ID_SEPARATOR + name);
+        chira::logger::log(ERR, "Resource Manager", "Unable to find supposedly cached resource " + provider + RESOURCE_ID_SEPARATOR.data() + name);
         return nullptr;
     }
 
@@ -49,7 +50,7 @@ public:
                 return dynamic_cast<resourceType*>(resourceManager::resources[provider][name]);
             }
         }
-        chira::logger::log(ERR, "Resource Manager", "Resource " + provider + RESOURCE_ID_SEPARATOR + name + " was not found");
+        chira::logger::log(ERR, "Resource Manager", "Resource " + provider + RESOURCE_ID_SEPARATOR.data() + name + " was not found");
         return nullptr;
     }
 
@@ -63,15 +64,13 @@ public:
                 return resource;
             }
         }
-        chira::logger::log(WARN, "Resource Manager", "Resource " + provider + RESOURCE_ID_SEPARATOR + name + " was not found");
+        chira::logger::log(WARN, "Resource Manager", "Resource " + provider + RESOURCE_ID_SEPARATOR.data() + name + " was not found");
         return nullptr;
     }
 
     static void removeResource(const std::string& provider, const std::string& name);
 protected:
-    /*
-     * Deletes ALL resources and providers. Should only ever be called once, when the program closes.
-     */
+    // Deletes ALL resources and providers. Should only ever be called once, when the program closes.
     static void discardAll();
 private:
     static inline std::unordered_map<std::string, std::vector<std::unique_ptr<abstractResourceProvider>>> providers{};
