@@ -37,4 +37,4 @@ jobs:
         name: ChiraEngine-linux-${{matrix.build_type}}
         path: |
           ${{github.workspace}}/build/resources/
-          ${{github.workspace}}/build/ChiraEngineProject
+          ${{github.workspace}}/build/ChiraEngineGui
