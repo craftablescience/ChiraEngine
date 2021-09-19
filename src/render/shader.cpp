@@ -1,8 +1,10 @@
 #include "shader.h"
 
 #include <glm/gtc/type_ptr.hpp>
-#include <iostream>
+#include "fmt/core.h"
+#include "../utility/logger.h"
 #include "../resource/resourceManager.h"
+#include "../i18n/translationManager.h"
 
 shader::shader(const std::string& provider_, const std::string& name_) : propertiesResource(provider_, name_), handleObject() {}
 
@@ -32,8 +34,7 @@ void shader::checkForCompilationErrors() const {
     glGetProgramiv(this->handle, GL_LINK_STATUS, &success);
     if(!success) {
         glGetProgramInfoLog(this->handle, 512, nullptr, infoLog);
-        std::cerr << "Error: shader linking failed." << std::endl;
-        std::cerr << infoLog << std::endl;
+        chira::logger::log(ERR, "Shader", fmt::format(TR("error.opengl.shader_linking"), infoLog));
     }
 }
 

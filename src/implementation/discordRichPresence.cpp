@@ -1,14 +1,18 @@
+#include <fmt/format.h>
 #include "discordRichPresence.h"
 
-#include "../core/engine.h"
+#include "../utility/logger.h"
+#include "../i18n/translationManager.h"
 
 void discordRichPresence::init(const std::string& appId) {
     if (discordRichPresence::isInitialized) return;
     DiscordEventHandlers handlers;
     memset(&handlers, 0, sizeof(handlers));
+#if DEBUG
     handlers.ready = discordRichPresence::callbackReady;
     handlers.disconnected = discordRichPresence::callbackDisconnected;
     handlers.errored = discordRichPresence::callbackError;
+#endif
     Discord_Initialize(appId.c_str(), &handlers, 1, nullptr);
     discordRichPresence::isInitialized = true;
 }
@@ -106,13 +110,13 @@ void discordRichPresence::shutdown() {
 }
 
 void discordRichPresence::callbackReady(const DiscordUser* connectedUser) {
-    chira::logger::log(INFO, "Discord", "User " + std::string(connectedUser->username) + ":" + connectedUser->discriminator + " connected");
+    chira::logger::log(INFO, "Discord", fmt::format(TR("debug.discord.user_connected"), connectedUser->username, connectedUser->discriminator));
 }
 
 void discordRichPresence::callbackDisconnected(int errcode, const char* message) {
-    chira::logger::log(WARN, "Discord", "User disconnected, code " + std::to_string(errcode) + ": " + std::string(message));
+    chira::logger::log(WARN, "Discord", fmt::format(TR("debug.discord.user_disconnected"), errcode, message));
 }
 
 void discordRichPresence::callbackError(int errcode, const char* message) {
-    chira::logger::log(ERR, "Discord", "Error " + std::to_string(errcode) + ": " + std::string(message));
+    chira::logger::log(ERR, "Discord", fmt::format(TR("debug.discord.generic_error"), errcode, message));
 }

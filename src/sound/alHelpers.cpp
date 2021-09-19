@@ -1,5 +1,7 @@
 #include "alHelpers.h"
 
+// todo: convert these to translation system
+
 bool checkForALErrors(const std::string& filename, const std::uint_fast32_t line) {
     ALenum error = alGetError();
     if (error != AL_NO_ERROR) {

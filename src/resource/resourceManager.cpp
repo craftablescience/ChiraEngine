@@ -17,7 +17,7 @@ abstractResourceProvider* resourceManager::getResourceProviderWithResource(const
             return i->get();
         }
     }
-    chira::logger::log(ERR, "Resource Manager", "Resource " + provider + RESOURCE_ID_SEPARATOR.data() + name + " was not found");
+    chira::logger::log(ERR, "Resource Manager", fmt::format(TR("error.resource_manager.resource_not_found"), provider + RESOURCE_ID_SEPARATOR.data() + name));
     return nullptr;
 }
 

@@ -10,7 +10,13 @@
 
 int main() {
     engine engine;
-    resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/demo"});
+    resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/editor"});
+    chira::translationManager::addTranslationFile("editor");
+
+    engine::getSettingsLoader()->setValue("engineGui", "discordIntegration", true, false, true);
+    bool discordEnabled;
+    engine::getSettingsLoader()->getValue("engineGui", "discordIntegration", &discordEnabled);
+
     mesh::addMeshLoader("obj", new objMeshLoader{});
 
     engine.addKeybind(keybind(GLFW_KEY_ESCAPE, GLFW_PRESS, [](class engine* e) {
@@ -31,14 +37,16 @@ int main() {
 
     mesh* cubeMesh;
 
-    engine.addInitFunction([&cubeMesh](class engine* e) {
+    engine.addInitFunction([&cubeMesh, &discordEnabled](class engine* e) {
         auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file", "materials/cubeMaterial.json");
         cubeMesh = resourceManager::getResource<mesh>("file", "meshes/teapot.json", cubeMaterial);
 
-        discordRichPresence::init("875778280899358720");
-        discordRichPresence::setLargeImage("main_logo");
-        discordRichPresence::setDetails("Demo App Running");
-        discordRichPresence::setState("https://discord.gg/ASgHFkX");
+        if (discordEnabled) {
+            discordRichPresence::init("875778280899358720");
+            discordRichPresence::setLargeImage("main_logo");
+            discordRichPresence::setDetails(TR("ui.window.title"));
+            discordRichPresence::setState("https://discord.gg/ASgHFkX");
+        }
 
         e->captureMouse(true);
         e->setMainCamera(new freecam{e});
@@ -74,7 +82,7 @@ int main() {
         cubeMesh->getMaterial()->getShader()->setUniform("v", e->getMainCamera()->getViewMatrix());
         cubeMesh->render();
 
-        ImGui::Begin("OpenGL Texture Text");
+        ImGui::Begin(TR("debug.imgui.texture_test").c_str());
         ImGui::Text("size = %d x %d", 512, 512);
         ImGui::Image((void*)(intptr_t) tex->getHandle(), ImVec2(512, 512));
         ImGui::End();

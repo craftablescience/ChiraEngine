@@ -1,6 +1,7 @@
 #include "texture2d.h"
 
 #include "../utility/logger.h"
+#include "../i18n/translationManager.h"
 
 texture2d::texture2d(const std::string& provider_, const std::string& name_, int format, bool vFlip_, int wrapModeU, int wrapModeV, int filterMode, bool mipmaps) : texture(provider_, name_, vFlip_) {
     this->format = format;
@@ -29,7 +30,7 @@ void texture2d::compile(unsigned char* buffer, std::size_t bufferLen) {
             glGenerateMipmap(GL_TEXTURE_2D);
         }
     } else {
-        chira::logger::log(ERR, "Texture2D", "Texture failed to compile. Missing image data");
+        chira::logger::log(ERR, "Texture2D", TR("error.opengl.texture_compile"));
     }
 }
 

@@ -6,6 +6,8 @@
 #include <vector>
 #include <memory>
 #include "../utility/logger.h"
+#include "fmt/core.h"
+#include "../i18n/translationManager.h"
 #include "abstractResourceProvider.h"
 
 constexpr std::string_view RESOURCE_ID_SEPARATOR = "://";
@@ -36,13 +38,13 @@ public:
                 return dynamic_cast<resourceType*>(resourcePtr);
             }
         }
-        chira::logger::log(ERR, "Resource Manager", "Unable to find supposedly cached resource " + provider + RESOURCE_ID_SEPARATOR.data() + name);
+        chira::logger::log(ERR, "Resource Manager", fmt::format(TR("error.resource_manager.cached_resource_not_found"), provider + RESOURCE_ID_SEPARATOR.data() + name));
         return nullptr;
     }
 
     template<typename resourceType, typename... Params>
     static resourceType* getUniqueResource(const std::string& provider, const std::string& name, Params... params) {
-        for (auto i = resourceManager::providers[provider].rbegin(); i < resourceManager::providers[provider].rend(); i++) {
+        for (auto i = resourceManager::providers[provider].rbegin(); i != resourceManager::providers[provider].rend(); i++) {
             auto res = i->get()->hasResource(name);
             if (res) {
                 resourceManager::resources[provider][name] = new resourceType{provider, name, params...};
@@ -50,13 +52,13 @@ public:
                 return dynamic_cast<resourceType*>(resourceManager::resources[provider][name]);
             }
         }
-        chira::logger::log(ERR, "Resource Manager", "Resource " + provider + RESOURCE_ID_SEPARATOR.data() + name + " was not found");
+        chira::logger::log(ERR, "Resource Manager", fmt::format(TR("error.resource_manager.resource_not_found"), provider + RESOURCE_ID_SEPARATOR.data() + name));
         return nullptr;
     }
 
     template<typename resourceType, typename... Params>
     static std::unique_ptr<resourceType> getResourceWithoutCaching(const std::string& provider, const std::string& name, Params... params) {
-        for (auto i = resourceManager::providers[provider].rbegin(); i < resourceManager::providers[provider].rend(); i++) {
+        for (auto i = resourceManager::providers[provider].rbegin(); i != resourceManager::providers[provider].rend(); i++) {
             auto res = i->get()->hasResource(name);
             if (res) {
                 auto resource = std::make_unique<resourceType>(provider, name, params...);
@@ -64,7 +66,7 @@ public:
                 return resource;
             }
         }
-        chira::logger::log(WARN, "Resource Manager", "Resource " + provider + RESOURCE_ID_SEPARATOR.data() + name + " was not found");
+        chira::logger::log(WARN, "Resource Manager", fmt::format(TR("error.resource_manager.resource_not_found"), provider + RESOURCE_ID_SEPARATOR.data() + name));
         return nullptr;
     }
 

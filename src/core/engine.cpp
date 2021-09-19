@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
+#include "fmt/core.h"
 #include <iostream>
 #include "../config/glVersion.h"
 #include "../loader/jsonSettingsLoader.h"
@@ -11,6 +12,7 @@
 #include "../sound/alSoundManager.h"
 #include "../implementation/discordRichPresence.h"
 #include "../resource/filesystemResourceProvider.h"
+#include "../i18n/translationManager.h"
 #if __has_include(<windows.h>)
 #include <windows.h>
 #endif
@@ -27,6 +29,11 @@ engine::engine(const std::string& configPath) {
 #endif
     resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", ENGINE_FILESYSTEM_PATH});
     engine::setSettingsLoader(new jsonSettingsLoader(configPath));
+    // todo: use computer language as default here
+    std::string defaultLang = "en";
+    engine::getSettingsLoader()->getValue("ui", "language", &defaultLang);
+    chira::translationManager::setLanguage(defaultLang);
+    chira::translationManager::addTranslationFile("engine");
     this->lastTime = 0;
     this->currentTime = 0;
     this->lastMouseX = -1;
@@ -35,7 +42,7 @@ engine::engine(const std::string& configPath) {
 
 void engine::errorCallback(int error, const char* description) {
 #if DEBUG
-    std::fprintf(stderr, "GLFW error %d: %s\n", error, description);
+    fmt::print(stderr, TR("error.glfw.generic"), error, description);
 #endif
 }
 
@@ -122,7 +129,7 @@ void engine::init() {
     }
 
     if (!glfwInit()) {
-        chira::logger::log(ERR, "GLFW", "GLFW not defined");
+        chira::logger::log(ERR, "GLFW", TR("error.glfw.undefined"));
         exit(EXIT_FAILURE);
     }
     glfwSetErrorCallback(this->errorCallback);
@@ -136,15 +143,13 @@ void engine::init() {
     engine::getSettingsLoader()->getValue("graphics", "windowHeight", &windowHeight);
     bool fullscreen = false;
     engine::getSettingsLoader()->getValue("graphics", "fullscreen", &fullscreen);
-    std::string title = "Basic Game Engine";
-    engine::getSettingsLoader()->getValue("engine", "title", &title);
     this->window = glfwCreateWindow(windowWidth,
                                     windowHeight,
-                                    title.c_str(),
+                                    TR("ui.window.title").c_str(),
                                     fullscreen ? glfwGetPrimaryMonitor() : nullptr,
                                     nullptr);
     if (!this->window) {
-        chira::logger::log(ERR, "GLFW", "Window creation failed");
+        chira::logger::log(ERR, "GLFW", TR("error.glfw.window"));
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -156,17 +161,17 @@ void engine::init() {
         engine::getSettingsLoader()->getValue("engine", "iconPath", &path);
         this->setIcon(path);
     } else {
-        chira::logger::log(WARN, "ChiraEngine", "You should not unset the iconPath property unless you are a trained professional!");
+        chira::logger::log(WARN, "ChiraEngine", TR("error.engine.unset_icon_path"));
     }
 
 #if DEBUG
     int major, minor, rev;
     glfwGetVersion(&major, &minor, &rev);
-    chira::logger::log(INFO, "GLFW", "Using GLFW v" + std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(rev));
+    chira::logger::log(INFO, "GLFW", fmt::format(TR("debug.glfw.version"), major, minor, rev));
 #endif
 
     if (!gladLoadGL(glfwGetProcAddress)) {
-        chira::logger::log(ERR, "OpenGL", "OpenGL " + std::string(chira::GL_VERSION_STRING_PRETTY) + " must be available to run this program");
+        chira::logger::log(ERR, "OpenGL", fmt::format("error.opengl.version", chira::GL_VERSION_STRING_PRETTY));
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -175,8 +180,8 @@ void engine::init() {
     int vertexAttributes, textureUnits;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &vertexAttributes);
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
-    chira::logger::log(INFO, "OpenGL", "Maximum number of vertex attributes is " + std::to_string(vertexAttributes));
-    chira::logger::log(INFO, "OpenGL", "Maximum number of texture units is " + std::to_string(textureUnits));
+    chira::logger::log(INFO, "OpenGL", fmt::format(TR("debug.opengl.vertex_attributes"), vertexAttributes));
+    chira::logger::log(INFO, "OpenGL", fmt::format(TR("debug.opengl.texture_units"), textureUnits));
 #endif
 
     int width, height;
@@ -207,7 +212,7 @@ void engine::init() {
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(this->window, true);
     ImGui_ImplOpenGL3_Init(chira::GL_VERSION_STRING.data());
-    chira::logger::log(INFO, "ImGUI", "ImGUI loaded successfully");
+    chira::logger::log(INFO, "ImGUI", TR("debug.imgui.success"));
 
     bool openalEnabled = true;
     engine::getSettingsLoader()->getValue("scripting", "angelscript", &openalEnabled);
@@ -298,7 +303,7 @@ void engine::render() {
 }
 
 void engine::stop() {
-    chira::logger::log(INFO_IMPORTANT, "ChiraEngine", "Gracefully exiting...");
+    chira::logger::log(INFO_IMPORTANT, "ChiraEngine", TR("debug.engine.exit"));
 
     for (const auto& [name, scriptProvider] : this->scriptProviders) {
         scriptProvider->stop();
@@ -361,7 +366,7 @@ void engine::addScriptProvider(const std::string& name, abstractScriptProvider* 
 
 abstractScriptProvider* engine::getScriptProvider(const std::string& name) {
     if (this->scriptProviders.count(name) == 0) {
-        chira::logger::log(ERR, "engine::getScriptProvider", "Script provider " + name + " is not recognized, check that you registered it properly");
+        chira::logger::log(ERR, "engine::getScriptProvider", fmt::format(TR("error.engine.invalid_script_provider"), name));
     }
     return this->scriptProviders.at(name).get();
 }
@@ -372,7 +377,7 @@ void engine::setSoundManager(abstractSoundManager* newSoundManager) {
 
 abstractSoundManager* engine::getSoundManager() {
     if (!this->soundManager) {
-        chira::logger::log(WARN, "engine::getSoundManager", "Must set sound manager in engine::setSoundManager for this call to function");
+        chira::logger::log(WARN, "engine::getSoundManager", fmt::format(TR("error.engine.invalid_access"), "sound manager", "engine::setSoundManager"));
         return nullptr;
     }
     return this->soundManager.get();
@@ -380,7 +385,7 @@ abstractSoundManager* engine::getSoundManager() {
 
 abstractSettingsLoader* engine::getSettingsLoader() {
     if (!engine::settingsLoader) {
-        chira::logger::log(WARN, "engine::getSettingsLoader", "Must set settings loader in engine::setSettingsLoader for this call to function");
+        chira::logger::log(WARN, "engine::getSettingsLoader", fmt::format(TR("error.engine.invalid_access"), "settings loader", "engine::setSettingsLoader"));
         return nullptr;
     }
     return engine::settingsLoader.get();
@@ -393,7 +398,7 @@ void engine::setSettingsLoader(abstractSettingsLoader* newSettingsLoader) {
 
 abstractPhysicsProvider* engine::getPhysicsProvider() {
     if (!engine::physicsProvider) {
-        chira::logger::log(WARN, "engine::getPhysicsProvider", "Must set physics provider in engine::setPhysicsProvider for this call to function");
+        chira::logger::log(WARN, "engine::getPhysicsProvider", fmt::format(TR("error.engine.invalid_access"), "physics provider", "engine::setPhysicsProvider"));
         return nullptr;
     }
     return engine::physicsProvider.get();
@@ -405,7 +410,7 @@ void engine::setPhysicsProvider(abstractPhysicsProvider* newPhysicsProvider) {
 
 abstractCamera* engine::getMainCamera() const {
     if (!this->mainCamera) {
-        chira::logger::log(WARN, "engine::getMainCamera", "Must set camera in engine::setMainCamera first");
+        chira::logger::log(WARN, "engine::getMainCamera", fmt::format(TR("error.engine.invalid_access"), "main camera", "engine::setMainCamera"));
         return nullptr;
     }
     return this->mainCamera;
@@ -424,7 +429,6 @@ void engine::setSettingsLoaderDefaults() {
     engine::settingsLoader->load();
     engine::settingsLoader->addCategory("engine");
     engine::settingsLoader->setValue("engine", "iconPath", std::string("textures/ui/icon.png"), false, false);
-    engine::settingsLoader->setValue("engine", "title", std::string("Chira Engine"), false, false);
     engine::settingsLoader->setValue("engine", "consoleColoredText", true, false, false);
     engine::settingsLoader->setValue("engine", "maxPointLights", 64, false, false);
     engine::settingsLoader->setValue("engine", "maxDirectionalLights", 4, false, false);
@@ -438,6 +442,8 @@ void engine::setSettingsLoaderDefaults() {
     engine::settingsLoader->addCategory("input");
     engine::settingsLoader->setValue("input", "rawMouseMotion", true, false, false);
     engine::settingsLoader->setValue("input", "invertYAxis", false, false, false);
+    engine::settingsLoader->addCategory("ui");
+    engine::settingsLoader->setValue("ui", "language", std::string("en"), false, false);
     engine::settingsLoader->addCategory("scripting");
     engine::settingsLoader->setValue("scripting", "angelscript", true, false, false);
     engine::settingsLoader->save();

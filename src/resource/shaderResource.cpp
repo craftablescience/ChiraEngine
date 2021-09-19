@@ -1,6 +1,8 @@
 #include "shaderResource.h"
 
 #include "../utility/logger.h"
+#include "fmt/core.h"
+#include "../i18n/translationManager.h"
 #include "../config/glVersion.h"
 #include <sstream>
 
@@ -37,7 +39,7 @@ void shaderResource::checkForCompilationErrors() const {
     glGetShaderiv(this->handle, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(this->handle, 512, nullptr, infoLog);
-        chira::logger::log(ERR, "Shader Resource", "Error: shader compilation failed. Type: " + std::to_string(this->type) + "\n" + infoLog);
+        chira::logger::log(ERR, "Shader Resource", fmt::format(TR("error.shader_resource.compilation_failure"), this->type, infoLog));
     }
 }
 

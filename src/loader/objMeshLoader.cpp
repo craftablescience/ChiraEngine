@@ -3,8 +3,10 @@
 #include <fstream>
 #include <algorithm>
 #include <sstream>
+#include "fmt/core.h"
 #include "../resource/stringResource.h"
 #include "../resource/resourceManager.h"
+#include "../i18n/translationManager.h"
 
 void objMeshLoader::loadMesh(const std::string& provider, const std::string& name, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
     std::vector<position> vertexBuffer;
@@ -43,7 +45,7 @@ void objMeshLoader::loadMesh(const std::string& provider, const std::string& nam
             while (iss >> objIndices[counter]) {
                 objIndices[counter] -= 1;
                 if (counter >= 9) {
-                    chira::logger::log(WARN, "OBJ", "OBJ file " + name + " is not triangulated");
+                    chira::logger::log(WARN, "OBJ", fmt::format(TR("warn.obj_loader.not_triangulated"), name));
                     break;
                 } else if (counter >= 6) {
                     includeUVs = true;

@@ -3,6 +3,8 @@
 #include "../resource/filesystemResourceProvider.h"
 #include "../resource/resourceManager.h"
 
+// todo: convert these to translation system
+
 bool oggFileSound::init(const std::string& filename) {
     return this->init(filename, 1.0f, 1.0f, glm::vec3{}, soundType::EFFECT, false, true);
 }

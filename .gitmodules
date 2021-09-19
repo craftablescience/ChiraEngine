@@ -25,3 +25,6 @@
 [submodule "src/third_party/bullet"]
 	path = src/third_party/bullet
 	url = https://github.com/bulletphysics/bullet3
+[submodule "src/third_party/fmt"]
+	path = src/third_party/fmt
+	url = https://github.com/fmtlib/fmt

@@ -109,6 +109,8 @@ bool console::getEnabled() const {
 }
 
 void console::setTheme() {
+    // todo: pop/push style vars to not mess with styling
+
     ImVec4* colors = ImGui::GetStyle().Colors;
 
     colors[ImGuiCol_WindowBg]              = ImVec4(0.46f, 0.46f, 0.46f, 0.95f);

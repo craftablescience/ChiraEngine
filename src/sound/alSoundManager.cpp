@@ -1,5 +1,7 @@
 #include "alSoundManager.h"
 
+// todo: convert these to translation system
+
 alSoundManager::~alSoundManager() {
     if (!alcCall(alcMakeContextCurrent, this->contextCurrent, this->device, nullptr)) {
         chira::logger::log(ERR, "OpenAL", "Could not make context non-current");

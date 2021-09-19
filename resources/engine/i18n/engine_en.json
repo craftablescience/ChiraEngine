@@ -1,0 +1,39 @@
+{
+  "ui.window.title": "Chira Engine",
+
+  "debug.glfw.version": "Using GLFW v{}.{}.{}",
+  "debug.opengl.vertex_attributes": "Maximum number of vertex attributes is {}",
+  "debug.opengl.texture_units": "Maximum number of texture units is {}",
+  "debug.imgui.success": "ImGUI loaded successfully",
+
+  "debug.discord.user_connected": "Discord user {}:{} connected",
+  "debug.discord.user_disconnected": "Discord user disconnected, code {}: {}",
+  "debug.discord.generic_error": "Error {}: {}",
+
+  "debug.engine.exit": "Exiting...",
+
+  "warn.obj_loader.not_triangulated": "OBJ file at {} is not triangulated, this will cause problems",
+  "warn.material.invalid_gl_format": "Invalid GL format: {}",
+  "warn.mesh.invalid_depth_function": "Invalid depth function value {}",
+  "warn.mesh.invalid_cull_type": "Invalid cull type value ",
+
+  "error.angelscript.unrecoverable_error": "Unrecoverable error while starting a new module at \"{}\"",
+  "error.angelscript.script_not_found": "Unable to load script at \"{}\"",
+  "error.angelscript.compilation_failure": "Script errors in \"{}\" have forced compilation to fail!",
+  "error.angelscript.missing_function": "Script at \"{}\" does not have a \"{}\" function",
+  "error.angelscript.exception": "An exception in \"{}\" occurred:\n{}",
+  "error.opengl.texture_compile": "Texture failed to compile: missing image data",
+  "error.opengl.shader_linking": "Shader linking failed\n{}",
+  "error.glfw.generic": "GLFW Error {}: {}\n",
+  "error.glfw.undefined": "GLFW not defined",
+  "error.glfw.window": "Window creation failed",
+  "error.opengl.version": "OpenGL {} must be available to run this program",
+  "error.engine.unset_icon_path": "You should not unset the iconPath property unless you are a trained professional!",
+  "error.engine.invalid_script_provider": "Script provider {} is not recognized, check that you registered it properly",
+  "error.engine.invalid_access": "Must set {} in {} for this call to function",
+  "error.engine.missing_translation_manager": "Huh? The translation manager is missing! This should never happen, ever!",
+  "error.translation_manager.missing_translation": "Could not find {} translation of \"{}\"",
+  "error.resource_manager.resource_not_found": "Resource {} was not found",
+  "error.resource_manager.cached_resource_not_found": "Supposedly cached resource {} was not found",
+  "error.shader_resource.compilation_failure": "Shader compilation failed. Type: {}\n{}"
+}

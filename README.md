@@ -9,6 +9,7 @@ To summarize the major features:
 - As extensible as possible: register custom logging hooks, scripting providers, sound providers, etc.
 - Robust resource loading and management, and custom resource providers can be registered
 - Hassle-free Discord Rich Presence
+- Inline text localization
 - AngelScript support, with common function hooks and types registered
 - Bullet physics engine built-in
 - Abstract input system using C++11 lambdas (or a reference to a function)
@@ -23,6 +24,7 @@ Again, the goal of the engine is to have as much customization as possible, whil
 - AngelScript v2.34.0
 - Bullet v3.17
 - Discord RPC
+- {fmt} v8.0.1
 - GLAD (OpenGL 4.5 Core, no extensions)
 - GLFW v3.3.5
 - GLM v0.9.9.9

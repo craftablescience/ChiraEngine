@@ -1,5 +1,7 @@
 #include "material.h"
 
+#include "fmt/core.h"
+#include "../i18n/translationManager.h"
 #include "../resource/resourceManager.h"
 
 material::material(const std::string& provider_, const std::string& name_) : propertiesResource(provider_, name_) {}
@@ -23,7 +25,7 @@ int material::getGLFormatFromString(const std::string& formatName) {
     } else if (formatName == "RGBA") {
         return GL_RGBA;
     }
-    chira::logger::log(WARN, "Material", "Invalid GL format: " + formatName);
+    chira::logger::log(WARN, "Material", fmt::format(TR("warn.material.invalid_gl_format"), formatName));
     return GL_RGBA;
 }
 
