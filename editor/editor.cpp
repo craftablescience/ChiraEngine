@@ -7,7 +7,7 @@
 #include "../src/implementation/discordRichPresence.h"
 #include "../src/resource/filesystemResourceProvider.h"
 #include "../src/resource/resourceManager.h"
-#include "../src/resource/fontResource.h"
+#include "tinyfiledialogs.h"
 
 int main() {
     engine engine;
@@ -34,6 +34,20 @@ int main() {
     }));
     engine.addKeybind(keybind(GLFW_KEY_M, GLFW_PRESS, [](class engine* e) {
         e->getSoundManager()->getSound("helloWorld")->play();
+    }));
+    engine.addKeybind(keybind(GLFW_KEY_B, GLFW_RELEASE, [](class engine* e) {
+        chira::logger::log(INFO_IMPORTANT, "File Picker Debug", tinyfd_openFileDialog(
+                "Select File",
+#if WIN32
+                "C:\\",
+#else
+                "/",
+#endif
+                0,
+                nullptr,
+                nullptr,
+                0
+        ));
     }));
 
     mesh* cubeMesh;

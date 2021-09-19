@@ -75,6 +75,9 @@ list(APPEND ENGINE_LINK_LIBRARIES nlohmann_json::nlohmann_json)
 # STB
 include(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb/CMakeLists.txt)
 
+# TINYFILEDIALOGS
+include(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs/CMakeLists.txt)
+
 # IMGUI
 list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imconfig.h
@@ -121,5 +124,6 @@ target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/ogg/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/vorbis/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb)
+target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui)
 target_link_libraries(ChiraEngine ${OPENGL_LIBRARIES} ${ENGINE_LINK_LIBRARIES})
