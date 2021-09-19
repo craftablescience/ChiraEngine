@@ -25,16 +25,28 @@ public:
     static resourceType* getResource(const std::string& provider, const std::string& name, Params... params) {
         for (const auto& [resourceName, resourcePtr] : resourceManager::resources[provider]) {
             if (name == resourceName) {
+                resourcePtr->incrementRefCount();
                 return dynamic_cast<resourceType*>(resourcePtr);
             }
         }
         return resourceManager::getUniqueResource<resourceType>(provider, name, params...);
     }
 
+    template<typename resourceType, typename... Params>
+    static void precacheResource(const std::string& provider, const std::string& name, Params... params) {
+        for (const auto& [resourceName, resourcePtr] : resourceManager::resources[provider]) {
+            if (name == resourceName) {
+                return; // Already in cache
+            }
+        }
+        resourceManager::precacheUniqueResource<resourceType>(provider, name, params...);
+    }
+
     template<typename resourceType>
     static resourceType* getCachedResource(const std::string& provider, const std::string& name) {
         for (const auto& [resourceName, resourcePtr] : resourceManager::resources[provider]) {
             if (name == resourceName) {
+                resourcePtr->incrementRefCount();
                 return dynamic_cast<resourceType*>(resourcePtr);
             }
         }
@@ -54,6 +66,19 @@ public:
         }
         chira::logger::log(ERR, "Resource Manager", fmt::format(TR("error.resource_manager.resource_not_found"), provider + RESOURCE_ID_SEPARATOR.data() + name));
         return nullptr;
+    }
+
+    template<typename resourceType, typename... Params>
+    static void precacheUniqueResource(const std::string& provider, const std::string& name, Params... params) {
+        for (auto i = resourceManager::providers[provider].rbegin(); i != resourceManager::providers[provider].rend(); i++) {
+            auto res = i->get()->hasResource(name);
+            if (res) {
+                resourceManager::resources[provider][name] = new resourceType{provider, name, params...};
+                i->get()->compileResource(name, resourceManager::resources[provider][name]);
+                return; // Precached!
+            }
+        }
+        chira::logger::log(ERR, "Resource Manager", fmt::format(TR("error.resource_manager.resource_not_found"), provider + RESOURCE_ID_SEPARATOR.data() + name));
     }
 
     template<typename resourceType, typename... Params>
