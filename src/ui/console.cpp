@@ -98,6 +98,7 @@ void console::render() {
     ImGui::EndChild();
 
     ImGui::End();
+    console::resetTheme();
 }
 
 void console::setEnabled(bool enabled) {
@@ -109,44 +110,44 @@ bool console::getEnabled() const {
 }
 
 void console::setTheme() {
-    // todo: pop/push style vars to not mess with styling
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.46f, 0.46f, 0.46f, 0.95f));
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.33f, 0.33f, 0.33f, 0.80f));
+    ImGui::PushStyleColor(ImGuiCol_ModalWindowDimBg, ImVec4(0.33f, 0.33f, 0.33f, 0.80f));
+    ImGui::PushStyleColor(ImGuiCol_PopupBg, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.33f, 0.33f, 0.33f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_BorderShadow, ImVec4(0.33f, 0.33f, 0.33f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_ScrollbarBg, ImVec4(0.13f, 0.13f, 0.13f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_ScrollbarGrab, ImVec4(0.25f, 0.25f, 0.25f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_ScrollbarGrabHovered, ImVec4(0.25f, 0.25f, 0.25f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_ScrollbarGrabActive, ImVec4(0.25f, 0.25f, 0.25f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_CheckMark, ImVec4(1.00f, 1.00f, 1.00f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(0.33f, 0.33f, 0.33f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_SeparatorHovered, ImVec4(0.33f, 0.33f, 0.33f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_SeparatorActive, ImVec4(0.33f, 0.33f, 0.33f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_ResizeGrip, ImVec4(0.40f, 0.40f, 0.40f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_ResizeGripHovered, ImVec4(0.40f, 0.40f, 0.40f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_ResizeGripActive, ImVec4(0.40f, 0.40f, 0.40f, 1.00f));
 
-    ImVec4* colors = ImGui::GetStyle().Colors;
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 4.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_PopupRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_ScrollbarRounding, 4.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_GrabRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_TabRounding, 0.0f);
+}
 
-    colors[ImGuiCol_WindowBg]              = ImVec4(0.46f, 0.46f, 0.46f, 0.95f);
-    colors[ImGuiCol_ChildBg]               = ImVec4(0.33f, 0.33f, 0.33f, 0.80f);
-    colors[ImGuiCol_ModalWindowDimBg]      = ImVec4(0.33f, 0.33f, 0.33f, 0.80f);
-    colors[ImGuiCol_PopupBg]               = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
-    colors[ImGuiCol_Border]                = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
-    colors[ImGuiCol_BorderShadow]          = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
-    colors[ImGuiCol_FrameBg]               = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
-    colors[ImGuiCol_FrameBgHovered]        = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
-    colors[ImGuiCol_FrameBgActive]         = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
-    colors[ImGuiCol_TitleBg]               = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
-    colors[ImGuiCol_TitleBgActive]         = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
-    colors[ImGuiCol_TitleBgCollapsed]      = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
-    colors[ImGuiCol_ScrollbarBg]           = ImVec4(0.13f, 0.13f, 0.13f, 1.00f);
-    colors[ImGuiCol_ScrollbarGrab]         = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
-    colors[ImGuiCol_ScrollbarGrabHovered]  = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
-    colors[ImGuiCol_ScrollbarGrabActive]   = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
-    colors[ImGuiCol_CheckMark]             = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-    colors[ImGuiCol_Button]                = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
-    colors[ImGuiCol_ButtonHovered]         = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
-    colors[ImGuiCol_ButtonActive]          = ImVec4(0.46f, 0.46f, 0.46f, 1.00f);
-    colors[ImGuiCol_Separator]             = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
-    colors[ImGuiCol_SeparatorHovered]      = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
-    colors[ImGuiCol_SeparatorActive]       = ImVec4(0.33f, 0.33f, 0.33f, 1.00f);
-    colors[ImGuiCol_ResizeGrip]            = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
-    colors[ImGuiCol_ResizeGripHovered]     = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
-    colors[ImGuiCol_ResizeGripActive]      = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
-
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.FrameBorderSize   = 1.0f;
-    style.WindowRounding    = 4.0f;
-    style.ChildRounding     = 0.0f;
-    style.FrameRounding     = 0.0f;
-    style.PopupRounding     = 0.0f;
-    style.ScrollbarRounding = 4.0f;
-    style.GrabRounding      = 0.0f;
-    style.TabRounding       = 0.0f;
+void console::resetTheme() {
+    ImGui::PopStyleColor(26);
+    ImGui::PopStyleVar(8);
 }

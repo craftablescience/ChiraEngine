@@ -38,21 +38,14 @@ add_subdirectory(src)
 
 list(APPEND DEMO_SOURCES ${CMAKE_CURRENT_LIST_DIR}/editor/editor.cpp)
 if(WIN32)
-    list(APPEND DEMO_SOURCES ${CMAKE_CURRENT_LIST_DIR}/editor/resources/editor/win32/project.rc)
+    list(APPEND DEMO_SOURCES ${CMAKE_CURRENT_LIST_DIR}/resources/editor/win32/project.rc)
 endif()
 add_executable(${PROJECT_NAME} ${DEMO_SOURCES})
 target_link_libraries(${PROJECT_NAME} ChiraEngine ${OPENGL_LIBRARIES})
 
-# Resources provided by the engine
-add_custom_target(copyEngineResources ALL
+# Resource files
+add_custom_target(copyResources ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources/engine/
-        ${CMAKE_BINARY_DIR}/resources/engine/)
-add_dependencies(${PROJECT_NAME} copyEngineResources)
-
-# Resources provided by the demo
-add_custom_target(copyDemoResources ALL
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/editor/resources/editor/
-        ${CMAKE_BINARY_DIR}/resources/editor/)
-add_dependencies(${PROJECT_NAME} copyDemoResources)
+        ${CMAKE_CURRENT_SOURCE_DIR}/resources/
+        ${CMAKE_BINARY_DIR}/resources/)
+add_dependencies(${PROJECT_NAME} copyResources)

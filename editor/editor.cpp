@@ -38,6 +38,17 @@ int main() {
     mesh* cubeMesh;
 
     engine.addInitFunction([&cubeMesh, &discordEnabled](class engine* e) {
+        ImGuiIO& io = ImGui::GetIO();
+        io.Fonts->Clear();
+        std::string filepath = ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file", "fonts/noto_sans_jp/NotoSansJP-Regular.otf"))->getPath() + "/fonts/noto_sans_jp/NotoSansJP-Regular.otf";
+        ImFont* font = io.Fonts->AddFontFromFileTTF(filepath.c_str(), 20.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+        if (font != nullptr) {
+            io.FontDefault = font;
+        } else {
+            io.Fonts->AddFontDefault();
+        }
+        io.Fonts->Build();
+
         auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file", "materials/cubeMaterial.json");
         cubeMesh = resourceManager::getResource<mesh>("file", "meshes/teapot.json", cubeMaterial);
 
