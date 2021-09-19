@@ -5,11 +5,9 @@
 void phongMaterial::compile(const nlohmann::json& properties) {
     material::compile(properties);
     this->diffuse = resourceManager::getResource<texture2d>(
-            this->provider,
             properties["dependencies"]["diffuse"],
             material::getGLFormatFromString(properties["properties"]["diffuse_format"]));
     this->specular = resourceManager::getResource<texture2d>(
-            this->provider,
             properties["dependencies"]["specular"],
             material::getGLFormatFromString(properties["properties"]["specular_format"]));
     this->diffuse->setTextureUnit(GL_TEXTURE0);

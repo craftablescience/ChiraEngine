@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "vertex": "shaders/unlit.vsh",
-    "fragment": "shaders/unlit.fsh"
+    "vertex": "file://shaders/unlit.vsh",
+    "fragment": "file://shaders/unlit.fsh"
   }
 }

@@ -1,5 +1,10 @@
 {
+  "resource.font.console_font_path": "file://fonts/console_en.json",
+
   "ui.window.title": "Chira Engine",
+  "ui.window.select_file": "Select File",
+
+  "generic.operation.cancelled": "Operation cancelled",
 
   "debug.glfw.version": "Using GLFW v{}.{}.{}",
   "debug.opengl.vertex_attributes": "Maximum number of vertex attributes is {}",
@@ -35,5 +40,6 @@
   "error.translation_manager.missing_translation": "Could not find {} translation of \"{}\"",
   "error.resource_manager.resource_not_found": "Resource {} was not found",
   "error.resource_manager.cached_resource_not_found": "Supposedly cached resource {} was not found",
+  "error.resource_manager.cannot_split_identifier": "Cannot split resource identifier \"{}\"",
   "error.shader_resource.compilation_failure": "Shader compilation failed. Type: {}\n{}"
 }

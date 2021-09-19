@@ -6,8 +6,8 @@
 
 class translationFileResource : public propertiesResource {
 public:
-    translationFileResource(const std::string& provider_, const std::string& name_, std::string language_) :
-            propertiesResource(provider_, name_), language(std::move(language_)) {}
+    translationFileResource(const std::string& identifier_, std::string language_) :
+            propertiesResource(identifier_), language(std::move(language_)) {}
     void compile(const nlohmann::json& translations) override {
         this->strings = translations;
     }

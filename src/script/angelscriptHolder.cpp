@@ -7,7 +7,7 @@
 // todo: use resource system to load scripts without a file path
 
 angelscriptHolder::angelscriptHolder(const std::string& path) {
-    this->filepath = ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file", "scripts/" + path))->getPath() + "/scripts/" + path;
+    this->filepath = ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file://scripts/" + path))->getPath() + "/scripts/" + path;
 }
 
 angelscriptHolder::~angelscriptHolder() {

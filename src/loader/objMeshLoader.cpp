@@ -6,14 +6,13 @@
 #include "fmt/core.h"
 #include "../resource/stringResource.h"
 #include "../resource/resourceManager.h"
-#include "../i18n/translationManager.h"
 
-void objMeshLoader::loadMesh(const std::string& provider, const std::string& name, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
+void objMeshLoader::loadMesh(const std::string& identifier, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
     std::vector<position> vertexBuffer;
     std::vector<uv> uvBuffer;
     std::vector<normal> normalBuffer;
 
-    auto* meshData = resourceManager::getResource<stringResource>(provider, name);
+    auto* meshData = resourceManager::getResource<stringResource>(identifier);
     std::istringstream meshDataStream = std::istringstream{meshData->getString()};
 
     std::string line;
@@ -45,7 +44,7 @@ void objMeshLoader::loadMesh(const std::string& provider, const std::string& nam
             while (iss >> objIndices[counter]) {
                 objIndices[counter] -= 1;
                 if (counter >= 9) {
-                    chira::logger::log(WARN, "OBJ", fmt::format(TR("warn.obj_loader.not_triangulated"), name));
+                    chira::logger::log(WARN, "OBJ", fmt::format(TR("warn.obj_loader.not_triangulated"), identifier));
                     break;
                 } else if (counter >= 6) {
                     includeUVs = true;

@@ -3,7 +3,7 @@
 #include <glad/gl.h>
 #include "../loader/image.h"
 
-texture::texture(const std::string& provider_, const std::string& name_, bool vFlip_) : abstractResource(provider_, name_) {
+texture::texture(const std::string& identifier_, bool vFlip_) : abstractResource(identifier_) {
     this->vFlip = vFlip_;
 }
 

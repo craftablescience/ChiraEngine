@@ -14,7 +14,7 @@ enum bulletColliderType {
  */
 class bulletColliderResource : propertiesResource {
 public:
-    bulletColliderResource(const std::string& provider_, const std::string& name_) : propertiesResource(provider_, name_) {}
+    explicit bulletColliderResource(const std::string& identifier_) : propertiesResource(identifier_) {}
     void compile(const nlohmann::json& properties) override {
         this->mass = properties["properties"]["mass"];
 

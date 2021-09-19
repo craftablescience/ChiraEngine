@@ -35,7 +35,7 @@ engine::engine(const std::string& configPath) {
     std::string defaultLang = "en";
     engine::getSettingsLoader()->getValue("ui", "language", &defaultLang);
     chira::translationManager::setLanguage(defaultLang);
-    chira::translationManager::addTranslationFile("engine");
+    chira::translationManager::addTranslationFile("file://i18n/engine");
     this->lastTime = 0;
     this->currentTime = 0;
     this->lastMouseX = -1;
@@ -260,7 +260,7 @@ void engine::init() {
         scriptProvider->initScripts();
     }
 
-    resourceManager::precacheResource<fontResource>("file", "fonts/console.json");
+    resourceManager::precacheResource<fontResource>(TR("resource.font.console_font_path"));
     io.Fonts->Build();
 }
 
@@ -482,7 +482,7 @@ void engine::setIcon(const std::string& iconPath) {
     GLFWimage images[1];
     int width, height, bitsPerPixel;
     image icon(
-            ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file", iconPath))->getPath() + "/" + iconPath,
+            ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file://" + iconPath))->getPath() + "/" + iconPath,
             &width, &height, &bitsPerPixel, 4, false);
 #if DEBUG
     assert(icon.getData());

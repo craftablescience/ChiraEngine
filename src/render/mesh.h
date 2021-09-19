@@ -9,7 +9,7 @@
 
 class mesh : public propertiesResource {
 public:
-    mesh(const std::string& provider_, const std::string& name_, material* material);
+    mesh(const std::string& identifier_, material* material);
     ~mesh() override;
     void compile(const nlohmann::json& properties) override;
     void release() const override;

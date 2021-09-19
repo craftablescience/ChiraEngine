@@ -9,7 +9,7 @@
 
 class material : public propertiesResource {
 public:
-    material(const std::string& provider_, const std::string& name_);
+    explicit material(const std::string& identifier_);
     void compile(const nlohmann::json& properties) override;
     virtual void use();
     void release() const override;

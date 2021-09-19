@@ -95,6 +95,10 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_opengl3.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_opengl3.h)
 
+# IMGUI_MARKDOWN
+list(APPEND ENGINE_SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdown/imgui_markdown.h)
+
 # CHIRAENGINE
 include(${CMAKE_CURRENT_SOURCE_DIR}/config/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/core/CMakeLists.txt)
@@ -126,4 +130,5 @@ target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui)
+target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdown)
 target_link_libraries(ChiraEngine ${OPENGL_LIBRARIES} ${ENGINE_LINK_LIBRARIES})

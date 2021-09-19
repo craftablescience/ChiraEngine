@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "vertex": "shaders/phonglit.vsh",
-    "fragment": "shaders/phonglit.fsh"
+    "vertex": "file://shaders/phonglit.vsh",
+    "fragment": "file://shaders/phonglit.fsh"
   }
 }

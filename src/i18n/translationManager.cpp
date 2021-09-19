@@ -1,4 +1,3 @@
-#include "fmt/core.h"
 #include "translationManager.h"
 
 #include "../resource/resourceManager.h"
@@ -12,36 +11,28 @@ const std::string& chira::translationManager::getLanguage() {
 }
 
 const std::unordered_map<std::string,std::string>& chira::translationManager::getCodeAndNamePairs() {
-    return translationManager::langPairs;
+    return translationManager::LANGUAGE_DEFINITIONS;
 }
 
 const std::string& chira::translationManager::getLanguageNameFromCode(const std::string& code) {
-    return translationManager::langPairs[code];
+    return translationManager::LANGUAGE_DEFINITIONS[code];
 }
 
 bool chira::translationManager::isValidCode(const std::string& code) {
-    return translationManager::langPairs.count(code) > 0;
+    return translationManager::LANGUAGE_DEFINITIONS.count(code) > 0;
 }
 
-void chira::translationManager::addTranslationFile(const std::string& name) {
-    chira::translationManager::addTranslationFile("i18n", name);
-}
-
-void chira::translationManager::addTranslationFile(const std::string& path, const std::string& name) {
-    auto file = resourceManager::getResourceWithoutCaching<translationFileResource>("file", path + "/" + name + "_" + chira::translationManager::currentLanguage + ".json", chira::translationManager::currentLanguage);
-    for (const auto& [identifier, value] : file->getAllTranslations()) {
-        chira::translationManager::languageStrings[identifier] = value;
+void chira::translationManager::addTranslationFile(const std::string& identifier) {
+    auto file = resourceManager::getResourceWithoutCaching<translationFileResource>(identifier + "_" + chira::translationManager::currentLanguage + ".json", chira::translationManager::currentLanguage);
+    for (const auto& [id, value] : file->getAllTranslations()) {
+        chira::translationManager::languageStrings[id] = value;
     }
 }
 
-void chira::translationManager::addUniversalFile(const std::string& name) {
-    chira::translationManager::addUniversalFile("i18n", name);
-}
-
-void chira::translationManager::addUniversalFile(const std::string& path, const std::string& name) {
-    auto file = resourceManager::getResourceWithoutCaching<translationFileResource>("file", path + "/" + name + "_" + "universal.json", "universal");
-    for (const auto& [identifier, value] : file->getAllTranslations()) {
-        chira::translationManager::languageStrings[identifier] = value;
+void chira::translationManager::addUniversalFile(const std::string& identifier) {
+    auto file = resourceManager::getResourceWithoutCaching<translationFileResource>(identifier + "_" + "universal.json", "universal");
+    for (const auto& [id, value] : file->getAllTranslations()) {
+        chira::translationManager::languageStrings[id] = value;
     }
 }
 

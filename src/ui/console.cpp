@@ -112,7 +112,7 @@ bool console::getEnabled() const {
 
 void console::setTheme() {
     if (!this->font) {
-        this->font = resourceManager::getResource<fontResource>("file", "fonts/console.json");
+        this->font = resourceManager::getResource<fontResource>(TR("resource.font.console_font_path"));
     }
     ImGui::PushFont(this->font->getFont());
 

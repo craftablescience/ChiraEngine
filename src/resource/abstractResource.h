@@ -11,13 +11,12 @@
 class abstractResource {
     friend class resourceManager;
 public:
-    abstractResource(std::string provider_, std::string name_) : provider(std::move(provider_)), name(std::move(name_)) {}
+    explicit abstractResource(std::string identifier_) : identifier(std::move(identifier_)) {}
     virtual void compile(unsigned char* buffer, std::size_t bufferLength) = 0;
     virtual void release() const;
     virtual ~abstractResource() = default;
 protected:
-    std::string provider;
-    std::string name;
+    std::string identifier;
 private:
     unsigned int refCount = 1;
     void incrementRefCount();

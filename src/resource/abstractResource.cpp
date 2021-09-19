@@ -3,7 +3,7 @@
 #include "resourceManager.h"
 
 void abstractResource::release() const {
-    resourceManager::removeResource(this->provider, this->name);
+    resourceManager::removeResource(this->identifier);
 }
 
 void abstractResource::incrementRefCount() {

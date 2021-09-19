@@ -3,7 +3,7 @@
 #include "../utility/logger.h"
 #include "../i18n/translationManager.h"
 
-texture2d::texture2d(const std::string& provider_, const std::string& name_, int format, bool vFlip_, int wrapModeU, int wrapModeV, int filterMode, bool mipmaps) : texture(provider_, name_, vFlip_) {
+texture2d::texture2d(const std::string& identifier_, int format, bool vFlip_, int wrapModeU, int wrapModeV, int filterMode, bool mipmaps) : texture(identifier_, vFlip_) {
     this->format = format;
     this->wrapModeU = wrapModeU;
     this->wrapModeV = wrapModeV;

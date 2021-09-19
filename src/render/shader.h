@@ -9,7 +9,7 @@
 
 class shader : public propertiesResource, public handleObject {
 public:
-    shader(const std::string& provider_, const std::string& name_);
+    explicit shader(const std::string& identifier_);
     void compile(const nlohmann::json& properties) override;
     ~shader() override;
     void use();

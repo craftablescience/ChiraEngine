@@ -28,3 +28,6 @@
 [submodule "src/third_party/fmt"]
 	path = src/third_party/fmt
 	url = https://github.com/fmtlib/fmt
+[submodule "src/third_party/imgui_markdown"]
+	path = src/third_party/imgui_markdown
+	url = https://github.com/juliettef/imgui_markdown

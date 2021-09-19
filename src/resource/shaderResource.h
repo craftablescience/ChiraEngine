@@ -13,7 +13,7 @@ const std::string PREPROCESSOR_DEFAULT_SUFFIX = "#";
 
 class shaderResource : public abstractResource, public handleObject {
 public:
-    shaderResource(const std::string& provider_, const std::string& name_, int type_);
+    shaderResource(const std::string& identifier_, int type_);
     void compile(unsigned char* buffer, std::size_t bufferLength) override;
     ~shaderResource() override;
     [[nodiscard]] unsigned int getType() const;

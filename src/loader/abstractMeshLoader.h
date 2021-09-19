@@ -6,5 +6,5 @@
 
 class abstractMeshLoader {
 public:
-    virtual void loadMesh(const std::string& provider, const std::string& name, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) = 0;
+    virtual void loadMesh(const std::string& identifier, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) = 0;
 };

@@ -8,11 +8,12 @@
 #include "../src/resource/filesystemResourceProvider.h"
 #include "../src/resource/resourceManager.h"
 #include "tinyfiledialogs.h"
+#include "../src/ui/markdown.h"
 
 int main() {
     engine engine;
     resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/editor"});
-    chira::translationManager::addTranslationFile("editor");
+    chira::translationManager::addTranslationFile("file://i18n/editor");
 
     engine::getSettingsLoader()->setValue("engineGui", "discordIntegration", true, false, true);
     bool discordEnabled;
@@ -36,8 +37,8 @@ int main() {
         e->getSoundManager()->getSound("helloWorld")->play();
     }));
     engine.addKeybind(keybind(GLFW_KEY_B, GLFW_RELEASE, [](class engine* e) {
-        chira::logger::log(INFO_IMPORTANT, "File Picker Debug", tinyfd_openFileDialog(
-                "Select File",
+        const char* path = tinyfd_openFileDialog(
+                TR("ui.window.select_file").c_str(),
 #if WIN32
                 "C:\\",
 #else
@@ -47,7 +48,13 @@ int main() {
                 nullptr,
                 nullptr,
                 0
-        ));
+        );
+        if (path) {
+            chira::logger::log(INFO_IMPORTANT, "File Picker Debug", std::string(path));
+            delete path;
+        } else {
+            chira::logger::log(INFO_IMPORTANT, "File Picker Debug", TR("generic.operation.cancelled"));
+        }
     }));
 
     mesh* cubeMesh;
@@ -56,11 +63,11 @@ int main() {
         ImGuiIO& io = ImGui::GetIO();
 
         // Don't release the fontResource when done to keep it cached
-        auto* noto = resourceManager::getResource<fontResource>("file", "fonts/default.json");
+        auto* noto = resourceManager::getResource<fontResource>("file://fonts/default.json");
         io.FontDefault = noto->getFont();
 
-        auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file", "materials/cubeMaterial.json");
-        cubeMesh = resourceManager::getResource<mesh>("file", "meshes/teapot.json", cubeMaterial);
+        auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
+        cubeMesh = resourceManager::getResource<mesh>("file://meshes/teapot.json", cubeMaterial);
 
         if (discordEnabled) {
             discordRichPresence::init("875778280899358720");
@@ -97,7 +104,7 @@ int main() {
     });
     engine.init();
 
-    auto* tex = resourceManager::getResource<texture2d>("file", "textures/ui/icon.png", GL_RGBA, false);
+    auto* tex = resourceManager::getResource<texture2d>("file://textures/ui/icon.png", GL_RGBA, false);
     engine.addRenderFunction([tex, cubeMesh](class engine* e) {
         cubeMesh->getMaterial()->getShader()->setUniform("p", e->getMainCamera()->getProjectionMatrix());
         cubeMesh->getMaterial()->getShader()->setUniform("v", e->getMainCamera()->getViewMatrix());
@@ -106,6 +113,7 @@ int main() {
         ImGui::Begin(TR("debug.imgui.texture_test").c_str());
         ImGui::Text("size = %d x %d", 512, 512);
         ImGui::Image((void*)(intptr_t) tex->getHandle(), ImVec2(512, 512));
+        markdown::create("Hello -- [https://belewis.me](https://belewis.me)");
         ImGui::End();
     });
     engine.run();

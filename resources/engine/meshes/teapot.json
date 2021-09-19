@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "model": "meshes/teapot.obj"
+    "model": "file://meshes/teapot.obj"
   },
   "properties": {
     "loader": "obj",

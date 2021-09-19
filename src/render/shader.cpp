@@ -4,15 +4,14 @@
 #include "fmt/core.h"
 #include "../utility/logger.h"
 #include "../resource/resourceManager.h"
-#include "../i18n/translationManager.h"
 
-shader::shader(const std::string& provider_, const std::string& name_) : propertiesResource(provider_, name_), handleObject() {}
+shader::shader(const std::string& identifier_) : propertiesResource(identifier_), handleObject() {}
 
 void shader::compile(const nlohmann::json& properties) {
     this->handle = glCreateProgram();
-    auto vert = resourceManager::getResourceWithoutCaching<shaderResource>(provider, properties["dependencies"]["vertex"], GL_VERTEX_SHADER);
+    auto vert = resourceManager::getResourceWithoutCaching<shaderResource>(properties["dependencies"]["vertex"], GL_VERTEX_SHADER);
     glAttachShader(this->handle, vert->getHandle());
-    auto frag = resourceManager::getResourceWithoutCaching<shaderResource>(provider, properties["dependencies"]["fragment"], GL_FRAGMENT_SHADER);
+    auto frag = resourceManager::getResourceWithoutCaching<shaderResource>(properties["dependencies"]["fragment"], GL_FRAGMENT_SHADER);
     glAttachShader(this->handle, frag->getHandle());
     glLinkProgram(this->handle);
 #if DEBUG

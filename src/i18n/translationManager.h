@@ -10,15 +10,13 @@ namespace chira {
         static const std::unordered_map<std::string,std::string>& getCodeAndNamePairs();
         static const std::string& getLanguageNameFromCode(const std::string& code);
         static bool isValidCode(const std::string& code);
-        static void addTranslationFile(const std::string& name);
-        static void addTranslationFile(const std::string& path, const std::string& name);
-        static void addUniversalFile(const std::string& name);
-        static void addUniversalFile(const std::string& path, const std::string& name);
+        static void addTranslationFile(const std::string& identifier);
+        static void addUniversalFile(const std::string& identifier);
         static std::string getTranslation(const std::string& identifier);
     private:
         static inline std::unordered_map<std::string,std::string> languageStrings{};
         static inline std::string currentLanguage = "en"; // todo: figure out computer's language and set it here
-        static inline std::unordered_map<std::string, std::string> langPairs = {
+        static inline std::unordered_map<std::string, std::string> LANGUAGE_DEFINITIONS = {
                 {"en", "English"},
                 {"jp", "Japanese"}
         };

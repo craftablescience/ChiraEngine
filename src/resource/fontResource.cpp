@@ -5,7 +5,7 @@
 
 void fontResource::compile(const nlohmann::json& properties) {
     ImGuiIO& io = ImGui::GetIO();
-    std::string path = ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file", properties["properties"]["path"]))->getPath() + "/" + std::string(properties["properties"]["path"]);
+    std::string path = ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource(properties["properties"]["path"]))->getPath() + "/" + resourceManager::splitResourceIdentifier(std::string(properties["properties"]["path"])).second;
     this->name = properties["properties"]["name"];
     this->size = properties["properties"]["size"];
     if (properties["properties"].contains("range")) {

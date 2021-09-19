@@ -11,7 +11,7 @@
  */
 class fontResource : public propertiesResource {
 public:
-    fontResource(const std::string& provider_, const std::string& name_) : propertiesResource(provider_, name_) {}
+    explicit fontResource(const std::string& identifier_) : propertiesResource(identifier_) {}
     void compile(const nlohmann::json& properties) override;
     [[nodiscard]] ImFont* getFont() const;
     [[nodiscard]] const std::string& getName() const;

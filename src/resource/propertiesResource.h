@@ -24,7 +24,7 @@
  */
 class propertiesResource : public abstractResource {
 public:
-    propertiesResource(const std::string& provider_, const std::string& name_) : abstractResource(provider_, name_) {}
+    explicit propertiesResource(const std::string& identifier_) : abstractResource(identifier_) {}
     void compile(unsigned char* buffer, std::size_t bufferLength) final {
         this->compile(nlohmann::json::parse(std::string{reinterpret_cast<const char*>(buffer), bufferLength}));
     }

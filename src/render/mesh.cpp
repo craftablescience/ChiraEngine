@@ -4,7 +4,7 @@
 #include "../i18n/translationManager.h"
 #include "../resource/resourceManager.h"
 
-mesh::mesh(const std::string& provider_, const std::string& name_, material* material) : propertiesResource(provider_, name_), model(1.0f), vertices(), indices() {
+mesh::mesh(const std::string& identifier_, material* material) : propertiesResource(identifier_), model(1.0f), vertices(), indices() {
     this->materialPtr = material;
 }
 
@@ -26,7 +26,7 @@ void mesh::compile(const nlohmann::json& properties) {
         this->cullType = mesh::getGLCullTypeFromString(properties["properties"]["cullType"]);
     }
 
-    mesh::getMeshLoader(properties["properties"]["loader"])->loadMesh(this->provider, properties["dependencies"]["model"], &this->vertices, &this->indices);
+    mesh::getMeshLoader(properties["properties"]["loader"])->loadMesh(properties["dependencies"]["model"], &this->vertices, &this->indices);
 
     glGenVertexArrays(1, &(this->vaoHandle));
     glGenBuffers(1, &(this->vboHandle));

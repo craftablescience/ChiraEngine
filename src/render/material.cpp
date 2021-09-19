@@ -4,10 +4,10 @@
 #include "../i18n/translationManager.h"
 #include "../resource/resourceManager.h"
 
-material::material(const std::string& provider_, const std::string& name_) : propertiesResource(provider_, name_) {}
+material::material(const std::string& identifier_) : propertiesResource(identifier_) {}
 
 void material::compile(const nlohmann::json& properties) {
-    this->shaderPtr = resourceManager::getResource<shader>(this->provider, properties["dependencies"]["shader"]);
+    this->shaderPtr = resourceManager::getResource<shader>(properties["dependencies"]["shader"]);
 }
 
 void material::use() {

@@ -7,7 +7,7 @@
 
 class texture : public abstractResource {
 public:
-    texture(const std::string& provider_, const std::string& name_, bool vFlip_ = true);
+    explicit texture(const std::string& identifier_, bool vFlip_ = true);
     void compile(unsigned char* buffer, std::size_t bufferLen) override;
     virtual void use() = 0;
     void setTextureUnit(int textureUnit);

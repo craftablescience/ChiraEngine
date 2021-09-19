@@ -17,7 +17,7 @@ bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, 
     this->loop = loop_;
     this->is3d = is3d_;
 
-    this->audioData.filename = ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file", "sounds/" + filename))->getPath() + "/sounds/" + filename;
+    this->audioData.filename = ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file://sounds/" + filename))->getPath() + "/sounds/" + filename;
     this->audioData.file.open(this->audioData.filename, std::ios::binary);
     if (!this->audioData.file.is_open()) {
         chira::logger::log(ERR, "OGG", "Could not open " + filename);

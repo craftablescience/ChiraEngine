@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "shader": "shaders/unlit.json"
+    "shader": "file://shaders/unlit.json"
   }
 }

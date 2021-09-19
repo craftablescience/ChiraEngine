@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "shader": "shaders/phonglit.json",
-    "diffuse": "textures/container_diffuse.png",
-    "specular": "textures/container_specular.png"
+    "shader": "file://shaders/phonglit.json",
+    "diffuse": "file://textures/container_diffuse.png",
+    "specular": "file://textures/container_specular.png"
   },
   "properties": {
     "diffuse_format": "RGBA",

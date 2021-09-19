@@ -7,7 +7,7 @@
 #include <sstream>
 
 // todo: add #include preprocessing
-shaderResource::shaderResource(const std::string& provider_, const std::string& name_, int type_) : abstractResource(provider_, name_), handleObject(), type(type_) {}
+shaderResource::shaderResource(const std::string& identifier_, int type_) : abstractResource(identifier_), handleObject(), type(type_) {}
 
 void shaderResource::compile(unsigned char* buffer, std::size_t bufferLength) {
     if (this->handle != -1) return;
