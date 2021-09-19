@@ -13,6 +13,8 @@
 #include "../implementation/discordRichPresence.h"
 #include "../resource/filesystemResourceProvider.h"
 #include "../i18n/translationManager.h"
+#include "../resource/fontResource.h"
+
 #if __has_include(<windows.h>)
 #include <windows.h>
 #endif
@@ -208,9 +210,10 @@ void engine::init() {
     IMGUI_CHECKVERSION();
 #endif
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void) io;
+    ImGuiIO& io = ImGui::GetIO();
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(this->window, true);
+    io.Fonts->Clear();
     ImGui_ImplOpenGL3_Init(chira::GL_VERSION_STRING.data());
     chira::logger::log(INFO, "ImGUI", TR("debug.imgui.success"));
 
@@ -237,6 +240,8 @@ void engine::init() {
         shaderResource::addPreprocessorSymbol("MAX_SPOT_LIGHTS", std::to_string(maxLights));
     }
 
+    io.Fonts->AddFontDefault();
+
     this->callRegisteredFunctions(&(this->initFunctions));
 
     for (const auto& [name, scriptProvider] : this->scriptProviders) {
@@ -254,6 +259,9 @@ void engine::init() {
 
         scriptProvider->initScripts();
     }
+
+    resourceManager::precacheResource<fontResource>("file", "fonts/console.json");
+    io.Fonts->Build();
 }
 
 void engine::run() {

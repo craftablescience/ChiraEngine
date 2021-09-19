@@ -3,6 +3,7 @@
 #include <string>
 #include "imgui.h"
 #include "../utility/logger.h"
+#include "../resource/fontResource.h"
 
 struct console {
 public:
@@ -14,9 +15,10 @@ public:
     void render();
     void setEnabled(bool enabled);
     [[nodiscard]] bool getEnabled() const;
-    static void setTheme();
-    static void resetTheme();
+    void setTheme();
+    void resetTheme();
 private:
+    fontResource* font = nullptr;
     ImVector<char*> items;
     ImVector<char*> history;
     int historyPos;

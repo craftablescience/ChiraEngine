@@ -1,4 +1,5 @@
 #include "console.h"
+#include "../resource/resourceManager.h"
 
 console::console() {
     this->clearLog();
@@ -110,6 +111,11 @@ bool console::getEnabled() const {
 }
 
 void console::setTheme() {
+    if (!this->font) {
+        this->font = resourceManager::getResource<fontResource>("file", "fonts/console.json");
+    }
+    ImGui::PushFont(this->font->getFont());
+
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.46f, 0.46f, 0.46f, 0.95f));
     ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.33f, 0.33f, 0.33f, 0.80f));
     ImGui::PushStyleColor(ImGuiCol_ModalWindowDimBg, ImVec4(0.33f, 0.33f, 0.33f, 0.80f));
@@ -148,6 +154,7 @@ void console::setTheme() {
 }
 
 void console::resetTheme() {
-    ImGui::PopStyleColor(26);
     ImGui::PopStyleVar(8);
+    ImGui::PopStyleColor(26);
+    ImGui::PopFont();
 }

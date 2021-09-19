@@ -7,6 +7,7 @@
 #include "../src/implementation/discordRichPresence.h"
 #include "../src/resource/filesystemResourceProvider.h"
 #include "../src/resource/resourceManager.h"
+#include "../src/resource/fontResource.h"
 
 int main() {
     engine engine;
@@ -39,15 +40,10 @@ int main() {
 
     engine.addInitFunction([&cubeMesh, &discordEnabled](class engine* e) {
         ImGuiIO& io = ImGui::GetIO();
-        io.Fonts->Clear();
-        std::string filepath = ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file", "fonts/noto_sans_jp/NotoSansJP-Regular.otf"))->getPath() + "/fonts/noto_sans_jp/NotoSansJP-Regular.otf";
-        ImFont* font = io.Fonts->AddFontFromFileTTF(filepath.c_str(), 20.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
-        if (font != nullptr) {
-            io.FontDefault = font;
-        } else {
-            io.Fonts->AddFontDefault();
-        }
-        io.Fonts->Build();
+
+        // Don't release the fontResource when done to keep it cached
+        auto* noto = resourceManager::getResource<fontResource>("file", "fonts/default.json");
+        io.FontDefault = noto->getFont();
 
         auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file", "materials/cubeMaterial.json");
         cubeMesh = resourceManager::getResource<mesh>("file", "meshes/teapot.json", cubeMaterial);
