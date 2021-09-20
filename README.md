@@ -23,6 +23,7 @@ Again, the goal of the engine is to have as much customization as possible, whil
 ## Bundled Dependencies
 - AngelScript v2.34.0
 - Bullet v3.17
+- cURLpp v0.8.1
 - Discord RPC
 - {fmt} v8.0.1
 - GLAD (OpenGL 4.5 Core, no extensions)

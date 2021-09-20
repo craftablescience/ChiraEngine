@@ -31,3 +31,6 @@
 [submodule "src/third_party/imgui_markdown"]
 	path = src/third_party/imgui_markdown
 	url = https://github.com/juliettef/imgui_markdown
+[submodule "src/third_party/curlpp"]
+	path = src/third_party/curlpp
+	url = https://github.com/jpbarrette/curlpp
