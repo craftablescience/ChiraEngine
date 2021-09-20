@@ -53,7 +53,7 @@ void engine::errorCallback(int error, const char* description) {
 
 #if DEBUG
 void APIENTRY glDebugOutputCallback(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* userParam) {
-    // todo: localize error messages
+    // Leaving OpenGL error reports unlocalized is probably best
 
     if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
 
@@ -251,7 +251,7 @@ void engine::init() {
     glfwGetFramebufferSize(this->window, &width, &height);
     glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(this->window, this->framebufferSizeCallback);
-    engine::setBackgroundColor(0.0f, 0.0f, 0.0f, 1.0f);
+    engine::setBackgroundColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     mesh::addMeshLoader("primitive", new primitiveMeshLoader{});
     mesh::addMeshLoader("obj", new objMeshLoader{});
@@ -333,7 +333,7 @@ void engine::init() {
 void engine::displaySplashScreen() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    auto* mat = resourceManager::getResource<material>("file://materials/splashscreen.json");
+    auto* mat = resourceManager::getResource<texturedMaterial>("file://materials/splashscreen.json");
     auto* plane = resourceManager::getResource<mesh>("file://meshes/plane.json", mat);
     plane->render();
 

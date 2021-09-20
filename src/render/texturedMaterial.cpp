@@ -9,7 +9,7 @@ void texturedMaterial::compile(const nlohmann::json& properties) {
             material::getGLFormatFromString(properties["properties"]["texture_format"]));
     this->tex->setTextureUnit(GL_TEXTURE0);
     this->shaderPtr->use();
-    this->shaderPtr->setUniform("texture0", 0);
+    this->shaderPtr->setUniform("tex", 0);
 }
 
 void texturedMaterial::use() {
