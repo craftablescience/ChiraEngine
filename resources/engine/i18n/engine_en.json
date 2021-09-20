@@ -3,6 +3,7 @@
 
   "ui.window.title": "Chira Engine",
   "ui.window.select_file": "Select File",
+  "ui.console.title": "Console",
 
   "generic.operation.cancelled": "Operation cancelled",
 
@@ -10,17 +11,16 @@
   "debug.opengl.vertex_attributes": "Maximum number of vertex attributes is {}",
   "debug.opengl.texture_units": "Maximum number of texture units is {}",
   "debug.imgui.success": "ImGUI loaded successfully",
-
   "debug.discord.user_connected": "Discord user {}:{} connected",
   "debug.discord.user_disconnected": "Discord user disconnected, code {}: {}",
   "debug.discord.generic_error": "Error {}: {}",
-
   "debug.engine.exit": "Exiting...",
 
   "warn.obj_loader.not_triangulated": "OBJ file at {} is not triangulated, this will cause problems",
   "warn.material.invalid_gl_format": "Invalid GL format: {}",
   "warn.mesh.invalid_depth_function": "Invalid depth function value {}",
-  "warn.mesh.invalid_cull_type": "Invalid cull type value ",
+  "warn.mesh.invalid_cull_type": "Invalid cull type value {}",
+  "warn.ogg.3d_stereo_audio": "Stereo audio will not sound like it is playing from a 3D source",
 
   "error.angelscript.unrecoverable_error": "Unrecoverable error while starting a new module at \"{}\"",
   "error.angelscript.script_not_found": "Unable to load script at \"{}\"",
@@ -41,5 +41,38 @@
   "error.resource_manager.resource_not_found": "Resource {} was not found",
   "error.resource_manager.cached_resource_not_found": "Supposedly cached resource {} was not found",
   "error.resource_manager.cannot_split_identifier": "Cannot split resource identifier \"{}\"",
-  "error.shader_resource.compilation_failure": "Shader compilation failed. Type: {}\n{}"
+  "error.shader_resource.compilation_failure": "Shader compilation failed. Type: {}\n{}",
+  "error.openal.generic": "In file \"{}\" at line {}:\n{}",
+  "error.openal.al_invalid_name": "AL_INVALID_NAME: a bad name (ID) was passed to an OpenAL function",
+  "error.openal.al_invalid_enum": "AL_INVALID_ENUM: an invalid enum value was passed to an OpenAL function",
+  "error.openal.al_invalid_value": "AL_INVALID_VALUE: an invalid value was passed to an OpenAL function",
+  "error.openal.al_invalid_operation": "AL_INVALID_OPERATION: the requested operation is not valid",
+  "error.openal.al_out_of_memory": "AL_OUT_OF_MEMORY: the requested operation resulted in OpenAL running out of memory",
+  "error.openal.al_unknown": "Unknown AL error: {}",
+  "error.openal.alc_invalid_value": "ALC_INVALID_VALUE: an invalid value was passed to an OpenAL function",
+  "error.openal.alc_invalid_device": "ALC_INVALID_DEVICE: a bad device was passed to an OpenAL function",
+  "error.openal.alc_invalid_context": "ALC_INVALID_CONTEXT: a bad context was passed to an OpenAL function",
+  "error.openal.alc_invalid_enum": "ALC_INVALID_ENUM: an unknown enum value was passed to an OpenAL function",
+  "error.openal.alc_out_of_memory": "ALC_OUT_OF_MEMORY: an unknown enum value was passed to an OpenAL function",
+  "error.openal.alc_unknown": "Unknown ALC error: {}",
+  "error.openal.remove_context": "Could not make context non-current",
+  "error.openal.destroy_context": "Could not destroy context",
+  "error.openal.close_device_failure": "Default device failed to close",
+  "error.openal.open_device_failure": "Default device failed to initialize",
+  "error.openal.no_devices_available": "No devices available",
+  "error.openal.using_nondefault_device": "Using non-default device {}",
+  "error.openal.create_context_failure": "Could not create context",
+  "error.openal.make_context_current": "Could not make context current",
+  "error.ogg.file_open_failure": "Could not open file \"{}\"",
+  "error.ogg.ov_open_callbacks_missing": "Could not open ov_open_callbacks for \"{}\"",
+  "error.ogg.fail_bit_set": "Fail bit set in \"{}\"",
+  "error.ogg.bad_bit_set": "Bad bit set in \"{}\"",
+  "error.ogg.file_empty": "Already reached EOF without loading data in \"{}\"",
+  "error.ogg.file_missing": "File at \"{}\" does not exist",
+  "error.ogg.data_missing": "Data missing in \"{}\"",
+  "error.ogg.initial_read_error": "{} found in initial read of buffer {} in \"{}\"",
+  "error.ogg.buffer_update_error": "{} found during update of buffer in \"{}\"",
+  "error.ogg.loop_read_error": "{} found while looping in \"{}\"",
+  "error.ogg.unrecognized_format": "Unrecognized OGG format with {} channels, {} bps, in \"{}\"",
+  "error.ogg.unknown": "Unknown error encountered in {} in \"{}\""
 }

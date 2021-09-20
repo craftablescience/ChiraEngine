@@ -1,60 +1,61 @@
 #include "alHelpers.h"
 
-// todo: convert these to translation system
+#include "../i18n/translationManager.h"
+#include "fmt/core.h"
 
 bool checkForALErrors(const std::string& filename, const std::uint_fast32_t line) {
-    ALenum error = alGetError();
-    if (error != AL_NO_ERROR) {
-        std::string out = "In " + filename + " at line " + std::to_string(line) + ": ";
-        switch (error) {
+    ALenum alError = alGetError();
+    if (alError != AL_NO_ERROR) {
+        std::string error;
+        switch (alError) {
             case AL_INVALID_NAME:
-                out += "AL_INVALID_NAME: a bad name (ID) was passed to an OpenAL function";
+                error = TR("error.openal.al_invalid_name");
                 break;
             case AL_INVALID_ENUM:
-                out += "AL_INVALID_ENUM: an invalid enum value was passed to an OpenAL function";
+                error = TR("error.openal.al_invalid_enum");
                 break;
             case AL_INVALID_VALUE:
-                out += "AL_INVALID_VALUE: an invalid value was passed to an OpenAL function";
+                error = TR("error.openal.al_invalid_value");
                 break;
             case AL_INVALID_OPERATION:
-                out += "AL_INVALID_OPERATION: the requested operation is not valid";
+                error = TR("error.openal.al_invalid_operation");
                 break;
             case AL_OUT_OF_MEMORY:
-                out += "AL_OUT_OF_MEMORY: the requested operation resulted in OpenAL running out of memory";
+                error = TR("error.openal.al_out_of_memory");
                 break;
             default:
-                out += "UNKNOWN AL ERROR: " + std::to_string(error);
+                error = fmt::format(TR("error.openal.al_unknown"), alError);
         }
-        chira::logger::log(ERR, "OpenAL", out);
+        chira::logger::log(ERR, "OpenAL", fmt::format(TR("error.openal.generic"), filename, line, error));
         return false;
     }
     return true;
 }
 
 bool checkForALCErrors(const std::string& filename, const std::uint_fast32_t line, ALCdevice* device) {
-    ALCenum error = alcGetError(device);
-    if (error != ALC_NO_ERROR) {
-        std::string out = "In " + filename + " at line " + std::to_string(line) + ": ";
-        switch (error) {
+    ALCenum alcError = alcGetError(device);
+    if (alcError != ALC_NO_ERROR) {
+        std::string error;
+        switch (alcError) {
             case ALC_INVALID_VALUE:
-                out += "ALC_INVALID_VALUE: an invalid value was passed to an OpenAL function";
+                error = TR("error.openal.alc_invalid_value");
                 break;
             case ALC_INVALID_DEVICE:
-                out += "ALC_INVALID_DEVICE: a bad device was passed to an OpenAL function";
+                error = TR("error.openal.alc_invalid_device");
                 break;
             case ALC_INVALID_CONTEXT:
-                out += "ALC_INVALID_CONTEXT: a bad context was passed to an OpenAL function";
+                error = TR("error.openal.alc_invalid_context");
                 break;
             case ALC_INVALID_ENUM:
-                out += "ALC_INVALID_ENUM: an unknown enum value was passed to an OpenAL function";
+                error = TR("error.openal.alc_invalid_enum");
                 break;
             case ALC_OUT_OF_MEMORY:
-                out += "ALC_OUT_OF_MEMORY: an unknown enum value was passed to an OpenAL function";
+                error = TR("error.openal.alc_out_of_memory");
                 break;
             default:
-                out += "UNKNOWN ALC ERROR: " + std::to_string(error);
+                error = fmt::format(TR("error.openal.alc_unknown"), alcError);
         }
-        chira::logger::log(ERR, "OpenAL", out);
+        chira::logger::log(ERR, "OpenAL", fmt::format(TR("error.openal.generic"), filename, line, error));
         return false;
     }
     return true;

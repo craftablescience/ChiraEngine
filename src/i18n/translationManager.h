@@ -15,7 +15,7 @@ namespace chira {
         static std::string getTranslation(const std::string& identifier);
     private:
         static inline std::unordered_map<std::string,std::string> languageStrings{};
-        static inline std::string currentLanguage = "en"; // todo: figure out computer's language and set it here
+        static inline std::string currentLanguage = "en";
         static inline std::unordered_map<std::string, std::string> LANGUAGE_DEFINITIONS = {
                 {"en", "English"},
                 {"jp", "Japanese"}
