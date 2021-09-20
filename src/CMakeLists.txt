@@ -1,6 +1,10 @@
 # ANGELSCRIPT
 include(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/CMakeLists.txt)
 
+# CURLPP
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp)
+list(APPEND ENGINE_LINK_LIBRARIES curlpp)
+
 # DISCORD
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/discord)
@@ -123,6 +127,7 @@ add_library(ChiraEngine STATIC ${ENGINE_SOURCES})
 target_compile_definitions(ChiraEngine PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_GLAD2)
 
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/include)
+target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/addons)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/discord/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fmt/include)
