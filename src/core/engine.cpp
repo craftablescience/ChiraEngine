@@ -276,7 +276,6 @@ void engine::run() {
     this->currentTime = glfwGetTime();
 
     while (!glfwWindowShouldClose(this->window)) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         this->render();
         this->soundManager->setListenerPosition(this->getMainCamera()->getPosition());
         this->soundManager->setListenerRotation(this->getMainCamera()->getRotation(), this->getMainCamera()->getUpVector());
@@ -294,6 +293,8 @@ void engine::run() {
 }
 
 void engine::render() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     this->lastTime = this->currentTime;
     this->currentTime = glfwGetTime();
 

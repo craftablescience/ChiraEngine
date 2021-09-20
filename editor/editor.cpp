@@ -110,8 +110,7 @@ int main() {
         settingsWindow.setEnabled(!settingsWindow.getEnabled());
     }));
 
-    // Test loading assets from the Internet
-    auto* tex = resourceManager::getResource<texture2d>("https://raw.githubusercontent.com/craftablescience/ChiraEngine/main/resources/engine/textures/ui/icon.png", GL_RGBA, false);
+    auto* tex = resourceManager::getResource<texture2d>("file://textures/ui/icon.png", GL_RGBA, false);
     bool renderImguiTextureTestWindow = true;
 
     engine.addRenderFunction([tex, cubeMesh, &renderImguiTextureTestWindow, &settingsWindow](class engine* e) {

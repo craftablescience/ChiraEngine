@@ -26,19 +26,19 @@ void settings::render() {
     }
 
     ImGui::PushItemWidth(SETTINGS_INPUT_FIELD_WIDTH);
-    ImGui::InputInt("ui.settings.window_width", &this->windowWidth);
-    ImGui::InputInt("ui.settings.window_height", &this->windowHeight);
+    ImGui::InputInt(TR("ui.settings.window_width").c_str(), &this->windowWidth);
+    ImGui::InputInt(TR("ui.settings.window_height").c_str(), &this->windowHeight);
     ImGui::PopItemWidth();
-    ImGui::Checkbox("ui.settings.start_maximized", &this->startMaximized);
-    ImGui::Checkbox("ui.settings.fullscreen", &this->fullscreen);
-    ImGui::Checkbox("ui.settings.raw_mouse_motion", &this->rawMouseMotion);
-    ImGui::Checkbox("ui.settings.invert_y_axis", &this->invertYAxis);
+    ImGui::Checkbox(TR("ui.settings.start_maximized").c_str(), &this->startMaximized);
+    ImGui::Checkbox(TR("ui.settings.fullscreen").c_str(), &this->fullscreen);
+    ImGui::Checkbox(TR("ui.settings.raw_mouse_motion").c_str(), &this->rawMouseMotion);
+    ImGui::Checkbox(TR("ui.settings.invert_y_axis").c_str(), &this->invertYAxis);
     ImGui::PushItemWidth(SETTINGS_INPUT_FIELD_WIDTH);
-    ImGui::InputText("ui.settings.language", &this->language);
+    ImGui::InputText(TR("ui.settings.language").c_str(), &this->language);
     ImGui::PopItemWidth();
-    ImGui::Checkbox("ui.settings.discord_integration", &this->discordIntegration);
-
-    if (ImGui::Button("ui.settings.apply")) {
+    ImGui::Checkbox(TR("ui.settings.discord_integration").c_str(), &this->discordIntegration);
+    ImGui::Separator();
+    if (ImGui::Button(TR("ui.settings.apply").c_str())) {
         engine::getSettingsLoader()->setValue("graphics", "windowWidth", this->windowWidth, true, false);
         engine::getSettingsLoader()->setValue("graphics", "windowHeight", this->windowHeight, true, false);
         engine::getSettingsLoader()->setValue("graphics", "startMaximized", this->startMaximized, true, false);
