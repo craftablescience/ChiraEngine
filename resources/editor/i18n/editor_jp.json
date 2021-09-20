@@ -1,3 +1,16 @@
 {
+  "_tl_editor_comment": "This is all from Google Translate! It all needs to be rewritten!",
+
+  "ui.settings.title": "設定",
+  "ui.settings.window_width": "ウィンドウ幅",
+  "ui.settings.window_height": "窓の高さ",
+  "ui.settings.start_maximized": "最大化を開始",
+  "ui.settings.fullscreen": "全画面表示",
+  "ui.settings.raw_mouse_motion": "生のマウスの動き",
+  "ui.settings.invert_y_axis": "Y軸を反転",
+  "ui.settings.language": "言語",
+  "ui.settings.discord_integration": "不和の豊富な存在",
+  "ui.settings.apply": "申し込み",
+
   "debug.imgui.texture_test": "ImGUIのテクスチャーのテスト"
 }

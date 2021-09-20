@@ -36,7 +36,7 @@ endif()
 
 add_subdirectory(src)
 
-list(APPEND DEMO_SOURCES ${CMAKE_CURRENT_LIST_DIR}/editor/editor.cpp)
+include(${CMAKE_CURRENT_SOURCE_DIR}/editor/CMakeLists.txt)
 if(WIN32)
     list(APPEND DEMO_SOURCES ${CMAKE_CURRENT_LIST_DIR}/resources/editor/win32/project.rc)
 endif()

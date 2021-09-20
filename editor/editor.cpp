@@ -9,7 +9,7 @@
 #include "../src/resource/resourceManager.h"
 #include "tinyfiledialogs.h"
 #include "../src/ui/markdown.h"
-#include "../src/resource/stringResource.h"
+#include "ui/settings.h"
 
 int main() {
     engine engine;
@@ -37,7 +37,7 @@ int main() {
     engine.addKeybind(keybind(GLFW_KEY_M, GLFW_PRESS, [](class engine* e) {
         e->getSoundManager()->getSound("helloWorld")->play();
     }));
-    engine.addKeybind(keybind(GLFW_KEY_B, GLFW_RELEASE, [](class engine* e) {
+    engine.addKeybind(keybind(GLFW_KEY_P, GLFW_RELEASE, [](class engine* e) {
         const char* path = tinyfd_openFileDialog(
                 TR("ui.window.select_file").c_str(),
 #if WIN32
@@ -105,19 +105,33 @@ int main() {
     });
     engine.init();
 
+    settings settingsWindow;
+    engine.addKeybind(keybind(GLFW_KEY_O, GLFW_PRESS, [&settingsWindow](class engine* e){
+        settingsWindow.setEnabled(!settingsWindow.getEnabled());
+    }));
+
     // Test loading assets from the Internet
     auto* tex = resourceManager::getResource<texture2d>("https://raw.githubusercontent.com/craftablescience/ChiraEngine/main/resources/engine/textures/ui/icon.png", GL_RGBA, false);
+    bool renderImguiTextureTestWindow = true;
 
-    engine.addRenderFunction([tex, cubeMesh](class engine* e) {
+    engine.addRenderFunction([tex, cubeMesh, &renderImguiTextureTestWindow, &settingsWindow](class engine* e) {
         cubeMesh->getMaterial()->getShader()->setUniform("p", e->getMainCamera()->getProjectionMatrix());
         cubeMesh->getMaterial()->getShader()->setUniform("v", e->getMainCamera()->getViewMatrix());
         cubeMesh->render();
 
-        ImGui::Begin(TR("debug.imgui.texture_test").c_str());
-        ImGui::Text("size = %d x %d", 512, 512);
-        ImGui::Image((void*)(intptr_t) tex->getHandle(), ImVec2(512, 512));
-        markdown::create("Hello from Markdown");
-        ImGui::End();
+        if (renderImguiTextureTestWindow) {
+            if (!ImGui::Begin(TR("debug.imgui.texture_test").c_str(), &renderImguiTextureTestWindow)) {
+                ImGui::End();
+            }
+            ImGui::Text("size = %d x %d", 512, 512);
+            ImGui::Image((void *) (intptr_t) tex->getHandle(), ImVec2(512, 512));
+            markdown::create("Hello from Markdown");
+            ImGui::End();
+        }
+
+        if (settingsWindow.getEnabled()) {
+            settingsWindow.render();
+        }
     });
     engine.run();
 }
