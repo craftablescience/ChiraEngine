@@ -12,6 +12,6 @@ public:
     }
     virtual bool hasResource(const std::string& name) = 0;
     virtual void compileResource(const std::string& name, abstractResource* resource) = 0;
-private:
+protected:
     std::string providerName;
 };

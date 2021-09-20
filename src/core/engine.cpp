@@ -12,8 +12,7 @@
 #include "../sound/alSoundManager.h"
 #include "../implementation/discordRichPresence.h"
 #include "../resource/filesystemResourceProvider.h"
-#include "../i18n/translationManager.h"
-#include "../resource/fontResource.h"
+#include "../resource/internetResourceProvider.h"
 
 #if __has_include(<windows.h>)
 #include <windows.h>
@@ -30,6 +29,8 @@ engine::engine(const std::string& configPath) {
 #endif
 #endif
     resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", ENGINE_FILESYSTEM_PATH});
+    resourceManager::addResourceProvider("http", new internetResourceProvider{"http", 80});
+    resourceManager::addResourceProvider("https", new internetResourceProvider{"https", 443});
     engine::setSettingsLoader(new jsonSettingsLoader(configPath));
     // todo: use computer language as default here
     std::string defaultLang = "en";

@@ -6,6 +6,7 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/filesystemResourceProvider.h
         ${CMAKE_CURRENT_LIST_DIR}/fontResource.cpp
         ${CMAKE_CURRENT_LIST_DIR}/fontResource.h
+        ${CMAKE_CURRENT_LIST_DIR}/internetResourceProvider.cpp
         ${CMAKE_CURRENT_LIST_DIR}/internetResourceProvider.h
         ${CMAKE_CURRENT_LIST_DIR}/stringResource.cpp
         ${CMAKE_CURRENT_LIST_DIR}/stringResource.h

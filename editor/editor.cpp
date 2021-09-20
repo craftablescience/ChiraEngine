@@ -9,6 +9,7 @@
 #include "../src/resource/resourceManager.h"
 #include "tinyfiledialogs.h"
 #include "../src/ui/markdown.h"
+#include "../src/resource/stringResource.h"
 
 int main() {
     engine engine;
@@ -58,6 +59,8 @@ int main() {
     }));
 
     mesh* cubeMesh;
+
+    resourceManager::getResource<stringResource>("https://example.com/myfile.html");
 
     engine.addInitFunction([&cubeMesh, &discordEnabled](class engine* e) {
         ImGuiIO& io = ImGui::GetIO();
