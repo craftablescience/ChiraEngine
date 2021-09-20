@@ -71,7 +71,6 @@ int main() {
         if (discordEnabled) {
             discordRichPresence::init("875778280899358720");
             discordRichPresence::setLargeImage("main_logo");
-            discordRichPresence::setDetails(TR("ui.window.title"));
             discordRichPresence::setState("https://discord.gg/ASgHFkX");
         }
 
