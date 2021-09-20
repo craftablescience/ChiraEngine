@@ -51,7 +51,7 @@ void console::engineLoggingHook(const loggerType type, const std::string& source
 void console::render() {
     console::setTheme();
     ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin("Console", &(this->isEnabled))) {
+    if (!ImGui::Begin(TR("ui.console.title").c_str(), &(this->isEnabled))) {
         ImGui::End();
         return;
     }
