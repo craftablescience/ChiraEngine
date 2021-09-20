@@ -20,8 +20,6 @@ int main() {
     bool discordEnabled;
     engine::getSettingsLoader()->getValue("engineGui", "discordIntegration", &discordEnabled);
 
-    mesh::addMeshLoader("obj", new objMeshLoader{});
-
     engine.addKeybind(keybind(GLFW_KEY_ESCAPE, GLFW_PRESS, [](class engine* e) {
         e->stop();
     }));
@@ -114,6 +112,7 @@ int main() {
     bool renderImguiTextureTestWindow = true;
 
     engine.addRenderFunction([tex, cubeMesh, &renderImguiTextureTestWindow, &settingsWindow](class engine* e) {
+        // todo: use UBO
         cubeMesh->getMaterial()->getShader()->setUniform("p", e->getMainCamera()->getProjectionMatrix());
         cubeMesh->getMaterial()->getShader()->setUniform("v", e->getMainCamera()->getViewMatrix());
         cubeMesh->render();

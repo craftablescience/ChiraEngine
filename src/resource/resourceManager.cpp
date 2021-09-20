@@ -38,10 +38,11 @@ std::pair<std::string,std::string> resourceManager::splitResourceIdentifier(cons
 void resourceManager::removeResource(const std::string& identifier) {
     auto id = resourceManager::splitResourceIdentifier(identifier);
     const std::string& provider = id.first, name = id.second;
-    resourceManager::resources[provider][name]->decrementRefCount();
-    if (resourceManager::resources[provider][name]->getRefCount() == 0) {
+    if (resourceManager::resources[provider][name]->getRefCount() <= 1) {
         delete resourceManager::resources[provider][name];
         resourceManager::resources[provider].erase(name);
+    } else {
+        resourceManager::resources[provider][name]->decrementRefCount();
     }
 }
 

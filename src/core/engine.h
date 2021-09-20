@@ -88,6 +88,7 @@ private:
     static void setSettingsLoaderDefaults();
     // NOTE: PNGs must have a bit depth of 8 or less* (less not tested)
     void setIcon(const std::string& iconPath);
+    void displaySplashScreen();
     static void errorCallback(int error, const char* description);
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
     static void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);

@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "model": "plane"
+  },
+  "properties": {
+    "loader": "primitive",
+    "depthFunction": "NEVER",
+    "backfaceCulling": false,
+    "cullType": "FRONT_AND_BACK"
+  }
+}

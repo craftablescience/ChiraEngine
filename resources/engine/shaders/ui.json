@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "vertex": "file://shaders/ui.vsh",
+    "fragment": "file://shaders/ui.fsh"
+  }
+}

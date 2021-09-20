@@ -16,13 +16,13 @@ mesh::~mesh() {
 }
 
 void mesh::compile(const nlohmann::json& properties) {
-    if (properties.contains("depthFunction")) {
-        this->depthFunction = mesh::getGLDepthFuncFromString(properties["properties"]["depthFunc"]);
+    if (properties["properties"].contains("depthFunction")) {
+        this->depthFunction = mesh::getGLDepthFuncFromString(properties["properties"]["depthFunction"]);
     }
-    if (properties.contains("backfaceCulling")) {
+    if (properties["properties"].contains("backfaceCulling")) {
         this->backfaceCulling = properties["properties"]["backfaceCulling"];
     }
-    if (properties.contains("cullType")) {
+    if (properties["properties"].contains("cullType")) {
         this->cullType = mesh::getGLCullTypeFromString(properties["properties"]["cullType"]);
     }
 

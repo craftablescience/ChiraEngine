@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "model": "file://meshes/cube.obj"
+    "model": "file://meshes/teapot.obj"
   },
   "properties": {
     "loader": "obj",
     "depthFunction": "LEQUAL",
     "backfaceCulling": true,
-    "cullType": "back"
+    "cullType": "BACK"
   }
 }

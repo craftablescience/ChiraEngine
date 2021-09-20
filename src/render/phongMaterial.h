@@ -1,10 +1,8 @@
 #pragma once
 
 #include <utility>
-
 #include "material.h"
 #include "texture2d.h"
-#include "../core/engine.h"
 
 class phongMaterial : public material {
 public:

@@ -76,5 +76,6 @@
   "error.ogg.buffer_update_error": "{}が「{}」のバッファの更新中に見つかりました",
   "error.ogg.loop_read_error": "{}が「{}」でループ中に見つかりました",
   "error.ogg.unrecognized_format": "{}チャネル、{} bps、「{}」の認識されないOGG形式",
-  "error.ogg.unknown": "「{}」の{}で不明なエラーが発生しました"
+  "error.ogg.unknown": "「{}」の{}で不明なエラーが発生しました",
+  "error.primitive_loader.invalid_identifier": "識別子は有効な名前である必要があります（例：「cube」）"
 }

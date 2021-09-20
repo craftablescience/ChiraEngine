@@ -74,5 +74,6 @@
   "error.ogg.buffer_update_error": "{} found during update of buffer in \"{}\"",
   "error.ogg.loop_read_error": "{} found while looping in \"{}\"",
   "error.ogg.unrecognized_format": "Unrecognized OGG format with {} channels, {} bps, in \"{}\"",
-  "error.ogg.unknown": "Unknown error encountered in {} in \"{}\""
+  "error.ogg.unknown": "Unknown error encountered in {} in \"{}\"",
+  "error.primitive_loader.invalid_identifier": "Identifier must be a valid name (e.g. \"cube\")"
 }
