@@ -60,8 +60,6 @@ int main() {
 
     mesh* cubeMesh;
 
-    resourceManager::getResource<stringResource>("https://example.com/myfile.html");
-
     engine.addInitFunction([&cubeMesh, &discordEnabled](class engine* e) {
         ImGuiIO& io = ImGui::GetIO();
 
@@ -107,7 +105,9 @@ int main() {
     });
     engine.init();
 
-    auto* tex = resourceManager::getResource<texture2d>("file://textures/ui/icon.png", GL_RGBA, false);
+    // Test loading assets from the Internet
+    auto* tex = resourceManager::getResource<texture2d>("https://raw.githubusercontent.com/craftablescience/ChiraEngine/main/resources/engine/textures/ui/icon.png", GL_RGBA, false);
+
     engine.addRenderFunction([tex, cubeMesh](class engine* e) {
         cubeMesh->getMaterial()->getShader()->setUniform("p", e->getMainCamera()->getProjectionMatrix());
         cubeMesh->getMaterial()->getShader()->setUniform("v", e->getMainCamera()->getViewMatrix());
