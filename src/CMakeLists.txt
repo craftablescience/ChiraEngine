@@ -1,9 +1,12 @@
+# Fixes curlpp putting its DLL in a subfolder
+set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}" CACHE STRING "" FORCE)
+
 # ANGELSCRIPT
 include(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/CMakeLists.txt)
 
 # CURLPP
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp)
-list(APPEND ENGINE_LINK_LIBRARIES curlpp)
+list(APPEND ENGINE_LINK_LIBRARIES curl curlpp)
 
 # DISCORD
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -124,7 +127,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/utility/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/wec/CMakeLists.txt)
 add_library(ChiraEngine STATIC ${ENGINE_SOURCES})
 
-target_compile_definitions(ChiraEngine PRIVATE -DIMGUI_IMPL_OPENGL_LOADER_GLAD2)
+target_compile_definitions(ChiraEngine PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLAD2)
 
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp/include)
