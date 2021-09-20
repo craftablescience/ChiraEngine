@@ -158,6 +158,12 @@ void engine::init() {
     glfwMakeContextCurrent(this->window);
     glfwSetWindowUserPointer(this->window, this);
 
+    bool startMaximized = true;
+    engine::getSettingsLoader()->getValue("graphics", "startMaximized", &startMaximized);
+    if (startMaximized && !fullscreen) {
+        glfwMaximizeWindow(this->window);
+    }
+
     if (engine::getSettingsLoader()->hasValue("engine", "iconPath")) {
         std::string path{};
         engine::getSettingsLoader()->getValue("engine", "iconPath", &path);
@@ -446,6 +452,7 @@ void engine::setSettingsLoaderDefaults() {
     engine::settingsLoader->addCategory("graphics");
     engine::settingsLoader->setValue("graphics", "windowWidth", 1600, false, false);
     engine::settingsLoader->setValue("graphics", "windowHeight", 900, false, false);
+    engine::settingsLoader->setValue("graphics", "startMaximized", true, false, false);
     engine::settingsLoader->setValue("graphics", "fullscreen", false, false, false);
     engine::settingsLoader->addCategory("input");
     engine::settingsLoader->setValue("input", "rawMouseMotion", true, false, false);
