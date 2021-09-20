@@ -524,7 +524,7 @@ void engine::setSettingsLoaderDefaults() {
     engine::settingsLoader->addCategory("graphics");
     engine::settingsLoader->setValue("graphics", "windowWidth", 1600, false, false);
     engine::settingsLoader->setValue("graphics", "windowHeight", 900, false, false);
-    engine::settingsLoader->setValue("graphics", "startMaximized", true, false, false);
+    engine::settingsLoader->setValue("graphics", "startMaximized", false, false, false);
     engine::settingsLoader->setValue("graphics", "fullscreen", false, false, false);
     engine::settingsLoader->addCategory("input");
     engine::settingsLoader->setValue("input", "rawMouseMotion", true, false, false);
