@@ -28,7 +28,8 @@ Again, the goal of the engine is to have as much customization as possible, whil
 - GLAD (OpenGL 4.5 Core, no extensions)
 - GLFW v3.3.5
 - GLM v0.9.9.9
-- ImGUI v1.84.2
+- Dear ImGui v1.84.2 (docking branch)
+- imgui_markdown
 - libogg v1.3.5
 - libvorbis v1.3.7
 - nlohmann_json v3.10.0

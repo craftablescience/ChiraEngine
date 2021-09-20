@@ -94,6 +94,10 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_glfw.h
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_opengl3.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_opengl3.h)
+if(WIN32 AND (NOT MSVC))
+    # Windows IME support
+    list(APPEND ENGINE_LINK_LIBRARIES imm32)
+endif()
 
 # IMGUI_MARKDOWN
 list(APPEND ENGINE_SOURCES
