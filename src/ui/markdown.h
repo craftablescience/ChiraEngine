@@ -27,7 +27,6 @@ public:
     */
     static void create(const std::string& markdown_) {
         markdown::mdConfig.linkCallback = markdown::linkCallback;
-        //markdown::mdConfig.imageCallback = markdown::imageCallback;
         //markdown::mdConfig.headingFormats[0] = {H1, true};
         //markdown::mdConfig.headingFormats[1] = {H2, true};
         //markdown::mdConfig.headingFormats[2] = {H3, false};
@@ -36,7 +35,6 @@ public:
     }
 private:
     static inline ImGui::MarkdownConfig mdConfig{};
-
 
     static void linkCallback(ImGui::MarkdownLinkCallbackData data_) {
         std::string url(data_.link, data_.linkLength);
@@ -48,20 +46,4 @@ private:
 #endif
         }
     }
-    /*
-    static ImGui::MarkdownImageData imageCallback(ImGui::MarkdownLinkCallbackData data_) {
-        // todo: load image from link (netResourceProvider?)
-        ImTextureID image = ImGui::GetIO().Fonts->TexID;
-        ImGui::MarkdownImageData imageData{true, false, image, ImVec2( 40.0f, 20.0f )};
-
-        // For image resize when available size.x > image width, add
-        const ImVec2 contentSize = ImGui::GetContentRegionAvail();
-        if (imageData.size.x > contentSize.x) {
-            const float ratio = imageData.size.y / imageData.size.x;
-            imageData.size.x = contentSize.x;
-            imageData.size.y = contentSize.x * ratio;
-        }
-        return imageData;
-    }
-    */
 };

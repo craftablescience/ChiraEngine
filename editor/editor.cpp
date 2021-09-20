@@ -116,7 +116,7 @@ int main() {
         ImGui::Begin(TR("debug.imgui.texture_test").c_str());
         ImGui::Text("size = %d x %d", 512, 512);
         ImGui::Image((void*)(intptr_t) tex->getHandle(), ImVec2(512, 512));
-        markdown::create("Hello -- [https://belewis.me](https://belewis.me)");
+        markdown::create("Hello from Markdown");
         ImGui::End();
     });
     engine.run();
