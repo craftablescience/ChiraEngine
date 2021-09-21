@@ -160,6 +160,11 @@ void engine::mouseScrollCallback(GLFWwindow* window, double xPos, double yPos) {
     }
 }
 
+void engine::windowIconifyCallback(GLFWwindow* window, int iconified) {
+    auto* e = static_cast<engine*>(glfwGetWindowUserPointer(window));
+    e->iconified = (iconified == GLFW_TRUE);
+}
+
 void engine::init() {
     this->started = true;
 
@@ -191,11 +196,15 @@ void engine::init() {
     engine::getSettingsLoader()->getValue("graphics", "windowHeight", &windowHeight);
     bool fullscreen = false;
     engine::getSettingsLoader()->getValue("graphics", "fullscreen", &fullscreen);
-    this->window = glfwCreateWindow(windowWidth,
-                                    windowHeight,
-                                    TR("ui.window.title").c_str(),
-                                    fullscreen ? glfwGetPrimaryMonitor() : nullptr,
-                                    nullptr);
+    this->window = glfwCreateWindow(windowWidth, windowHeight, TR("ui.window.title").c_str(), nullptr, nullptr);
+    if (fullscreen) {
+        const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+        glfwSetWindowMonitor(this->window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
+    }
     if (!this->window) {
         chira::logger::log(ERR, "GLFW", TR("error.glfw.window"));
         glfwTerminate();
@@ -281,6 +290,7 @@ void engine::init() {
     ImGui_ImplGlfw_InitForOpenGL(this->window, true);
     io.Fonts->Clear();
     ImGui_ImplOpenGL3_Init(chira::GL_VERSION_STRING.data());
+    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     chira::logger::log(INFO, "ImGUI", TR("debug.imgui.success"));
 
     bool openalEnabled = true;
@@ -374,11 +384,9 @@ void engine::render() {
 
     callRegisteredFunctions(&(this->renderFunctions));
 
-#if DEBUG
     if (this->getConsole()->getEnabled()) {
         this->getConsole()->render();
     }
-#endif
 
     for (const auto& [name, scriptProvider] : this->scriptProviders) {
         scriptProvider->render(this->getDeltaTime());
@@ -593,4 +601,8 @@ void engine::showConsole(bool shouldShow) {
 
 console* engine::getConsole() {
     return &(this->consoleUI);
+}
+
+bool engine::isIconified() const {
+    return this->iconified;
 }

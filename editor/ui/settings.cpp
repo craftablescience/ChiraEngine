@@ -24,7 +24,6 @@ void settings::render() {
         ImGui::End();
         return;
     }
-
     ImGui::PushItemWidth(SETTINGS_INPUT_FIELD_WIDTH);
     ImGui::InputInt(TR("ui.settings.window_width").c_str(), &this->windowWidth);
     ImGui::InputInt(TR("ui.settings.window_height").c_str(), &this->windowHeight);
@@ -49,7 +48,6 @@ void settings::render() {
         engine::getSettingsLoader()->setValue("engineGui", "discordIntegration", this->discordIntegration, true, false);
         engine::getSettingsLoader()->save();
     }
-
     ImGui::End();
 }
 

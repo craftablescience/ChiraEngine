@@ -38,9 +38,9 @@ add_subdirectory(src)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/editor/CMakeLists.txt)
 if(WIN32)
-    list(APPEND DEMO_SOURCES ${CMAKE_CURRENT_LIST_DIR}/resources/editor/win32/project.rc)
+    list(APPEND EDITOR_SOURCES ${CMAKE_CURRENT_LIST_DIR}/resources/editor/win32/project.rc)
 endif()
-add_executable(${PROJECT_NAME} ${DEMO_SOURCES})
+add_executable(${PROJECT_NAME} ${EDITOR_SOURCES})
 target_link_libraries(${PROJECT_NAME} ChiraEngine ${OPENGL_LIBRARIES})
 
 # Resource files

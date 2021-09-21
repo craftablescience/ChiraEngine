@@ -49,12 +49,12 @@ void console::engineLoggingHook(const loggerType type, const std::string& source
 }
 
 void console::render() {
-    console::setTheme();
     ImGui::SetNextWindowSize(ImVec2(800, 600), ImGuiCond_FirstUseEver);
     if (!ImGui::Begin(TR("ui.console.title").c_str(), &(this->isEnabled))) {
         ImGui::End();
         return;
     }
+    console::setTheme();
     ImGui::Checkbox("Autoscroll", &this->autoScroll);
     ImGui::Separator();
     ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
@@ -89,17 +89,16 @@ void console::render() {
             }
         }
     }
+    ImGui::PopStyleVar();
 
     if (this->scrollToBottom || (this->autoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())) {
         ImGui::SetScrollHereY(1.0f);
     }
     this->scrollToBottom = false;
 
-    ImGui::PopStyleVar();
     ImGui::EndChild();
-
-    ImGui::End();
     console::resetTheme();
+    ImGui::End();
 }
 
 void console::setEnabled(bool enabled) {
@@ -116,45 +115,13 @@ void console::setTheme() {
     }
     ImGui::PushFont(this->font->getFont());
 
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.46f, 0.46f, 0.46f, 0.95f));
-    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.33f, 0.33f, 0.33f, 0.80f));
-    ImGui::PushStyleColor(ImGuiCol_ModalWindowDimBg, ImVec4(0.33f, 0.33f, 0.33f, 0.80f));
-    ImGui::PushStyleColor(ImGuiCol_PopupBg, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.33f, 0.33f, 0.33f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_BorderShadow, ImVec4(0.33f, 0.33f, 0.33f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_ScrollbarBg, ImVec4(0.13f, 0.13f, 0.13f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_ScrollbarGrab, ImVec4(0.25f, 0.25f, 0.25f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_ScrollbarGrabHovered, ImVec4(0.25f, 0.25f, 0.25f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_ScrollbarGrabActive, ImVec4(0.25f, 0.25f, 0.25f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_CheckMark, ImVec4(1.00f, 1.00f, 1.00f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.46f, 0.46f, 0.46f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(0.33f, 0.33f, 0.33f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_SeparatorHovered, ImVec4(0.33f, 0.33f, 0.33f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_SeparatorActive, ImVec4(0.33f, 0.33f, 0.33f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_ResizeGrip, ImVec4(0.40f, 0.40f, 0.40f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_ResizeGripHovered, ImVec4(0.40f, 0.40f, 0.40f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_ResizeGripActive, ImVec4(0.40f, 0.40f, 0.40f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
 
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 4.0f);
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 0.0f);
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
-    ImGui::PushStyleVar(ImGuiStyleVar_PopupRounding, 0.0f);
-    ImGui::PushStyleVar(ImGuiStyleVar_ScrollbarRounding, 4.0f);
-    ImGui::PushStyleVar(ImGuiStyleVar_GrabRounding, 0.0f);
-    ImGui::PushStyleVar(ImGuiStyleVar_TabRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 4.0f);
 }
 
 void console::resetTheme() {
-    ImGui::PopStyleVar(8);
-    ImGui::PopStyleColor(26);
+    ImGui::PopStyleVar(1);
+    ImGui::PopStyleColor(1);
     ImGui::PopFont();
 }

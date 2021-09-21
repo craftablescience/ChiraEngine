@@ -1,6 +1,5 @@
 #include "../src/core/engine.h"
 #include "../src/render/texture2d.h"
-#include "../src/loader/objMeshLoader.h"
 #include "../src/render/freecam.h"
 #include "../src/sound/oggFileSound.h"
 #include "../src/render/phongMaterial.h"
@@ -15,6 +14,7 @@ int main() {
     engine engine;
     resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/editor"});
     chira::translationManager::addTranslationFile("file://i18n/editor");
+    chira::translationManager::addUniversalFile("file://i18n/editor");
 
     engine::getSettingsLoader()->setValue("engineGui", "discordIntegration", true, false, true);
     bool discordEnabled;
@@ -59,20 +59,18 @@ int main() {
     mesh* cubeMesh;
 
     engine.addInitFunction([&cubeMesh, &discordEnabled](class engine* e) {
-        ImGuiIO& io = ImGui::GetIO();
-
-        // Don't release the fontResource when done to keep it cached
-        auto* noto = resourceManager::getResource<fontResource>("file://fonts/default.json");
-        io.FontDefault = noto->getFont();
-
-        auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
-        cubeMesh = resourceManager::getResource<mesh>("file://meshes/teapot.json", cubeMaterial);
-
         if (discordEnabled) {
-            discordRichPresence::init("875778280899358720");
+            discordRichPresence::init(TR("editor.discord.application_id"));
             discordRichPresence::setLargeImage("main_logo");
             discordRichPresence::setState("https://discord.gg/ASgHFkX");
         }
+
+        // Don't release the fontResource when done to keep it cached
+        auto* noto = resourceManager::getResource<fontResource>("file://fonts/default.json");
+        ImGui::GetIO().FontDefault = noto->getFont();
+
+        auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
+        cubeMesh = resourceManager::getResource<mesh>("file://meshes/teapot.json", cubeMaterial);
 
         e->captureMouse(true);
         e->setMainCamera(new freecam{e});
@@ -111,6 +109,8 @@ int main() {
     bool renderImguiTextureTestWindow = true;
 
     engine.addRenderFunction([tex, cubeMesh, &renderImguiTextureTestWindow, &settingsWindow](class engine* e) {
+        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
+
         // todo: use UBO
         cubeMesh->getMaterial()->getShader()->setUniform("p", e->getMainCamera()->getProjectionMatrix());
         cubeMesh->getMaterial()->getShader()->setUniform("v", e->getMainCamera()->getViewMatrix());
@@ -119,11 +119,12 @@ int main() {
         if (renderImguiTextureTestWindow) {
             if (!ImGui::Begin(TR("debug.imgui.texture_test").c_str(), &renderImguiTextureTestWindow)) {
                 ImGui::End();
+            } else {
+                ImGui::Text("size = %d x %d", 512, 512);
+                ImGui::Image((void *) (intptr_t) tex->getHandle(), ImVec2(512, 512));
+                markdown::create("Hello from Markdown");
+                ImGui::End();
             }
-            ImGui::Text("size = %d x %d", 512, 512);
-            ImGui::Image((void *) (intptr_t) tex->getHandle(), ImVec2(512, 512));
-            markdown::create("Hello from Markdown");
-            ImGui::End();
         }
 
         if (settingsWindow.getEnabled()) {

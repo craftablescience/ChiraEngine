@@ -69,6 +69,7 @@ public:
     [[nodiscard]] bool isMouseCaptured() const;
     void showConsole(bool shouldShow);
     console* getConsole();
+    [[nodiscard]] bool isIconified() const;
 private:
     GLFWwindow* window = nullptr;
     std::vector<std::function<void(engine*)>> initFunctions{};
@@ -84,6 +85,7 @@ private:
     abstractCamera* mainCamera = nullptr; // This pointer should not be deleted, ever! It's a reference to a managed resource!
     console consoleUI{};
     bool started = false;
+    bool iconified = false;
     double lastTime, currentTime, lastMouseX, lastMouseY;
     static void setSettingsLoaderDefaults();
     // NOTE: PNGs must have a bit depth of 8 or less* (less not tested)
@@ -97,4 +99,5 @@ private:
     void mouseButtonRepeatingCallback();
     static void mouseMovementCallback(GLFWwindow* window, double xPos, double yPos);
     static void mouseScrollCallback(GLFWwindow* window, double xPos, double yPos);
+    static void windowIconifyCallback(GLFWwindow* window, int iconified);
 };
