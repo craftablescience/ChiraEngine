@@ -9,6 +9,8 @@
 #include "tinyfiledialogs.h"
 #include "../src/ui/markdown.h"
 #include "ui/settings.h"
+#include "imgui_internal.h"
+#include "../src/resource/stringResource.h"
 
 int main() {
     engine engine;
@@ -121,7 +123,7 @@ int main() {
                 ImGui::End();
             } else {
                 ImGui::Text("size = %d x %d", 512, 512);
-                ImGui::Image((void *) (intptr_t) tex->getHandle(), ImVec2(512, 512));
+                ImGui::Image((void*) (intptr_t) tex->getHandle(), ImVec2(512, 512));
                 markdown::create("Hello from Markdown");
                 ImGui::End();
             }

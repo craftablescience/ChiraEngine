@@ -110,7 +110,7 @@ void discordRichPresence::shutdown() {
 }
 
 void discordRichPresence::callbackReady(const DiscordUser* connectedUser) {
-    chira::logger::log(INFO, "Discord", fmt::format(TR("debug.discord.user_connected"), connectedUser->username, connectedUser->discriminator));
+    chira::logger::log(INFO_IMPORTANT, "Discord", fmt::format(TR("debug.discord.user_connected"), connectedUser->username, connectedUser->discriminator));
 }
 
 void discordRichPresence::callbackDisconnected(int errcode, const char* message) {
