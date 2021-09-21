@@ -38,4 +38,4 @@ jobs:
         path: |
           ${{github.workspace}}/build/resources/
           ${{github.workspace}}/build/ChiraEngineGui
-          ${{github.workspace}}/build/libcurlpp.*
+          ${{github.workspace}}/build/libcurlpp.s*
