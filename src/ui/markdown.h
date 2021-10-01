@@ -2,7 +2,7 @@
 
 #include "imgui.h"
 #include "imgui_markdown.h"
-#if WIN32
+#if _WIN32
 #include <windows.h>
 #include <shellapi.h>
 #endif
@@ -39,7 +39,7 @@ private:
     static void linkCallback(ImGui::MarkdownLinkCallbackData data_) {
         std::string url(data_.link, data_.linkLength);
         if (!data_.isImage) {
-#if WIN32
+#if _WIN32
             ShellExecuteA(nullptr, "open", url.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 #else
             system(("open " + url).c_str());

@@ -5,7 +5,7 @@
 #include "../core/engine.h"
 #include "abstractCamera.h"
 
-// Largely taken from https://learnopengl.com/Getting-started/Camera
+/// Largely taken from https://learnopengl.com/Getting-started/Camera
 class perspectiveCamera : public abstractCamera {
 public:
     explicit perspectiveCamera(engine* engine, float newYaw, float newPitch, glm::vec3 newPosition, glm::vec3 currentUp = glm::vec3(0.0f, 1.0f, 0.0f), float newZoom = 45.0f);

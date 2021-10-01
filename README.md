@@ -8,13 +8,15 @@ To summarize the major features:
 - Native Windows and Linux support (OpenGL 4.5 Core)
 - As extensible as possible: register custom logging hooks, scripting providers, sound providers, etc.
 - Robust resource loading and management, and custom resource providers can be registered
+- Data-oriented design, using components as building blocks
 - Hassle-free Discord Rich Presence
 - Inline text localization
 - AngelScript support, with common function hooks and types registered
 - Bullet physics engine built-in
 - Abstract input system using C++11 lambdas (or a reference to a function)
+- Event queue to communicate between components
 - Settings manager, which saves to and loads from a JSON file (with smart overwriting) for modifiable settings without recompiling
-- Both AngelScript and OpenAL can be disabled in code and/or through the settings file
+- Both AngelScript and OpenAL can be disabled in code or in the settings file
 - The sound manager can be changed, and scripting providers (defined by the user) can be added
 - Logger built-in with colored text and hooks, and a console GUI which uses the logging hook system
 

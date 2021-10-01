@@ -2,7 +2,7 @@
 
 #include "positionComponent.h"
 #include "rotationComponent.h"
-#include "../../render/mesh.h"
+#include "../render/mesh.h"
 
 class meshComponent : public positionComponent, public rotationComponent {
 public:

@@ -13,10 +13,8 @@ public:
     }
     const std::string& getLanguage();
     bool hasTranslation(const std::string& key);
-    /*
-     * NOTE: Currently nlohmann::json does not support string_view unfortunately.
-     * If this ever changes, please change this function to use it!
-     */
+    /// Note: Currently nlohmann::json does not support string_view unfortunately.
+    /// If this ever changes, please change this function to use it!
     std::string getTranslation(const std::string& identifier);
     std::unordered_map<std::string,std::string> getAllTranslations();
 private:

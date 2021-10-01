@@ -3,10 +3,8 @@
 #include <string>
 #include <discord_rpc.h>
 
-/*
- * Updates are handled by the engine. All you need to do is run the init() method.
- * After that, any setter functions will change the status after the frame is rendered.
- */
+/// Updates are handled by the engine. All you need to do is run the init() method.
+/// After that, any setter functions will change the status after the frame is rendered.
 class discordRichPresence {
 public:
     static void init(const std::string& appId);

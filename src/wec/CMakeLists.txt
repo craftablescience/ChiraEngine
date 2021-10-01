@@ -1,7 +1,15 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/wec/component/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/wec/entity/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/wec/world/CMakeLists.txt)
-
 list(APPEND ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/wecManager.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/wecManager.h)
+        ${CMAKE_CURRENT_LIST_DIR}/abstractComponent.h
+        ${CMAKE_CURRENT_LIST_DIR}/abstractEntity.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/abstractEntity.h
+        ${CMAKE_CURRENT_LIST_DIR}/abstractWorld.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/abstractWorld.h
+        ${CMAKE_CURRENT_LIST_DIR}/componentManager.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/componentManager.h
+        ${CMAKE_CURRENT_LIST_DIR}/extensibleComponent.h
+        ${CMAKE_CURRENT_LIST_DIR}/extensibleEntity.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/extensibleEntity.h
+        ${CMAKE_CURRENT_LIST_DIR}/meshComponent.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/meshComponent.h
+        ${CMAKE_CURRENT_LIST_DIR}/positionComponent.h
+        ${CMAKE_CURRENT_LIST_DIR}/rotationComponent.h)

@@ -63,7 +63,7 @@ public:
 
     [[nodiscard]] const GLFWwindow* getWindow() const;
     [[nodiscard]] bool isStarted() const;
-    // NOTE: only guaranteed to work after run() in a render method
+    /// Note: only guaranteed to work after run() in a render method
     [[nodiscard]] double getDeltaTime() const;
     void captureMouse(bool capture);
     [[nodiscard]] bool isMouseCaptured() const;
@@ -88,7 +88,7 @@ private:
     bool iconified = false;
     double lastTime, currentTime, lastMouseX, lastMouseY;
     static void setSettingsLoaderDefaults();
-    // NOTE: PNGs must have a bit depth of 8 or less* (less not tested)
+    /// Note: PNGs must have a bit depth of 8 or less* (less not tested)
     void setIcon(const std::string& iconPath);
     void displaySplashScreen();
     static void errorCallback(int error, const char* description);

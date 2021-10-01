@@ -3,16 +3,15 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
-#include "../component/abstractComponent.h"
+#include "abstractComponent.h"
 
-class abstractEntity {
+class abstractEntity : public abstractComponent {
 public:
     virtual void init() = 0;
     virtual void preRender(double delta) = 0;
     virtual void postRender(double delta) = 0;
-    virtual void stop() = 0;
     void addComponent(const std::string& name, abstractComponent* component);
     abstractComponent* getComponent(const std::string& name);
 protected:
-    std::unordered_map<std::string, std::unique_ptr<abstractComponent>> components;
+    std::unordered_map<std::string, abstractComponent*> components;
 };

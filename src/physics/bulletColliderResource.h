@@ -8,10 +8,8 @@ enum bulletColliderType {
     BULLET_BOX
 };
 
-/*
- * Note that this does not add or remove the collider to the physics world.
- * This must be done by a component.
- */
+/// Note: this does not add or remove the collider to the physics world.
+/// This must be done by a component.
 class bulletColliderResource : propertiesResource {
 public:
     explicit bulletColliderResource(const std::string& identifier_) : propertiesResource(identifier_) {}

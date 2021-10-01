@@ -23,5 +23,5 @@ namespace chira {
     };
 }
 
-// Just a handy shortcut, since this function call is quite long
+/// Just a handy shortcut, since this function call is quite long
 #define TR(ID) chira::translationManager::getTranslation(ID)

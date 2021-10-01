@@ -11,7 +11,6 @@ public:
 
     void addCategory(const std::string& category) override;
 
-    // Note: if the settings loader does not have the value, it should not raise an error, just don't modify the pointer
     void getValue(const std::string& category, const std::string& name, int* value) override;
     void getValue(const std::string& category, const std::string& name, double* value) override;
     void getValue(const std::string& category, const std::string& name, std::string* value) override;

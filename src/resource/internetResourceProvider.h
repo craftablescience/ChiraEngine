@@ -3,11 +3,9 @@
 #include <string>
 #include "abstractResourceProvider.h"
 
-/*
- * This provider must only be registered once under one name / protocol!
- * It always returns true when asked if it holds a resource, this may not be true however.
- * Additionally, the "name" passed to it is the protocol it uses (e.g. http, https, ftp, etc.)
- */
+/// Note: this provider must only be registered once under one name / protocol!
+/// It always returns true when asked if it holds a resource, this may not actually be true however.
+/// Additionally, the "name" passed to it is the protocol it uses (e.g. http, https, ftp, etc.)
 class internetResourceProvider : public abstractResourceProvider {
 public:
     explicit internetResourceProvider(const std::string& name_, unsigned short port_) : abstractResourceProvider(name_), port(port_) {}

@@ -3,11 +3,9 @@
 #include <memory>
 #include <string>
 
-/*
- * If adding a resource that depends on other resources,
- * release() them before release()ing it
- * The destructor should discard the data
- */
+/// If adding a resource that depends on other resources,
+/// release() them before release()ing the parent.
+/// The destructor should discard the data.
 class abstractResource {
     friend class resourceManager;
 public:

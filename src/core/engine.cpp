@@ -7,6 +7,7 @@
 #include "fmt/core.h"
 #include <iostream>
 #include "../config/glVersion.h"
+#include "../events/eventQueue.h"
 #include "../loader/jsonSettingsLoader.h"
 #include "../loader/image.h"
 #include "../sound/alSoundManager.h"
@@ -26,9 +27,8 @@ const std::string ENGINE_FILESYSTEM_PATH = "resources/engine";
 
 engine::engine(const std::string& configPath) {
 #ifdef _WIN32
-#if DEBUG
     system(("chcp " + std::to_string(CP_UTF8) + " > nul").c_str());
-#else
+#ifndef DEBUG
     FreeConsole();
 #endif
 #endif
@@ -168,7 +168,7 @@ void engine::windowIconifyCallback(GLFWwindow* window, int iconified) {
 void engine::init() {
     this->started = true;
 
-    chira::logger::addCallback([this](const loggerType type, const std::string& source, const std::string& message) {
+    chira::logger::addCallback([=](const loggerType type, const std::string& source, const std::string& message) {
         this->getConsole()->engineLoggingHook(type, source, message);
     });
 
@@ -367,6 +367,7 @@ void engine::run() {
         if (discordRichPresence::initialized()) {
             discordRichPresence::updatePresence();
         }
+        chira::eventQueue::flushEvents();
     }
 
     this->stop();

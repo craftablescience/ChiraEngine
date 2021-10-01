@@ -111,7 +111,7 @@ public:
 
     static void removeResource(const std::string& identifier);
 protected:
-    // Deletes ALL resources and providers. Should only ever be called once, when the program closes.
+    /// Deletes ALL resources and providers. Should only ever be called once, when the program closes.
     static void discardAll();
 private:
     static inline std::unordered_map<std::string, std::vector<std::unique_ptr<abstractResourceProvider>>> providers{};
