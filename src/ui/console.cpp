@@ -5,10 +5,7 @@ using namespace chira;
 
 console::console() {
     this->clearLog();
-    this->historyPos = -1;
     this->autoScroll = true;
-    this->scrollToBottom = false;
-
     this->isEnabled = false;
 }
 
@@ -33,19 +30,19 @@ void console::addLog(const std::string& message) {
 void console::engineLoggingHook(const loggerType type, const std::string& source, const std::string& message) {
     switch (type) {
         case INFO:
-            this->addLog(logger::INFO_PREFIX + "[" + source + "] " + message);
+            this->addLog(std::string(logger::INFO_PREFIX) + "[" + source + "] " + message);
             break;
         case INFO_IMPORTANT:
-            this->addLog(logger::INFO_IMPORTANT_PREFIX + "[" + source + "] " + message);
+            this->addLog(std::string(logger::INFO_IMPORTANT_PREFIX) + "[" + source + "] " + message);
             break;
         case OUTPUT:
-            this->addLog(logger::OUTPUT_PREFIX + "[" + source + "] " + message);
+            this->addLog(std::string(logger::OUTPUT_PREFIX) + "[" + source + "] " + message);
             break;
         case WARN:
-            this->addLog(logger::WARNING_PREFIX + "[" + source + "] " + message);
+            this->addLog(std::string(logger::WARNING_PREFIX) + "[" + source + "] " + message);
             break;
         case ERR:
-            this->addLog(logger::ERROR_PREFIX + "[" + source + "] " + message);
+            this->addLog(std::string(logger::ERROR_PREFIX) + "[" + source + "] " + message);
             break;
     }
 }
@@ -69,16 +66,16 @@ void console::render() {
             const char* item = this->items[i];
             ImVec4 color;
             bool has_color = false;
-            if (strstr(item, logger::INFO_IMPORTANT_PREFIX.c_str())) {
+            if (strstr(item, logger::INFO_IMPORTANT_PREFIX.data())) {
                 color = ImVec4(0.13f, 0.77f, 0.13f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, logger::OUTPUT_PREFIX.c_str())) {
+            } else if (strstr(item, logger::OUTPUT_PREFIX.data())) {
                 color = ImVec4(0.3f, 0.3f, 1.0f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, logger::WARNING_PREFIX.c_str())) {
+            } else if (strstr(item, logger::WARNING_PREFIX.data())) {
                 color = ImVec4(1.0f, 0.84f, 0.0f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, logger::ERROR_PREFIX.c_str())) {
+            } else if (strstr(item, logger::ERROR_PREFIX.data())) {
                 color = ImVec4(1.0f, 0.2f, 0.2f, 1.0f);
                 has_color = true;
             }
@@ -93,10 +90,11 @@ void console::render() {
     }
     ImGui::PopStyleVar();
 
-    if (this->scrollToBottom || (this->autoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())) {
+    // Subtracting 2 from ImGui::GetScrollMaxY() should give a little leeway
+    // when scrolling back down to start autoscrolling again
+    if (this->autoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY() - 2) {
         ImGui::SetScrollHereY(1.0f);
     }
-    this->scrollToBottom = false;
 
     ImGui::EndChild();
     console::resetTheme();

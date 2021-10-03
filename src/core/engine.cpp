@@ -25,30 +25,8 @@
 
 using namespace chira;
 
-void engine::preInit(const std::string& configPath) {
-#ifdef _WIN32
-    system(("chcp " + std::to_string(CP_UTF8) + " > nul").c_str());
-#ifndef DEBUG
-    FreeConsole();
-#endif
-#endif
-    resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", ENGINE_FILESYSTEM_PATH});
-    resourceManager::addResourceProvider("http", new internetResourceProvider{"http", 80});
-    resourceManager::addResourceProvider("https", new internetResourceProvider{"https", 443});
-    engine::setSettingsLoader(new jsonSettingsLoader(configPath));
-    // todo: use computer language as default here
-    std::string defaultLang = "en";
-    engine::getSettingsLoader()->getValue("ui", "language", &defaultLang);
-    translationManager::setLanguage(defaultLang);
-    translationManager::addTranslationFile("file://i18n/engine");
-    engine::lastTime = 0;
-    engine::currentTime = 0;
-    engine::lastMouseX = -1;
-    engine::lastMouseY = -1;
-}
-
 void engine::errorCallback(int error, const char* description) {
-    fmt::print(stderr, TR("error.glfw.generic"), error, description);
+    logger::log(ERR, "GLFW", fmt::format(TR("error.glfw.generic"), error, description));
 }
 
 #if DEBUG
@@ -157,6 +135,28 @@ void engine::mouseScrollCallback(GLFWwindow* w, double xPos, double yPos) {
 
 void engine::windowIconifyCallback(GLFWwindow* w, int isIconified) {
     engine::iconified = (isIconified == GLFW_TRUE);
+}
+
+void engine::preInit(const std::string& configPath) {
+#ifdef _WIN32
+    system(("chcp " + std::to_string(CP_UTF8) + " > nul").c_str());
+#ifndef DEBUG
+    FreeConsole();
+#endif
+#endif
+    resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", ENGINE_FILESYSTEM_PATH});
+    resourceManager::addResourceProvider("http", new internetResourceProvider{"http", 80});
+    resourceManager::addResourceProvider("https", new internetResourceProvider{"https", 443});
+    engine::setSettingsLoader(new jsonSettingsLoader(configPath));
+    // todo: use computer language as default here
+    std::string defaultLang = "en";
+    engine::getSettingsLoader()->getValue("ui", "language", &defaultLang);
+    translationManager::setLanguage(defaultLang);
+    translationManager::addTranslationFile("file://i18n/engine");
+    engine::lastTime = 0;
+    engine::currentTime = 0;
+    engine::lastMouseX = -1;
+    engine::lastMouseY = -1;
 }
 
 void engine::init() {

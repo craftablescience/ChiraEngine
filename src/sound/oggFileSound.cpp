@@ -45,7 +45,7 @@ bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, 
 
     this->audioData.channels = vorbisInfo->channels;
     this->audioData.bitsPerSample = 16;
-    this->audioData.sampleRate = vorbisInfo->rate;
+    this->audioData.sampleRate = (std::int32_t) vorbisInfo->rate;
     this->audioData.duration = (std::size_t) ov_time_total(&this->audioData.oggVorbisFile, -1);
 
     alCall(alGenSources, 1, &this->audioData.source);
@@ -80,7 +80,7 @@ bool oggFileSound::readFile(const std::string& filename) {
     for (std::uint8_t i = 0; i < OGG_NUM_BUFFERS; ++i) {
         std::int32_t dataSoFar = 0;
         while (dataSoFar < OGG_BUFFER_SIZE) {
-            std::int32_t result = ov_read(&this->audioData.oggVorbisFile, &data[dataSoFar], OGG_BUFFER_SIZE - dataSoFar, 0, 2, 1, reinterpret_cast<int*>(&this->audioData.oggCurrentSection));
+            auto result = (std::int32_t) ov_read(&this->audioData.oggVorbisFile, &data[dataSoFar], OGG_BUFFER_SIZE - dataSoFar, 0, 2, 1, reinterpret_cast<int*>(&this->audioData.oggCurrentSection));
             switch (result) {
                 case OV_HOLE:
                     logger::log(ERR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_HOLE", i, filename));
@@ -153,7 +153,7 @@ void oggFileSound::update() {
         memset(data, 0, OGG_BUFFER_SIZE);
         std::int32_t sizeRead = 0;
         while (sizeRead < OGG_BUFFER_SIZE) {
-            std::int32_t result = ov_read(&this->audioData.oggVorbisFile, &data[sizeRead], OGG_BUFFER_SIZE - sizeRead, 0, 2, 1, reinterpret_cast<int*>(&this->audioData.oggCurrentSection));
+            auto result = (std::int32_t) ov_read(&this->audioData.oggVorbisFile, &data[sizeRead], OGG_BUFFER_SIZE - sizeRead, 0, 2, 1, reinterpret_cast<int*>(&this->audioData.oggCurrentSection));
             if (result == OV_HOLE) {
                 logger::log(ERR, "OGG", fmt::format(TR("error.ogg.buffer_update_error"), "OV_HOLE", this->audioData.filename));
                 break;

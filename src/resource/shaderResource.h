@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <glad/gl.h>
 #include <fstream>
@@ -9,8 +10,8 @@
 #include "../resource/abstractResource.h"
 
 namespace chira {
-    const std::string SHADER_PREPROCESSOR_DEFAULT_PREFIX = "#";
-    const std::string SHADER_PREPROCESSOR_DEFAULT_SUFFIX = "#";
+    constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_PREFIX = "#";
+    constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_SUFFIX = "#";
 
     class shaderResource : public abstractResource, public handleObject {
     public:
@@ -24,8 +25,8 @@ namespace chira {
     private:
         unsigned int type;
         std::string data{};
-        static inline std::string preprocessorPrefix = SHADER_PREPROCESSOR_DEFAULT_PREFIX;
-        static inline std::string preprocessorSuffix = SHADER_PREPROCESSOR_DEFAULT_SUFFIX;
+        static inline std::string preprocessorPrefix = std::string{SHADER_PREPROCESSOR_DEFAULT_PREFIX};
+        static inline std::string preprocessorSuffix = std::string{SHADER_PREPROCESSOR_DEFAULT_SUFFIX};
         static inline std::unordered_map<std::string, std::string> preprocessorSymbols{};
         void checkForCompilationErrors() const;
     };

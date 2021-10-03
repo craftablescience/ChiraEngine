@@ -22,9 +22,7 @@ namespace chira {
         fontResource* font = nullptr;
         ImVector<char*> items;
         ImVector<char*> history;
-        int historyPos;
         bool autoScroll;
-        bool scrollToBottom;
         bool isEnabled;
     };
 }
