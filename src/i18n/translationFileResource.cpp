@@ -1,5 +1,7 @@
 #include "translationFileResource.h"
 
+using namespace chira;
+
 const std::string& translationFileResource::getLanguage() {
     return this->language;
 }

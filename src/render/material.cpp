@@ -4,6 +4,8 @@
 #include "../i18n/translationManager.h"
 #include "../resource/resourceManager.h"
 
+using namespace chira;
+
 material::material(const std::string& identifier_) : propertiesResource(identifier_) {}
 
 void material::compile(const nlohmann::json& properties) {
@@ -25,7 +27,7 @@ int material::getGLFormatFromString(const std::string& formatName) {
     } else if (formatName == "RGBA") {
         return GL_RGBA;
     }
-    chira::logger::log(WARN, "Material", fmt::format(TR("warn.material.invalid_gl_format"), formatName));
+    logger::log(WARN, "Material", fmt::format(TR("warn.material.invalid_gl_format"), formatName));
     return GL_RGBA;
 }
 

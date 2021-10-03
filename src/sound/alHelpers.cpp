@@ -3,6 +3,8 @@
 #include "../i18n/translationManager.h"
 #include "fmt/core.h"
 
+using namespace chira;
+
 bool checkForALErrors(const std::string& filename, const std::uint_fast32_t line) {
     ALenum alError = alGetError();
     if (alError != AL_NO_ERROR) {
@@ -26,7 +28,7 @@ bool checkForALErrors(const std::string& filename, const std::uint_fast32_t line
             default:
                 error = fmt::format(TR("error.openal.al_unknown"), alError);
         }
-        chira::logger::log(ERR, "OpenAL", fmt::format(TR("error.openal.generic"), filename, line, error));
+        logger::log(ERR, "OpenAL", fmt::format(TR("error.openal.generic"), filename, line, error));
         return false;
     }
     return true;
@@ -55,7 +57,7 @@ bool checkForALCErrors(const std::string& filename, const std::uint_fast32_t lin
             default:
                 error = fmt::format(TR("error.openal.alc_unknown"), alcError);
         }
-        chira::logger::log(ERR, "OpenAL", fmt::format(TR("error.openal.generic"), filename, line, error));
+        logger::log(ERR, "OpenAL", fmt::format(TR("error.openal.generic"), filename, line, error));
         return false;
     }
     return true;

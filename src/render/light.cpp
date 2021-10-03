@@ -1,5 +1,7 @@
 #include "light.h"
 
+using namespace chira;
+
 abstractLight::abstractLight(const glm::vec3& position_, const glm::vec3& ambient_, const glm::vec3& diffuse_, const glm::vec3& specular_):
     position(position_), ambient(ambient_), diffuse(diffuse_), specular(specular_) {}
 

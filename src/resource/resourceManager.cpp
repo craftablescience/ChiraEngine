@@ -1,5 +1,7 @@
 #include "resourceManager.h"
 
+using namespace chira;
+
 void resourceManager::addResourceProvider(const std::string& name, abstractResourceProvider* provider) {
     if (resourceManager::providers.find(name) == resourceManager::providers.end()) {
         resourceManager::providers[name] = std::vector<std::unique_ptr<abstractResourceProvider>>{};
@@ -19,7 +21,7 @@ abstractResourceProvider* resourceManager::getResourceProviderWithResource(const
             return i->get();
         }
     }
-    chira::logger::log(ERR, "Resource Manager", fmt::format(TR("error.resource_manager.resource_not_found"), identifier));
+    logger::log(ERR, "Resource Manager", fmt::format(TR("error.resource_manager.resource_not_found"), identifier));
     return nullptr;
 }
 
@@ -30,7 +32,7 @@ std::pair<std::string,std::string> resourceManager::splitResourceIdentifier(cons
         out.first = identifier.substr(0, pos);
         out.second = identifier.substr(pos + RESOURCE_ID_SEPARATOR.length());
     } else {
-        chira::logger::log(ERR, "resourceManager::splitResourceIdentifier", fmt::format(TR("error.resource_manager.cannot_split_identifier"), identifier));
+        logger::log(ERR, "resourceManager::splitResourceIdentifier", fmt::format(TR("error.resource_manager.cannot_split_identifier"), identifier));
     }
     return out;
 }

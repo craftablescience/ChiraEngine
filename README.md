@@ -6,19 +6,26 @@ A fully customizable (and heavily work-in-progress) game engine written in C++17
 ## Features
 To summarize the major features:
 - Native Windows and Linux support (OpenGL 4.5 Core)
-- As extensible as possible: register custom logging hooks, scripting providers, sound providers, etc.
-- Robust resource loading and management, and custom resource providers can be registered
+- As extensible as possible: register custom logging hooks, sound providers, resource types and providers, etc.
+- Robust resource loading and management to facilitate sharing of congruent data
 - Data-oriented design, using components as building blocks
 - Hassle-free Discord Rich Presence
 - Inline text localization
 - AngelScript support, with common function hooks and types registered
-- Bullet physics engine built-in
 - Abstract input system using C++11 lambdas (or a reference to a function)
 - Event queue to communicate between components
 - Settings manager, which saves to and loads from a JSON file (with smart overwriting) for modifiable settings without recompiling
-- Both AngelScript and OpenAL can be disabled in code or in the settings file
 - The sound manager can be changed, and scripting providers (defined by the user) can be added
 - Logger built-in with colored text and hooks, and a console GUI which uses the logging hook system
+
+## Planned Features
+- Bullet physics engine built-in
+- Abstract ImGUI windows and expose relevant functions to scripting
+- Create an editor UI to make games with
+- Revamp scripting, allow adding custom scripting providers
+- Add C# scripting support
+- Add more graphics features like PBR
+- Implement the assimp library for model loading
 
 Again, the goal of the engine is to have as much customization as possible, while still maintaining ease of use.
 

@@ -9,6 +9,8 @@
 #include "fmt/core.h"
 #include "../utility/curlMemoryWriter.h"
 
+using namespace chira;
+
 void internetResourceProvider::compileResource(const std::string& name, abstractResource* resource) {
     curlpp::Easy request;
     curlMemoryWriter mWriterChunk;
@@ -19,8 +21,8 @@ void internetResourceProvider::compileResource(const std::string& name, abstract
         request.perform();
         resource->compile(mWriterChunk.m_pBuffer, mWriterChunk.m_Size);
     } catch (curlpp::RuntimeError& e) {
-        chira::logger::log(ERR, fmt::format("Internet Resource Provider ({}:{})", this->providerName, this->port), e.what());
+        logger::log(ERR, fmt::format("Internet Resource Provider ({}:{})", this->providerName, this->port), e.what());
     } catch (curlpp::LogicError& e) {
-        chira::logger::log(ERR, fmt::format("Internet Resource Provider ({}:{})", this->providerName, this->port), e.what());
+        logger::log(ERR, fmt::format("Internet Resource Provider ({}:{})", this->providerName, this->port), e.what());
     }
 }

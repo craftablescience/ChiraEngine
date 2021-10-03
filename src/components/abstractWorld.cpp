@@ -8,11 +8,11 @@ const std::string& abstractWorld::getName() {
 
 void abstractWorld::addEntity(const std::string& name_, abstractEntity* component) {
     // todo: add entity to manager
-    this->entities[name_] = std::unique_ptr<abstractEntity>(component);
+    //this->entities[name_] = std::unique_ptr<abstractEntity>(component);
 }
 
 abstractEntity* abstractWorld::getEntity(const std::string& name_) {
-    return this->entities[name_].get();
+    //return this->entities[name_].get();
 }
 
 void abstractWorld::removeEntity(const std::string& name_) {

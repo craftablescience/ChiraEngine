@@ -2,6 +2,8 @@
 
 #include "../resource/resourceManager.h"
 
+using namespace chira;
+
 void texturedMaterial::compile(const nlohmann::json& properties) {
     material::compile(properties);
     this->tex = resourceManager::getResource<texture2d>(

@@ -2,6 +2,8 @@
 
 #include "resourceManager.h"
 
+using namespace chira;
+
 void abstractResource::release() const {
     resourceManager::removeResource(this->identifier);
 }

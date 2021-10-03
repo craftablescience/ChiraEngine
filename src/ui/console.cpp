@@ -1,6 +1,8 @@
 #include "console.h"
 #include "../resource/resourceManager.h"
 
+using namespace chira;
+
 console::console() {
     this->clearLog();
     this->historyPos = -1;
@@ -31,19 +33,19 @@ void console::addLog(const std::string& message) {
 void console::engineLoggingHook(const loggerType type, const std::string& source, const std::string& message) {
     switch (type) {
         case INFO:
-            this->addLog(chira::logger::INFO_PREFIX + "[" + source + "] " + message);
+            this->addLog(logger::INFO_PREFIX + "[" + source + "] " + message);
             break;
         case INFO_IMPORTANT:
-            this->addLog(chira::logger::INFO_IMPORTANT_PREFIX + "[" + source + "] " + message);
+            this->addLog(logger::INFO_IMPORTANT_PREFIX + "[" + source + "] " + message);
             break;
         case OUTPUT:
-            this->addLog(chira::logger::OUTPUT_PREFIX + "[" + source + "] " + message);
+            this->addLog(logger::OUTPUT_PREFIX + "[" + source + "] " + message);
             break;
         case WARN:
-            this->addLog(chira::logger::WARNING_PREFIX + "[" + source + "] " + message);
+            this->addLog(logger::WARNING_PREFIX + "[" + source + "] " + message);
             break;
         case ERR:
-            this->addLog(chira::logger::ERROR_PREFIX + "[" + source + "] " + message);
+            this->addLog(logger::ERROR_PREFIX + "[" + source + "] " + message);
             break;
     }
 }
@@ -67,16 +69,16 @@ void console::render() {
             const char* item = this->items[i];
             ImVec4 color;
             bool has_color = false;
-            if (strstr(item, chira::logger::INFO_IMPORTANT_PREFIX.c_str())) {
+            if (strstr(item, logger::INFO_IMPORTANT_PREFIX.c_str())) {
                 color = ImVec4(0.13f, 0.77f, 0.13f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, chira::logger::OUTPUT_PREFIX.c_str())) {
+            } else if (strstr(item, logger::OUTPUT_PREFIX.c_str())) {
                 color = ImVec4(0.3f, 0.3f, 1.0f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, chira::logger::WARNING_PREFIX.c_str())) {
+            } else if (strstr(item, logger::WARNING_PREFIX.c_str())) {
                 color = ImVec4(1.0f, 0.84f, 0.0f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, chira::logger::ERROR_PREFIX.c_str())) {
+            } else if (strstr(item, logger::ERROR_PREFIX.c_str())) {
                 color = ImVec4(1.0f, 0.2f, 0.2f, 1.0f);
                 has_color = true;
             }

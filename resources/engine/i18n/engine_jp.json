@@ -36,7 +36,7 @@
   "error.glfw.window": "ウィンドウの作成に失敗しました",
   "error.opengl.version": "このプログラムを実行するには,OpenGL {}が使用可能である必要があります",
   "error.engine.unset_icon_path": "訓練を受けた専門家でない限り,iconPathプロパティの設定を解除しないでください！",
-  "error.engine.invalid_script_provider": "スクリプトプロバイダー{}が認識されません。正しく登録されていることを確認してください",
+  "error.engine.script_provider_missing": "{}はまだ初期化されていません",
   "error.engine.invalid_access": "この関数を呼び出すには,{}に{}を設定する必要があります",
   "error.engine.missing_translation_manager": "え？翻訳マネージャーがありません！これは決して起こらないはずです！",
   "error.translation_manager.missing_translation": "「{}」の{}翻訳が見つかりませんでした",

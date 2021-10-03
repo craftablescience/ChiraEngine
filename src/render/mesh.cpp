@@ -4,6 +4,8 @@
 #include "../i18n/translationManager.h"
 #include "../resource/resourceManager.h"
 
+using namespace chira;
+
 mesh::mesh(const std::string& identifier_, material* material) : propertiesResource(identifier_), model(1.0f), vertices(), indices() {
     this->materialPtr = material;
 }
@@ -103,7 +105,7 @@ int mesh::getGLDepthFuncFromString(const std::string& depthFunc) {
     } else if (depthFunc == "NOTEQUAL") {
         return GL_NOTEQUAL;
     }
-    chira::logger::log(WARN, "Mesh", fmt::format(TR("warn.mesh.invalid_depth_function"), depthFunc));
+    logger::log(WARN, "Mesh", fmt::format(TR("warn.mesh.invalid_depth_function"), depthFunc));
     return GL_LEQUAL;
 }
 
@@ -115,6 +117,6 @@ int mesh::getGLCullTypeFromString(const std::string& cullType) {
     } else if (cullType == "FRONT_AND_BACK" || cullType == "BACK_AND_FRONT") {
         return GL_FRONT_AND_BACK;
     }
-    chira::logger::log(WARN, "Mesh", fmt::format(TR("warn.mesh.invalid_cull_type"), cullType));
+    logger::log(WARN, "Mesh", fmt::format(TR("warn.mesh.invalid_cull_type"), cullType));
     return GL_BACK;
 }

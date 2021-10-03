@@ -3,37 +3,39 @@
 #include "fmt/core.h"
 #include "../i18n/translationManager.h"
 
+using namespace chira;
+
 alSoundManager::~alSoundManager() {
     if (!alcCall(alcMakeContextCurrent, this->contextCurrent, this->device, nullptr)) {
-        chira::logger::log(ERR, "OpenAL", TR("error.openal.remove_context"));
+        logger::log(ERR, "OpenAL", TR("error.openal.remove_context"));
     }
     if (!alcCall(alcDestroyContext, this->device, this->context)) {
-        chira::logger::log(ERR, "OpenAL", TR("error.openal.destroy_context"));
+        logger::log(ERR, "OpenAL", TR("error.openal.destroy_context"));
     }
     ALCboolean closed;
     if (!alcCall(alcCloseDevice, closed, this->device, this->device)) {
-        chira::logger::log(ERR, "OpenAL", TR("error.openal.close_device_failure"));
+        logger::log(ERR, "OpenAL", TR("error.openal.close_device_failure"));
     }
 }
 
 void alSoundManager::init() {
     this->device = alcOpenDevice(nullptr);
     if (!this->device) {
-        chira::logger::log(WARN, "OpenAL", TR("error.openal.open_device_failure"));
+        logger::log(WARN, "OpenAL", TR("error.openal.open_device_failure"));
         std::vector<std::string> devices{};
         alcGetAvailableDevices(devices, nullptr);
         if (devices.empty()) {
-            chira::logger::log(ERR, "OpenAL", TR("error.openal.no_devices_available"));
+            logger::log(ERR, "OpenAL", TR("error.openal.no_devices_available"));
         } else {
-            chira::logger::log(ERR, "OpenAL", fmt::format(TR("error.openal.using_nondefault_device"), devices[0]));
+            logger::log(ERR, "OpenAL", fmt::format(TR("error.openal.using_nondefault_device"), devices[0]));
             this->device = alcOpenDevice(devices[0].c_str());
         }
     }
     if (!alcCall(alcCreateContext, this->context, this->device, this->device, nullptr) || !this->context) {
-        chira::logger::log(ERR, "OpenAL", TR("error.openal.create_context_failure"));
+        logger::log(ERR, "OpenAL", TR("error.openal.create_context_failure"));
     }
     if (!alcCall(alcMakeContextCurrent, this->contextCurrent, this->device, this->context) || this->contextCurrent != ALC_TRUE) {
-        chira::logger::log(ERR, "OpenAL", TR("error.openal.make_context_current"));
+        logger::log(ERR, "OpenAL", TR("error.openal.make_context_current"));
     }
 }
 

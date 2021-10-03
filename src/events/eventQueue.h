@@ -4,8 +4,6 @@
 #include <vector>
 #include <unordered_map>
 
-class engine;
-
 namespace chira {
     /// The "name" variable should be set to the sender's name.
     /// "data" is the data to send, if any.
@@ -20,7 +18,7 @@ namespace chira {
     /// flush currentEvents and move the contents of futureEvents to it.
     /// Think of it like v-sync's double buffer.
     class eventQueue {
-        friend engine; // to call flushEvents()
+        friend class engine; // to call flushEvents()
     public:
         static void addEvent(const std::string& eventName, const eventData& event);
         /// Note: the returned array is not guaranteed to exist after

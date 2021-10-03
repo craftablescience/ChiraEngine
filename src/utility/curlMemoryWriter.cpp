@@ -5,6 +5,8 @@
 
 #define MAX_BUFFER_LENGTH 20000
 
+using namespace chira;
+
 curlMemoryWriter::curlMemoryWriter() {
     this->m_pBuffer = nullptr;
     this->m_pBuffer = (unsigned char*) std::malloc(MAX_BUFFER_LENGTH * sizeof(unsigned char));
@@ -30,7 +32,7 @@ std::size_t curlMemoryWriter::writeMemoryCallback(const char* ptr, std::size_t s
     std::size_t realsize = size * nmemb;
 
     // (Re)Allocate memory for the buffer
-    m_pBuffer = (unsigned char*) w_realloc(m_pBuffer, m_Size + realsize);
+    m_pBuffer = (unsigned char*) this->w_realloc(m_pBuffer, m_Size + realsize);
 
     // Test if Buffer is initialized correctly & copy memory
     if (m_pBuffer == nullptr) {

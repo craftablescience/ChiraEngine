@@ -1,6 +1,8 @@
 #include "keybind.h"
 
-keybind::keybind(int button, int action, const std::function<void(engine*)>& function, bool isMouse) {
+using namespace chira;
+
+keybind::keybind(int button, int action, const std::function<void()>& function, bool isMouse) {
     this->button = button;
     this->action = action;
     this->fire = function;
@@ -19,6 +21,6 @@ bool keybind::isMouse() const {
     return this->mouse;
 }
 
-void keybind::run(engine* enginePtr) {
-    this->fire(enginePtr);
+void keybind::run() {
+    this->fire();
 }

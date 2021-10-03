@@ -2,6 +2,8 @@
 
 #include "../resource/resourceManager.h"
 
+using namespace chira;
+
 void phongMaterial::compile(const nlohmann::json& properties) {
     material::compile(properties);
     this->diffuse = resourceManager::getResource<texture2d>(

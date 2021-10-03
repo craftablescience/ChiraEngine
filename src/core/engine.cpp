@@ -7,7 +7,6 @@
 #include "fmt/core.h"
 #include <iostream>
 #include "../config/glVersion.h"
-#include "../events/eventQueue.h"
 #include "../loader/jsonSettingsLoader.h"
 #include "../loader/image.h"
 #include "../sound/alSoundManager.h"
@@ -18,14 +17,15 @@
 #include "../loader/primitiveMeshLoader.h"
 #include "../render/texture2d.h"
 #include "../render/texturedMaterial.h"
+#include "../events/eventQueue.h"
 
 #if __has_include(<windows.h>)
 #include <windows.h>
 #endif
 
-const std::string ENGINE_FILESYSTEM_PATH = "resources/engine";
+using namespace chira;
 
-engine::engine(const std::string& configPath) {
+void engine::preInit(const std::string& configPath) {
 #ifdef _WIN32
     system(("chcp " + std::to_string(CP_UTF8) + " > nul").c_str());
 #ifndef DEBUG
@@ -39,12 +39,12 @@ engine::engine(const std::string& configPath) {
     // todo: use computer language as default here
     std::string defaultLang = "en";
     engine::getSettingsLoader()->getValue("ui", "language", &defaultLang);
-    chira::translationManager::setLanguage(defaultLang);
-    chira::translationManager::addTranslationFile("file://i18n/engine");
-    this->lastTime = 0;
-    this->currentTime = 0;
-    this->lastMouseX = -1;
-    this->lastMouseY = -1;
+    translationManager::setLanguage(defaultLang);
+    translationManager::addTranslationFile("file://i18n/engine");
+    engine::lastTime = 0;
+    engine::currentTime = 0;
+    engine::lastMouseX = -1;
+    engine::lastMouseY = -1;
 }
 
 void engine::errorCallback(int error, const char* description) {
@@ -91,100 +91,88 @@ void APIENTRY glDebugOutputCallback(GLenum source, GLenum type, unsigned int id,
 }
 #endif
 
-void engine::framebufferSizeCallback(GLFWwindow* window, int width, int height) {
+void engine::framebufferSizeCallback(GLFWwindow* w, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-void engine::keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    auto* e = static_cast<engine*>(glfwGetWindowUserPointer(window));
+void engine::keyboardCallback(GLFWwindow* w, int key, int scancode, int action, int mods) {
     if (action == GLFW_REPEAT) return;
-    for (keybind& k : *e->getKeybinds()) {
+    for (keybind& k : *engine::getKeybinds()) {
         if (k.getButton() == key && k.getAction() == action) {
-            k.run(e);
+            k.run();
         }
     }
 }
 
 void engine::keyboardRepeatingCallback() {
-    for (keybind& k : this->keybinds) {
-        if (glfwGetKey(this->window, k.getButton()) && k.getAction() == GLFW_REPEAT) {
-            k.run(this);
+    for (keybind& k : engine::keybinds) {
+        if (glfwGetKey(engine::window, k.getButton()) && k.getAction() == GLFW_REPEAT) {
+            k.run();
         }
     }
 }
 
-void engine::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
-    auto* e = static_cast<engine*>(glfwGetWindowUserPointer(window));
-    for (keybind& k : *e->getKeybinds()) {
+void engine::mouseButtonCallback(GLFWwindow* w, int button, int action, int mods) {
+    for (keybind& k : *engine::getKeybinds()) {
         if (k.getButton() == button && k.getAction() == action) {
-            k.run(e);
+            k.run();
         }
     }
 }
 
 void engine::mouseButtonRepeatingCallback() {
-    for (keybind& k : this->keybinds) {
-        if (k.isMouse() && (glfwGetMouseButton(this->window, k.getButton()) && k.getAction() == GLFW_REPEAT)) {
-            k.run(this);
+    for (keybind& k : engine::keybinds) {
+        if (k.isMouse() && (glfwGetMouseButton(engine::window, k.getButton()) && k.getAction() == GLFW_REPEAT)) {
+            k.run();
         }
     }
 }
 
-void engine::mouseMovementCallback(GLFWwindow* window, double xPos, double yPos) {
-    auto* e = static_cast<engine*>(glfwGetWindowUserPointer(window));
-
-    if (e->lastMouseX == -1) e->lastMouseX = xPos;
-    if (e->lastMouseY == -1) e->lastMouseY = yPos;
+void engine::mouseMovementCallback(GLFWwindow* w, double xPos, double yPos) {
+    if (engine::lastMouseX == -1) engine::lastMouseX = xPos;
+    if (engine::lastMouseY == -1) engine::lastMouseY = yPos;
 
     int width, height;
-    glfwGetWindowSize(e->window, &width, &height);
-    double xOffset = xPos - e->lastMouseX;
-    double yOffset = yPos - e->lastMouseY;
+    glfwGetWindowSize(engine::window, &width, &height);
+    double xOffset = xPos - engine::lastMouseX;
+    double yOffset = yPos - engine::lastMouseY;
 
-    for (mousebind& bind : *e->getMousebinds()) {
+    for (mousebind& bind : *engine::getMousebinds()) {
         if (bind.getType() == MOVE) {
-            bind.run(e, xOffset, yOffset);
+            bind.run(xOffset, yOffset);
         }
     }
 
-    e->lastMouseX = xPos;
-    e->lastMouseY = yPos;
+    engine::lastMouseX = xPos;
+    engine::lastMouseY = yPos;
 }
 
-void engine::mouseScrollCallback(GLFWwindow* window, double xPos, double yPos) {
-    auto* e = static_cast<engine*>(glfwGetWindowUserPointer(window));
-    for (mousebind& bind : *e->getMousebinds()) {
+void engine::mouseScrollCallback(GLFWwindow* w, double xPos, double yPos) {
+    for (mousebind& bind : *engine::getMousebinds()) {
         if (bind.getType() == SCROLL) {
-            bind.run(e, xPos, yPos);
+            bind.run(xPos, yPos);
         }
     }
 }
 
-void engine::windowIconifyCallback(GLFWwindow* window, int iconified) {
-    auto* e = static_cast<engine*>(glfwGetWindowUserPointer(window));
-    e->iconified = (iconified == GLFW_TRUE);
+void engine::windowIconifyCallback(GLFWwindow* w, int isIconified) {
+    engine::iconified = (isIconified == GLFW_TRUE);
 }
 
 void engine::init() {
-    this->started = true;
+    engine::started = true;
 
-    chira::logger::addCallback([=](const loggerType type, const std::string& source, const std::string& message) {
-        this->getConsole()->engineLoggingHook(type, source, message);
+    logger::addCallback([=](const loggerType& type, const std::string& source, const std::string& message) {
+        engine::getConsole()->engineLoggingHook(type, source, message);
     });
 
-    bool angelscriptEnabled = true;
-    engine::getSettingsLoader()->getValue("scripting", "angelscript", &angelscriptEnabled);
-    if (angelscriptEnabled) {
-        this->addScriptProvider("angelscript", new angelscriptProvider{});
-    }
-
     if (!glfwInit()) {
-        chira::logger::log(ERR, "GLFW", TR("error.glfw.undefined"));
+        logger::log(ERR, "GLFW", TR("error.glfw.undefined"));
         exit(EXIT_FAILURE);
     }
-    glfwSetErrorCallback(this->errorCallback);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, chira::GL_VERSION_MAJOR);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, chira::GL_VERSION_MINOR);
+    glfwSetErrorCallback(engine::errorCallback);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #if DEBUG
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
@@ -196,45 +184,44 @@ void engine::init() {
     engine::getSettingsLoader()->getValue("graphics", "windowHeight", &windowHeight);
     bool fullscreen = false;
     engine::getSettingsLoader()->getValue("graphics", "fullscreen", &fullscreen);
-    this->window = glfwCreateWindow(windowWidth, windowHeight, TR("ui.window.title").c_str(), nullptr, nullptr);
+    engine::window = glfwCreateWindow(windowWidth, windowHeight, TR("ui.window.title").c_str(), nullptr, nullptr);
     if (fullscreen) {
         const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         glfwWindowHint(GLFW_RED_BITS, mode->redBits);
         glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
         glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
         glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-        glfwSetWindowMonitor(this->window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
+        glfwSetWindowMonitor(engine::window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
     }
-    if (!this->window) {
-        chira::logger::log(ERR, "GLFW", TR("error.glfw.window"));
+    if (!engine::window) {
+        logger::log(ERR, "GLFW", TR("error.glfw.window"));
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
-    glfwMakeContextCurrent(this->window);
-    glfwSetWindowUserPointer(this->window, this);
+    glfwMakeContextCurrent(engine::window);
 
     bool startMaximized = true;
     engine::getSettingsLoader()->getValue("graphics", "startMaximized", &startMaximized);
     if (startMaximized && !fullscreen) {
-        glfwMaximizeWindow(this->window);
+        glfwMaximizeWindow(engine::window);
     }
 
     if (engine::getSettingsLoader()->hasValue("engine", "iconPath")) {
         std::string path{};
         engine::getSettingsLoader()->getValue("engine", "iconPath", &path);
-        this->setIcon(path);
+        engine::setIcon(path);
     } else {
-        chira::logger::log(WARN, "ChiraEngine", TR("error.engine.unset_icon_path"));
+        logger::log(WARN, "ChiraEngine", TR("error.engine.unset_icon_path"));
     }
 
 #if DEBUG
     int major, minor, rev;
     glfwGetVersion(&major, &minor, &rev);
-    chira::logger::log(INFO, "GLFW", fmt::format(TR("debug.glfw.version"), major, minor, rev));
+    logger::log(INFO, "GLFW", fmt::format(TR("debug.glfw.version"), major, minor, rev));
 #endif
 
     if (!gladLoadGL(glfwGetProcAddress)) {
-        chira::logger::log(ERR, "OpenGL", fmt::format("error.opengl.version", chira::GL_VERSION_STRING_PRETTY));
+        logger::log(ERR, "OpenGL", fmt::format("error.opengl.version", GL_VERSION_STRING_PRETTY));
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -252,34 +239,35 @@ void engine::init() {
     int vertexAttributes, textureUnits;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &vertexAttributes);
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
-    chira::logger::log(INFO, "OpenGL", fmt::format(TR("debug.opengl.vertex_attributes"), vertexAttributes));
-    chira::logger::log(INFO, "OpenGL", fmt::format(TR("debug.opengl.texture_units"), textureUnits));
+    logger::log(INFO, "OpenGL", fmt::format(TR("debug.opengl.vertex_attributes"), vertexAttributes));
+    logger::log(INFO, "OpenGL", fmt::format(TR("debug.opengl.texture_units"), textureUnits));
 #endif
 
     int width, height;
-    glfwGetFramebufferSize(this->window, &width, &height);
+    glfwGetFramebufferSize(engine::window, &width, &height);
     glViewport(0, 0, width, height);
-    glfwSetFramebufferSizeCallback(this->window, this->framebufferSizeCallback);
+    glfwSetFramebufferSizeCallback(engine::window, engine::framebufferSizeCallback);
     engine::setBackgroundColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     mesh::addMeshLoader("primitive", new primitiveMeshLoader{});
     mesh::addMeshLoader("obj", new objMeshLoader{});
 
-    this->displaySplashScreen();
+    engine::displaySplashScreen();
     glfwSwapInterval(1);
     glEnable(GL_DEPTH_TEST);
 
-    glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GLFW_TRUE);
-    glfwSetInputMode(this->window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
+    glfwSetInputMode(engine::window, GLFW_STICKY_KEYS, GLFW_TRUE);
+    glfwSetInputMode(engine::window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
     bool rawMouseMotion = false;
     engine::getSettingsLoader()->getValue("input", "rawMouseMotion", &rawMouseMotion);
     if (glfwRawMouseMotionSupported() && rawMouseMotion) {
-        glfwSetInputMode(this->window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+        glfwSetInputMode(engine::window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
     }
-    glfwSetKeyCallback(this->window, keyboardCallback);
-    glfwSetMouseButtonCallback(window, mouseButtonCallback);
-    glfwSetCursorPosCallback(this->window, mouseMovementCallback);
-    glfwSetScrollCallback(this->window, mouseScrollCallback);
+    glfwSetKeyCallback(engine::window, engine::keyboardCallback);
+    glfwSetMouseButtonCallback(engine::window, engine::mouseButtonCallback);
+    glfwSetCursorPosCallback(engine::window, engine::mouseMovementCallback);
+    glfwSetScrollCallback(engine::window, engine::mouseScrollCallback);
+    glfwSetWindowIconifyCallback(engine::window, engine::windowIconifyCallback);
 
 #if DEBUG
     IMGUI_CHECKVERSION();
@@ -287,18 +275,18 @@ void engine::init() {
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(this->window, true);
+    ImGui_ImplGlfw_InitForOpenGL(engine::window, true);
     io.Fonts->Clear();
-    ImGui_ImplOpenGL3_Init(chira::GL_VERSION_STRING.data());
+    ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    chira::logger::log(INFO, "ImGUI", TR("debug.imgui.success"));
+    logger::log(INFO, "ImGUI", TR("debug.imgui.success"));
 
     bool openalEnabled = true;
     engine::getSettingsLoader()->getValue("scripting", "angelscript", &openalEnabled);
     if (openalEnabled) {
-        this->setSoundManager(new alSoundManager{});
+        engine::setSoundManager(new alSoundManager{});
     }
-    this->soundManager->init();
+    engine::soundManager->init();
 
     if (engine::getSettingsLoader()->hasValue("engine", "maxPointLights")) {
         int maxLights;
@@ -316,25 +304,19 @@ void engine::init() {
         shaderResource::addPreprocessorSymbol("MAX_SPOT_LIGHTS", std::to_string(maxLights));
     }
 
+    engine::angelscript = std::make_unique<angelscriptProvider>();
+    engine::angelscript->initProvider();
+    engine::angelscript->registerGlobalFunction(engine::setBackgroundColor, "setBackgroundColor");
+    engine::angelscript->registerGlobalFunction(engine::setBackgroundColor, "captureMouse");
+    engine::angelscript->registerGlobalFunction(engine::setBackgroundColor, "isMouseCaptured");
+    engine::angelscript->registerGlobalFunction(engine::setBackgroundColor, "showConsole");
+    // Reminder on how to define a callable method:
+    // engine::angelscript->asEngine->RegisterGlobalFunction("void showConsole(bool)", asMETHOD(engine, showConsole), asCALL_THISCALL_ASGLOBAL, this);
+
     io.Fonts->AddFontDefault();
 
-    this->callRegisteredFunctions(&(this->initFunctions));
-
-    for (const auto& [name, scriptProvider] : this->scriptProviders) {
-        scriptProvider->initProvider();
-
-        if (name == "angelscript") {
-            auto* angel = (angelscriptProvider*) scriptProvider.get();
-
-            angel->registerGlobalFunction(engine::setBackgroundColor, "setBackgroundColor");
-
-            angel->asEngine->RegisterGlobalFunction("void captureMouse(bool)", asMETHOD(engine, captureMouse), asCALL_THISCALL_ASGLOBAL, this);
-            angel->asEngine->RegisterGlobalFunction("bool isMouseCaptured()", asMETHOD(engine, isMouseCaptured), asCALL_THISCALL_ASGLOBAL, this);
-            angel->asEngine->RegisterGlobalFunction("void showConsole(bool)", asMETHOD(engine, showConsole), asCALL_THISCALL_ASGLOBAL, this);
-        }
-
-        scriptProvider->initScripts();
-    }
+    engine::callRegisteredFunctions(&(engine::initFunctions));
+    engine::angelscript->initScripts();
 
     resourceManager::precacheResource<fontResource>(TR("resource.font.console_font_path"));
     io.Fonts->Build();
@@ -347,50 +329,47 @@ void engine::displaySplashScreen() {
     auto* plane = resourceManager::getResource<mesh>("file://meshes/plane.json", mat);
     plane->render();
 
-    glfwSwapBuffers(this->window);
+    glfwSwapBuffers(engine::window);
     plane->release();
 }
 
 void engine::run() {
-    this->lastTime = this->currentTime;
-    this->currentTime = glfwGetTime();
+    engine::lastTime = engine::currentTime;
+    engine::currentTime = glfwGetTime();
 
-    while (!glfwWindowShouldClose(this->window)) {
-        this->render();
-        this->soundManager->setListenerPosition(this->getMainCamera()->getPosition());
-        this->soundManager->setListenerRotation(this->getMainCamera()->getRotation(), this->getMainCamera()->getUpVector());
-        this->soundManager->update();
-        glfwSwapBuffers(this->window);
+    while (!glfwWindowShouldClose(engine::window)) {
+        engine::render();
+        engine::soundManager->setListenerPosition(engine::getMainCamera()->getPosition());
+        engine::soundManager->setListenerRotation(engine::getMainCamera()->getRotation(), engine::getMainCamera()->getUpVector());
+        engine::soundManager->update();
+        glfwSwapBuffers(engine::window);
         glfwPollEvents();
-        this->keyboardRepeatingCallback();
-        this->mouseButtonRepeatingCallback();
+        engine::keyboardRepeatingCallback();
+        engine::mouseButtonRepeatingCallback();
         if (discordRichPresence::initialized()) {
             discordRichPresence::updatePresence();
         }
-        chira::eventQueue::flushEvents();
+        eventQueue::flushEvents();
     }
 
-    this->stop();
+    engine::stop();
 }
 
 void engine::render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    this->lastTime = this->currentTime;
-    this->currentTime = glfwGetTime();
+    engine::lastTime = engine::currentTime;
+    engine::currentTime = glfwGetTime();
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    callRegisteredFunctions(&(this->renderFunctions));
+    engine::callRegisteredFunctions(&(engine::renderFunctions));
+    engine::angelscript->render(engine::getDeltaTime());
 
-    if (this->getConsole()->getEnabled()) {
-        this->getConsole()->render();
-    }
-
-    for (const auto& [name, scriptProvider] : this->scriptProviders) {
-        scriptProvider->render(this->getDeltaTime());
+    if (engine::getConsole()->getEnabled()) {
+        engine::getConsole()->render();
     }
 
     ImGui::Render();
@@ -398,19 +377,16 @@ void engine::render() {
 }
 
 void engine::stop() {
-    chira::logger::log(INFO_IMPORTANT, "ChiraEngine", TR("debug.engine.exit"));
+    logger::log(INFO_IMPORTANT, "ChiraEngine", TR("debug.engine.exit"));
 
-    for (const auto& [name, scriptProvider] : this->scriptProviders) {
-        scriptProvider->stop();
-    }
-
-    callRegisteredFunctions(&(this->stopFunctions));
+    engine::callRegisteredFunctions(&(engine::stopFunctions));
+    engine::angelscript->stop();
 
     if (discordRichPresence::initialized()) {
         discordRichPresence::shutdown();
     }
 
-    this->soundManager->stop();
+    engine::soundManager->stop();
 
     resourceManager::discardAll();
 
@@ -418,21 +394,21 @@ void engine::stop() {
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
-    glfwDestroyWindow(this->window);
+    glfwDestroyWindow(engine::window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
 
-void engine::addInitFunction(const std::function<void(engine*)>& init) {
-    this->initFunctions.push_back(init);
+void engine::addInitFunction(const std::function<void()>& init) {
+    engine::initFunctions.push_back(init);
 }
 
-void engine::addRenderFunction(const std::function<void(engine*)>& render) {
-    this->renderFunctions.push_back(render);
+void engine::addRenderFunction(const std::function<void()>& render) {
+    engine::renderFunctions.push_back(render);
 }
 
-void engine::addStopFunction(const std::function<void(engine*)>& stop) {
-    this->stopFunctions.push_back(stop);
+void engine::addStopFunction(const std::function<void()>& stop) {
+    engine::stopFunctions.push_back(stop);
 }
 
 void engine::setBackgroundColor(float r, float g, float b, float a) {
@@ -440,47 +416,43 @@ void engine::setBackgroundColor(float r, float g, float b, float a) {
 }
 
 void engine::addKeybind(const keybind& keybind) {
-    this->keybinds.push_back(keybind);
+    engine::keybinds.push_back(keybind);
 }
 
 std::vector<keybind>* engine::getKeybinds() {
-    return &(this->keybinds);
+    return &(engine::keybinds);
 }
 
 void engine::addMousebind(const mousebind& mousebind) {
-    this->mousebinds.push_back(mousebind);
+    engine::mousebinds.push_back(mousebind);
 }
 
 std::vector<mousebind>* engine::getMousebinds() {
-    return &(this->mousebinds);
+    return &(engine::mousebinds);
 }
 
-void engine::addScriptProvider(const std::string& name, abstractScriptProvider* scriptProvider) {
-    this->scriptProviders.insert(std::make_pair(name, scriptProvider));
-}
-
-abstractScriptProvider* engine::getScriptProvider(const std::string& name) {
-    if (this->scriptProviders.count(name) == 0) {
-        chira::logger::log(ERR, "engine::getScriptProvider", fmt::format(TR("error.engine.invalid_script_provider"), name));
+angelscriptProvider* engine::getAngelscriptProvider() {
+    if (!engine::angelscript) {
+        logger::log(ERR, "engine::getAngelscriptProvider", fmt::format(TR("error.engine.script_provider_missing"), "AngelScript"));
     }
-    return this->scriptProviders.at(name).get();
+    return engine::angelscript.get();
 }
 
 void engine::setSoundManager(abstractSoundManager* newSoundManager) {
-    this->soundManager.reset(newSoundManager);
+    engine::soundManager.reset(newSoundManager);
 }
 
 abstractSoundManager* engine::getSoundManager() {
-    if (!this->soundManager) {
-        chira::logger::log(WARN, "engine::getSoundManager", fmt::format(TR("error.engine.invalid_access"), "sound manager", "engine::setSoundManager"));
+    if (!engine::soundManager) {
+        logger::log(WARN, "engine::getSoundManager", fmt::format(TR("error.engine.invalid_access"), "sound manager", "engine::setSoundManager"));
         return nullptr;
     }
-    return this->soundManager.get();
+    return engine::soundManager.get();
 }
 
 abstractSettingsLoader* engine::getSettingsLoader() {
     if (!engine::settingsLoader) {
-        chira::logger::log(WARN, "engine::getSettingsLoader", fmt::format(TR("error.engine.invalid_access"), "settings loader", "engine::setSettingsLoader"));
+        logger::log(WARN, "engine::getSettingsLoader", fmt::format(TR("error.engine.invalid_access"), "settings loader", "engine::setSettingsLoader"));
         return nullptr;
     }
     return engine::settingsLoader.get();
@@ -493,7 +465,7 @@ void engine::setSettingsLoader(abstractSettingsLoader* newSettingsLoader) {
 
 abstractPhysicsProvider* engine::getPhysicsProvider() {
     if (!engine::physicsProvider) {
-        chira::logger::log(WARN, "engine::getPhysicsProvider", fmt::format(TR("error.engine.invalid_access"), "physics provider", "engine::setPhysicsProvider"));
+        logger::log(WARN, "engine::getPhysicsProvider", fmt::format(TR("error.engine.invalid_access"), "physics provider", "engine::setPhysicsProvider"));
         return nullptr;
     }
     return engine::physicsProvider.get();
@@ -503,21 +475,21 @@ void engine::setPhysicsProvider(abstractPhysicsProvider* newPhysicsProvider) {
     engine::physicsProvider.reset(newPhysicsProvider);
 }
 
-abstractCamera* engine::getMainCamera() const {
-    if (!this->mainCamera) {
-        chira::logger::log(WARN, "engine::getMainCamera", fmt::format(TR("error.engine.invalid_access"), "main camera", "engine::setMainCamera"));
+abstractCamera* engine::getMainCamera() {
+    if (!engine::mainCamera) {
+        logger::log(WARN, "engine::getMainCamera", fmt::format(TR("error.engine.invalid_access"), "main camera", "engine::setMainCamera"));
         return nullptr;
     }
-    return this->mainCamera;
+    return engine::mainCamera;
 }
 
 void engine::setMainCamera(abstractCamera* newCamera) {
-    if (this->mainCamera) {
-        this->mainCamera->setCurrent(false);
+    if (engine::mainCamera) {
+        engine::mainCamera->setCurrent(false);
     }
-    this->mainCamera = newCamera;
-    this->mainCamera->init(this);
-    this->mainCamera->setCurrent(true);
+    engine::mainCamera = newCamera;
+    engine::mainCamera->init();
+    engine::mainCamera->setCurrent(true);
 }
 
 void engine::setSettingsLoaderDefaults() {
@@ -540,32 +512,30 @@ void engine::setSettingsLoaderDefaults() {
     engine::settingsLoader->setValue("input", "invertYAxis", false, false, false);
     engine::settingsLoader->addCategory("ui");
     engine::settingsLoader->setValue("ui", "language", std::string("en"), false, false);
-    engine::settingsLoader->addCategory("scripting");
-    engine::settingsLoader->setValue("scripting", "angelscript", true, false, false);
     engine::settingsLoader->save();
 }
 
-void engine::callRegisteredFunctions(const std::vector<std::function<void(engine*)>>* list) {
-    for (const std::function<void(engine*)>& func : *list) {
-        func(this);
+void engine::callRegisteredFunctions(const std::vector<std::function<void()>>* list) {
+    for (const auto& func : *list) {
+        func();
     }
 }
 
-const GLFWwindow* engine::getWindow() const {
-    return this->window;
+const GLFWwindow* engine::getWindow() {
+    return engine::window;
 }
 
-bool engine::isStarted() const {
-    return this->started;
+bool engine::isStarted() {
+    return engine::started;
 }
 
-double engine::getDeltaTime() const {
-    return this->currentTime - this->lastTime;
+double engine::getDeltaTime() {
+    return engine::currentTime - engine::lastTime;
 }
 
 void engine::setIcon(const std::string& iconPath) {
 #if DEBUG
-    assert(this->started);
+    assert(engine::started);
 #endif
     GLFWimage images[1];
     int width, height, bitsPerPixel;
@@ -578,32 +548,32 @@ void engine::setIcon(const std::string& iconPath) {
     images[0].width = width;
     images[0].height = height;
     images[0].pixels = icon.getData();
-    glfwSetWindowIcon(this->window, 1, images);
+    glfwSetWindowIcon(engine::window, 1, images);
 }
 
 void engine::captureMouse(bool capture) {
-    this->mouseCaptured = capture;
+    engine::mouseCaptured = capture;
     if (capture) {
-        glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(engine::window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
     } else {
-        glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        glfwSetInputMode(engine::window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
     }
 }
 
-bool engine::isMouseCaptured() const {
-    return this->mouseCaptured;
+bool engine::isMouseCaptured() {
+    return engine::mouseCaptured;
 }
 
 void engine::showConsole(bool shouldShow) {
-    this->getConsole()->setEnabled(shouldShow);
+    engine::consoleUI.setEnabled(shouldShow);
 }
 
 console* engine::getConsole() {
-    return &(this->consoleUI);
+    return &(engine::consoleUI);
 }
 
-bool engine::isIconified() const {
-    return this->iconified;
+bool engine::isIconified() {
+    return engine::iconified;
 }

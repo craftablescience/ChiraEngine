@@ -22,82 +22,81 @@
 #include "../render/material.h"
 #include "../physics/abstractPhysicsProvider.h"
 
-class keybind;
-class mousebind;
-class world;
+namespace chira {
+    const std::string ENGINE_FILESYSTEM_PATH = "resources/engine";
 
-class engine {
-public:
-    explicit engine(const std::string& configPath = "settings.json");
+    class engine {
+    public:
+        /// Ran at the very start of your program. Readies the engine for you to add features before init().
+        static void preInit(const std::string& configPath = "settings.json");
+        static void init();
+        static void run();
+        static void render();
+        static void stop();
 
-    void init();
-    void run();
-    void render();
-    void stop();
+        static void addInitFunction(const std::function<void()>& init);
+        static void addRenderFunction(const std::function<void()>& render);
+        static void addStopFunction(const std::function<void()>& stop);
 
-    void addInitFunction(const std::function<void(engine*)>& init);
-    void addRenderFunction(const std::function<void(engine*)>& render);
-    void addStopFunction(const std::function<void(engine*)>& stop);
+        static void setBackgroundColor(float r, float g, float b, float a);
 
-    static void setBackgroundColor(float r, float g, float b, float a);
+        static void addKeybind(const keybind& keybind);
+        static std::vector<keybind>* getKeybinds();
+        static void addMousebind(const mousebind& mousebind);
+        static std::vector<mousebind>* getMousebinds();
 
-    void addKeybind(const keybind& keybind);
-    std::vector<keybind>* getKeybinds();
-    void addMousebind(const mousebind& mousebind);
-    std::vector<mousebind>* getMousebinds();
+        static angelscriptProvider* getAngelscriptProvider();
+        static void setSoundManager(abstractSoundManager* newSoundManager);
+        static abstractSoundManager* getSoundManager();
 
-    void addScriptProvider(const std::string& name, abstractScriptProvider* scriptProvider);
-    abstractScriptProvider* getScriptProvider(const std::string& name);
-    void setSoundManager(abstractSoundManager* newSoundManager);
-    abstractSoundManager* getSoundManager();
+        static abstractSettingsLoader* getSettingsLoader();
+        static void setSettingsLoader(abstractSettingsLoader* newSettingsLoader);
+        static abstractPhysicsProvider* getPhysicsProvider();
+        static void setPhysicsProvider(abstractPhysicsProvider* newPhysicsProvider);
 
-    static abstractSettingsLoader* getSettingsLoader();
-    static void setSettingsLoader(abstractSettingsLoader* newSettingsLoader);
-    static abstractPhysicsProvider* getPhysicsProvider();
-    static void setPhysicsProvider(abstractPhysicsProvider* newPhysicsProvider);
+        [[nodiscard]] static abstractCamera* getMainCamera();
+        static void setMainCamera(abstractCamera* newCamera);
 
-    [[nodiscard]] abstractCamera* getMainCamera() const;
-    void setMainCamera(abstractCamera* newCamera);
+        static void callRegisteredFunctions(const std::vector<std::function<void()>>* list);
 
-    void callRegisteredFunctions(const std::vector<std::function<void(engine*)>>* list);
-
-    [[nodiscard]] const GLFWwindow* getWindow() const;
-    [[nodiscard]] bool isStarted() const;
-    /// Note: only guaranteed to work after run() in a render method
-    [[nodiscard]] double getDeltaTime() const;
-    void captureMouse(bool capture);
-    [[nodiscard]] bool isMouseCaptured() const;
-    void showConsole(bool shouldShow);
-    console* getConsole();
-    [[nodiscard]] bool isIconified() const;
-private:
-    GLFWwindow* window = nullptr;
-    std::vector<std::function<void(engine*)>> initFunctions{};
-    std::vector<std::function<void(engine*)>> renderFunctions{};
-    std::vector<std::function<void(engine*)>> stopFunctions{};
-    std::map<std::string, std::unique_ptr<abstractScriptProvider>> scriptProviders{};
-    std::unique_ptr<abstractSoundManager> soundManager = nullptr;
-    std::vector<keybind> keybinds{};
-    std::vector<mousebind> mousebinds{};
-    static inline std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
-    static inline std::unique_ptr<abstractPhysicsProvider> physicsProvider = nullptr;
-    bool mouseCaptured = false;
-    abstractCamera* mainCamera = nullptr; // This pointer should not be deleted, ever! It's a reference to a managed resource!
-    console consoleUI{};
-    bool started = false;
-    bool iconified = false;
-    double lastTime, currentTime, lastMouseX, lastMouseY;
-    static void setSettingsLoaderDefaults();
-    /// Note: PNGs must have a bit depth of 8 or less* (less not tested)
-    void setIcon(const std::string& iconPath);
-    void displaySplashScreen();
-    static void errorCallback(int error, const char* description);
-    static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
-    static void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-    void keyboardRepeatingCallback();
-    static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
-    void mouseButtonRepeatingCallback();
-    static void mouseMovementCallback(GLFWwindow* window, double xPos, double yPos);
-    static void mouseScrollCallback(GLFWwindow* window, double xPos, double yPos);
-    static void windowIconifyCallback(GLFWwindow* window, int iconified);
-};
+        [[nodiscard]] static const GLFWwindow* getWindow();
+        [[nodiscard]] static bool isStarted();
+        /// Note: only guaranteed to work after run() in a render method
+        [[nodiscard]] static double getDeltaTime();
+        static void captureMouse(bool capture);
+        [[nodiscard]] static bool isMouseCaptured();
+        static void showConsole(bool shouldShow);
+        static console* getConsole();
+        [[nodiscard]] static bool isIconified();
+    private:
+        static inline GLFWwindow* window = nullptr;
+        static inline std::vector<std::function<void()>> initFunctions{};
+        static inline std::vector<std::function<void()>> renderFunctions{};
+        static inline std::vector<std::function<void()>> stopFunctions{};
+        static inline std::unique_ptr<angelscriptProvider> angelscript = nullptr;
+        static inline std::unique_ptr<abstractSoundManager> soundManager = nullptr;
+        static inline std::vector<keybind> keybinds{};
+        static inline std::vector<mousebind> mousebinds{};
+        static inline std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
+        static inline std::unique_ptr<abstractPhysicsProvider> physicsProvider = nullptr;
+        static inline bool mouseCaptured = false;
+        static inline abstractCamera* mainCamera = nullptr; // This pointer should not be deleted, ever! It's a reference to a managed resource!
+        static inline console consoleUI{};
+        static inline bool started = false;
+        static inline bool iconified = false;
+        static inline double lastTime, currentTime, lastMouseX, lastMouseY;
+        static void setSettingsLoaderDefaults();
+        /// Note: PNGs must have a bit depth of 8 or less* (less not tested)
+        static void setIcon(const std::string& iconPath);
+        static void displaySplashScreen();
+        static void errorCallback(int error, const char* description);
+        static void framebufferSizeCallback(GLFWwindow* w, int width, int height);
+        static void keyboardCallback(GLFWwindow* w, int key, int scancode, int action, int mods);
+        static void keyboardRepeatingCallback();
+        static void mouseButtonCallback(GLFWwindow* w, int button, int action, int mods);
+        static void mouseButtonRepeatingCallback();
+        static void mouseMovementCallback(GLFWwindow* w, double xPos, double yPos);
+        static void mouseScrollCallback(GLFWwindow* w, double xPos, double yPos);
+        static void windowIconifyCallback(GLFWwindow* w, int isIconified);
+    };
+}

@@ -1,16 +1,18 @@
 #pragma once
 
-enum axis {
-    X,
-    Y,
-    Z
-};
+namespace chira {
+    enum axis {
+        X,
+        Y,
+        Z
+    };
 
-enum signedAxis {
-    XP,
-    XN,
-    YP,
-    YN,
-    ZP,
-    ZN
-};
+    enum signedAxis {
+        XP,
+        XN,
+        YP,
+        YN,
+        ZP,
+        ZN
+    };
+}

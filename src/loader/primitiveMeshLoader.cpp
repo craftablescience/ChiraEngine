@@ -3,6 +3,8 @@
 #include "../utility/logger.h"
 #include "../i18n/translationManager.h"
 
+using namespace chira;
+
 void primitiveMeshLoader::loadMesh(const std::string& identifier, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
     if (identifier == "plane") {
         vertices->assign({
@@ -59,6 +61,6 @@ void primitiveMeshLoader::loadMesh(const std::string& identifier, std::vector<ve
             22, 23, 20
         });
     } else {
-        chira::logger::log(ERR, "PrimitiveMeshLoader", TR("error.primitive_loader.invalid_identifier"));
+        logger::log(ERR, "PrimitiveMeshLoader", TR("error.primitive_loader.invalid_identifier"));
     }
 }

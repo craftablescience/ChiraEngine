@@ -5,6 +5,8 @@
 #include "../utility/logger.h"
 #include "../resource/resourceManager.h"
 
+using namespace chira;
+
 shader::shader(const std::string& identifier_) : propertiesResource(identifier_), handleObject() {}
 
 void shader::compile(const nlohmann::json& properties) {
@@ -33,7 +35,7 @@ void shader::checkForCompilationErrors() const {
     glGetProgramiv(this->handle, GL_LINK_STATUS, &success);
     if(!success) {
         glGetProgramInfoLog(this->handle, 512, nullptr, infoLog);
-        chira::logger::log(ERR, "Shader", fmt::format(TR("error.opengl.shader_linking"), infoLog));
+        logger::log(ERR, "Shader", fmt::format(TR("error.opengl.shader_linking"), infoLog));
     }
 }
 

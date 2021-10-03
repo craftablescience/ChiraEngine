@@ -4,6 +4,8 @@
 #include "../utility/logger.h"
 #include "../i18n/translationManager.h"
 
+using namespace chira;
+
 void discordRichPresence::init(const std::string& appId) {
     if (discordRichPresence::isInitialized) return;
     DiscordEventHandlers handlers;
@@ -110,13 +112,13 @@ void discordRichPresence::shutdown() {
 }
 
 void discordRichPresence::callbackReady(const DiscordUser* connectedUser) {
-    chira::logger::log(INFO_IMPORTANT, "Discord", fmt::format(TR("debug.discord.user_connected"), connectedUser->username, connectedUser->discriminator));
+    logger::log(INFO_IMPORTANT, "Discord", fmt::format(TR("debug.discord.user_connected"), connectedUser->username, connectedUser->discriminator));
 }
 
 void discordRichPresence::callbackDisconnected(int errcode, const char* message) {
-    chira::logger::log(WARN, "Discord", fmt::format(TR("debug.discord.user_disconnected"), errcode, message));
+    logger::log(WARN, "Discord", fmt::format(TR("debug.discord.user_disconnected"), errcode, message));
 }
 
 void discordRichPresence::callbackError(int errcode, const char* message) {
-    chira::logger::log(ERR, "Discord", fmt::format(TR("debug.discord.generic_error"), errcode, message));
+    logger::log(ERR, "Discord", fmt::format(TR("debug.discord.generic_error"), errcode, message));
 }

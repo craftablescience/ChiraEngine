@@ -3,6 +3,8 @@
 #include "../utility/logger.h"
 #include "../i18n/translationManager.h"
 
+using namespace chira;
+
 texture2d::texture2d(const std::string& identifier_, int format, bool vFlip_, int wrapModeU, int wrapModeV, int filterMode, bool mipmaps) : texture(identifier_, vFlip_) {
     this->format = format;
     this->wrapModeU = wrapModeU;
@@ -30,7 +32,7 @@ void texture2d::compile(unsigned char* buffer, std::size_t bufferLen) {
             glGenerateMipmap(GL_TEXTURE_2D);
         }
     } else {
-        chira::logger::log(ERR, "Texture2D", TR("error.opengl.texture_compile"));
+        logger::log(ERR, "Texture2D", TR("error.opengl.texture_compile"));
     }
 }
 

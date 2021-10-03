@@ -3,6 +3,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+using namespace chira;
+
 image::image(const unsigned char* buffer, std::size_t bufferLen, int* width, int* height, int* fileChannels, int desiredChannels, bool vflip) : abstractImage() {
     stbi_set_flip_vertically_on_load(vflip);
     this->data = stbi_load_from_memory(buffer, (int) bufferLen, width, height, fileChannels, desiredChannels);

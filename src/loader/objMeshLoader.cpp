@@ -7,6 +7,8 @@
 #include "../resource/stringResource.h"
 #include "../resource/resourceManager.h"
 
+using namespace chira;
+
 void objMeshLoader::loadMesh(const std::string& identifier, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
     std::vector<position> vertexBuffer;
     std::vector<uv> uvBuffer;
@@ -44,7 +46,7 @@ void objMeshLoader::loadMesh(const std::string& identifier, std::vector<vertex>*
             while (iss >> objIndices[counter]) {
                 objIndices[counter] -= 1;
                 if (counter >= 9) {
-                    chira::logger::log(WARN, "OBJ", fmt::format(TR("warn.obj_loader.not_triangulated"), identifier));
+                    logger::log(WARN, "OBJ", fmt::format(TR("warn.obj_loader.not_triangulated"), identifier));
                     break;
                 } else if (counter >= 6) {
                     includeUVs = true;

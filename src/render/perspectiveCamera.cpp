@@ -2,14 +2,16 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-perspectiveCamera::perspectiveCamera(engine* engine, float newYaw, float newPitch, glm::vec3 newPosition, glm::vec3 currentUp, float newZoom):
+using namespace chira;
+
+perspectiveCamera::perspectiveCamera(float newYaw, float newPitch, glm::vec3 newPosition, glm::vec3 currentUp, float newZoom):
     position{newPosition}, front{glm::vec3(0.0f, 0.0f, -1.0f)}, worldUp{currentUp}, yaw{newYaw}, pitch{newPitch}, zoom{newZoom} {}
 
-void perspectiveCamera::init(engine* engine) {
+void perspectiveCamera::init() {
     int windowWidth = 1600;
-    engine->getSettingsLoader()->getValue("graphics", "windowWidth", &windowWidth);
+    engine::getSettingsLoader()->getValue("graphics", "windowWidth", &windowWidth);
     int windowHeight = 900;
-    engine->getSettingsLoader()->getValue("graphics", "windowHeight", &windowHeight);
+    engine::getSettingsLoader()->getValue("graphics", "windowHeight", &windowHeight);
     this->projection = glm::perspective(glm::radians(this->zoom), (float) windowWidth / (float) windowHeight, 0.1f, 1024.0f);
     this->updateCameraVectors();
 }

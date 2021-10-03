@@ -1,6 +1,8 @@
 #include "jsonSettingsLoader.h"
 #include <iomanip>
 
+using namespace chira;
+
 jsonSettingsLoader::jsonSettingsLoader(const std::string& path) : abstractFileSettingsLoader(path), settings() {}
 
 void jsonSettingsLoader::addCategory(const std::string& category) {

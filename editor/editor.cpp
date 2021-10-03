@@ -10,34 +10,35 @@
 #include "../src/ui/markdown.h"
 #include "ui/settings.h"
 #include "imgui_internal.h"
-#include "../src/resource/stringResource.h"
+
+using namespace chira;
 
 int main() {
-    engine engine;
+    engine::preInit();
     resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/editor"});
-    chira::translationManager::addTranslationFile("file://i18n/editor");
-    chira::translationManager::addUniversalFile("file://i18n/editor");
+    translationManager::addTranslationFile("file://i18n/editor");
+    translationManager::addUniversalFile("file://i18n/editor");
 
     engine::getSettingsLoader()->setValue("engineGui", "discordIntegration", true, false, true);
     bool discordEnabled;
     engine::getSettingsLoader()->getValue("engineGui", "discordIntegration", &discordEnabled);
 
-    engine.addKeybind(keybind(GLFW_KEY_ESCAPE, GLFW_PRESS, [](class engine* e) {
-        e->stop();
+    engine::addKeybind(keybind(GLFW_KEY_ESCAPE, GLFW_PRESS, []() {
+        engine::stop();
     }));
-    engine.addKeybind(keybind(GLFW_KEY_1, GLFW_PRESS, [](class engine* e) {
+    engine::addKeybind(keybind(GLFW_KEY_1, GLFW_PRESS, []() {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }));
-    engine.addKeybind(keybind(GLFW_KEY_2, GLFW_PRESS, [](class engine* e) {
+    engine::addKeybind(keybind(GLFW_KEY_2, GLFW_PRESS, []() {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }));
-    engine.addKeybind(keybind(GLFW_KEY_GRAVE_ACCENT, GLFW_PRESS, [](class engine* e) {
-        e->showConsole(!e->getConsole()->getEnabled());
+    engine::addKeybind(keybind(GLFW_KEY_GRAVE_ACCENT, GLFW_PRESS, []() {
+        engine::showConsole(!engine::getConsole()->getEnabled());
     }));
-    engine.addKeybind(keybind(GLFW_KEY_M, GLFW_PRESS, [](class engine* e) {
-        e->getSoundManager()->getSound("helloWorld")->play();
+    engine::addKeybind(keybind(GLFW_KEY_M, GLFW_PRESS, []() {
+        engine::getSoundManager()->getSound("helloWorld")->play();
     }));
-    engine.addKeybind(keybind(GLFW_KEY_P, GLFW_RELEASE, [](class engine* e) {
+    engine::addKeybind(keybind(GLFW_KEY_P, GLFW_RELEASE, []() {
         const char* path = tinyfd_openFileDialog(
                 TR("ui.window.select_file").c_str(),
 #if WIN32
@@ -51,16 +52,16 @@ int main() {
                 0
         );
         if (path) {
-            chira::logger::log(INFO_IMPORTANT, "File Picker Debug", std::string(path));
+            logger::log(INFO_IMPORTANT, "File Picker Debug", std::string(path));
             delete path;
         } else {
-            chira::logger::log(INFO_IMPORTANT, "File Picker Debug", TR("generic.operation.cancelled"));
+            logger::log(INFO_IMPORTANT, "File Picker Debug", TR("generic.operation.cancelled"));
         }
     }));
 
     mesh* cubeMesh;
 
-    engine.addInitFunction([&cubeMesh, &discordEnabled](class engine* e) {
+    engine::addInitFunction([&cubeMesh, &discordEnabled]() {
         if (discordEnabled) {
             discordRichPresence::init(TR("editor.discord.application_id"));
             discordRichPresence::setLargeImage("main_logo");
@@ -74,18 +75,18 @@ int main() {
         auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
         cubeMesh = resourceManager::getResource<mesh>("file://meshes/teapot.json", cubeMaterial);
 
-        e->captureMouse(true);
-        e->setMainCamera(new freecam{e});
+        engine::captureMouse(true);
+        engine::setMainCamera(new freecam{});
 
         bool angelscriptEnabled = true;
         engine::getSettingsLoader()->getValue("scripting", "angelscript", &angelscriptEnabled);
         if (angelscriptEnabled) {
-            ((angelscriptProvider*) e->getScriptProvider("angelscript"))->addScript(new angelscriptHolder{"testScript.as"});
+            engine::getAngelscriptProvider()->addScript(new angelscriptHolder{"testScript.as"});
         }
 
         auto* sound = new oggFileSound();
         sound->init("helloWorldCutMono.ogg");
-        e->getSoundManager()->addSound("helloWorld", sound);
+        engine::getSoundManager()->addSound("helloWorld", sound);
 
         cubeMaterial->setShininess();
         cubeMaterial->setLambertFactor();
@@ -100,22 +101,22 @@ int main() {
         engine::setBackgroundColor(0.0f, 0.0f, 0.3f, 1.0f);
 #endif
     });
-    engine.init();
+    engine::init();
 
     settings settingsWindow;
-    engine.addKeybind(keybind(GLFW_KEY_O, GLFW_PRESS, [&settingsWindow](class engine* e){
+    engine::addKeybind(keybind(GLFW_KEY_O, GLFW_PRESS, [&settingsWindow](){
         settingsWindow.setEnabled(!settingsWindow.getEnabled());
     }));
 
     auto* tex = resourceManager::getResource<texture2d>("file://textures/ui/icon.png", GL_RGBA, false);
     bool renderImguiTextureTestWindow = true;
 
-    engine.addRenderFunction([tex, cubeMesh, &renderImguiTextureTestWindow, &settingsWindow](class engine* e) {
+    engine::addRenderFunction([tex, cubeMesh, &renderImguiTextureTestWindow, &settingsWindow]() {
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
 
         // todo: use UBO
-        cubeMesh->getMaterial()->getShader()->setUniform("p", e->getMainCamera()->getProjectionMatrix());
-        cubeMesh->getMaterial()->getShader()->setUniform("v", e->getMainCamera()->getViewMatrix());
+        cubeMesh->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
+        cubeMesh->getMaterial()->getShader()->setUniform("v", engine::getMainCamera()->getViewMatrix());
         cubeMesh->render();
 
         if (renderImguiTextureTestWindow) {
@@ -133,5 +134,5 @@ int main() {
             settingsWindow.render();
         }
     });
-    engine.run();
+    engine::run();
 }

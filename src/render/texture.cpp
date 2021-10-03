@@ -3,6 +3,8 @@
 #include <glad/gl.h>
 #include "../loader/image.h"
 
+using namespace chira;
+
 texture::texture(const std::string& identifier_, bool vFlip_) : abstractResource(identifier_) {
     this->vFlip = vFlip_;
 }

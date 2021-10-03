@@ -3,6 +3,8 @@
 #include "resourceManager.h"
 #include "filesystemResourceProvider.h"
 
+using namespace chira;
+
 void fontResource::compile(const nlohmann::json& properties) {
     ImGuiIO& io = ImGui::GetIO();
     std::string path = ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource(properties["properties"]["path"]))->getPath() + "/" + resourceManager::splitResourceIdentifier(std::string(properties["properties"]["path"])).second;

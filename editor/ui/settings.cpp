@@ -6,6 +6,8 @@
 
 #define SETTINGS_INPUT_FIELD_WIDTH 150.0f
 
+using namespace chira;
+
 settings::settings() {
     this->isEnabled = false;
     engine::getSettingsLoader()->getValue("graphics", "windowWidth", &this->windowWidth);

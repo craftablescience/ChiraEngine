@@ -1,5 +1,7 @@
 #include "bulletPhysicsProvider.h"
 
+using namespace chira;
+
 bulletPhysicsProvider::bulletPhysicsProvider() {
     this->collisionConfiguration = std::make_unique<btDefaultCollisionConfiguration>();
     this->dispatcher = std::make_unique<btCollisionDispatcher>(collisionConfiguration.get());

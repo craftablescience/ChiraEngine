@@ -34,7 +34,7 @@
   "error.glfw.window": "Window creation failed",
   "error.opengl.version": "OpenGL {} must be available to run this program",
   "error.engine.unset_icon_path": "You should not unset the iconPath property unless you are a trained professional!",
-  "error.engine.invalid_script_provider": "Script provider {} is not recognized, check that you registered it properly",
+  "error.engine.script_provider_missing": "{} is not initialized yet",
   "error.engine.invalid_access": "Must set {} in {} for this call to function",
   "error.engine.missing_translation_manager": "Huh? The translation manager is missing! This should never happen, ever!",
   "error.translation_manager.missing_translation": "Could not find {} translation of \"{}\"",

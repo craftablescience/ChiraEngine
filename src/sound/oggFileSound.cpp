@@ -3,6 +3,8 @@
 #include "../resource/filesystemResourceProvider.h"
 #include "../resource/resourceManager.h"
 
+using namespace chira;
+
 bool oggFileSound::init(const std::string& filename) {
     return this->init(filename, 1.0f, 1.0f, glm::vec3{}, soundType::EFFECT, false, true);
 }
@@ -18,7 +20,7 @@ bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, 
     this->audioData.filename = ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file://sounds/" + filename))->getPath() + "/sounds/" + filename;
     this->audioData.file.open(this->audioData.filename, std::ios::binary);
     if (!this->audioData.file.is_open()) {
-        chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.file_open_failure"), filename));
+        logger::log(ERR, "OGG", fmt::format(TR("error.ogg.file_open_failure"), filename));
         return false;
     }
     this->audioData.file.seekg(0, std::ios_base::beg);
@@ -35,7 +37,7 @@ bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, 
     oggCallbacks.tell_func = tellOggVorbisCallback;
 
     if (ov_open_callbacks(reinterpret_cast<void*>(&this->audioData), &this->audioData.oggVorbisFile, nullptr, -1, oggCallbacks) < 0) {
-        chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.ov_open_callbacks_missing"), filename));
+        logger::log(ERR, "OGG", fmt::format(TR("error.ogg.ov_open_callbacks_missing"), filename));
         return false;
     }
 
@@ -61,13 +63,13 @@ bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, 
     alCall(alGenBuffers, OGG_NUM_BUFFERS, &this->audioData.buffers[0]);
 
     if (this->audioData.file.eof()) {
-        chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.file_empty"), filename));
+        logger::log(ERR, "OGG", fmt::format(TR("error.ogg.file_empty"), filename));
         return false;
     } else if(this->audioData.file.fail()) {
-        chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.fail_bit_set"), filename));
+        logger::log(ERR, "OGG", fmt::format(TR("error.ogg.fail_bit_set"), filename));
         return false;
     } else if (!this->audioData.file) {
-        chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.file_missing"), filename));
+        logger::log(ERR, "OGG", fmt::format(TR("error.ogg.file_missing"), filename));
         return false;
     }
     return this->readFile(this->audioData.filename);
@@ -81,16 +83,16 @@ bool oggFileSound::readFile(const std::string& filename) {
             std::int32_t result = ov_read(&this->audioData.oggVorbisFile, &data[dataSoFar], OGG_BUFFER_SIZE - dataSoFar, 0, 2, 1, reinterpret_cast<int*>(&this->audioData.oggCurrentSection));
             switch (result) {
                 case OV_HOLE:
-                    chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_HOLE", i, filename));
+                    logger::log(ERR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_HOLE", i, filename));
                     break;
                 case OV_EBADLINK:
-                    chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_EBADLINK", i, filename));
+                    logger::log(ERR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_EBADLINK", i, filename));
                     break;
                 case OV_EINVAL:
-                    chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_EINVAL", i, filename));
+                    logger::log(ERR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_EINVAL", i, filename));
                     break;
                 case 0:
-                    chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "EOF", i, filename));
+                    logger::log(ERR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "EOF", i, filename));
                     break;
                 default:
                     break;
@@ -106,7 +108,7 @@ bool oggFileSound::readFile(const std::string& filename) {
         } else if (this->audioData.channels == 2 && this->audioData.bitsPerSample == 16) {
             this->audioData.format = AL_FORMAT_STEREO16;
         } else {
-            chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.unrecognized_format"), this->audioData.channels, this->audioData.bitsPerSample, filename));
+            logger::log(ERR, "OGG", fmt::format(TR("error.ogg.unrecognized_format"), this->audioData.channels, this->audioData.bitsPerSample, filename));
             delete[] data;
             return false;
         }
@@ -114,7 +116,7 @@ bool oggFileSound::readFile(const std::string& filename) {
     }
 
     if (this->is3d && this->audioData.channels > 1) {
-        chira::logger::log(WARN, "OGG", TR("warn.ogg.3d_stereo_audio"));
+        logger::log(WARN, "OGG", TR("warn.ogg.3d_stereo_audio"));
     }
 
     alCall(alSourceQueueBuffers, this->audioData.source, OGG_NUM_BUFFERS, &this->audioData.buffers[0]);
@@ -153,13 +155,13 @@ void oggFileSound::update() {
         while (sizeRead < OGG_BUFFER_SIZE) {
             std::int32_t result = ov_read(&this->audioData.oggVorbisFile, &data[sizeRead], OGG_BUFFER_SIZE - sizeRead, 0, 2, 1, reinterpret_cast<int*>(&this->audioData.oggCurrentSection));
             if (result == OV_HOLE) {
-                chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.buffer_update_error"), "OV_HOLE", this->audioData.filename));
+                logger::log(ERR, "OGG", fmt::format(TR("error.ogg.buffer_update_error"), "OV_HOLE", this->audioData.filename));
                 break;
             } else if (result == OV_EBADLINK) {
-                chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.buffer_update_error"), "OV_EBADLINK", this->audioData.filename));
+                logger::log(ERR, "OGG", fmt::format(TR("error.ogg.buffer_update_error"), "OV_EBADLINK", this->audioData.filename));
                 break;
             } else if (result == OV_EINVAL) {
-                chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.buffer_update_error"), "OV_EINVAL", this->audioData.filename));
+                logger::log(ERR, "OGG", fmt::format(TR("error.ogg.buffer_update_error"), "OV_EINVAL", this->audioData.filename));
                 break;
             } else if (result == 0) {
                 if (!this->loop) {
@@ -176,7 +178,7 @@ void oggFileSound::update() {
             alCall(alSourceQueueBuffers, this->audioData.source, 1, &buffer);
         }
         if (dataSizeToBuffer < OGG_BUFFER_SIZE) {
-            chira::logger::log(WARN, "OGG", fmt::format(TR("error.ogg.data_missing"), this->audioData.filename));
+            logger::log(WARN, "OGG", fmt::format(TR("error.ogg.data_missing"), this->audioData.filename));
         }
         ALint state;
         alCall(alGetSourcei, this->audioData.source, AL_SOURCE_STATE, &state);
@@ -194,26 +196,26 @@ void oggFileSound::seekBeginning() {
     std::int32_t seekResult = ov_raw_seek(&this->audioData.oggVorbisFile, 0);
     switch (seekResult) {
         case OV_ENOSEEK:
-            chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_ENOSEEK", this->audioData.filename));
+            logger::log(ERR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_ENOSEEK", this->audioData.filename));
             break;
         case OV_EINVAL:
-            chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EINVAL", this->audioData.filename));
+            logger::log(ERR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EINVAL", this->audioData.filename));
             break;
         case OV_EREAD:
-            chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EREAD", this->audioData.filename));
+            logger::log(ERR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EREAD", this->audioData.filename));
             break;
         case OV_EFAULT:
-            chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EFAULT", this->audioData.filename));
+            logger::log(ERR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EFAULT", this->audioData.filename));
             break;
         case OV_EOF:
-            chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EOF", this->audioData.filename));
+            logger::log(ERR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EOF", this->audioData.filename));
             break;
         case OV_EBADLINK:
-            chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EBADLINK", this->audioData.filename));
+            logger::log(ERR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EBADLINK", this->audioData.filename));
             break;
         default:
             if (seekResult != 0) {
-                chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.unknown"), "OV_RAW_SEEK", this->audioData.filename));
+                logger::log(ERR, "OGG", fmt::format(TR("error.ogg.unknown"), "OV_RAW_SEEK", this->audioData.filename));
             }
     }
 }
@@ -243,7 +245,7 @@ std::size_t oggFileSound::readOggVorbisCallback(void* destination, std::size_t s
     if (!audioData->file.is_open()) {
         audioData->file.open(audioData->filename, std::ios::binary);
         if (!audioData->file.is_open()) {
-            chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.file_open_failure"), audioData->filename));
+            logger::log(ERR, "OGG", fmt::format(TR("error.ogg.file_open_failure"), audioData->filename));
             return 0;
         }
     }
@@ -254,11 +256,11 @@ std::size_t oggFileSound::readOggVorbisCallback(void* destination, std::size_t s
         if (audioData->file.eof()) {
             audioData->file.clear();
         } else if (audioData->file.fail()) {
-            chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.fail_bit_set"), audioData->filename));
+            logger::log(ERR, "OGG", fmt::format(TR("error.ogg.fail_bit_set"), audioData->filename));
             audioData->file.clear();
             return 0;
         } else if (audioData->file.bad()) {
-            chira::logger::log(ERR, "OGG", fmt::format(TR("error.ogg.bad_bit_set"), audioData->filename));
+            logger::log(ERR, "OGG", fmt::format(TR("error.ogg.bad_bit_set"), audioData->filename));
             audioData->file.clear();
             return 0;
         }

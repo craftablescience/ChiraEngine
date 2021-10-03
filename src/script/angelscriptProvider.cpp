@@ -11,6 +11,8 @@
 #include <scriptstdstring/scriptstdstring.h>
 #include <weakref/weakref.h>
 
+using namespace chira;
+
 angelscriptProvider::angelscriptProvider() {
     this->started = false;
 }
@@ -59,15 +61,15 @@ void angelscriptProvider::addScript(angelscriptHolder* script) {
 }
 
 void angelscriptProvider::print(const std::string& message) {
-    chira::logger::log(OUTPUT, "AngelScript", message);
+    logger::log(OUTPUT, "AngelScript", message);
 }
 
 void angelscriptProvider::messageCallback(const asSMessageInfo* msg, void* param) {
     if (msg->type == asMSGTYPE_INFORMATION) {
-        chira::logger::log(OUTPUT, "AngelScript",std::string(msg->section) + " (" + std::to_string(msg->row) + ", " + std::to_string(msg->col) + "): " + msg->message);
+        logger::log(OUTPUT, "AngelScript",std::string(msg->section) + " (" + std::to_string(msg->row) + ", " + std::to_string(msg->col) + "): " + msg->message);
     } else if (msg->type == asMSGTYPE_WARNING) {
-        chira::logger::log(WARN, "AngelScript",std::string(msg->section) + " (" + std::to_string(msg->row) + ", " + std::to_string(msg->col) + "): " + msg->message);
+        logger::log(WARN, "AngelScript",std::string(msg->section) + " (" + std::to_string(msg->row) + ", " + std::to_string(msg->col) + "): " + msg->message);
     } else if (msg->type == asMSGTYPE_ERROR) {
-        chira::logger::log(ERR,   "AngelScript",std::string(msg->section) + " (" + std::to_string(msg->row) + ", " + std::to_string(msg->col) + "): " + msg->message);
+        logger::log(ERR,   "AngelScript",std::string(msg->section) + " (" + std::to_string(msg->row) + ", " + std::to_string(msg->col) + "): " + msg->message);
     }
 }
