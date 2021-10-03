@@ -113,12 +113,11 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdown/imgui_markdown.h)
 
 # CHIRAENGINE
-#include(${CMAKE_CURRENT_SOURCE_DIR}/components/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/config/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/core/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/events/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/event/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/hook/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/i18n/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/implementation/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/input/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/loader/CMakeLists.txt)
 #include(${CMAKE_CURRENT_SOURCE_DIR}/physics/CMakeLists.txt)
@@ -128,6 +127,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/script/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/sound/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/ui/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/utility/CMakeLists.txt)
+#include(${CMAKE_CURRENT_SOURCE_DIR}/wec/CMakeLists.txt)
 add_library(ChiraEngine STATIC ${ENGINE_SOURCES})
 
 target_compile_definitions(ChiraEngine PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLAD2)

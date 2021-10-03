@@ -10,14 +10,14 @@
 #include "../loader/jsonSettingsLoader.h"
 #include "../loader/image.h"
 #include "../sound/alSoundManager.h"
-#include "../implementation/discordRichPresence.h"
+#include "../hook/discordRichPresence.h"
 #include "../resource/filesystemResourceProvider.h"
 #include "../resource/internetResourceProvider.h"
 #include "../loader/objMeshLoader.h"
 #include "../loader/primitiveMeshLoader.h"
 #include "../render/texture2d.h"
 #include "../render/texturedMaterial.h"
-#include "../events/eventQueue.h"
+#include "../event/eventQueue.h"
 
 #if __has_include(<windows.h>)
 #include <windows.h>

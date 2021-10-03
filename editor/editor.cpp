@@ -3,7 +3,7 @@
 #include "../src/render/freecam.h"
 #include "../src/sound/oggFileSound.h"
 #include "../src/render/phongMaterial.h"
-#include "../src/implementation/discordRichPresence.h"
+#include "../src/hook/discordRichPresence.h"
 #include "../src/resource/filesystemResourceProvider.h"
 #include "../src/resource/resourceManager.h"
 #include "tinyfiledialogs.h"
