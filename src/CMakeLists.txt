@@ -82,6 +82,11 @@ list(APPEND ENGINE_LINK_LIBRARIES nlohmann_json::nlohmann_json)
 # STB
 include(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb/CMakeLists.txt)
 
+# STDUUID
+set(UUID_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stduuid)
+list(APPEND ENGINE_LINK_LIBRARIES stduuid)
+
 # TINYFILEDIALOGS
 include(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs/CMakeLists.txt)
 
@@ -143,6 +148,8 @@ target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/ogg/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/vorbis/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb)
+target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stduuid/gsl)
+target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stduuid/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdown)

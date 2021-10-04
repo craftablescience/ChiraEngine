@@ -40,11 +40,13 @@ Again, the goal of the engine is to have as much customization as possible, whil
 - GLM v0.9.9.9
 - Dear ImGui v1.84.2 (docking branch)
 - imgui_markdown
+- nlohmann_json v3.10.0
 - libogg v1.3.5
 - libvorbis v1.3.7
-- nlohmann_json v3.10.0
 - OpenAL Soft v1.21.1
 - stb_image v2.27
+- stduuid v1.0
+- TinyFileDialogs v3.8.8
 
 ## Compilation
 - **CLion (recommended)**: The project will compile without any prior configuration. If developing on Windows, you will need to install the Windows SDK (see below).
