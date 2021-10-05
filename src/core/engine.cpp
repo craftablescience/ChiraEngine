@@ -30,7 +30,11 @@ using namespace chira;
 void APIENTRY glDebugOutputCallback(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* userParam) {
     // Leaving OpenGL error reports unlocalized is probably best
 
-    if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
+    if (id == 8 || id == 131169 || id == 131185 || id == 131218 || id == 131204) {
+        // Ignore 8 because the Steam overlay tries to bind to an already bound framebuffer, very low overhead, don't worry about it
+        // Others are ignored because learnopengl.com said they were duplicates
+        return;
+    }
 
     std::cout << "---------------" << std::endl;
     std::cout << "Debug message (" << id << "): " <<  message << std::endl;
