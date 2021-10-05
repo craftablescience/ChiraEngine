@@ -1,61 +1,62 @@
 #include "componentManager.h"
 
-void componentManager::addComponent(const std::string& name, abstractComponent* component) {
-    this->components[name] = std::unique_ptr<abstractComponent>(component);
+using namespace chira;
+
+uuids::uuid componentManager::addComponent(abstractComponent* component) {
+    uuids::uuid uuid = uuidGenerator::getNewUUID();
+    componentManager::components[uuid] = component;
+    return uuid;
 }
 
-void componentManager::addEntity(const std::string& name, abstractEntity* entity) {
-    this->entities[name] = std::unique_ptr<abstractEntity>(entity);
+uuids::uuid componentManager::addEntity(abstractEntity* entity) {
+    uuids::uuid uuid = uuidGenerator::getNewUUID();
+    componentManager::entities[uuid] = entity;
+    return uuid;
 }
 
-void componentManager::addWorld(const std::string& name, abstractWorld* world) {
-    this->worlds[name] = std::unique_ptr<abstractWorld>(world);
+uuids::uuid componentManager::addWorld(abstractWorld* world) {
+    uuids::uuid uuid = uuidGenerator::getNewUUID();
+    componentManager::worlds[uuid] = world;
+    return uuid;
 }
 
-abstractComponent* componentManager::getComponent(const std::string& name) {
-    return this->components[name].get();
+void componentManager::removeComponent(const uuids::uuid& uuid) {
+    delete componentManager::components[uuid];
+    componentManager::components.erase(uuid);
 }
 
-abstractEntity* componentManager::getEntity(const std::string& name) {
-    return this->entities[name].get();
+void componentManager::removeEntity(const uuids::uuid& uuid) {
+    delete componentManager::entities[uuid];
+    componentManager::entities.erase(uuid);
 }
 
-abstractWorld* componentManager::getWorld(const std::string& name) {
-    return this->worlds[name].get();
-}
-
-void componentManager::preRender(double delta) {
-    for (const auto& [name, world] : this->worlds) {
-        world->preRender(delta);
-    }
-    for (const auto& [name, entity] : this->entities) {
-        entity->preRender(delta);
-    }
+void componentManager::removeWorld(const uuids::uuid& uuid) {
+    delete componentManager::worlds[uuid];
+    componentManager::worlds.erase(uuid);
 }
 
 void componentManager::render(double delta) {
-    for (const auto& [name, component] : this->components) {
+    for (const auto& [name, world] : componentManager::worlds) {
+        world->preRender(delta);
+    }
+    for (const auto& [name, entity] : componentManager::entities) {
+        entity->preRender(delta);
+    }
+
+    for (const auto& [name, component] : componentManager::components) {
         component->render(delta);
     }
-}
 
-void componentManager::postRender(double delta) {
-    for (const auto& [name, entity] : this->entities) {
+    for (const auto& [name, entity] : componentManager::entities) {
         entity->postRender(delta);
     }
-    for (const auto& [name, world] : this->worlds) {
+    for (const auto& [name, world] : componentManager::worlds) {
         world->postRender(delta);
     }
 }
 
-void componentManager::stop() {
-    for (const auto& [name, component] : this->components) {
-        component->stop();
-    }
-    for (const auto& [name, entity] : this->entities) {
-        entity->stop();
-    }
-    for (const auto& [name, world] : this->worlds) {
-        world->stop();
-    }
+void componentManager::clear() {
+    componentManager::components.clear();
+    componentManager::entities.clear();
+    componentManager::worlds.clear();
 }

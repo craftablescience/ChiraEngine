@@ -132,7 +132,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/script/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/sound/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/ui/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/utility/CMakeLists.txt)
-#include(${CMAKE_CURRENT_SOURCE_DIR}/wec/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/wec/CMakeLists.txt)
 add_library(ChiraEngine STATIC ${ENGINE_SOURCES})
 
 target_compile_definitions(ChiraEngine PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLAD2)

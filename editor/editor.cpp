@@ -6,6 +6,9 @@
 #include "../src/hook/discordRichPresence.h"
 #include "../src/resource/filesystemResourceProvider.h"
 #include "../src/resource/resourceManager.h"
+#include "../src/wec/extensibleWorld.h"
+#include "../src/wec/meshComponent.h"
+#include "../src/wec/componentManager.h"
 #include "tinyfiledialogs.h"
 #include "../src/ui/markdown.h"
 #include "ui/settings.h"
@@ -59,9 +62,15 @@ int main() {
         }
     }));
 
+    uuids::uuid worldId = componentManager::addWorld(new extensibleWorld{
+        [](double delta){},
+        [](double delta){},
+        [](){}
+    });
+
     mesh* cubeMesh;
 
-    engine::addInitFunction([&cubeMesh, &discordEnabled]() {
+    engine::addInitFunction([&worldId, &cubeMesh, &discordEnabled]() {
         if (discordEnabled) {
             discordRichPresence::init(TR("editor.discord.application_id"));
             discordRichPresence::setLargeImage("main_logo");
@@ -75,14 +84,12 @@ int main() {
         auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
         cubeMesh = resourceManager::getResource<mesh>("file://meshes/teapot.json", cubeMaterial);
 
+        componentManager::getWorld<extensibleWorld>(worldId)->add(new meshComponent(cubeMesh, glm::vec3{}, glm::vec3{}));
+
         engine::captureMouse(true);
         engine::setMainCamera(new freecam{});
 
-        bool angelscriptEnabled = true;
-        engine::getSettingsLoader()->getValue("scripting", "angelscript", &angelscriptEnabled);
-        if (angelscriptEnabled) {
-            engine::getAngelscriptProvider()->addScript(new angelscriptHolder{"testScript.as"});
-        }
+        engine::getAngelscriptProvider()->addScript(new angelscriptHolder{"testScript.as"});
 
         auto* sound = new oggFileSound();
         sound->init("helloWorldCutMono.ogg");
@@ -117,7 +124,7 @@ int main() {
         // todo: use UBO
         cubeMesh->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
         cubeMesh->getMaterial()->getShader()->setUniform("v", engine::getMainCamera()->getViewMatrix());
-        cubeMesh->render();
+        //cubeMesh->render();
 
         if (renderImguiTextureTestWindow) {
             if (!ImGui::Begin(TR("debug.imgui.texture_test").c_str(), &renderImguiTextureTestWindow)) {

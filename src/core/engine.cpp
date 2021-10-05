@@ -18,16 +18,13 @@
 #include "../render/texture2d.h"
 #include "../render/texturedMaterial.h"
 #include "../event/eventQueue.h"
+#include "../wec/componentManager.h"
 
 #if __has_include(<windows.h>)
 #include <windows.h>
 #endif
 
 using namespace chira;
-
-void engine::errorCallback(int error, const char* description) {
-    logger::log(ERR, "GLFW", fmt::format(TR("error.glfw.generic"), error, description));
-}
 
 #if DEBUG
 void APIENTRY glDebugOutputCallback(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* userParam) {
@@ -68,6 +65,10 @@ void APIENTRY glDebugOutputCallback(GLenum source, GLenum type, unsigned int id,
     } std::cout << std::endl << std::endl;
 }
 #endif
+
+void engine::errorCallback(int error, const char* description) {
+    logger::log(ERR, "GLFW", fmt::format(TR("error.glfw.generic"), error, description));
+}
 
 void engine::framebufferSizeCallback(GLFWwindow* w, int width, int height) {
     glViewport(0, 0, width, height);
@@ -367,6 +368,7 @@ void engine::render() {
 
     engine::callRegisteredFunctions(&(engine::renderFunctions));
     engine::angelscript->render(engine::getDeltaTime());
+    componentManager::render(engine::getDeltaTime());
 
     if (engine::getConsole()->getEnabled()) {
         engine::getConsole()->render();
@@ -388,6 +390,7 @@ void engine::stop() {
 
     engine::soundManager->stop();
 
+    componentManager::clear();
     resourceManager::discardAll();
 
     ImGui_ImplOpenGL3_Shutdown();

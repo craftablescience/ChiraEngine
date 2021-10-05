@@ -7,9 +7,9 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/componentManager.cpp
         ${CMAKE_CURRENT_LIST_DIR}/componentManager.h
         ${CMAKE_CURRENT_LIST_DIR}/extensibleComponent.h
-        ${CMAKE_CURRENT_LIST_DIR}/extensibleEntity.cpp
         ${CMAKE_CURRENT_LIST_DIR}/extensibleEntity.h
+        ${CMAKE_CURRENT_LIST_DIR}/extensibleWorld.h
         ${CMAKE_CURRENT_LIST_DIR}/meshComponent.cpp
         ${CMAKE_CURRENT_LIST_DIR}/meshComponent.h
-        ${CMAKE_CURRENT_LIST_DIR}/positionComponent.h
-        ${CMAKE_CURRENT_LIST_DIR}/rotationComponent.h)
+        ${CMAKE_CURRENT_LIST_DIR}/positionComponentData.h
+        ${CMAKE_CURRENT_LIST_DIR}/rotationComponentData.h)

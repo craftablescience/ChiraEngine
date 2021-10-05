@@ -1,16 +1,16 @@
 #pragma once
 
-#include "abstractEntity.h"
+#include "abstractWorld.h"
 #include <functional>
 
 namespace chira {
     /// Very useful for rapid iteration.
     /// Allows you to run arbitrary code.
     /// It's probably a bad idea to use this in production,
-    /// convert your code to a hard entity subclass when it works!
-    class extensibleEntity : public abstractEntity {
+    /// convert your code to a hard world subclass when it works!
+    class extensibleWorld : public abstractWorld {
     public:
-        extensibleEntity(const std::function<void(double)>& preRenderFunction_, const std::function<void(double)>& postRenderFunction_, const std::function<void()>& deathFunction_) {
+        extensibleWorld(const std::function<void(double)>& preRenderFunction_, const std::function<void(double)>& postRenderFunction_, const std::function<void()>& deathFunction_) {
             this->preRenderFunction = preRenderFunction_;
             this->postRenderFunction = postRenderFunction_;
             this->deathFunction = deathFunction_;
@@ -21,7 +21,7 @@ namespace chira {
         void postRender(double delta) override {
             this->postRenderFunction(delta);
         }
-        ~extensibleEntity() override {
+        ~extensibleWorld() override {
             this->deathFunction();
         }
     private:

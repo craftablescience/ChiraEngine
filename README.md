@@ -8,7 +8,10 @@ To summarize the major features:
 - Native Windows and Linux support (OpenGL 4.5 Core)
 - As extensible as possible: register custom logging hooks, sound providers, resource types and providers, etc.
 - Robust resource loading and management to facilitate sharing of congruent data
-- Data-oriented design, using components as building blocks
+- Data-oriented design, using worlds ➡ entities ➡ components as building blocks
+  - Components can exist standalone if necessary
+  - Entities are components that handle registration of other components with the engine, and provide connecting glue between components. They can also be added standalone
+  - Worlds are entities that manage groups of entities, and provide the same code glue entities provide for components
 - Hassle-free Discord Rich Presence
 - Inline text localization
 - AngelScript support, with common function hooks and types registered
@@ -26,6 +29,7 @@ To summarize the major features:
 - Add C# scripting support
 - Add more graphics features like PBR
 - Implement the assimp library for model loading
+- Particle systems! Preferably offloaded to the GPU
 
 Again, the goal of the engine is to have as much customization as possible, while still maintaining ease of use.
 

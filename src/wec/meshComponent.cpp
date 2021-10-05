@@ -1,6 +1,8 @@
 #include "meshComponent.h"
 
-meshComponent::meshComponent(mesh* mesh_, const glm::vec3& pos, const glm::vec3& rot) : positionComponent(pos), rotationComponent(rot) {
+using namespace chira;
+
+meshComponent::meshComponent(mesh* mesh_, const glm::vec3& pos, const glm::vec3& rot) : positionComponentData(pos), rotationComponentData(rot) {
     this->meshPtr = mesh_;
 }
 
@@ -16,6 +18,6 @@ void meshComponent::render(double delta) {
     this->meshPtr->render();
 }
 
-void meshComponent::stop() {
+meshComponent::~meshComponent() {
     this->meshPtr->release();
 }
