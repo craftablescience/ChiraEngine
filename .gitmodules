@@ -34,6 +34,6 @@
 [submodule "src/third_party/curlpp"]
 	path = src/third_party/curlpp
 	url = https://github.com/jpbarrette/curlpp
-[submodule ".\\src\\third_party\\stduuid"]
-	path = .\\src\\third_party\\stduuid
+[submodule "src/third_party/stduuid"]
+	path = src/third_party/stduuid
 	url = https://github.com/mariusbancila/stduuid
