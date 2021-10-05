@@ -24,12 +24,12 @@ namespace chira {
     private:
         static inline bool isInitialized = false;
         static inline bool isModifiedSinceLastUpdate = false;
-        static inline std::string state = "";
-        static inline std::string details = "";
-        static inline std::string largeImage = "";
-        static inline std::string largeImageText = "";
-        static inline std::string smallImage = "";
-        static inline std::string smallImageText = "";
+        static inline std::string state; // NOLINT(cert-err58-cpp)
+        static inline std::string details; // NOLINT(cert-err58-cpp)
+        static inline std::string largeImage; // NOLINT(cert-err58-cpp)
+        static inline std::string largeImageText; // NOLINT(cert-err58-cpp)
+        static inline std::string smallImage; // NOLINT(cert-err58-cpp)
+        static inline std::string smallImageText; // NOLINT(cert-err58-cpp)
         static inline std::int64_t startTimestamp = -1;
         static inline std::int64_t endTimestamp = -1;
         static void callbackReady(const DiscordUser* connectedUser);

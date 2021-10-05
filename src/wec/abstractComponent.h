@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../resource/propertiesResource.h"
+#include "json/json.h"
 
 namespace chira {
     /// Q: When do I make something part of a component or an entity? \n

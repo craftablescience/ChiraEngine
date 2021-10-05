@@ -8,8 +8,6 @@
 #include "abstractEntity.h"
 #include "abstractWorld.h"
 
-// todo: make a factory so you can create a component from a string name
-
 namespace chira {
     class componentManager {
     public:

@@ -9,6 +9,8 @@
  * https://indiegamedev.net/2020/02/15/the-complete-guide-to-openal-with-c-part-1-playing-a-sound/
  * The error reporting functions have been modified to use the engine's logging capabilities.
  * This code was in the public domain and was not under any licenses or restrictions.
+ *
+ * It is not in the chira namespace because there were a lot of errors when it was put there ¯\_(ツ)_/¯
  */
 
 #define alCall(function, ...) alCallImpl(__FILE__, __LINE__, function, __VA_ARGS__)
