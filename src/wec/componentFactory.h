@@ -2,6 +2,8 @@
 
 #include "abstractComponent.h"
 
+// See https://stackoverflow.com/questions/582331/is-there-a-way-to-instantiate-objects-from-a-string-holding-their-class-name
+
 namespace chira {
     class componentFactory {
     public:

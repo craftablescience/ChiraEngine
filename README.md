@@ -41,10 +41,10 @@ Again, the goal of the engine is to have as much customization as possible, whil
 - {fmt} v8.0.1
 - GLAD (OpenGL 4.5 Core, no extensions)
 - GLFW v3.3.5
-- GLM v0.9.9.9
+- GLM v0.9.9
 - Dear ImGui v1.84.2 (docking branch)
 - imgui_markdown
-- nlohmann_json v3.10.0
+- nlohmann_json v3.10.2
 - libogg v1.3.5
 - libvorbis v1.3.7
 - OpenAL Soft v1.21.1
