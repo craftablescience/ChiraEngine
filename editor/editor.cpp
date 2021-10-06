@@ -130,7 +130,6 @@ int main() {
         // todo: use UBO
         cubeMesh->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
         cubeMesh->getMaterial()->getShader()->setUniform("v", engine::getMainCamera()->getViewMatrix());
-        //cubeMesh->render();
 
         if (renderImguiTextureTestWindow) {
             if (!ImGui::Begin(TR("debug.imgui.texture_test").c_str(), &renderImguiTextureTestWindow)) {

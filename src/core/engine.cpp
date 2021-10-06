@@ -330,7 +330,7 @@ void engine::init() {
 void engine::displaySplashScreen() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    auto* mat = resourceManager::getResource<texturedMaterial>("file://materials/splashscreen.json");
+    auto* mat = resourceManager::getResource<texturedMaterial>(TR("resource.material.splashscreen_material_path"));
     auto* plane = resourceManager::getResource<mesh>("file://meshes/plane.json", mat);
     plane->render();
 

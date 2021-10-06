@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "shader": "file://shaders/ui.json",
+    "texture": "file://textures/ui/splash_en.png"
+  },
+  "properties": {
+    "texture_format": "RGB"
+  }
+}
