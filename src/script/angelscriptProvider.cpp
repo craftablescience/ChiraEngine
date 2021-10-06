@@ -53,11 +53,11 @@ void angelscriptProvider::stop() {
     }
 }
 
-void angelscriptProvider::addScript(angelscriptHolder* script) {
+void angelscriptProvider::addScript(const std::string& script) {
+    this->scripts.push_back(std::make_unique<angelscriptHolder>(script));
     if (this->started) {
-        script->init(this);
+        this->scripts[this->scripts.size() - 1]->init(this);
     }
-    this->scripts.push_back(std::unique_ptr<angelscriptHolder>(script));
 }
 
 void angelscriptProvider::print(const std::string& message) {

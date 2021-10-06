@@ -19,7 +19,7 @@ namespace chira {
         void initScripts() override;
         void render(double delta) override;
         void stop() override;
-        void addScript(angelscriptHolder* script);
+        void addScript(const std::string& script);
 
         template <typename F>
         int registerGlobalFunction(F f, const std::string& name) {
