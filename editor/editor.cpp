@@ -95,7 +95,7 @@ int main() {
         engine::captureMouse(true);
         engine::setMainCamera(new freecam{});
 
-        engine::getAngelscriptProvider()->addScript("testScript.as");
+        engine::getAngelscriptProvider()->addScript("file://scripts/testScript.as");
 
         auto* sound = new oggFileSound();
         sound->init("helloWorldCutMono.ogg");

@@ -12,11 +12,11 @@ namespace chira {
         void init(angelscriptProvider* provider);
         void render(angelscriptProvider* provider, double delta);
         void stop(angelscriptProvider* provider);
-        std::string getFilePath() {
-            return this->filepath;
+        std::string getIdentifier() {
+            return this->identifier;
         }
     private:
-        std::string filepath;
+        std::string identifier;
         asIScriptContext* scriptContext = nullptr;
         asIScriptFunction* initFunc = nullptr;
         asIScriptFunction* renderFunc = nullptr;
