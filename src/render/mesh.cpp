@@ -1,12 +1,13 @@
 #include "mesh.h"
 
+#include "../utility/matrixMath.h"
 #include "fmt/core.h"
 #include "../i18n/translationManager.h"
 #include "../resource/resourceManager.h"
 
 using namespace chira;
 
-mesh::mesh(const std::string& identifier_, material* material) : propertiesResource(identifier_), model(1.0f), vertices(), indices() {
+mesh::mesh(const std::string& identifier_, material* material, glm::vec3* pos, glm::vec3* rot) : propertiesResource(identifier_), position(pos), rotation(rot) {
     this->materialPtr = material;
 }
 
@@ -66,7 +67,8 @@ void mesh::release() const {
 void mesh::render() {
     this->materialPtr->use();
     shader* s = this->materialPtr->getShader();
-    s->setUniform("m", &this->model);
+    glm::mat4 model = transformToMatrix(*this->position, *this->rotation);
+    s->setUniform("m", &model);
 
     glDepthFunc(this->depthFunction);
     if (this->backfaceCulling) {

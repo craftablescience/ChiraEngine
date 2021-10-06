@@ -332,6 +332,9 @@ void engine::displaySplashScreen() {
 
     auto* mat = resourceManager::getResource<texturedMaterial>(TR("resource.material.splashscreen_material_path"));
     auto* plane = resourceManager::getResource<mesh>("file://meshes/plane.json", mat);
+    glm::vec3 origin;
+    plane->setPosition(&origin);
+    plane->setRotation(&origin);
     plane->render();
 
     glfwSwapBuffers(engine::window);
