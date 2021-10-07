@@ -6,15 +6,13 @@
 #include <vector>
 
 namespace chira {
-    class bulletColliderResource;
-
     class bulletPhysicsProvider : public abstractPhysicsProvider {
     public:
         bulletPhysicsProvider();
         void updatePhysics(double delta) override;
         void stop() override;
-        bulletColliderResource* addBoxCollider(const glm::vec3& bounds);
-        void removeCollider(btCollisionShape* collider);
+        // todo: there must be a way to remove a RigidBody
+        void addRigidBody(btRigidBody* rb);
         void setGravity(const glm::vec3& gravity) override;
     private:
         std::unique_ptr<btDefaultCollisionConfiguration> collisionConfiguration;

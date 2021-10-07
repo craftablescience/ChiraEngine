@@ -12,7 +12,7 @@ namespace chira {
         virtual void preRender(double delta) = 0;
         void render(double delta) override {}
         virtual void postRender(double delta) = 0;
-        uuids::uuid add(abstractComponent* component);
+        virtual uuids::uuid add(abstractComponent* component);
         abstractComponent* get(const uuids::uuid& uuid);
         void remove(const uuids::uuid& uuid);
         ~abstractEntity() override;

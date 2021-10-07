@@ -1,6 +1,6 @@
 #include "mesh.h"
 
-#include "../utility/matrixMath.h"
+#include "../utility/math/matrixMath.h"
 #include "fmt/core.h"
 #include "../i18n/translationManager.h"
 #include "../resource/resourceManager.h"

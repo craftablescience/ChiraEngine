@@ -14,7 +14,7 @@
 #include "ui/settings.h"
 #include "imgui_internal.h"
 #include "../src/wec/componentFactory.h"
-#include "../src/wec/propEntity.h"
+#include "../src/wec/propBulletPhysicsEntity.h"
 
 using namespace chira;
 
@@ -86,11 +86,16 @@ int main() {
         auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
         cubeMesh = resourceManager::getResource<mesh>("file://meshes/teapot.json", cubeMaterial);
 
+        /*
         componentManager::getWorld<extensibleWorld>(worldId)->add(
                 dynamic_cast<propEntity*>(
                         componentFactory::getComponent("propEntity"))
                         ->init(new meshComponent(cubeMesh, glm::vec3{}, glm::vec3{})
                         ));
+        */
+        componentManager::getWorld<extensibleWorld>(worldId)->add((new propBulletPhysicsEntity{})->init(
+                new meshComponent{cubeMesh},
+                new bulletRigidBodyComponent{"file://physics/cube_dynamic.json", glm::vec3{0, 5, -10}}));
 
         engine::captureMouse(true);
         engine::setMainCamera(new freecam{});

@@ -19,6 +19,7 @@
 #include "../render/texturedMaterial.h"
 #include "../event/eventQueue.h"
 #include "../wec/componentManager.h"
+#include "../physics/bulletPhysicsProvider.h"
 
 #if __has_include(<windows.h>)
 #include <windows.h>
@@ -287,7 +288,7 @@ void engine::init() {
     logger::log(INFO, "ImGUI", TR("debug.imgui.success"));
 
     bool openalEnabled = true;
-    engine::getSettingsLoader()->getValue("scripting", "angelscript", &openalEnabled);
+    engine::getSettingsLoader()->getValue("audio", "openal", &openalEnabled);
     if (openalEnabled) {
         engine::setSoundManager(new alSoundManager{});
     }
@@ -307,6 +308,12 @@ void engine::init() {
         int maxLights;
         engine::getSettingsLoader()->getValue("engine", "maxSpotLights", &maxLights);
         shaderResource::addPreprocessorSymbol("MAX_SPOT_LIGHTS", std::to_string(maxLights));
+    }
+
+    bool bulletEnabled = true;
+    engine::getSettingsLoader()->getValue("physics", "bullet", &bulletEnabled);
+    if (bulletEnabled) {
+        engine::setPhysicsProvider(new bulletPhysicsProvider{});
     }
 
     engine::angelscript = std::make_unique<angelscriptProvider>();
@@ -346,6 +353,7 @@ void engine::run() {
     engine::currentTime = glfwGetTime();
 
     while (!glfwWindowShouldClose(engine::window)) {
+        engine::physicsProvider->updatePhysics(engine::getDeltaTime());
         engine::render();
         engine::soundManager->setListenerPosition(engine::getMainCamera()->getPosition());
         engine::soundManager->setListenerRotation(engine::getMainCamera()->getRotation(), engine::getMainCamera()->getUpVector());
@@ -394,6 +402,8 @@ void engine::stop() {
     if (discordRichPresence::initialized()) {
         discordRichPresence::shutdown();
     }
+
+    engine::physicsProvider->stop();
 
     engine::soundManager->stop();
 
@@ -512,6 +522,8 @@ void engine::setSettingsLoaderDefaults() {
     engine::settingsLoader->setValue("engine", "maxSpotLights", 4, false, false);
     engine::settingsLoader->addCategory("audio");
     engine::settingsLoader->setValue("audio", "openal", true, false, false);
+    engine::settingsLoader->addCategory("physics");
+    engine::settingsLoader->setValue("physics", "bullet", true, false, false);
     engine::settingsLoader->addCategory("graphics");
     engine::settingsLoader->setValue("graphics", "windowWidth", 1600, false, false);
     engine::settingsLoader->setValue("graphics", "windowHeight", 900, false, false);

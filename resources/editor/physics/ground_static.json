@@ -1,0 +1,9 @@
+{
+  "properties": {
+    "mass": 0,
+    "colliderType": "box",
+    "boundX": 2,
+    "boundY": 2,
+    "boundZ": 2
+  }
+}
