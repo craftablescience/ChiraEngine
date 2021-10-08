@@ -155,8 +155,7 @@ void engine::preInit(const std::string& configPath) {
     resourceManager::addResourceProvider("http", new internetResourceProvider{"http", 80});
     resourceManager::addResourceProvider("https", new internetResourceProvider{"https", 443});
     engine::setSettingsLoader(new jsonSettingsLoader(configPath));
-    // todo: use computer language as default here
-    std::string defaultLang = "en";
+    std::string defaultLang;
     engine::getSettingsLoader()->getValue("ui", "language", &defaultLang);
     translationManager::setLanguage(defaultLang);
     translationManager::addTranslationFile("file://i18n/engine");
@@ -534,6 +533,7 @@ void engine::setSettingsLoaderDefaults() {
     engine::settingsLoader->setValue("input", "rawMouseMotion", true, false, false);
     engine::settingsLoader->setValue("input", "invertYAxis", false, false, false);
     engine::settingsLoader->addCategory("ui");
+    // todo: use computer language as default
     engine::settingsLoader->setValue("ui", "language", std::string("en"), false, false);
     engine::settingsLoader->save();
 }

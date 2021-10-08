@@ -11,6 +11,6 @@ propBulletPhysicsEntity* propBulletPhysicsEntity::init(meshComponent* mesh_, bul
 }
 
 void propBulletPhysicsEntity::preRender(double delta) {
-    this->meshPtr->setPosition(bulletConversions::bulletToGLM(this->physics->getTransform().getOrigin()));
-    this->meshPtr->setRotation(bulletConversions::bulletToGLM(this->physics->getTransform().getRotation()));
+    this->meshPtr->setPosition(bulletToGLM(this->physics->getTransform().getOrigin()));
+    this->meshPtr->setRotation(bulletToGLM(this->physics->getTransform().getRotation()));
 }

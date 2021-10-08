@@ -5,13 +5,14 @@
 #include <fstream>
 #include <utility>
 #include "abstractResourceProvider.h"
+#include "../utility/stringOperations.h"
 
 namespace chira {
     class filesystemResourceProvider : public abstractResourceProvider {
     public:
-        explicit filesystemResourceProvider(const std::string& name_, std::string path_) : abstractResourceProvider(name_), path(std::move(path_)) {}
+        explicit filesystemResourceProvider(const std::string& name_, std::string path_) : abstractResourceProvider(strip(name_, '/')), path(std::move(path_)) {}
         bool hasResource(const std::string& name) override {
-            // Note: update your compiler if compilation fails because of std::filesystem
+            // Update your compiler if compilation fails because of std::filesystem
             return std::filesystem::exists(std::filesystem::current_path().append(this->path).append(name));
         }
         void compileResource(const std::string& name, abstractResource* resource) override {
