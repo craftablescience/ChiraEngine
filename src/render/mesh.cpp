@@ -7,7 +7,7 @@
 
 using namespace chira;
 
-mesh::mesh(const std::string& identifier_, material* material, glm::vec3* pos, glm::vec3* rot) : propertiesResource(identifier_), position(pos), rotation(rot) {
+mesh::mesh(const std::string& identifier_, material* material, glm::vec3* pos, glm::quat* rot) : propertiesResource(identifier_), position(pos), rotation(rot) {
     this->materialPtr = material;
 }
 

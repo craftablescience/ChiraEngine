@@ -96,9 +96,13 @@ int main() {
         componentManager::getWorld<extensibleWorld>(worldId)->add((new propBulletPhysicsEntity{})->init(
                 new meshComponent{cubeMesh},
                 new bulletRigidBodyComponent{"file://physics/cube_dynamic.json", glm::vec3{0, 5, -10}}));
+        componentManager::getWorld<extensibleWorld>(worldId)->add((new propBulletPhysicsEntity{})->init(
+                new meshComponent{resourceManager::getUniqueResource<mesh>("file://meshes/teapot.json", cubeMaterial)},
+                new bulletRigidBodyComponent{"file://physics/ground_static.json", glm::vec3{3, -5, -13}}));
 
         engine::captureMouse(true);
         engine::setMainCamera(new freecam{});
+        engine::getMainCamera()->setPosition(glm::vec3{0,0,10});
 
         engine::getAngelscriptProvider()->addScript("file://scripts/testScript.as");
 

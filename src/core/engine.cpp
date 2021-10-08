@@ -4,7 +4,8 @@
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
-#include "fmt/core.h"
+#include <fmt/core.h>
+#include <glm/gtc/quaternion.hpp>
 #include <iostream>
 #include "../config/glVersion.h"
 #include "../loader/jsonSettingsLoader.h"
@@ -338,10 +339,9 @@ void engine::displaySplashScreen() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     auto* mat = resourceManager::getResource<texturedMaterial>(TR("resource.material.splashscreen_material_path"));
-    auto* plane = resourceManager::getResource<mesh>("file://meshes/plane.json", mat);
-    glm::vec3 origin;
-    plane->setPosition(&origin);
-    plane->setRotation(&origin);
+    glm::vec3 zeroVec;
+    glm::quat zeroQuat{1,0,0,0};
+    auto* plane = resourceManager::getResource<mesh>("file://meshes/plane.json", mat, &zeroVec, &zeroQuat);
     plane->render();
 
     glfwSwapBuffers(engine::window);

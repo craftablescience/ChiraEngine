@@ -17,7 +17,7 @@ namespace chira {
         }
         void preRender(double delta) override {
             this->meshPtr->setPosition(propBulletPhysicsEntity::btToGLM(this->physics->getTransform().getOrigin()));
-            this->meshPtr->setRotation(propBulletPhysicsEntity::btQuatToEuler(this->physics->getTransform().getRotation()));
+            this->meshPtr->setRotation(propBulletPhysicsEntity::btToGLM(this->physics->getTransform().getRotation()));
         }
         void postRender(double delta) override {}
     private:
@@ -29,10 +29,8 @@ namespace chira {
         static glm::vec3 btToGLM(const btVector3& vector3) {
             return glm::vec3{vector3.x(), vector3.y(), vector3.z()};
         }
-        static glm::vec3 btQuatToEuler(const btQuaternion& quat) {
-            btScalar x, y, z;
-            quat.getEulerZYX(z, y, x);
-            return glm::vec3{x,y,z};
+        static glm::quat btToGLM(const btQuaternion& quaternion) {
+            return {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
         }
     };
 }

@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <string>
-#include "../utility/vertex.h"
+#include "../utility/math/vertex.h"
 
 namespace chira {
     class abstractMeshLoader {

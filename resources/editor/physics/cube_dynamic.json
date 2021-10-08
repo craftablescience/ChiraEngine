@@ -1,7 +1,7 @@
 {
   "properties": {
     "mass": 10,
-    "colliderType": "box",
+    "colliderType": "BULLET_BOX",
     "boundX": 2,
     "boundY": 2,
     "boundZ": 2

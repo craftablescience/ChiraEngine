@@ -10,7 +10,7 @@
 namespace chira {
     class mesh : public propertiesResource {
     public:
-        mesh(const std::string& identifier_, material* material, glm::vec3* pos = nullptr, glm::vec3* rot = nullptr);
+        mesh(const std::string& identifier_, material* material, glm::vec3* pos = nullptr, glm::quat* rot = nullptr);
         ~mesh() override;
         void compile(const nlohmann::json& properties) override;
         void release() const override;
@@ -21,14 +21,14 @@ namespace chira {
         void setPosition(glm::vec3* pos) {
             this->position = pos;
         }
-        void setRotation(glm::vec3* rot) {
+        void setRotation(glm::quat* rot) {
             this->rotation = rot;
         }
         static void addMeshLoader(const std::string& name, abstractMeshLoader* meshLoader);
         static abstractMeshLoader* getMeshLoader(const std::string& name);
     protected:
         glm::vec3* position;
-        glm::vec3* rotation;
+        glm::quat* rotation;
     private:
         int depthFunction = GL_LEQUAL;
         bool backfaceCulling = true;

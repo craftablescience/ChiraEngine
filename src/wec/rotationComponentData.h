@@ -2,22 +2,26 @@
 
 #include "abstractComponent.h"
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+
+// Why does this not have a default constructor??
+#define QUAT_IDENTITY glm::quat{1,0,0,0}
 
 namespace chira {
     class rotationComponentData {
     public:
-        explicit rotationComponentData(const glm::vec3& rot) {
+        explicit rotationComponentData(const glm::quat& rot) {
             this->rotation = rot;
         }
-        void setRotation(const glm::vec3& rot) {
+        void setRotation(const glm::quat& rot) {
             this->rotation = rot;
             this->rotationChanged = true;
         }
-        const glm::vec3& getRotation() {
+        const glm::quat& getRotation() {
             return this->rotation;
         }
     protected:
-        glm::vec3 rotation{};
+        glm::quat rotation = QUAT_IDENTITY;
         bool rotationChanged = true;
     };
 }
