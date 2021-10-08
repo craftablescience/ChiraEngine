@@ -16,13 +16,13 @@ To summarize the major features:
 - Inline text localization
 - AngelScript support, with common function hooks and types registered
 - Abstract input system using C++11 lambdas (or a reference to a function)
+- Bullet physics engine built-in
 - Event queue to communicate between components
 - Settings manager, which saves to and loads from a JSON file (with smart overwriting) for modifiable settings without recompiling
 - The sound manager can be changed, and scripting providers (defined by the user) can be added
 - Logger built-in with colored text and hooks, and a console GUI which uses the logging hook system
 
 ## Planned Features
-- Bullet physics engine built-in
 - Abstract ImGUI windows and expose relevant functions to scripting
 - Create an editor UI to make games with
 - Revamp scripting, allow adding custom scripting providers
