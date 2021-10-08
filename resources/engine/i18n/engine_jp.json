@@ -23,6 +23,7 @@
   "warn.material.invalid_gl_format": "無効なGL形式:{}",
   "warn.mesh.invalid_depth_function": "無効な深度関数値:{}",
   "warn.mesh.invalid_cull_type": "無効なcullタイプ値:{}",
+  "warn.bullet_collider_resource.invalid_collider_type": "コライダータイプの{}が無効です",
   "warn.ogg.3d_stereo_audio": "ステレオオーディオは、3Dソースから再生されているようには聞こえません",
 
   "error.angelscript.unrecoverable_error": "「{}」で新しいモジュールを起動中に回復不能なエラーが発生しました",

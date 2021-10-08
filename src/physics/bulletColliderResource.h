@@ -165,7 +165,6 @@ namespace chira {
             } else if (colliderTypeStr == "BULLET_UNIFORM_SCALING") {
                 return BULLET_UNIFORM_SCALING;
             }
-            // todo: localize
             logger::log(WARN, "BulletColliderResource", fmt::format(TR("warn.bullet_collider_resource.invalid_collider_type"), colliderTypeStr));
             return BULLET_INVALID;
         }
