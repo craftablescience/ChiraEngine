@@ -1,5 +1,7 @@
 #include "bulletPhysicsProvider.h"
 
+#include "../core/engine.h"
+
 using namespace chira;
 
 bulletPhysicsProvider::bulletPhysicsProvider() {
@@ -17,7 +19,9 @@ bulletPhysicsProvider::bulletPhysicsProvider() {
 }
 
 void bulletPhysicsProvider::updatePhysics(double delta) {
-    this->dynamicsWorld->stepSimulation((btScalar) delta, 4);
+    int step = 4;
+    engine::getSettingsLoader()->getValue("physics", "subStep", &step);
+    this->dynamicsWorld->stepSimulation((btScalar) delta, step);
 }
 
 void bulletPhysicsProvider::stop() {

@@ -524,6 +524,7 @@ void engine::setSettingsLoaderDefaults() {
     engine::settingsLoader->setValue("audio", "openal", true, false, false);
     engine::settingsLoader->addCategory("physics");
     engine::settingsLoader->setValue("physics", "bullet", true, false, false);
+    engine::getSettingsLoader()->setValue("physics", "subStep", 4, false, false);
     engine::settingsLoader->addCategory("graphics");
     engine::settingsLoader->setValue("graphics", "windowWidth", 1600, false, false);
     engine::settingsLoader->setValue("graphics", "windowHeight", 900, false, false);
