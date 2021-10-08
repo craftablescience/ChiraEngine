@@ -403,12 +403,12 @@ void engine::stop() {
         discordRichPresence::shutdown();
     }
 
-    engine::physicsProvider->stop();
-
     engine::soundManager->stop();
 
     componentManager::clear();
     resourceManager::discardAll();
+
+    engine::physicsProvider->stop();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

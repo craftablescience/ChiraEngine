@@ -2,8 +2,8 @@
 
 #include "../wec/abstractComponent.h"
 #include "bulletColliderResource.h"
+#include "../utility/math/bulletConversions.h"
 #include <string>
-#include <glm/glm.hpp>
 
 namespace chira {
     /// This class assumes Bullet is the current physics provider.
@@ -11,9 +11,7 @@ namespace chira {
     class bulletRigidBodyComponent : public abstractComponent {
     public:
         explicit bulletRigidBodyComponent(const std::string& identifier, const glm::vec3& transform = glm::vec3{});
-        ~bulletRigidBodyComponent() override {
-            this->collider->release();
-        }
+        ~bulletRigidBodyComponent() override;
         void render(double delta) override {}
         const btTransform& getTransform() {
             return this->rigidBody->getWorldTransform();
@@ -21,9 +19,5 @@ namespace chira {
     private:
         bulletColliderResource* collider;
         btRigidBody* rigidBody;
-
-        static btVector3 glmToBt(const glm::vec3& vector3) {
-            return {vector3.x, vector3.y, vector3.z};
-        }
     };
 }

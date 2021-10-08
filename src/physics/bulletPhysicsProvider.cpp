@@ -40,6 +40,10 @@ void bulletPhysicsProvider::addRigidBody(btRigidBody* rb) {
     this->dynamicsWorld->addRigidBody(rb);
 }
 
+void bulletPhysicsProvider::removeRigidBody(btRigidBody* rb) {
+    this->dynamicsWorld->removeRigidBody(rb);
+}
+
 void bulletPhysicsProvider::setGravity(const glm::vec3& gravity) {
     this->dynamicsWorld->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
 }

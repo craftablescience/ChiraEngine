@@ -1,7 +1,5 @@
 #include "propBulletPhysicsEntity.h"
 
-#include "../utility/math/bulletConversions.h"
-
 using namespace chira;
 
 propBulletPhysicsEntity* propBulletPhysicsEntity::init(meshComponent* mesh_, bulletRigidBodyComponent* physics_) {
@@ -13,6 +11,6 @@ propBulletPhysicsEntity* propBulletPhysicsEntity::init(meshComponent* mesh_, bul
 }
 
 void propBulletPhysicsEntity::preRender(double delta) {
-    this->meshPtr->setPosition(bulletToGLM(this->physics->getTransform().getOrigin()));
-    this->meshPtr->setRotation(bulletToGLM(this->physics->getTransform().getRotation()));
+    this->meshPtr->setPosition(bulletConversions::bulletToGLM(this->physics->getTransform().getOrigin()));
+    this->meshPtr->setRotation(bulletConversions::bulletToGLM(this->physics->getTransform().getRotation()));
 }
