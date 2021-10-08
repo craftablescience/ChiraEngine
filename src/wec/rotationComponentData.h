@@ -4,9 +4,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-// Why does this not have a default constructor??
-#define QUAT_IDENTITY glm::quat{1,0,0,0}
-
 namespace chira {
     class rotationComponentData {
     public:
@@ -21,7 +18,7 @@ namespace chira {
             return this->rotation;
         }
     protected:
-        glm::quat rotation = QUAT_IDENTITY;
+        glm::quat rotation = glm::identity<glm::quat>();
         bool rotationChanged = true;
     };
 }

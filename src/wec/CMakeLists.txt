@@ -13,6 +13,7 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/meshComponent.cpp
         ${CMAKE_CURRENT_LIST_DIR}/meshComponent.h
         ${CMAKE_CURRENT_LIST_DIR}/positionComponentData.h
+        ${CMAKE_CURRENT_LIST_DIR}/propBulletPhysicsEntity.cpp
         ${CMAKE_CURRENT_LIST_DIR}/propBulletPhysicsEntity.h
         ${CMAKE_CURRENT_LIST_DIR}/propEntity.h
         ${CMAKE_CURRENT_LIST_DIR}/rotationComponentData.h)

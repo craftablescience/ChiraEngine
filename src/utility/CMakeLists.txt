@@ -1,6 +1,7 @@
 list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/math/axis.h
-        ${CMAKE_CURRENT_LIST_DIR}/math/matrixMath.h
+        ${CMAKE_CURRENT_LIST_DIR}/math/bulletConversions.h
+        ${CMAKE_CURRENT_LIST_DIR}/math/matrix.h
         ${CMAKE_CURRENT_LIST_DIR}/math/vertex.cpp
         ${CMAKE_CURRENT_LIST_DIR}/math/vertex.h
         ${CMAKE_CURRENT_LIST_DIR}/curlMemoryWriter.cpp

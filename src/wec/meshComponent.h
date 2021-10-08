@@ -8,7 +8,7 @@
 namespace chira {
     class meshComponent : public abstractComponent, public positionComponentData, public rotationComponentData {
     public:
-        explicit meshComponent(mesh* mesh_, const glm::vec3& pos = glm::vec3{}, const glm::quat& rot = QUAT_IDENTITY);
+        explicit meshComponent(mesh* mesh_, const glm::vec3& pos = glm::vec3{}, const glm::quat& rot = glm::identity<glm::quat>());
         [[nodiscard]] mesh* getMesh() const {
             return this->meshPtr;
         }

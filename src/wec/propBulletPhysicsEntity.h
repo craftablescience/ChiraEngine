@@ -8,29 +8,13 @@
 namespace chira {
     class propBulletPhysicsEntity : public abstractEntity {
     public:
-        propBulletPhysicsEntity* init(meshComponent* mesh_, bulletRigidBodyComponent* physics_) {
-            this->meshPtr = mesh_;
-            this->add(mesh_);
-            this->physics = physics_;
-            this->add(physics_);
-            return this;
-        }
-        void preRender(double delta) override {
-            this->meshPtr->setPosition(propBulletPhysicsEntity::btToGLM(this->physics->getTransform().getOrigin()));
-            this->meshPtr->setRotation(propBulletPhysicsEntity::btToGLM(this->physics->getTransform().getRotation()));
-        }
+        propBulletPhysicsEntity* init(meshComponent* mesh_, bulletRigidBodyComponent* physics_);
+        void preRender(double delta) override;
         void postRender(double delta) override {}
     private:
         meshComponent* meshPtr = nullptr;
         bulletRigidBodyComponent* physics = nullptr;
 
         RegisterComponentName(propBulletPhysicsEntity);
-
-        static glm::vec3 btToGLM(const btVector3& vector3) {
-            return glm::vec3{vector3.x(), vector3.y(), vector3.z()};
-        }
-        static glm::quat btToGLM(const btQuaternion& quaternion) {
-            return {quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()};
-        }
     };
 }
