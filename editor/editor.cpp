@@ -126,16 +126,17 @@ int main() {
         settingsWindow.setEnabled(!settingsWindow.getEnabled());
     }));
 
-    auto* tex = resourceManager::getResource<texture2d>("file://textures/ui/icon.png", GL_RGBA, false);
-    bool renderImguiTextureTestWindow = true;
+    //auto* tex = resourceManager::getResource<texture2d>("file://textures/ui/icon.png", GL_RGBA, false);
+    //bool renderImguiTextureTestWindow = true;
 
-    engine::addRenderFunction([tex, cubeMesh, &renderImguiTextureTestWindow, &settingsWindow]() {
+    engine::addRenderFunction([/*tex,*/ cubeMesh, /*&renderImguiTextureTestWindow,*/ &settingsWindow]() {
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
 
         // todo: use UBO
         cubeMesh->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
         cubeMesh->getMaterial()->getShader()->setUniform("v", engine::getMainCamera()->getViewMatrix());
 
+        /*
         if (renderImguiTextureTestWindow) {
             if (!ImGui::Begin(TR("debug.imgui.texture_test").c_str(), &renderImguiTextureTestWindow)) {
                 ImGui::End();
@@ -146,6 +147,7 @@ int main() {
                 ImGui::End();
             }
         }
+        */
 
         if (settingsWindow.getEnabled()) {
             settingsWindow.render();
