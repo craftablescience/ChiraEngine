@@ -6,7 +6,6 @@
 #include "backends/imgui_impl_opengl3.h"
 #include <fmt/core.h>
 #include <glm/gtc/quaternion.hpp>
-#include <iostream>
 #include "../config/glVersion.h"
 #include "../loader/jsonSettingsLoader.h"
 #include "../loader/image.h"
@@ -28,7 +27,6 @@
 
 using namespace chira;
 
-#if DEBUG
 void APIENTRY glDebugOutputCallback(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* userParam) {
     // Leaving OpenGL error reports unlocalized is probably best
 
@@ -38,39 +36,42 @@ void APIENTRY glDebugOutputCallback(GLenum source, GLenum type, unsigned int id,
         return;
     }
 
-    std::cout << "---------------" << std::endl;
-    std::cout << "Debug message (" << id << "): " <<  message << std::endl;
+    std::string output = "---------------\nDebug message (" + std::to_string(id) + "): " +  message;
 
+    output += "\nSource: ";
     switch (source) {
-        case GL_DEBUG_SOURCE_API:             std::cout << "Source: API"; break;
-        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   std::cout << "Source: Window System"; break;
-        case GL_DEBUG_SOURCE_SHADER_COMPILER: std::cout << "Source: Shader Compiler"; break;
-        case GL_DEBUG_SOURCE_THIRD_PARTY:     std::cout << "Source: Third Party"; break;
-        case GL_DEBUG_SOURCE_APPLICATION:     std::cout << "Source: Application"; break;
-        default:                              std::cout << "Source: Other";
-    } std::cout << std::endl;
+        case GL_DEBUG_SOURCE_API:             output += "API"; break;
+        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   output += "Window System"; break;
+        case GL_DEBUG_SOURCE_SHADER_COMPILER: output += "Shader Compiler"; break;
+        case GL_DEBUG_SOURCE_THIRD_PARTY:     output += "Third Party"; break;
+        case GL_DEBUG_SOURCE_APPLICATION:     output += "Application"; break;
+        default:                              output += "Other";
+    }
 
+    output += "\nType: ";
     switch (type) {
-        case GL_DEBUG_TYPE_ERROR:               std::cout << "Type: Error"; break;
-        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: std::cout << "Type: Deprecated Behaviour"; break;
-        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  std::cout << "Type: Undefined Behaviour"; break;
-        case GL_DEBUG_TYPE_PORTABILITY:         std::cout << "Type: Portability"; break;
-        case GL_DEBUG_TYPE_PERFORMANCE:         std::cout << "Type: Performance"; break;
-        case GL_DEBUG_TYPE_MARKER:              std::cout << "Type: Marker"; break;
-        case GL_DEBUG_TYPE_PUSH_GROUP:          std::cout << "Type: Push Group"; break;
-        case GL_DEBUG_TYPE_POP_GROUP:           std::cout << "Type: Pop Group"; break;
-        default:                                std::cout << "Type: Other";
-    } std::cout << std::endl;
+        case GL_DEBUG_TYPE_ERROR:               output += "Error"; break;
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: output += "Deprecated Behaviour"; break;
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  output += "Undefined Behaviour"; break;
+        case GL_DEBUG_TYPE_PORTABILITY:         output += "Portability"; break;
+        case GL_DEBUG_TYPE_PERFORMANCE:         output += "Performance"; break;
+        case GL_DEBUG_TYPE_MARKER:              output += "Marker"; break;
+        case GL_DEBUG_TYPE_PUSH_GROUP:          output += "Push Group"; break;
+        case GL_DEBUG_TYPE_POP_GROUP:           output += "Pop Group"; break;
+        default:                                output += "Other";
+    }
 
+    output += "\nSeverity: ";
     switch (severity) {
-        case GL_DEBUG_SEVERITY_HIGH:         std::cout << "Severity: high"; break;
-        case GL_DEBUG_SEVERITY_MEDIUM:       std::cout << "Severity: medium"; break;
-        case GL_DEBUG_SEVERITY_LOW:          std::cout << "Severity: low"; break;
-        case GL_DEBUG_SEVERITY_NOTIFICATION: std::cout << "Severity: notification"; break;
-        default:                             std::cout << "Severity: other";
-    } std::cout << std::endl << std::endl;
+        case GL_DEBUG_SEVERITY_HIGH:         output += "high"; break;
+        case GL_DEBUG_SEVERITY_MEDIUM:       output += "medium"; break;
+        case GL_DEBUG_SEVERITY_LOW:          output += "low"; break;
+        case GL_DEBUG_SEVERITY_NOTIFICATION: output += "notification"; break;
+        default:                             output += "other";
+    }
+
+    logger::log(WARN, "OpenGL", output);
 }
-#endif
 
 void engine::errorCallback(int error, const char* description) {
     logger::log(ERR, "GLFW", fmt::format(TR("error.glfw.generic"), error, description));
@@ -285,7 +286,9 @@ void engine::init() {
     io.Fonts->Clear();
     ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+#if DEBUG
     logger::log(INFO, "ImGUI", TR("debug.imgui.success"));
+#endif
 
     bool openalEnabled = true;
     engine::getSettingsLoader()->getValue("audio", "openal", &openalEnabled);
