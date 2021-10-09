@@ -70,6 +70,7 @@ void APIENTRY glDebugOutputCallback(GLenum source, GLenum type, unsigned int id,
         default:                             output += "other";
     }
 
+    // Logging as a warning because most of the time the program runs perfectly fine
     logger::log(WARN, "OpenGL", output);
 }
 
