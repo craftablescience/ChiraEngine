@@ -1,5 +1,8 @@
 # Chira Engine
-![Discord](https://img.shields.io/discord/678074864346857482?label=Discord&logo=Discord&logoColor=%23FFFFFF&style=flat-square)
+![Windows Workflow Status](https://img.shields.io/github/workflow/status/craftablescience/ChiraEngine/Build%20(Windows)?label=Windows)
+![Linux Workflow Status](https://img.shields.io/github/workflow/status/craftablescience/ChiraEngine/Build%20(Linux)?label=Linux)
+![License](https://img.shields.io/github/license/craftablescience/ChiraEngine?label=License)
+![Discord](https://img.shields.io/discord/678074864346857482?label=Discord&logo=Discord&logoColor=%23FFFFFF)
 
 A fully customizable (and heavily work-in-progress) game engine written in C++17.
 
