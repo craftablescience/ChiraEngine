@@ -194,7 +194,7 @@ void engine::init() {
     engine::getSettingsLoader()->getValue("graphics", "fullscreen", &fullscreen);
     engine::window = glfwCreateWindow(windowWidth, windowHeight, TR("ui.window.title").c_str(), nullptr, nullptr);
     if (fullscreen) {
-        const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         glfwWindowHint(GLFW_RED_BITS, mode->redBits);
         glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
         glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);

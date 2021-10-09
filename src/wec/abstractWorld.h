@@ -5,6 +5,7 @@
 namespace chira {
     class abstractWorld : public abstractEntity {
     public:
-        uuids::uuid add(abstractComponent* component) override;
+        using abstractEntity::add;
+        uuids::uuid add(abstractEntity* entity);
     };
 }

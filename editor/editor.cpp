@@ -9,12 +9,13 @@
 #include "../src/wec/extensibleWorld.h"
 #include "../src/wec/meshComponent.h"
 #include "../src/wec/componentManager.h"
-#include "tinyfiledialogs.h"
+#include <tinyfiledialogs.h>
 #include "../src/ui/markdown.h"
-#include "ui/settings.h"
+#include "ui/settingsUiWindowComponent.h"
 #include "imgui_internal.h"
 #include "../src/wec/componentFactory.h"
 #include "../src/wec/propBulletPhysicsEntity.h"
+#include "../src/ui/extensibleUiWindowComponent.h"
 
 using namespace chira;
 
@@ -86,19 +87,26 @@ int main() {
         auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
         cubeMesh = resourceManager::getResource<mesh>("file://meshes/teapot.json", cubeMaterial);
 
-        /*
-        componentManager::getWorld<extensibleWorld>(worldId)->add(
-                dynamic_cast<propEntity*>(
-                        componentFactory::getComponent("propEntity"))
-                        ->init(new meshComponent(cubeMesh, glm::vec3{}, glm::vec3{})
-                        ));
-        */
         componentManager::getWorld<extensibleWorld>(worldId)->add((new propBulletPhysicsEntity{})->init(
                 new meshComponent{cubeMesh},
                 new bulletRigidBodyComponent{"file://physics/cube_dynamic.json", glm::vec3{0, 5, -10}}));
         componentManager::getWorld<extensibleWorld>(worldId)->add((new propBulletPhysicsEntity{})->init(
                 new meshComponent{resourceManager::getUniqueResource<mesh>("file://meshes/teapot.json", cubeMaterial)},
                 new bulletRigidBodyComponent{"file://physics/ground_static.json", glm::vec3{3, -5, -13}}));
+
+        auto* tex = resourceManager::getResource<texture2d>("file://textures/ui/icon.png", GL_RGBA, false);
+        componentManager::getWorld<extensibleWorld>(worldId)->add(
+                new extensibleUiWindowComponent{TR("debug.imgui.texture_test"), true, [tex](double delta) {
+                    ImGui::Text("size = %d x %d", 512, 512);
+                    ImGui::Image((void*) (intptr_t) tex->getHandle(), ImVec2(512, 512));
+                    markdown::create("Hello from Markdown");
+                }});
+
+        auto* settingsUi = new settingsUiWindowComponent{false};
+        componentManager::getWorld<extensibleWorld>(worldId)->add(settingsUi);
+        engine::addKeybind(keybind(GLFW_KEY_O, GLFW_PRESS, [settingsUi](){
+            settingsUi->setVisible(!settingsUi->isVisible());
+        }));
 
         engine::captureMouse(true);
         engine::setMainCamera(new freecam{});
@@ -125,37 +133,12 @@ int main() {
     });
     engine::init();
 
-    settings settingsWindow;
-    engine::addKeybind(keybind(GLFW_KEY_O, GLFW_PRESS, [&settingsWindow](){
-        settingsWindow.setEnabled(!settingsWindow.getEnabled());
-    }));
-
-    //auto* tex = resourceManager::getResource<texture2d>("file://textures/ui/icon.png", GL_RGBA, false);
-    //bool renderImguiTextureTestWindow = true;
-
-    engine::addRenderFunction([/*tex,*/ cubeMesh, /*&renderImguiTextureTestWindow,*/ &settingsWindow]() {
+    engine::addRenderFunction([cubeMesh]() {
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
 
         // todo: use UBO
         cubeMesh->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
         cubeMesh->getMaterial()->getShader()->setUniform("v", engine::getMainCamera()->getViewMatrix());
-
-        /*
-        if (renderImguiTextureTestWindow) {
-            if (!ImGui::Begin(TR("debug.imgui.texture_test").c_str(), &renderImguiTextureTestWindow)) {
-                ImGui::End();
-            } else {
-                ImGui::Text("size = %d x %d", 512, 512);
-                ImGui::Image((void*) (intptr_t) tex->getHandle(), ImVec2(512, 512));
-                markdown::create("Hello from Markdown");
-                ImGui::End();
-            }
-        }
-        */
-
-        if (settingsWindow.getEnabled()) {
-            settingsWindow.render();
-        }
     });
     engine::run();
 }

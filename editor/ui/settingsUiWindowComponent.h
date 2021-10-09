@@ -1,19 +1,16 @@
 #pragma once
 
-#include <string>
-#include "imgui.h"
+#include "../../src/ui/abstractUiWindowComponent.h"
 #include "../../src/utility/logger.h"
 #include "../../src/resource/fontResource.h"
 
-struct settings {
-public:
-    settings();
-    void render();
-    void setEnabled(bool enabled);
-    [[nodiscard]] bool getEnabled() const;
+using namespace chira;
+
+struct settingsUiWindowComponent : public abstractUiWindowComponent {
+    explicit settingsUiWindowComponent(bool startVisible, const ImVec2& windowSize = ImVec2(0,0), bool enforceSize = false);
+    void draw(double delta) override;
 private:
     // Fields are initialized by values in settings loader
-    bool isEnabled = false;
     int windowWidth = -1;
     int windowHeight = -1;
     bool startMaximized = false;

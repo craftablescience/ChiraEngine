@@ -1,4 +1,4 @@
-#include "settings.h"
+#include "settingsUiWindowComponent.h"
 
 #include "misc/cpp/imgui_stdlib.h"
 #include "../../src/resource/resourceManager.h"
@@ -8,8 +8,7 @@
 
 using namespace chira;
 
-settings::settings() {
-    this->isEnabled = false;
+settingsUiWindowComponent::settingsUiWindowComponent(bool startVisible, const ImVec2& windowSize, bool enforceSize) : abstractUiWindowComponent(TR("ui.settings.title"), startVisible, windowSize, enforceSize) {
     engine::getSettingsLoader()->getValue("graphics", "windowWidth", &this->windowWidth);
     engine::getSettingsLoader()->getValue("graphics", "windowHeight", &this->windowHeight);
     engine::getSettingsLoader()->getValue("graphics", "startMaximized", &this->startMaximized);
@@ -20,12 +19,7 @@ settings::settings() {
     engine::getSettingsLoader()->getValue("engineGui", "discordIntegration", &this->discordIntegration);
 }
 
-void settings::render() {
-    ImGui::SetNextWindowSize(ImVec2(0, 0), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin(TR("ui.settings.title").c_str(), &(this->isEnabled))) {
-        ImGui::End();
-        return;
-    }
+void settingsUiWindowComponent::draw(double delta) {
     ImGui::PushItemWidth(SETTINGS_INPUT_FIELD_WIDTH);
     ImGui::InputInt(TR("ui.settings.window_width").c_str(), &this->windowWidth);
     ImGui::InputInt(TR("ui.settings.window_height").c_str(), &this->windowHeight);
@@ -50,13 +44,4 @@ void settings::render() {
         engine::getSettingsLoader()->setValue("engineGui", "discordIntegration", this->discordIntegration, true, false);
         engine::getSettingsLoader()->save();
     }
-    ImGui::End();
-}
-
-void settings::setEnabled(bool enabled) {
-    this->isEnabled = enabled;
-}
-
-bool settings::getEnabled() const {
-    return this->isEnabled;
 }
