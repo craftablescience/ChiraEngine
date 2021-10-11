@@ -116,11 +116,13 @@ list(APPEND ENGINE_SOURCES
 if(WIN32 AND (NOT MSVC))
     # Windows IME support
     list(APPEND ENGINE_LINK_LIBRARIES imm32)
+elseif(UNIX)
+    # ImGUI needs it on Linux
+    list(APPEND ENGINE_LINK_LIBRARIES dl)
 endif()
 
 # IMGUI_MARKDOWN
-list(APPEND ENGINE_SOURCES
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdown/imgui_markdown.h)
+list(APPEND ENGINE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdown/imgui_markdown.h)
 
 # CHIRAENGINE
 include(${CMAKE_CURRENT_SOURCE_DIR}/config/CMakeLists.txt)
