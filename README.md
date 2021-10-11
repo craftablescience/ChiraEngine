@@ -39,6 +39,7 @@ Again, the goal of the engine is to have as much customization as possible, whil
 ## Bundled Dependencies
 - AngelScript v2.34.0
 - Bullet v3.17
+- curl v7.79.1 (Bundled for Windows only)
 - cURLpp v0.8.1
 - Discord RPC
 - {fmt} v8.0.1
@@ -55,19 +56,30 @@ Again, the goal of the engine is to have as much customization as possible, whil
 - stduuid v1.0
 - TinyFileDialogs v3.8.8
 
-## Compilation
-- **CLion (recommended)**: The project will compile without any prior configuration. If developing on Windows, you will need to install the Windows SDK (see below).
+## Compilation (Windows)
+*Note: If CMake complains about a missing curl library, download the DLL from [https://curl.se/windows/](https://curl.se/windows/).
+It's in the bin folder. Copy it out of the zip file, and add `-DCURL_LIBRARY="path/to/curl.dll"` to CMake's build arguments.
+You may need to copy the DLL to the binary folder as well.
+Alternatively, you can install curl through [MSYS2](https://www.msys2.org/).*
+
+- **CLion (recommended)**: The project will compile without any prior configuration, but you will need to install the Windows SDK (see below).
 
 - Visual Studio 2019: You will need to install the following components:
+  ![image](https://user-images.githubusercontent.com/26600014/128105644-cfa92f30-dc96-4476-a4c9-8d8b5f3ce129.png)
+  
+  Additionally, compiling with MSVC will produce an error for x64 targets, due to a bug with AngelScript (see [the AngelScript docs](https://www.angelcode.com/angelscript/sdk/docs/manual/doc_compile_lib.html#doc_compile_win64) for more information).
+  I strongly recommend compiling with MinGW, but if you can't, target x86.
 
-![image](https://user-images.githubusercontent.com/26600014/128105644-cfa92f30-dc96-4476-a4c9-8d8b5f3ce129.png)
-
-Additionally, compiling with MSVC will produce an error for x64 targets, due to a bug with AngelScript (see [the AngelScript docs](https://www.angelcode.com/angelscript/sdk/docs/manual/doc_compile_lib.html#doc_compile_win64) for more information).
-I recommend compiling with MinGW if you can help it, or targeting x86 if you can't.
+## Compilation (Linux)
+- **CLion (recommended)**: The project will compile without any prior configuration, but you will need to install a few things first.
+  
+  On Debian-based distros, run:
+  - `sudo apt update && sudo apt install cmake build-essential xorg-dev mesa-common-dev mesa-utils libasound2-dev libpulse-dev libjack-dev curl libcurl4-gnutls-dev`
+  - You can remove the audio libraries you don't use from this command, but keep in mind this will affect the end users of your project.
 
 ## Usage
 I recommend adding this repository as a submodule to your project.
-Make sure to copy the `resources` folder to the executable directory in your buildscript, or it will fail due to missing assets.
+Make sure if you add a new resource folder, copy it to the `resources` folder in the executable directory in your buildscript, or the program will fail at runtime due to missing assets.
 
 A good example buildscript and application can be found at:
 

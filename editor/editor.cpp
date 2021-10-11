@@ -12,8 +12,6 @@
 #include <tinyfiledialogs.h>
 #include "../src/ui/markdown.h"
 #include "ui/settingsUiWindowComponent.h"
-#include "imgui_internal.h"
-#include "../src/wec/componentFactory.h"
 #include "../src/wec/propBulletPhysicsEntity.h"
 #include "../src/ui/extensibleUiWindowComponent.h"
 
