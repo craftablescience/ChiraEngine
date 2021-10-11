@@ -116,6 +116,8 @@ list(APPEND ENGINE_SOURCES
 if(WIN32 AND (NOT MSVC))
     # Windows IME support
     list(APPEND ENGINE_LINK_LIBRARIES imm32)
+    # TinyFileDialogs wants these
+    list(APPEND ENGINE_LINK_LIBRARIES comdlg32 ole32)
 elseif(UNIX)
     # ImGUI needs it on Linux
     list(APPEND ENGINE_LINK_LIBRARIES dl)
