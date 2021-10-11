@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/github/license/craftablescience/ChiraEngine?label=License)
 ![Discord](https://img.shields.io/discord/678074864346857482?label=Discord&logo=Discord&logoColor=%23FFFFFF)
 
-A fully customizable (and heavily work-in-progress) game engine written in C++17.
+A fully customizable (and heavily work-in-progress) MIT-licensed game engine, written in C++17.
 
 ## Features
 To summarize the major features:
