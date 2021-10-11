@@ -6,7 +6,7 @@
 #include "curlpp/Easy.hpp"
 #include "curlpp/Options.hpp"
 #include "../utility/logger.h"
-#include "fmt/core.h"
+#include <fmt/core.h>
 #include "../utility/curlMemoryWriter.h"
 
 using namespace chira;

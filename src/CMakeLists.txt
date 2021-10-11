@@ -1,5 +1,10 @@
-# Fixes curlpp putting its DLL in a subfolder
-set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}" CACHE STRING "" FORCE)
+# Put all libraries in the executable folder
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
+# Build dependencies as external files to link to dynamically
+set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 
 # ANGELSCRIPT
 include(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/CMakeLists.txt)
@@ -141,7 +146,7 @@ target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/addons)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/discord/include)
-target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fmt/include)
+target_include_directories(ChiraEngine SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fmt/include)
 target_include_directories(ChiraEngine SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/include)
 target_include_directories(ChiraEngine PUBLIC ${OPENGL_INCLUDE_DIRS})
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/bullet/src)
@@ -153,4 +158,10 @@ target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdown)
-target_link_libraries(ChiraEngine ${OPENGL_LIBRARIES} ${ENGINE_LINK_LIBRARIES})
+target_link_libraries(ChiraEngine PUBLIC ${OPENGL_LIBRARIES} ${ENGINE_LINK_LIBRARIES})
+
+# Copy engine resources
+add_custom_command(TARGET ChiraEngine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/../resources/engine/
+        ${CMAKE_BINARY_DIR}/resources/engine/)

@@ -1,7 +1,7 @@
 #include "alHelpers.h"
 
 #include "../i18n/translationManager.h"
-#include "fmt/core.h"
+#include <fmt/core.h>
 
 using namespace chira;
 

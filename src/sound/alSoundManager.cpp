@@ -1,6 +1,6 @@
 #include "alSoundManager.h"
 
-#include "fmt/core.h"
+#include <fmt/core.h>
 #include "../i18n/translationManager.h"
 
 using namespace chira;
