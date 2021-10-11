@@ -163,7 +163,7 @@ target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_
 target_link_libraries(ChiraEngine PUBLIC ${OPENGL_LIBRARIES} ${ENGINE_LINK_LIBRARIES})
 
 # Copy engine resources
-add_custom_command(TARGET ChiraEngine POST_BUILD
+add_custom_command(TARGET ChiraEngine PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/../resources/engine/
         ${CMAKE_BINARY_DIR}/resources/engine/)

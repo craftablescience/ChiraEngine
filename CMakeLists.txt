@@ -45,7 +45,7 @@ add_executable(${PROJECT_NAME} ${EDITOR_SOURCES})
 target_link_libraries(${PROJECT_NAME} ChiraEngine ${OPENGL_LIBRARIES})
 
 # Resource files
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/resources/editor/
         ${CMAKE_BINARY_DIR}/resources/editor/)
