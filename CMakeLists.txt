@@ -47,5 +47,5 @@ target_link_libraries(${PROJECT_NAME} ChiraEngine ${OPENGL_LIBRARIES})
 # Resource files
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/resources/engine/
-        ${CMAKE_BINARY_DIR}/resources/engine/)
+        ${CMAKE_SOURCE_DIR}/resources/editor/
+        ${CMAKE_BINARY_DIR}/resources/editor/)
