@@ -31,3 +31,9 @@
 [submodule "src/third_party/stduuid"]
 	path = src/third_party/stduuid
 	url = https://github.com/mariusbancila/stduuid
+[submodule "src/third_party/ogg"]
+	path = src/third_party/ogg
+	url = https://github.com/craftablescience/ogg
+[submodule "src/third_party/vorbis"]
+	path = src/third_party/vorbis
+	url = https://github.com/craftablescience/vorbis
