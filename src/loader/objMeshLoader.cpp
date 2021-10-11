@@ -3,7 +3,7 @@
 #include <fstream>
 #include <algorithm>
 #include <sstream>
-#include "fmt/core.h"
+#include <fmt/core.h>
 #include "../resource/stringResource.h"
 #include "../resource/resourceManager.h"
 
