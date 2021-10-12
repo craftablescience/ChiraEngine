@@ -174,9 +174,7 @@ void engine::preInit(const std::string& configPath) {
 void engine::init() {
     engine::started = true;
 
-    logger::addCallback([=](const loggerType& type, const std::string& source, const std::string& message) {
-        engine::getConsole()->engineLoggingHook(type, source, message);
-    });
+    engine::consoleUI = new console{};
 
     if (!glfwInit()) {
         logger::log(ERR, "GLFW", TR("error.glfw.undefined"));
@@ -226,11 +224,9 @@ void engine::init() {
         logger::log(WARN, "ChiraEngine", TR("error.engine.unset_icon_path"));
     }
 
-#if DEBUG
     int major, minor, rev;
     glfwGetVersion(&major, &minor, &rev);
     logger::log(INFO, "GLFW", fmt::format(TR("debug.glfw.version"), major, minor, rev));
-#endif
 
     if (!gladLoadGL(glfwGetProcAddress)) {
         logger::log(ERR, "OpenGL", fmt::format("error.opengl.version", GL_VERSION_STRING_PRETTY));
@@ -291,9 +287,7 @@ void engine::init() {
     io.Fonts->Clear();
     ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-#if DEBUG
     logger::log(INFO, "ImGUI", TR("debug.imgui.success"));
-#endif
 
     bool openalEnabled = true;
     engine::getSettingsLoader()->getValue("audio", "openal", &openalEnabled);
@@ -334,12 +328,14 @@ void engine::init() {
     // engine::angelscript->asEngine->RegisterGlobalFunction("void showConsole(bool)", asMETHOD(engine, showConsole), asCALL_THISCALL_ASGLOBAL, this);
 
     io.Fonts->AddFontDefault();
+    engine::consoleUI->precacheResource();
 
     engine::callRegisteredFunctions(&(engine::initFunctions));
     engine::angelscript->initScripts();
 
-    resourceManager::precacheResource<fontResource>(TR("resource.font.console_font_path"));
     io.Fonts->Build();
+
+    componentManager::addComponent(engine::consoleUI);
 }
 
 void engine::displaySplashScreen() {
@@ -391,10 +387,6 @@ void engine::render() {
     engine::callRegisteredFunctions(&(engine::renderFunctions));
     engine::angelscript->render(engine::getDeltaTime());
     componentManager::render(engine::getDeltaTime());
-
-    if (engine::getConsole()->getEnabled()) {
-        engine::getConsole()->render();
-    }
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -598,11 +590,11 @@ bool engine::isMouseCaptured() {
 }
 
 void engine::showConsole(bool shouldShow) {
-    engine::consoleUI.setEnabled(shouldShow);
+    engine::consoleUI->setVisible(shouldShow);
 }
 
 console* engine::getConsole() {
-    return &(engine::consoleUI);
+    return engine::consoleUI;
 }
 
 bool engine::isIconified() {

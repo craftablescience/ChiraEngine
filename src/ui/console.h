@@ -1,28 +1,26 @@
 #pragma once
 
 #include <string>
-#include "imgui.h"
-#include "../utility/logger.h"
 #include "../resource/fontResource.h"
+#include "../utility/logger.h"
+#include "abstractUiWindowComponent.h"
 
 namespace chira {
-    struct console {
+    class console : public abstractUiWindowComponent {
     public:
-        console();
-        virtual ~console();
+        explicit console(const ImVec2& windowSize = ImVec2(800, 600));
+        ~console() override;
         void clearLog();
         void addLog(const std::string& message);
+        void precacheResource() const;
         void engineLoggingHook(loggerType type, const std::string& source, const std::string& message);
-        void render();
-        void setEnabled(bool enabled);
-        [[nodiscard]] bool getEnabled() const;
+        void draw(double delta) override;
         void setTheme();
-        void resetTheme();
+        void resetTheme() const;
     private:
         fontResource* font = nullptr;
         ImVector<char*> items;
         ImVector<char*> history;
         bool autoScroll;
-        bool isEnabled;
     };
 }

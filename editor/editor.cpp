@@ -11,7 +11,7 @@
 #include "../src/wec/componentManager.h"
 #include <tinyfiledialogs.h>
 #include "../src/ui/markdown.h"
-#include "ui/settingsUiWindowComponent.h"
+#include "ui/settings.h"
 #include "../src/wec/propBulletPhysicsEntity.h"
 #include "../src/ui/extensibleUiWindowComponent.h"
 
@@ -37,7 +37,7 @@ int main() {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }));
     engine::addKeybind(keybind(GLFW_KEY_GRAVE_ACCENT, GLFW_PRESS, []() {
-        engine::showConsole(!engine::getConsole()->getEnabled());
+        engine::showConsole(!engine::getConsole()->isVisible());
     }));
     engine::addKeybind(keybind(GLFW_KEY_M, GLFW_PRESS, []() {
         engine::getSoundManager()->getSound("helloWorld")->play();
@@ -100,7 +100,7 @@ int main() {
                     markdown::create("Hello from Markdown");
                 }});
 
-        auto* settingsUi = new settingsUiWindowComponent{false};
+        auto* settingsUi = new settings{false};
         componentManager::getWorld<extensibleWorld>(worldId)->add(settingsUi);
         engine::addKeybind(keybind(GLFW_KEY_O, GLFW_PRESS, [settingsUi](){
             settingsUi->setVisible(!settingsUi->isVisible());

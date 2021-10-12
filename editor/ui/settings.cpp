@@ -1,4 +1,4 @@
-#include "settingsUiWindowComponent.h"
+#include "settings.h"
 
 #include "misc/cpp/imgui_stdlib.h"
 #include "../../src/resource/resourceManager.h"
@@ -8,7 +8,7 @@
 
 using namespace chira;
 
-settingsUiWindowComponent::settingsUiWindowComponent(bool startVisible, const ImVec2& windowSize, bool enforceSize) : abstractUiWindowComponent(TR("ui.settings.title"), startVisible, windowSize, enforceSize) {
+settings::settings(bool startVisible, const ImVec2& windowSize, bool enforceSize) : abstractUiWindowComponent(TR("ui.settings.title"), startVisible, windowSize, enforceSize) {
     engine::getSettingsLoader()->getValue("graphics", "windowWidth", &this->windowWidth);
     engine::getSettingsLoader()->getValue("graphics", "windowHeight", &this->windowHeight);
     engine::getSettingsLoader()->getValue("graphics", "startMaximized", &this->startMaximized);
@@ -19,7 +19,7 @@ settingsUiWindowComponent::settingsUiWindowComponent(bool startVisible, const Im
     engine::getSettingsLoader()->getValue("engineGui", "discordIntegration", &this->discordIntegration);
 }
 
-void settingsUiWindowComponent::draw(double delta) {
+void settings::draw(double delta) {
     ImGui::PushItemWidth(SETTINGS_INPUT_FIELD_WIDTH);
     ImGui::InputInt(TR("ui.settings.window_width").c_str(), &this->windowWidth);
     ImGui::InputInt(TR("ui.settings.window_height").c_str(), &this->windowHeight);

@@ -6,8 +6,8 @@
 
 using namespace chira;
 
-struct settingsUiWindowComponent : public abstractUiWindowComponent {
-    explicit settingsUiWindowComponent(bool startVisible, const ImVec2& windowSize = ImVec2(0,0), bool enforceSize = false);
+struct settings : public abstractUiWindowComponent {
+    explicit settings(bool startVisible, const ImVec2& windowSize = ImVec2(0,0), bool enforceSize = false);
     void draw(double delta) override;
 private:
     // Fields are initialized by values in settings loader

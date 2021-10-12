@@ -81,7 +81,7 @@ namespace chira {
         static inline std::unique_ptr<abstractPhysicsProvider> physicsProvider = nullptr;
         static inline bool mouseCaptured = false;
         static inline abstractCamera* mainCamera = nullptr; // This pointer should not be deleted, ever! It's a reference to a managed resource!
-        static inline console consoleUI{}; // NOLINT(cert-err58-cpp)
+        static inline console* consoleUI = nullptr;
         static inline bool started = false;
         static inline bool iconified = false;
         static inline double lastTime, currentTime, lastMouseX, lastMouseY;
