@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace chira {
     enum axis {
         X,
@@ -15,4 +17,7 @@ namespace chira {
         ZP,
         ZN
     };
+
+    axis getAxisFromString(const std::string& str);
+    signedAxis getSignedAxisFromString(const std::string& str);
 }

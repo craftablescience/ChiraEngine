@@ -108,6 +108,15 @@ namespace chira {
             return nullptr;
         }
 
+        /// The only way to make a propertiesResource without a provider is to make it unique, and not to cache it.
+        /// You might want to use this sparingly as it defeats the entire point of a cached, shared resource system.
+        template<typename resourceType, typename... Params>
+        static std::unique_ptr<resourceType> getUniqueUncachedPropertyResource(const std::string& identifier, const nlohmann::json& props, Params... params) {
+            auto resource = std::make_unique<resourceType>(identifier, params...);
+            ((propertiesResource*) resource)->compile(props);
+            return resource;
+        }
+
         static std::pair<std::string,std::string> splitResourceIdentifier(const std::string& identifier);
 
         static void removeResource(const std::string& identifier);

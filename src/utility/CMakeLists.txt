@@ -1,4 +1,5 @@
 list(APPEND ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/math/axis.cpp
         ${CMAKE_CURRENT_LIST_DIR}/math/axis.h
         ${CMAKE_CURRENT_LIST_DIR}/math/bulletConversions.cpp
         ${CMAKE_CURRENT_LIST_DIR}/math/bulletConversions.h

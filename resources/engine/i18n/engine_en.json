@@ -29,6 +29,8 @@
   "error.angelscript.compilation_failure": "Script errors in \"{}\" have forced compilation to fail!",
   "error.angelscript.missing_function": "Script at \"{}\" does not have a \"{}\" function",
   "error.angelscript.exception": "An exception in \"{}\" occurred:\n{}",
+  "error.axis.invalid_value": "String \"{}\" does not map to any value in the {} enum.",
+  "error.bullet_collider_resource.unimplemented": "Collider type {} is unimplemented!",
   "error.opengl.texture_compile": "Texture failed to compile: missing image data",
   "error.opengl.shader_linking": "Shader linking failed\n{}",
   "error.glfw.generic": "GLFW Error {}: {}\n",
