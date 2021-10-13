@@ -9,7 +9,6 @@
 #include <memory>
 #include "../render/shader.h"
 #include "../render/texture.h"
-#include "../render/mesh.h"
 #include "../input/keybind.h"
 #include "../input/mousebind.h"
 #include "../loader/abstractSettingsLoader.h"

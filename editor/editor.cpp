@@ -69,7 +69,7 @@ int main() {
         [](){}
     });
 
-    mesh* cubeMesh;
+    meshResource* cubeMesh;
 
     engine::addInitFunction([&worldId, &cubeMesh, &discordEnabled]() {
         if (discordEnabled) {
@@ -83,13 +83,13 @@ int main() {
         ImGui::GetIO().FontDefault = noto->getFont();
 
         auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
-        cubeMesh = resourceManager::getResource<mesh>("file://meshes/teapot.json", cubeMaterial);
+        cubeMesh = resourceManager::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial);
 
         componentManager::getWorld<extensibleWorld>(worldId)->add((new propBulletPhysicsEntity{})->init(
                 new meshComponent{cubeMesh},
                 new bulletRigidBodyComponent{"file://physics/cube_dynamic.json", glm::vec3{0, 5, -10}}));
         componentManager::getWorld<extensibleWorld>(worldId)->add((new propBulletPhysicsEntity{})->init(
-                new meshComponent{resourceManager::getUniqueResource<mesh>("file://meshes/teapot.json", cubeMaterial)},
+                new meshComponent{cubeMesh},
                 new bulletRigidBodyComponent{"file://physics/ground_static.json", glm::vec3{3, -5, -13}}));
 
         auto* tex = resourceManager::getResource<texture2d>("file://textures/ui/icon.png", GL_RGBA, false);

@@ -13,6 +13,7 @@
 #include "../hook/discordRichPresence.h"
 #include "../resource/filesystemResourceProvider.h"
 #include "../resource/internetResourceProvider.h"
+#include "../resource/meshResource.h"
 #include "../loader/objMeshLoader.h"
 #include "../loader/primitiveMeshLoader.h"
 #include "../render/texture2d.h"
@@ -257,8 +258,8 @@ void engine::init() {
     glfwSetFramebufferSizeCallback(engine::window, engine::framebufferSizeCallback);
     engine::setBackgroundColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-    mesh::addMeshLoader("primitive", new primitiveMeshLoader{});
-    mesh::addMeshLoader("obj", new objMeshLoader{});
+    meshResource::addMeshLoader("primitive", new primitiveMeshLoader{});
+    meshResource::addMeshLoader("obj", new objMeshLoader{});
 
     engine::displaySplashScreen();
     glfwSwapInterval(1);
@@ -344,8 +345,8 @@ void engine::displaySplashScreen() {
     auto* mat = resourceManager::getResource<texturedMaterial>(TR("resource.material.splashscreen_material_path"));
     glm::vec3 zeroVec;
     glm::quat zeroQuat{1,0,0,0};
-    auto* plane = resourceManager::getResource<mesh>("file://meshes/plane.json", mat, &zeroVec, &zeroQuat);
-    plane->render();
+    auto* plane = resourceManager::getResource<meshResource>("file://meshes/plane.json", mat);
+    plane->render(&zeroVec, &zeroQuat);
 
     glfwSwapBuffers(engine::window);
     plane->release();

@@ -1,4 +1,4 @@
-#include "mesh.h"
+#include "meshResource.h"
 
 #include "../utility/math/matrix.h"
 #include <fmt/core.h>
@@ -7,29 +7,29 @@
 
 using namespace chira;
 
-mesh::mesh(const std::string& identifier_, material* material, glm::vec3* pos, glm::quat* rot) : propertiesResource(identifier_), position(pos), rotation(rot) {
+meshResource::meshResource(const std::string& identifier_, material* material) : propertiesResource(identifier_) {
     this->materialPtr = material;
 }
 
-mesh::~mesh() {
+meshResource::~meshResource() {
     glDeleteVertexArrays(1, &(this->vaoHandle));
     glDeleteBuffers(1, &(this->vboHandle));
     glDeleteBuffers(1, &(this->eboHandle));
     this->vboHandle = this->eboHandle = this->vaoHandle = 0;
 }
 
-void mesh::compile(const nlohmann::json& properties) {
+void meshResource::compile(const nlohmann::json& properties) {
     if (properties["properties"].contains("depthFunction")) {
-        this->depthFunction = mesh::getGLDepthFuncFromString(properties["properties"]["depthFunction"]);
+        this->depthFunction = meshResource::getGLDepthFuncFromString(properties["properties"]["depthFunction"]);
     }
     if (properties["properties"].contains("backfaceCulling")) {
         this->backfaceCulling = properties["properties"]["backfaceCulling"];
     }
     if (properties["properties"].contains("cullType")) {
-        this->cullType = mesh::getGLCullTypeFromString(properties["properties"]["cullType"]);
+        this->cullType = meshResource::getGLCullTypeFromString(properties["properties"]["cullType"]);
     }
 
-    mesh::getMeshLoader(properties["properties"]["loader"])->loadMesh(properties["dependencies"]["model"], &this->vertices, &this->indices);
+    meshResource::getMeshLoader(properties["properties"]["loader"])->loadMesh(properties["dependencies"]["model"], &this->vertices, &this->indices);
 
     glGenVertexArrays(1, &(this->vaoHandle));
     glGenBuffers(1, &(this->vboHandle));
@@ -59,15 +59,15 @@ void mesh::compile(const nlohmann::json& properties) {
     glBindVertexArray(0);
 }
 
-void mesh::release() const {
+void meshResource::release() const {
     this->materialPtr->release();
     abstractResource::release();
 }
 
-void mesh::render() {
+void meshResource::render(glm::vec3* position, glm::quat* rotation) {
     this->materialPtr->use();
     shader* s = this->materialPtr->getShader();
-    glm::mat4 model = transformToMatrix(*this->position, *this->rotation);
+    glm::mat4 model = transformToMatrix(*position, *rotation);
     s->setUniform("m", &model);
 
     glDepthFunc(this->depthFunction);
@@ -81,15 +81,15 @@ void mesh::render() {
     glDrawElements(GL_TRIANGLES, (int) this->indices.size(), GL_UNSIGNED_INT, nullptr);
 }
 
-void mesh::addMeshLoader(const std::string& name, abstractMeshLoader* meshLoader) {
-    mesh::meshLoaders[name] = std::unique_ptr<abstractMeshLoader>(meshLoader);
+void meshResource::addMeshLoader(const std::string& name, abstractMeshLoader* meshLoader) {
+    meshResource::meshLoaders[name] = std::unique_ptr<abstractMeshLoader>(meshLoader);
 }
 
-abstractMeshLoader* mesh::getMeshLoader(const std::string& name) {
-    return mesh::meshLoaders[name].get();
+abstractMeshLoader* meshResource::getMeshLoader(const std::string& name) {
+    return meshResource::meshLoaders[name].get();
 }
 
-int mesh::getGLDepthFuncFromString(const std::string& depthFunc) {
+int meshResource::getGLDepthFuncFromString(const std::string& depthFunc) {
     if (depthFunc == "NEVER") {
         return GL_NEVER;
     } else if (depthFunc == "ALWAYS") {
@@ -111,7 +111,7 @@ int mesh::getGLDepthFuncFromString(const std::string& depthFunc) {
     return GL_LEQUAL;
 }
 
-int mesh::getGLCullTypeFromString(const std::string& cullType) {
+int meshResource::getGLCullTypeFromString(const std::string& cullType) {
     if (cullType == "BACK") {
         return GL_BACK;
     } else if (cullType == "FRONT") {

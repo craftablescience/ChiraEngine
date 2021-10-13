@@ -6,8 +6,6 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/light.h
         ${CMAKE_CURRENT_LIST_DIR}/material.cpp
         ${CMAKE_CURRENT_LIST_DIR}/material.h
-        ${CMAKE_CURRENT_LIST_DIR}/mesh.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/mesh.h
         ${CMAKE_CURRENT_LIST_DIR}/perspectiveCamera.cpp
         ${CMAKE_CURRENT_LIST_DIR}/perspectiveCamera.h
         ${CMAKE_CURRENT_LIST_DIR}/phongMaterial.cpp

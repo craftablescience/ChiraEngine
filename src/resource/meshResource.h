@@ -5,30 +5,21 @@
 #include <functional>
 #include <glm/glm.hpp>
 #include "../loader/abstractMeshLoader.h"
-#include "material.h"
+#include "../render/material.h"
 
 namespace chira {
-    class mesh : public propertiesResource {
+    class meshResource : public propertiesResource {
     public:
-        mesh(const std::string& identifier_, material* material, glm::vec3* pos = nullptr, glm::quat* rot = nullptr);
-        ~mesh() override;
+        meshResource(const std::string& identifier_, material* material);
+        ~meshResource() override;
         void compile(const nlohmann::json& properties) override;
+        void render(glm::vec3* position, glm::quat* rotation);
         void release() const override;
-        void render();
         material* getMaterial() {
             return this->materialPtr;
         }
-        void setPosition(glm::vec3* pos) {
-            this->position = pos;
-        }
-        void setRotation(glm::quat* rot) {
-            this->rotation = rot;
-        }
         static void addMeshLoader(const std::string& name, abstractMeshLoader* meshLoader);
         static abstractMeshLoader* getMeshLoader(const std::string& name);
-    protected:
-        glm::vec3* position;
-        glm::quat* rotation;
     private:
         int depthFunction = GL_LEQUAL;
         bool backfaceCulling = true;
