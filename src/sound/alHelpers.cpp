@@ -3,9 +3,7 @@
 #include "../i18n/translationManager.h"
 #include <fmt/core.h>
 
-using namespace chira;
-
-bool checkForALErrors(const std::string& filename, const std::uint_fast32_t line) {
+bool chira::checkForALErrors(const std::string& filename, const std::uint_fast32_t line) {
     ALenum alError = alGetError();
     if (alError != AL_NO_ERROR) {
         std::string error;
@@ -34,7 +32,7 @@ bool checkForALErrors(const std::string& filename, const std::uint_fast32_t line
     return true;
 }
 
-bool checkForALCErrors(const std::string& filename, const std::uint_fast32_t line, ALCdevice* device) {
+bool chira::checkForALCErrors(const std::string& filename, const std::uint_fast32_t line, ALCdevice* device) {
     ALCenum alcError = alcGetError(device);
     if (alcError != ALC_NO_ERROR) {
         std::string error;
@@ -63,7 +61,7 @@ bool checkForALCErrors(const std::string& filename, const std::uint_fast32_t lin
     return true;
 }
 
-bool alcGetAvailableDevices(std::vector<std::string>& devicesVec, ALCdevice* device) {
+bool chira::alcGetAvailableDevices(std::vector<std::string>& devicesVec, ALCdevice* device) {
     const ALCchar* devices;
     if(!alcCall(alcGetString, devices, device, nullptr, ALC_DEVICE_SPECIFIER))
         return false;
