@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "image": "file://textures/ui/icon.png"
+  },
+  "properties": {
+    "vertical_flip": false
+  }
+}

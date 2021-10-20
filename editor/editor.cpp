@@ -1,5 +1,4 @@
 #include "../src/core/engine.h"
-#include "../src/render/texture2d.h"
 #include "../src/render/freecam.h"
 #include "../src/sound/oggFileSound.h"
 #include "../src/render/phongMaterial.h"
@@ -92,12 +91,11 @@ int main() {
                 new meshComponent{cubeMesh},
                 new bulletRigidBodyComponent{"file://physics/ground_static.json", glm::vec3{3, -5, -13}}));
 
-        auto* tex = resourceManager::getResource<texture2d>("file://textures/ui/icon.png", GL_RGBA, false);
+        auto* tex = resourceManager::getResource<texture>("file://textures/ui/icon.json");
         componentManager::getWorld<extensibleWorld>(worldId)->add(
                 new extensibleUiWindowComponent{TR("debug.imgui.texture_test"), true, [tex](double delta) {
                     ImGui::Text("size = %d x %d", 512, 512);
                     ImGui::Image((void*) (intptr_t) tex->getHandle(), ImVec2(512, 512));
-                    markdown::create("Hello from Markdown");
                 }});
 
         auto* settingsUi = new settings{false};

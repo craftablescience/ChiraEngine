@@ -2,7 +2,7 @@
 
 #include <utility>
 #include "material.h"
-#include "texture2d.h"
+#include "texture.h"
 
 namespace chira {
     class phongMaterial : public material {
@@ -14,7 +14,7 @@ namespace chira {
         void setShininess(float shininess = 32.0f);
         void setLambertFactor(float lambertFactor = 1.0f);
     private:
-        texture2d* diffuse = nullptr;
-        texture2d* specular = nullptr;
+        texture* diffuse = nullptr;
+        texture* specular = nullptr;
     };
 }

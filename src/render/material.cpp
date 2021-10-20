@@ -21,16 +21,6 @@ void material::release() const {
     abstractResource::release();
 }
 
-int material::getGLFormatFromString(const std::string& formatName) {
-    if (formatName == "RGB") {
-        return GL_RGB;
-    } else if (formatName == "RGBA") {
-        return GL_RGBA;
-    }
-    logger::log(WARN, "Material", fmt::format(TR("warn.material.invalid_gl_format"), formatName));
-    return GL_RGBA;
-}
-
 shader* material::getShader() {
     return this->shaderPtr;
 }

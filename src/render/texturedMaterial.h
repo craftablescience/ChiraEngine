@@ -2,7 +2,7 @@
 
 #include <utility>
 #include "material.h"
-#include "texture2d.h"
+#include "texture.h"
 
 namespace chira {
     class texturedMaterial : public material {
@@ -12,6 +12,6 @@ namespace chira {
         void use() override;
         void release() const override;
     private:
-        texture2d* tex = nullptr;
+        texture* tex = nullptr;
     };
 }

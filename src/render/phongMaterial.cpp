@@ -6,12 +6,8 @@ using namespace chira;
 
 void phongMaterial::compile(const nlohmann::json& properties) {
     material::compile(properties);
-    this->diffuse = resourceManager::getResource<texture2d>(
-            properties["dependencies"]["diffuse"],
-            material::getGLFormatFromString(properties["properties"]["diffuse_format"]));
-    this->specular = resourceManager::getResource<texture2d>(
-            properties["dependencies"]["specular"],
-            material::getGLFormatFromString(properties["properties"]["specular_format"]));
+    this->diffuse = resourceManager::getResource<texture>(properties["dependencies"]["diffuse"]);
+    this->specular = resourceManager::getResource<texture>(properties["dependencies"]["specular"]);
     this->diffuse->setTextureUnit(GL_TEXTURE0);
     this->specular->setTextureUnit(GL_TEXTURE1);
     this->shaderPtr->use();

@@ -7,8 +7,8 @@
 
 using namespace chira;
 
-meshResource::meshResource(const std::string& identifier_, material* material) : propertiesResource(identifier_) {
-    this->materialPtr = material;
+meshResource::meshResource(const std::string& identifier_, material* material_) : propertiesResource(identifier_) {
+    this->materialPtr = material_;
 }
 
 meshResource::~meshResource() {
@@ -20,13 +20,13 @@ meshResource::~meshResource() {
 
 void meshResource::compile(const nlohmann::json& properties) {
     if (properties["properties"].contains("depthFunction")) {
-        this->depthFunction = meshResource::getGLDepthFuncFromString(properties["properties"]["depthFunction"]);
+        this->depthFunction = meshResource::getDepthFuncFromString(properties["properties"]["depthFunction"]);
     }
     if (properties["properties"].contains("backfaceCulling")) {
         this->backfaceCulling = properties["properties"]["backfaceCulling"];
     }
     if (properties["properties"].contains("cullType")) {
-        this->cullType = meshResource::getGLCullTypeFromString(properties["properties"]["cullType"]);
+        this->cullType = meshResource::getCullTypeFromString(properties["properties"]["cullType"]);
     }
 
     meshResource::getMeshLoader(properties["properties"]["loader"])->loadMesh(properties["dependencies"]["model"], &this->vertices, &this->indices);
@@ -89,7 +89,7 @@ abstractMeshLoader* meshResource::getMeshLoader(const std::string& name) {
     return meshResource::meshLoaders[name].get();
 }
 
-int meshResource::getGLDepthFuncFromString(const std::string& depthFunc) {
+int meshResource::getDepthFuncFromString(const std::string& depthFunc) {
     if (depthFunc == "NEVER") {
         return GL_NEVER;
     } else if (depthFunc == "ALWAYS") {
@@ -111,7 +111,7 @@ int meshResource::getGLDepthFuncFromString(const std::string& depthFunc) {
     return GL_LEQUAL;
 }
 
-int meshResource::getGLCullTypeFromString(const std::string& cullType) {
+int meshResource::getCullTypeFromString(const std::string& cullType) {
     if (cullType == "BACK") {
         return GL_BACK;
     } else if (cullType == "FRONT") {

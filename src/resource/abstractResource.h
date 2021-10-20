@@ -11,7 +11,7 @@ namespace chira {
         friend class resourceManager;
     public:
         explicit abstractResource(std::string identifier_) : identifier(std::move(identifier_)) {}
-        virtual void compile(unsigned char* buffer, std::size_t bufferLength) = 0;
+        virtual void compile(const unsigned char buffer[], std::size_t bufferLength) = 0;
         virtual void release() const;
         virtual ~abstractResource() = default;
     protected:

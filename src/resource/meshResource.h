@@ -10,7 +10,7 @@
 namespace chira {
     class meshResource : public propertiesResource {
     public:
-        meshResource(const std::string& identifier_, material* material);
+        meshResource(const std::string& identifier_, material* material_);
         ~meshResource() override;
         void compile(const nlohmann::json& properties) override;
         void render(glm::vec3* position, glm::quat* rotation);
@@ -29,7 +29,7 @@ namespace chira {
         std::vector<vertex> vertices{};
         std::vector<unsigned int> indices{};
         static inline std::unordered_map<std::string, std::unique_ptr<abstractMeshLoader>> meshLoaders{};
-        static int getGLDepthFuncFromString(const std::string& depthFunc);
-        static int getGLCullTypeFromString(const std::string& cullType);
+        static int getDepthFuncFromString(const std::string& depthFunc);
+        static int getCullTypeFromString(const std::string& cullType);
     };
 }

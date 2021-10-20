@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "image": "file://textures/container_diffuse.png"
+  },
+  "properties": {}
+}

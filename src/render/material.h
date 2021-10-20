@@ -17,6 +17,5 @@ namespace chira {
         shader* getShader();
     protected:
         shader* shaderPtr = nullptr;
-        static int getGLFormatFromString(const std::string& formatName);
     };
 }

@@ -16,7 +16,6 @@
 #include "../resource/meshResource.h"
 #include "../loader/objMeshLoader.h"
 #include "../loader/primitiveMeshLoader.h"
-#include "../render/texture2d.h"
 #include "../render/texturedMaterial.h"
 #include "../event/eventQueue.h"
 #include "../wec/componentManager.h"

@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "image": "file://textures/crate.jpg"
+  },
+  "properties": {
+    "format": "RGB"
+  }
+}

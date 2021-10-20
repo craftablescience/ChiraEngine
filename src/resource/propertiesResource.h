@@ -26,9 +26,18 @@ namespace chira {
     class propertiesResource : public abstractResource {
     public:
         explicit propertiesResource(const std::string& identifier_) : abstractResource(identifier_) {}
-        void compile(unsigned char* buffer, std::size_t bufferLength) final {
+        void compile(const unsigned char buffer[], std::size_t bufferLength) final {
             this->compile(nlohmann::json::parse(std::string{reinterpret_cast<const char*>(buffer), bufferLength}));
         }
         virtual void compile(const nlohmann::json& properties) = 0;
+
+        template<typename T>
+        T getPropertyOrDefault(const nlohmann::json& dictionary, const std::string& key, T defaultValue) {
+            if (dictionary.contains(key)) {
+                return dictionary[key];
+            } else {
+                return defaultValue;
+            }
+        }
     };
 }

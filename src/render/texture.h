@@ -2,25 +2,34 @@
 
 #include <memory>
 #include <string>
+#include <glad/gl.h>
 #include "../resource/propertiesResource.h"
 #include "../loader/abstractImage.h"
+#include "../resource/textureResource.h"
 
 namespace chira {
-    class texture : public abstractResource {
+    class texture : public propertiesResource {
     public:
-        explicit texture(const std::string& identifier_, bool vFlip_ = true);
-        void compile(unsigned char* buffer, std::size_t bufferLen) override;
-        virtual void use() = 0;
+        explicit texture(const std::string& identifier_);
+        void compile(const nlohmann::json& properties) override;
+        void use() const;
+        ~texture() override;
+        [[nodiscard]] textureResource* getTexture() const;
         void setTextureUnit(int textureUnit);
         [[nodiscard]] int getTextureUnit() const;
         [[nodiscard]] unsigned int getHandle() const;
     protected:
         unsigned int handle = 0;
         int activeTextureUnit = -1;
-        std::unique_ptr<abstractImage> file = nullptr;
-        int width = -1;
-        int height = -1;
-        int bitDepth = -1;
-        bool vFlip = true;
+        textureResource* file = nullptr;
+        int format = GL_RGBA;
+        int wrapModeU = GL_REPEAT;
+        int wrapModeV = GL_REPEAT;
+        int filterMode = GL_LINEAR;
+        bool mipmaps = true;
+    private:
+        static int getFormatFromString(const std::string& formatName);
+        static int getWrapModeFromString(const std::string& wrapName);
+        static int getFilterModeFromString(const std::string& filterName);
     };
 }
