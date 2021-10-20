@@ -7,9 +7,9 @@ out vec3 TexCoords;
 
 uniform mat4 p;
 uniform mat4 v;
-uniform mat4 m;
 
 void main() {
     TexCoords = iPos;
-    gl_Position = p * v * vec4(iPos, 1.0);
+    vec4 pos = p * v * vec4(iPos, 1.0);
+    gl_Position = pos.xyww;
 }

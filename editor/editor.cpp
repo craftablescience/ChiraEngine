@@ -86,15 +86,15 @@ int main() {
         auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
         cubeMesh = resourceManager::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial);
 
-        skybox = new skyboxComponent{"file://materials/skyboxShanghaiMaterial.json"};
-        componentManager::getWorld<extensibleWorld>(worldId)->add(skybox);
-
         componentManager::getWorld<extensibleWorld>(worldId)->add((new propBulletPhysicsEntity{})->init(
                 new meshComponent{cubeMesh},
                 new bulletRigidBodyComponent{"file://physics/cube_dynamic.json", glm::vec3{0, 5, -10}}));
         componentManager::getWorld<extensibleWorld>(worldId)->add((new propBulletPhysicsEntity{})->init(
                 new meshComponent{cubeMesh},
                 new bulletRigidBodyComponent{"file://physics/ground_static.json", glm::vec3{3, -5, -13}}));
+
+        skybox = new skyboxComponent{"file://materials/skyboxShanghaiMaterial.json"};
+        componentManager::getWorld<extensibleWorld>(worldId)->add(skybox);
 
         auto* tex = resourceManager::getResource<texture>("file://textures/ui/icon.json");
         componentManager::getWorld<extensibleWorld>(worldId)->add(
@@ -138,10 +138,12 @@ int main() {
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
 
         // todo: use UBO
+        cubeMesh->getMaterial()->getShader()->use();
         cubeMesh->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
         cubeMesh->getMaterial()->getShader()->setUniform("v", engine::getMainCamera()->getViewMatrix());
 
         // todo: use UBO
+        skybox->getMesh()->getMaterial()->getShader()->use();
         skybox->getMesh()->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
         auto view = glm::mat4(glm::mat3(*engine::getMainCamera()->getViewMatrix()));
         skybox->getMesh()->getMaterial()->getShader()->setUniform("v", &view);

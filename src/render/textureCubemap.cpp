@@ -64,14 +64,10 @@ void textureCubemap::use() const {
     glBindTexture(GL_TEXTURE_CUBE_MAP, this->handle);
 }
 
-textureCubemap::~textureCubemap() {
-    this->file->release();
-    this->file_bk->release();
-    this->file_up->release();
-    this->file_dn->release();
-    this->file_lt->release();
-    this->file_rt->release();
-}
+/// There's a VERY CURSED BUG where the heap gets corrupted if you try to release any of the cached assets.
+/// Maybe use cubemaps sparingly for now?
+/// FIXME: find out why release()ing the textures and self crashes on exit
+textureCubemap::~textureCubemap() = default;
 
 textureResource* textureCubemap::getTextureForward() const {
     return this->file;
