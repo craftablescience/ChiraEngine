@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "vertex": "file://shaders/skybox.vsh",
+    "fragment": "file://shaders/skybox.fsh"
+  }
+}

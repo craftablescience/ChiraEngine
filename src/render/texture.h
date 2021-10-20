@@ -12,7 +12,7 @@ namespace chira {
     public:
         explicit texture(const std::string& identifier_);
         void compile(const nlohmann::json& properties) override;
-        void use() const;
+        virtual void use() const;
         ~texture() override;
         [[nodiscard]] textureResource* getTexture() const;
         void setTextureUnit(int textureUnit);
@@ -23,11 +23,10 @@ namespace chira {
         int activeTextureUnit = -1;
         textureResource* file = nullptr;
         int format = GL_RGBA;
-        int wrapModeU = GL_REPEAT;
-        int wrapModeV = GL_REPEAT;
+        int wrapModeS = GL_REPEAT;
+        int wrapModeT = GL_REPEAT;
         int filterMode = GL_LINEAR;
         bool mipmaps = true;
-    private:
         static int getFormatFromString(const std::string& formatName);
         static int getWrapModeFromString(const std::string& wrapName);
         static int getFilterModeFromString(const std::string& filterName);

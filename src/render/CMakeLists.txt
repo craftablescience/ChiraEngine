@@ -1,5 +1,7 @@
 list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/abstractCamera.h
+        ${CMAKE_CURRENT_LIST_DIR}/cubemapMaterial.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/cubemapMaterial.h
         ${CMAKE_CURRENT_LIST_DIR}/freecam.cpp
         ${CMAKE_CURRENT_LIST_DIR}/freecam.h
         ${CMAKE_CURRENT_LIST_DIR}/light.cpp
@@ -14,5 +16,7 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/shader.h
         ${CMAKE_CURRENT_LIST_DIR}/texture.cpp
         ${CMAKE_CURRENT_LIST_DIR}/texture.h
+        ${CMAKE_CURRENT_LIST_DIR}/textureCubemap.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/textureCubemap.h
         ${CMAKE_CURRENT_LIST_DIR}/texturedMaterial.cpp
         ${CMAKE_CURRENT_LIST_DIR}/texturedMaterial.h)

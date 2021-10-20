@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "model": "cube"
+  },
+  "properties": {
+    "loader": "primitive",
+    "depthFunction": "LEQUAL",
+    "backfaceCulling": false
+  }
+}

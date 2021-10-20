@@ -66,9 +66,11 @@ void meshResource::release() const {
 
 void meshResource::render(glm::vec3* position, glm::quat* rotation) {
     this->materialPtr->use();
-    shader* s = this->materialPtr->getShader();
-    glm::mat4 model = transformToMatrix(*position, *rotation);
-    s->setUniform("m", &model);
+    if (position && rotation) {
+        shader* s = this->materialPtr->getShader();
+        glm::mat4 model = transformToMatrix(*position, *rotation);
+        s->setUniform("m", &model);
+    }
 
     glDepthFunc(this->depthFunction);
     if (this->backfaceCulling) {

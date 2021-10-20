@@ -34,6 +34,7 @@
   "error.axis.invalid_value": "String \"{}\" does not map to any value in the {} enum.",
   "error.bullet_collider_resource.unimplemented": "Collider type {} is unimplemented!",
   "error.opengl.texture_compile": "Texture failed to compile: missing image data",
+  "error.opengl.texture_cubemap_compile": "Texture {} in cubemap failed to compile: missing image data",
   "error.opengl.shader_linking": "Shader linking failed\n{}",
   "error.glfw.generic": "GLFW Error {}: {}\n",
   "error.glfw.undefined": "GLFW not defined",

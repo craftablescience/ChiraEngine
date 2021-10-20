@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "image_fd": "file://textures/skyboxShanghai/pz.png",
+    "image_bk": "file://textures/skyboxShanghai/nz.png",
+    "image_up": "file://textures/skyboxShanghai/py.png",
+    "image_dn": "file://textures/skyboxShanghai/ny.png",
+    "image_rt": "file://textures/skyboxShanghai/px.png",
+    "image_lt": "file://textures/skyboxShanghai/nx.png"
+  },
+  "properties": {}
+}

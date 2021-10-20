@@ -13,6 +13,7 @@
 #include "ui/settings.h"
 #include "../src/wec/propBulletPhysicsEntity.h"
 #include "../src/ui/extensibleUiWindowComponent.h"
+#include "../src/wec/skyboxComponent.h"
 
 using namespace chira;
 
@@ -69,8 +70,9 @@ int main() {
     });
 
     meshResource* cubeMesh;
+    skyboxComponent* skybox;
 
-    engine::addInitFunction([&worldId, &cubeMesh, &discordEnabled]() {
+    engine::addInitFunction([&worldId, &cubeMesh, &skybox, &discordEnabled]() {
         if (discordEnabled) {
             discordRichPresence::init(TR("editor.discord.application_id"));
             discordRichPresence::setLargeImage("main_logo");
@@ -83,6 +85,9 @@ int main() {
 
         auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
         cubeMesh = resourceManager::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial);
+
+        skybox = new skyboxComponent{"file://materials/skyboxShanghaiMaterial.json"};
+        componentManager::getWorld<extensibleWorld>(worldId)->add(skybox);
 
         componentManager::getWorld<extensibleWorld>(worldId)->add((new propBulletPhysicsEntity{})->init(
                 new meshComponent{cubeMesh},
@@ -129,12 +134,17 @@ int main() {
     });
     engine::init();
 
-    engine::addRenderFunction([cubeMesh]() {
+    engine::addRenderFunction([cubeMesh, skybox]() {
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
 
         // todo: use UBO
         cubeMesh->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
         cubeMesh->getMaterial()->getShader()->setUniform("v", engine::getMainCamera()->getViewMatrix());
+
+        // todo: use UBO
+        skybox->getMesh()->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
+        auto view = glm::mat4(glm::mat3(*engine::getMainCamera()->getViewMatrix()));
+        skybox->getMesh()->getMaterial()->getShader()->setUniform("v", &view);
     });
     engine::run();
 }

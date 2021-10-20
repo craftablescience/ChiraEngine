@@ -4,7 +4,7 @@
   },
   "properties": {
     "loader": "primitive",
-    "depthFunction": "LEQUAL",
+    "depthFunction": "LESS",
     "backfaceCulling": true,
     "cullType": "BACK"
   }

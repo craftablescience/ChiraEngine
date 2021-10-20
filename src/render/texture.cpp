@@ -9,8 +9,8 @@ texture::texture(const std::string& identifier_) : propertiesResource(identifier
 
 void texture::compile(const nlohmann::json& properties) {
     this->format = getFormatFromString(getPropertyOrDefault<std::string>(properties["properties"], "format", std::string("RGBA")));
-    this->wrapModeU = getWrapModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "wrap_mode_u", "REPEAT"));
-    this->wrapModeV = getWrapModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "wrap_mode_v", "REPEAT"));
+    this->wrapModeS = getWrapModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "wrap_mode_s", "REPEAT"));
+    this->wrapModeT = getWrapModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "wrap_mode_t", "REPEAT"));
     this->filterMode = getFilterModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "filter_mode", "LINEAR"));
     this->mipmaps = getPropertyOrDefault<bool>(properties["properties"], "mipmaps", true);
     this->file = resourceManager::getResource<textureResource>(properties["dependencies"]["image"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", true));
@@ -24,8 +24,8 @@ void texture::compile(const nlohmann::json& properties) {
         glActiveTexture(this->activeTextureUnit);
     }
     glBindTexture(GL_TEXTURE_2D, this->handle);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrapModeU);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrapModeV);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrapModeS);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrapModeT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->filterMode);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->filterMode);
 

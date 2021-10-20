@@ -263,6 +263,7 @@ void engine::init() {
     engine::displaySplashScreen();
     glfwSwapInterval(1);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS); // Wiki says modern hardware is fine with this and it looks better
 
     glfwSetInputMode(engine::window, GLFW_STICKY_KEYS, GLFW_TRUE);
     glfwSetInputMode(engine::window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
