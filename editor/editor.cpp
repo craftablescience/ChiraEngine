@@ -127,10 +127,6 @@ int main() {
         cubeShader->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);
         cubeShader->setUniform("light.specular", 1.0f, 1.0f, 1.0f);
         cubeShader->setUniform("light.position", 0.0f, 5.0f, 0.0f);
-
-#if DEBUG
-        engine::setBackgroundColor(0.0f, 0.0f, 0.3f, 1.0f);
-#endif
     });
     engine::init();
 
