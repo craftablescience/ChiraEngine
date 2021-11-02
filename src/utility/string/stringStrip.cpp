@@ -1,4 +1,4 @@
-#include "stringOperations.h"
+#include "stringStrip.h"
 
 #include <regex>
 

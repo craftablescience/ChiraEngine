@@ -1,13 +1,14 @@
 list(APPEND ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/provider/abstractResourceProvider.h
+        ${CMAKE_CURRENT_LIST_DIR}/provider/filesystemResourceProvider.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/provider/filesystemResourceProvider.h
+        ${CMAKE_CURRENT_LIST_DIR}/provider/internetResourceProvider.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/provider/internetResourceProvider.h
         ${CMAKE_CURRENT_LIST_DIR}/propertiesResource.h
         ${CMAKE_CURRENT_LIST_DIR}/abstractResource.cpp
         ${CMAKE_CURRENT_LIST_DIR}/abstractResource.h
-        ${CMAKE_CURRENT_LIST_DIR}/abstractResourceProvider.h
-        ${CMAKE_CURRENT_LIST_DIR}/filesystemResourceProvider.h
         ${CMAKE_CURRENT_LIST_DIR}/fontResource.cpp
         ${CMAKE_CURRENT_LIST_DIR}/fontResource.h
-        ${CMAKE_CURRENT_LIST_DIR}/internetResourceProvider.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/internetResourceProvider.h
         ${CMAKE_CURRENT_LIST_DIR}/meshResource.h
         ${CMAKE_CURRENT_LIST_DIR}/meshResource.cpp
         ${CMAKE_CURRENT_LIST_DIR}/stringResource.cpp

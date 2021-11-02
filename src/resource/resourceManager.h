@@ -8,7 +8,7 @@
 #include "../utility/logger.h"
 #include <fmt/core.h>
 #include "../i18n/translationManager.h"
-#include "abstractResourceProvider.h"
+#include "provider/abstractResourceProvider.h"
 
 namespace chira {
     constexpr std::string_view RESOURCE_ID_SEPARATOR = "://";

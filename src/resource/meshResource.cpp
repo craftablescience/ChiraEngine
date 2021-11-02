@@ -68,7 +68,7 @@ void meshResource::render(glm::vec3* position, glm::quat* rotation) {
     this->materialPtr->use();
     if (position && rotation) {
         shader* s = this->materialPtr->getShader();
-        glm::mat4 model = transformToMatrix(*position, *rotation);
+        glm::mat4 model = transformToMatrix(glm::identity<glm::mat4>(), *position, *rotation);
         s->setUniform("m", &model);
     }
 

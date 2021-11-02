@@ -29,8 +29,8 @@ To summarize the major features:
 - Abstract ImGUI windows and expose relevant functions to scripting
 - Create an editor UI to make games with
 - Revamp scripting, allow adding custom scripting providers
-- Add C# scripting support
-- Add more graphics features like PBR
+- Remove AngelScript, add JavaScript scripting support
+- Add more graphics features
 - Implement the assimp library for model loading
 - Particle systems! Preferably offloaded to the GPU
 

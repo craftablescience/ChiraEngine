@@ -1,6 +1,6 @@
 #include "oggFileSound.h"
 
-#include "../resource/filesystemResourceProvider.h"
+#include "../resource/provider/filesystemResourceProvider.h"
 #include "../resource/resourceManager.h"
 
 using namespace chira;

@@ -10,6 +10,9 @@ namespace chira {
     class internetResourceProvider : public abstractResourceProvider {
     public:
         explicit internetResourceProvider(const std::string& name_, unsigned short port_) : abstractResourceProvider(name_), port(port_) {}
+        /// Redefines this function to always return true.
+        /// This is better than sending a request to the URI and seeing if it's valid, because that will take a lot of time.
+        /// It lets us request the resource immediately, but you must know beforehand that it's a valid URI.
         bool hasResource(const std::string& name) override {
             return true;
         }

@@ -1,5 +1,4 @@
 #include "angelscriptHolder.h"
-#include "../resource/filesystemResourceProvider.h"
 #include "../resource/resourceManager.h"
 #include "../resource/stringResource.h"
 #include <angelscript.h>
