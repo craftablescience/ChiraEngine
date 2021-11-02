@@ -129,6 +129,7 @@ list(APPEND ENGINE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdow
 # CHIRAENGINE
 include(${CMAKE_CURRENT_SOURCE_DIR}/config/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/core/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/entity/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/event/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/hook/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/i18n/CMakeLists.txt)
