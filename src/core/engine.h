@@ -12,7 +12,6 @@
 #include "../input/keybind.h"
 #include "../input/mousebind.h"
 #include "../loader/abstractSettingsLoader.h"
-#include "../render/abstractCamera.h"
 #include "../script/abstractScriptProvider.h"
 #include "../script/angelscriptProvider.h"
 #include "../sound/abstractSoundManager.h"

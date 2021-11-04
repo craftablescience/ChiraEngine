@@ -45,6 +45,7 @@ entity* entity::getChild(const std::string& name_) {
 }
 
 void entity::addChild(entity* child) {
+    child->setParent(this);
     this->children[child->getName().data()] = child;
 }
 

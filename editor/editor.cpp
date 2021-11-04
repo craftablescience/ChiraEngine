@@ -1,5 +1,4 @@
 #include "../src/core/engine.h"
-#include "../src/render/freecam.h"
 #include "../src/sound/oggFileSound.h"
 #include "../src/render/phongMaterial.h"
 #include "../src/hook/discordRichPresence.h"
@@ -59,8 +58,9 @@ int main() {
     }));
 
     meshResource* cubeMesh;
+    camera3d* camera;
 
-    engine::addInitFunction([&cubeMesh, &discordEnabled]() {
+    engine::addInitFunction([&cubeMesh, &camera, &discordEnabled]() {
         if (discordEnabled) {
             discordRichPresence::init(TR("editor.discord.application_id"));
             discordRichPresence::setLargeImage("main_logo");
@@ -95,8 +95,9 @@ int main() {
         }));
 
         engine::captureMouse(true);
-        //engine::setMainCamera(new freecam{});
-        //engine::getMainCamera()->setPosition(glm::vec3{0,0,10});
+        camera = new camera3d{"freecam", PERSPECTIVE};
+        engine::getRoot()->addChild(camera);
+        engine::getRoot()->setMainCamera(camera);
 
         engine::getAngelscriptProvider()->addScript("file://scripts/testScript.as");
 
@@ -117,19 +118,19 @@ int main() {
     });
     engine::init();
 
-    engine::addRenderFunction([cubeMesh]() {
+    engine::addRenderFunction([cubeMesh, camera]() {
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
 
         // todo: use UBO
-        //cubeMesh->getMaterial()->getShader()->use();
-        //cubeMesh->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
-        //cubeMesh->getMaterial()->getShader()->setUniform("v", engine::getMainCamera()->getViewMatrix());
+        cubeMesh->getMaterial()->getShader()->use();
+        cubeMesh->getMaterial()->getShader()->setUniform("p", camera->getProjection());
+        cubeMesh->getMaterial()->getShader()->setUniform("v", camera->getView());
 
         // todo: use UBO
-        //skybox->getMesh()->getMaterial()->getShader()->use();
-        //skybox->getMesh()->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
-        //auto view = glm::mat4(glm::mat3(*engine::getMainCamera()->getViewMatrix()));
-        //skybox->getMesh()->getMaterial()->getShader()->setUniform("v", &view);
+        engine::getRoot()->getSkybox()->getShader()->use();
+        engine::getRoot()->getSkybox()->getShader()->setUniform("p", camera->getProjection());
+        auto view = glm::mat4(glm::mat3(camera->getView()));
+        engine::getRoot()->getSkybox()->getShader()->setUniform("v", &view);
     });
     engine::run();
 }

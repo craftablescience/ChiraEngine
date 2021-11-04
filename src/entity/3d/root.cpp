@@ -17,6 +17,14 @@ void root::render() {
     }
 }
 
+void root::setMainCamera(camera3d* camera) {
+    this->mainCamera = camera;
+}
+
+camera3d* root::getMainCamera() {
+    return this->mainCamera;
+}
+
 void root::setSkybox(const std::string& cubemapId) {
     this->skybox->setMaterial(resourceManager::getResource<cubemapMaterial>(cubemapId));
 }

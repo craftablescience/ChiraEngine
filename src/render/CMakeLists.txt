@@ -1,15 +1,10 @@
 list(APPEND ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/abstractCamera.h
         ${CMAKE_CURRENT_LIST_DIR}/cubemapMaterial.cpp
         ${CMAKE_CURRENT_LIST_DIR}/cubemapMaterial.h
-        ${CMAKE_CURRENT_LIST_DIR}/freecam.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/freecam.h
         ${CMAKE_CURRENT_LIST_DIR}/light.cpp
         ${CMAKE_CURRENT_LIST_DIR}/light.h
         ${CMAKE_CURRENT_LIST_DIR}/material.cpp
         ${CMAKE_CURRENT_LIST_DIR}/material.h
-        ${CMAKE_CURRENT_LIST_DIR}/perspectiveCamera.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/perspectiveCamera.h
         ${CMAKE_CURRENT_LIST_DIR}/phongMaterial.cpp
         ${CMAKE_CURRENT_LIST_DIR}/phongMaterial.h
         ${CMAKE_CURRENT_LIST_DIR}/shader.cpp
