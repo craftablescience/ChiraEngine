@@ -17,6 +17,10 @@ void root::render() {
     }
 }
 
+glm::vec3 root::getGlobalPosition() {
+    return this->position;
+}
+
 void root::setMainCamera(camera3d* camera) {
     this->mainCamera = camera;
 }

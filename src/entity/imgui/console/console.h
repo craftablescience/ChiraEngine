@@ -1,20 +1,19 @@
 #pragma once
 
-#include <string>
-#include "../resource/fontResource.h"
-#include "../utility/logger.h"
-#include "abstractUiWindowComponent.h"
+#include "../../resource/fontResource.h"
+#include "../../utility/logger.h"
+#include "../window.h"
 
 namespace chira {
-    class console : public abstractUiWindowComponent {
+    class console : public window {
     public:
         explicit console(const ImVec2& windowSize = ImVec2(800, 600));
-        ~console();
+        ~console() override;
+        void renderContents() override;
         void clearLog();
         void addLog(const std::string& message);
-        void precacheResource() const;
+        static void precacheResource() ;
         void engineLoggingHook(loggerType type, const std::string& source, const std::string& message);
-        void draw(double delta) override;
         void setTheme();
         void resetTheme() const;
     private:

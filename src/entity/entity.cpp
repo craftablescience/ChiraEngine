@@ -1,7 +1,6 @@
 #include "entity.h"
 
 #include "../utility/uuidGenerator.h"
-#include "../utility/string/stringRemove.h"
 
 using namespace chira;
 
@@ -13,7 +12,6 @@ entity::entity(entity* parent_) {
 entity::entity(entity* parent_, const std::string& name_) {
     this->parent = parent_;
     this->name = name_;
-    replace(this->name, "/");
 }
 
 entity::entity() : entity(nullptr) {}

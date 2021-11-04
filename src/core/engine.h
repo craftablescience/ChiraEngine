@@ -15,7 +15,7 @@
 #include "../script/abstractScriptProvider.h"
 #include "../script/angelscriptProvider.h"
 #include "../sound/abstractSoundManager.h"
-#include "../ui/console.h"
+#include "../entity/imgui/console/console.h"
 #include "../utility/logger.h"
 #include "../render/material.h"
 #include "../physics/abstractPhysicsProvider.h"

@@ -5,9 +5,9 @@
 #include "../src/resource/provider/filesystemResourceProvider.h"
 #include "../src/resource/resourceManager.h"
 #include <tinyfiledialogs.h>
-#include "../src/ui/markdown.h"
-#include "ui/settings.h"
+#include "../src/utility/markdown.h"
 #include "../src/entity/3d/model/mesh3d.h"
+#include "../src/entity/3d/physics/bulletRigidBody.h"
 
 using namespace chira;
 
@@ -61,26 +61,39 @@ int main() {
     camera3d* camera;
 
     engine::addInitFunction([&cubeMesh, &camera, &discordEnabled]() {
+        //region Enable Discord Rich Presence
         if (discordEnabled) {
             discordRichPresence::init(TR("editor.discord.application_id"));
             discordRichPresence::setLargeImage("main_logo");
             discordRichPresence::setState("https://discord.gg/ASgHFkX");
         }
+        //endregion
 
+        //region Set the default font
         // Don't release the fontResource when done to keep it cached
         auto* noto = resourceManager::getResource<fontResource>("file://fonts/default.json");
         ImGui::GetIO().FontDefault = noto->getFont();
+        //endregion
 
+        //region Create a basic mesh
         auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
         cubeMesh = resourceManager::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial);
+        //endregion
 
-        engine::getRoot()->addChild(new mesh3d{cubeMesh});
-        //        new bulletRigidBodyComponent{"file://physics/cube_dynamic.json", glm::vec3{0, 5, -10}}
+        //region Add two teapots, one a dynamic rigidbody and one a static rigidbody
+        auto staticTeapot = new bulletRigidBody{"file://physics/ground_static.json"};
+        staticTeapot->translate(glm::vec3{3,5,-13});
+        staticTeapot->addChild(new mesh3d{cubeMesh});
+
+        auto fallingTeapot = new bulletRigidBody{"file://physics/cube_dynamic.json"};
+        fallingTeapot->translate(glm::vec3{0,5,-10});
+        fallingTeapot->addChild(new mesh3d{cubeMesh});
+
+        engine::getRoot()->addChild(staticTeapot);
+        engine::getRoot()->addChild(fallingTeapot);
+        //endregion
+
         /*
-        componentManager::getWorld<extensibleWorld>(worldId)->add((new propBulletPhysicsEntity{})->init(
-                new meshComponent{cubeMesh},
-                new bulletRigidBodyComponent{"file://physics/ground_static.json", glm::vec3{3, -5, -13}}));
-
         auto* tex = resourceManager::getResource<texture>("file://textures/ui/icon.json");
         componentManager::getWorld<extensibleWorld>(worldId)->add(
                 new extensibleUiWindowComponent{TR("debug.imgui.texture_test"), true, [tex](double delta) {
@@ -89,22 +102,30 @@ int main() {
                 }});
         */
 
-        auto* settingsUi = new settings{false};
+        /*
         engine::addKeybind(keybind(GLFW_KEY_O, GLFW_PRESS, [settingsUi](){
             settingsUi->setVisible(!settingsUi->isVisible());
         }));
+        */
 
+        //region Add the camera
         engine::captureMouse(true);
         camera = new camera3d{"freecam", PERSPECTIVE};
         engine::getRoot()->addChild(camera);
         engine::getRoot()->setMainCamera(camera);
+        //endregion
 
+        //region Add a test script
         engine::getAngelscriptProvider()->addScript("file://scripts/testScript.as");
+        //endregion
 
+        //region Add a test sound
         auto* sound = new oggFileSound();
         sound->init("helloWorldCutMono.ogg");
         engine::getSoundManager()->addSound("helloWorld", sound);
+        //endregion
 
+        //region Apply some lighting properties to the mesh
         cubeMaterial->setShininess();
         cubeMaterial->setLambertFactor();
         shader* cubeShader = cubeMaterial->getShader();
@@ -113,8 +134,11 @@ int main() {
         cubeShader->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);
         cubeShader->setUniform("light.specular", 1.0f, 1.0f, 1.0f);
         cubeShader->setUniform("light.position", 0.0f, 5.0f, 0.0f);
+        //endregion
 
+        //region Set a nice skybox
         engine::getRoot()->setSkybox("file://materials/skyboxShanghaiMaterial.json");
+        //endregion
     });
     engine::init();
 

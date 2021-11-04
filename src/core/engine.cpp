@@ -326,9 +326,10 @@ void engine::init() {
     // engine::angelscript->asEngine->RegisterGlobalFunction("void showConsole(bool)", asMETHOD(engine, showConsole), asCALL_THISCALL_ASGLOBAL, this);
 
     io.Fonts->AddFontDefault();
-    engine::consoleUI->precacheResource();
+    console::precacheResource();
 
     engine::treeRoot = new root{"root"};
+    engine::treeRoot->addChild(engine::consoleUI);
     engine::callRegisteredFunctions(&(engine::initFunctions));
     engine::angelscript->initScripts();
 

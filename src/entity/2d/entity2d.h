@@ -8,7 +8,7 @@ namespace chira {
         explicit entity2d(entity* parent_) : entity(parent_) {}
         entity2d(entity* parent_, const std::string& name_) : entity(parent_, name_) {}
         entity2d() : entity() {}
-        explicit entity2d(const std::string& name_) : entity() {}
+        explicit entity2d(const std::string& name_) : entity(name_) {}
         void render(const glm::mat4& parentTransform) override;
         void setPosition(const glm::vec2& newPos);
         void setRotation(const glm::quat& newRot);

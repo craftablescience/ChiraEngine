@@ -19,7 +19,7 @@ camera3d::camera3d(const cameraProjectionMode& mode, float fov_) : entity3d(), f
     this->createProjection(camera3d::getWindowWidth(), camera3d::getWindowHeight());
 }
 
-camera3d::camera3d(const std::string& name_, const cameraProjectionMode& mode, float fov_) : entity3d(), fov(fov_) {
+camera3d::camera3d(const std::string& name_, const cameraProjectionMode& mode, float fov_) : entity3d(name_), fov(fov_) {
     this->projectionMode = mode;
     this->createProjection(camera3d::getWindowWidth(), camera3d::getWindowHeight());
 }

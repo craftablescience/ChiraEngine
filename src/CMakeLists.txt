@@ -140,7 +140,6 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/render/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/resource/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/script/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/sound/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/ui/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/utility/CMakeLists.txt)
 add_library(ChiraEngine STATIC ${ENGINE_SOURCES})
 

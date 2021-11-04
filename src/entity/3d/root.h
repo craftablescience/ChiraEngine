@@ -10,6 +10,7 @@ namespace chira {
     public:
         explicit root(const std::string& name_);
         void render();
+        glm::vec3 getGlobalPosition() override;
         void setMainCamera(camera3d* camera);
         camera3d* getMainCamera();
         void setSkybox(const std::string& cubemapId);

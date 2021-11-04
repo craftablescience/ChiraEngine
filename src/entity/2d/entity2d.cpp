@@ -5,8 +5,9 @@
 using namespace chira;
 
 void entity2d::render(const glm::mat4& parentTransform) {
+    glm::mat4 transform = transformToMatrix(parentTransform, this->position, this->rotation);
     for (auto& [key, entity] : this->children) {
-        entity->render(transformToMatrix(parentTransform, this->position, this->rotation));
+        entity->render(transform);
     }
 }
 

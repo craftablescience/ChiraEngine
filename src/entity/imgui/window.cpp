@@ -1,30 +1,34 @@
-#include "abstractUiWindowComponent.h"
-
-#include <imgui.h>
+#include "window.h"
 
 using namespace chira;
 
-abstractUiWindowComponent::abstractUiWindowComponent(const std::string& title_, bool startVisible, const ImVec2& windowSize, bool enforceSize) {
+window::window(const std::string& title_, bool startVisible, const ImVec2& windowSize, bool enforceSize, const std::function<void()>& windowFunc) {
     this->title = title_;
     this->isVisible_ = startVisible;
     this->nextWindowSize = windowSize;
     this->windowSizeCondition = enforceSize? ImGuiCond_Always : ImGuiCond_FirstUseEver;
+    this->windowFunction = windowFunc;
 }
 
-void abstractUiWindowComponent::render(double delta) {
+void window::render(const glm::mat4& parentTransform) {
     if (this->isVisible_) {
         ImGui::SetNextWindowSize(this->nextWindowSize, this->windowSizeCondition);
         if (ImGui::Begin(this->title.c_str(), &this->isVisible_)) {
-            this->draw(delta);
+            this->renderContents();
         }
         ImGui::End();
     }
+    entity::render(parentTransform);
 }
 
-void abstractUiWindowComponent::setVisible(bool visible) {
+void window::renderContents() {
+    this->windowFunction();
+}
+
+void window::setVisible(bool visible) {
     this->isVisible_ = visible;
 }
 
-bool abstractUiWindowComponent::isVisible() const {
+bool window::isVisible() const {
     return this->isVisible_;
 }

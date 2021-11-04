@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../../src/ui/abstractUiWindowComponent.h"
 #include "../../src/utility/logger.h"
 #include "../../src/resource/fontResource.h"
 
 using namespace chira;
 
-struct settings : public abstractUiWindowComponent {
+class settings : public abstractUiWindowComponent {
+public:
     explicit settings(bool startVisible, const ImVec2& windowSize = ImVec2(0,0), bool enforceSize = false);
     void draw(double delta) override;
 private:

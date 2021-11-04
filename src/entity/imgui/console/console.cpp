@@ -1,12 +1,11 @@
 #include "console.h"
 
-#include <imgui.h>
-#include "../resource/resourceManager.h"
+#include "../../resource/resourceManager.h"
 
 using namespace chira;
 
-console::console(const ImVec2& windowSize) : abstractUiWindowComponent(TR("ui.console.title"), false, windowSize) {
-    logger::addCallback([=](const loggerType& type, const std::string& source, const std::string& message) {
+console::console(const ImVec2& windowSize) : window(TR("ui.console.title"), false, windowSize) {
+    logger::addCallback([=](const loggerType &type, const std::string &source, const std::string &message) {
         console::engineLoggingHook(type, source, message);
     });
     this->clearLog();
@@ -20,42 +19,7 @@ console::~console() {
     }
 }
 
-void console::clearLog() {
-    for (auto& item : this->items) {
-        free(item);
-    }
-    this->items.clear();
-}
-
-void console::addLog(const std::string& message) {
-    this->items.push_back(strdup(message.c_str()));
-}
-
-void console::precacheResource() const {
-    resourceManager::precacheResource<fontResource>(TR("resource.font.console_font_path"));
-}
-
-void console::engineLoggingHook(const loggerType type, const std::string& source, const std::string& message) {
-    switch (type) {
-        case INFO:
-            this->addLog(std::string(logger::INFO_PREFIX) + "[" + source + "] " + message);
-            break;
-        case INFO_IMPORTANT:
-            this->addLog(std::string(logger::INFO_IMPORTANT_PREFIX) + "[" + source + "] " + message);
-            break;
-        case OUTPUT:
-            this->addLog(std::string(logger::OUTPUT_PREFIX) + "[" + source + "] " + message);
-            break;
-        case WARN:
-            this->addLog(std::string(logger::WARNING_PREFIX) + "[" + source + "] " + message);
-            break;
-        case ERR:
-            this->addLog(std::string(logger::ERROR_PREFIX) + "[" + source + "] " + message);
-            break;
-    }
-}
-
-void console::draw(double delta) {
+void console::renderContents() {
     console::setTheme();
     ImGui::Checkbox("Autoscroll", &this->autoScroll);
     ImGui::Separator();
@@ -101,6 +65,41 @@ void console::draw(double delta) {
 
     ImGui::EndChild();
     console::resetTheme();
+}
+
+void console::clearLog() {
+    for (auto& item : this->items) {
+        free(item);
+    }
+    this->items.clear();
+}
+
+void console::addLog(const std::string& message) {
+    this->items.push_back(strdup(message.c_str()));
+}
+
+void console::precacheResource() {
+    resourceManager::precacheResource<fontResource>(TR("resource.font.console_font_path"));
+}
+
+void console::engineLoggingHook(const loggerType type, const std::string& source, const std::string& message) {
+    switch (type) {
+        case INFO:
+            this->addLog(std::string(logger::INFO_PREFIX) + "[" + source + "] " + message);
+            break;
+        case INFO_IMPORTANT:
+            this->addLog(std::string(logger::INFO_IMPORTANT_PREFIX) + "[" + source + "] " + message);
+            break;
+        case OUTPUT:
+            this->addLog(std::string(logger::OUTPUT_PREFIX) + "[" + source + "] " + message);
+            break;
+        case WARN:
+            this->addLog(std::string(logger::WARNING_PREFIX) + "[" + source + "] " + message);
+            break;
+        case ERR:
+            this->addLog(std::string(logger::ERROR_PREFIX) + "[" + source + "] " + message);
+            break;
+    }
 }
 
 void console::setTheme() {
