@@ -60,16 +60,17 @@ void meshResource::compile(const nlohmann::json& properties) {
 }
 
 void meshResource::release() const {
-    this->materialPtr->release();
+    if (this->materialPtr) {
+        this->materialPtr->release();
+    }
     abstractResource::release();
 }
 
-void meshResource::render(glm::vec3* position, glm::quat* rotation) {
-    this->materialPtr->use();
-    if (position && rotation) {
-        shader* s = this->materialPtr->getShader();
-        glm::mat4 model = transformToMatrix(glm::identity<glm::mat4>(), *position, *rotation);
-        s->setUniform("m", &model);
+void meshResource::render(const glm::mat4& model) {
+    if (this->materialPtr) {
+        this->materialPtr->use();
+        glm::mat4 model_ = model; // thanks C++
+        this->materialPtr->getShader()->setUniform("m", &model_);
     }
 
     glDepthFunc(this->depthFunction);
@@ -80,7 +81,7 @@ void meshResource::render(glm::vec3* position, glm::quat* rotation) {
         glDisable(GL_CULL_FACE);
     }
     glBindVertexArray(this->vaoHandle);
-    glDrawElements(GL_TRIANGLES, (int) this->indices.size(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, (GLint) this->indices.size(), GL_UNSIGNED_INT, nullptr);
 }
 
 void meshResource::addMeshLoader(const std::string& name, abstractMeshLoader* meshLoader) {

@@ -13,10 +13,16 @@ namespace chira {
         meshResource(const std::string& identifier_, material* material_);
         ~meshResource() override;
         void compile(const nlohmann::json& properties) override;
-        void render(glm::vec3* position, glm::quat* rotation);
+        void render(const glm::mat4& model);
         void release() const override;
         material* getMaterial() {
             return this->materialPtr;
+        }
+        void setMaterial(material* newMaterial) {
+            if (this->materialPtr) {
+                this->materialPtr->release();
+            }
+            this->materialPtr = newMaterial;
         }
         static void addMeshLoader(const std::string& name, abstractMeshLoader* meshLoader);
         static abstractMeshLoader* getMeshLoader(const std::string& name);

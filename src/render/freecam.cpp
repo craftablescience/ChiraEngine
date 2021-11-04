@@ -28,6 +28,8 @@ void freecam::setActive(bool newActive) {
 }
 
 void freecam::setupKeybinds() const {
+    // todo
+    /*
     engine::addKeybind(keybind(GLFW_KEY_W, GLFW_REPEAT,[]() {
         if (engine::getMainCamera()->isCurrent() && engine::getMainCamera()->isActive()) {
             if (auto* cam = dynamic_cast<freecam*>(engine::getMainCamera())) {
@@ -101,4 +103,5 @@ void freecam::setupKeybinds() const {
             }
         }
     }));
+     */
 }

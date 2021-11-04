@@ -2,13 +2,12 @@
 
 #include <string>
 #include <imgui.h>
-#include "../wec/abstractComponent.h"
 
 namespace chira {
-    class abstractUiWindowComponent : public abstractComponent {
+    class abstractUiWindowComponent {
     public:
         abstractUiWindowComponent(const std::string& title_, bool startVisible, const ImVec2& windowSize = ImVec2(0,0), bool enforceSize = false);
-        void render(double delta) final;
+        void render(double delta);
         virtual void draw(double delta) = 0;
         void setVisible(bool visible);
         [[nodiscard]] bool isVisible() const;

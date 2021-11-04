@@ -5,15 +5,10 @@
 #include "../src/hook/discordRichPresence.h"
 #include "../src/resource/provider/filesystemResourceProvider.h"
 #include "../src/resource/resourceManager.h"
-#include "../src/wec/extensibleWorld.h"
-#include "../src/wec/meshComponent.h"
-#include "../src/wec/componentManager.h"
 #include <tinyfiledialogs.h>
 #include "../src/ui/markdown.h"
 #include "ui/settings.h"
-#include "../src/wec/propBulletPhysicsEntity.h"
-#include "../src/ui/extensibleUiWindowComponent.h"
-#include "../src/wec/skyboxComponent.h"
+#include "../src/entity/3d/model/mesh3d.h"
 
 using namespace chira;
 
@@ -63,16 +58,9 @@ int main() {
         }
     }));
 
-    uuids::uuid worldId = componentManager::addWorld(new extensibleWorld{
-        [](double delta){},
-        [](double delta){},
-        [](){}
-    });
-
     meshResource* cubeMesh;
-    skyboxComponent* skybox;
 
-    engine::addInitFunction([&worldId, &cubeMesh, &skybox, &discordEnabled]() {
+    engine::addInitFunction([&cubeMesh, &discordEnabled]() {
         if (discordEnabled) {
             discordRichPresence::init(TR("editor.discord.application_id"));
             discordRichPresence::setLargeImage("main_logo");
@@ -86,15 +74,12 @@ int main() {
         auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
         cubeMesh = resourceManager::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial);
 
-        componentManager::getWorld<extensibleWorld>(worldId)->add((new propBulletPhysicsEntity{})->init(
-                new meshComponent{cubeMesh},
-                new bulletRigidBodyComponent{"file://physics/cube_dynamic.json", glm::vec3{0, 5, -10}}));
+        engine::getRoot()->addChild(new mesh3d{cubeMesh});
+        //        new bulletRigidBodyComponent{"file://physics/cube_dynamic.json", glm::vec3{0, 5, -10}}
+        /*
         componentManager::getWorld<extensibleWorld>(worldId)->add((new propBulletPhysicsEntity{})->init(
                 new meshComponent{cubeMesh},
                 new bulletRigidBodyComponent{"file://physics/ground_static.json", glm::vec3{3, -5, -13}}));
-
-        skybox = new skyboxComponent{"file://materials/skyboxShanghaiMaterial.json"};
-        componentManager::getWorld<extensibleWorld>(worldId)->add(skybox);
 
         auto* tex = resourceManager::getResource<texture>("file://textures/ui/icon.json");
         componentManager::getWorld<extensibleWorld>(worldId)->add(
@@ -102,16 +87,16 @@ int main() {
                     ImGui::Text("size = %d x %d", 512, 512);
                     ImGui::Image((void*) (intptr_t) tex->getHandle(), ImVec2(512, 512));
                 }});
+        */
 
         auto* settingsUi = new settings{false};
-        componentManager::getWorld<extensibleWorld>(worldId)->add(settingsUi);
         engine::addKeybind(keybind(GLFW_KEY_O, GLFW_PRESS, [settingsUi](){
             settingsUi->setVisible(!settingsUi->isVisible());
         }));
 
         engine::captureMouse(true);
-        engine::setMainCamera(new freecam{});
-        engine::getMainCamera()->setPosition(glm::vec3{0,0,10});
+        //engine::setMainCamera(new freecam{});
+        //engine::getMainCamera()->setPosition(glm::vec3{0,0,10});
 
         engine::getAngelscriptProvider()->addScript("file://scripts/testScript.as");
 
@@ -127,22 +112,24 @@ int main() {
         cubeShader->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);
         cubeShader->setUniform("light.specular", 1.0f, 1.0f, 1.0f);
         cubeShader->setUniform("light.position", 0.0f, 5.0f, 0.0f);
+
+        engine::getRoot()->setSkybox("file://materials/skyboxShanghaiMaterial.json");
     });
     engine::init();
 
-    engine::addRenderFunction([cubeMesh, skybox]() {
+    engine::addRenderFunction([cubeMesh]() {
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
 
         // todo: use UBO
-        cubeMesh->getMaterial()->getShader()->use();
-        cubeMesh->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
-        cubeMesh->getMaterial()->getShader()->setUniform("v", engine::getMainCamera()->getViewMatrix());
+        //cubeMesh->getMaterial()->getShader()->use();
+        //cubeMesh->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
+        //cubeMesh->getMaterial()->getShader()->setUniform("v", engine::getMainCamera()->getViewMatrix());
 
         // todo: use UBO
-        skybox->getMesh()->getMaterial()->getShader()->use();
-        skybox->getMesh()->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
-        auto view = glm::mat4(glm::mat3(*engine::getMainCamera()->getViewMatrix()));
-        skybox->getMesh()->getMaterial()->getShader()->setUniform("v", &view);
+        //skybox->getMesh()->getMaterial()->getShader()->use();
+        //skybox->getMesh()->getMaterial()->getShader()->setUniform("p", engine::getMainCamera()->getProjectionMatrix());
+        //auto view = glm::mat4(glm::mat3(*engine::getMainCamera()->getViewMatrix()));
+        //skybox->getMesh()->getMaterial()->getShader()->setUniform("v", &view);
     });
     engine::run();
 }

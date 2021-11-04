@@ -9,7 +9,7 @@ namespace chira {
     class console : public abstractUiWindowComponent {
     public:
         explicit console(const ImVec2& windowSize = ImVec2(800, 600));
-        ~console() override;
+        ~console();
         void clearLog();
         void addLog(const std::string& message);
         void precacheResource() const;

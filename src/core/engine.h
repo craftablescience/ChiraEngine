@@ -20,6 +20,7 @@
 #include "../utility/logger.h"
 #include "../render/material.h"
 #include "../physics/abstractPhysicsProvider.h"
+#include "../entity/3d/root.h"
 
 namespace chira {
     const std::string ENGINE_FILESYSTEM_PATH = "resources/engine"; // NOLINT(cert-err58-cpp)
@@ -53,8 +54,7 @@ namespace chira {
         static abstractPhysicsProvider* getPhysicsProvider();
         static void setPhysicsProvider(abstractPhysicsProvider* newPhysicsProvider);
 
-        [[nodiscard]] static abstractCamera* getMainCamera();
-        static void setMainCamera(abstractCamera* newCamera);
+        [[nodiscard]] static root* getRoot();
 
         static void callRegisteredFunctions(const std::vector<std::function<void()>>* list);
 
@@ -79,7 +79,7 @@ namespace chira {
         static inline std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
         static inline std::unique_ptr<abstractPhysicsProvider> physicsProvider = nullptr;
         static inline bool mouseCaptured = false;
-        static inline abstractCamera* mainCamera = nullptr; // This pointer should not be deleted, ever! It's a reference to a managed resource!
+        static inline root* treeRoot = nullptr;
         static inline console* consoleUI = nullptr;
         static inline bool started = false;
         static inline bool iconified = false;

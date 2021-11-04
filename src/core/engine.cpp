@@ -5,7 +5,6 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 #include <fmt/core.h>
-#include <glm/gtc/quaternion.hpp>
 #include "../config/glVersion.h"
 #include "../loader/jsonSettingsLoader.h"
 #include "../loader/image.h"
@@ -13,12 +12,10 @@
 #include "../hook/discordRichPresence.h"
 #include "../resource/provider/filesystemResourceProvider.h"
 #include "../resource/provider/internetResourceProvider.h"
-#include "../resource/meshResource.h"
 #include "../loader/objMeshLoader.h"
 #include "../loader/primitiveMeshLoader.h"
 #include "../render/texturedMaterial.h"
 #include "../event/eventQueue.h"
-#include "../wec/componentManager.h"
 #include "../physics/bulletPhysicsProvider.h"
 
 #if __has_include(<windows.h>)
@@ -331,22 +328,22 @@ void engine::init() {
     io.Fonts->AddFontDefault();
     engine::consoleUI->precacheResource();
 
+    engine::treeRoot = new root{"root"};
     engine::callRegisteredFunctions(&(engine::initFunctions));
     engine::angelscript->initScripts();
 
     io.Fonts->Build();
 
-    componentManager::addComponent(engine::consoleUI);
+    // todo
+    //componentManager::addComponent(engine::consoleUI);
 }
 
 void engine::displaySplashScreen() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     auto* mat = resourceManager::getResource<texturedMaterial>(TR("resource.material.splashscreen_material_path"));
-    glm::vec3 zeroVec;
-    glm::quat zeroQuat{1,0,0,0};
     auto* plane = resourceManager::getResource<meshResource>("file://meshes/plane.json", mat);
-    plane->render(&zeroVec, &zeroQuat);
+    plane->render(glm::identity<glm::mat4>());
 
     glfwSwapBuffers(engine::window);
     plane->release();
@@ -359,8 +356,8 @@ void engine::run() {
     while (!glfwWindowShouldClose(engine::window)) {
         engine::physicsProvider->updatePhysics(engine::getDeltaTime());
         engine::render();
-        engine::soundManager->setListenerPosition(engine::getMainCamera()->getPosition());
-        engine::soundManager->setListenerRotation(engine::getMainCamera()->getRotation(), engine::getMainCamera()->getUpVector());
+        engine::soundManager->setListenerPosition(engine::getRoot()->getAudioListeningPosition());
+        engine::soundManager->setListenerRotation(engine::getRoot()->getAudioListeningRotation(), engine::getRoot()->getAudioListeningUpVector());
         engine::soundManager->update();
         glfwSwapBuffers(engine::window);
         glfwPollEvents();
@@ -387,7 +384,7 @@ void engine::render() {
 
     engine::callRegisteredFunctions(&(engine::renderFunctions));
     engine::angelscript->render(engine::getDeltaTime());
-    componentManager::render(engine::getDeltaTime());
+    engine::treeRoot->render();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -404,11 +401,9 @@ void engine::stop() {
     }
 
     engine::soundManager->stop();
-
-    componentManager::clear();
-    resourceManager::discardAll();
-
+    delete engine::treeRoot;
     engine::physicsProvider->stop();
+    resourceManager::discardAll();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -495,21 +490,8 @@ void engine::setPhysicsProvider(abstractPhysicsProvider* newPhysicsProvider) {
     engine::physicsProvider.reset(newPhysicsProvider);
 }
 
-abstractCamera* engine::getMainCamera() {
-    if (!engine::mainCamera) {
-        logger::log(WARN, "engine::getMainCamera", fmt::format(TR("error.engine.invalid_access"), "main camera", "engine::setMainCamera"));
-        return nullptr;
-    }
-    return engine::mainCamera;
-}
-
-void engine::setMainCamera(abstractCamera* newCamera) {
-    if (engine::mainCamera) {
-        engine::mainCamera->setCurrent(false);
-    }
-    engine::mainCamera = newCamera;
-    engine::mainCamera->init();
-    engine::mainCamera->setCurrent(true);
+root* engine::getRoot() {
+    return engine::treeRoot;
 }
 
 void engine::setSettingsLoaderDefaults() {

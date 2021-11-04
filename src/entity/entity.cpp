@@ -16,6 +16,16 @@ entity::entity(entity* parent_, const std::string& name_) {
     replace(this->name, "/");
 }
 
+entity::entity() : entity(nullptr) {}
+
+entity::entity(const std::string& name_) : entity(nullptr, name_) {}
+
+entity::~entity() {
+    for (const auto& [name_, ent] : this->children) {
+        delete ent;
+    }
+}
+
 void entity::render(const glm::mat4& parentTransform) {
     for (auto& [key, entity] : this->children) {
         entity->render(parentTransform);
@@ -32,4 +42,13 @@ std::string_view entity::getName() const {
 
 entity* entity::getChild(const std::string& name_) {
     return this->children[name_];
+}
+
+void entity::addChild(entity* child) {
+    this->children[child->getName().data()] = child;
+}
+
+void entity::removeChild(const std::string& name_) {
+    delete this->children[name_];
+    this->children.erase(name_);
 }

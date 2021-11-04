@@ -7,5 +7,11 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/2d/world2d.h
         ${CMAKE_CURRENT_LIST_DIR}/3d/entity3d.cpp
         ${CMAKE_CURRENT_LIST_DIR}/3d/entity3d.h
+        ${CMAKE_CURRENT_LIST_DIR}/3d/root.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/3d/root.h
         ${CMAKE_CURRENT_LIST_DIR}/3d/world3d.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/3d/world3d.h)
+        ${CMAKE_CURRENT_LIST_DIR}/3d/world3d.h
+        ${CMAKE_CURRENT_LIST_DIR}/3d/camera/camera3d.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/3d/camera/camera3d.h
+        ${CMAKE_CURRENT_LIST_DIR}/3d/model/mesh3d.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/3d/model/mesh3d.h)
