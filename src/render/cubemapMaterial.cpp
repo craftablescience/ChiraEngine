@@ -18,6 +18,6 @@ void cubemapMaterial::use() {
 }
 
 void cubemapMaterial::release() const {
-    material::release();
     this->cubemap->release();
+    material::release();
 }

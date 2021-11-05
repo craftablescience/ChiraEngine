@@ -12,6 +12,9 @@ namespace chira {
         mesh3d(const std::string& name_, meshResource* mesh_) : entity3d(name_), mesh(mesh_) {}
         ~mesh3d() override;
         void render(const glm::mat4& parentTransform) override;
+        meshResource* getMeshResource() const {
+            return this->mesh;
+        }
     private:
         meshResource* mesh;
     };

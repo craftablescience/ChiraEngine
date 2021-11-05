@@ -75,22 +75,19 @@ int main() {
         ImGui::GetIO().FontDefault = noto->getFont();
         //endregion
 
-        //region Create a basic mesh
-        auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
-        cubeMesh = resourceManager::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial);
-        //endregion
-
-        //region Add two teapots, one a dynamic rigidbody and one a static rigidbody
+        //region Add a teapot with a static rigidbody
         auto staticTeapot = new bulletRigidBody{"file://physics/ground_static.json"};
         staticTeapot->translate(glm::vec3{3,5,-13});
+        auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
+        cubeMesh = resourceManager::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial);
         staticTeapot->addChild(new mesh3d{cubeMesh});
 
-        auto fallingTeapot = new bulletRigidBody{"file://physics/cube_dynamic.json"};
-        fallingTeapot->translate(glm::vec3{0,5,-10});
-        fallingTeapot->addChild(new mesh3d{cubeMesh});
+        //auto fallingTeapot = new bulletRigidBody{"file://physics/cube_dynamic.json"};
+        //fallingTeapot->translate(glm::vec3{0,5,-10});
+        //fallingTeapot->addChild(new mesh3d{cubeMesh});
 
         engine::getRoot()->addChild(staticTeapot);
-        engine::getRoot()->addChild(fallingTeapot);
+        //engine::getRoot()->addChild(fallingTeapot);
         //endregion
 
         /*
@@ -100,9 +97,7 @@ int main() {
                     ImGui::Text("size = %d x %d", 512, 512);
                     ImGui::Image((void*) (intptr_t) tex->getHandle(), ImVec2(512, 512));
                 }});
-        */
 
-        /*
         engine::addKeybind(keybind(GLFW_KEY_O, GLFW_PRESS, [settingsUi](){
             settingsUi->setVisible(!settingsUi->isVisible());
         }));
@@ -153,8 +148,9 @@ int main() {
         // todo: use UBO
         engine::getRoot()->getSkybox()->getShader()->use();
         engine::getRoot()->getSkybox()->getShader()->setUniform("p", camera->getProjection());
-        auto view = glm::mat4(glm::mat3(camera->getView()));
-        engine::getRoot()->getSkybox()->getShader()->setUniform("v", &view);
+        engine::getRoot()->getSkybox()->getShader()->setUniform("v", glm::mat4(glm::mat3(camera->getView())));
+
+        camera->translate(glm::vec3{0,0,0.1});
     });
     engine::run();
 }

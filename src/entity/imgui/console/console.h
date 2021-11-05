@@ -7,7 +7,7 @@
 namespace chira {
     class console : public window {
     public:
-        explicit console(const ImVec2& windowSize = ImVec2(800, 600));
+        explicit console(const ImVec2& windowSize = ImVec2(800, 600), const std::string& name_ = "Console");
         ~console() override;
         void renderContents() override;
         void clearLog();

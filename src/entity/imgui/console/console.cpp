@@ -4,12 +4,13 @@
 
 using namespace chira;
 
-console::console(const ImVec2& windowSize) : window(TR("ui.console.title"), false, windowSize) {
+console::console(const ImVec2& windowSize, const std::string& name_) : window(TR("ui.console.title"), false, windowSize) {
     logger::addCallback([=](const loggerType &type, const std::string &source, const std::string &message) {
         console::engineLoggingHook(type, source, message);
     });
     this->clearLog();
     this->autoScroll = true;
+    this->name = name_;
 }
 
 console::~console() {

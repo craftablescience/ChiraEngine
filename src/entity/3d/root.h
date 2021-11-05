@@ -7,8 +7,10 @@
 
 namespace chira {
     class root : private world3d {
+        friend class engine;
     public:
         explicit root(const std::string& name_);
+        ~root() override = default;
         void render();
         glm::vec3 getGlobalPosition() override;
         void setMainCamera(camera3d* camera);
@@ -32,5 +34,6 @@ namespace chira {
         meshResource* skybox;
         camera3d* mainCamera = nullptr;
         using world3d::render;
+        void clearTree();
     };
 }

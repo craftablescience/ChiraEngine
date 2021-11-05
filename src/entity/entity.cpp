@@ -42,6 +42,10 @@ entity* entity::getChild(const std::string& name_) {
     return this->children[name_];
 }
 
+bool entity::hasChild(const std::string& name_) {
+    return this->children.count(name_) > 0;
+}
+
 void entity::addChild(entity* child) {
     child->setParent(this);
     this->children[child->getName().data()] = child;

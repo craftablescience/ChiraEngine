@@ -36,3 +36,10 @@ void root::setSkybox(const std::string& cubemapId) {
 cubemapMaterial* root::getSkybox() {
     return dynamic_cast<cubemapMaterial*>(this->skybox->getMaterial());
 }
+
+void root::clearTree() {
+    for (const auto& [name_, ent] : this->children) {
+        delete ent;
+    }
+    this->skybox->release();
+}

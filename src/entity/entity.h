@@ -23,6 +23,7 @@ namespace chira {
         [[nodiscard]] entity* getParent() const;
         std::string_view getName() const;
         entity* getChild(const std::string& name_);
+        bool hasChild(const std::string& name_);
         void addChild(entity* child);
         void removeChild(const std::string& name_);
     protected:

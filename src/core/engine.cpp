@@ -171,7 +171,7 @@ void engine::preInit(const std::string& configPath) {
 void engine::init() {
     engine::started = true;
 
-    engine::consoleUI = new console{};
+    auto consoleUI = new console{};
 
     if (!glfwInit()) {
         logger::log(ERR, "GLFW", TR("error.glfw.undefined"));
@@ -328,15 +328,12 @@ void engine::init() {
     io.Fonts->AddFontDefault();
     console::precacheResource();
 
-    engine::treeRoot = new root{"root"};
-    engine::treeRoot->addChild(engine::consoleUI);
+    engine::treeRoot = std::make_unique<root>("root");
+    engine::treeRoot->addChild(consoleUI);
     engine::callRegisteredFunctions(&(engine::initFunctions));
     engine::angelscript->initScripts();
 
     io.Fonts->Build();
-
-    // todo
-    //componentManager::addComponent(engine::consoleUI);
 }
 
 void engine::displaySplashScreen() {
@@ -402,7 +399,7 @@ void engine::stop() {
     }
 
     engine::soundManager->stop();
-    delete engine::treeRoot;
+    engine::treeRoot->clearTree();
     engine::physicsProvider->stop();
     resourceManager::discardAll();
 
@@ -492,7 +489,7 @@ void engine::setPhysicsProvider(abstractPhysicsProvider* newPhysicsProvider) {
 }
 
 root* engine::getRoot() {
-    return engine::treeRoot;
+    return engine::treeRoot.get();
 }
 
 void engine::setSettingsLoaderDefaults() {
@@ -574,11 +571,11 @@ bool engine::isMouseCaptured() {
 }
 
 void engine::showConsole(bool shouldShow) {
-    engine::consoleUI->setVisible(shouldShow);
+    engine::getConsole()->setVisible(shouldShow);
 }
 
 console* engine::getConsole() {
-    return engine::consoleUI;
+    return dynamic_cast<console*>(engine::getRoot()->getChild("console"));
 }
 
 bool engine::isIconified() {
