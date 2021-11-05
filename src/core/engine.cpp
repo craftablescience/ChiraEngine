@@ -575,7 +575,7 @@ void engine::showConsole(bool shouldShow) {
 }
 
 console* engine::getConsole() {
-    return dynamic_cast<console*>(engine::getRoot()->getChild("console"));
+    return dynamic_cast<console*>(engine::getRoot()->getChild("Console"));
 }
 
 bool engine::isIconified() {
