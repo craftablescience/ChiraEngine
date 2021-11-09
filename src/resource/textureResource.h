@@ -8,6 +8,7 @@ namespace chira {
     public:
         explicit textureResource(const std::string& identifier_, bool vFlip_ = true);
         void compile(const unsigned char buffer[], std::size_t bufferLen) override;
+        textureResource* copy() override;
         [[nodiscard]] abstractImage* getFile() const {
             return this->file.get();
         }

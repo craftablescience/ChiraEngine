@@ -17,6 +17,7 @@ namespace chira {
     public:
         shaderResource(const std::string& identifier_, int type_);
         void compile(const unsigned char buffer[], std::size_t bufferLength) override;
+        shaderResource* copy() override;
         ~shaderResource() override;
         [[nodiscard]] unsigned int getType() const;
         static void addPreprocessorSymbol(const std::string& name, const std::string& value);

@@ -15,3 +15,8 @@ void textureResource::compile(const unsigned char buffer[], std::size_t bufferLe
     this->height = h;
     this->bitDepth = bd;
 }
+
+textureResource* textureResource::copy() {
+    this->incrementRefCount();
+    return this;
+}

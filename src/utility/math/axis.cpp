@@ -13,7 +13,7 @@ chira::axis chira::getAxisFromString(const std::string& str) {
         return Z;
     } else {
         logger::log(ERR, "axis::getAxisFromString", fmt::format(TR("error.axis.invalid_value"), str, "axis"));
-        return (axis) ((int) -1); // Uh oh
+        return Z; // oh no
     }
 }
 
@@ -32,6 +32,6 @@ chira::signedAxis chira::getSignedAxisFromString(const std::string& str) {
         return ZN;
     } else {
         logger::log(ERR, "axis::getSignedAxisFromString", fmt::format(TR("error.axis.invalid_value"), str, "signedAxis"));
-        return (signedAxis) ((int) -1); // Uh oh
+        return ZN; // oh no
     }
 }

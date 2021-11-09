@@ -202,6 +202,10 @@ namespace chira {
                 this->collider->calculateLocalInertia(this->mass, this->localInertia);
             }
         }
+        bulletColliderResource* copy() override {
+            this->incrementRefCount();
+            return this;
+        }
         btRigidBody* getNewRigidBody() {
             btRigidBody::btRigidBodyConstructionInfo info(
                     this->mass,

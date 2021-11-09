@@ -54,6 +54,11 @@ void textureCubemap::compile(const nlohmann::json& properties) {
     }
 }
 
+textureCubemap* textureCubemap::copy() {
+    this->incrementRefCount();
+    return this;
+}
+
 void textureCubemap::use() const {
     if (this->handle == 0) return;
     if (this->activeTextureUnit == -1) {

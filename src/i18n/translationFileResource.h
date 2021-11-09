@@ -12,6 +12,10 @@ namespace chira {
         void compile(const nlohmann::json& translations) override {
             this->strings = translations;
         }
+        translationFileResource* copy() override {
+            this->incrementRefCount();
+            return this;
+        }
         const std::string& getLanguage();
         bool hasTranslation(const std::string& key);
         /// Note: Currently nlohmann::json does not support string_view unfortunately.

@@ -9,6 +9,7 @@ namespace chira {
     public:
         explicit phongMaterial(const std::string& identifier_) : material(identifier_) {}
         void compile(const nlohmann::json& properties) override;
+        phongMaterial* copy() override;
         void use() override;
         void release() const override;
         void setShininess(float shininess = 32.0f);

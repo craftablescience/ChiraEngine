@@ -13,6 +13,7 @@ namespace chira {
         meshResource(const std::string& identifier_, material* material_);
         ~meshResource() override;
         void compile(const nlohmann::json& properties) override;
+        meshResource* copy() override;
         void render(const glm::mat4& model);
         void release() const override;
         material* getMaterial() {

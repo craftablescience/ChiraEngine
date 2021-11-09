@@ -12,6 +12,11 @@ void material::compile(const nlohmann::json& properties) {
     this->shaderPtr = resourceManager::getResource<shader>(properties["dependencies"]["shader"]);
 }
 
+material* material::copy() {
+    this->incrementRefCount();
+    return this;
+}
+
 void material::use() {
     this->shaderPtr->use();
 }

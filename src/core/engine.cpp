@@ -81,6 +81,9 @@ void engine::errorCallback(int error, const char* description) {
 
 void engine::framebufferSizeCallback(GLFWwindow* w, int width, int height) {
     glViewport(0, 0, width, height);
+    if (engine::treeRoot) {
+        engine::treeRoot->getMainCamera()->createProjection(width, height);
+    }
 }
 
 void engine::keyboardCallback(GLFWwindow* w, int key, int scancode, int action, int mods) {

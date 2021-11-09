@@ -4,6 +4,11 @@
 
 using namespace chira;
 
+abstractResource* abstractResource::copy() {
+    this->incrementRefCount();
+    return this;
+}
+
 void abstractResource::release() const {
     resourceManager::removeResource(this->identifier);
 }

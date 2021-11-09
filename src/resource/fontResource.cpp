@@ -18,6 +18,11 @@ void fontResource::compile(const nlohmann::json& properties) {
     this->font = io.Fonts->AddFontFromFileTTF(path.c_str(), this->size, nullptr, this->range);
 }
 
+fontResource* fontResource::copy() {
+    this->incrementRefCount();
+    return this;
+}
+
 ImFont* fontResource::getFont() const {
     return this->font;
 }

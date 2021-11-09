@@ -59,6 +59,11 @@ void meshResource::compile(const nlohmann::json& properties) {
     glBindVertexArray(0);
 }
 
+meshResource* meshResource::copy() {
+    this->incrementRefCount();
+    return this;
+}
+
 void meshResource::release() const {
     if (this->materialPtr) {
         this->materialPtr->release();

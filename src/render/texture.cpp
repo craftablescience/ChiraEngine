@@ -39,6 +39,11 @@ void texture::compile(const nlohmann::json& properties) {
     }
 }
 
+texture* texture::copy() {
+    this->incrementRefCount();
+    return this;
+}
+
 void texture::use() const {
     if (this->handle == 0) return;
     if (this->activeTextureUnit == -1) {

@@ -15,6 +15,11 @@ void phongMaterial::compile(const nlohmann::json& properties) {
     this->shaderPtr->setUniform("material.specular", 1);
 }
 
+phongMaterial* phongMaterial::copy() {
+    this->incrementRefCount();
+    return this;
+}
+
 void phongMaterial::use() {
     this->diffuse->use();
     this->specular->use();

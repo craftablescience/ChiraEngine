@@ -30,6 +30,10 @@ namespace chira {
             this->compile(nlohmann::json::parse(std::string{reinterpret_cast<const char*>(buffer), bufferLength}));
         }
         virtual void compile(const nlohmann::json& properties) = 0;
+        propertiesResource* copy() override {
+            this->incrementRefCount();
+            return this;
+        }
 
         template<typename T>
         T getPropertyOrDefault(const nlohmann::json& dictionary, const std::string& key, T defaultValue) {

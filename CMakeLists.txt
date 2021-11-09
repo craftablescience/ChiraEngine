@@ -35,6 +35,20 @@ elseif(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
 endif()
 
+# Tests
+option(CHIRA_BUILD_TESTS "Run Chira Engine's built-in tests" ON)
+if(CHIRA_BUILD_TESTS)
+    include(FetchContent)
+    FetchContent_Declare(
+            googletest
+            URL https://github.com/google/googletest/archive/e2239ee6043f73722e7aa812a459f54a28552929.zip
+    )
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(googletest)
+    enable_testing()
+    include(${CMAKE_CURRENT_SOURCE_DIR}/test/src/CMakeLists.txt)
+endif()
+
 add_subdirectory(src)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/editor/CMakeLists.txt)
@@ -43,6 +57,14 @@ if(WIN32)
 endif()
 add_executable(${PROJECT_NAME} ${EDITOR_SOURCES})
 target_link_libraries(${PROJECT_NAME} ChiraEngine ${OPENGL_LIBRARIES})
+
+if(CHIRA_BUILD_TESTS)
+    add_executable(ChiraTest ${TEST_SOURCES})
+    target_include_directories(ChiraTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+    target_link_libraries(ChiraTest PUBLIC ChiraEngine ${OPENGL_LIBRARIES} gtest_main)
+    include(GoogleTest)
+    gtest_discover_tests(ChiraTest)
+endif()
 
 # Compiling for Windows requires the resources be copied before the RC file is compiled
 # However, I'd like to avoid making a custom target, perhaps someday the Linux method can be used for both platforms

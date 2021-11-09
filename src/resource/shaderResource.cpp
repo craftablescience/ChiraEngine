@@ -31,6 +31,11 @@ void shaderResource::compile(const unsigned char buffer[], std::size_t bufferLen
 #endif
 }
 
+shaderResource* shaderResource::copy() {
+    this->incrementRefCount();
+    return this;
+}
+
 shaderResource::~shaderResource() {
     if (this->handle != -1) glDeleteShader(this->handle);
 }

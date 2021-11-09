@@ -12,6 +12,7 @@ namespace chira {
     public:
         explicit shader(const std::string& identifier_);
         void compile(const nlohmann::json& properties) override;
+        shader* copy() override;
         ~shader() override;
         void use();
         void setUniform(const std::string& name, bool value) const;

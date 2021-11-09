@@ -12,11 +12,12 @@ namespace chira {
     public:
         explicit abstractResource(std::string identifier_) : identifier(std::move(identifier_)) {}
         virtual void compile(const unsigned char buffer[], std::size_t bufferLength) = 0;
+        virtual abstractResource* copy();
         virtual void release() const;
         virtual ~abstractResource() = default;
     protected:
         std::string identifier;
-    private:
+
         unsigned int refCount = 1;
         void incrementRefCount();
         void decrementRefCount();
