@@ -25,8 +25,8 @@ abstractResourceProvider* resourceManager::getResourceProviderWithResource(const
     return nullptr;
 }
 
-std::pair<std::string,std::string> resourceManager::splitResourceIdentifier(const std::string& identifier) {
-    std::pair<std::string,std::string> out;
+std::pair<std::string, std::string> resourceManager::splitResourceIdentifier(const std::string& identifier) {
+    std::pair<std::string, std::string> out;
     size_t pos = identifier.find(RESOURCE_ID_SEPARATOR);
     if (pos != std::string::npos) {
         out.first = identifier.substr(0, pos);
@@ -50,6 +50,8 @@ void resourceManager::discardAll() {
     // Make sure all resources are deleted, just in case
     for (const auto& [providerName, resourceMap] : resources) {
         for (const auto& [name, resource] : resourceMap) {
+            //todo(localize)
+            logger::log(WARN, "Resource Manager", fmt::format("Deleting resource \"{}\" that was not deleted!", resource->getIdentifier()));
             delete resource.get();
         }
     }

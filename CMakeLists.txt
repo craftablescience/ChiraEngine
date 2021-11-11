@@ -37,7 +37,8 @@ endif()
 
 # Tests
 option(CHIRA_BUILD_TESTS "Run Chira Engine's built-in tests" ON)
-if(CHIRA_BUILD_TESTS)
+if(CHIRA_BUILD_TESTS AND (NOT MSVC))
+    # For some reason Visual Studio doesn't like this
     include(FetchContent)
     FetchContent_Declare(
             googletest
@@ -58,7 +59,7 @@ endif()
 add_executable(${PROJECT_NAME} ${EDITOR_SOURCES})
 target_link_libraries(${PROJECT_NAME} ChiraEngine ${OPENGL_LIBRARIES})
 
-if(CHIRA_BUILD_TESTS)
+if(CHIRA_BUILD_TESTS AND (NOT MSVC))
     add_executable(ChiraTest ${TEST_SOURCES})
     target_include_directories(ChiraTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
     target_link_libraries(ChiraTest PUBLIC ChiraEngine ${OPENGL_LIBRARIES} gtest_main)

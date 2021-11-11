@@ -10,8 +10,11 @@ set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 include(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/CMakeLists.txt)
 
 # CURLPP
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp)
-list(APPEND ENGINE_LINK_LIBRARIES curl curlpp)
+option(CHIRA_BUILD_WITH_CURLPP "Build with the CurlPP library and related features" ON)
+if((NOT MSVC) AND CHIRA_BUILD_WITH_CURLPP)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp)
+    list(APPEND ENGINE_LINK_LIBRARIES curl curlpp)
+endif()
 
 # DISCORD
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -42,6 +45,9 @@ list(APPEND ENGINE_LINK_LIBRARIES glm::glm)
 
 # BULLET
 set(PKGCONFIG_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
+if(MSVC)
+    set(USE_MSVC_RUNTIME_LIBRARY_DLL ON CACHE BOOL "" FORCE)
+endif()
 set(USE_GRAPHICAL_BENCHMARK OFF CACHE BOOL "" FORCE)
 set(BUILD_CPU_DEMOS         OFF CACHE BOOL "" FORCE)
 set(USE_GLUT                OFF CACHE BOOL "" FORCE)
@@ -53,7 +59,7 @@ set(BUILD_UNIT_TESTS        OFF CACHE BOOL "" FORCE)
 set(BUILD_ENET              OFF CACHE BOOL "" FORCE)
 set(BUILD_CLSOCKET          OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/bullet)
-list(APPEND ENGINE_LINK_LIBRARIES BulletDynamics BulletCollision LinearMath)
+list(APPEND ENGINE_LINK_LIBRARIES Bullet3Common BulletDynamics BulletCollision LinearMath)
 
 # OPENAL
 set(ALSOFT_EXAMPLES         OFF CACHE BOOL "" FORCE)
@@ -143,10 +149,13 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/sound/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/utility/CMakeLists.txt)
 add_library(ChiraEngine STATIC ${ENGINE_SOURCES})
 
-target_compile_definitions(ChiraEngine PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLAD2)
+if((NOT MSVC) AND CHIRA_BUILD_WITH_CURLPP)
+    target_compile_definitions(ChiraEngine PUBLIC CHIRA_BUILD_CURLPP_ENABLED)
+    target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp/include)
+endif()
+target_compile_definitions(ChiraEngine PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD2)
 
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/include)
-target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/addons)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/discord/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fmt/include)

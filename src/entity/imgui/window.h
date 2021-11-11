@@ -13,7 +13,7 @@ namespace chira {
         virtual void renderContents();
         void setVisible(bool visible);
         [[nodiscard]] bool isVisible() const;
-    private:
+    protected:
         std::string title;
         bool isVisible_;
         ImVec2 nextWindowSize;
