@@ -12,17 +12,11 @@ void cubemapMaterial::compile(const nlohmann::json& properties) {
     this->shaderPtr->setUniform("cubemap", 0);
 }
 
-cubemapMaterial* cubemapMaterial::copy() {
-    this->incrementRefCount();
-    return this;
-}
-
 void cubemapMaterial::use() {
     material::use();
     this->cubemap->use();
 }
 
-void cubemapMaterial::release() const {
-    this->cubemap->release();
-    material::release();
+cubemapMaterial::~cubemapMaterial() {
+    resourceManager::removeResource(this->cubemap->getIdentifier());
 }

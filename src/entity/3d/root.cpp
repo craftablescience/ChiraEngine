@@ -33,13 +33,13 @@ void root::setSkybox(const std::string& cubemapId) {
     this->skybox->setMaterial(resourceManager::getResource<cubemapMaterial>(cubemapId));
 }
 
-cubemapMaterial* root::getSkybox() {
-    return dynamic_cast<cubemapMaterial*>(this->skybox->getMaterial());
+std::shared_ptr<cubemapMaterial> root::getSkybox() {
+    return std::dynamic_pointer_cast<cubemapMaterial>(this->skybox->getMaterial());
 }
 
 void root::clearTree() {
     for (const auto& [name_, ent] : this->children) {
         delete ent;
     }
-    this->skybox->release();
+    resourceManager::removeResource(this->skybox->getIdentifier());
 }

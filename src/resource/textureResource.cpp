@@ -4,7 +4,7 @@
 
 using namespace chira;
 
-textureResource::textureResource(const std::string& identifier_, bool vFlip_) : abstractResource(identifier_) {
+textureResource::textureResource(const std::string& identifier_, bool vFlip_) : resource(identifier_) {
     this->vFlip = vFlip_;
 }
 
@@ -14,9 +14,4 @@ void textureResource::compile(const unsigned char buffer[], std::size_t bufferLe
     this->width = w;
     this->height = h;
     this->bitDepth = bd;
-}
-
-textureResource* textureResource::copy() {
-    this->incrementRefCount();
-    return this;
 }

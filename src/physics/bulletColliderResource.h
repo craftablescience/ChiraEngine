@@ -8,7 +8,7 @@
 #include <btBulletDynamicsCommon.h>
 
 namespace chira {
-    enum bulletColliderType {
+    enum class bulletColliderType {
         BULLET_INVALID,
         BULLET_BOX,
         BULLET_BVH_TRIANGLE_MESH,
@@ -46,23 +46,23 @@ namespace chira {
             }
             this->colliderType = bulletColliderResource::getBulletColliderTypeFromString(properties["properties"]["colliderType"]);
             switch(this->colliderType) {
-                case BULLET_INVALID:
+                case bulletColliderType::BULLET_INVALID:
                     // Can't really do much here, we've already logged a warning about it
                     break;
 
-                case BULLET_BOX:
+                case bulletColliderType::BULLET_BOX:
                     this->collider = std::make_unique<btBoxShape>(btVector3(
                             properties["properties"]["boundX"],
                             properties["properties"]["boundY"],
                             properties["properties"]["boundZ"]));
                     break;
 
-                case BULLET_BVH_TRIANGLE_MESH:
+                case bulletColliderType::BULLET_BVH_TRIANGLE_MESH:
                     // todo
                     logger::log(ERR, "BulletColliderResource", fmt::format(TR("error.bullet_collider_resource.unimplemented"), properties["properties"]["colliderType"]));
                     break;
 
-                case BULLET_CAPSULE:
+                case bulletColliderType::BULLET_CAPSULE:
                     switch (getAxisFromString(properties["properties"]["axis"])) {
                         case X:
                             this->collider = std::make_unique<btCapsuleShapeX>(
@@ -85,12 +85,12 @@ namespace chira {
                     }
                     break;
 
-                case BULLET_COMPOUND:
+                case bulletColliderType::BULLET_COMPOUND:
                     // todo
                     logger::log(ERR, "BulletColliderResource", fmt::format(TR("error.bullet_collider_resource.unimplemented"), properties["properties"]["colliderType"]));
                     break;
 
-                case BULLET_CONE:
+                case bulletColliderType::BULLET_CONE:
                     switch (getAxisFromString(properties["properties"]["axis"])) {
                         case X:
                             this->collider = std::make_unique<btConeShapeX>(
@@ -113,27 +113,27 @@ namespace chira {
                     }
                     break;
 
-                case BULLET_CONVEX_HULL:
+                case bulletColliderType::BULLET_CONVEX_HULL:
                     // todo
                     logger::log(ERR, "BulletColliderResource", fmt::format(TR("error.bullet_collider_resource.unimplemented"), properties["properties"]["colliderType"]));
                     break;
 
-                case BULLET_CONVEX_POINT_CLOUD:
+                case bulletColliderType::BULLET_CONVEX_POINT_CLOUD:
                     // todo
                     logger::log(ERR, "BulletColliderResource", fmt::format(TR("error.bullet_collider_resource.unimplemented"), properties["properties"]["colliderType"]));
                     break;
 
-                case BULLET_CONVEX_POLYHEDRON:
+                case bulletColliderType::BULLET_CONVEX_POLYHEDRON:
                     // todo
                     logger::log(ERR, "BulletColliderResource", fmt::format(TR("error.bullet_collider_resource.unimplemented"), properties["properties"]["colliderType"]));
                     break;
 
-                case BULLET_CONVEX_TRIANGLE_MESH:
+                case bulletColliderType::BULLET_CONVEX_TRIANGLE_MESH:
                     // todo
                     logger::log(ERR, "BulletColliderResource", fmt::format(TR("error.bullet_collider_resource.unimplemented"), properties["properties"]["colliderType"]));
                     break;
 
-                case BULLET_CYLINDER:
+                case bulletColliderType::BULLET_CYLINDER:
                     switch (getAxisFromString(properties["properties"]["axis"])) {
                         case X:
                             this->collider = std::make_unique<btCylinderShapeX>(btVector3(
@@ -159,31 +159,31 @@ namespace chira {
                     }
                     break;
 
-                case BULLET_HEIGHTFIELD_TERRAIN:
+                case bulletColliderType::BULLET_HEIGHTFIELD_TERRAIN:
                     // todo
                     logger::log(ERR, "BulletColliderResource", fmt::format(TR("error.bullet_collider_resource.unimplemented"), properties["properties"]["colliderType"]));
                     break;
 
-                case BULLET_MULTIMATERIAL_TRIANGLE_MESH:
+                case bulletColliderType::BULLET_MULTIMATERIAL_TRIANGLE_MESH:
                     // todo
                     logger::log(ERR, "BulletColliderResource", fmt::format(TR("error.bullet_collider_resource.unimplemented"), properties["properties"]["colliderType"]));
                     break;
 
-                case BULLET_MULTISPHERE:
+                case bulletColliderType::BULLET_MULTISPHERE:
                     // todo
                     logger::log(ERR, "BulletColliderResource", fmt::format(TR("error.bullet_collider_resource.unimplemented"), properties["properties"]["colliderType"]));
                     break;
 
-                case BULLET_SDF_COLLISION:
+                case bulletColliderType::BULLET_SDF_COLLISION:
                     // todo
                     logger::log(ERR, "BulletColliderResource", fmt::format(TR("error.bullet_collider_resource.unimplemented"), properties["properties"]["colliderType"]));
                     break;
 
-                case BULLET_SPHERE:
+                case bulletColliderType::BULLET_SPHERE:
                     this->collider = std::make_unique<btSphereShape>(properties["properties"]["radius"]);
                     break;
 
-                case BULLET_STATIC_PLANE:
+                case bulletColliderType::BULLET_STATIC_PLANE:
                     this->collider = std::make_unique<btStaticPlaneShape>(btVector3(
                             properties["properties"]["normalX"],
                             properties["properties"]["normalY"],
@@ -195,16 +195,12 @@ namespace chira {
             this->transform.setIdentity();
             this->transform.setOrigin(btVector3(this->originX, this->originY, this->originZ));
 
-            if (this->colliderType == BULLET_STATIC_PLANE) {
+            if (this->colliderType == bulletColliderType::BULLET_STATIC_PLANE) {
                 this->mass = 0.0f;
             }
             if (this->mass != 0.0f) {
                 this->collider->calculateLocalInertia(this->mass, this->localInertia);
             }
-        }
-        bulletColliderResource* copy() override {
-            this->incrementRefCount();
-            return this;
         }
         btRigidBody* getNewRigidBody() {
             btRigidBody::btRigidBodyConstructionInfo info(
@@ -216,44 +212,44 @@ namespace chira {
         }
         static bulletColliderType getBulletColliderTypeFromString(const std::string& colliderTypeStr) {
             if (colliderTypeStr == "BULLET_BOX") {
-                return BULLET_BOX;
+                return bulletColliderType::BULLET_BOX;
             } else if (colliderTypeStr == "BULLET_BVH_TRIANGLE_MESH") {
-                return BULLET_BVH_TRIANGLE_MESH;
+                return bulletColliderType::BULLET_BVH_TRIANGLE_MESH;
             } else if (colliderTypeStr == "BULLET_CAPSULE_X") {
-                return BULLET_CAPSULE;
+                return bulletColliderType::BULLET_CAPSULE;
             } else if (colliderTypeStr == "BULLET_COMPOUND") {
-                return BULLET_COMPOUND;
+                return bulletColliderType::BULLET_COMPOUND;
             } else if (colliderTypeStr == "BULLET_CONE_X") {
-                return BULLET_CONE;
+                return bulletColliderType::BULLET_CONE;
             } else if (colliderTypeStr == "BULLET_CONVEX_HULL") {
-                return BULLET_CONVEX_HULL;
+                return bulletColliderType::BULLET_CONVEX_HULL;
             } else if (colliderTypeStr == "BULLET_CONVEX_POINT_CLOUD") {
-                return BULLET_CONVEX_POINT_CLOUD;
+                return bulletColliderType::BULLET_CONVEX_POINT_CLOUD;
             } else if (colliderTypeStr == "BULLET_CONVEX_POLYHEDRON") {
-                return BULLET_CONVEX_POLYHEDRON;
+                return bulletColliderType::BULLET_CONVEX_POLYHEDRON;
             } else if (colliderTypeStr == "BULLET_CONVEX_TRIANGLE_MESH") {
-                return BULLET_CONVEX_TRIANGLE_MESH;
+                return bulletColliderType::BULLET_CONVEX_TRIANGLE_MESH;
             } else if (colliderTypeStr == "BULLET_CYLINDER_X") {
-                return BULLET_CYLINDER;
+                return bulletColliderType::BULLET_CYLINDER;
             } else if (colliderTypeStr == "BULLET_HEIGHTFIELD_TERRAIN") {
-                return BULLET_HEIGHTFIELD_TERRAIN;
+                return bulletColliderType::BULLET_HEIGHTFIELD_TERRAIN;
             } else if (colliderTypeStr == "BULLET_MULTIMATERIAL_TRIANGLE_MESH") {
-                return BULLET_MULTIMATERIAL_TRIANGLE_MESH;
+                return bulletColliderType::BULLET_MULTIMATERIAL_TRIANGLE_MESH;
             } else if (colliderTypeStr == "BULLET_MULTISPHERE") {
-                return BULLET_MULTISPHERE;
+                return bulletColliderType::BULLET_MULTISPHERE;
             } else if (colliderTypeStr == "BULLET_SDF_COLLISION") {
-                return BULLET_SDF_COLLISION;
+                return bulletColliderType::BULLET_SDF_COLLISION;
             } else if (colliderTypeStr == "BULLET_SPHERE") {
-                return BULLET_SPHERE;
+                return bulletColliderType::BULLET_SPHERE;
             } else if (colliderTypeStr == "BULLET_STATIC_PLANE") {
-                return BULLET_STATIC_PLANE;
+                return bulletColliderType::BULLET_STATIC_PLANE;
             }
             logger::log(WARN, "BulletColliderResource", fmt::format(TR("warn.bullet_collider_resource.invalid_collider_type"), colliderTypeStr));
-            return BULLET_INVALID;
+            return bulletColliderType::BULLET_INVALID;
         }
     private:
         std::unique_ptr<btCollisionShape> collider;
-        bulletColliderType colliderType = BULLET_INVALID;
+        bulletColliderType colliderType = bulletColliderType::BULLET_INVALID;
         btScalar mass = 0.0;
         btTransform transform;
         btVector3 localInertia;

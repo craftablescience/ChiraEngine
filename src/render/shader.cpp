@@ -21,11 +21,6 @@ void shader::compile(const nlohmann::json& properties) {
 #endif
 }
 
-shader* shader::copy() {
-    this->incrementRefCount();
-    return this;
-}
-
 shader::~shader() {
     if (this->handle != -1) glDeleteProgram(this->handle);
 }

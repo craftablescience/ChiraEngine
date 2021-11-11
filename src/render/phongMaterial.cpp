@@ -15,21 +15,15 @@ void phongMaterial::compile(const nlohmann::json& properties) {
     this->shaderPtr->setUniform("material.specular", 1);
 }
 
-phongMaterial* phongMaterial::copy() {
-    this->incrementRefCount();
-    return this;
-}
-
 void phongMaterial::use() {
     this->diffuse->use();
     this->specular->use();
     material::use();
 }
 
-void phongMaterial::release() const {
-    this->diffuse->release();
-    this->specular->release();
-    material::release();
+phongMaterial::~phongMaterial() {
+    resourceManager::removeResource(this->diffuse->getIdentifier());
+    resourceManager::removeResource(this->specular->getIdentifier());
 }
 
 void phongMaterial::setShininess(float shininess) {

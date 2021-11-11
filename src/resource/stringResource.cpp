@@ -9,11 +9,6 @@ void stringResource::compile(const unsigned char buffer[], std::size_t bufferLen
     this->data = std::regex_replace(this->data.data(), std::regex{"\r\n"}, "\n");
 }
 
-stringResource* stringResource::copy() {
-    this->incrementRefCount();
-    return this;
-}
-
-const std::string& stringResource::getString() const {
+const std::string& stringResource::getString() const noexcept {
     return this->data;
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utility>
 #include <vector>
 #include <string>
 #include <functional>
@@ -10,20 +11,15 @@
 namespace chira {
     class meshResource : public propertiesResource {
     public:
-        meshResource(const std::string& identifier_, material* material_);
+        meshResource(const std::string& identifier_, std::shared_ptr<material> material_);
         ~meshResource() override;
         void compile(const nlohmann::json& properties) override;
-        meshResource* copy() override;
         void render(const glm::mat4& model);
-        void release() const override;
-        material* getMaterial() {
+        std::shared_ptr<material> getMaterial() {
             return this->materialPtr;
         }
-        void setMaterial(material* newMaterial) {
-            if (this->materialPtr) {
-                this->materialPtr->release();
-            }
-            this->materialPtr = newMaterial;
+        void setMaterial(std::shared_ptr<material> newMaterial) {
+            this->materialPtr = std::move(newMaterial);
         }
         static void addMeshLoader(const std::string& name, abstractMeshLoader* meshLoader);
         static abstractMeshLoader* getMeshLoader(const std::string& name);
@@ -31,7 +27,7 @@ namespace chira {
         int depthFunction = GL_LEQUAL;
         bool backfaceCulling = true;
         int cullType = GL_BACK;
-        material* materialPtr;
+        std::shared_ptr<material> materialPtr;
         unsigned int vboHandle = -1, vaoHandle = -1, eboHandle = -1;
         std::vector<vertex> vertices{};
         std::vector<unsigned int> indices{};

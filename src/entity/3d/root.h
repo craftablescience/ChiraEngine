@@ -16,7 +16,7 @@ namespace chira {
         void setMainCamera(camera3d* camera);
         camera3d* getMainCamera();
         void setSkybox(const std::string& cubemapId);
-        cubemapMaterial* getSkybox();
+        std::shared_ptr<cubemapMaterial> getSkybox();
         glm::vec3 getAudioListeningPosition() {
             return this->mainCamera->getPosition();
         }
@@ -31,7 +31,7 @@ namespace chira {
         using world3d::getChild;
         using world3d::removeChild;
     private:
-        meshResource* skybox;
+        std::shared_ptr<meshResource> skybox;
         camera3d* mainCamera = nullptr;
         using world3d::render;
         void clearTree();

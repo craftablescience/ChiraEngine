@@ -12,17 +12,7 @@ void texturedMaterial::compile(const nlohmann::json& properties) {
     this->shaderPtr->setUniform("tex", 0);
 }
 
-texturedMaterial* texturedMaterial::copy() {
-    this->incrementRefCount();
-    return this;
-}
-
 void texturedMaterial::use() {
     this->tex->use();
     material::use();
-}
-
-void texturedMaterial::release() const {
-    this->tex->release();
-    material::release();
 }

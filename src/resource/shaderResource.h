@@ -7,17 +7,16 @@
 #include <fstream>
 #include <regex>
 #include "../utility/handleObject.h"
-#include "../resource/abstractResource.h"
+#include "../resource/resource.h"
 
 namespace chira {
     constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_PREFIX = "#";
     constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_SUFFIX = "#";
 
-    class shaderResource : public abstractResource, public handleObject {
+    class shaderResource : public resource, public handleObject {
     public:
         shaderResource(const std::string& identifier_, int type_);
         void compile(const unsigned char buffer[], std::size_t bufferLength) override;
-        shaderResource* copy() override;
         ~shaderResource() override;
         [[nodiscard]] unsigned int getType() const;
         static void addPreprocessorSymbol(const std::string& name, const std::string& value);
@@ -25,7 +24,7 @@ namespace chira {
         static void setPreprocessorSuffix(const std::string& suffix);
     private:
         unsigned int type;
-        std::string data{};
+        std::string data;
         static inline std::string preprocessorPrefix = std::string{SHADER_PREPROCESSOR_DEFAULT_PREFIX}; // NOLINT(cert-err58-cpp)
         static inline std::string preprocessorSuffix = std::string{SHADER_PREPROCESSOR_DEFAULT_SUFFIX}; // NOLINT(cert-err58-cpp)
         static inline std::unordered_map<std::string, std::string> preprocessorSymbols{};

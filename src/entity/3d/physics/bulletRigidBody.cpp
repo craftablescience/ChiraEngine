@@ -41,7 +41,7 @@ bulletRigidBody::bulletRigidBody(const std::string& name_, const std::string& co
 
 bulletRigidBody::~bulletRigidBody() {
     dynamic_cast<bulletPhysicsProvider*>(engine::getPhysicsProvider())->removeRigidBody(this->rigidBody);
-    this->collider->release();
+    resourceManager::removeResource(this->collider->getIdentifier());
 }
 
 void bulletRigidBody::render(const glm::mat4& parentTransform) {

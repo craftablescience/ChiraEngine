@@ -14,7 +14,7 @@ void objMeshLoader::loadMesh(const std::string& identifier, std::vector<vertex>*
     std::vector<uv> uvBuffer;
     std::vector<normal> normalBuffer;
 
-    auto* meshData = resourceManager::getResource<stringResource>(identifier);
+    auto meshData = resourceManager::getResource<stringResource>(identifier);
     std::istringstream meshDataStream = std::istringstream{meshData->getString()};
 
     std::string line;

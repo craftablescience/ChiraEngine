@@ -16,7 +16,7 @@ namespace chira {
         bool hasResource(const std::string& name) override {
             return true;
         }
-        void compileResource(const std::string& name, abstractResource* resource) override;
+        void compileResource(const std::string& name, resource* resource) override;
         [[nodiscard]] const std::string& getProtocol() const {
             return this->providerName;
         }

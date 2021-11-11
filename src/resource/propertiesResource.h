@@ -1,6 +1,6 @@
 #pragma once
 
-#include "abstractResource.h"
+#include "resource.h"
 #include <string>
 #include <nlohmann/json.hpp>
 
@@ -23,17 +23,13 @@ namespace chira {
      * classes, this is only the recommendation on how to
      * store meta-resource files.
      */
-    class propertiesResource : public abstractResource {
+    class propertiesResource : public resource {
     public:
-        explicit propertiesResource(const std::string& identifier_) : abstractResource(identifier_) {}
+        explicit propertiesResource(const std::string& identifier_) : resource(identifier_) {}
         void compile(const unsigned char buffer[], std::size_t bufferLength) final {
             this->compile(nlohmann::json::parse(std::string{reinterpret_cast<const char*>(buffer), bufferLength}));
         }
         virtual void compile(const nlohmann::json& properties) = 0;
-        propertiesResource* copy() override {
-            this->incrementRefCount();
-            return this;
-        }
 
         template<typename T>
         T getPropertyOrDefault(const nlohmann::json& dictionary, const std::string& key, T defaultValue) {

@@ -12,11 +12,9 @@ namespace chira {
     public:
         explicit material(const std::string& identifier_);
         void compile(const nlohmann::json& properties) override;
-        material* copy() override;
         virtual void use();
-        void release() const override;
-        shader* getShader();
+        std::shared_ptr<shader> getShader();
     protected:
-        shader* shaderPtr = nullptr;
+        std::shared_ptr<shader> shaderPtr = nullptr;
     };
 }

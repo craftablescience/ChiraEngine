@@ -2,21 +2,15 @@
 
 #include "../utility/math/matrix.h"
 #include <fmt/core.h>
+
+#include <utility>
 #include "../i18n/translationManager.h"
 #include "../resource/resourceManager.h"
 
 using namespace chira;
 
-meshResource::meshResource(const std::string& identifier_, material* material_) : propertiesResource(identifier_) {
-    this->materialPtr = material_;
-}
-
-meshResource::~meshResource() {
-    glDeleteVertexArrays(1, &(this->vaoHandle));
-    glDeleteBuffers(1, &(this->vboHandle));
-    glDeleteBuffers(1, &(this->eboHandle));
-    this->vboHandle = this->eboHandle = this->vaoHandle = 0;
-}
+meshResource::meshResource(const std::string& identifier_, std::shared_ptr<material> material_) :
+    propertiesResource(identifier_), materialPtr(std::move(material_)) {}
 
 void meshResource::compile(const nlohmann::json& properties) {
     if (properties["properties"].contains("depthFunction")) {
@@ -28,7 +22,6 @@ void meshResource::compile(const nlohmann::json& properties) {
     if (properties["properties"].contains("cullType")) {
         this->cullType = meshResource::getCullTypeFromString(properties["properties"]["cullType"]);
     }
-
     meshResource::getMeshLoader(properties["properties"]["loader"])->loadMesh(properties["dependencies"]["model"], &this->vertices, &this->indices);
 
     glGenVertexArrays(1, &(this->vaoHandle));
@@ -59,18 +52,6 @@ void meshResource::compile(const nlohmann::json& properties) {
     glBindVertexArray(0);
 }
 
-meshResource* meshResource::copy() {
-    this->incrementRefCount();
-    return this;
-}
-
-void meshResource::release() const {
-    if (this->materialPtr) {
-        this->materialPtr->release();
-    }
-    abstractResource::release();
-}
-
 void meshResource::render(const glm::mat4& model) {
     if (this->materialPtr) {
         this->materialPtr->use();
@@ -87,6 +68,14 @@ void meshResource::render(const glm::mat4& model) {
     }
     glBindVertexArray(this->vaoHandle);
     glDrawElements(GL_TRIANGLES, (GLint) this->indices.size(), GL_UNSIGNED_INT, nullptr);
+}
+
+meshResource::~meshResource() {
+    glDeleteVertexArrays(1, &(this->vaoHandle));
+    glDeleteBuffers(1, &(this->vboHandle));
+    glDeleteBuffers(1, &(this->eboHandle));
+    this->vboHandle = this->eboHandle = this->vaoHandle = 0;
+    resourceManager::removeResource(this->materialPtr->getIdentifier());
 }
 
 void meshResource::addMeshLoader(const std::string& name, abstractMeshLoader* meshLoader) {

@@ -40,7 +40,7 @@ void textureCubemap::compile(const nlohmann::json& properties) {
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, this->filterMode);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, this->filterMode);
 
-    std::vector<textureResource*> files{this->file_rt, this->file_lt, this->file_up, this->file_dn, this->file, this->file_bk};
+    std::vector<textureResource*> files{this->file_rt.get(), this->file_lt.get(), this->file_up.get(), this->file_dn.get(), this->file.get(), this->file_bk.get()};
     std::vector<int> formats{this->format_rt, this->format_lt, this->format_up, this->format_dn, this->format, this->format_bk};
     for (int i = 0; i < 6; i++) {
         if (files[i]->getFile() && files[i]->getFile()->getData()) {
@@ -54,11 +54,6 @@ void textureCubemap::compile(const nlohmann::json& properties) {
     }
 }
 
-textureCubemap* textureCubemap::copy() {
-    this->incrementRefCount();
-    return this;
-}
-
 void textureCubemap::use() const {
     if (this->handle == 0) return;
     if (this->activeTextureUnit == -1) {
@@ -69,31 +64,34 @@ void textureCubemap::use() const {
     glBindTexture(GL_TEXTURE_CUBE_MAP, this->handle);
 }
 
-/// There's a VERY CURSED BUG where the heap gets corrupted if you try to release any of the cached assets.
-/// Maybe use cubemaps sparingly for now?
-/// FIXME: find out why release()ing the textures and self crashes on exit
-textureCubemap::~textureCubemap() = default;
+textureCubemap::~textureCubemap() {
+    resourceManager::removeResource(this->file_bk->getIdentifier());
+    resourceManager::removeResource(this->file_dn->getIdentifier());
+    resourceManager::removeResource(this->file_lt->getIdentifier());
+    resourceManager::removeResource(this->file_rt->getIdentifier());
+    resourceManager::removeResource(this->file_up->getIdentifier());
+}
 
-textureResource* textureCubemap::getTextureForward() const {
+std::shared_ptr<textureResource> textureCubemap::getTextureForward() const {
     return this->file;
 }
 
-textureResource* textureCubemap::getTextureBackward() const {
+std::shared_ptr<textureResource> textureCubemap::getTextureBackward() const {
     return this->file_bk;
 }
 
-textureResource* textureCubemap::getTextureUp() const {
+std::shared_ptr<textureResource> textureCubemap::getTextureUp() const {
     return this->file_up;
 }
 
-textureResource* textureCubemap::getTextureDown() const {
+std::shared_ptr<textureResource> textureCubemap::getTextureDown() const {
     return this->file_dn;
 }
 
-textureResource* textureCubemap::getTextureLeft() const {
+std::shared_ptr<textureResource> textureCubemap::getTextureLeft() const {
     return this->file_lt;
 }
 
-textureResource* textureCubemap::getTextureRight() const {
+std::shared_ptr<textureResource> textureCubemap::getTextureRight() const {
     return this->file_rt;
 }

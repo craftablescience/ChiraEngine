@@ -2,7 +2,7 @@
 
 #include <string>
 #include <memory>
-#include "../abstractResource.h"
+#include "../resource.h"
 
 namespace chira {
     class abstractResourceProvider {
@@ -12,7 +12,7 @@ namespace chira {
             return this->providerName;
         }
         virtual bool hasResource(const std::string& name) = 0;
-        virtual void compileResource(const std::string& name, abstractResource* resource) = 0;
+        virtual void compileResource(const std::string& name, resource* resource) = 0;
     protected:
         std::string providerName;
     };

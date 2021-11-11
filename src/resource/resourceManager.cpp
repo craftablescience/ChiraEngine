@@ -40,19 +40,19 @@ std::pair<std::string,std::string> resourceManager::splitResourceIdentifier(cons
 void resourceManager::removeResource(const std::string& identifier) {
     auto id = resourceManager::splitResourceIdentifier(identifier);
     const std::string& provider = id.first, name = id.second;
-    if (resourceManager::resources[provider][name]->getRefCount() <= 1) {
-        delete resourceManager::resources[provider][name];
+    // If the count is <= 2, then it's being held by the resource manager and the object requesting its removal.
+    if (resourceManager::resources[provider][name].use_count() <= 2) {
         resourceManager::resources[provider].erase(name);
-    } else {
-        resourceManager::resources[provider][name]->decrementRefCount();
     }
 }
 
 void resourceManager::discardAll() {
+    // Make sure all resources are deleted, just in case
     for (const auto& [providerName, resourceMap] : resources) {
         for (const auto& [name, resource] : resourceMap) {
-            delete resource;
+            delete resource.get();
         }
     }
+    resourceManager::resources.clear();
     resourceManager::providers.clear();
 }

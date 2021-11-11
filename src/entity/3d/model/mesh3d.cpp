@@ -1,6 +1,7 @@
 #include "mesh3d.h"
 
 #include "../../../utility/math/matrix.h"
+#include "../../../resource/resourceManager.h"
 
 using namespace chira;
 
@@ -10,5 +11,5 @@ void mesh3d::render(const glm::mat4& parentTransform) {
 }
 
 mesh3d::~mesh3d() {
-    this->mesh->release();
+    resourceManager::removeResource(this->mesh->getIdentifier());
 }

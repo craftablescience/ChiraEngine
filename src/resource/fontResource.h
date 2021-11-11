@@ -12,7 +12,6 @@ namespace chira {
     public:
         explicit fontResource(const std::string& identifier_) : propertiesResource(identifier_) {}
         void compile(const nlohmann::json& properties) override;
-        fontResource* copy() override;
         [[nodiscard]] ImFont* getFont() const;
         [[nodiscard]] const std::string& getName() const;
         [[nodiscard]] float getSize() const;

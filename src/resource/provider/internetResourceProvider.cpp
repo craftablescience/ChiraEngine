@@ -11,7 +11,7 @@
 
 using namespace chira;
 
-void internetResourceProvider::compileResource(const std::string& name, abstractResource* resource) {
+void internetResourceProvider::compileResource(const std::string& name, resource* resource) {
     curlpp::Easy request;
     curlMemoryWriter mWriterChunk;
     try {

@@ -12,17 +12,16 @@ namespace chira {
     public:
         explicit texture(const std::string& identifier_);
         void compile(const nlohmann::json& properties) override;
-        texture* copy() override;
         virtual void use() const;
         ~texture() override;
-        [[nodiscard]] textureResource* getTexture() const;
+        [[nodiscard]] std::shared_ptr<textureResource> getTexture() const;
         void setTextureUnit(int textureUnit);
         [[nodiscard]] int getTextureUnit() const;
         [[nodiscard]] unsigned int getHandle() const;
     protected:
         unsigned int handle = 0;
         int activeTextureUnit = -1;
-        textureResource* file = nullptr;
+        std::shared_ptr<textureResource> file = nullptr;
         int format = GL_RGBA;
         int wrapModeS = GL_REPEAT;
         int wrapModeT = GL_REPEAT;

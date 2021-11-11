@@ -9,7 +9,7 @@
 using namespace chira;
 
 // todo: add #include preprocessing
-shaderResource::shaderResource(const std::string& identifier_, int type_) : abstractResource(identifier_), handleObject(), type(type_) {}
+shaderResource::shaderResource(const std::string& identifier_, int type_) : resource(identifier_), handleObject(), type(type_) {}
 
 void shaderResource::compile(const unsigned char buffer[], std::size_t bufferLength) {
     if (this->handle != -1) return;
@@ -29,11 +29,6 @@ void shaderResource::compile(const unsigned char buffer[], std::size_t bufferLen
 #if DEBUG
     this->checkForCompilationErrors();
 #endif
-}
-
-shaderResource* shaderResource::copy() {
-    this->incrementRefCount();
-    return this;
 }
 
 shaderResource::~shaderResource() {

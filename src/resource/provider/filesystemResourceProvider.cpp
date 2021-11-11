@@ -7,7 +7,7 @@ bool filesystemResourceProvider::hasResource(const std::string& name) {
     return std::filesystem::exists(std::filesystem::current_path().append(this->path).append(name));
 }
 
-void filesystemResourceProvider::compileResource(const std::string& name, abstractResource* resource) {
+void filesystemResourceProvider::compileResource(const std::string& name, resource* resource) {
     std::ifstream ifs((std::filesystem::current_path().append(this->path).append(name).string()).c_str(), std::ios::in | std::ios::binary | std::ios::ate);
     std::ifstream::pos_type fileSize = ifs.tellg();
     ifs.seekg(0, std::ios::beg);

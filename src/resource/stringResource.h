@@ -1,14 +1,13 @@
 #pragma once
 
-#include "abstractResource.h"
+#include "resource.h"
 
 namespace chira {
-    class stringResource : public abstractResource {
+    class stringResource : public resource {
     public:
-        explicit stringResource(const std::string& identifier_) : abstractResource(identifier_) {}
+        explicit stringResource(const std::string& identifier_) : resource(identifier_) {}
         void compile(const unsigned char buffer[], std::size_t bufferLength) override;
-        stringResource* copy() override;
-        [[nodiscard]] const std::string& getString() const;
+        [[nodiscard]] const std::string& getString() const noexcept;
     private:
         std::string data;
     };

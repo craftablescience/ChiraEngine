@@ -57,7 +57,7 @@ int main() {
         }
     }));
 
-    meshResource* cubeMesh;
+    std::shared_ptr<meshResource> cubeMesh;
     camera3d* camera;
 
     engine::addInitFunction([&cubeMesh, &camera, &discordEnabled]() {
@@ -71,20 +71,20 @@ int main() {
 
         //region Set the default font
         // Don't release the fontResource when done to keep it cached
-        auto* noto = resourceManager::getResource<fontResource>("file://fonts/default.json");
+        auto noto = resourceManager::getResource<fontResource>("file://fonts/default.json");
         ImGui::GetIO().FontDefault = noto->getFont();
         //endregion
 
         //region Add a teapot with a static rigidbody
         auto staticTeapot = new bulletRigidBody{"file://physics/ground_static.json"};
         staticTeapot->translate(glm::vec3{3,5,-13});
-        auto* cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
+        auto cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
         cubeMesh = resourceManager::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial);
         staticTeapot->addChild(new mesh3d{cubeMesh});
 
         auto fallingTeapot = new bulletRigidBody{"file://physics/cube_dynamic.json"};
         fallingTeapot->translate(glm::vec3{0,5,-10});
-        fallingTeapot->addChild(new mesh3d{cubeMesh->copy()});
+        fallingTeapot->addChild(new mesh3d{cubeMesh});
 
         engine::getRoot()->addChild(staticTeapot);
         engine::getRoot()->addChild(fallingTeapot);
@@ -123,7 +123,7 @@ int main() {
         //region Apply some lighting properties to the mesh
         cubeMaterial->setShininess();
         cubeMaterial->setLambertFactor();
-        shader* cubeShader = cubeMaterial->getShader();
+        auto cubeShader = cubeMaterial->getShader();
         cubeShader->use();
         cubeShader->setUniform("light.ambient", 0.1f, 0.1f, 0.1f);
         cubeShader->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);
