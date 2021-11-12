@@ -174,7 +174,8 @@ void engine::preInit(const std::string& configPath) {
 void engine::init() {
     engine::started = true;
 
-    auto consoleUI = new console{};
+    //todo(asan)
+    auto* consoleUI = new console{};
 
     if (!glfwInit()) {
         logger::log(ERR, "GLFW", TR("error.glfw.undefined"));

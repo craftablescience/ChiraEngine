@@ -2,9 +2,11 @@ cmake_minimum_required(VERSION 3.15)
 project(AngelScript)
 set(CMAKE_CXX_STANDARD 17)
 
-list(APPEND AS_SOURCES
+add_library(${PROJECT_NAME}
+        # Most important header
         ${CMAKE_CURRENT_LIST_DIR}/include/angelscript.h
 
+        # Core headers
         ${CMAKE_CURRENT_LIST_DIR}/source/as_array.h
         ${CMAKE_CURRENT_LIST_DIR}/source/as_builder.h
         ${CMAKE_CURRENT_LIST_DIR}/source/as_bytecode.h
@@ -38,7 +40,6 @@ list(APPEND AS_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/source/as_tokenizer.h
         ${CMAKE_CURRENT_LIST_DIR}/source/as_typeinfo.h
         ${CMAKE_CURRENT_LIST_DIR}/source/as_variablescope.h
-
         ${CMAKE_CURRENT_LIST_DIR}/source/as_atomic.cpp
         ${CMAKE_CURRENT_LIST_DIR}/source/as_builder.cpp
         ${CMAKE_CURRENT_LIST_DIR}/source/as_bytecode.cpp
@@ -47,6 +48,7 @@ list(APPEND AS_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/source/as_callfunc_x86.cpp
         ${CMAKE_CURRENT_LIST_DIR}/source/as_callfunc_x64_gcc.cpp
         ${CMAKE_CURRENT_LIST_DIR}/source/as_callfunc_x64_msvc.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/source/as_callfunc_x64_msvc_asm.asm
         ${CMAKE_CURRENT_LIST_DIR}/source/as_callfunc_x64_mingw.cpp
         ${CMAKE_CURRENT_LIST_DIR}/source/as_compiler.cpp
         ${CMAKE_CURRENT_LIST_DIR}/source/as_configgroup.cpp
@@ -76,35 +78,29 @@ list(APPEND AS_SOURCES
         # Addons
         ${CMAKE_CURRENT_LIST_DIR}/addons/datetime/datetime.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/datetime/datetime.cpp
-
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptany/scriptany.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptany/scriptany.cpp
-
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptarray/scriptarray.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptarray/scriptarray.cpp
-
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptbuilder/scriptbuilder.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptbuilder/scriptbuilder.cpp
-
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptdictionary/scriptdictionary.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptdictionary/scriptdictionary.cpp
-
         ${CMAKE_CURRENT_LIST_DIR}/addons/scripthandle/scripthandle.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scripthandle/scripthandle.cpp
-
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptmath/scriptmath.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptmath/scriptmath.cpp
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptmath/scriptmathcomplex.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptmath/scriptmathcomplex.cpp
-
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptstdstring/scriptstdstring.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptstdstring/scriptstdstring.cpp
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptstdstring/scriptstdstring_utils.cpp
-
         ${CMAKE_CURRENT_LIST_DIR}/addons/weakref/weakref.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/weakref/weakref.cpp)
 
-add_library(${PROJECT_NAME} ${AS_SOURCES})
+#if(MSVC)
+#    set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/source/as_callfunc_x64_msvc_asm.asm PROPERTIES COMPILE_FLAGS /c /nologo /Fo$(OutDir)\\as_callfunc_x64_msvc_asm.obj /W3 /Zi /Ta $(InputDir)\$(InputFileName))
+#endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/addons)
