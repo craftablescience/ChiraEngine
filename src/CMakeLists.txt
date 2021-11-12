@@ -7,7 +7,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 
 # ANGELSCRIPT
-include(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/CMakeLists.txt)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript)
+list(APPEND ENGINE_LINK_LIBRARIES AngelScript)
 
 # CURLPP
 option(CHIRA_BUILD_WITH_CURLPP "Build with the CurlPP library and related features" ON)
@@ -45,9 +46,6 @@ list(APPEND ENGINE_LINK_LIBRARIES glm::glm)
 
 # BULLET
 set(PKGCONFIG_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
-if(MSVC)
-    set(USE_MSVC_RUNTIME_LIBRARY_DLL ON CACHE BOOL "" FORCE)
-endif()
 set(USE_GRAPHICAL_BENCHMARK OFF CACHE BOOL "" FORCE)
 set(BUILD_CPU_DEMOS         OFF CACHE BOOL "" FORCE)
 set(USE_GLUT                OFF CACHE BOOL "" FORCE)
@@ -59,7 +57,7 @@ set(BUILD_UNIT_TESTS        OFF CACHE BOOL "" FORCE)
 set(BUILD_ENET              OFF CACHE BOOL "" FORCE)
 set(BUILD_CLSOCKET          OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/bullet)
-list(APPEND ENGINE_LINK_LIBRARIES Bullet3Common BulletDynamics BulletCollision LinearMath)
+list(APPEND ENGINE_LINK_LIBRARIES BulletDynamics BulletCollision LinearMath)
 
 # OPENAL
 set(ALSOFT_EXAMPLES         OFF CACHE BOOL "" FORCE)
@@ -173,7 +171,10 @@ target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_
 target_link_libraries(ChiraEngine PUBLIC ${OPENGL_LIBRARIES} ${ENGINE_LINK_LIBRARIES})
 
 # Copy engine resources
-add_custom_command(TARGET ChiraEngine PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/../resources/engine/
-        ${CMAKE_BINARY_DIR}/resources/engine/)
+if(MSVC)
+    add_custom_command(TARGET ChiraEngine PRE_BUILD
+            COMMAND "${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../resources/engine/ ${CMAKE_BINARY_DIR}/resources/engine/")
+else()
+    add_custom_command(TARGET ChiraEngine PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../resources/engine/ ${CMAKE_BINARY_DIR}/resources/engine/)
+endif()

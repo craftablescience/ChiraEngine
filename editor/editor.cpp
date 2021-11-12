@@ -1,10 +1,10 @@
+#include <tinyfiledialogs.h>
 #include "../src/core/engine.h"
 #include "../src/sound/oggFileSound.h"
 #include "../src/render/phongMaterial.h"
 #include "../src/hook/discordRichPresence.h"
 #include "../src/resource/provider/filesystemResourceProvider.h"
 #include "../src/resource/resourceManager.h"
-#include <tinyfiledialogs.h>
 #include "../src/utility/markdown.h"
 #include "../src/entity/3d/model/mesh3d.h"
 #include "../src/entity/3d/physics/bulletRigidBody.h"
@@ -105,7 +105,7 @@ int main() {
 
         //region Add the camera
         engine::captureMouse(true);
-        camera = new camera3d{"freecam", PERSPECTIVE};
+        camera = new camera3d{"freecam", cameraProjectionMode::PERSPECTIVE};
         engine::getRoot()->addChild(camera);
         engine::getRoot()->setMainCamera(camera);
         //endregion

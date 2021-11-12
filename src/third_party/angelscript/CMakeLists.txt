@@ -1,4 +1,8 @@
-list(APPEND ENGINE_SOURCES
+cmake_minimum_required(VERSION 3.15)
+project(AngelScript)
+set(CMAKE_CXX_STANDARD 17)
+
+list(APPEND AS_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/include/angelscript.h
 
         ${CMAKE_CURRENT_LIST_DIR}/source/as_array.h
@@ -99,3 +103,8 @@ list(APPEND ENGINE_SOURCES
 
         ${CMAKE_CURRENT_LIST_DIR}/addons/weakref/weakref.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/weakref/weakref.cpp)
+
+add_library(${PROJECT_NAME} ${AS_SOURCES})
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/addons)

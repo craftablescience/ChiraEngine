@@ -26,10 +26,10 @@ camera3d::camera3d(const std::string& name_, const cameraProjectionMode& mode, f
 
 void camera3d::createProjection(int windowWidth, int windowHeight) {
     switch (this->projectionMode) {
-        case PERSPECTIVE:
+        case cameraProjectionMode::PERSPECTIVE:
             this->projection = glm::perspective(glm::radians(this->fov / 2), (float) windowWidth / (float) windowHeight, 0.1f, 1024.0f);
             break;
-        case ORTHOGONAL:
+        case cameraProjectionMode::ORTHOGONAL:
             // todo
             break;
     }

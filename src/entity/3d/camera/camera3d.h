@@ -3,7 +3,7 @@
 #include "../entity3d.h"
 
 namespace chira {
-    enum cameraProjectionMode {
+    enum class cameraProjectionMode {
         PERSPECTIVE,
         ORTHOGONAL
     };
