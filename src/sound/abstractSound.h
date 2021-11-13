@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 
 namespace chira {
-    enum soundType {
+    enum class soundType {
         MUSIC,
         EFFECT,
         UI
@@ -11,6 +11,7 @@ namespace chira {
 
     class abstractSound {
     public:
+        virtual ~abstractSound() = default;
         virtual bool init(const std::string& filename, float pitch_, float gain_, const glm::vec3& position_, soundType type_, bool loop_, bool is3d_) = 0;
         virtual void play() = 0;
         virtual void update() = 0;

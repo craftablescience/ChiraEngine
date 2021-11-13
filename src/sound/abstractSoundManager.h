@@ -7,6 +7,7 @@
 namespace chira {
     class abstractSoundManager {
     public:
+        virtual ~abstractSoundManager() = default;
         virtual void init() = 0;
         virtual void update() = 0;
         virtual void stop() = 0;

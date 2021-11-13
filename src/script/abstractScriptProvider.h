@@ -7,5 +7,6 @@ namespace chira {
         virtual void initScripts() = 0;
         virtual void render(double delta) = 0;
         virtual void stop() = 0;
+        virtual ~abstractScriptProvider() = default;
     };
 }

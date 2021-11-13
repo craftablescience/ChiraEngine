@@ -8,6 +8,7 @@ namespace chira {
     class abstractResourceProvider {
     public:
         explicit abstractResourceProvider(std::string name) : providerName(std::move(name)) {}
+        virtual ~abstractResourceProvider() = default;
         const std::string& getName() {
             return this->providerName;
         }
