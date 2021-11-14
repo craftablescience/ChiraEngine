@@ -10,11 +10,17 @@ set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript)
 list(APPEND ENGINE_LINK_LIBRARIES AngelScript)
 
+# CURL
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curl)
+set(CURL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curl/include)
+set(CURL_LIBRARY libcurl)
+list(APPEND ENGINE_LINK_LIBRARIES curl)
+
 # CURLPP
 option(CHIRA_BUILD_WITH_CURLPP "Build with the CurlPP library and related features" ON)
 if((NOT MSVC) AND CHIRA_BUILD_WITH_CURLPP)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp)
-    list(APPEND ENGINE_LINK_LIBRARIES curl curlpp)
+    list(APPEND ENGINE_LINK_LIBRARIES curlpp)
 endif()
 
 # DISCORD
