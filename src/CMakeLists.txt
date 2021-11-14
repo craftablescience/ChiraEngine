@@ -125,7 +125,8 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/json)
 list(APPEND ENGINE_LINK_LIBRARIES nlohmann_json::nlohmann_json)
 
 # STB
-include(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb/CMakeLists.txt)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb)
+list(APPEND ENGINE_LINK_LIBRARIES stb)
 
 # STDUUID
 set(UUID_BUILD_TESTS OFF CACHE BOOL "" FORCE)
