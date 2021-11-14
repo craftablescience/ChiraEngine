@@ -39,7 +39,7 @@ Again, the goal of the engine is to have as much customization as possible, whil
 ## Bundled Dependencies
 - AngelScript v2.34.0
 - Bullet v3.17
-- curl v7.79.1 (Bundled for Windows only)
+- cURL v7.77.0
 - cURLpp v0.8.1
 - Discord RPC
 - {fmt} v8.0.1

@@ -71,20 +71,13 @@ endif()
 # However, I'd like to avoid making a custom target, perhaps someday the Linux method can be used for both platforms
 if(WIN32)
     # Resource files
-    if(MSVC)
-        add_custom_target(copyResources ALL
-                COMMAND "${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/editor/ ${CMAKE_BINARY_DIR}/resources/editor/")
-    else()
-        add_custom_target(copyResources ALL
-                COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/editor/ ${CMAKE_BINARY_DIR}/resources/editor/)
-    endif()
+    add_custom_target(copyResources ALL
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/editor ${CMAKE_BINARY_DIR}/resources/editor)
     add_dependencies(${PROJECT_NAME} copyResources)
-elseif(UNIX)
+else()
     # Resource files
     add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_SOURCE_DIR}/resources/editor/
-            ${CMAKE_BINARY_DIR}/resources/editor/)
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/editor ${CMAKE_BINARY_DIR}/resources/editor)
 endif()
 
 # Copy engine resources for tests (again...)

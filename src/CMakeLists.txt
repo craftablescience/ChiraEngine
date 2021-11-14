@@ -3,8 +3,13 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-# Build dependencies as external files to link to dynamically
-set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
+if(MSVC)
+    # Not recommended, but if you have to...
+    set(BUILD_SHARED_LIBS OFF)
+else()
+    # Build dependencies as external files to link to dynamically
+    set(BUILD_SHARED_LIBS ON)
+endif()
 
 # ANGELSCRIPT
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript)
@@ -14,12 +19,19 @@ list(APPEND ENGINE_LINK_LIBRARIES AngelScript)
 set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
 set(HTTP_ONLY ON CACHE BOOL "" FORCE)
 set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+if(MSVC)
+    set(CURL_STATIC_CRT ON CACHE BOOL "" FORCE)
+endif()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curl)
 set(CURL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curl/include)
 set(CURL_LIBRARY libcurl)
 list(APPEND ENGINE_LINK_LIBRARIES libcurl)
 
 # CURLPP
+
+if(MSVC)
+    set(CURLPP_STATIC_CRT ON CACHE BOOL "" FORCE)
+endif()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp)
 list(APPEND ENGINE_LINK_LIBRARIES curlpp)
 
@@ -62,8 +74,14 @@ set(BUILD_UNIT_TESTS        OFF CACHE BOOL "" FORCE)
 # No networking support... yet
 set(BUILD_ENET              OFF CACHE BOOL "" FORCE)
 set(BUILD_CLSOCKET          OFF CACHE BOOL "" FORCE)
+if(MSVC)
+    set(BUILD_SHARED_LIBS OFF)
+endif()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/bullet)
 list(APPEND ENGINE_LINK_LIBRARIES BulletDynamics BulletCollision LinearMath)
+if(MSVC)
+   set(BUILD_SHARED_LIBS ON)
+endif()
 
 # OPENAL
 set(ALSOFT_EXAMPLES         OFF CACHE BOOL "" FORCE)
@@ -174,10 +192,5 @@ target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_
 target_link_libraries(ChiraEngine PUBLIC ${OPENGL_LIBRARIES} ${ENGINE_LINK_LIBRARIES})
 
 # Copy engine resources
-if(MSVC)
-    add_custom_command(TARGET ChiraEngine PRE_BUILD
-            COMMAND "${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../resources/engine/ ${CMAKE_BINARY_DIR}/resources/engine/")
-else()
-    add_custom_command(TARGET ChiraEngine PRE_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../resources/engine/ ${CMAKE_BINARY_DIR}/resources/engine/)
-endif()
+add_custom_command(TARGET ChiraEngine PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../resources/engine ${CMAKE_BINARY_DIR}/resources/engine)
