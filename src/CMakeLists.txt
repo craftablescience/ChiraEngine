@@ -125,8 +125,12 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/json)
 list(APPEND ENGINE_LINK_LIBRARIES nlohmann_json::nlohmann_json)
 
 # STB
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb)
-list(APPEND ENGINE_LINK_LIBRARIES stb)
+if(CHIRA_BUILD_STATIC)
+    list(APPEND ENGINE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb/stb_image.h)
+else()
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb)
+    list(APPEND ENGINE_LINK_LIBRARIES stb)
+endif()
 
 # STDUUID
 set(UUID_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -134,8 +138,14 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stduuid)
 list(APPEND ENGINE_LINK_LIBRARIES stduuid)
 
 # TINYFILEDIALOGS
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
-list(APPEND ENGINE_LINK_LIBRARIES tinyfiledialogs)
+if(CHIRA_BUILD_STATIC)
+    list(APPEND ENGINE_SOURCES
+            ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs/tinyfiledialogs.c
+            ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs/tinyfiledialogs.h)
+else()
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
+    list(APPEND ENGINE_LINK_LIBRARIES tinyfiledialogs)
+endif()
 
 # IMGUI
 list(APPEND ENGINE_SOURCES
