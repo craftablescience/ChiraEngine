@@ -11,10 +11,14 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript)
 list(APPEND ENGINE_LINK_LIBRARIES AngelScript)
 
 # CURL
+set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
+set(CURL_LTO ON CACHE BOOL "" FORCE)
+set(HTTP_ONLY ON CACHE BOOL "" FORCE)
+set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curl)
 set(CURL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curl/include)
 set(CURL_LIBRARY libcurl)
-list(APPEND ENGINE_LINK_LIBRARIES curl)
+list(APPEND ENGINE_LINK_LIBRARIES libcurl)
 
 # CURLPP
 option(CHIRA_BUILD_WITH_CURLPP "Build with the CurlPP library and related features" ON)
