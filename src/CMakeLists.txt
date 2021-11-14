@@ -3,11 +3,14 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-if(MSVC)
-    # Not recommended, but if you have to...
+option(CHIRA_BUILD_STATIC "Build Chira Engine's dependencies statically" OFF)
+if(CHIRA_BUILD_STATIC OR MSVC)
+    # Note: Distributing with static libs disabled means your distribution
+    #       falls under LGPLv2.1 licensing, which you probably want to avoid.
+    #       In other words, it's not recommended, but if you have to, it works.
     set(BUILD_SHARED_LIBS OFF)
 else()
-    # Build dependencies as external files to link to dynamically
+    # Build with dynamic (shared) dependencies
     set(BUILD_SHARED_LIBS ON)
 endif()
 
