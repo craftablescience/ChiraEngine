@@ -197,6 +197,36 @@ target_compile_definitions(ChiraEngine PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD2)
 if(CHIRA_BUILD_STATIC)
     target_compile_definitions(ChiraEngine PUBLIC CHIRA_BUILD_STATIC)
 endif()
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    target_compile_definitions(ChiraEngine PUBLIC -DDEBUG)
+    if(UNIX OR MINGW)
+        # On UNIX, build with debug friendly optimizations and debug symbols
+        # On windows, just disable optimizations entirely
+        target_compile_options(ChiraEngine PUBLIC -Og -g)
+    elseif(MSVC)
+        target_compile_options(ChiraEngine PUBLIC /Od)
+    endif()
+elseif(CMAKE_BUILD_TYPE MATCHES Release)
+    target_compile_definitions(ChiraEngine PUBLIC -DRELEASE)
+    # Build with max optimizations and don't omit stack ptr for debugging reasons
+    if(UNIX OR MINGW)
+        target_compile_options(ChiraEngine PUBLIC -O3 -fno-omit-frame-pointer)
+    elseif(MSVC)
+        target_compile_options(ChiraEngine PUBLIC /O2)
+    endif()
+endif()
+
+option(CHIRA_BUILD_WITH_WARNINGS "Build Chira Engine with warnings enabled" ON)
+if(UNIX OR MINGW)
+    if(CHIRA_BUILD_WITH_WARNINGS)
+        target_compile_options(ChiraEngine PUBLIC -Wall)
+    endif()
+    target_link_options(ChiraEngine PUBLIC -Wl,-rpath='$ORIGIN')
+elseif(MSVC)
+    if(CHIRA_BUILD_WITH_WARNINGS)
+        target_compile_options(ChiraEngine PUBLIC /Wall)
+    endif()
+endif()
 
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/addons)
@@ -214,6 +244,7 @@ target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdown)
+
 target_link_libraries(ChiraEngine PUBLIC ${OPENGL_LIBRARIES} ${ENGINE_LINK_LIBRARIES})
 
 # Copy engine resources
