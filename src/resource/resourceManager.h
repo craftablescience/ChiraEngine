@@ -9,13 +9,11 @@
 #include <fmt/core.h>
 #include "../i18n/translationManager.h"
 #include "provider/abstractResourceProvider.h"
-#include "resource.h"
 
 namespace chira {
     constexpr std::string_view RESOURCE_ID_SEPARATOR = "://";
 
     class resourceManager {
-        friend class engine;
     public:
         static void addResourceProvider(const std::string& name, abstractResourceProvider* provider);
 
@@ -110,7 +108,7 @@ namespace chira {
         static std::pair<std::string, std::string> splitResourceIdentifier(const std::string& identifier);
 
         static void removeResource(const std::string& identifier);
-    protected:
+
         /// Deletes ALL resources and providers. Should only ever be called once, when the program closes.
         static void discardAll();
     private:

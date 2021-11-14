@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include "utility/math/axis.h"
+#include <utility/math/axis.h>
 
 using namespace chira;
 

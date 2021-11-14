@@ -4,8 +4,8 @@
 
 #include <gtest/gtest.h>
 
-#include "utility/string/stringRemove.h"
-#include "utility/string/stringStrip.h"
+#include <utility/string/stringRemove.h>
+#include <utility/string/stringStrip.h>
 
 using namespace chira;
 
