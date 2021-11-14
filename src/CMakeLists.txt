@@ -21,11 +21,8 @@ set(CURL_LIBRARY libcurl)
 list(APPEND ENGINE_LINK_LIBRARIES libcurl)
 
 # CURLPP
-option(CHIRA_BUILD_WITH_CURLPP "Build with the CurlPP library and related features" ON)
-if((NOT MSVC) AND CHIRA_BUILD_WITH_CURLPP)
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp)
-    list(APPEND ENGINE_LINK_LIBRARIES curlpp)
-endif()
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp)
+list(APPEND ENGINE_LINK_LIBRARIES curlpp)
 
 # DISCORD
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -157,14 +154,11 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/sound/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/utility/CMakeLists.txt)
 add_library(ChiraEngine STATIC ${ENGINE_SOURCES})
 
-if((NOT MSVC) AND CHIRA_BUILD_WITH_CURLPP)
-    target_compile_definitions(ChiraEngine PUBLIC CHIRA_BUILD_CURLPP_ENABLED)
-    target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp/include)
-endif()
 target_compile_definitions(ChiraEngine PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD2)
 
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/addons)
+target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/discord/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fmt/include)
 target_include_directories(ChiraEngine SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/include)

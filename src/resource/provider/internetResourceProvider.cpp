@@ -4,17 +4,13 @@
 #include <algorithm>
 #include <fmt/core.h>
 #include "../../utility/logger.h"
-#ifdef CHIRA_BUILD_CURLPP_ENABLED
 #include "../../utility/curlMemoryWriter.h"
-#include "curlpp/cURLpp.hpp"
 #include "curlpp/Easy.hpp"
 #include "curlpp/Options.hpp"
-#endif
 
 using namespace chira;
 
 void internetResourceProvider::compileResource(const std::string& name, resource* resource) {
-#ifdef CHIRA_BUILD_CURLPP_ENABLED
     curlpp::Easy request;
     curlMemoryWriter mWriterChunk;
     try {
@@ -28,8 +24,4 @@ void internetResourceProvider::compileResource(const std::string& name, resource
     } catch (curlpp::LogicError& e) {
         logger::log(ERR, fmt::format("Internet Resource Provider ({}:{})", this->providerName, this->port), e.what());
     }
-#else
-    //todo(localize)
-    logger::log(ERR, "Internet Resource Provider", "This feature is disabled. The resource has not been compiled.");
-#endif
 }
