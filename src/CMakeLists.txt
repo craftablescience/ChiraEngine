@@ -3,12 +3,18 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-option(CHIRA_BUILD_STATIC "Build Chira Engine's dependencies statically" OFF)
-if(CHIRA_BUILD_STATIC OR MSVC)
+if(MSVC)
+    option(CHIRA_BUILD_STATIC "Build Chira Engine's dependencies statically" ON)
+else()
+    option(CHIRA_BUILD_STATIC "Build Chira Engine's dependencies statically" OFF)
+endif()
+if(CHIRA_BUILD_STATIC)
     # Note: Distributing with static libs disabled means your distribution
     #       falls under LGPLv2.1 licensing, which you probably want to avoid.
     #       In other words, it's not recommended, but if you have to, it works.
+    # todo: Currently it appears curlpp and OpenAL ignore this
     set(BUILD_SHARED_LIBS OFF)
+    add_definitions(-DLIBTYPE=STATIC)
 else()
     # Build with dynamic (shared) dependencies
     set(BUILD_SHARED_LIBS ON)
@@ -22,8 +28,10 @@ list(APPEND ENGINE_LINK_LIBRARIES AngelScript)
 set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
 set(HTTP_ONLY ON CACHE BOOL "" FORCE)
 set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
-if(MSVC)
+if(CHIRA_BUILD_STATIC AND MSVC)
     set(CURL_STATIC_CRT ON CACHE BOOL "" FORCE)
+else()
+    set(CURL_STATIC_CRT OFF CACHE BOOL "" FORCE)
 endif()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curl)
 set(CURL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curl/include)
@@ -31,9 +39,10 @@ set(CURL_LIBRARY libcurl)
 list(APPEND ENGINE_LINK_LIBRARIES libcurl)
 
 # CURLPP
-
-if(MSVC)
+if(CHIRA_BUILD_STATIC AND MSVC)
     set(CURLPP_STATIC_CRT ON CACHE BOOL "" FORCE)
+else()
+    set(CURLPP_STATIC_CRT OFF CACHE BOOL "" FORCE)
 endif()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp)
 list(APPEND ENGINE_LINK_LIBRARIES curlpp)
@@ -125,6 +134,9 @@ list(APPEND ENGINE_LINK_LIBRARIES stduuid)
 
 # TINYFILEDIALOGS
 include(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs/CMakeLists.txt)
+if(WIN32)
+    list(APPEND ENGINE_LINK_LIBRARIES comdlg32 ole32)
+endif()
 
 # IMGUI
 list(APPEND ENGINE_SOURCES
@@ -147,8 +159,6 @@ list(APPEND ENGINE_SOURCES
 if(WIN32)
     # Windows IME support
     list(APPEND ENGINE_LINK_LIBRARIES imm32)
-    # TinyFileDialogs wants these
-    list(APPEND ENGINE_LINK_LIBRARIES comdlg32 ole32)
 elseif(UNIX)
     # ImGUI needs it on Linux
     list(APPEND ENGINE_LINK_LIBRARIES dl)
@@ -175,6 +185,9 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/utility/CMakeLists.txt)
 add_library(ChiraEngine STATIC ${ENGINE_SOURCES})
 
 target_compile_definitions(ChiraEngine PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD2)
+if(CHIRA_BUILD_STATIC)
+    target_compile_definitions(ChiraEngine PUBLIC CHIRA_BUILD_STATIC)
+endif()
 
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/include)
 target_include_directories(ChiraEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/addons)

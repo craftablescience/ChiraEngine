@@ -1,5 +1,8 @@
 #pragma once
 
+#ifdef CHIRA_BUILD_STATIC
+#define AL_LIBTYPE_STATIC
+#endif
 #include <AL/al.h>
 #include <AL/alc.h>
 #include "../core/engine.h"
