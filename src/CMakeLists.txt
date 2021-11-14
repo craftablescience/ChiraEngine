@@ -133,10 +133,8 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stduuid)
 list(APPEND ENGINE_LINK_LIBRARIES stduuid)
 
 # TINYFILEDIALOGS
-include(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs/CMakeLists.txt)
-if(WIN32)
-    list(APPEND ENGINE_LINK_LIBRARIES comdlg32 ole32)
-endif()
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
+list(APPEND ENGINE_LINK_LIBRARIES tinyfiledialogs)
 
 # IMGUI
 list(APPEND ENGINE_SOURCES
