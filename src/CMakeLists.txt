@@ -140,7 +140,7 @@ list(APPEND ENGINE_LINK_LIBRARIES stduuid)
 # TINYFILEDIALOGS
 if(CHIRA_BUILD_STATIC)
     list(APPEND ENGINE_SOURCES
-            ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs/tinyfiledialogs.c
+            ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs/tinyfiledialogs.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs/tinyfiledialogs.h)
 else()
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
