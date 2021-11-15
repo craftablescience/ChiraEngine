@@ -174,8 +174,7 @@ void engine::preInit(const std::string& configPath) {
 void engine::init() {
     engine::started = true;
 
-    //todo(asan)
-    auto* consoleUI = new console{};
+    engine::consoleUI = new console{};
 
     if (!glfwInit()) {
         logger::log(ERR, "GLFW", TR("error.glfw.undefined"));
@@ -333,8 +332,8 @@ void engine::init() {
     console::precacheResource();
 
     engine::treeRoot = std::make_unique<root>("root");
-    engine::treeRoot->addChild(consoleUI);
-    engine::callRegisteredFunctions(&(engine::initFunctions));
+    engine::treeRoot->addChild(engine::consoleUI);
+    engine::callRegisteredFunctions(&engine::initFunctions);
     engine::angelscript->initScripts();
 
     io.Fonts->Build();
@@ -573,11 +572,11 @@ bool engine::isMouseCaptured() {
 }
 
 void engine::showConsole(bool shouldShow) {
-    engine::getConsole()->setVisible(shouldShow);
+    engine::consoleUI->setVisible(shouldShow);
 }
 
 console* engine::getConsole() {
-    return dynamic_cast<console*>(engine::getRoot()->getChild("Console"));
+    return engine::consoleUI;
 }
 
 bool engine::isIconified() {

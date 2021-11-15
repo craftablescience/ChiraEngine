@@ -5,7 +5,7 @@
 using namespace chira;
 
 console::console(const ImVec2& windowSize) : window(TR("ui.console.title"), false, windowSize) {
-    logger::addCallback([=](const loggerType &type, const std::string &source, const std::string &message) {
+    this->loggingId = logger::addCallback([=](const loggerType& type, const std::string& source, const std::string& message) {
         console::engineLoggingHook(type, source, message);
     });
     this->clearLog();
@@ -17,6 +17,7 @@ console::~console() {
     for (auto& i : this->history) {
         free(i);
     }
+    logger::removeCallback(this->loggingId);
 }
 
 void console::renderContents() {

@@ -12,7 +12,7 @@ namespace chira {
         void renderContents() override;
         void clearLog();
         void addLog(const std::string& message);
-        static void precacheResource() ;
+        static void precacheResource();
         void engineLoggingHook(loggerType type, const std::string& source, const std::string& message);
         void setTheme();
         void resetTheme() const;
@@ -21,5 +21,6 @@ namespace chira {
         ImVector<char*> items;
         ImVector<char*> history;
         bool autoScroll;
+        uuids::uuid loggingId;
     };
 }

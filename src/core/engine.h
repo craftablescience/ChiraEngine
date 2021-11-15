@@ -78,6 +78,7 @@ namespace chira {
         static inline std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
         static inline std::unique_ptr<abstractPhysicsProvider> physicsProvider = nullptr;
         static inline std::unique_ptr<root> treeRoot = nullptr;
+        static inline console* consoleUI = nullptr;
         static inline bool mouseCaptured = false;
         static inline bool started = false;
         static inline bool iconified = false;

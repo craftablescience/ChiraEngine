@@ -3,6 +3,7 @@
 #include <string_view>
 #include <iostream>
 #include <functional>
+#include "uuidGenerator.h"
 
 namespace chira {
     enum loggerType {
@@ -21,9 +22,10 @@ namespace chira {
         static inline constexpr std::string_view WARNING_PREFIX = "[W]";
         static inline constexpr std::string_view ERROR_PREFIX = "[E]";
         static void log(const loggerType& type, const std::string& source, const std::string& message);
-        static void addCallback(const std::function<void(const loggerType&,const std::string&,const std::string&)>& function);
+        static uuids::uuid addCallback(const std::function<void(const loggerType&,const std::string&,const std::string&)>& function);
         static void runLogHooks(const loggerType& type, const std::string& source, const std::string& message);
+        static void removeCallback(const uuids::uuid& id);
     private:
-        static inline std::vector<std::function<void(const loggerType&,const std::string&,const std::string&)>> callbacks{};
+        static inline std::unordered_map<uuids::uuid, std::function<void(const loggerType&,const std::string&,const std::string&)>> callbacks{};
     };
 }

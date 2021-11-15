@@ -2,12 +2,11 @@
 
 using namespace chira;
 
-window::window(const std::string& title_, bool startVisible, const ImVec2& windowSize, bool enforceSize, const std::function<void()>& windowFunc) {
+window::window(const std::string& title_, bool startVisible, const ImVec2& windowSize, bool enforceSize) {
     this->title = title_;
     this->isVisible_ = startVisible;
     this->nextWindowSize = windowSize;
     this->windowSizeCondition = enforceSize? ImGuiCond_Always : ImGuiCond_FirstUseEver;
-    this->windowFunction = windowFunc;
 }
 
 void window::render(const glm::mat4& parentTransform) {
@@ -19,10 +18,6 @@ void window::render(const glm::mat4& parentTransform) {
         ImGui::End();
     }
     entity::render(parentTransform);
-}
-
-void window::renderContents() {
-    this->windowFunction();
 }
 
 void window::setVisible(bool visible) {

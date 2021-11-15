@@ -8,9 +8,9 @@
 namespace chira {
     class window : public entity {
     public:
-        window(const std::string& title_, bool startVisible, const ImVec2& windowSize = ImVec2(0,0), bool enforceSize = false, const std::function<void()>& windowFunc = [](){});
+        window(const std::string& title_, bool startVisible, const ImVec2& windowSize = ImVec2(0,0), bool enforceSize = false);
         void render(const glm::mat4& parentTransform) override;
-        virtual void renderContents();
+        virtual void renderContents() = 0;
         void setVisible(bool visible);
         [[nodiscard]] bool isVisible() const;
     protected:
@@ -18,6 +18,5 @@ namespace chira {
         bool isVisible_;
         ImVec2 nextWindowSize;
         ImGuiCond_ windowSizeCondition;
-        std::function<void()> windowFunction;
     };
 }

@@ -11,11 +11,11 @@ namespace chira {
         friend class resourceManager;
     public:
         explicit resource(std::string identifier_) : identifier(std::move(identifier_)) {}
+        virtual ~resource();
         virtual void compile(const unsigned char buffer[], std::size_t bufferLength) {}
         [[nodiscard]] const std::string& getIdentifier() const noexcept {
             return this->identifier;
         }
-        virtual ~resource();
     protected:
         std::string identifier;
     };

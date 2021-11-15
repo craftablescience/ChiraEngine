@@ -23,12 +23,18 @@ void logger::log(const loggerType& type, const std::string& source, const std::s
     logger::runLogHooks(type, source, message);
 }
 
-void logger::addCallback(const std::function<void(const loggerType&,const std::string&,const std::string&)>& function) {
-    logger::callbacks.push_back(function);
+uuids::uuid logger::addCallback(const std::function<void(const loggerType&,const std::string&,const std::string&)>& function) {
+    auto id = uuidGenerator::getNewUUID();
+    logger::callbacks[id] = function;
+    return id;
 }
 
 void logger::runLogHooks(const loggerType& type, const std::string& source, const std::string& message) {
-    for (const auto& function : logger::callbacks) {
+    for (const auto& [id, function] : logger::callbacks) {
         function(type, source, message);
     }
+}
+
+void logger::removeCallback(const uuids::uuid& id) {
+    logger::callbacks.erase(id);
 }
