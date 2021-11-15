@@ -3,6 +3,7 @@
 #include <string_view>
 #include <iostream>
 #include <functional>
+#include <unordered_map>
 #include "uuidGenerator.h"
 
 namespace chira {

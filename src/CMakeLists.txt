@@ -2,6 +2,7 @@
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+# The RPATH to link to these libraries on Linux is set in the parent CMake
 
 option(CHIRA_BUILD_STATIC "Build Chira Engine's dependencies statically" OFF)
 if(MSVC)
@@ -74,6 +75,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm)
 list(APPEND ENGINE_LINK_LIBRARIES glm::glm)
 
 # BULLET
+cmake_policy(SET CMP0077 NEW)
 set(PKGCONFIG_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 set(USE_GRAPHICAL_BENCHMARK OFF CACHE BOOL "" FORCE)
 set(BUILD_CPU_DEMOS         OFF CACHE BOOL "" FORCE)
@@ -216,13 +218,10 @@ elseif(CMAKE_BUILD_TYPE MATCHES Release)
 endif()
 
 option(CHIRA_BUILD_WITH_WARNINGS "Build Chira Engine with warnings enabled" ON)
-if(UNIX OR MINGW)
-    if(CHIRA_BUILD_WITH_WARNINGS)
+if(CHIRA_BUILD_WITH_WARNINGS)
+    if(UNIX OR MINGW)
         target_compile_options(ChiraEngine PUBLIC -Wall)
-    endif()
-    target_link_options(ChiraEngine PUBLIC -Wl,-rpath='$ORIGIN')
-elseif(MSVC)
-    if(CHIRA_BUILD_WITH_WARNINGS)
+    elseif(MSVC)
         target_compile_options(ChiraEngine PUBLIC /Wall)
     endif()
 endif()

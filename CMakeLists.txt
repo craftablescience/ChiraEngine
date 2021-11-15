@@ -6,6 +6,11 @@ cmake_minimum_required(VERSION 3.15)
 project(ChiraEngineGui)
 set(CMAKE_CXX_STANDARD 17)
 
+# You should add this to your own CMake to load Chira Engine's dependencies
+set(CMAKE_SKIP_BUILD_RPATH FALSE)
+set(CMAKE_BUILD_RPATH_USE_ORIGIN TRUE)
+set(CMAKE_INSTALL_RPATH $ORIGIN)
+
 # Tests
 option(CHIRA_BUILD_TESTS "Run Chira Engine's built-in tests" ON)
 if(CHIRA_BUILD_TESTS AND (NOT MSVC))

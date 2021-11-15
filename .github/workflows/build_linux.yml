@@ -8,10 +8,10 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
-        include:
-          - { build_type: Debug }
-          - { build_type: Release }
+        build_type: [Debug, Release]
+        compiler: [gcc, clang]
     runs-on: ubuntu-latest
     steps:
 
@@ -21,12 +21,18 @@ jobs:
     - name: Checkout Submodules
       run: git submodule update --init --recursive
 
-    - name:  Install Necessary Packages
+    - name: Install Necessary Packages
       run: sudo apt update && sudo apt install -y cmake build-essential xorg-dev mesa-common-dev mesa-utils libssl-dev libasound2-dev libpulse-dev libjack-dev
-      shell: bash
+
+    - name: Install Clang
+      if: ${{ matrix.compiler == 'clang' }}
+      uses: egor-tensin/setup-clang@v1
+      with:
+        version: 13
+        platform: x64
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+      run: cmake -G "Unix Makefiles" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
@@ -34,7 +40,7 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: ChiraEngine-linux-${{matrix.build_type}}
+        name: ChiraEngine-linux-${{matrix.compiler}}-${{matrix.build_type}}
         path: |
           ${{github.workspace}}/build/resources/
           ${{github.workspace}}/build/ChiraEngineGui

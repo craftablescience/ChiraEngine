@@ -8,16 +8,15 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
-        include:
-          - { build_type: Debug }
-          - { build_type: Release }
+        build_type: [Debug, Release]
+        sys: [mingw64, clang64]
     runs-on: windows-latest
     defaults:
       run:
         shell: msys2 {0}
     steps:
-
     - name: Checkout Repository
       uses: actions/checkout@v2
 
@@ -28,23 +27,36 @@ jobs:
     - name: Install MSYS2
       uses: msys2/setup-msys2@v2
       with:
-        msystem: MINGW64
+        msystem: ${{matrix.sys}}
         update: true
         install: >-
+          git
           make
-          mingw-w64-x86_64-toolchain
-          mingw-w64-x86_64-cmake
+        pacboy: >-
+          toolchain:p
+          cmake:p
 
-    - name: Configure CMake
+    - name: Configure CMake (mingw64)
+      if: ${{ matrix.sys == 'mingw64' }}
       run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+
+    - name: Configure CMake (clang64)
+      if: ${{ matrix.sys == 'clang64' }}
+      run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_C_COMPILER="/clang64/bin/clang.exe" -DCMAKE_CXX_COMPILER="/clang64/bin/clang++.exe"
 
     - name: Build
       run: cmake --build build --config ${{matrix.build_type}}
 
+    - name: Copy Clang DLLs
+      if: ${{ matrix.sys == 'clang64' }}
+      run: |
+        cp /clang64/bin/libc++.dll build/libc++.dll
+        cp /clang64/bin/libunwind.dll build/libunwind.dll
+
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: ChiraEngine-windows-${{matrix.build_type}}
+        name: ChiraEngine-windows-${{matrix.sys}}-${{matrix.build_type}}
         path: |
           ${{github.workspace}}\build\resources\
           ${{github.workspace}}\build\ChiraEngineGui.exe
