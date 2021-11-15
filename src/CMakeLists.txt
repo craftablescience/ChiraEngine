@@ -3,10 +3,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
+option(CHIRA_BUILD_STATIC "Build Chira Engine's dependencies statically" OFF)
 if(MSVC)
-    option(CHIRA_BUILD_STATIC "Build Chira Engine's dependencies statically" ON)
-else()
-    option(CHIRA_BUILD_STATIC "Build Chira Engine's dependencies statically" OFF)
+    set(CHIRA_BUILD_STATIC ON)
 endif()
 if(CHIRA_BUILD_STATIC)
     # Note: Distributing with static libs disabled means your distribution
@@ -22,7 +21,7 @@ endif()
 
 # ANGELSCRIPT
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript)
-list(APPEND ENGINE_LINK_LIBRARIES AngelScript)
+list(APPEND ENGINE_LINK_LIBRARIES angelscript)
 
 # CURL
 set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
