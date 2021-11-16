@@ -200,6 +200,10 @@ if(CHIRA_BUILD_STATIC)
 endif()
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     target_compile_definitions(ChiraEngine PUBLIC -DDEBUG)
+    string(TOLOWER "${CMAKE_CXX_COMPILER_ID}" COMPILER_ID)
+    if(COMPILER_ID MATCHES "clang")
+        target_compile_options(ChiraEngine PUBLIC -fno-limit-debug-info)
+    endif()
     if(UNIX OR MINGW)
         # On UNIX, build with debug friendly optimizations and debug symbols
         # On windows, just disable optimizations entirely
