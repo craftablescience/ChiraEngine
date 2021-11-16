@@ -51,7 +51,10 @@ jobs:
       if: ${{ matrix.sys == 'clang64' }}
       run: |
         cp /clang64/bin/libc++.dll build/libc++.dll
+        cp /clang64/bin/libcrypto-1_1-x64.dll build/libcrypto-1_1-x64.dll
+        cp /clang64/bin/libssh2-1.dll build/libssh2-1.dll
         cp /clang64/bin/libunwind.dll build/libunwind.dll
+        cp /clang64/bin/zlib1.dll build/zlib1.dll
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
