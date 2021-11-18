@@ -10,7 +10,7 @@ namespace chira {
         friend class engine;
     public:
         explicit root(const std::string& name_);
-        ~root() override = default;
+        ~root() override;
         void render();
         glm::vec3 getGlobalPosition() override;
         void setMainCamera(camera3d* camera);

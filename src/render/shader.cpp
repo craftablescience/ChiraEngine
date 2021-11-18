@@ -11,9 +11,9 @@ shader::shader(const std::string& identifier_) : propertiesResource(identifier_)
 
 void shader::compile(const nlohmann::json& properties) {
     this->handle = glCreateProgram();
-    auto vert = resourceManager::getResourceWithoutCaching<shaderResource>(properties["dependencies"]["vertex"], GL_VERTEX_SHADER);
+    auto vert = resourceManager::getResource<shaderResource>(properties["dependencies"]["vertex"], GL_VERTEX_SHADER);
     glAttachShader(this->handle, vert->getHandle());
-    auto frag = resourceManager::getResourceWithoutCaching<shaderResource>(properties["dependencies"]["fragment"], GL_FRAGMENT_SHADER);
+    auto frag = resourceManager::getResource<shaderResource>(properties["dependencies"]["fragment"], GL_FRAGMENT_SHADER);
     glAttachShader(this->handle, frag->getHandle());
     glLinkProgram(this->handle);
 #if DEBUG

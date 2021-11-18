@@ -8,6 +8,12 @@ root::root(const std::string& name_) : world3d(nullptr, name_) {
     this->skybox = resourceManager::getResource<meshResource>("file://meshes/skybox.json", sharedPointer<material>{});
 }
 
+root::~root() {
+    if (this->skybox) {
+        resourceManager::removeResource(this->skybox->getIdentifier());
+    }
+}
+
 void root::render() {
     for (auto& [key, entity] : this->children) {
         entity->render(glm::identity<glm::mat4>());

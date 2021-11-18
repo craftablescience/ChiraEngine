@@ -6,7 +6,6 @@
 #include <vector>
 #include <memory>
 #include "../utility/logger.h"
-#include "../utility/sharedPointer.h"
 #include <fmt/core.h>
 #include "../i18n/translationManager.h"
 #include "provider/abstractResourceProvider.h"
@@ -27,7 +26,7 @@ namespace chira {
             auto id = resourceManager::splitResourceIdentifier(identifier);
             const std::string& provider = id.first, name = id.second;
             if (resourceManager::resources[provider].count(name) > 0) {
-                return resourceManager::resources[provider].at(name).castDynamic<resourceType>();
+                return resourceManager::resources[provider][name].castDynamic<resourceType>();
             }
             return resourceManager::getUniqueResource<resourceType>(identifier, params...);
         }
@@ -47,10 +46,10 @@ namespace chira {
             auto id = resourceManager::splitResourceIdentifier(identifier);
             const std::string& provider = id.first, name = id.second;
             if (resourceManager::resources[provider].count(name) > 0) {
-                return resourceManager::resources[provider].at(name).castDynamic<resourceType>();
+                return resourceManager::resources[provider][name].castDynamic<resourceType>();
             }
             logger::log(ERR, "Resource Manager", fmt::format(TR("error.resource_manager.cached_resource_not_found"), identifier));
-            return sharedPointer<resourceType>{nullptr};
+            return sharedPointer<resourceType>{};
         }
 
         template<typename resourceType, typename... Params>
@@ -61,11 +60,11 @@ namespace chira {
                 if (i->get()->hasResource(name)) {
                     resourceManager::resources[provider][name] = sharedPointer<resource>(new resourceType{identifier, params...});
                     i->get()->compileResource(name, resourceManager::resources[provider][name].get());
-                    return resourceManager::resources[provider].at(name).castDynamic<resourceType>();
+                    return resourceManager::resources[provider][name].castDynamic<resourceType>();
                 }
             }
             logger::log(ERR, "Resource Manager", fmt::format(TR("error.resource_manager.resource_not_found"), identifier));
-            return sharedPointer<resourceType>{nullptr};
+            return sharedPointer<resourceType>{};
         }
 
         template<typename resourceType, typename... Params>
@@ -75,26 +74,11 @@ namespace chira {
             for (auto i = resourceManager::providers[provider].rbegin(); i != resourceManager::providers[provider].rend(); i++) {
                 if (i->get()->hasResource(name)) {
                     resourceManager::resources[provider][name] = sharedPointer<resource>(new resourceType{identifier, params...});
-                    i->get()->compileResource(name, resourceManager::resources[provider].at(name).get());
+                    i->get()->compileResource(name, resourceManager::resources[provider][name].get());
                     return; // Precached!
                 }
             }
             logger::log(ERR, "Resource Manager", fmt::format(TR("error.resource_manager.resource_not_found"), identifier));
-        }
-
-        template<typename resourceType, typename... Params>
-        static std::unique_ptr<resourceType> getResourceWithoutCaching(const std::string& identifier, Params... params) {
-            auto id = resourceManager::splitResourceIdentifier(identifier);
-            const std::string& provider = id.first, name = id.second;
-            for (auto i = resourceManager::providers[provider].rbegin(); i != resourceManager::providers[provider].rend(); i++) {
-                if (i->get()->hasResource(name)) {
-                    auto resource = std::make_unique<resourceType>(identifier, params...);
-                    i->get()->compileResource(name, resource.get());
-                    return resource;
-                }
-            }
-            logger::log(WARN, "Resource Manager", fmt::format(TR("error.resource_manager.resource_not_found"), identifier));
-            return nullptr;
         }
 
         /// The only way to make a propertiesResource without a provider is to make it unique, and not to cache it.
@@ -108,12 +92,17 @@ namespace chira {
 
         static std::pair<std::string, std::string> splitResourceIdentifier(const std::string& identifier);
 
+        /// If resource is present in the cache and has a reference count less than or equal to 2, mark it for removal.
         static void removeResource(const std::string& identifier);
+
+        /// Delete all resources marked for removal.
+        static void cleanup();
 
         /// Deletes ALL resources and providers. Should only ever be called once, when the program closes.
         static void discardAll();
     private:
         static inline std::unordered_map<std::string, std::vector<std::unique_ptr<abstractResourceProvider>>> providers{};
         static inline std::unordered_map<std::string, std::unordered_map<std::string, sharedPointer<resource>>> resources{};
+        static inline std::vector<std::string> garbageResources{};
     };
 }

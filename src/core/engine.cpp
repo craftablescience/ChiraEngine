@@ -345,7 +345,6 @@ void engine::displaySplashScreen() {
     auto plane = resourceManager::getResource<meshResource>("file://meshes/plane.json", mat.castDynamic<material>());
     plane->render(glm::identity<glm::mat4>());
     glfwSwapBuffers(engine::window);
-    resourceManager::removeResource(plane->getIdentifier());
 }
 
 void engine::run() {
@@ -387,6 +386,8 @@ void engine::render() {
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    resourceManager::cleanup();
 }
 
 void engine::stop() {

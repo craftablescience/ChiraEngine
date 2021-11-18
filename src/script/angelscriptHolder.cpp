@@ -23,7 +23,7 @@ void angelscriptHolder::init(angelscriptProvider* provider) {
         logger::log(ERR, "AngelScript", fmt::format(TR("error.angelscript.unrecoverable_error"), this->identifier));
         return;
     }
-    std::unique_ptr<stringResource> scriptData = resourceManager::getResourceWithoutCaching<stringResource>(this->identifier);
+    auto scriptData = resourceManager::getResource<stringResource>(this->identifier);
     r = builder.AddSectionFromMemory(this->identifier.c_str(), scriptData->getString().c_str());
     if (r < 0) {
         logger::log(ERR, "AngelScript", fmt::format(TR("error.angelscript.script_not_found"), this->identifier));

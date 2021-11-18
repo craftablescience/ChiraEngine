@@ -42,12 +42,22 @@ void resourceManager::removeResource(const std::string& identifier) {
     const std::string& provider = id.first, name = id.second;
     // If the count is 2, then it's being held by the resource manager and the object requesting its removal.
     // Anything below 2 means it should be already deleted everywhere except the resource manager.
-    if (resourceManager::resources[provider].count(name) > 0 && resourceManager::resources[provider].at(name).useCount() <= 2) {
-        resourceManager::resources[provider].erase(name);
+    if (resourceManager::resources[provider].count(name) > 0 && resourceManager::resources[provider][name].useCount() <= 2) {
+        resourceManager::garbageResources.push_back(identifier);
     }
 }
 
+void resourceManager::cleanup() {
+    for (const auto& name : resourceManager::garbageResources) {
+        logger::log(INFO_IMPORTANT, "RM", "Removing " + name);
+        auto id = resourceManager::splitResourceIdentifier(name);
+        resourceManager::resources[id.first].erase(id.second);
+    }
+    resourceManager::garbageResources.clear();
+}
+
 void resourceManager::discardAll() {
+    resourceManager::cleanup();
     // Make sure all resources are deleted, just in case
     for (const auto& [providerName, resourceMap] : resourceManager::resources) {
         for (const auto& [name, resource] : resourceMap) {
