@@ -14,9 +14,11 @@ namespace chira {
         sharedPointer() = default;
         explicit sharedPointer(T* inputPtr) : ptr(inputPtr), refCount(new unsigned int(1)) {}
         sharedPointer(T* inputPtr, unsigned int* refCountPtr) : ptr(inputPtr), refCount(refCountPtr) {
-            (*this->refCount)++;
+            if (this->refCount) {
+                (*this->refCount)++;
+            }
         }
-        sharedPointer<T>& operator=(const sharedPointer<T>& other) {
+        sharedPointer<T>& operator=(const sharedPointer<T>& other) noexcept {
             if (this != &other) {
                 if ((this->refCount) && ((*this->refCount) <= 1)) {
                     delete this->ptr;
@@ -24,11 +26,13 @@ namespace chira {
                 }
                 this->ptr = other.ptr;
                 this->refCount = other.refCount;
-                (*this->refCount)++;
+                if (this->refCount) {
+                    (*this->refCount)++;
+                }
             }
             return *this;
         }
-        sharedPointer(const sharedPointer<T>& other) {
+        sharedPointer(const sharedPointer<T>& other) noexcept {
             if (this != &other) {
                 if ((this->refCount) && ((*this->refCount) <= 1)) {
                     delete this->ptr;
@@ -36,7 +40,9 @@ namespace chira {
                 }
                 this->ptr = other.ptr;
                 this->refCount = other.refCount;
-                (*this->refCount)++;
+                if (this->refCount) {
+                    (*this->refCount)++;
+                }
             }
         }
         sharedPointer<T>& operator=(sharedPointer<T>&& other) noexcept {
@@ -74,28 +80,32 @@ namespace chira {
             return this->ptr;
         }
         bool operator!() const noexcept {
-            return !bool(this->ptr);
+            return !(bool(this->ptr));
         }
         explicit operator bool() const noexcept {
             return bool(this->ptr);
         }
-        [[nodiscard]] unsigned int useCount() {
-            return *this->refCount;
+        [[nodiscard]] unsigned int useCount() const noexcept {
+            if (this->refCount) {
+                return *this->refCount;
+            } else {
+                return 0;
+            }
         }
         template<typename U>
-        sharedPointer<U> castStatic() {
+        sharedPointer<U> castStatic() const {
             return sharedPointer<U>(static_cast<U*>(this->ptr), this->refCount);
         }
         template<typename U>
-        sharedPointer<U> castDynamic() {
+        sharedPointer<U> castDynamic() const {
             return sharedPointer<U>(dynamic_cast<U*>(this->ptr), this->refCount);
         }
         template<typename U>
-        sharedPointer<U> castReinterpret() {
+        sharedPointer<U> castReinterpret() const {
             return sharedPointer<U>(reinterpret_cast<U*>(this->ptr), this->refCount);
         }
         template<typename U>
-        sharedPointer<U> cast(const sharedPointerCastType& type) {
+        sharedPointer<U> cast(const sharedPointerCastType& type) const {
             switch (type) {
                 case sharedPointerCastType::STATIC_CAST:
                     return this->castStatic<U>();

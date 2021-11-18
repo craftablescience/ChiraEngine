@@ -52,7 +52,7 @@ void resourceManager::discardAll() {
     for (const auto& [providerName, resourceMap] : resourceManager::resources) {
         for (const auto& [name, resource] : resourceMap) {
             //todo(localize)
-            logger::log(WARN, "Resource Manager", fmt::format("Deleting resource \"{}\" that was not deleted!", resourceManager::resources[providerName].at(name)->getIdentifier()));
+            logger::log(WARN, "Resource Manager", fmt::format("Deleting resource \"{}\" that was not already deleted!", resourceManager::resources[providerName].at(name)->getIdentifier()));
         }
     }
     resourceManager::resources.clear();
