@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include "../../utility/sharedPointer.h"
 
 namespace chira {
     /// If adding a resource that depends on other resources,

@@ -72,26 +72,26 @@ textureCubemap::~textureCubemap() {
     resourceManager::removeResource(this->file_up->getIdentifier());
 }
 
-std::shared_ptr<textureResource> textureCubemap::getTextureForward() const {
+sharedPointer<textureResource> textureCubemap::getTextureForward() const {
     return this->file;
 }
 
-std::shared_ptr<textureResource> textureCubemap::getTextureBackward() const {
+sharedPointer<textureResource> textureCubemap::getTextureBackward() const {
     return this->file_bk;
 }
 
-std::shared_ptr<textureResource> textureCubemap::getTextureUp() const {
+sharedPointer<textureResource> textureCubemap::getTextureUp() const {
     return this->file_up;
 }
 
-std::shared_ptr<textureResource> textureCubemap::getTextureDown() const {
+sharedPointer<textureResource> textureCubemap::getTextureDown() const {
     return this->file_dn;
 }
 
-std::shared_ptr<textureResource> textureCubemap::getTextureLeft() const {
+sharedPointer<textureResource> textureCubemap::getTextureLeft() const {
     return this->file_lt;
 }
 
-std::shared_ptr<textureResource> textureCubemap::getTextureRight() const {
+sharedPointer<textureResource> textureCubemap::getTextureRight() const {
     return this->file_rt;
 }

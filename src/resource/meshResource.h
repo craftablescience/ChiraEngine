@@ -11,14 +11,14 @@
 namespace chira {
     class meshResource : public propertiesResource {
     public:
-        meshResource(const std::string& identifier_, std::shared_ptr<material> material_);
+        meshResource(const std::string& identifier_, sharedPointer<material> material_);
         ~meshResource() override;
         void compile(const nlohmann::json& properties) override;
         void render(const glm::mat4& model);
-        std::shared_ptr<material> getMaterial() {
+        sharedPointer<material> getMaterial() {
             return this->materialPtr;
         }
-        void setMaterial(std::shared_ptr<material> newMaterial) {
+        void setMaterial(sharedPointer<material> newMaterial) {
             this->materialPtr = std::move(newMaterial);
         }
         static void addMeshLoader(const std::string& name, abstractMeshLoader* meshLoader);
@@ -27,7 +27,7 @@ namespace chira {
         int depthFunction = GL_LEQUAL;
         bool backfaceCulling = true;
         int cullType = GL_BACK;
-        std::shared_ptr<material> materialPtr;
+        sharedPointer<material> materialPtr;
         unsigned int vboHandle = -1, vaoHandle = -1, eboHandle = -1;
         std::vector<vertex> vertices{};
         std::vector<unsigned int> indices{};

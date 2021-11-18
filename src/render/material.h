@@ -13,8 +13,8 @@ namespace chira {
         explicit material(const std::string& identifier_);
         void compile(const nlohmann::json& properties) override;
         virtual void use();
-        std::shared_ptr<shader> getShader();
+        sharedPointer<shader> getShader();
     protected:
-        std::shared_ptr<shader> shaderPtr = nullptr;
+        sharedPointer<shader> shaderPtr;
     };
 }

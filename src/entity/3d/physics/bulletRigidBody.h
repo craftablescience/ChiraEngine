@@ -19,7 +19,7 @@ namespace chira {
         void translate(const glm::vec3& translateByAmount) override;
         void rotate(const glm::quat& rotateByAmount) override;
     protected:
-        std::shared_ptr<bulletColliderResource> collider;
+        sharedPointer<bulletColliderResource> collider;
         btRigidBody* rigidBody;
     };
 }

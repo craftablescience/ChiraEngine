@@ -11,6 +11,6 @@ namespace chira {
         void use() override;
         ~cubemapMaterial() override;
     private:
-        std::shared_ptr<textureCubemap> cubemap;
+        sharedPointer<textureCubemap> cubemap;
     };
 }

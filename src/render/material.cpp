@@ -16,6 +16,6 @@ void material::use() {
     this->shaderPtr->use();
 }
 
-std::shared_ptr<shader> material::getShader() {
+sharedPointer<shader> material::getShader() {
     return this->shaderPtr;
 }

@@ -12,21 +12,21 @@ namespace chira {
         using texture::setTextureUnit;
         using texture::getTextureUnit;
         using texture::getHandle;
-        [[nodiscard]] std::shared_ptr<textureResource> getTextureForward() const;
-        [[nodiscard]] std::shared_ptr<textureResource> getTextureBackward() const;
-        [[nodiscard]] std::shared_ptr<textureResource> getTextureUp() const;
-        [[nodiscard]] std::shared_ptr<textureResource> getTextureDown() const;
-        [[nodiscard]] std::shared_ptr<textureResource> getTextureLeft() const;
-        [[nodiscard]] std::shared_ptr<textureResource> getTextureRight() const;
+        [[nodiscard]] sharedPointer<textureResource> getTextureForward() const;
+        [[nodiscard]] sharedPointer<textureResource> getTextureBackward() const;
+        [[nodiscard]] sharedPointer<textureResource> getTextureUp() const;
+        [[nodiscard]] sharedPointer<textureResource> getTextureDown() const;
+        [[nodiscard]] sharedPointer<textureResource> getTextureLeft() const;
+        [[nodiscard]] sharedPointer<textureResource> getTextureRight() const;
     private:
         // Disable this method
         using texture::getTexture;
         // Inherited variables from texture are used as file_fd, format_fd
-        std::shared_ptr<textureResource> file_bk = nullptr;
-        std::shared_ptr<textureResource> file_up = nullptr;
-        std::shared_ptr<textureResource> file_dn = nullptr;
-        std::shared_ptr<textureResource> file_lt = nullptr;
-        std::shared_ptr<textureResource> file_rt = nullptr;
+        sharedPointer<textureResource> file_bk;
+        sharedPointer<textureResource> file_up;
+        sharedPointer<textureResource> file_dn;
+        sharedPointer<textureResource> file_lt;
+        sharedPointer<textureResource> file_rt;
         int format_bk = GL_RGBA;
         int format_up = GL_RGBA;
         int format_dn = GL_RGBA;

@@ -57,7 +57,7 @@ int main() {
         }
     }));
 
-    std::shared_ptr<meshResource> cubeMesh;
+    sharedPointer<meshResource> cubeMesh;
     camera3d* camera;
 
     engine::addInitFunction([&cubeMesh, &camera, &discordEnabled]() {
@@ -79,7 +79,7 @@ int main() {
         auto staticTeapot = new bulletRigidBody{"file://physics/ground_static.json"};
         staticTeapot->translate(glm::vec3{3,5,-13});
         auto cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
-        cubeMesh = resourceManager::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial);
+        cubeMesh = resourceManager::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial.castDynamic<material>());
         staticTeapot->addChild(new mesh3d{cubeMesh});
 
         //auto fallingTeapot = new bulletRigidBody{"file://physics/cube_dynamic.json"};

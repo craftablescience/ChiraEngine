@@ -14,7 +14,7 @@ namespace chira {
         void setShininess(float shininess = 32.0f);
         void setLambertFactor(float lambertFactor = 1.0f);
     private:
-        std::shared_ptr<texture> diffuse = nullptr;
-        std::shared_ptr<texture> specular = nullptr;
+        sharedPointer<texture> diffuse;
+        sharedPointer<texture> specular;
     };
 }

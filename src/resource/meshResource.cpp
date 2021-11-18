@@ -9,7 +9,7 @@
 
 using namespace chira;
 
-meshResource::meshResource(const std::string& identifier_, std::shared_ptr<material> material_) :
+meshResource::meshResource(const std::string& identifier_, sharedPointer<material> material_) :
     propertiesResource(identifier_), materialPtr(std::move(material_)) {}
 
 void meshResource::compile(const nlohmann::json& properties) {

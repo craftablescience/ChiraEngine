@@ -14,14 +14,14 @@ namespace chira {
         void compile(const nlohmann::json& properties) override;
         virtual void use() const;
         ~texture() override;
-        [[nodiscard]] std::shared_ptr<textureResource> getTexture() const;
+        [[nodiscard]] sharedPointer<textureResource> getTexture() const;
         void setTextureUnit(int textureUnit);
         [[nodiscard]] int getTextureUnit() const;
         [[nodiscard]] unsigned int getHandle() const;
     protected:
         unsigned int handle = 0;
         int activeTextureUnit = -1;
-        std::shared_ptr<textureResource> file = nullptr;
+        sharedPointer<textureResource> file;
         int format = GL_RGBA;
         int wrapModeS = GL_REPEAT;
         int wrapModeT = GL_REPEAT;

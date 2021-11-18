@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "../entity3d.h"
 #include "../../../resource/meshResource.h"
 
@@ -8,14 +10,14 @@ namespace chira {
     public:
         mesh3d(entity* parent_, meshResource* mesh_) : entity3d(parent_), mesh(mesh_) {}
         mesh3d(entity* parent_, const std::string& name_, meshResource* mesh_) : entity3d(parent_, name_), mesh(mesh_) {}
-        explicit mesh3d(std::shared_ptr<meshResource> mesh_) : entity3d(), mesh(mesh_) {}
+        explicit mesh3d(sharedPointer<meshResource> mesh_) : entity3d(), mesh(std::move(mesh_)) {}
         mesh3d(const std::string& name_, meshResource* mesh_) : entity3d(name_), mesh(mesh_) {}
         ~mesh3d() override;
         void render(const glm::mat4& parentTransform) override;
-        std::shared_ptr<meshResource> getMeshResource() const {
+        sharedPointer<meshResource> getMeshResource() const {
             return this->mesh;
         }
     private:
-        std::shared_ptr<meshResource> mesh;
+        sharedPointer<meshResource> mesh;
     };
 }

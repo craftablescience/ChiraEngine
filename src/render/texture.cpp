@@ -53,7 +53,7 @@ texture::~texture() {
     resourceManager::removeResource(this->file->getIdentifier());
 }
 
-std::shared_ptr<textureResource> texture::getTexture() const {
+sharedPointer<textureResource> texture::getTexture() const {
     return this->file;
 }
 

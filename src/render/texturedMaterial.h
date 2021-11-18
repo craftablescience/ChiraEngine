@@ -11,6 +11,6 @@ namespace chira {
         void compile(const nlohmann::json& properties) override;
         void use() override;
     private:
-        std::shared_ptr<texture> tex = nullptr;
+        sharedPointer<texture> tex;
     };
 }

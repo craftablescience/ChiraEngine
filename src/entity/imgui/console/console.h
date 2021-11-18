@@ -17,7 +17,7 @@ namespace chira {
         void setTheme();
         void resetTheme() const;
     private:
-        std::shared_ptr<fontResource> font = nullptr;
+        sharedPointer<fontResource> font;
         ImVector<char*> items;
         ImVector<char*> history;
         bool autoScroll;
