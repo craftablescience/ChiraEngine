@@ -26,6 +26,7 @@ TEST(sharedResourcePtr, createFromPointer) {
 
 TEST(sharedResourcePtr, createFromSharedCopyConstructor) {
     auto a = sharedPointer<sharedResourcePtrTestBase>(new sharedResourcePtrTestBase{});
+    a.setHolderAmountForDelete(0);
     EXPECT_EQ(a.useCount(), 1);
     EXPECT_EQ(a->x, 10);
     EXPECT_EQ((*a).x, 10);
@@ -42,6 +43,7 @@ TEST(sharedResourcePtr, createFromSharedCopyConstructor) {
 
 TEST(sharedResourcePtr, createFromSharedCopyAssignment) {
     auto a = sharedPointer<sharedResourcePtrTestBase>(new sharedResourcePtrTestBase{});
+    a.setHolderAmountForDelete(0);
     EXPECT_EQ(a.useCount(), 1);
     EXPECT_EQ(a->x, 10);
     EXPECT_EQ((*a).x, 10);
@@ -58,6 +60,7 @@ TEST(sharedResourcePtr, createFromSharedCopyAssignment) {
 
 TEST(sharedResourcePtr, createFromCastDynamic) {
     auto a = sharedPointer<sharedResourcePtrTestDerived>(new sharedResourcePtrTestDerived{});
+    a.setHolderAmountForDelete(0);
     EXPECT_EQ(a.useCount(), 1);
     EXPECT_EQ(a->x, 10);
     EXPECT_EQ(a->y, -10);

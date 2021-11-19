@@ -49,7 +49,6 @@ void resourceManager::removeResource(const std::string& identifier) {
 
 void resourceManager::cleanup() {
     for (const auto& name : resourceManager::garbageResources) {
-        logger::log(INFO_IMPORTANT, "RM", "Removing " + name);
         auto id = resourceManager::splitResourceIdentifier(name);
         resourceManager::resources[id.first].erase(id.second);
     }

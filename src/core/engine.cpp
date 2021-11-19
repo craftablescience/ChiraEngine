@@ -316,7 +316,7 @@ void engine::init() {
     bool bulletEnabled = true;
     engine::getSettingsLoader()->getValue("physics", "bullet", &bulletEnabled);
     if (bulletEnabled) {
-        engine::setPhysicsProvider(new bulletPhysicsProvider{});
+        engine::setPhysicsProvider(new bulletPhysicsProvider());
     }
 
     engine::angelscript = std::make_unique<angelscriptProvider>();

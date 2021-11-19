@@ -76,17 +76,18 @@ int main() {
         //endregion
 
         //region Add a teapot with a static rigidbody
-        auto staticTeapot = new bulletRigidBody{"file://physics/ground_static.json"};
-        staticTeapot->translate(glm::vec3{3,5,-13});
+        //auto staticTeapot = new bulletRigidBody{"file://physics/ground_static.json"};
+        //staticTeapot->translate(glm::vec3{3,5,-13});
         auto cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
         cubeMesh = resourceManager::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial.castDynamic<material>());
-        staticTeapot->addChild(new mesh3d{cubeMesh});
+        //staticTeapot->addChild(new mesh3d{cubeMesh});
+        engine::getRoot()->addChild(new mesh3d{cubeMesh});
 
         //auto fallingTeapot = new bulletRigidBody{"file://physics/cube_dynamic.json"};
         //fallingTeapot->translate(glm::vec3{0,5,-10});
         //fallingTeapot->addChild(new mesh3d{cubeMesh});
 
-        engine::getRoot()->addChild(staticTeapot);
+        //engine::getRoot()->addChild(staticTeapot);
         //engine::getRoot()->addChild(fallingTeapot);
         //endregion
 

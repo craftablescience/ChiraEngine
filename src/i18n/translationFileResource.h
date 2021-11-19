@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utility>
+#include <unordered_map>
 
 #include "../resource/propertiesResource.h"
 
@@ -17,7 +18,7 @@ namespace chira {
         /// Note: Currently nlohmann::json does not support string_view unfortunately.
         /// If this ever changes, please change this function to use it!
         std::string getTranslation(const std::string& identifier);
-        std::unordered_map<std::string,std::string> getAllTranslations();
+        std::unordered_map<std::string, std::string> getAllTranslations();
     private:
         std::string language;
         nlohmann::json strings;

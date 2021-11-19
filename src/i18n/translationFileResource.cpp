@@ -17,6 +17,6 @@ std::string translationFileResource::getTranslation(const std::string& identifie
     return identifier + "#" + this->language;
 }
 
-std::unordered_map<std::string,std::string> translationFileResource::getAllTranslations() {
-    return this->strings.get<std::unordered_map<std::string,std::string>>();
+std::unordered_map<std::string, std::string> translationFileResource::getAllTranslations() {
+    return this->strings.get<std::unordered_map<std::string, std::string>>();
 }

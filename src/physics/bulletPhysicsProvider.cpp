@@ -1,11 +1,13 @@
 #include "bulletPhysicsProvider.h"
 
+#include <memory>
+
 #include "../core/engine.h"
 
 using namespace chira;
 
 bulletPhysicsProvider::bulletPhysicsProvider() {
-    this->collisionConfiguration = std::make_unique<btDefaultCollisionConfiguration>();
+    this->collisionConfiguration = std::make_unique<btDefaultCollisionConfiguration>(btDefaultCollisionConstructionInfo());
     this->dispatcher = std::make_unique<btCollisionDispatcher>(this->collisionConfiguration.get());
     this->overlappingPairCache = std::make_unique<btDbvtBroadphase>();
     this->solver = std::make_unique<btSequentialImpulseConstraintSolver>();
