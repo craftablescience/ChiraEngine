@@ -276,7 +276,7 @@ if(CHIRA_BUILD_EDITOR)
     endif()
     add_executable(ChiraEngineGui ${EDITOR_SOURCES})
     target_link_libraries(ChiraEngineGui ${PROJECT_NAME} ${OPENGL_LIBRARIES})
-    target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/editor)
+    target_include_directories(ChiraEngineGui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/editor)
 endif()
 
 if(CHIRA_BUILD_TESTS AND (NOT MSVC))
