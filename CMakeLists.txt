@@ -15,6 +15,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 # This is mostly for detecting Clang
 string(TOLOWER "${CMAKE_CXX_COMPILER_ID}" COMPILER_ID)
 
+# Global compile options
+if(UNIX OR MINGW)
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -fPIC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif()
+
 option(CHIRA_BUILD_STATIC "Build Chira Engine's dependencies statically" OFF)
 # todo: clang kind of partially works with shared libs? look into this later
 if(MSVC OR (COMPILER_ID MATCHES "clang"))
@@ -51,20 +57,6 @@ endif()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript)
 list(APPEND ENGINE_LINK_LIBRARIES angelscript)
 
-# CURL
-set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
-set(HTTP_ONLY ON CACHE BOOL "" FORCE)
-set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
-if(CHIRA_BUILD_STATIC AND MSVC)
-    set(CURL_STATIC_CRT ON CACHE BOOL "" FORCE)
-else()
-    set(CURL_STATIC_CRT OFF CACHE BOOL "" FORCE)
-endif()
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curl)
-set(CURL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curl/include)
-set(CURL_LIBRARY libcurl)
-list(APPEND ENGINE_LINK_LIBRARIES libcurl)
-
 # BULLET
 cmake_policy(SET CMP0077 NEW)
 set(PKGCONFIG_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
@@ -80,6 +72,20 @@ set(BUILD_ENET              OFF CACHE BOOL "" FORCE)
 set(BUILD_CLSOCKET          OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/bullet)
 list(APPEND ENGINE_LINK_LIBRARIES BulletDynamics BulletCollision LinearMath)
+
+# CURL
+set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
+set(HTTP_ONLY ON CACHE BOOL "" FORCE)
+set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+if(CHIRA_BUILD_STATIC AND MSVC)
+    set(CURL_STATIC_CRT ON CACHE BOOL "" FORCE)
+else()
+    set(CURL_STATIC_CRT OFF CACHE BOOL "" FORCE)
+endif()
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curl)
+set(CURL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curl/include)
+set(CURL_LIBRARY libcurl)
+list(APPEND ENGINE_LINK_LIBRARIES libcurl)
 
 # CURLPP
 if(CHIRA_BUILD_STATIC AND MSVC)
@@ -203,9 +209,6 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/CMakeLists.txt)
 add_library(${PROJECT_NAME} STATIC ${ENGINE_SOURCES})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD2)
-if(UNIX OR MINGW)
-    add_compile_options(-fPIC)
-endif()
 if(CHIRA_BUILD_STATIC)
     target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_BUILD_STATIC)
 endif()
