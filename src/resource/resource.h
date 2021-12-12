@@ -124,7 +124,7 @@ namespace chira {
         static inline std::unordered_map<std::string, std::unordered_map<std::string, sharedPointer<resource>>> resources{};
         static inline std::vector<std::string> garbageResources{};
 
-        /// We do a few dirty hacks
+        /// We do a few predeclaration workarounds
         static void logResourceError(const std::string& identifier, const std::string& resourceName);
     };
 }

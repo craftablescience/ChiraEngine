@@ -29,9 +29,9 @@ void camera3d::createProjection(int windowWidth, int windowHeight) {
         case cameraProjectionMode::PERSPECTIVE:
             this->projection = glm::perspective(glm::radians(this->fov / 2), (float) windowWidth / (float) windowHeight, 0.1f, 1024.0f);
             break;
-        case cameraProjectionMode::ORTHOGONAL:
-            // todo
-            break;
+        //case cameraProjectionMode::ORTHOGONAL:
+        //    this->projection = glm::ortho(0.f, (float) windowWidth, (float) windowHeight, 0.f, 0.1f, 1024.f);
+        //    break;
     }
 }
 

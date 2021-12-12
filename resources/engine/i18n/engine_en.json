@@ -26,6 +26,7 @@
   "warn.mesh.invalid_cull_type": "Invalid cull type value {}",
   "warn.bullet_collider_resource.invalid_collider_type": "Invalid collider type {}",
   "warn.ogg.3d_stereo_audio": "Stereo audio will not sound like it is playing from a 3D source",
+  "warn.resource.deleting_resource_at_exit": "Deleting \"{}\" (refcount {}) that was not already deleted!",
 
   "error.angelscript.unrecoverable_error": "Unrecoverable error while starting a new module at \"{}\"",
   "error.angelscript.script_not_found": "Unable to load script at \"{}\"",

@@ -73,8 +73,7 @@ void resource::discardAll() {
     // Make sure all resources are deleted, just in case
     for (const auto& [providerName, resourceMap] : resource::resources) {
         for (const auto& [name, resource] : resourceMap) {
-            //todo(localize)
-            logger::log(WARN, "Resource Manager", fmt::format("Deleting \"{}\" (refcount {}) that was not already deleted!", resource::resources[providerName].at(name)->getIdentifier(), resource::resources[providerName].at(name).useCount()));
+            logger::log(WARN, "Resource Manager", fmt::format(TR("warn.resource.deleting_resource_at_exit"), resource::resources[providerName].at(name)->getIdentifier(), resource::resources[providerName].at(name).useCount()));
         }
     }
     resource::resources.clear();

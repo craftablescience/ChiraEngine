@@ -21,5 +21,8 @@ namespace chira {
     protected:
         sharedPointer<bulletColliderResource> collider;
         btRigidBody* rigidBody;
+    private:
+        // I'm not bothering with this
+        using entity3d::translateWithRotation;
     };
 }
