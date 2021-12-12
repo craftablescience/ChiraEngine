@@ -45,3 +45,10 @@ jobs:
           ${{github.workspace}}/build/resources/
           ${{github.workspace}}/build/ChiraEngineGui
           ${{github.workspace}}/build/*.s*
+
+    - name: Cache Build
+      uses: actions/cache@v2
+      with:
+        path: |
+          ${{github.workspace}}\build
+        key: ${{ runner.os }}-${{ matrix.sys }}-${{ matrix.build_type }}-cache
