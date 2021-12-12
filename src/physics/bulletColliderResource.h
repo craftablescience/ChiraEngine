@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../resource/propertiesResource.h"
-#include "../utility/logger.h"
-#include "../utility/math/axis.h"
-#include "../i18n/translationManager.h"
+#include <resource/propertiesResource.h>
+#include <utility/logger.h>
+#include <utility/math/axis.h>
+#include <i18n/translationManager.h>
 #include <fmt/core.h>
 #include <btBulletDynamicsCommon.h>
 

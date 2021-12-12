@@ -1,11 +1,10 @@
 #include "meshResource.h"
 
-#include "../utility/math/matrix.h"
-#include <fmt/core.h>
-
 #include <utility>
-#include "../i18n/translationManager.h"
-#include "../resource/resourceManager.h"
+#include <utility/math/matrix.h>
+#include <i18n/translationManager.h>
+#include <fmt/core.h>
+#include <resource/resourceManager.h>
 
 using namespace chira;
 

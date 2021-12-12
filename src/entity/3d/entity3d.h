@@ -1,7 +1,7 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
-#include "../entity.h"
+#include <entity/entity.h>
 
 namespace chira {
     class entity3d : public entity {

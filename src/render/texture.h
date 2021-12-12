@@ -3,9 +3,9 @@
 #include <memory>
 #include <string>
 #include <glad/gl.h>
-#include "../resource/propertiesResource.h"
-#include "../loader/abstractImage.h"
-#include "../resource/textureResource.h"
+#include <resource/propertiesResource.h>
+#include <loader/abstractImage.h>
+#include <resource/textureResource.h>
 
 namespace chira {
     class texture : public propertiesResource {

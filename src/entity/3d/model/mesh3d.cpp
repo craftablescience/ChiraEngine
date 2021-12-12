@@ -1,7 +1,7 @@
 #include "mesh3d.h"
 
-#include "../../../utility/math/matrix.h"
-#include "../../../resource/resourceManager.h"
+#include <utility/math/matrix.h>
+#include <resource/resourceManager.h>
 
 using namespace chira;
 

@@ -2,8 +2,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 #include <fmt/core.h>
-#include "../utility/logger.h"
-#include "../resource/resourceManager.h"
+#include <utility/logger.h>
+#include <resource/resourceManager.h>
 
 using namespace chira;
 

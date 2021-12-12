@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../entity3d.h"
-#include "../../../physics/bulletColliderResource.h"
+#include <entity/3d/entity3d.h>
+#include <physics/bulletColliderResource.h>
 
 namespace chira {
     class bulletRigidBody : public entity3d {

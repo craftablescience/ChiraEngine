@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../entity3d.h"
+#include <entity/3d/entity3d.h>
 
 namespace chira {
     enum class cameraProjectionMode {

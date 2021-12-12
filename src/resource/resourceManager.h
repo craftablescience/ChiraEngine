@@ -5,9 +5,9 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
-#include "../utility/logger.h"
+#include <utility/logger.h>
+#include <i18n/translationManager.h>
 #include <fmt/core.h>
-#include "../i18n/translationManager.h"
 #include "provider/abstractResourceProvider.h"
 
 namespace chira {

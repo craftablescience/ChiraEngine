@@ -1,22 +1,22 @@
 #include "engine.h"
 
 #define IMGUI_USER_CONFIG "../../src/config/imguiConfig.h"
-#include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
+#include <imgui.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
 #include <fmt/core.h>
-#include "../config/glVersion.h"
-#include "../loader/jsonSettingsLoader.h"
-#include "../loader/image.h"
-#include "../sound/alSoundManager.h"
-#include "../hook/discordRichPresence.h"
-#include "../resource/provider/filesystemResourceProvider.h"
-#include "../resource/provider/internetResourceProvider.h"
-#include "../loader/objMeshLoader.h"
-#include "../loader/primitiveMeshLoader.h"
-#include "../render/texturedMaterial.h"
-#include "../event/eventQueue.h"
-#include "../physics/bulletPhysicsProvider.h"
+#include <config/glVersion.h>
+#include <loader/jsonSettingsLoader.h>
+#include <loader/image.h>
+#include <sound/alSoundManager.h>
+#include <hook/discordRichPresence.h>
+#include <resource/provider/filesystemResourceProvider.h>
+#include <resource/provider/internetResourceProvider.h>
+#include <loader/objMeshLoader.h>
+#include <loader/primitiveMeshLoader.h>
+#include <render/texturedMaterial.h>
+#include <event/eventQueue.h>
+#include <physics/bulletPhysicsProvider.h>
 
 #if __has_include(<windows.h>)
 #include <windows.h>

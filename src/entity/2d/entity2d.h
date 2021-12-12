@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../entity.h"
+#include <entity/entity.h>
 
 namespace chira {
     class entity2d : public entity {

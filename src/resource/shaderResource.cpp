@@ -1,9 +1,9 @@
 #include "shaderResource.h"
 
-#include "../utility/logger.h"
+#include <utility/logger.h>
+#include <i18n/translationManager.h>
 #include <fmt/core.h>
-#include "../i18n/translationManager.h"
-#include "../config/glVersion.h"
+#include <config/glVersion.h>
 #include <sstream>
 
 using namespace chira;

@@ -3,9 +3,9 @@
 #include <glm/glm.hpp>
 #include <functional>
 #include <vector>
-#include "../resource/shaderResource.h"
-#include "../resource/propertiesResource.h"
-#include "../utility/handleObject.h"
+#include <resource/shaderResource.h>
+#include <resource/propertiesResource.h>
+#include <utility/handleObject.h>
 
 namespace chira {
     class shader : public propertiesResource, public handleObject {

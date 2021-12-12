@@ -1,6 +1,6 @@
 #include "cubemapMaterial.h"
 
-#include "../resource/resourceManager.h"
+#include <resource/resourceManager.h>
 
 using namespace chira;
 

@@ -2,8 +2,8 @@
 
 #include <utility>
 
-#include "../entity3d.h"
-#include "../../../resource/meshResource.h"
+#include <entity/3d/entity3d.h>
+#include <resource/meshResource.h>
 
 namespace chira {
     class mesh3d : public entity3d {

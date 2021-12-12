@@ -2,7 +2,7 @@
 
 #include <string>
 #include <memory>
-#include "../resource.h"
+#include <resource/resource.h>
 
 namespace chira {
     class abstractResourceProvider {

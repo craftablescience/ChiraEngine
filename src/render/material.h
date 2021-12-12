@@ -4,7 +4,7 @@
 #include <memory>
 #include <functional>
 #include <unordered_map>
-#include "../resource/propertiesResource.h"
+#include <resource/propertiesResource.h>
 #include "shader.h"
 
 namespace chira {

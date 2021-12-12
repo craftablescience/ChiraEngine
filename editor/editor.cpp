@@ -1,13 +1,12 @@
 #include <tinyfiledialogs.h>
-#include "../src/core/engine.h"
-#include "../src/sound/oggFileSound.h"
-#include "../src/render/phongMaterial.h"
-#include "../src/hook/discordRichPresence.h"
-#include "../src/resource/provider/filesystemResourceProvider.h"
-#include "../src/resource/resourceManager.h"
-#include "../src/utility/markdown.h"
-#include "../src/entity/3d/model/mesh3d.h"
-#include "../src/entity/3d/physics/bulletRigidBody.h"
+#include <core/engine.h>
+#include <sound/oggFileSound.h>
+#include <render/phongMaterial.h>
+#include <hook/discordRichPresence.h>
+#include <resource/provider/filesystemResourceProvider.h>
+#include <resource/resourceManager.h>
+#include <utility/markdown.h>
+#include <entity/3d/model/mesh3d.h>
 
 using namespace chira;
 

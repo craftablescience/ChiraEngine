@@ -1,6 +1,6 @@
 #include "alHelpers.h"
 
-#include "../i18n/translationManager.h"
+#include <i18n/translationManager.h>
 #include <fmt/core.h>
 
 bool chira::checkForALErrors(const std::string& filename, const std::uint_fast32_t line) {

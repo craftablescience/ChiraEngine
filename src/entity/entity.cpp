@@ -1,6 +1,6 @@
 #include "entity.h"
 
-#include "../utility/uuidGenerator.h"
+#include <utility/uuidGenerator.h>
 
 using namespace chira;
 

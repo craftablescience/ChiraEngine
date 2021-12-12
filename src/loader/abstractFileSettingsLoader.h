@@ -2,8 +2,8 @@
 
 #include <string>
 #include <filesystem>
+#include <resource/resourceManager.h>
 #include "abstractSettingsLoader.h"
-#include "../resource/resourceManager.h"
 
 namespace chira {
     class abstractFileSettingsLoader : public abstractSettingsLoader {

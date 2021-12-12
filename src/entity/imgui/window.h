@@ -3,7 +3,7 @@
 #include <functional>
 #include <string>
 #include <imgui.h>
-#include "../entity.h"
+#include <entity/entity.h>
 
 namespace chira {
     class window : public entity {

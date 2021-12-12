@@ -1,9 +1,9 @@
 #pragma once
 
 #include "world3d.h"
-#include "../../resource/meshResource.h"
-#include "../../render/cubemapMaterial.h"
 #include "camera/camera3d.h"
+#include <resource/meshResource.h>
+#include <render/cubemapMaterial.h>
 
 namespace chira {
     class root : private world3d {

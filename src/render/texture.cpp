@@ -1,7 +1,7 @@
 #include "texture.h"
 
-#include "../loader/image.h"
-#include "../resource/resourceManager.h"
+#include <loader/image.h>
+#include <resource/resourceManager.h>
 
 using namespace chira;
 

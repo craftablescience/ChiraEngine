@@ -1,7 +1,7 @@
 #pragma once
 
-#include "imgui.h"
-#include "imgui_markdown.h"
+#include <imgui.h>
+#include <imgui_markdown.h>
 #if _WIN32
 #include <windows.h>
 #include <shellapi.h>

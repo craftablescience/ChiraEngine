@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../src/utility/logger.h"
-#include "../../src/resource/fontResource.h"
+#include <utility/logger.h>
+#include <resource/fontResource.h>
 
 using namespace chira;
 

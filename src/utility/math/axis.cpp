@@ -1,7 +1,7 @@
 #include "axis.h"
 
-#include "../logger.h"
-#include "../../i18n/translationManager.h"
+#include <utility/logger.h>
+#include <i18n/translationManager.h>
 #include <fmt/core.h>
 
 chira::axis chira::getAxisFromString(const std::string& str) {

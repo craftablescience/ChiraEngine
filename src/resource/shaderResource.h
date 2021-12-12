@@ -6,8 +6,8 @@
 #include <glad/gl.h>
 #include <fstream>
 #include <regex>
-#include "../utility/handleObject.h"
-#include "../resource/resource.h"
+#include <utility/handleObject.h>
+#include <resource/resource.h>
 
 namespace chira {
     constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_PREFIX = "#";

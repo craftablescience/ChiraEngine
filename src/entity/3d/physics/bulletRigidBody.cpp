@@ -1,9 +1,9 @@
 #include "bulletRigidBody.h"
 
-#include "../../../physics/bulletPhysicsProvider.h"
-#include "../../../core/engine.h"
-#include "../../../resource/resourceManager.h"
-#include "../../../utility/math/bulletConversions.h"
+#include <core/engine.h>
+#include <physics/bulletPhysicsProvider.h>
+#include <resource/resourceManager.h>
+#include <utility/math/bulletConversions.h>
 
 using namespace chira;
 

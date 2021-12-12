@@ -1,25 +1,25 @@
 #pragma once
 
-#include "glad/gl.h"
+#include <glad/gl.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <map>
 #include <functional>
 #include <vector>
 #include <memory>
-#include "../render/shader.h"
-#include "../render/texture.h"
-#include "../input/keybind.h"
-#include "../input/mousebind.h"
-#include "../loader/abstractSettingsLoader.h"
-#include "../script/abstractScriptProvider.h"
-#include "../script/angelscriptProvider.h"
-#include "../sound/abstractSoundManager.h"
-#include "../entity/imgui/console/console.h"
-#include "../utility/logger.h"
-#include "../render/material.h"
-#include "../physics/abstractPhysicsProvider.h"
-#include "../entity/3d/root.h"
+#include <render/shader.h>
+#include <render/texture.h>
+#include <input/keybind.h>
+#include <input/mousebind.h>
+#include <loader/abstractSettingsLoader.h>
+#include <script/abstractScriptProvider.h>
+#include <script/angelscriptProvider.h>
+#include <sound/abstractSoundManager.h>
+#include <entity/imgui/console/console.h>
+#include <utility/logger.h>
+#include <render/material.h>
+#include <physics/abstractPhysicsProvider.h>
+#include <entity/3d/root.h>
 
 namespace chira {
     const std::string ENGINE_FILESYSTEM_PATH = "resources/engine"; // NOLINT(cert-err58-cpp)

@@ -1,6 +1,5 @@
 #include "angelscriptProvider.h"
 
-#include "../utility/logger.h"
 #include <datetime/datetime.h>
 #include <scriptany/scriptany.h>
 #include <scriptarray/scriptarray.h>
@@ -10,6 +9,8 @@
 #include <scriptmath/scriptmathcomplex.h>
 #include <scriptstdstring/scriptstdstring.h>
 #include <weakref/weakref.h>
+
+#include <utility/logger.h>
 
 using namespace chira;
 

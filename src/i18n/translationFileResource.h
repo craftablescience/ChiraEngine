@@ -3,7 +3,7 @@
 #include <utility>
 #include <unordered_map>
 
-#include "../resource/propertiesResource.h"
+#include <resource/propertiesResource.h>
 
 namespace chira {
     class translationFileResource : public propertiesResource {

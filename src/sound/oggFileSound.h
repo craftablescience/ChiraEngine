@@ -1,13 +1,13 @@
 #pragma once
 
 #include <fstream>
-#include "alHelpers.h"
-#include "abstractSound.h"
 #include <ogg/ogg.h>
 #include <ogg/os_types.h>
 #include <vorbis/codec.h>
 #include <vorbis/vorbisenc.h>
 #include <vorbis/vorbisfile.h>
+#include "alHelpers.h"
+#include "abstractSound.h"
 
 /*
  * This code is largely copied verbatim from:

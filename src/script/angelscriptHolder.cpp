@@ -1,8 +1,9 @@
 #include "angelscriptHolder.h"
-#include "../resource/resourceManager.h"
-#include "../resource/stringResource.h"
+
 #include <angelscript.h>
 #include <scriptbuilder/scriptbuilder.h>
+#include <resource/resourceManager.h>
+#include <resource/stringResource.h>
 
 using namespace chira;
 

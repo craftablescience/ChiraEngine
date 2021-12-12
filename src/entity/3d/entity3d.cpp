@@ -1,6 +1,6 @@
 #include "entity3d.h"
 
-#include "../../utility/math/matrix.h"
+#include <utility/math/matrix.h>
 
 using namespace chira;
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "abstractPhysicsProvider.h"
-#include "bulletColliderResource.h"
 #include <memory>
 #include <vector>
+#include "abstractPhysicsProvider.h"
+#include "bulletColliderResource.h"
 
 namespace chira {
     class bulletPhysicsProvider : public abstractPhysicsProvider {

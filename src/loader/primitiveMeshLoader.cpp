@@ -1,7 +1,7 @@
 #include "primitiveMeshLoader.h"
 
-#include "../utility/logger.h"
-#include "../i18n/translationManager.h"
+#include <utility/logger.h>
+#include <i18n/translationManager.h>
 
 using namespace chira;
 

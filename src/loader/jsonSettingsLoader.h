@@ -1,7 +1,7 @@
 #pragma once
 
 #include <fstream>
-#include "nlohmann/json.hpp"
+#include <nlohmann/json.hpp>
 #include "abstractFileSettingsLoader.h"
 
 namespace chira {

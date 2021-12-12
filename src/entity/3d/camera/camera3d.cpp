@@ -1,6 +1,6 @@
 #include "camera3d.h"
 
-#include "../../../core/engine.h"
+#include <core/engine.h>
 
 using namespace chira;
 
