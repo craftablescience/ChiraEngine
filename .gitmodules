@@ -1,39 +1,3 @@
-[submodule "src/third_party/json"]
-	path = src/third_party/json
-	url = https://github.com/nlohmann/json
-[submodule "src/third_party/glm"]
-	path = src/third_party/glm
-	url = https://github.com/g-truc/glm
-[submodule "src/third_party/imgui"]
-	path = src/third_party/imgui
-	url = https://github.com/ocornut/imgui
-[submodule "src/third_party/openalsoft"]
-	path = src/third_party/openalsoft
-	url = https://github.com/kcat/openal-soft
-[submodule "src/third_party/discord"]
-	path = src/third_party/discord
-	url = https://github.com/discord/discord-rpc
-[submodule "src/third_party/bullet"]
-	path = src/third_party/bullet
-	url = https://github.com/bulletphysics/bullet3
-[submodule "src/third_party/fmt"]
-	path = src/third_party/fmt
-	url = https://github.com/fmtlib/fmt
-[submodule "src/third_party/imgui_markdown"]
-	path = src/third_party/imgui_markdown
-	url = https://github.com/juliettef/imgui_markdown
-[submodule "src/third_party/curlpp"]
-	path = src/third_party/curlpp
-	url = https://github.com/jpbarrette/curlpp
-[submodule "src/third_party/stduuid"]
-	path = src/third_party/stduuid
-	url = https://github.com/mariusbancila/stduuid
-[submodule "src/third_party/ogg"]
-	path = src/third_party/ogg
-	url = https://github.com/craftablescience/ogg
-[submodule "src/third_party/vorbis"]
-	path = src/third_party/vorbis
-	url = https://github.com/craftablescience/vorbis
 [submodule "third_party/glfw"]
 	path = third_party/glfw
 	url = https://github.com/glfw/glfw
