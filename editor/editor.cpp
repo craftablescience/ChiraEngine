@@ -8,6 +8,7 @@
 #include <utility/markdown.h>
 #include <entity/3d/model/mesh3d.h>
 #include <i18n/translationManager.h>
+#include <entity/3d/physics/bulletRigidBody.h>
 
 using namespace chira;
 
@@ -42,18 +43,13 @@ int main() {
         engine::getSoundManager()->getSound("helloWorld")->play();
     }));
     engine::addKeybind(keybind(GLFW_KEY_P, GLFW_RELEASE, []() {
-        const char* path = tinyfd_openFileDialog(
-                TR("ui.window.select_file").c_str(),
-#if WIN32
+        const char* path = tinyfd_openFileDialog(TR("ui.window.select_file").c_str(),
+#if _WIN32
                 "C:\\",
 #else
                 "/",
 #endif
-                0,
-                nullptr,
-                nullptr,
-                0
-        );
+                0, nullptr, nullptr, 0);
         if (path) {
             logger::log(INFO_IMPORTANT, "File Picker Debug", std::string(path));
             delete path;
@@ -81,19 +77,18 @@ int main() {
         //endregion
 
         //region Add a teapot with a static rigidbody
-        //auto staticTeapot = new bulletRigidBody{"file://physics/ground_static.json"};
-        //staticTeapot->translate(glm::vec3{3,5,-13});
+        auto staticTeapot = new bulletRigidBody{"file://physics/ground_static.json"};
+        staticTeapot->translate(glm::vec3{3,0,-13});
         auto cubeMaterial = resource::getResource<phongMaterial>("file://materials/cubeMaterial.json");
         cubeMesh = resource::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial.castDynamic<material>());
-        //staticTeapot->addChild(new mesh3d{cubeMesh});
-        engine::getRoot()->addChild(new mesh3d{cubeMesh});
+        staticTeapot->addChild(new mesh3d{cubeMesh});
 
-        //auto fallingTeapot = new bulletRigidBody{"file://physics/cube_dynamic.json"};
-        //fallingTeapot->translate(glm::vec3{0,5,-10});
-        //fallingTeapot->addChild(new mesh3d{cubeMesh});
+        auto fallingTeapot = new bulletRigidBody{"file://physics/cube_dynamic.json"};
+        fallingTeapot->translate(glm::vec3{0,15,-10});
+        fallingTeapot->addChild(new mesh3d{cubeMesh});
 
-        //engine::getRoot()->addChild(staticTeapot);
-        //engine::getRoot()->addChild(fallingTeapot);
+        engine::getRoot()->addChild(staticTeapot);
+        engine::getRoot()->addChild(fallingTeapot);
         //endregion
 
         /*
@@ -140,6 +135,8 @@ int main() {
         //region Set a nice skybox
         engine::getRoot()->setSkybox("file://materials/skyboxShanghaiMaterial.json");
         //endregion
+
+        camera->translate(glm::vec3{0,0,15});
     });
     engine::init();
 
@@ -155,8 +152,6 @@ int main() {
         engine::getRoot()->getSkybox()->getShader()->use();
         engine::getRoot()->getSkybox()->getShader()->setUniform("p", camera->getProjection());
         engine::getRoot()->getSkybox()->getShader()->setUniform("v", glm::mat4(glm::mat3(camera->getView())));
-
-        camera->translate(glm::vec3{0,0,0.1});
     });
     engine::run();
 }
