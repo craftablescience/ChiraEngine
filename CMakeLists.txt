@@ -67,23 +67,23 @@ if(CHIRA_BUILD_STATIC AND MSVC)
 else()
     set(CURLPP_STATIC_CRT OFF CACHE BOOL "" FORCE)
 endif()
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/curlpp)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp)
 list(APPEND ENGINE_LINK_LIBRARIES curlpp)
 
 # DISCORD
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/discord)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/discord)
 list(APPEND ENGINE_LINK_LIBRARIES discord-rpc)
 
 # FMT
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/fmt)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/fmt)
 list(APPEND ENGINE_LINK_LIBRARIES fmt::fmt)
 
 # OPENGL
 find_package(OpenGL REQUIRED)
 
 # GLAD
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/glad)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad)
 list(APPEND ENGINE_LINK_LIBRARIES glad)
 
 # GLFW
@@ -94,7 +94,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/glfw)
 list(APPEND ENGINE_LINK_LIBRARIES glfw)
 
 # GLM
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/glm)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm)
 list(APPEND ENGINE_LINK_LIBRARIES glm::glm)
 
 # BULLET
@@ -113,7 +113,7 @@ set(BUILD_CLSOCKET          OFF CACHE BOOL "" FORCE)
 if(MSVC)
     set(BUILD_SHARED_LIBS OFF)
 endif()
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/bullet)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/bullet)
 list(APPEND ENGINE_LINK_LIBRARIES BulletDynamics BulletCollision LinearMath)
 if(MSVC)
     set(BUILD_SHARED_LIBS ON)
@@ -128,7 +128,7 @@ set(ALSOFT_INSTALL_UTILS    OFF CACHE BOOL "" FORCE)
 set(ALSOFT_REQUIRE_OPENSL   OFF CACHE BOOL "" FORCE)
 set(ALSOFT_REQUIRE_OBOE     OFF CACHE BOOL "" FORCE)
 set(ALSOFT_REQUIRE_SDL2     OFF CACHE BOOL "" FORCE)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/openalsoft)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/openalsoft)
 list(APPEND ENGINE_LINK_LIBRARIES OpenAL)
 
 # LIBOGG and LIBVORBIS
@@ -136,59 +136,59 @@ set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
 
 # LIBOGG
 set(INSTALL_DOCS OFF CACHE BOOL "" FORCE)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/ogg)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/ogg)
 list(APPEND ENGINE_LINK_LIBRARIES ogg)
 
 # LIBVORBIS
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/vorbis)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/vorbis)
 list(APPEND ENGINE_LINK_LIBRARIES vorbis vorbisenc vorbisfile)
 
 # NLOHMANN_JSON
 set(JSON_BuildTests OFF CACHE INTERNAL "")
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/json)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/json)
 list(APPEND ENGINE_LINK_LIBRARIES nlohmann_json::nlohmann_json)
 
 # STB
 if(CHIRA_BUILD_STATIC)
-    list(APPEND ENGINE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/stb/stb_image.h)
+    list(APPEND ENGINE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb/stb_image.h)
 else()
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/stb)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb)
     list(APPEND ENGINE_LINK_LIBRARIES stb)
 endif()
 
 # STDUUID
 set(UUID_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/stduuid)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stduuid)
 list(APPEND ENGINE_LINK_LIBRARIES stduuid)
 
 # TINYFILEDIALOGS
 if(CHIRA_BUILD_STATIC)
     list(APPEND ENGINE_SOURCES
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/tinyfiledialogs/tinyfiledialogs.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/tinyfiledialogs/tinyfiledialogs.h)
+            ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs/tinyfiledialogs.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs/tinyfiledialogs.h)
 else()
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/tinyfiledialogs)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
     list(APPEND ENGINE_LINK_LIBRARIES tinyfiledialogs)
 endif()
 
 # IMGUI
 list(APPEND ENGINE_SOURCES
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/imconfig.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/imgui.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/imgui_demo.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/imgui_draw.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/imgui_internal.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/imgui_tables.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/imgui_widgets.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/imstb_rectpack.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/imstb_textedit.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/imstb_truetype.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/backends/imgui_impl_glfw.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/backends/imgui_impl_glfw.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/backends/imgui_impl_opengl3.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/backends/imgui_impl_opengl3.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/misc/cpp/imgui_stdlib.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui/misc/cpp/imgui_stdlib.h)
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imconfig.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui_demo.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui_draw.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui_internal.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui_tables.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui_widgets.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imstb_rectpack.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imstb_textedit.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imstb_truetype.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_glfw.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_glfw.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_opengl3.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_opengl3.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/misc/cpp/imgui_stdlib.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/misc/cpp/imgui_stdlib.h)
 if(WIN32)
     # Windows IME support
     list(APPEND ENGINE_LINK_LIBRARIES imm32)
@@ -198,7 +198,7 @@ elseif(UNIX)
 endif()
 
 # IMGUI_MARKDOWN
-list(APPEND ENGINE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui_markdown/imgui_markdown.h)
+list(APPEND ENGINE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdown/imgui_markdown.h)
 
 # CHIRAENGINE
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/CMakeLists.txt)
@@ -242,20 +242,20 @@ endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/addons)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/curlpp/include)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/discord/include)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/fmt/include)
-target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/glad/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/discord/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fmt/include)
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIRS})
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/bullet/src)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/ogg/include)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/vorbis/include)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/stb)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/stduuid/gsl)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/stduuid/include)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/tinyfiledialogs)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party/imgui_markdown)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/bullet/src)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/ogg/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/vorbis/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stduuid/gsl)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stduuid/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdown)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} ${ENGINE_LINK_LIBRARIES})
 

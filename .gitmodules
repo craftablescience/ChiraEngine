@@ -1,3 +1,39 @@
 [submodule "third_party/glfw"]
 	path = third_party/glfw
 	url = https://github.com/glfw/glfw
+[submodule "third_party/json"]
+	path = third_party/json
+	url = https://github.com/nlohmann/json
+[submodule "third_party/glm"]
+	path = third_party/glm
+	url = https://github.com/g-truc/glm
+[submodule "third_party/imgui"]
+	path = third_party/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "third_party/openalsoft"]
+	path = third_party/openalsoft
+	url = https://github.com/kcat/openal-soft
+[submodule "third_party/discord"]
+	path = third_party/discord
+	url = https://github.com/discord/discord-rpc
+[submodule "third_party/bullet"]
+	path = third_party/bullet
+	url = https://github.com/bulletphysics/bullet3
+[submodule "third_party/fmt"]
+	path = third_party/fmt
+	url = https://github.com/fmtlib/fmt
+[submodule "third_party/imgui_markdown"]
+	path = third_party/imgui_markdown
+	url = https://github.com/juliettef/imgui_markdown
+[submodule "third_party/curlpp"]
+	path = third_party/curlpp
+	url = https://github.com/jpbarrette/curlpp
+[submodule "third_party/stduuid"]
+	path = third_party/stduuid
+	url = https://github.com/mariusbancila/stduuid
+[submodule "third_party/ogg"]
+	path = third_party/ogg
+	url = https://github.com/craftablescience/ogg
+[submodule "third_party/vorbis"]
+	path = third_party/vorbis
+	url = https://github.com/craftablescience/vorbis
