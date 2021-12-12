@@ -434,6 +434,28 @@ void engine::setBackgroundColor(float r, float g, float b, float a) {
     glClearColor(r, g, b, a);
 }
 
+glm::vec2 engine::getWindowSize() {
+    int w, h;
+    glfwGetWindowSize(engine::window, &w, &h);
+    return {w, h};
+}
+
+int engine::getWindowWidth() {
+    int w, h;
+    glfwGetWindowSize(engine::window, &w, &h);
+    return w;
+}
+
+int engine::getWindowHeight() {
+    int w, h;
+    glfwGetWindowSize(engine::window, &w, &h);
+    return h;
+}
+
+void engine::setWindowSize(int width, int height) {
+    glfwSetWindowSize(engine::window, width, height);
+}
+
 void engine::addKeybind(const keybind& keybind) {
     engine::keybinds.push_back(keybind);
 }

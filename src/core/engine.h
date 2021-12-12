@@ -39,6 +39,10 @@ namespace chira {
         static void addStopFunction(const std::function<void()>& stop);
 
         static void setBackgroundColor(float r, float g, float b, float a);
+        static glm::vec2 getWindowSize();
+        static int getWindowWidth();
+        static int getWindowHeight();
+        static void setWindowSize(int width, int height);
 
         static void addKeybind(const keybind& keybind);
         static std::vector<keybind>* getKeybinds();

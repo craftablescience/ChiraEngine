@@ -52,7 +52,5 @@ namespace chira {
         glm::mat4 projection{};
         cameraProjectionMode projectionMode;
         float fov = 90.0f;
-        static int getWindowWidth();
-        static int getWindowHeight();
     };
 }
