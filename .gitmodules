@@ -34,3 +34,6 @@
 [submodule "src/third_party/vorbis"]
 	path = src/third_party/vorbis
 	url = https://github.com/craftablescience/vorbis
+[submodule "third_party/glfw"]
+	path = third_party/glfw
+	url = https://github.com/glfw/glfw
