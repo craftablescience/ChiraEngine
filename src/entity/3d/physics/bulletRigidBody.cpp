@@ -59,12 +59,12 @@ void bulletRigidBody::setRotation(const glm::quat& newRot) {
     entity3d::setRotation(newRot);
 }
 
-const glm::vec3& bulletRigidBody::getPosition() {
+glm::vec3 bulletRigidBody::getPosition() {
     this->position = bulletToGLM(this->rigidBody->getWorldTransform().getOrigin());
     return entity3d::getPosition();
 }
 
-const glm::quat& bulletRigidBody::getRotation() {
+glm::quat bulletRigidBody::getRotation() {
     this->rotation = bulletToGLM(this->rigidBody->getWorldTransform().getRotation());
     return entity3d::getRotation();
 }

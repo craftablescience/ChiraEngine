@@ -9,6 +9,8 @@
 #include <entity/3d/model/mesh3d.h>
 #include <i18n/translationManager.h>
 #include <entity/3d/physics/bulletRigidBody.h>
+#include <entity/imgui/settings/settings.h>
+#include "entity/3d/camera/freecam.h"
 
 using namespace chira;
 
@@ -59,9 +61,8 @@ int main() {
     }));
 
     sharedPointer<meshResource> cubeMesh;
-    camera3d* camera;
 
-    engine::addInitFunction([&cubeMesh, &camera, &discordEnabled]() {
+    engine::addInitFunction([&cubeMesh, &discordEnabled]() {
         //region Enable Discord Rich Presence
         if (discordEnabled) {
             discordRichPresence::init(TR("editor.discord.application_id"));
@@ -91,22 +92,15 @@ int main() {
         engine::getRoot()->addChild(fallingTeapot);
         //endregion
 
-        /*
-        auto* tex = resource::getResource<texture>("file://textures/ui/icon.json");
-        componentManager::getWorld<extensibleWorld>(worldId)->add(
-                new extensibleUiWindowComponent{TR("debug.imgui.texture_test"), true, [tex](double delta) {
-                    ImGui::Text("size = %d x %d", 512, 512);
-                    ImGui::Image((void*) (intptr_t) tex->getHandle(), ImVec2(512, 512));
-                }});
-
-        engine::addKeybind(keybind(GLFW_KEY_O, GLFW_PRESS, [settingsUi](){
-            settingsUi->setVisible(!settingsUi->isVisible());
+        auto settingsUI = new settings{};
+        engine::getRoot()->addChild(settingsUI);
+        engine::addKeybind(keybind(GLFW_KEY_O, GLFW_PRESS, [settingsUI](){
+            settingsUI->setVisible(!settingsUI->isVisible());
         }));
-        */
 
         //region Add the camera
         engine::captureMouse(true);
-        camera = new camera3d{"freecam", cameraProjectionMode::PERSPECTIVE};
+        auto camera = new freecam{"freecam", cameraProjectionMode::PERSPECTIVE};
         engine::getRoot()->addChild(camera);
         engine::getRoot()->setMainCamera(camera);
         //endregion
@@ -140,18 +134,18 @@ int main() {
     });
     engine::init();
 
-    engine::addRenderFunction([cubeMesh, camera]() {
+    engine::addRenderFunction([cubeMesh]() {
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
 
         // todo: use UBO
         cubeMesh->getMaterial()->getShader()->use();
-        cubeMesh->getMaterial()->getShader()->setUniform("p", camera->getProjection());
-        cubeMesh->getMaterial()->getShader()->setUniform("v", camera->getView());
+        cubeMesh->getMaterial()->getShader()->setUniform("p", engine::getRoot()->getMainCamera()->getProjection());
+        cubeMesh->getMaterial()->getShader()->setUniform("v", engine::getRoot()->getMainCamera()->getView());
 
         // todo: use UBO
         engine::getRoot()->getSkybox()->getShader()->use();
-        engine::getRoot()->getSkybox()->getShader()->setUniform("p", camera->getProjection());
-        engine::getRoot()->getSkybox()->getShader()->setUniform("v", glm::mat4(glm::mat3(camera->getView())));
+        engine::getRoot()->getSkybox()->getShader()->setUniform("p", engine::getRoot()->getMainCamera()->getProjection());
+        engine::getRoot()->getSkybox()->getShader()->setUniform("v", glm::mat4(glm::mat3(engine::getRoot()->getMainCamera()->getView())));
     });
     engine::run();
 }

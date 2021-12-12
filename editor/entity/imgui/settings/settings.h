@@ -2,13 +2,14 @@
 
 #include <utility/logger.h>
 #include <resource/fontResource.h>
+#include <entity/imgui/window.h>
 
 using namespace chira;
 
-class settings : public abstractUiWindowComponent {
+class settings : public window {
 public:
-    explicit settings(bool startVisible, const ImVec2& windowSize = ImVec2(0,0), bool enforceSize = false);
-    void draw(double delta) override;
+    explicit settings(const ImVec2& windowSize = ImVec2(0,0));
+    void renderContents() override;
 private:
     // Fields are initialized by values in settings loader
     int windowWidth = -1;

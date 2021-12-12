@@ -20,8 +20,7 @@ namespace chira {
             return this->mainCamera->getPosition();
         }
         glm::vec3 getAudioListeningRotation() {
-            // todo
-            return glm::vec3{};
+            return glm::eulerAngles(this->mainCamera->getRotation());
         }
         glm::vec3 getAudioListeningUpVector() {
             return this->mainCamera->getUpVector();

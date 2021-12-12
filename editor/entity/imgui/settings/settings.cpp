@@ -1,14 +1,12 @@
 #include "settings.h"
 
 #include <misc/cpp/imgui_stdlib.h>
-#include <resource/resource.h>
 #include <core/engine.h>
-
-#define SETTINGS_INPUT_FIELD_WIDTH 150.0f
+#include <i18n/translationManager.h>
 
 using namespace chira;
 
-settings::settings(bool startVisible, const ImVec2& windowSize, bool enforceSize) : abstractUiWindowComponent(TR("ui.settings.title"), startVisible, windowSize, enforceSize) {
+settings::settings(const ImVec2& windowSize) : window(TR("ui.settings.title"), false, windowSize) {
     engine::getSettingsLoader()->getValue("graphics", "windowWidth", &this->windowWidth);
     engine::getSettingsLoader()->getValue("graphics", "windowHeight", &this->windowHeight);
     engine::getSettingsLoader()->getValue("graphics", "startMaximized", &this->startMaximized);
@@ -19,8 +17,10 @@ settings::settings(bool startVisible, const ImVec2& windowSize, bool enforceSize
     engine::getSettingsLoader()->getValue("engineGui", "discordIntegration", &this->discordIntegration);
 }
 
-void settings::draw(double delta) {
-    ImGui::PushItemWidth(SETTINGS_INPUT_FIELD_WIDTH);
+void settings::renderContents() {
+    constexpr float inputWidth = 150.0f;
+
+    ImGui::PushItemWidth(inputWidth);
     ImGui::InputInt(TR("ui.settings.window_width").c_str(), &this->windowWidth);
     ImGui::InputInt(TR("ui.settings.window_height").c_str(), &this->windowHeight);
     ImGui::PopItemWidth();
@@ -28,7 +28,7 @@ void settings::draw(double delta) {
     ImGui::Checkbox(TR("ui.settings.fullscreen").c_str(), &this->fullscreen);
     ImGui::Checkbox(TR("ui.settings.raw_mouse_motion").c_str(), &this->rawMouseMotion);
     ImGui::Checkbox(TR("ui.settings.invert_y_axis").c_str(), &this->invertYAxis);
-    ImGui::PushItemWidth(SETTINGS_INPUT_FIELD_WIDTH);
+    ImGui::PushItemWidth(inputWidth);
     ImGui::InputText(TR("ui.settings.language").c_str(), &this->language);
     ImGui::PopItemWidth();
     ImGui::Checkbox(TR("ui.settings.discord_integration").c_str(), &this->discordIntegration);

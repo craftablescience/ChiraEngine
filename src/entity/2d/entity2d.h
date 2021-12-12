@@ -19,6 +19,6 @@ namespace chira {
     protected:
         // The following are in local space and are relative to the parent.
         glm::vec2 position{};
-        glm::quat rotation{};
+        glm::quat rotation = glm::identity<glm::quat>();
     };
 }

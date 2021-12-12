@@ -3,7 +3,7 @@
 #include <functional>
 
 namespace chira {
-    enum mouseActions {
+    enum class mouseActions {
         MOVE,
         SCROLL
     };

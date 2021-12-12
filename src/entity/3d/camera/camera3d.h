@@ -15,10 +15,10 @@ namespace chira {
         explicit camera3d(const cameraProjectionMode& mode, float fov_ = 90.0f);
         explicit camera3d(const std::string& name_, const cameraProjectionMode& mode, float fov_ = 90.0f);
         void createProjection(int windowWidth, int windowHeight);
-        virtual const glm::mat4& getProjection() {
+        const glm::mat4& getProjection() const {
             return this->projection;
         }
-        virtual glm::mat4 getView() {
+        glm::mat4 getView() {
             return glm::lookAt(this->position, this->position + this->getFrontVector(), this->getUpVector());
         }
         void setFieldOfView(float fov_) {
@@ -28,16 +28,25 @@ namespace chira {
             return this->fov;
         }
         glm::vec3 getFrontVector() {
-            // todo
-            return glm::vec3{0,0,-1};
+            glm::vec3 out;
+            out.x =     2 * (this->getRotation().x * this->getRotation().z + this->getRotation().w * this->getRotation().y);
+            out.y =     2 * (this->getRotation().y * this->getRotation().z - this->getRotation().w * this->getRotation().x);
+            out.z = 1 - 2 * (this->getRotation().x * this->getRotation().x + this->getRotation().y * this->getRotation().y);
+            return -out; // negating for OpenGL
         }
         glm::vec3 getUpVector() {
-            // todo
-            return glm::vec3{0,1,0};
+            glm::vec3 out;
+            out.x =     2 * (this->getRotation().x * this->getRotation().y - this->getRotation().w * this->getRotation().z);
+            out.y = 1 - 2 * (this->getRotation().x * this->getRotation().x + this->getRotation().z * this->getRotation().z);
+            out.z =     2 * (this->getRotation().y * this->getRotation().z + this->getRotation().w * this->getRotation().x);
+            return out;
         }
         glm::vec3 getRightVector() {
-            // todo
-            return glm::vec3{1,0,0};
+            glm::vec3 out;
+            out.x = 1 - 2 * (this->getRotation().y * this->getRotation().y + this->getRotation().z * this->getRotation().z);
+            out.y =     2 * (this->getRotation().x * this->getRotation().y + this->getRotation().w * this->getRotation().z);
+            out.z =     2 * (this->getRotation().x * this->getRotation().z - this->getRotation().w * this->getRotation().y);
+            return out;
         }
     protected:
         glm::mat4 projection{};

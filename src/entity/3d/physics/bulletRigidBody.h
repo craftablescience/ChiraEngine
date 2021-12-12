@@ -14,8 +14,8 @@ namespace chira {
         void render(const glm::mat4& parentTransform) override;
         void setPosition(const glm::vec3& newPos) override;
         void setRotation(const glm::quat& newRot) override;
-        const glm::vec3& getPosition() override;
-        const glm::quat& getRotation() override;
+        glm::vec3 getPosition() override;
+        glm::quat getRotation() override;
         void translate(const glm::vec3& translateByAmount) override;
         void rotate(const glm::quat& rotateByAmount) override;
     protected:

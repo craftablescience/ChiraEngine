@@ -11,6 +11,8 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/3d/world3d.h
         ${CMAKE_CURRENT_LIST_DIR}/3d/camera/camera3d.cpp
         ${CMAKE_CURRENT_LIST_DIR}/3d/camera/camera3d.h
+        ${CMAKE_CURRENT_LIST_DIR}/3d/camera/freecam.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/3d/camera/freecam.h
         ${CMAKE_CURRENT_LIST_DIR}/3d/model/mesh3d.cpp
         ${CMAKE_CURRENT_LIST_DIR}/3d/model/mesh3d.h
         ${CMAKE_CURRENT_LIST_DIR}/3d/physics/bulletRigidBody.cpp

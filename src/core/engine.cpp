@@ -1,6 +1,6 @@
 #include "engine.h"
 
-#define IMGUI_USER_CONFIG "../../src/config/imguiConfig.h"
+#define IMGUI_USER_CONFIG <config/imguiConfig.h>
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
@@ -129,7 +129,7 @@ void engine::mouseMovementCallback(GLFWwindow* w, double xPos, double yPos) {
     double yOffset = yPos - engine::lastMouseY;
 
     for (mousebind& bind : *engine::getMousebinds()) {
-        if (bind.getType() == MOVE) {
+        if (bind.getType() == mouseActions::MOVE) {
             bind.run(xOffset, yOffset);
         }
     }
@@ -140,7 +140,7 @@ void engine::mouseMovementCallback(GLFWwindow* w, double xPos, double yPos) {
 
 void engine::mouseScrollCallback(GLFWwindow* w, double xPos, double yPos) {
     for (mousebind& bind : *engine::getMousebinds()) {
-        if (bind.getType() == SCROLL) {
+        if (bind.getType() == mouseActions::SCROLL) {
             bind.run(xPos, yPos);
         }
     }
