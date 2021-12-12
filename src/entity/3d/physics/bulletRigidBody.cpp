@@ -2,13 +2,13 @@
 
 #include <core/engine.h>
 #include <physics/bulletPhysicsProvider.h>
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
 #include <utility/math/bulletConversions.h>
 
 using namespace chira;
 
 bulletRigidBody::bulletRigidBody(entity* parent_, const std::string& colliderId) : entity3d(parent_) {
-    this->collider = resourceManager::getResource<bulletColliderResource>(colliderId);
+    this->collider = resource::getResource<bulletColliderResource>(colliderId);
     this->rigidBody = this->collider->getNewRigidBody();
     // todo: this only accounts for position, not rotation
     this->rigidBody->translate(glmToBullet(this->position));
@@ -16,7 +16,7 @@ bulletRigidBody::bulletRigidBody(entity* parent_, const std::string& colliderId)
 }
 
 bulletRigidBody::bulletRigidBody(entity* parent_, const std::string& name_, const std::string& colliderId) : entity3d(parent_, name_) {
-    this->collider = resourceManager::getResource<bulletColliderResource>(colliderId);
+    this->collider = resource::getResource<bulletColliderResource>(colliderId);
     this->rigidBody = this->collider->getNewRigidBody();
     // todo: this only accounts for position, not rotation
     this->rigidBody->translate(glmToBullet(this->position));
@@ -24,7 +24,7 @@ bulletRigidBody::bulletRigidBody(entity* parent_, const std::string& name_, cons
 }
 
 bulletRigidBody::bulletRigidBody(const std::string& colliderId) : entity3d() {
-    this->collider = resourceManager::getResource<bulletColliderResource>(colliderId);
+    this->collider = resource::getResource<bulletColliderResource>(colliderId);
     this->rigidBody = this->collider->getNewRigidBody();
     // todo: this only accounts for position, not rotation
     this->rigidBody->translate(glmToBullet(this->position));
@@ -32,7 +32,7 @@ bulletRigidBody::bulletRigidBody(const std::string& colliderId) : entity3d() {
 }
 
 bulletRigidBody::bulletRigidBody(const std::string& name_, const std::string& colliderId) : entity3d(nullptr, name_) {
-    this->collider = resourceManager::getResource<bulletColliderResource>(colliderId);
+    this->collider = resource::getResource<bulletColliderResource>(colliderId);
     this->rigidBody = this->collider->getNewRigidBody();
     // todo: this only accounts for position, not rotation
     this->rigidBody->translate(glmToBullet(this->position));
@@ -41,7 +41,6 @@ bulletRigidBody::bulletRigidBody(const std::string& name_, const std::string& co
 
 bulletRigidBody::~bulletRigidBody() {
     dynamic_cast<bulletPhysicsProvider*>(engine::getPhysicsProvider())->removeRigidBody(this->rigidBody);
-    resourceManager::removeResource(this->collider->getIdentifier());
 }
 
 void bulletRigidBody::render(const glm::mat4& parentTransform) {

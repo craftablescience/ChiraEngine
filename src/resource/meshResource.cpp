@@ -4,7 +4,7 @@
 #include <utility/math/matrix.h>
 #include <i18n/translationManager.h>
 #include <fmt/core.h>
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
 
 using namespace chira;
 
@@ -74,7 +74,6 @@ meshResource::~meshResource() {
     glDeleteBuffers(1, &(this->vboHandle));
     glDeleteBuffers(1, &(this->eboHandle));
     this->vboHandle = this->eboHandle = this->vaoHandle = 0;
-    resourceManager::removeResource(this->materialPtr->getIdentifier());
 }
 
 void meshResource::addMeshLoader(const std::string& name, abstractMeshLoader* meshLoader) {

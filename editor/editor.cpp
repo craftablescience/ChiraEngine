@@ -4,15 +4,16 @@
 #include <render/phongMaterial.h>
 #include <hook/discordRichPresence.h>
 #include <resource/provider/filesystemResourceProvider.h>
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
 #include <utility/markdown.h>
 #include <entity/3d/model/mesh3d.h>
+#include <i18n/translationManager.h>
 
 using namespace chira;
 
 int main() {
     engine::preInit();
-    resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/editor"});
+    resource::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/editor"});
     translationManager::addTranslationFile("file://i18n/editor");
     translationManager::addUniversalFile("file://i18n/editor");
 
@@ -30,8 +31,13 @@ int main() {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }));
     engine::addKeybind(keybind(GLFW_KEY_GRAVE_ACCENT, GLFW_PRESS, []() {
-        engine::showConsole(!engine::getConsole()->isVisible());
+        engine::getConsole()->setVisible(!engine::getConsole()->isVisible());
     }));
+#if DEBUG
+    engine::addKeybind(keybind(GLFW_KEY_F1, GLFW_PRESS, []() {
+        engine::getProfiler()->setVisible(!engine::getProfiler()->isVisible());
+    }));
+#endif
     engine::addKeybind(keybind(GLFW_KEY_M, GLFW_PRESS, []() {
         engine::getSoundManager()->getSound("helloWorld")->play();
     }));
@@ -70,15 +76,15 @@ int main() {
 
         //region Set the default font
         // Don't release the fontResource when done to keep it cached
-        auto noto = resourceManager::getResource<fontResource>("file://fonts/default.json");
+        auto noto = resource::getResource<fontResource>("file://fonts/default.json");
         ImGui::GetIO().FontDefault = noto->getFont();
         //endregion
 
         //region Add a teapot with a static rigidbody
         //auto staticTeapot = new bulletRigidBody{"file://physics/ground_static.json"};
         //staticTeapot->translate(glm::vec3{3,5,-13});
-        auto cubeMaterial = resourceManager::getResource<phongMaterial>("file://materials/cubeMaterial.json");
-        cubeMesh = resourceManager::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial.castDynamic<material>());
+        auto cubeMaterial = resource::getResource<phongMaterial>("file://materials/cubeMaterial.json");
+        cubeMesh = resource::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial.castDynamic<material>());
         //staticTeapot->addChild(new mesh3d{cubeMesh});
         engine::getRoot()->addChild(new mesh3d{cubeMesh});
 
@@ -91,7 +97,7 @@ int main() {
         //endregion
 
         /*
-        auto* tex = resourceManager::getResource<texture>("file://textures/ui/icon.json");
+        auto* tex = resource::getResource<texture>("file://textures/ui/icon.json");
         componentManager::getWorld<extensibleWorld>(worldId)->add(
                 new extensibleUiWindowComponent{TR("debug.imgui.texture_test"), true, [tex](double delta) {
                     ImGui::Text("size = %d x %d", 512, 512);

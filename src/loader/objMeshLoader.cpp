@@ -1,11 +1,10 @@
 #include "objMeshLoader.h"
 
-#include <fstream>
 #include <algorithm>
-#include <sstream>
 #include <fmt/core.h>
 #include <resource/stringResource.h>
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
+#include <i18n/translationManager.h>
 
 using namespace chira;
 
@@ -14,7 +13,7 @@ void objMeshLoader::loadMesh(const std::string& identifier, std::vector<vertex>*
     std::vector<uv> uvBuffer;
     std::vector<normal> normalBuffer;
 
-    auto meshData = resourceManager::getResource<stringResource>(identifier);
+    auto meshData = resource::getResource<stringResource>(identifier);
     std::istringstream meshDataStream = std::istringstream{meshData->getString()};
 
     std::string line;

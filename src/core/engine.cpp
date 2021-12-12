@@ -157,9 +157,9 @@ void engine::preInit(const std::string& configPath) {
     FreeConsole();
 #endif
 #endif
-    resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", ENGINE_FILESYSTEM_PATH});
-    resourceManager::addResourceProvider("http", new internetResourceProvider{"http", 80});
-    resourceManager::addResourceProvider("https", new internetResourceProvider{"https", 443});
+    resource::addResourceProvider("file", new filesystemResourceProvider{"file", ENGINE_FILESYSTEM_PATH});
+    resource::addResourceProvider("http", new internetResourceProvider{"http", 80});
+    resource::addResourceProvider("https", new internetResourceProvider{"https", 443});
     engine::setSettingsLoader(new jsonSettingsLoader(configPath));
     std::string defaultLang;
     engine::getSettingsLoader()->getValue("ui", "language", &defaultLang);
@@ -175,6 +175,9 @@ void engine::init() {
     engine::started = true;
 
     engine::consoleUI = new console{};
+#if DEBUG
+    engine::profilerUI = new profiler{};
+#endif
 
     if (!glfwInit()) {
         logger::log(ERR, "GLFW", TR("error.glfw.undefined"));
@@ -331,8 +334,11 @@ void engine::init() {
     io.Fonts->AddFontDefault();
     console::precacheResource();
 
-    engine::treeRoot = std::make_unique<root>("root");
+    engine::treeRoot = new root("root");
     engine::treeRoot->addChild(engine::consoleUI);
+#if DEBUG
+    engine::treeRoot->addChild(engine::profilerUI);
+#endif
     engine::callRegisteredFunctions(&engine::initFunctions);
     engine::angelscript->initScripts();
 
@@ -341,8 +347,8 @@ void engine::init() {
 
 void engine::displaySplashScreen() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    auto mat = resourceManager::getResource<texturedMaterial>(TR("resource.material.splashscreen_material_path"));
-    auto plane = resourceManager::getResource<meshResource>("file://meshes/plane.json", mat.castDynamic<material>());
+    auto mat = resource::getResource<texturedMaterial>(TR("resource.material.splashscreen_material_path"));
+    auto plane = resource::getResource<meshResource>("file://meshes/plane.json", mat.castDynamic<material>());
     plane->render(glm::identity<glm::mat4>());
     glfwSwapBuffers(engine::window);
 }
@@ -365,8 +371,8 @@ void engine::run() {
             discordRichPresence::updatePresence();
         }
         eventQueue::flushEvents();
+        resource::cleanup();
     }
-
     engine::stop();
 }
 
@@ -386,8 +392,6 @@ void engine::render() {
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-    resourceManager::cleanup();
 }
 
 void engine::stop() {
@@ -401,9 +405,9 @@ void engine::stop() {
     }
 
     engine::soundManager->stop();
-    engine::treeRoot->clearTree();
+    delete engine::treeRoot;
     engine::physicsProvider->stop();
-    resourceManager::discardAll();
+    resource::discardAll();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -491,7 +495,7 @@ void engine::setPhysicsProvider(abstractPhysicsProvider* newPhysicsProvider) {
 }
 
 root* engine::getRoot() {
-    return engine::treeRoot.get();
+    return engine::treeRoot;
 }
 
 void engine::setSettingsLoaderDefaults() {
@@ -546,7 +550,7 @@ void engine::setIcon(const std::string& iconPath) {
     GLFWimage images[1];
     int width, height, bitsPerPixel;
     image icon(
-            ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file://" + iconPath))->getPath() + "/" + iconPath,
+            ((filesystemResourceProvider*) resource::getResourceProviderWithResource("file://" + iconPath))->getPath() + "/" + iconPath,
             &width, &height, &bitsPerPixel, 4, false);
 #if DEBUG
     assert(icon.getData());
@@ -572,12 +576,17 @@ bool engine::isMouseCaptured() {
     return engine::mouseCaptured;
 }
 
-void engine::showConsole(bool shouldShow) {
-    engine::consoleUI->setVisible(shouldShow);
-}
-
 console* engine::getConsole() {
     return engine::consoleUI;
+}
+
+profiler* engine::getProfiler() {
+#if DEBUG
+    return engine::profilerUI;
+#else
+    logger::log(ERR, "engine::getProfiler", "Profiler window is not present in release build!");
+    return nullptr;
+#endif
 }
 
 bool engine::isIconified() {

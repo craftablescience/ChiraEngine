@@ -1,5 +1,7 @@
 #include "filesystemResourceProvider.h"
 
+#include <resource/resource.h>
+
 using namespace chira;
 
 bool filesystemResourceProvider::hasResource(const std::string& name) {

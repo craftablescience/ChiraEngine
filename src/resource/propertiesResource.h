@@ -1,7 +1,6 @@
 #pragma once
 
 #include "resource.h"
-#include <string>
 #include <nlohmann/json.hpp>
 
 namespace chira {

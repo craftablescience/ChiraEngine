@@ -12,8 +12,12 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
+# This is mostly for detecting Clang
+string(TOLOWER "${CMAKE_CXX_COMPILER_ID}" COMPILER_ID)
+
 option(CHIRA_BUILD_STATIC "Build Chira Engine's dependencies statically" OFF)
-if(MSVC)
+# todo: clang kind of partially works with shared libs? look into this later
+if(MSVC OR (COMPILER_ID MATCHES "clang"))
     set(CHIRA_BUILD_STATIC ON)
 endif()
 if(CHIRA_BUILD_STATIC)
@@ -61,6 +65,22 @@ set(CURL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curl/include)
 set(CURL_LIBRARY libcurl)
 list(APPEND ENGINE_LINK_LIBRARIES libcurl)
 
+# BULLET
+cmake_policy(SET CMP0077 NEW)
+set(PKGCONFIG_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
+set(USE_GRAPHICAL_BENCHMARK OFF CACHE BOOL "" FORCE)
+set(BUILD_CPU_DEMOS         OFF CACHE BOOL "" FORCE)
+set(USE_GLUT                OFF CACHE BOOL "" FORCE)
+set(BUILD_BULLET2_DEMOS     OFF CACHE BOOL "" FORCE)
+set(BUILD_OPENGL3_DEMOS     OFF CACHE BOOL "" FORCE)
+set(BUILD_EXTRAS            OFF CACHE BOOL "" FORCE)
+set(BUILD_UNIT_TESTS        OFF CACHE BOOL "" FORCE)
+# No networking support... yet
+set(BUILD_ENET              OFF CACHE BOOL "" FORCE)
+set(BUILD_CLSOCKET          OFF CACHE BOOL "" FORCE)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/bullet)
+list(APPEND ENGINE_LINK_LIBRARIES BulletDynamics BulletCollision LinearMath)
+
 # CURLPP
 if(CHIRA_BUILD_STATIC AND MSVC)
     set(CURLPP_STATIC_CRT ON CACHE BOOL "" FORCE)
@@ -96,28 +116,6 @@ list(APPEND ENGINE_LINK_LIBRARIES glfw)
 # GLM
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm)
 list(APPEND ENGINE_LINK_LIBRARIES glm::glm)
-
-# BULLET
-cmake_policy(SET CMP0077 NEW)
-set(PKGCONFIG_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
-set(USE_GRAPHICAL_BENCHMARK OFF CACHE BOOL "" FORCE)
-set(BUILD_CPU_DEMOS         OFF CACHE BOOL "" FORCE)
-set(USE_GLUT                OFF CACHE BOOL "" FORCE)
-set(BUILD_BULLET2_DEMOS     OFF CACHE BOOL "" FORCE)
-set(BUILD_OPENGL3_DEMOS     OFF CACHE BOOL "" FORCE)
-set(BUILD_EXTRAS            OFF CACHE BOOL "" FORCE)
-set(BUILD_UNIT_TESTS        OFF CACHE BOOL "" FORCE)
-# No networking support... yet
-set(BUILD_ENET              OFF CACHE BOOL "" FORCE)
-set(BUILD_CLSOCKET          OFF CACHE BOOL "" FORCE)
-if(MSVC)
-    set(BUILD_SHARED_LIBS OFF)
-endif()
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/bullet)
-list(APPEND ENGINE_LINK_LIBRARIES BulletDynamics BulletCollision LinearMath)
-if(MSVC)
-    set(BUILD_SHARED_LIBS ON)
-endif()
 
 # OPENAL
 set(ALSOFT_EXAMPLES         OFF CACHE BOOL "" FORCE)
@@ -210,7 +208,6 @@ if(CHIRA_BUILD_STATIC)
 endif()
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     target_compile_definitions(${PROJECT_NAME} PUBLIC -DDEBUG)
-    string(TOLOWER "${CMAKE_CXX_COMPILER_ID}" COMPILER_ID)
     if(COMPILER_ID MATCHES "clang")
         target_compile_options(${PROJECT_NAME} PUBLIC -fno-limit-debug-info)
     endif()

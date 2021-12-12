@@ -1,13 +1,13 @@
 #include "fontResource.h"
 
-#include "resourceManager.h"
+#include "resource.h"
 #include "provider/filesystemResourceProvider.h"
 
 using namespace chira;
 
 void fontResource::compile(const nlohmann::json& properties) {
     ImGuiIO& io = ImGui::GetIO();
-    std::string path = (dynamic_cast<filesystemResourceProvider*>(resourceManager::getResourceProviderWithResource(properties["properties"]["path"])))->getPath() + "/" + resourceManager::splitResourceIdentifier(std::string(properties["properties"]["path"])).second;
+    std::string path = (dynamic_cast<filesystemResourceProvider*>(resource::getResourceProviderWithResource(properties["properties"]["path"])))->getPath() + "/" + resource::splitResourceIdentifier(std::string(properties["properties"]["path"])).second;
     this->name = properties["properties"]["name"];
     this->size = properties["properties"]["size"];
     if (properties["properties"].contains("range")) {

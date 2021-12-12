@@ -11,8 +11,6 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/fontResource.h
         ${CMAKE_CURRENT_LIST_DIR}/meshResource.h
         ${CMAKE_CURRENT_LIST_DIR}/meshResource.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/resourceManager.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/resourceManager.h
         ${CMAKE_CURRENT_LIST_DIR}/shaderResource.cpp
         ${CMAKE_CURRENT_LIST_DIR}/shaderResource.h
         ${CMAKE_CURRENT_LIST_DIR}/stringResource.cpp

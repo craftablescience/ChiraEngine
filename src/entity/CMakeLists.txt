@@ -18,4 +18,6 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/imgui/window.cpp
         ${CMAKE_CURRENT_LIST_DIR}/imgui/window.h
         ${CMAKE_CURRENT_LIST_DIR}/imgui/console/console.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/imgui/console/console.h)
+        ${CMAKE_CURRENT_LIST_DIR}/imgui/console/console.h
+        ${CMAKE_CURRENT_LIST_DIR}/imgui/profiler/profiler.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/imgui/profiler/profiler.h)

@@ -3,7 +3,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <fmt/core.h>
 #include <utility/logger.h>
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
+#include <i18n/translationManager.h>
 
 using namespace chira;
 
@@ -11,9 +12,9 @@ shader::shader(const std::string& identifier_) : propertiesResource(identifier_)
 
 void shader::compile(const nlohmann::json& properties) {
     this->handle = glCreateProgram();
-    auto vert = resourceManager::getResource<shaderResource>(properties["dependencies"]["vertex"], GL_VERTEX_SHADER);
+    auto vert = resource::getResource<shaderResource>(properties["dependencies"]["vertex"], GL_VERTEX_SHADER);
     glAttachShader(this->handle, vert->getHandle());
-    auto frag = resourceManager::getResource<shaderResource>(properties["dependencies"]["fragment"], GL_FRAGMENT_SHADER);
+    auto frag = resource::getResource<shaderResource>(properties["dependencies"]["fragment"], GL_FRAGMENT_SHADER);
     glAttachShader(this->handle, frag->getHandle());
     glLinkProgram(this->handle);
 #if DEBUG

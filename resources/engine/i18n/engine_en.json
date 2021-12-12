@@ -5,6 +5,7 @@
   "ui.window.title": "Chira Engine",
   "ui.window.select_file": "Select File",
   "ui.console.title": "Console",
+  "ui.profiler.title": "Profiler",
 
   "generic.operation.cancelled": "Operation cancelled",
 

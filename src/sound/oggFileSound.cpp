@@ -1,7 +1,9 @@
 #include "oggFileSound.h"
 
 #include <resource/provider/filesystemResourceProvider.h>
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
+#include <i18n/translationManager.h>
+#include <fmt/core.h>
 
 using namespace chira;
 
@@ -17,7 +19,7 @@ bool oggFileSound::init(const std::string& filename, float pitch_, float gain_, 
     this->loop = loop_;
     this->is3d = is3d_;
 
-    this->audioData.filename = ((filesystemResourceProvider*) resourceManager::getResourceProviderWithResource("file://sounds/" + filename))->getPath() + "/sounds/" + filename;
+    this->audioData.filename = ((filesystemResourceProvider*) resource::getResourceProviderWithResource("file://sounds/" + filename))->getPath() + "/sounds/" + filename;
     this->audioData.file.open(this->audioData.filename, std::ios::binary);
     if (!this->audioData.file.is_open()) {
         logger::log(ERR, "OGG", fmt::format(TR("error.ogg.file_open_failure"), filename));

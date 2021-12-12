@@ -1,6 +1,7 @@
 #include "translationManager.h"
 
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
+#include <fmt/core.h>
 
 using namespace chira;
 
@@ -25,20 +26,20 @@ bool translationManager::isValidCode(const std::string& code) {
 }
 
 void translationManager::addTranslationFile(const std::string& identifier) {
-    auto file = resourceManager::getResource<translationFileResource>(identifier + "_" + translationManager::currentLanguage + ".json", translationManager::currentLanguage);
+    auto file = resource::getResource<translationFileResource>(identifier + "_" + translationManager::currentLanguage + ".json", translationManager::currentLanguage);
     for (const auto& [id, value] : file->getAllTranslations()) {
         translationManager::languageStrings[id] = value;
     }
 }
 
 void translationManager::addUniversalFile(const std::string& identifier) {
-    auto file = resourceManager::getResource<translationFileResource>(identifier + "_" + "universal.json", "universal");
+    auto file = resource::getResource<translationFileResource>(identifier + "_" + "universal.json", "universal");
     for (const auto& [id, value] : file->getAllTranslations()) {
         translationManager::languageStrings[id] = value;
     }
 }
 
-std::string translationManager::getTranslation(const std::string& identifier) {
+std::string translationManager::getTranslation(const std::string& identifier) { // NOLINT(misc-no-recursion)
     if (translationManager::languageStrings.count(identifier) > 0) {
         return translationManager::languageStrings[identifier];
     }

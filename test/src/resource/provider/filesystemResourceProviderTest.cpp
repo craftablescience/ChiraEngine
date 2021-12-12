@@ -5,18 +5,18 @@
 #include <gtest/gtest.h>
 
 #include <resource/provider/filesystemResourceProvider.h>
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
 #include <resource/stringResource.h>
 
 using namespace chira;
 
 TEST(filesystemResourceProvider, getStringResource) {
-    resourceManager::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/engine"});
-    auto missing = resourceManager::getResource<stringResource>("file://test/string_resource_test.txt");
+    resource::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/engine"});
+    auto missing = resource::getResource<stringResource>("file://test/string_resource_test.txt");
     EXPECT_EQ(missing.useCount(), 2);
     EXPECT_STREQ(missing->getString().c_str(), "test");
-    resourceManager::removeResource(missing->getIdentifier());
-    resourceManager::discardAll();
+    resource::removeResource(missing->getIdentifier());
+    resource::discardAll();
 }
 
 #pragma clang diagnostic pop

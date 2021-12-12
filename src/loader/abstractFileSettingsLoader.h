@@ -2,7 +2,7 @@
 
 #include <string>
 #include <filesystem>
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
 #include "abstractSettingsLoader.h"
 
 namespace chira {

@@ -13,7 +13,6 @@ namespace chira {
         explicit texture(const std::string& identifier_);
         void compile(const nlohmann::json& properties) override;
         virtual void use() const;
-        ~texture() override;
         [[nodiscard]] sharedPointer<textureResource> getTexture() const;
         void setTextureUnit(int textureUnit);
         [[nodiscard]] int getTextureUnit() const;

@@ -1,6 +1,8 @@
 #include "console.h"
 
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
+#include <i18n/translationManager.h>
+#include <fmt/core.h>
 
 using namespace chira;
 
@@ -80,7 +82,7 @@ void console::addLog(const std::string& message) {
 }
 
 void console::precacheResource() {
-    resourceManager::precacheResource<fontResource>(TR("resource.font.console_font_path"));
+    resource::precacheResource<fontResource>(TR("resource.font.console_font_path"));
 }
 
 void console::engineLoggingHook(const loggerType type, const std::string& source, const std::string& message) {
@@ -105,7 +107,7 @@ void console::engineLoggingHook(const loggerType type, const std::string& source
 
 void console::setTheme() {
     if (!this->font) {
-        this->font = resourceManager::getResource<fontResource>(TR("resource.font.console_font_path"));
+        this->font = resource::getResource<fontResource>(TR("resource.font.console_font_path"));
     }
     ImGui::PushFont(this->font->getFont());
     ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));

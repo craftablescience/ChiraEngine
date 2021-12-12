@@ -7,6 +7,7 @@
 #include <utility/curlMemoryWriter.h>
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
+#include <resource/resource.h>
 
 using namespace chira;
 

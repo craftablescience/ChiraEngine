@@ -8,7 +8,6 @@ namespace chira {
         explicit textureCubemap(const std::string& identifier_);
         void compile(const nlohmann::json& properties) override;
         void use() const override;
-        ~textureCubemap() override;
         using texture::setTextureUnit;
         using texture::getTextureUnit;
         using texture::getHandle;

@@ -1,7 +1,7 @@
 #include "settings.h"
 
 #include <misc/cpp/imgui_stdlib.h>
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
 #include <core/engine.h>
 
 #define SETTINGS_INPUT_FIELD_WIDTH 150.0f

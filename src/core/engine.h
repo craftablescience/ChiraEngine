@@ -16,6 +16,7 @@
 #include <script/angelscriptProvider.h>
 #include <sound/abstractSoundManager.h>
 #include <entity/imgui/console/console.h>
+#include <entity/imgui/profiler/profiler.h>
 #include <utility/logger.h>
 #include <render/material.h>
 #include <physics/abstractPhysicsProvider.h>
@@ -63,8 +64,8 @@ namespace chira {
         [[nodiscard]] static double getDeltaTime();
         static void captureMouse(bool capture);
         [[nodiscard]] static bool isMouseCaptured();
-        static void showConsole(bool shouldShow);
         static console* getConsole();
+        static profiler* getProfiler();
         [[nodiscard]] static bool isIconified();
     private:
         static inline GLFWwindow* window = nullptr;
@@ -77,8 +78,11 @@ namespace chira {
         static inline std::vector<mousebind> mousebinds{};
         static inline std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
         static inline std::unique_ptr<abstractPhysicsProvider> physicsProvider = nullptr;
-        static inline std::unique_ptr<root> treeRoot = nullptr;
+        static inline root* treeRoot = nullptr;
         static inline console* consoleUI = nullptr;
+#if DEBUG
+        static inline profiler* profilerUI = nullptr;
+#endif
         static inline bool mouseCaptured = false;
         static inline bool started = false;
         static inline bool iconified = false;

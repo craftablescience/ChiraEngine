@@ -1,10 +1,8 @@
 #pragma once
 
-#include <string>
-#include <memory>
-#include <resource/resource.h>
-
 namespace chira {
+    class resource;
+
     class abstractResourceProvider {
     public:
         explicit abstractResourceProvider(std::string name) : providerName(std::move(name)) {}

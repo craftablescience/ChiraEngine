@@ -1,7 +1,9 @@
 #include "texture.h"
 
 #include <loader/image.h>
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
+#include <i18n/translationManager.h>
+#include <fmt/core.h>
 
 using namespace chira;
 
@@ -13,7 +15,7 @@ void texture::compile(const nlohmann::json& properties) {
     this->wrapModeT = getWrapModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "wrap_mode_t", "REPEAT"));
     this->filterMode = getFilterModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "filter_mode", "LINEAR"));
     this->mipmaps = getPropertyOrDefault<bool>(properties["properties"], "mipmaps", true);
-    this->file = resourceManager::getResource<textureResource>(properties["dependencies"]["image"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", true));
+    this->file = resource::getResource<textureResource>(properties["dependencies"]["image"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", true));
 
     if (this->handle != 0) return;
     glGenTextures(1, &this->handle);
@@ -47,10 +49,6 @@ void texture::use() const {
         glActiveTexture(this->activeTextureUnit);
     }
     glBindTexture(GL_TEXTURE_2D, this->handle);
-}
-
-texture::~texture() {
-    resourceManager::removeResource(this->file->getIdentifier());
 }
 
 sharedPointer<textureResource> texture::getTexture() const {

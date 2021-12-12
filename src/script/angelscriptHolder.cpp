@@ -2,8 +2,10 @@
 
 #include <angelscript.h>
 #include <scriptbuilder/scriptbuilder.h>
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
 #include <resource/stringResource.h>
+#include <i18n/translationManager.h>
+#include <fmt/core.h>
 
 using namespace chira;
 
@@ -24,7 +26,7 @@ void angelscriptHolder::init(angelscriptProvider* provider) {
         logger::log(ERR, "AngelScript", fmt::format(TR("error.angelscript.unrecoverable_error"), this->identifier));
         return;
     }
-    auto scriptData = resourceManager::getResource<stringResource>(this->identifier);
+    auto scriptData = resource::getResource<stringResource>(this->identifier);
     r = builder.AddSectionFromMemory(this->identifier.c_str(), scriptData->getString().c_str());
     if (r < 0) {
         logger::log(ERR, "AngelScript", fmt::format(TR("error.angelscript.script_not_found"), this->identifier));

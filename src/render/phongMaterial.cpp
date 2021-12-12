@@ -1,13 +1,13 @@
 #include "phongMaterial.h"
 
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
 
 using namespace chira;
 
 void phongMaterial::compile(const nlohmann::json& properties) {
     material::compile(properties);
-    this->diffuse = resourceManager::getResource<texture>(properties["dependencies"]["diffuse"]);
-    this->specular = resourceManager::getResource<texture>(properties["dependencies"]["specular"]);
+    this->diffuse = resource::getResource<texture>(properties["dependencies"]["diffuse"]);
+    this->specular = resource::getResource<texture>(properties["dependencies"]["specular"]);
     this->diffuse->setTextureUnit(GL_TEXTURE0);
     this->specular->setTextureUnit(GL_TEXTURE1);
     this->shaderPtr->use();
@@ -19,11 +19,6 @@ void phongMaterial::use() {
     this->diffuse->use();
     this->specular->use();
     material::use();
-}
-
-phongMaterial::~phongMaterial() {
-    resourceManager::removeResource(this->diffuse->getIdentifier());
-    resourceManager::removeResource(this->specular->getIdentifier());
 }
 
 void phongMaterial::setShininess(float shininess) {

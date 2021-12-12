@@ -1,6 +1,8 @@
 #include "textureCubemap.h"
 
-#include <resource/resourceManager.h>
+#include <resource/resource.h>
+#include <i18n/translationManager.h>
+#include <fmt/core.h>
 
 using namespace chira;
 
@@ -11,12 +13,12 @@ void textureCubemap::compile(const nlohmann::json& properties) {
     this->wrapModeT = getWrapModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "wrap_mode_t", "REPEAT"));
     this->wrapModeR = getWrapModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "wrap_mode_r", "REPEAT"));
     this->filterMode = getFilterModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "filter_mode", "LINEAR"));
-    this->file = resourceManager::getResource<textureResource>(properties["dependencies"]["image_fd"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", false));
-    this->file_bk = resourceManager::getResource<textureResource>(properties["dependencies"]["image_bk"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", false));
-    this->file_up = resourceManager::getResource<textureResource>(properties["dependencies"]["image_up"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", false));
-    this->file_dn = resourceManager::getResource<textureResource>(properties["dependencies"]["image_dn"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", false));
-    this->file_lt = resourceManager::getResource<textureResource>(properties["dependencies"]["image_lt"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", false));
-    this->file_rt = resourceManager::getResource<textureResource>(properties["dependencies"]["image_rt"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", false));
+    this->file = resource::getResource<textureResource>(properties["dependencies"]["image_fd"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", false));
+    this->file_bk = resource::getResource<textureResource>(properties["dependencies"]["image_bk"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", false));
+    this->file_up = resource::getResource<textureResource>(properties["dependencies"]["image_up"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", false));
+    this->file_dn = resource::getResource<textureResource>(properties["dependencies"]["image_dn"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", false));
+    this->file_lt = resource::getResource<textureResource>(properties["dependencies"]["image_lt"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", false));
+    this->file_rt = resource::getResource<textureResource>(properties["dependencies"]["image_rt"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", false));
     this->format = getFormatFromString(getPropertyOrDefault<std::string>(properties["properties"], "format_fd", std::string("RGBA")));
     this->format_bk = getFormatFromString(getPropertyOrDefault<std::string>(properties["properties"], "format_bk", std::string("RGBA")));
     this->format_up = getFormatFromString(getPropertyOrDefault<std::string>(properties["properties"], "format_up", std::string("RGBA")));
@@ -62,14 +64,6 @@ void textureCubemap::use() const {
         glActiveTexture(this->activeTextureUnit);
     }
     glBindTexture(GL_TEXTURE_CUBE_MAP, this->handle);
-}
-
-textureCubemap::~textureCubemap() {
-    resourceManager::removeResource(this->file_bk->getIdentifier());
-    resourceManager::removeResource(this->file_dn->getIdentifier());
-    resourceManager::removeResource(this->file_lt->getIdentifier());
-    resourceManager::removeResource(this->file_rt->getIdentifier());
-    resourceManager::removeResource(this->file_up->getIdentifier());
 }
 
 sharedPointer<textureResource> textureCubemap::getTextureForward() const {
