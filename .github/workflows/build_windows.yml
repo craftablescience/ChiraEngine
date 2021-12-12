@@ -38,7 +38,7 @@ jobs:
 
     - name: Configure CMake (mingw64)
       if: ${{ matrix.sys == 'mingw64' }}
-      run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+      run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
 
     - name: Configure CMake (clang64)
       if: ${{ matrix.sys == 'clang64' }}
@@ -64,11 +64,3 @@ jobs:
           ${{github.workspace}}\build\resources\
           ${{github.workspace}}\build\ChiraEngineGui.exe
           ${{github.workspace}}\build\*.dll
-
-    - uses: actions/cache@v2
-      with:
-        path: |
-          build
-        key: ${{ runner.os }}-${{ matrix.sys }}-${{ matrix.build_type }}-${{ hashFiles('**/CMakeLists.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-${{ matrix.sys }}-${{ matrix.build_type }}-
