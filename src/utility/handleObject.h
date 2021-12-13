@@ -1,12 +1,13 @@
 #pragma once
 
 namespace chira {
+    template<typename T>
     class handleObject {
     public:
-        [[nodiscard]] int getHandle() const {
+        [[nodiscard]] T getHandle() const {
             return this->handle;
         }
     protected:
-        int handle = -1;
+        T handle = -1;
     };
 }

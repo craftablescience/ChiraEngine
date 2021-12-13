@@ -70,9 +70,9 @@ void resource::cleanup() {
 
 void resource::discardAll() {
     resource::cleanup();
-    // Make sure all resources are deleted, just in case
     for (const auto& [providerName, resourceMap] : resource::resources) {
         for (const auto& [name, resource] : resourceMap) {
+            // This really shouldn't happen, but it should work out if it does, hence the warning
             logger::log(WARN, "Resource", fmt::format(TR("warn.resource.deleting_resource_at_exit"), resource::resources[providerName].at(name)->getIdentifier(), resource::resources[providerName].at(name).useCount()));
         }
     }

@@ -8,10 +8,10 @@
 namespace chira {
     class mesh3d : public entity3d {
     public:
-        mesh3d(entity* parent_, meshResource* mesh_) : entity3d(parent_), mesh(mesh_) {}
-        mesh3d(entity* parent_, const std::string& name_, meshResource* mesh_) : entity3d(parent_, name_), mesh(mesh_) {}
+        mesh3d(entity* parent_, sharedPointer<meshResource> mesh_) : entity3d(parent_), mesh(std::move(mesh_)) {}
+        mesh3d(entity* parent_, const std::string& name_, sharedPointer<meshResource> mesh_) : entity3d(parent_, name_), mesh(std::move(mesh_)) {}
         explicit mesh3d(sharedPointer<meshResource> mesh_) : entity3d(), mesh(std::move(mesh_)) {}
-        mesh3d(const std::string& name_, meshResource* mesh_) : entity3d(name_), mesh(mesh_) {}
+        mesh3d(const std::string& name_, sharedPointer<meshResource> mesh_) : entity3d(name_), mesh(std::move(mesh_)) {}
         void render(const glm::mat4& parentTransform) override;
         sharedPointer<meshResource> getMeshResource() const {
             return this->mesh;

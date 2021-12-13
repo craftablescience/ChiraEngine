@@ -60,9 +60,7 @@ int main() {
         }
     }));
 
-    sharedPointer<meshResource> cubeMesh;
-
-    engine::addInitFunction([&cubeMesh, &discordEnabled]() {
+    engine::addInitFunction([&discordEnabled]() {
         //region Enable Discord Rich Presence
         if (discordEnabled) {
             discordRichPresence::init(TR("editor.discord.application_id"));
@@ -77,11 +75,11 @@ int main() {
         //endregion
 
         //region Add a teapot with a static rigidbody
-        auto staticTeapot = new bulletRigidBody{"file://physics/ground_static.json"};
+        auto staticTeapot = new bulletRigidBody{"static", "file://physics/ground_static.json"};
         staticTeapot->translate(glm::vec3{3,0,-13});
         auto cubeMaterial = resource::getResource<phongMaterial>("file://materials/cubeMaterial.json");
-        cubeMesh = resource::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial.castDynamic<material>());
-        staticTeapot->addChild(new mesh3d{cubeMesh});
+        auto cubeMesh = resource::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial.castDynamic<material>());
+        staticTeapot->addChild(new mesh3d{"teapotMesh", cubeMesh});
 
         auto fallingTeapot = new bulletRigidBody{"file://physics/cube_dynamic.json"};
         fallingTeapot->translate(glm::vec3{0,15,-10});
@@ -99,7 +97,7 @@ int main() {
 
         //region Add the camera
         engine::captureMouse(true);
-        auto camera = new freecam{"freecam", cameraProjectionMode::PERSPECTIVE};
+        auto camera = new freecam{cameraProjectionMode::PERSPECTIVE};
         engine::getRoot()->addChild(camera);
         engine::getRoot()->setMainCamera(camera);
         //endregion
@@ -133,18 +131,8 @@ int main() {
     });
     engine::init();
 
-    engine::addRenderFunction([cubeMesh]() {
+    engine::addRenderFunction([]() {
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
-
-        // todo: use UBO
-        cubeMesh->getMaterial()->getShader()->use();
-        cubeMesh->getMaterial()->getShader()->setUniform("p", engine::getRoot()->getMainCamera()->getProjection());
-        cubeMesh->getMaterial()->getShader()->setUniform("v", engine::getRoot()->getMainCamera()->getView());
-
-        // todo: use UBO
-        engine::getRoot()->getSkybox()->getShader()->use();
-        engine::getRoot()->getSkybox()->getShader()->setUniform("p", engine::getRoot()->getMainCamera()->getProjection());
-        engine::getRoot()->getSkybox()->getShader()->setUniform("v", glm::mat4(glm::mat3(engine::getRoot()->getMainCamera()->getView())));
     });
     engine::run();
 }

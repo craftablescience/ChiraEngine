@@ -12,11 +12,13 @@
 #include <hook/discordRichPresence.h>
 #include <resource/provider/filesystemResourceProvider.h>
 #include <resource/provider/internetResourceProvider.h>
+#include <resource/shaderResource.h>
 #include <loader/objMeshLoader.h>
 #include <loader/primitiveMeshLoader.h>
 #include <render/texturedMaterial.h>
 #include <event/eventQueue.h>
 #include <physics/bulletPhysicsProvider.h>
+#include <render/ubo.h>
 
 #if __has_include(<windows.h>)
 #include <windows.h>
@@ -319,24 +321,19 @@ void engine::init() {
     bool bulletEnabled = true;
     engine::getSettingsLoader()->getValue("physics", "bullet", &bulletEnabled);
     if (bulletEnabled) {
-        engine::setPhysicsProvider(new bulletPhysicsProvider());
+        engine::setPhysicsProvider(new bulletPhysicsProvider{});
     }
 
     engine::angelscript = std::make_unique<angelscriptProvider>();
     engine::angelscript->initProvider();
     engine::angelscript->registerGlobalFunction(engine::setBackgroundColor, "setBackgroundColor");
-    engine::angelscript->registerGlobalFunction(engine::captureMouse,       "captureMouse");
-    engine::angelscript->registerGlobalFunction(engine::isMouseCaptured,    "isMouseCaptured");
-    engine::angelscript->registerGlobalFunction(engine::getDeltaTime,       "getDeltaTime");
-    engine::angelscript->registerGlobalFunction(engine::isIconified,        "isIconified");
-    engine::angelscript->registerGlobalFunction(engine::isStarted,          "isStarted");
     // Reminder on how to define a callable method:
     // engine::angelscript->asEngine->RegisterGlobalFunction("void showConsole(bool)", asMETHOD(engine, showConsole), asCALL_THISCALL_ASGLOBAL, this);
 
     io.Fonts->AddFontDefault();
     engine::consoleUI->precacheResource();
 
-    engine::treeRoot = new root("root");
+    engine::treeRoot = new root{"root"};
     engine::treeRoot->addChild(engine::consoleUI);
 #if DEBUG
     engine::treeRoot->addChild(engine::profilerUI);
@@ -383,6 +380,8 @@ void engine::render() {
 
     engine::lastTime = engine::currentTime;
     engine::currentTime = glfwGetTime();
+
+    uboPV::get()->update(engine::getRoot()->getMainCamera()->getProjection(), engine::getRoot()->getMainCamera()->getView());
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();

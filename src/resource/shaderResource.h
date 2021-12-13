@@ -13,7 +13,7 @@ namespace chira {
     constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_PREFIX = "#";
     constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_SUFFIX = "#";
 
-    class shaderResource : public resource, public handleObject {
+    class shaderResource : public resource, public handleObject<int> {
     public:
         shaderResource(const std::string& identifier_, int type_);
         void compile(const unsigned char buffer[], std::size_t bufferLength) override;

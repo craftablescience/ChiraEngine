@@ -54,8 +54,10 @@ void meshResource::compile(const nlohmann::json& properties) {
 void meshResource::render(const glm::mat4& model) {
     if (this->materialPtr) {
         this->materialPtr->use();
-        glm::mat4 model_ = model; // thanks C++
-        this->materialPtr->getShader()->setUniform("m", &model_);
+        if (this->materialPtr->getShader()->usesModelMatrix()) {
+            glm::mat4 model_ = model; // thanks C++
+            this->materialPtr->getShader()->setUniform("m", &model_);
+        }
     }
 
     glDepthFunc(this->depthFunction);
@@ -66,7 +68,7 @@ void meshResource::render(const glm::mat4& model) {
         glDisable(GL_CULL_FACE);
     }
     glBindVertexArray(this->vaoHandle);
-    glDrawElements(GL_TRIANGLES, (GLint) this->indices.size(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, static_cast<GLint>(this->indices.size()), GL_UNSIGNED_INT, nullptr);
 }
 
 meshResource::~meshResource() {

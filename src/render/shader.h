@@ -1,14 +1,11 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <functional>
-#include <vector>
-#include <resource/shaderResource.h>
 #include <resource/propertiesResource.h>
 #include <utility/handleObject.h>
 
 namespace chira {
-    class shader : public propertiesResource, public handleObject {
+    class shader : public propertiesResource, public handleObject<int> {
     public:
         explicit shader(const std::string& identifier_);
         void compile(const nlohmann::json& properties) override;
@@ -32,7 +29,12 @@ namespace chira {
         void setUniform(const std::string& name, float value1, float value2, float value3, float value4) const;
         void setUniform(const std::string& name, const glm::mat4& value) const;
         void setUniform(const std::string& name, glm::mat4* value) const;
+        [[nodiscard]] bool usesModelMatrix() const {
+            return this->usesModel;
+        }
     private:
+        /// Set when compiling
+        bool usesModel = true;
         void checkForCompilationErrors() const;
     };
 }

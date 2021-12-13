@@ -5,11 +5,14 @@ layout (location = 3) in vec2 iTexCoord;
 
 out vec3 TexCoords;
 
-uniform mat4 p;
-uniform mat4 v;
+layout (std140) uniform PV {
+    mat4 p;
+    mat4 v;
+    mat4 pv;
+};
 
 void main() {
     TexCoords = iPos;
-    vec4 pos = p * v * vec4(iPos, 1.0);
+    vec4 pos = p * mat4(mat3(v)) * vec4(iPos, 1.0);
     gl_Position = pos.xyww;
 }

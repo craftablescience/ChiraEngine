@@ -25,9 +25,11 @@ namespace chira {
         glm::vec3 getAudioListeningUpVector() {
             return this->mainCamera->getUpVector();
         }
+        using world3d::hasChild;
         using world3d::addChild;
         using world3d::getChild;
         using world3d::removeChild;
+        using world3d::removeAllChildren;
     private:
         sharedPointer<meshResource> skybox;
         camera3d* mainCamera = nullptr;

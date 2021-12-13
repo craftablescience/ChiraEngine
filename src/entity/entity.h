@@ -26,6 +26,7 @@ namespace chira {
         bool hasChild(const std::string& name_);
         void addChild(entity* child);
         void removeChild(const std::string& name_);
+        void removeAllChildren();
     protected:
         entity* parent;
         std::string name;

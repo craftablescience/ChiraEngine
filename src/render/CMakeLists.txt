@@ -14,4 +14,6 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/textureCubemap.cpp
         ${CMAKE_CURRENT_LIST_DIR}/textureCubemap.h
         ${CMAKE_CURRENT_LIST_DIR}/texturedMaterial.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/texturedMaterial.h)
+        ${CMAKE_CURRENT_LIST_DIR}/texturedMaterial.h
+        ${CMAKE_CURRENT_LIST_DIR}/ubo.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/ubo.h)

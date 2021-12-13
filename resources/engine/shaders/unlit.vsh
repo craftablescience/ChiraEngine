@@ -9,12 +9,15 @@ out VS_OUT {
    vec2 TexCoord;
 } o;
 
+layout (std140) uniform PV {
+   mat4 p;
+   mat4 v;
+   mat4 pv;
+};
 uniform mat4 m;
-uniform mat4 v;
-uniform mat4 p;
 
 void main() {
-   gl_Position = p * v * m * vec4(iPos, 1.0);
+   gl_Position = pv * m * vec4(iPos, 1.0);
    o.Color = iColor;
    o.Normal = iNormal;
    o.TexCoord = iTexCoord;

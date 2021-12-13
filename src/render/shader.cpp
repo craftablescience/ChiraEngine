@@ -5,10 +5,12 @@
 #include <utility/logger.h>
 #include <resource/resource.h>
 #include <i18n/translationManager.h>
+#include <resource/shaderResource.h>
+#include <render/ubo.h>
 
 using namespace chira;
 
-shader::shader(const std::string& identifier_) : propertiesResource(identifier_), handleObject() {}
+shader::shader(const std::string& identifier_) : propertiesResource(identifier_), handleObject<int>() {}
 
 void shader::compile(const nlohmann::json& properties) {
     this->handle = glCreateProgram();
@@ -20,6 +22,9 @@ void shader::compile(const nlohmann::json& properties) {
 #if DEBUG
     this->checkForCompilationErrors();
 #endif
+    if (getPropertyOrDefault(properties["properties"], "usesPV", true))
+        uboPV::get()->bindToShader(this);
+    this->usesModel = getPropertyOrDefault(properties["properties"], "usesM", true);
 }
 
 shader::~shader() {

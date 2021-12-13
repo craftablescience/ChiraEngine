@@ -19,12 +19,10 @@ entity::entity() : entity(nullptr) {}
 entity::entity(const std::string& name_) : entity(nullptr, name_) {}
 
 entity::~entity() {
-    for (const auto& [name_, ent] : this->children) {
-        delete ent;
-    }
+    this->removeAllChildren();
 }
 
-void entity::render(const glm::mat4& parentTransform) {
+void entity::render(const glm::mat4& parentTransform) { // NOLINT(misc-no-recursion)
     for (auto& [key, entity] : this->children) {
         entity->render(parentTransform);
     }
@@ -52,6 +50,15 @@ void entity::addChild(entity* child) {
 }
 
 void entity::removeChild(const std::string& name_) {
+    this->children[name_]->removeAllChildren();
     delete this->children[name_];
     this->children.erase(name_);
+}
+
+void entity::removeAllChildren() { // NOLINT(misc-no-recursion)
+    for (const auto& [name_, ent_] : this->children) {
+        ent_->removeAllChildren();
+        delete ent_;
+    }
+    this->children.clear();
 }
