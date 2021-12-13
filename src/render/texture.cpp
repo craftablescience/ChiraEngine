@@ -7,7 +7,7 @@
 
 using namespace chira;
 
-texture::texture(const std::string& identifier_) : propertiesResource(identifier_) {}
+texture::texture(const std::string& identifier_, bool cacheTexture) : propertiesResource(identifier_), cache(cacheTexture) {}
 
 void texture::compile(const nlohmann::json& properties) {
     this->format = getFormatFromString(getPropertyOrDefault<std::string>(properties["properties"], "format", std::string("RGBA")));
@@ -15,7 +15,7 @@ void texture::compile(const nlohmann::json& properties) {
     this->wrapModeT = getWrapModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "wrap_mode_t", "REPEAT"));
     this->filterMode = getFilterModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "filter_mode", "LINEAR"));
     this->mipmaps = getPropertyOrDefault<bool>(properties["properties"], "mipmaps", true);
-    this->file = resource::getResource<textureResource>(properties["dependencies"]["image"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", true));
+    auto texData = resource::getResource<textureResource>(properties["dependencies"]["image"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", true));
 
     if (this->handle != 0) return;
     glGenTextures(1, &this->handle);
@@ -31,14 +31,17 @@ void texture::compile(const nlohmann::json& properties) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->filterMode);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->filterMode);
 
-    if (this->file->getFile() && this->file->getFile()->getData()) {
-        glTexImage2D(GL_TEXTURE_2D, 0, this->format, this->getTexture()->getWidth(), this->getTexture()->getHeight(), 0, this->format, GL_UNSIGNED_BYTE, this->file->getData());
+    if (texData->getFile() && texData->getFile()->getData()) {
+        glTexImage2D(GL_TEXTURE_2D, 0, this->format, texData->getWidth(), texData->getHeight(), 0, this->format, GL_UNSIGNED_BYTE, texData->getData());
         if (this->mipmaps) {
             glGenerateMipmap(GL_TEXTURE_2D);
         }
     } else {
         logger::log(ERR, "Texture", TR("error.opengl.texture_compile"));
     }
+
+    if (this->cache)
+        this->file = texData;
 }
 
 void texture::use() const {
@@ -49,10 +52,6 @@ void texture::use() const {
         glActiveTexture(this->activeTextureUnit);
     }
     glBindTexture(GL_TEXTURE_2D, this->handle);
-}
-
-sharedPointer<textureResource> texture::getTexture() const {
-    return this->file;
 }
 
 void texture::setTextureUnit(int textureUnit) {
