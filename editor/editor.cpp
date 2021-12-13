@@ -72,7 +72,6 @@ int main() {
         //endregion
 
         //region Set the default font
-        // Don't release the fontResource when done to keep it cached
         auto noto = resource::getResource<fontResource>("file://fonts/default.json");
         ImGui::GetIO().FontDefault = noto->getFont();
         //endregion
