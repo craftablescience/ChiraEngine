@@ -325,9 +325,11 @@ void engine::init() {
     engine::angelscript = std::make_unique<angelscriptProvider>();
     engine::angelscript->initProvider();
     engine::angelscript->registerGlobalFunction(engine::setBackgroundColor, "setBackgroundColor");
-    engine::angelscript->registerGlobalFunction(engine::setBackgroundColor, "captureMouse");
-    engine::angelscript->registerGlobalFunction(engine::setBackgroundColor, "isMouseCaptured");
-    engine::angelscript->registerGlobalFunction(engine::setBackgroundColor, "showConsole");
+    engine::angelscript->registerGlobalFunction(engine::captureMouse,       "captureMouse");
+    engine::angelscript->registerGlobalFunction(engine::isMouseCaptured,    "isMouseCaptured");
+    engine::angelscript->registerGlobalFunction(engine::getDeltaTime,       "getDeltaTime");
+    engine::angelscript->registerGlobalFunction(engine::isIconified,        "isIconified");
+    engine::angelscript->registerGlobalFunction(engine::isStarted,          "isStarted");
     // Reminder on how to define a callable method:
     // engine::angelscript->asEngine->RegisterGlobalFunction("void showConsole(bool)", asMETHOD(engine, showConsole), asCALL_THISCALL_ASGLOBAL, this);
 
