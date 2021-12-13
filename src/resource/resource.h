@@ -66,7 +66,7 @@ namespace chira {
             if (resource::resources[provider].count(name) > 0) {
                 return resource::resources[provider][name].castDynamic<resourceType>();
             }
-            resource::logResourceError("error.resource_manager.cached_resource_not_found", identifier);
+            resource::logResourceError("error.resource.cached_resource_not_found", identifier);
             return sharedPointer<resourceType>{};
         }
 
@@ -81,7 +81,7 @@ namespace chira {
                     return resource::resources[provider][name].castDynamic<resourceType>();
                 }
             }
-            resource::logResourceError("error.resource_manager.resource_not_found", identifier);
+            resource::logResourceError("error.resource.resource_not_found", identifier);
             return sharedPointer<resourceType>{};
         }
 
@@ -96,7 +96,7 @@ namespace chira {
                     return; // Precached!
                 }
             }
-            resource::logResourceError("error.resource_manager.resource_not_found", identifier);
+            resource::logResourceError("error.resource.resource_not_found", identifier);
         }
 
         /// The only way to make a propertiesResource without a provider is to make it unique, and not to cache it.

@@ -332,7 +332,7 @@ void engine::init() {
     // engine::angelscript->asEngine->RegisterGlobalFunction("void showConsole(bool)", asMETHOD(engine, showConsole), asCALL_THISCALL_ASGLOBAL, this);
 
     io.Fonts->AddFontDefault();
-    console::precacheResource();
+    engine::consoleUI->precacheResource();
 
     engine::treeRoot = new root("root");
     engine::treeRoot->addChild(engine::consoleUI);

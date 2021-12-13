@@ -12,7 +12,7 @@ namespace chira {
         void renderContents() override;
         void clearLog();
         void addLog(const std::string& message);
-        static void precacheResource();
+        void precacheResource();
         void engineLoggingHook(loggerType type, const std::string& source, const std::string& message);
         void setTheme();
         void resetTheme() const;

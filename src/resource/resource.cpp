@@ -34,7 +34,7 @@ abstractResourceProvider* resource::getResourceProviderWithResource(const std::s
             return i->get();
         }
     }
-    logger::log(ERR, "Resource Manager", fmt::format(TR("error.resource_manager.resource_not_found"), identifier));
+    logger::log(ERR, "Resource", fmt::format(TR("error.resource.resource_not_found"), identifier));
     return nullptr;
 }
 
@@ -45,7 +45,7 @@ std::pair<std::string, std::string> resource::splitResourceIdentifier(const std:
         out.first = identifier.substr(0, pos);
         out.second = identifier.substr(pos + RESOURCE_ID_SEPARATOR.length());
     } else {
-        logger::log(ERR, "resource::splitResourceIdentifier", fmt::format(TR("error.resource_manager.cannot_split_identifier"), identifier));
+        logger::log(ERR, "Resource", fmt::format(TR("error.resource.cannot_split_identifier"), identifier));
     }
     return out;
 }
@@ -73,7 +73,7 @@ void resource::discardAll() {
     // Make sure all resources are deleted, just in case
     for (const auto& [providerName, resourceMap] : resource::resources) {
         for (const auto& [name, resource] : resourceMap) {
-            logger::log(WARN, "Resource Manager", fmt::format(TR("warn.resource.deleting_resource_at_exit"), resource::resources[providerName].at(name)->getIdentifier(), resource::resources[providerName].at(name).useCount()));
+            logger::log(WARN, "Resource", fmt::format(TR("warn.resource.deleting_resource_at_exit"), resource::resources[providerName].at(name)->getIdentifier(), resource::resources[providerName].at(name).useCount()));
         }
     }
     resource::resources.clear();
@@ -81,5 +81,5 @@ void resource::discardAll() {
 }
 
 void resource::logResourceError(const std::string& identifier, const std::string& resourceName) {
-    logger::log(ERR, "Resource Manager", fmt::format(TR("error.resource_manager.resource_not_found"), identifier));
+    logger::log(ERR, "Resource", fmt::format(TR(identifier), resourceName));
 }

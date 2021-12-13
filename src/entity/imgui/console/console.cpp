@@ -82,7 +82,7 @@ void console::addLog(const std::string& message) {
 }
 
 void console::precacheResource() {
-    resource::precacheResource<fontResource>(TR("resource.font.console_font_path"));
+    this->font = resource::getResource<fontResource>(TR("resource.font.console_font_path"));
 }
 
 void console::engineLoggingHook(const loggerType type, const std::string& source, const std::string& message) {
