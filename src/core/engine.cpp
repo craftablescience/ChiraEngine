@@ -16,10 +16,9 @@
 #include <loader/objMeshLoader.h>
 #include <loader/primitiveMeshLoader.h>
 #include <render/texturedMaterial.h>
-#include <event/eventQueue.h>
 #include <physics/bulletPhysicsProvider.h>
 #include <render/ubo.h>
-
+#include <event/events.h>
 #if __has_include(<windows.h>)
 #include <windows.h>
 #endif
@@ -34,7 +33,6 @@ void APIENTRY glDebugOutputCallback(GLenum source, GLenum type, unsigned int id,
         // Others are ignored because learnopengl.com said they were duplicates
         return;
     }
-
     std::string output = "---------------\nDebug message (" + std::to_string(id) + "): " +  message;
 
     output += "\nSource: ";
@@ -46,7 +44,6 @@ void APIENTRY glDebugOutputCallback(GLenum source, GLenum type, unsigned int id,
         case GL_DEBUG_SOURCE_APPLICATION:     output += "Application"; break;
         default:                              output += "Other";
     }
-
     output += "\nType: ";
     switch (type) {
         case GL_DEBUG_TYPE_ERROR:               output += "Error"; break;
@@ -59,22 +56,22 @@ void APIENTRY glDebugOutputCallback(GLenum source, GLenum type, unsigned int id,
         case GL_DEBUG_TYPE_POP_GROUP:           output += "Pop Group"; break;
         default:                                output += "Other";
     }
-
     output += "\nSeverity: ";
     switch (severity) {
-        case GL_DEBUG_SEVERITY_HIGH:         output += "high"; break;
-        case GL_DEBUG_SEVERITY_MEDIUM:       output += "medium"; break;
-        case GL_DEBUG_SEVERITY_LOW:          output += "low"; break;
-        case GL_DEBUG_SEVERITY_NOTIFICATION: output += "notification"; break;
-        default:                             output += "other";
+        case GL_DEBUG_SEVERITY_HIGH:         output += "High"; break;
+        case GL_DEBUG_SEVERITY_MEDIUM:       output += "Medium"; break;
+        case GL_DEBUG_SEVERITY_LOW:          output += "Low"; break;
+        case GL_DEBUG_SEVERITY_NOTIFICATION: output += "Notification"; break;
+        default:                             output += "Other";
     }
 
-    if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) {
+    if (type == GL_DEBUG_TYPE_ERROR)
+        logger::log(ERR, "OpenGL", output);
+    else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
         logger::log(INFO, "OpenGL", output);
-    } else {
+    else
         // Logging as a warning because most of the time the program runs perfectly fine
         logger::log(WARN, "OpenGL", output);
-    }
 }
 
 void engine::errorCallback(int error, const char* description) {
@@ -369,7 +366,7 @@ void engine::run() {
         if (discordRichPresence::initialized()) {
             discordRichPresence::updatePresence();
         }
-        eventQueue::flushEvents();
+        events::update();
         resource::cleanup();
     }
     engine::stop();
