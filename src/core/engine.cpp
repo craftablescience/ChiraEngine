@@ -4,7 +4,7 @@
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
-#include <fmt/core.h>
+#include <i18n/translationManager.h>
 #include <config/glVersion.h>
 #include <loader/jsonSettingsLoader.h>
 #include <loader/image.h>
@@ -19,7 +19,9 @@
 #include <physics/bulletPhysicsProvider.h>
 #include <render/ubo.h>
 #include <event/events.h>
-#if __has_include(<windows.h>)
+#include <entity/imgui/console/console.h>
+#include <entity/imgui/profiler/profiler.h>
+#if __has_include(<windows.h>) && RELEASE
 #include <windows.h>
 #endif
 
@@ -151,7 +153,8 @@ void engine::windowIconifyCallback(GLFWwindow* w, int isIconified) {
 
 void engine::preInit(const std::string& configPath) {
 #ifdef _WIN32
-    system(("chcp " + std::to_string(CP_UTF8) + " > nul").c_str());
+    // #define CP_UTF8 65001 in windows.h
+    system(("chcp " + std::to_string(65001) + " > nul").c_str());
 #ifndef DEBUG
     FreeConsole();
 #endif

@@ -1,10 +1,9 @@
 #include "objMeshLoader.h"
 
 #include <algorithm>
-#include <fmt/core.h>
 #include <resource/stringResource.h>
-#include <resource/resource.h>
 #include <i18n/translationManager.h>
+#include <utility/logger.h>
 
 using namespace chira;
 

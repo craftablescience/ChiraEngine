@@ -2,7 +2,6 @@
 
 #include <utility/logger.h>
 #include <i18n/translationManager.h>
-#include <fmt/format.h>
 
 using namespace chira;
 

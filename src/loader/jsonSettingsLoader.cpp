@@ -1,5 +1,6 @@
 #include "jsonSettingsLoader.h"
 
+#include <fstream>
 #include <iomanip>
 
 using namespace chira;

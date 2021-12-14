@@ -5,7 +5,7 @@
 #endif
 #include <AL/al.h>
 #include <AL/alc.h>
-#include "../core/engine.h"
+#include <core/engine.h>
 
 /*
  * This code is largely copied verbatim from:

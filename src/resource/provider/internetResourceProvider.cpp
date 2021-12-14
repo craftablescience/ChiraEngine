@@ -1,6 +1,5 @@
 #include "internetResourceProvider.h"
 
-#include <fstream>
 #include <algorithm>
 #include <fmt/core.h>
 #include <utility/logger.h>

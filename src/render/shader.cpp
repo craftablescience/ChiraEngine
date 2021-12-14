@@ -1,7 +1,6 @@
 #include "shader.h"
 
 #include <glm/gtc/type_ptr.hpp>
-#include <fmt/core.h>
 #include <utility/logger.h>
 #include <resource/resource.h>
 #include <i18n/translationManager.h>

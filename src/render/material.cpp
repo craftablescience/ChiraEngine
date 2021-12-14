@@ -1,8 +1,6 @@
 #include "material.h"
 
-#include <fmt/core.h>
 #include <i18n/translationManager.h>
-#include <resource/resource.h>
 
 using namespace chira;
 

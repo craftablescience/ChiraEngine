@@ -3,13 +3,11 @@
 #include <cstdlib>
 #include <cstring>
 
-#define MAX_BUFFER_LENGTH 20000
-
 using namespace chira;
 
 curlMemoryWriter::curlMemoryWriter() {
     this->m_pBuffer = nullptr;
-    this->m_pBuffer = (unsigned char*) std::malloc(MAX_BUFFER_LENGTH * sizeof(unsigned char));
+    this->m_pBuffer = (unsigned char*) std::malloc(curlMemoryWriter::MAX_BUFFER_LENGTH * sizeof(unsigned char));
     this->m_Size = 0;
 }
 

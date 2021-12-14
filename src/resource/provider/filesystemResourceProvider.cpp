@@ -1,5 +1,7 @@
 #include "filesystemResourceProvider.h"
 
+#include <fstream>
+#include <filesystem>
 #include <resource/resource.h>
 
 using namespace chira;

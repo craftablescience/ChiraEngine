@@ -1,9 +1,6 @@
 #pragma once
 
-#include <vector>
-#include <string>
 #include "abstractMeshLoader.h"
-#include <utility/math/vertex.h>
 
 namespace chira {
     class objMeshLoader : public abstractMeshLoader {

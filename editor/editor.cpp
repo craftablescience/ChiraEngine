@@ -10,7 +10,9 @@
 #include <i18n/translationManager.h>
 #include <entity/3d/physics/bulletRigidBody.h>
 #include <entity/imgui/settings/settings.h>
-#include "entity/3d/camera/freecam.h"
+#include <entity/3d/camera/freecam.h>
+#include <entity/imgui/console/console.h>
+#include <entity/imgui/profiler/profiler.h>
 
 using namespace chira;
 

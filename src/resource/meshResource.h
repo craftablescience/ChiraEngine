@@ -1,9 +1,7 @@
 #pragma once
 
-#include <utility>
 #include <vector>
 #include <string>
-#include <functional>
 #include <glm/glm.hpp>
 #include <loader/abstractMeshLoader.h>
 #include <render/material.h>

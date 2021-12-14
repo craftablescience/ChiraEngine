@@ -3,7 +3,6 @@
 #include <angelscript.h>
 #include <string>
 #include <vector>
-#include <functional>
 #include <memory>
 #include "abstractScriptProvider.h"
 #include "angelscriptHolder.h"

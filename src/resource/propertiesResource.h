@@ -1,7 +1,7 @@
 #pragma once
 
-#include "resource.h"
 #include <nlohmann/json.hpp>
+#include "resource.h"
 
 namespace chira {
     /*

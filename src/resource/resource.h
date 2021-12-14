@@ -1,13 +1,9 @@
 #pragma once
 
-#include <memory>
 #include <string>
-#include <string_view>
 #include <unordered_map>
 #include <vector>
-#include <memory>
 #include <nlohmann/json.hpp>
-#include <utility/logger.h>
 #include <utility/pointer/sharedPointer.h>
 #include "provider/abstractResourceProvider.h"
 

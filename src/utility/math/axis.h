@@ -3,13 +3,13 @@
 #include <string>
 
 namespace chira {
-    enum axis {
+    enum class axis {
         X,
         Y,
         Z
     };
 
-    enum signedAxis {
+    enum class signedAxis {
         XP,
         XN,
         YP,

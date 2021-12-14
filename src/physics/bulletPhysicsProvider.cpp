@@ -1,6 +1,5 @@
 #include "bulletPhysicsProvider.h"
 
-#include <memory>
 #include <core/engine.h>
 
 using namespace chira;

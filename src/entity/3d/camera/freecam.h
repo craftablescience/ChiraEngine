@@ -1,10 +1,5 @@
 #pragma once
 
-#include <glad/gl.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <vector>
-#include <core/engine.h>
 #include "camera3d.h"
 
 namespace chira {

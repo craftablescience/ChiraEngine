@@ -1,6 +1,7 @@
 #pragma once
 
 #include <entity/entity.h>
+#include <glm/gtc/quaternion.hpp>
 
 namespace chira {
     class entity2d : public entity {

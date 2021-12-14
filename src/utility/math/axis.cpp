@@ -2,36 +2,35 @@
 
 #include <utility/logger.h>
 #include <i18n/translationManager.h>
-#include <fmt/core.h>
 
 chira::axis chira::getAxisFromString(const std::string& str) {
     if (str == "X") {
-        return X;
+        return axis::X;
     } else if (str == "Y") {
-        return Y;
+        return axis::Y;
     } else if (str == "Z") {
-        return Z;
+        return axis::Z;
     } else {
         logger::log(ERR, "axis::getAxisFromString", fmt::format(TR("error.axis.invalid_value"), str, "axis"));
-        return Z; // oh no
+        return axis::Z; // oh no
     }
 }
 
 chira::signedAxis chira::getSignedAxisFromString(const std::string& str) {
     if (str == "XP") {
-        return XP;
+        return signedAxis::XP;
     } else if (str == "XN") {
-        return XN;
+        return signedAxis::XN;
     } else if (str == "YP") {
-        return YP;
+        return signedAxis::YP;
     } else if (str == "YN") {
-        return YN;
+        return signedAxis::YN;
     } else if (str == "ZP") {
-        return ZP;
+        return signedAxis::ZP;
     } else if (str == "ZN") {
-        return ZN;
+        return signedAxis::ZN;
     } else {
         logger::log(ERR, "axis::getSignedAxisFromString", fmt::format(TR("error.axis.invalid_value"), str, "signedAxis"));
-        return ZN; // oh no
+        return signedAxis::ZN; // oh no
     }
 }

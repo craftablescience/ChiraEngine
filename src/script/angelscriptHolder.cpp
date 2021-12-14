@@ -2,10 +2,9 @@
 
 #include <angelscript.h>
 #include <scriptbuilder/scriptbuilder.h>
-#include <resource/resource.h>
 #include <resource/stringResource.h>
 #include <i18n/translationManager.h>
-#include <fmt/core.h>
+#include <utility/logger.h>
 
 using namespace chira;
 

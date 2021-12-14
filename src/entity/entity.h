@@ -4,7 +4,6 @@
 #include <string>
 #include <string_view>
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 
 namespace chira {
     /// The base entity class. Note that the name of an entity stored in the name variable should

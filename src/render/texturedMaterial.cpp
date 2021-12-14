@@ -1,7 +1,5 @@
 #include "texturedMaterial.h"
 
-#include <resource/resource.h>
-
 using namespace chira;
 
 void texturedMaterial::compile(const nlohmann::json& properties) {

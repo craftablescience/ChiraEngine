@@ -4,8 +4,6 @@
 #include <string_view>
 #include <unordered_map>
 #include <glad/gl.h>
-#include <fstream>
-#include <regex>
 #include <utility/handleObject.h>
 #include <resource/resource.h>
 

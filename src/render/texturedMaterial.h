@@ -1,6 +1,5 @@
 #pragma once
 
-#include <utility>
 #include "material.h"
 #include "texture.h"
 

@@ -1,5 +1,7 @@
 #include "freecam.h"
 
+#include <core/engine.h>
+
 using namespace chira;
 
 freecam::freecam(entity* parent_, const cameraProjectionMode& mode, float fov_, bool controls) : camera3d(parent_, mode, fov_) {

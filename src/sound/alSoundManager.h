@@ -8,7 +8,7 @@
 namespace chira {
     class alSoundManager : public abstractSoundManager {
     public:
-        virtual ~alSoundManager();
+        ~alSoundManager() override;
         void init() override;
         void update() override;
         void stop() override;

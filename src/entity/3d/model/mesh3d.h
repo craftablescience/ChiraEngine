@@ -1,8 +1,7 @@
 #pragma once
 
 #include <utility>
-
-#include <entity/3d/entity3d.h>
+#include "../entity3d.h"
 #include <resource/meshResource.h>
 
 namespace chira {

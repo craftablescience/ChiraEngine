@@ -2,7 +2,6 @@
 
 #include <resource/resource.h>
 #include <i18n/translationManager.h>
-#include <fmt/core.h>
 
 using namespace chira;
 

@@ -1,9 +1,5 @@
 #pragma once
 
-#include <string>
-#include <memory>
-#include <functional>
-#include <unordered_map>
 #include <resource/propertiesResource.h>
 #include "shader.h"
 

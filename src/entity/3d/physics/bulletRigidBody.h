@@ -1,6 +1,6 @@
 #pragma once
 
-#include <entity/3d/entity3d.h>
+#include "../entity3d.h"
 #include <physics/bulletColliderResource.h>
 
 namespace chira {

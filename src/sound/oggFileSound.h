@@ -2,9 +2,6 @@
 
 #include <fstream>
 #include <ogg/ogg.h>
-#include <ogg/os_types.h>
-#include <vorbis/codec.h>
-#include <vorbis/vorbisenc.h>
 #include <vorbis/vorbisfile.h>
 #include "alHelpers.h"
 #include "abstractSound.h"
@@ -19,8 +16,8 @@
  */
 
 namespace chira {
-    const std::size_t OGG_NUM_BUFFERS = 4;
-    const ALsizei OGG_BUFFER_SIZE = 65536;
+    constexpr std::size_t OGG_NUM_BUFFERS = 4;
+    constexpr ALsizei OGG_BUFFER_SIZE = 65536;
 
     struct oggStreamData {
         ALuint buffers[OGG_NUM_BUFFERS];

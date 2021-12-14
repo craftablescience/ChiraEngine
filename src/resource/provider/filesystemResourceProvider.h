@@ -1,9 +1,5 @@
 #pragma once
 
-#include <string>
-#include <filesystem>
-#include <fstream>
-#include <utility>
 #include <utility/string/stringStrip.h>
 #include "abstractResourceProvider.h"
 

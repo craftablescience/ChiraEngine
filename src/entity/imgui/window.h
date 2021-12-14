@@ -1,7 +1,5 @@
 #pragma once
 
-#include <functional>
-#include <string>
 #include <imgui.h>
 #include <entity/entity.h>
 

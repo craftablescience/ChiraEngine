@@ -1,9 +1,8 @@
 #include "texture.h"
 
 #include <loader/image.h>
-#include <resource/resource.h>
 #include <i18n/translationManager.h>
-#include <fmt/core.h>
+#include <utility/logger.h>
 
 using namespace chira;
 

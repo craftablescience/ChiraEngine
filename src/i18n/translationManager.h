@@ -1,6 +1,7 @@
 #pragma once
 
 #include "translationFileResource.h"
+#include <fmt/core.h>
 
 namespace chira {
     class translationManager {
