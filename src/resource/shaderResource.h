@@ -23,9 +23,9 @@ namespace chira {
     private:
         unsigned int type;
         std::string data;
-        static inline std::string preprocessorPrefix = std::string{SHADER_PREPROCESSOR_DEFAULT_PREFIX}; // NOLINT(cert-err58-cpp)
-        static inline std::string preprocessorSuffix = std::string{SHADER_PREPROCESSOR_DEFAULT_SUFFIX}; // NOLINT(cert-err58-cpp)
-        static inline std::unordered_map<std::string, std::string> preprocessorSymbols{};
+        static std::string preprocessorPrefix;
+        static std::string preprocessorSuffix;
+        static std::unordered_map<std::string, std::string> preprocessorSymbols;
         void checkForCompilationErrors() const;
     };
 }

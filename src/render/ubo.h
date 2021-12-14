@@ -18,7 +18,7 @@ namespace chira {
     protected:
         unsigned int bindingPoint = 0;
         std::string name;
-        static inline unsigned int uboBindingPoint = 0;
+        static unsigned int uboBindingPoint;
     };
 
     /// Stores two mat4 values, named PV

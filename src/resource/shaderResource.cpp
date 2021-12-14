@@ -8,6 +8,10 @@
 
 using namespace chira;
 
+std::string shaderResource::preprocessorPrefix = std::string{SHADER_PREPROCESSOR_DEFAULT_PREFIX}; // NOLINT(cert-err58-cpp)
+std::string shaderResource::preprocessorSuffix = std::string{SHADER_PREPROCESSOR_DEFAULT_SUFFIX}; // NOLINT(cert-err58-cpp)
+std::unordered_map<std::string, std::string> shaderResource::preprocessorSymbols{};
+
 // todo: add #include preprocessing
 shaderResource::shaderResource(const std::string& identifier_, int type_) : resource(identifier_), handleObject<int>(), type(type_) {}
 

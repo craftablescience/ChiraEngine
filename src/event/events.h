@@ -22,11 +22,11 @@ namespace chira {
         static void runCallbacks();
         static void update();
     private:
-        static inline std::vector<std::string> broadcastsLastFrame;
-        static inline std::vector<std::string> broadcastsThisFrame;
-        static inline bool isRunningCallbacks = false;
-        static inline std::unordered_map<std::string, std::vector<std::any>> calledEvents;
-        static inline std::unordered_map<std::string, std::vector<std::any>> calledEventsFallback;
-        static inline std::unordered_map<std::string, std::vector<std::pair<uuids::uuid, std::function<void(const std::any&)>>>> listeners;
+        static std::vector<std::string> broadcastsLastFrame;
+        static std::vector<std::string> broadcastsThisFrame;
+        static bool isRunningCallbacks;
+        static std::unordered_map<std::string, std::vector<std::any>> calledEvents;
+        static std::unordered_map<std::string, std::vector<std::any>> calledEventsFallback;
+        static std::unordered_map<std::string, std::vector<std::pair<uuids::uuid, std::function<void(const std::any&)>>>> listeners;
     };
 }

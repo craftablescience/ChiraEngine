@@ -6,6 +6,8 @@
 
 using namespace chira;
 
+std::unordered_map<std::string, std::unique_ptr<abstractMeshLoader>> meshResource::meshLoaders{};
+
 meshResource::meshResource(const std::string& identifier_, sharedPointer<material> material_) :
     propertiesResource(identifier_), materialPtr(std::move(material_)) {}
 

@@ -2,6 +2,8 @@
 
 using namespace chira;
 
+std::unique_ptr<uuidGenerator::uuidGeneratorInstance> uuidGenerator::generator{};
+
 uuidGenerator::uuidGeneratorInstance::uuidGeneratorInstance() {
     std::generate(std::begin(this->seedData), std::end(this->seedData), std::ref(this->rd));
     std::seed_seq seq(std::begin(this->seedData), std::end(this->seedData));

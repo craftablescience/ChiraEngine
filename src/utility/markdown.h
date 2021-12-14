@@ -7,6 +7,7 @@
 #include <shellapi.h>
 #endif
 #include <string>
+#include <memory>
 
 namespace chira {
     class markdown {
@@ -27,15 +28,15 @@ namespace chira {
         }
         */
         static void create(const std::string& markdown_) {
-            markdown::mdConfig.linkCallback = markdown::linkCallback;
+            markdown::mdConfig->linkCallback = markdown::linkCallback;
             //markdown::mdConfig.headingFormats[0] = {H1, true};
             //markdown::mdConfig.headingFormats[1] = {H2, true};
             //markdown::mdConfig.headingFormats[2] = {H3, false};
-            markdown::mdConfig.userData = nullptr;
-            ImGui::Markdown(markdown_.c_str(), markdown_.length(), mdConfig);
+            markdown::mdConfig->userData = nullptr;
+            ImGui::Markdown(markdown_.c_str(), markdown_.length(), *mdConfig);
         }
     private:
-        static inline ImGui::MarkdownConfig mdConfig{};
+        static std::unique_ptr<ImGui::MarkdownConfig> mdConfig;
 
         static void linkCallback(ImGui::MarkdownLinkCallbackData data_) {
             std::string url(data_.link, data_.linkLength);

@@ -15,12 +15,9 @@ namespace chira {
         static void addUniversalFile(const std::string& identifier);
         static std::string getTranslation(const std::string& identifier);
     private:
-        static inline std::unordered_map<std::string,std::string> languageStrings{};
-        static inline std::string currentLanguage = "en"; // NOLINT(cert-err58-cpp)
-        static inline std::unordered_map<std::string, std::string> LANGUAGE_DEFINITIONS = { // NOLINT(cert-err58-cpp)
-                {"en", "English"},
-                {"jp", "Japanese"}
-        };
+        static std::unordered_map<std::string,std::string> languageStrings;
+        static std::string currentLanguage;
+        static std::unordered_map<std::string, std::string> LANGUAGE_DEFINITIONS;
     };
 }
 

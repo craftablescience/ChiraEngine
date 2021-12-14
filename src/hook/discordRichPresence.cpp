@@ -5,6 +5,17 @@
 
 using namespace chira;
 
+bool discordRichPresence::isInitialized = false;
+bool discordRichPresence::isModifiedSinceLastUpdate = false;
+std::string discordRichPresence::state;
+std::string discordRichPresence::details;
+std::string discordRichPresence::largeImage;
+std::string discordRichPresence::largeImageText;
+std::string discordRichPresence::smallImage;
+std::string discordRichPresence::smallImageText;
+std::int64_t discordRichPresence::startTimestamp = -1;
+std::int64_t discordRichPresence::endTimestamp = -1;
+
 void discordRichPresence::init(const std::string& appId) {
     if (discordRichPresence::isInitialized) return;
     DiscordEventHandlers handlers;

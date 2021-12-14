@@ -4,6 +4,7 @@
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
+#include <cstdlib>
 #include <i18n/translationManager.h>
 #include <config/glVersion.h>
 #include <loader/jsonSettingsLoader.h>
@@ -21,11 +22,31 @@
 #include <event/events.h>
 #include <entity/imgui/console/console.h>
 #include <entity/imgui/profiler/profiler.h>
-#if __has_include(<windows.h>) && RELEASE
+#if __has_include(<windows.h>) && !defined(DEBUG)
 #include <windows.h>
 #endif
 
 using namespace chira;
+
+GLFWwindow* engine::window = nullptr;
+std::vector<std::function<void()>> engine::initFunctions{};
+std::vector<std::function<void()>> engine::renderFunctions{};
+std::vector<std::function<void()>> engine::stopFunctions{};
+std::unique_ptr<angelscriptProvider> engine::angelscript = nullptr;
+std::unique_ptr<abstractSoundManager> engine::soundManager = nullptr;
+std::vector<keybind> engine::keybinds{};
+std::vector<mousebind> engine::mousebinds{};
+std::unique_ptr<abstractSettingsLoader> engine::settingsLoader = nullptr;
+std::unique_ptr<abstractPhysicsProvider> engine::physicsProvider = nullptr;
+root* engine::treeRoot = nullptr;
+console* engine::consoleUI = nullptr;
+#if DEBUG
+profiler* engine::profilerUI = nullptr;
+#endif
+bool engine::mouseCaptured = false;
+bool engine::started = false;
+bool engine::iconified = false;
+double engine::lastTime, engine::currentTime, engine::lastMouseX, engine::lastMouseY;
 
 void APIENTRY glDebugOutputCallback(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* userParam) {
     // Leaving OpenGL error reports unlocalized is probably best
@@ -416,7 +437,6 @@ void engine::stop() {
 
     glfwDestroyWindow(engine::window);
     glfwTerminate();
-    exit(EXIT_SUCCESS);
 }
 
 void engine::addInitFunction(const std::function<void()>& init) {

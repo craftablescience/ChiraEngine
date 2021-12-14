@@ -19,6 +19,6 @@ namespace chira {
         static uuids::uuid getNewUUID();
         static std::string getNewUUIDString();
     private:
-        static inline std::unique_ptr<uuidGeneratorInstance> generator;
+        static std::unique_ptr<uuidGeneratorInstance> generator;
     };
 }

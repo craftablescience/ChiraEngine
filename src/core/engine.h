@@ -69,25 +69,26 @@ namespace chira {
         static profiler* getProfiler();
         [[nodiscard]] static bool isIconified();
     private:
-        static inline GLFWwindow* window = nullptr;
-        static inline std::vector<std::function<void()>> initFunctions{};
-        static inline std::vector<std::function<void()>> renderFunctions{};
-        static inline std::vector<std::function<void()>> stopFunctions{};
-        static inline std::unique_ptr<angelscriptProvider> angelscript = nullptr;
-        static inline std::unique_ptr<abstractSoundManager> soundManager = nullptr;
-        static inline std::vector<keybind> keybinds{};
-        static inline std::vector<mousebind> mousebinds{};
-        static inline std::unique_ptr<abstractSettingsLoader> settingsLoader = nullptr;
-        static inline std::unique_ptr<abstractPhysicsProvider> physicsProvider = nullptr;
-        static inline root* treeRoot = nullptr;
-        static inline console* consoleUI = nullptr;
+        static GLFWwindow* window;
+        static std::vector<std::function<void()>> initFunctions;
+        static std::vector<std::function<void()>> renderFunctions;
+        static std::vector<std::function<void()>> stopFunctions;
+        static std::unique_ptr<angelscriptProvider> angelscript;
+        static std::unique_ptr<abstractSoundManager> soundManager;
+        static std::vector<keybind> keybinds;
+        static std::vector<mousebind> mousebinds;
+        static std::unique_ptr<abstractSettingsLoader> settingsLoader;
+        static std::unique_ptr<abstractPhysicsProvider> physicsProvider;
+        static root* treeRoot;
+        static console* consoleUI;
 #if DEBUG
-        static inline profiler* profilerUI = nullptr;
+        static profiler* profilerUI;
 #endif
-        static inline bool mouseCaptured = false;
-        static inline bool started = false;
-        static inline bool iconified = false;
-        static inline double lastTime, currentTime, lastMouseX, lastMouseY;
+        static bool mouseCaptured;
+        static bool started;
+        static bool iconified;
+        static double lastTime, currentTime, lastMouseX, lastMouseY;
+
         static void setSettingsLoaderDefaults();
         /// Note: PNGs must have a bit depth of 8 or less* (less not tested)
         static void setIcon(const std::string& iconPath);

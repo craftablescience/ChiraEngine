@@ -5,6 +5,8 @@
 
 using namespace chira;
 
+unsigned int ubo::uboBindingPoint = 0;
+
 ubo::ubo(std::string name_, unsigned int size) : handleObject<unsigned int>(), name(std::move(name_)) {
     this->bindingPoint = ubo::uboBindingPoint++;
     glGenBuffers(1, &this->handle);

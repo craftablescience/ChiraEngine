@@ -5,7 +5,6 @@
 #include <gtest/gtest.h>
 
 #include <resource/provider/filesystemResourceProvider.h>
-#include <resource/resource.h>
 #include <resource/stringResource.h>
 
 using namespace chira;

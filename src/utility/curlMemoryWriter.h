@@ -4,7 +4,6 @@
 
 namespace chira {
     struct curlMemoryWriter {
-        constexpr static int MAX_BUFFER_LENGTH = 20000;
         curlMemoryWriter();
         ~curlMemoryWriter();
         static void* w_realloc(void* ptr, std::size_t size);

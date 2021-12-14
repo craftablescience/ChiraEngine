@@ -7,7 +7,8 @@ using namespace chira;
 
 curlMemoryWriter::curlMemoryWriter() {
     this->m_pBuffer = nullptr;
-    this->m_pBuffer = (unsigned char*) std::malloc(curlMemoryWriter::MAX_BUFFER_LENGTH * sizeof(unsigned char));
+    // Max of 20,000 bytes
+    this->m_pBuffer = (unsigned char*) std::malloc(20000 * sizeof(unsigned char));
     this->m_Size = 0;
 }
 

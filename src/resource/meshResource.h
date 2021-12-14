@@ -29,7 +29,7 @@ namespace chira {
         unsigned int vboHandle = -1, vaoHandle = -1, eboHandle = -1;
         std::vector<vertex> vertices{};
         std::vector<unsigned int> indices{};
-        static inline std::unordered_map<std::string, std::unique_ptr<abstractMeshLoader>> meshLoaders{};
+        static std::unordered_map<std::string, std::unique_ptr<abstractMeshLoader>> meshLoaders;
         static int getDepthFuncFromString(const std::string& depthFunc);
         static int getCullTypeFromString(const std::string& cullType);
     };

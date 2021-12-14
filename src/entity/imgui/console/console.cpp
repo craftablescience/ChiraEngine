@@ -35,16 +35,16 @@ void console::renderContents() {
             const char* item = this->items[i];
             ImVec4 color;
             bool has_color = false;
-            if (strstr(item, logger::INFO_IMPORTANT_PREFIX.data())) {
+            if (strstr(item, LOGGER_INFO_IMPORTANT_PREFIX.data())) {
                 color = ImVec4(0.13f, 0.77f, 0.13f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, logger::OUTPUT_PREFIX.data())) {
+            } else if (strstr(item, LOGGER_OUTPUT_PREFIX.data())) {
                 color = ImVec4(0.3f, 0.3f, 1.0f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, logger::WARNING_PREFIX.data())) {
+            } else if (strstr(item, LOGGER_WARNING_PREFIX.data())) {
                 color = ImVec4(1.0f, 0.84f, 0.0f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, logger::ERROR_PREFIX.data())) {
+            } else if (strstr(item, LOGGER_ERROR_PREFIX.data())) {
                 color = ImVec4(1.0f, 0.2f, 0.2f, 1.0f);
                 has_color = true;
             }
@@ -87,19 +87,19 @@ void console::precacheResource() {
 void console::engineLoggingHook(const loggerType type, const std::string& source, const std::string& message) {
     switch (type) {
         case INFO:
-            this->addLog(std::string(logger::INFO_PREFIX) + "[" + source + "] " + message);
+            this->addLog(std::string(LOGGER_INFO_PREFIX) + "[" + source + "] " + message);
             break;
         case INFO_IMPORTANT:
-            this->addLog(std::string(logger::INFO_IMPORTANT_PREFIX) + "[" + source + "] " + message);
+            this->addLog(std::string(LOGGER_INFO_IMPORTANT_PREFIX) + "[" + source + "] " + message);
             break;
         case OUTPUT:
-            this->addLog(std::string(logger::OUTPUT_PREFIX) + "[" + source + "] " + message);
+            this->addLog(std::string(LOGGER_OUTPUT_PREFIX) + "[" + source + "] " + message);
             break;
         case WARN:
-            this->addLog(std::string(logger::WARNING_PREFIX) + "[" + source + "] " + message);
+            this->addLog(std::string(LOGGER_WARNING_PREFIX) + "[" + source + "] " + message);
             break;
         case ERR:
-            this->addLog(std::string(logger::ERROR_PREFIX) + "[" + source + "] " + message);
+            this->addLog(std::string(LOGGER_ERROR_PREFIX) + "[" + source + "] " + message);
             break;
     }
 }

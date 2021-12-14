@@ -4,8 +4,6 @@
 #include <render/phongMaterial.h>
 #include <hook/discordRichPresence.h>
 #include <resource/provider/filesystemResourceProvider.h>
-#include <resource/resource.h>
-#include <utility/markdown.h>
 #include <entity/3d/model/mesh3d.h>
 #include <i18n/translationManager.h>
 #include <entity/3d/physics/bulletRigidBody.h>
@@ -91,17 +89,20 @@ int main() {
         engine::getRoot()->addChild(fallingTeapot);
         //endregion
 
+        //region Add the settings UI window
         auto settingsUI = new settings{};
         engine::getRoot()->addChild(settingsUI);
         engine::addKeybind(keybind(GLFW_KEY_O, GLFW_PRESS, [settingsUI](){
             settingsUI->setVisible(!settingsUI->isVisible());
         }));
+        //endregion
 
         //region Add the camera
         engine::captureMouse(true);
         auto camera = new freecam{cameraProjectionMode::PERSPECTIVE};
         engine::getRoot()->addChild(camera);
         engine::getRoot()->setMainCamera(camera);
+        camera->translate(glm::vec3{0,0,15});
         //endregion
 
         //region Add a test script
@@ -128,8 +129,6 @@ int main() {
         //region Set a nice skybox
         engine::getRoot()->setSkybox("file://materials/skyboxShanghaiMaterial.json");
         //endregion
-
-        camera->translate(glm::vec3{0,0,15});
     });
     engine::init();
 

@@ -14,6 +14,10 @@ resource::~resource() {
 // Static caching functions
 //
 
+std::unordered_map<std::string, std::vector<std::unique_ptr<abstractResourceProvider>>> resource::providers{};
+std::unordered_map<std::string, std::unordered_map<std::string, sharedPointer<resource>>> resource::resources{};
+std::vector<std::string> resource::garbageResources{};
+
 void resource::addResourceProvider(const std::string& name, abstractResourceProvider* provider) {
     if (resource::providers.find(name) == resource::providers.end()) {
         resource::providers[name] = std::vector<std::unique_ptr<abstractResourceProvider>>{};

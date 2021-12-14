@@ -22,16 +22,17 @@ namespace chira {
         static void resetPresence();
         static void shutdown();
     private:
-        static inline bool isInitialized = false;
-        static inline bool isModifiedSinceLastUpdate = false;
-        static inline std::string state; // NOLINT(cert-err58-cpp)
-        static inline std::string details; // NOLINT(cert-err58-cpp)
-        static inline std::string largeImage; // NOLINT(cert-err58-cpp)
-        static inline std::string largeImageText; // NOLINT(cert-err58-cpp)
-        static inline std::string smallImage; // NOLINT(cert-err58-cpp)
-        static inline std::string smallImageText; // NOLINT(cert-err58-cpp)
-        static inline std::int64_t startTimestamp = -1;
-        static inline std::int64_t endTimestamp = -1;
+        static bool isInitialized;
+        static bool isModifiedSinceLastUpdate;
+        static std::string state;
+        static std::string details;
+        static std::string largeImage;
+        static std::string largeImageText;
+        static std::string smallImage;
+        static std::string smallImageText;
+        static std::int64_t startTimestamp;
+        static std::int64_t endTimestamp;
+
         static void callbackReady(const DiscordUser* connectedUser);
         static void callbackDisconnected(int errcode, const char* message);
         static void callbackError(int errcode, const char* message);

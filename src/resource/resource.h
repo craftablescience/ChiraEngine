@@ -6,6 +6,7 @@
 #include <nlohmann/json.hpp>
 #include <utility/pointer/sharedPointer.h>
 #include "provider/abstractResourceProvider.h"
+#include "utility/logger.h"
 
 namespace chira {
     constexpr std::string_view RESOURCE_ID_SEPARATOR = "://";
@@ -116,9 +117,9 @@ namespace chira {
         static void discardAll();
 
     protected:
-        static inline std::unordered_map<std::string, std::vector<std::unique_ptr<abstractResourceProvider>>> providers{};
-        static inline std::unordered_map<std::string, std::unordered_map<std::string, sharedPointer<resource>>> resources{};
-        static inline std::vector<std::string> garbageResources{};
+        static std::unordered_map<std::string, std::vector<std::unique_ptr<abstractResourceProvider>>> providers;
+        static std::unordered_map<std::string, std::unordered_map<std::string, sharedPointer<resource>>> resources;
+        static std::vector<std::string> garbageResources;
 
         /// We do a few predeclaration workarounds
         static void logResourceError(const std::string& identifier, const std::string& resourceName);

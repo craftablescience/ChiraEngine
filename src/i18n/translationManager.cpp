@@ -5,6 +5,13 @@
 
 using namespace chira;
 
+std::unordered_map<std::string,std::string> translationManager::languageStrings{};
+std::string translationManager::currentLanguage = "en"; // NOLINT(cert-err58-cpp)
+std::unordered_map<std::string, std::string> translationManager::LANGUAGE_DEFINITIONS = { // NOLINT(cert-err58-cpp)
+        {"en", "English"},
+        {"jp", "Japanese"}
+};
+
 void translationManager::setLanguage(const std::string& languageCode) {
     translationManager::currentLanguage = languageCode;
 }
