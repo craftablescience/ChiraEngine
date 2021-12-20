@@ -13,7 +13,7 @@
   "debug.glfw.version": "GLFW v{}.{}.{}の使用",
   "debug.opengl.vertex_attributes": "頂点属性の最大数は{}",
   "debug.opengl.texture_units": "テクスチャユニットの最大数は{}",
-  "debug.imgui.success": "ImGUIが正常に読み込まれました",
+  "debug.imgui.success": "ImGuiが正常に読み込まれました",
   "debug.discord.user_connected": "Discordユーザー{}:{}接続済み",
   "debug.discord.user_disconnected": "Discordユーザーが切断されました,コード{}: {}",
   "debug.discord.generic_error": "エラー{}: {}",

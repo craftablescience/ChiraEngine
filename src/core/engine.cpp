@@ -314,7 +314,7 @@ void engine::init() {
     io.Fonts->Clear();
     ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    logger::log(INFO, "ImGUI", TR("debug.imgui.success"));
+    logger::log(INFO, "ImGui", TR("debug.imgui.success"));
 
     bool openalEnabled = true;
     engine::getSettingsLoader()->getValue("audio", "openal", &openalEnabled);

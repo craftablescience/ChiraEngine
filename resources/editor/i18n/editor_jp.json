@@ -12,5 +12,5 @@
   "ui.settings.discord_integration": "不和の豊富な存在",
   "ui.settings.apply": "申し込み",
 
-  "debug.imgui.texture_test": "ImGUIのテクスチャーのテスト"
+  "debug.imgui.texture_test": "ImGuiのテクスチャーのテスト"
 }

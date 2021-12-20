@@ -10,5 +10,5 @@
   "ui.settings.discord_integration": "Discord Rich Presence",
   "ui.settings.apply": "Apply",
 
-  "debug.imgui.texture_test": "ImGUI Texture Test"
+  "debug.imgui.texture_test": "ImGui Texture Test"
 }
