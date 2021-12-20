@@ -158,12 +158,8 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/libloader)
 list(APPEND ENGINE_LINK_LIBRARIES LibLoader)
 
 # STB
-if(CHIRA_BUILD_STATIC)
-    list(APPEND ENGINE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb/stb_image.h)
-else()
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb)
-    list(APPEND ENGINE_LINK_LIBRARIES stb)
-endif()
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb)
+list(APPEND ENGINE_LINK_LIBRARIES stb)
 
 # STDUUID
 set(UUID_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -171,40 +167,12 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stduuid)
 list(APPEND ENGINE_LINK_LIBRARIES stduuid)
 
 # TINYFILEDIALOGS
-if(CHIRA_BUILD_STATIC)
-    list(APPEND ENGINE_SOURCES
-            ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs/tinyfiledialogs.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs/tinyfiledialogs.h)
-else()
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
-    list(APPEND ENGINE_LINK_LIBRARIES tinyfiledialogs)
-endif()
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
+list(APPEND ENGINE_LINK_LIBRARIES tinyfiledialogs)
 
 # IMGUI
-list(APPEND ENGINE_SOURCES
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imconfig.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui_demo.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui_draw.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui_internal.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui_tables.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui_widgets.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imstb_rectpack.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imstb_textedit.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imstb_truetype.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_glfw.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_glfw.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_opengl3.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_opengl3.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/misc/cpp/imgui_stdlib.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/misc/cpp/imgui_stdlib.h)
-if(WIN32)
-    # Windows IME support
-    list(APPEND ENGINE_LINK_LIBRARIES imm32)
-elseif(UNIX)
-    # ImGUI needs it on Linux
-    list(APPEND ENGINE_LINK_LIBRARIES dl)
-endif()
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui)
+list(APPEND ENGINE_LINK_LIBRARIES ImGui)
 
 # IMGUI_MARKDOWN
 list(APPEND ENGINE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdown/imgui_markdown.h)
