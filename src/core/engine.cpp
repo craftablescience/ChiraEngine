@@ -323,6 +323,7 @@ void engine::init() {
     }
     engine::soundManager->init();
 
+    // todo: move this to a general lighting manager
     if (engine::getSettingsLoader()->hasValue("engine", "maxPointLights")) {
         int maxLights;
         engine::getSettingsLoader()->getValue("engine", "maxPointLights", &maxLights);
@@ -387,9 +388,8 @@ void engine::run() {
         glfwPollEvents();
         engine::keyboardRepeatingCallback();
         engine::mouseButtonRepeatingCallback();
-        if (discordRichPresence::initialized()) {
+        if (discordRichPresence::initialized())
             discordRichPresence::updatePresence();
-        }
         events::update();
         resource::cleanup();
     }
@@ -437,6 +437,7 @@ void engine::stop() {
 
     glfwDestroyWindow(engine::window);
     glfwTerminate();
+    exit(EXIT_SUCCESS);
 }
 
 void engine::addInitFunction(const std::function<void()>& init) {
