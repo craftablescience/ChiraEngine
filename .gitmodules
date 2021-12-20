@@ -15,7 +15,7 @@
 	url = https://github.com/kcat/openal-soft
 [submodule "third_party/discord"]
 	path = third_party/discord
-	url = https://github.com/discord/discord-rpc
+	url = https://github.com/craftablescience/discord-rpc
 [submodule "third_party/bullet"]
 	path = third_party/bullet
 	url = https://github.com/bulletphysics/bullet3

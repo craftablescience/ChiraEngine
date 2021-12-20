@@ -123,6 +123,13 @@ list(APPEND ENGINE_LINK_LIBRARIES glfw)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm)
 list(APPEND ENGINE_LINK_LIBRARIES glm::glm)
 
+# IMGUI
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui)
+list(APPEND ENGINE_LINK_LIBRARIES ImGui)
+
+# IMGUI_MARKDOWN
+list(APPEND ENGINE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdown/imgui_markdown.h)
+
 # OPENAL
 set(ALSOFT_EXAMPLES         OFF CACHE BOOL "" FORCE)
 set(ALSOFT_INSTALL_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -152,11 +159,6 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/json)
 list(APPEND ENGINE_LINK_LIBRARIES nlohmann_json::nlohmann_json)
 
-# LIBLOADER
-set(LIBLOADER_BUILD_TEST OFF CACHE BOOL "" FORCE)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/libloader)
-list(APPEND ENGINE_LINK_LIBRARIES LibLoader)
-
 # STB
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/stb)
 list(APPEND ENGINE_LINK_LIBRARIES stb)
@@ -170,12 +172,10 @@ list(APPEND ENGINE_LINK_LIBRARIES stduuid)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
 list(APPEND ENGINE_LINK_LIBRARIES tinyfiledialogs)
 
-# IMGUI
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui)
-list(APPEND ENGINE_LINK_LIBRARIES ImGui)
-
-# IMGUI_MARKDOWN
-list(APPEND ENGINE_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdown/imgui_markdown.h)
+# LIBLOADER
+set(LIBLOADER_BUILD_TEST OFF CACHE BOOL "" FORCE)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/libloader)
+list(APPEND ENGINE_LINK_LIBRARIES LibLoader)
 
 # CHIRAENGINE
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/CMakeLists.txt)
