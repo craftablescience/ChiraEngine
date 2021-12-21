@@ -48,55 +48,6 @@ bool engine::started = false;
 bool engine::iconified = false;
 double engine::lastTime, engine::currentTime, engine::lastMouseX, engine::lastMouseY;
 
-void APIENTRY glDebugOutputCallback(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* userParam) {
-    // Leaving OpenGL error reports unlocalized is probably best
-
-    if (id == 8 || id == 131169 || id == 131185 || id == 131218 || id == 131204) {
-        // Ignore 8 because the Steam overlay tries to bind to an already bound framebuffer, very low overhead, don't worry about it
-        // Others are ignored because learnopengl.com said they were duplicates
-        return;
-    }
-    std::string output = "---------------\nDebug message (" + std::to_string(id) + "): " +  message;
-
-    output += "\nSource: ";
-    switch (source) {
-        case GL_DEBUG_SOURCE_API:             output += "API"; break;
-        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   output += "Window System"; break;
-        case GL_DEBUG_SOURCE_SHADER_COMPILER: output += "Shader Compiler"; break;
-        case GL_DEBUG_SOURCE_THIRD_PARTY:     output += "Third Party"; break;
-        case GL_DEBUG_SOURCE_APPLICATION:     output += "Application"; break;
-        default:                              output += "Other";
-    }
-    output += "\nType: ";
-    switch (type) {
-        case GL_DEBUG_TYPE_ERROR:               output += "Error"; break;
-        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: output += "Deprecated Behaviour"; break;
-        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  output += "Undefined Behaviour"; break;
-        case GL_DEBUG_TYPE_PORTABILITY:         output += "Portability"; break;
-        case GL_DEBUG_TYPE_PERFORMANCE:         output += "Performance"; break;
-        case GL_DEBUG_TYPE_MARKER:              output += "Marker"; break;
-        case GL_DEBUG_TYPE_PUSH_GROUP:          output += "Push Group"; break;
-        case GL_DEBUG_TYPE_POP_GROUP:           output += "Pop Group"; break;
-        default:                                output += "Other";
-    }
-    output += "\nSeverity: ";
-    switch (severity) {
-        case GL_DEBUG_SEVERITY_HIGH:         output += "High"; break;
-        case GL_DEBUG_SEVERITY_MEDIUM:       output += "Medium"; break;
-        case GL_DEBUG_SEVERITY_LOW:          output += "Low"; break;
-        case GL_DEBUG_SEVERITY_NOTIFICATION: output += "Notification"; break;
-        default:                             output += "Other";
-    }
-
-    if (type == GL_DEBUG_TYPE_ERROR)
-        logger::log(ERR, "OpenGL", output);
-    else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
-        logger::log(INFO, "OpenGL", output);
-    else
-        // Logging as a warning because most of the time the program runs perfectly fine
-        logger::log(WARN, "OpenGL", output);
-}
-
 void engine::errorCallback(int error, const char* description) {
     logger::log(ERR, "GLFW", fmt::format(TR("error.glfw.generic"), error, description));
 }
@@ -266,7 +217,54 @@ void engine::init() {
     if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-        glDebugMessageCallback(glDebugOutputCallback, nullptr);
+        glDebugMessageCallback([](GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* userParam) {
+            // Leaving OpenGL error reports unlocalized is probably best
+
+            if (id == 8 || id == 131169 || id == 131185 || id == 131218 || id == 131204) {
+                // Ignore 8 because the Steam overlay tries to bind to an already bound framebuffer, very low overhead, don't worry about it
+                // Others are ignored because learnopengl.com said they were duplicates
+                return;
+            }
+            std::string output = "---------------\nDebug message (" + std::to_string(id) + "): " +  message;
+
+            output += "\nSource: ";
+            switch (source) {
+                case GL_DEBUG_SOURCE_API:             output += "API"; break;
+                case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   output += "Window System"; break;
+                case GL_DEBUG_SOURCE_SHADER_COMPILER: output += "Shader Compiler"; break;
+                case GL_DEBUG_SOURCE_THIRD_PARTY:     output += "Third Party"; break;
+                case GL_DEBUG_SOURCE_APPLICATION:     output += "Application"; break;
+                default:                              output += "Other";
+            }
+            output += "\nType: ";
+            switch (type) {
+                case GL_DEBUG_TYPE_ERROR:               output += "Error"; break;
+                case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: output += "Deprecated Behaviour"; break;
+                case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  output += "Undefined Behaviour"; break;
+                case GL_DEBUG_TYPE_PORTABILITY:         output += "Portability"; break;
+                case GL_DEBUG_TYPE_PERFORMANCE:         output += "Performance"; break;
+                case GL_DEBUG_TYPE_MARKER:              output += "Marker"; break;
+                case GL_DEBUG_TYPE_PUSH_GROUP:          output += "Push Group"; break;
+                case GL_DEBUG_TYPE_POP_GROUP:           output += "Pop Group"; break;
+                default:                                output += "Other";
+            }
+            output += "\nSeverity: ";
+            switch (severity) {
+                case GL_DEBUG_SEVERITY_HIGH:         output += "High"; break;
+                case GL_DEBUG_SEVERITY_MEDIUM:       output += "Medium"; break;
+                case GL_DEBUG_SEVERITY_LOW:          output += "Low"; break;
+                case GL_DEBUG_SEVERITY_NOTIFICATION: output += "Notification"; break;
+                default:                             output += "Other";
+            }
+
+            if (type == GL_DEBUG_TYPE_ERROR)
+                logger::log(ERR, "OpenGL", output);
+            else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+                logger::log(INFO, "OpenGL", output);
+            else
+                // Logging as a warning because most of the time the program runs perfectly fine
+                logger::log(WARN, "OpenGL", output);
+        }, nullptr);
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
     }
 
