@@ -81,7 +81,7 @@ namespace chira {
         static std::unique_ptr<abstractPhysicsProvider> physicsProvider;
         static root* treeRoot;
         static console* consoleUI;
-#if DEBUG
+#ifdef DEBUG
         static profiler* profilerUI;
 #endif
         static bool mouseCaptured;

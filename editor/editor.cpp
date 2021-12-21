@@ -36,7 +36,7 @@ int main() {
     engine::addKeybind(keybind(GLFW_KEY_GRAVE_ACCENT, GLFW_PRESS, []() {
         engine::getConsole()->setVisible(!engine::getConsole()->isVisible());
     }));
-#if DEBUG
+#ifdef DEBUG
     engine::addKeybind(keybind(GLFW_KEY_F1, GLFW_PRESS, []() {
         engine::getProfiler()->setVisible(!engine::getProfiler()->isVisible());
     }));

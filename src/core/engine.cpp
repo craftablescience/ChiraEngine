@@ -40,7 +40,7 @@ std::unique_ptr<abstractSettingsLoader> engine::settingsLoader = nullptr;
 std::unique_ptr<abstractPhysicsProvider> engine::physicsProvider = nullptr;
 root* engine::treeRoot = nullptr;
 console* engine::consoleUI = nullptr;
-#if DEBUG
+#ifdef DEBUG
 profiler* engine::profilerUI = nullptr;
 #endif
 bool engine::mouseCaptured = false;
@@ -149,7 +149,7 @@ void engine::init() {
     engine::started = true;
 
     engine::consoleUI = new console{};
-#if DEBUG
+#ifdef DEBUG
     engine::profilerUI = new profiler{};
 #endif
 
@@ -161,7 +161,7 @@ void engine::init() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#if DEBUG
+#ifdef DEBUG
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 #endif
 
@@ -211,7 +211,7 @@ void engine::init() {
         exit(EXIT_FAILURE);
     }
 
-#if DEBUG
+#ifdef DEBUG
     int flags;
     glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
     if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
@@ -302,7 +302,7 @@ void engine::init() {
     glfwSetScrollCallback(engine::window, engine::mouseScrollCallback);
     glfwSetWindowIconifyCallback(engine::window, engine::windowIconifyCallback);
 
-#if DEBUG
+#ifdef DEBUG
     IMGUI_CHECKVERSION();
 #endif
     ImGui::CreateContext();
