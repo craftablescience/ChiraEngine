@@ -187,18 +187,20 @@ void engine::init() {
     }
     glfwMakeContextCurrent(engine::window);
 
-    bool startMaximized = true;
-    engine::getSettingsLoader()->getValue("graphics", "startMaximized", &startMaximized);
-    if (startMaximized && !fullscreen) {
-        glfwMaximizeWindow(engine::window);
+    if (!fullscreen) {
+        bool startMaximized = true;
+        engine::getSettingsLoader()->getValue("graphics", "startMaximized", &startMaximized);
+        if (startMaximized) {
+            glfwMaximizeWindow(engine::window);
+        }
     }
 
     if (engine::getSettingsLoader()->hasValue("engine", "iconPath")) {
-        std::string path{};
+        std::string path;
         engine::getSettingsLoader()->getValue("engine", "iconPath", &path);
         engine::setIcon(path);
     } else {
-        logger::log(WARN, "ChiraEngine", TR("error.engine.unset_icon_path"));
+        logger::log(WARN, "Engine", TR("error.engine.unset_icon_path"));
     }
 
     int major, minor, rev;
@@ -415,7 +417,7 @@ void engine::render() {
 }
 
 void engine::stop() {
-    logger::log(INFO_IMPORTANT, "ChiraEngine", TR("debug.engine.exit"));
+    logger::log(INFO_IMPORTANT, "Engine", TR("debug.engine.exit"));
 
     engine::callRegisteredFunctions(&(engine::stopFunctions));
     engine::angelscript->stop();

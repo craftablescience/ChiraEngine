@@ -57,4 +57,41 @@ TEST(events, recursiveEvent) {
     EXPECT_EQ(eventFired, 0);
 }
 
+TEST(events, multipleFiringsOfOneEvent) {
+    const std::string eventName = "test_event_multiple_firings";
+    int eventFired = 0;
+    auto id = events::addListener(eventName, [&eventFired](const std::any& input) {
+        try { eventFired += std::any_cast<int>(input); }
+        catch (std::bad_any_cast&) { eventFired -= 1; }
+    });
+
+    EXPECT_EQ(eventFired, 0);
+    events::runCallbacks();
+    EXPECT_EQ(eventFired, 0);
+
+    events::createEvent(eventName, 2);
+    events::runCallbacks();
+    EXPECT_EQ(eventFired, 2);
+
+    events::createEvent(eventName, 3);
+    events::runCallbacks();
+    EXPECT_EQ(eventFired, 5);
+
+    events::createEvent(eventName, "throws std::bad_any_cast");
+    events::runCallbacks();
+    EXPECT_EQ(eventFired, 4);
+
+    eventFired = 0;
+    events::createEvent(eventName, 1);
+    events::createEvent(eventName, 2);
+    events::createEvent(eventName, 3);
+    events::runCallbacks();
+    EXPECT_EQ(eventFired, 6);
+
+    eventFired = 0;
+    events::removeListener(id);
+    events::runCallbacks();
+    EXPECT_EQ(eventFired, 0);
+}
+
 #pragma clang diagnostic pop

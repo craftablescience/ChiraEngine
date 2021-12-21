@@ -56,7 +56,10 @@ void events::runCallbacks() {
         for (const auto& [name, data] : events::calledEvents) {
             if (events::listeners.count(name) > 0) {
                 for (auto& [id, callback] : events::listeners[name]) {
-                    callback(data);
+                    for (const auto& datum : data) {
+                        // Yeah it's four nested loops, sue me
+                        callback(datum);
+                    }
                 }
             }
         }
