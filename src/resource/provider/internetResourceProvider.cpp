@@ -18,7 +18,11 @@ void internetResourceProvider::compileResource(const std::string& name, resource
         request.setOpt(curlpp::options::Url(this->providerName + "://" + name));
         request.setOpt(curlpp::options::Port(this->port));
         request.perform();
-        resource->compile(mWriterChunk.m_pBuffer, mWriterChunk.m_Size);
+        auto buffer = new unsigned char[mWriterChunk.m_Size + 1];
+        memcpy(buffer, mWriterChunk.m_pBuffer, mWriterChunk.m_Size);
+        buffer[mWriterChunk.m_Size] = '\0';
+        resource->compile(buffer, mWriterChunk.m_Size + 1);
+        delete[] buffer;
     } catch (curlpp::RuntimeError& e) {
         logger::log(ERR, fmt::format("Internet Resource Provider ({}:{})", this->providerName, this->port), e.what());
     } catch (curlpp::LogicError& e) {
