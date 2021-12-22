@@ -172,11 +172,6 @@ list(APPEND ENGINE_LINK_LIBRARIES stduuid)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
 list(APPEND ENGINE_LINK_LIBRARIES tinyfiledialogs)
 
-# LIBLOADER
-set(LIBLOADER_BUILD_TEST OFF CACHE BOOL "" FORCE)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/libloader)
-list(APPEND ENGINE_LINK_LIBRARIES LibLoader)
-
 # CHIRAENGINE
 include(${CMAKE_CURRENT_SOURCE_DIR}/src/CMakeLists.txt)
 add_library(${PROJECT_NAME} STATIC ${ENGINE_SOURCES})

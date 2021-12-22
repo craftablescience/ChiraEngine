@@ -37,6 +37,3 @@
 [submodule "third_party/vorbis"]
 	path = third_party/vorbis
 	url = https://github.com/craftablescience/vorbis
-[submodule "third_party/libloader"]
-	path = third_party/libloader
-	url = https://github.com/craftablescience/LibLoader
