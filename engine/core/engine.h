@@ -15,6 +15,7 @@
 #include <sound/abstractSoundManager.h>
 #include <physics/abstractPhysicsProvider.h>
 #include <entity/3d/root.h>
+#include <utility/math/color.h>
 
 namespace chira {
     class console;
@@ -35,7 +36,7 @@ namespace chira {
         static void addRenderFunction(const std::function<void()>& render);
         static void addStopFunction(const std::function<void()>& stop);
 
-        static void setBackgroundColor(float r, float g, float b, float a);
+        static void setBackgroundColor(colorRGB color);
         static glm::vec2 getWindowSize();
         static int getWindowWidth();
         static int getWindowHeight();

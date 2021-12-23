@@ -281,7 +281,7 @@ void engine::init() {
     glfwGetFramebufferSize(engine::window, &width, &height);
     glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(engine::window, engine::framebufferSizeCallback);
-    engine::setBackgroundColor(0.0f, 0.0f, 0.0f, 0.0f);
+    engine::setBackgroundColor(colorRGB{});
 
     meshResource::addMeshLoader("primitive", new primitiveMeshLoader{});
     meshResource::addMeshLoader("obj", new objMeshLoader{});
@@ -348,9 +348,10 @@ void engine::init() {
 
     engine::angelscript = std::make_unique<angelscriptProvider>();
     engine::angelscript->initProvider();
-    engine::angelscript->registerGlobalFunction(engine::setBackgroundColor, "setBackgroundColor");
-    // Reminder on how to define a callable method:
-    // engine::angelscript->asEngine->RegisterGlobalFunction("void showConsole(bool)", asMETHOD(engine, showConsole), asCALL_THISCALL_ASGLOBAL, this);
+    // Static function:
+    //engine::angelscript->registerGlobalFunction(engine::setBackgroundColor, "setBackgroundColor");
+    // Method:
+    //engine::angelscript->asEngine->RegisterGlobalFunction("void showConsole(bool)", asMETHOD(engine, showConsole), asCALL_THISCALL_ASGLOBAL, this);
 
     io.Fonts->AddFontDefault();
     engine::consoleUI->precacheResource();
@@ -452,8 +453,8 @@ void engine::addStopFunction(const std::function<void()>& stop) {
     engine::stopFunctions.push_back(stop);
 }
 
-void engine::setBackgroundColor(float r, float g, float b, float a) {
-    glClearColor(r, g, b, a);
+void engine::setBackgroundColor(colorRGB color) {
+    glClearColor(color.r, color.g, color.b, 1.f);
 }
 
 glm::vec2 engine::getWindowSize() {
