@@ -9,7 +9,7 @@
 #include <memory>
 #include <input/keybind.h>
 #include <input/mousebind.h>
-#include <loader/abstractSettingsLoader.h>
+#include <loader/settings/abstractSettingsLoader.h>
 #include <script/abstractScriptProvider.h>
 #include <script/angelscriptProvider.h>
 #include <sound/abstractSoundManager.h>

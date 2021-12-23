@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <glm/glm.hpp>
-#include <loader/abstractMeshLoader.h>
+#include <loader/mesh/abstractMeshLoader.h>
 #include <render/material.h>
 
 namespace chira {

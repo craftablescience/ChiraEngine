@@ -7,7 +7,7 @@
 
 using namespace chira;
 
-void objMeshLoader::loadMesh(const std::string& identifier, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
+void objMeshLoader::loadMesh(const std::string& identifier, std::vector<vertex>& vertices, std::vector<unsigned int>& indices) {
     std::vector<position> vertexBuffer;
     std::vector<uv> uvBuffer;
     std::vector<normal> normalBuffer;
@@ -76,14 +76,19 @@ void objMeshLoader::loadMesh(const std::string& identifier, std::vector<vertex>*
     }
 }
 
-void objMeshLoader::addVertex(const vertex& v, unsigned int* currentIndex, std::vector<vertex>* vertices, std::vector<unsigned int>* indices) {
-    auto position = std::find(vertices->begin(), vertices->end(), v);
-    if (position != vertices->end()) {
-        unsigned int index = position - vertices->begin();
-        indices->push_back(index);
+void objMeshLoader::addVertex(const vertex& v, unsigned int* currentIndex, std::vector<vertex>& vertices, std::vector<unsigned int>& indices) {
+    auto position = std::find(vertices.begin(), vertices.end(), v);
+    if (position != vertices.end()) {
+        unsigned int index = position - vertices.begin();
+        indices.push_back(index);
     } else {
-        vertices->push_back(v);
-        indices->push_back(*currentIndex);
+        vertices.push_back(v);
+        indices.push_back(*currentIndex);
         *currentIndex += 1;
     }
+}
+
+std::vector<unsigned char> objMeshLoader::createMesh(const std::vector<vertex>& vertices, const std::vector<unsigned int>& indices) {
+    // todo: make obj mesh
+    return {};
 }

@@ -21,7 +21,7 @@ void meshResource::compile(const nlohmann::json& properties) {
     if (properties["properties"].contains("cullType")) {
         this->cullType = meshResource::getCullTypeFromString(properties["properties"]["cullType"]);
     }
-    meshResource::getMeshLoader(properties["properties"]["loader"])->loadMesh(properties["dependencies"]["model"], &this->vertices, &this->indices);
+    meshResource::getMeshLoader(properties["properties"]["loader"])->loadMesh(properties["dependencies"]["model"], this->vertices, this->indices);
 
     glGenVertexArrays(1, &(this->vaoHandle));
     glGenBuffers(1, &(this->vboHandle));

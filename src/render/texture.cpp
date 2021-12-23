@@ -1,6 +1,6 @@
 #include "texture.h"
 
-#include <loader/image.h>
+#include <loader/image/image.h>
 #include <i18n/translationManager.h>
 #include <utility/logger.h>
 

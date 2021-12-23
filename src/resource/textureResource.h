@@ -1,7 +1,7 @@
 #pragma once
 
 #include "resource.h"
-#include <loader/abstractImage.h>
+#include <loader/image/abstractImage.h>
 
 namespace chira {
     class textureResource : public resource {
