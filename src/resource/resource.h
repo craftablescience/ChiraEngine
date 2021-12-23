@@ -30,7 +30,7 @@ namespace chira {
     // Static caching functions
     //
     public:
-        static void addResourceProvider(const std::string& name, abstractResourceProvider* provider);
+        static void addResourceProvider(abstractResourceProvider* provider);
 
         static abstractResourceProvider* getLatestResourceProvider(const std::string& provider);
 

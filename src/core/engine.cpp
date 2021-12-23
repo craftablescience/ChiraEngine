@@ -131,9 +131,9 @@ void engine::preInit(const std::string& configPath) {
     FreeConsole();
 #endif
 #endif
-    resource::addResourceProvider("file", new filesystemResourceProvider{"file", ENGINE_FILESYSTEM_PATH});
-    resource::addResourceProvider("http", new internetResourceProvider{"http", 80});
-    resource::addResourceProvider("https", new internetResourceProvider{"https", 443});
+    resource::addResourceProvider(new filesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
+    resource::addResourceProvider(new internetResourceProvider{"http", 80});
+    resource::addResourceProvider(new internetResourceProvider{"https", 443});
     engine::setSettingsLoader(new jsonSettingsLoader(configPath));
     std::string defaultLang;
     engine::getSettingsLoader()->getValue("ui", "language", &defaultLang);

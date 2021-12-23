@@ -15,7 +15,7 @@ using namespace chira;
 
 int main() {
     engine::preInit("settings_editor.json");
-    resource::addResourceProvider("file", new filesystemResourceProvider{"file", "editor"});
+    resource::addResourceProvider(new filesystemResourceProvider{"editor"});
     translationManager::addTranslationFile("file://i18n/editor");
     translationManager::addUniversalFile("file://i18n/editor");
 

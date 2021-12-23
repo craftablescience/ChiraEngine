@@ -23,6 +23,10 @@ void filesystemResourceProvider::compileResource(const std::string& name, resour
 }
 
 std::string filesystemResourceProvider::getResourcePath(const std::string& absolutePath) {
+    // Make sure we've been passed a valid resource path
+    if (absolutePath.find(FILESYSTEM_ROOT_FOLDER) == std::string::npos)
+        return "";
+
     std::string path = absolutePath;
 
     // Replace cringe Windows-style backslashes
@@ -37,5 +41,5 @@ std::string filesystemResourceProvider::getResourcePath(const std::string& absol
     path = path.substr(index);
 
     // Add the resource provider
-    return "file://" + path;
+    return FILESYSTEM_PROVIDER_NAME + RESOURCE_ID_SEPARATOR.data() + path;
 }

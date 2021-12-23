@@ -18,11 +18,11 @@ std::unordered_map<std::string, std::vector<std::unique_ptr<abstractResourceProv
 std::unordered_map<std::string, std::unordered_map<std::string, sharedPointer<resource>>> resource::resources{};
 std::vector<std::string> resource::garbageResources{};
 
-void resource::addResourceProvider(const std::string& name, abstractResourceProvider* provider) {
-    if (resource::providers.find(name) == resource::providers.end()) {
-        resource::providers[name] = std::vector<std::unique_ptr<abstractResourceProvider>>{};
+void resource::addResourceProvider(abstractResourceProvider* provider) {
+    if (resource::providers.find(provider->getName()) == resource::providers.end()) {
+        resource::providers[provider->getName()] = std::vector<std::unique_ptr<abstractResourceProvider>>{};
     }
-    resource::providers[name].emplace_back(provider);
+    resource::providers[provider->getName()].emplace_back(provider);
 }
 
 abstractResourceProvider* resource::getLatestResourceProvider(const std::string& provider) {
