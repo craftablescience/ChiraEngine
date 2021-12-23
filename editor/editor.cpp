@@ -1,4 +1,3 @@
-#include <tinyfiledialogs.h>
 #include <core/engine.h>
 #include <sound/oggFileSound.h>
 #include <render/phongMaterial.h>
@@ -15,8 +14,8 @@
 using namespace chira;
 
 int main() {
-    engine::preInit();
-    resource::addResourceProvider("file", new filesystemResourceProvider{"file", "resources/editor"});
+    engine::preInit("settings_editor.json");
+    resource::addResourceProvider("file", new filesystemResourceProvider{"file", "editor"});
     translationManager::addTranslationFile("file://i18n/editor");
     translationManager::addUniversalFile("file://i18n/editor");
 
@@ -43,21 +42,6 @@ int main() {
 #endif
     engine::addKeybind(keybind(GLFW_KEY_M, GLFW_PRESS, []() {
         engine::getSoundManager()->getSound("helloWorld")->play();
-    }));
-    engine::addKeybind(keybind(GLFW_KEY_P, GLFW_RELEASE, []() {
-        const char* path = tinyfd_openFileDialog(TR("ui.window.select_file").c_str(),
-#if _WIN32
-                "C:\\",
-#else
-                "/",
-#endif
-                0, nullptr, nullptr, 0);
-        if (path) {
-            logger::log(INFO_IMPORTANT, "File Picker Debug", std::string(path));
-            delete path;
-        } else {
-            logger::log(INFO_IMPORTANT, "File Picker Debug", TR("generic.operation.cancelled"));
-        }
     }));
 
     engine::addInitFunction([&discordEnabled]() {

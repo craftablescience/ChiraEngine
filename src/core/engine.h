@@ -20,7 +20,7 @@ namespace chira {
     class console;
     class profiler;
 
-    const std::string ENGINE_FILESYSTEM_PATH = "resources/engine"; // NOLINT(cert-err58-cpp)
+    const std::string ENGINE_FILESYSTEM_PATH = "engine"; // NOLINT(cert-err58-cpp)
 
     class engine {
     public:

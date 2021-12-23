@@ -21,3 +21,21 @@ void filesystemResourceProvider::compileResource(const std::string& name, resour
     resource->compile(bytes, (std::size_t) fileSize + 1);
     delete[] bytes;
 }
+
+std::string filesystemResourceProvider::getResourcePath(const std::string& absolutePath) {
+    std::string path = absolutePath;
+
+    // Replace cringe Windows-style backslashes
+    std::replace_if(path.begin(), path.end(), []( char c ){ return c == '\\'; }, '/');
+
+    // Remove everything before the root folder, the root folder, and the forward slash
+    auto index = path.rfind(FILESYSTEM_ROOT_FOLDER) + FILESYSTEM_ROOT_FOLDER.size() + 1;
+    path = path.substr(index);
+
+    // Remove the namespace
+    index = path.find('/') + 1;
+    path = path.substr(index);
+
+    // Add the resource provider
+    return "file://" + path;
+}
