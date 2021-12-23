@@ -1,6 +1,6 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/utility/math/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/utility/pointer/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/utility/string/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/math/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/pointer/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/string/CMakeLists.txt)
 
 list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/curlMemoryWriter.cpp

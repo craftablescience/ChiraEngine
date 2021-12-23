@@ -50,7 +50,7 @@ if(CHIRA_BUILD_TESTS AND (NOT MSVC))
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(googletest)
     enable_testing()
-    include(${CMAKE_CURRENT_SOURCE_DIR}/test/src/CMakeLists.txt)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/test/engine/CMakeLists.txt)
 endif()
 
 # ANGELSCRIPT
@@ -173,7 +173,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
 list(APPEND ENGINE_LINK_LIBRARIES tinyfiledialogs)
 
 # CHIRAENGINE
-include(${CMAKE_CURRENT_SOURCE_DIR}/src/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/engine/CMakeLists.txt)
 add_library(${PROJECT_NAME} STATIC ${ENGINE_SOURCES})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD2)
@@ -228,7 +228,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/th
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui_markdown)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/engine)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} ${ENGINE_LINK_LIBRARIES})
 
@@ -248,9 +248,20 @@ if(CHIRA_BUILD_EDITOR)
     target_include_directories(ChiraEngineGui PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/editor)
 endif()
 
+# CHIRAMODELVIEWER
+option(CHIRA_BUILD_MODEL_VIEWER "Build the Chira Model compiler" ON)
+if(CHIRA_BUILD_MODEL_VIEWER)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/modelviewer/CMakeLists.txt)
+    if(WIN32)
+        list(APPEND MODEL_VIEWER_SOURCES ${CMAKE_CURRENT_LIST_DIR}/resources/modelviewer/win32/project.rc)
+    endif()
+    add_executable(ChiraModelViewer ${MODEL_VIEWER_SOURCES})
+    target_link_libraries(ChiraModelViewer PRIVATE ${PROJECT_NAME} ${OPENGL_LIBRARIES})
+    target_include_directories(ChiraModelViewer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/modelviewer)
+endif()
+
 if(CHIRA_BUILD_TESTS AND (NOT MSVC))
     add_executable(ChiraTest ${TEST_SOURCES})
-    target_include_directories(ChiraTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
     target_link_libraries(ChiraTest PUBLIC ${PROJECT_NAME} ${OPENGL_LIBRARIES} gtest_main)
     include(GoogleTest)
     gtest_discover_tests(ChiraTest)
@@ -261,20 +272,34 @@ endif()
 if(CHIRA_BUILD_EDITOR)
     if(WIN32)
         # Resource files
-        add_custom_target(copyResources ALL
+        add_custom_target(copyEditorResources ALL
                 COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/editor ${CMAKE_BINARY_DIR}/resources/editor)
-        add_dependencies(${PROJECT_NAME} copyResources)
+        add_dependencies(ChiraEngineGui copyEditorResources)
     else()
         # Resource files
-        add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+        add_custom_command(TARGET ChiraEngineGui PRE_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/editor ${CMAKE_BINARY_DIR}/resources/editor)
+    endif()
+endif()
+
+# Ditto
+if(CHIRA_BUILD_MODEL_VIEWER)
+    if(WIN32)
+        # Resource files
+        add_custom_target(copyChiraModelViewerResources ALL
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/modelviewer ${CMAKE_BINARY_DIR}/resources/modelviewer)
+        add_dependencies(ChiraModelViewer copyChiraModelViewerResources)
+    else()
+        # Resource files
+        add_custom_command(TARGET ChiraModelViewer PRE_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/modelviewer ${CMAKE_BINARY_DIR}/resources/modelviewer)
     endif()
 endif()
 
 # Copy engine resources for tests (again...)
 if(CHIRA_BUILD_TESTS AND (NOT MSVC))
     add_custom_command(TARGET ChiraTest PRE_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources/engine/ ${CMAKE_BINARY_DIR}/resources/engine/)
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources/test ${CMAKE_BINARY_DIR}/resources/test)
     add_custom_command(TARGET ChiraTest PRE_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/bin/ ${CMAKE_BINARY_DIR})
 endif()
