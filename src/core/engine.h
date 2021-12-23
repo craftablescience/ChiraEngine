@@ -59,7 +59,7 @@ namespace chira {
 
         static void callRegisteredFunctions(const std::vector<std::function<void()>>* list);
 
-        [[nodiscard]] static const GLFWwindow* getWindow();
+        [[nodiscard]] static GLFWwindow* getWindow();
         [[nodiscard]] static bool isStarted();
         /// Note: only guaranteed to work after run() in a render method
         [[nodiscard]] static double getDeltaTime();

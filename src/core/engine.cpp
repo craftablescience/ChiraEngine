@@ -575,7 +575,7 @@ void engine::callRegisteredFunctions(const std::vector<std::function<void()>>* l
     }
 }
 
-const GLFWwindow* engine::getWindow() {
+GLFWwindow* engine::getWindow() {
     return engine::window;
 }
 
