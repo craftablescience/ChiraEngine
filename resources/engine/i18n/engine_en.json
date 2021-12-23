@@ -35,6 +35,7 @@
   "error.angelscript.exception": "An exception in \"{}\" occurred:\n{}",
   "error.axis.invalid_value": "String \"{}\" does not map to any value in the {} enum.",
   "error.bullet_collider_resource.unimplemented": "Collider type {} is unimplemented!",
+  "error.cmdl_loader.invalid_data": "Mesh at \"{}\" has invalid data!",
   "error.opengl.texture_compile": "Texture failed to compile: missing image data",
   "error.opengl.texture_cubemap_compile": "Texture {} in cubemap failed to compile: missing image data",
   "error.opengl.shader_linking": "Shader linking failed\n{}",

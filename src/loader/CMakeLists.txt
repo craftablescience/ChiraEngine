@@ -3,6 +3,8 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/image/image.cpp
         ${CMAKE_CURRENT_LIST_DIR}/image/image.h
         ${CMAKE_CURRENT_LIST_DIR}/mesh/abstractMeshLoader.h
+        ${CMAKE_CURRENT_LIST_DIR}/mesh/chiraMeshLoader.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/mesh/chiraMeshLoader.h
         ${CMAKE_CURRENT_LIST_DIR}/mesh/objMeshLoader.cpp
         ${CMAKE_CURRENT_LIST_DIR}/mesh/objMeshLoader.h
         ${CMAKE_CURRENT_LIST_DIR}/mesh/primitiveMeshLoader.cpp
