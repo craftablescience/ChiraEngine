@@ -60,8 +60,7 @@ int main() {
 #endif
 
     engine::addInitFunction([]() {
-        //auto noto = resource::getResource<fontResource>("file://fonts/default.json");
-        //ImGui::GetIO().FontDefault = noto->getFont();
+        engine::setBackgroundColor(colorRGB::solid(0.15f));
 
         auto camera = new freecam{cameraProjectionMode::PERSPECTIVE, false};
         engine::getRoot()->addChild(camera);

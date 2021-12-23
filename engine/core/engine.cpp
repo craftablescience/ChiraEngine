@@ -355,6 +355,8 @@ void engine::init() {
 
     io.Fonts->AddFontDefault();
     engine::consoleUI->precacheResource();
+    auto defaultFont = resource::getResource<fontResource>("file://fonts/default.json");
+    ImGui::GetIO().FontDefault = defaultFont->getFont();
 
     engine::treeRoot = new root{"root"};
     engine::treeRoot->addChild(engine::consoleUI);

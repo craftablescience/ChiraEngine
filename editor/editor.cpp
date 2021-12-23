@@ -53,11 +53,6 @@ int main() {
         }
         //endregion
 
-        //region Set the default font
-        auto noto = resource::getResource<fontResource>("file://fonts/default.json");
-        ImGui::GetIO().FontDefault = noto->getFont();
-        //endregion
-
         //region Add a teapot with a static rigidbody
         auto staticTeapot = new bulletRigidBody{"static", "file://physics/ground_static.json"};
         staticTeapot->translate(glm::vec3{3,0,-13});
