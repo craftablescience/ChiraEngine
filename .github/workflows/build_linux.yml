@@ -46,3 +46,4 @@ jobs:
           ${{github.workspace}}/build/ChiraEngineGui
           ${{github.workspace}}/build/ChiraModelViewer
           ${{github.workspace}}/build/*.s*
+        retention-days: 7

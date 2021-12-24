@@ -65,3 +65,4 @@ jobs:
           ${{github.workspace}}\build\ChiraEngineGui.exe
           ${{github.workspace}}\build\ChiraModelViewer.exe
           ${{github.workspace}}\build\*.dll
+        retention-days: 7
