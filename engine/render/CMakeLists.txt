@@ -1,19 +1,19 @@
 list(APPEND ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/cubemapMaterial.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/cubemapMaterial.h
+        ${CMAKE_CURRENT_LIST_DIR}/material/cubemapMaterial.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/material/cubemapMaterial.h
+        ${CMAKE_CURRENT_LIST_DIR}/material/material.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/material/material.h
+        ${CMAKE_CURRENT_LIST_DIR}/material/phongMaterial.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/material/phongMaterial.h
+        ${CMAKE_CURRENT_LIST_DIR}/material/texturedMaterial.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/material/texturedMaterial.h
         ${CMAKE_CURRENT_LIST_DIR}/light.cpp
         ${CMAKE_CURRENT_LIST_DIR}/light.h
-        ${CMAKE_CURRENT_LIST_DIR}/material.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/material.h
-        ${CMAKE_CURRENT_LIST_DIR}/phongMaterial.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/phongMaterial.h
         ${CMAKE_CURRENT_LIST_DIR}/shader.cpp
         ${CMAKE_CURRENT_LIST_DIR}/shader.h
         ${CMAKE_CURRENT_LIST_DIR}/texture.cpp
         ${CMAKE_CURRENT_LIST_DIR}/texture.h
         ${CMAKE_CURRENT_LIST_DIR}/textureCubemap.cpp
         ${CMAKE_CURRENT_LIST_DIR}/textureCubemap.h
-        ${CMAKE_CURRENT_LIST_DIR}/texturedMaterial.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/texturedMaterial.h
         ${CMAKE_CURRENT_LIST_DIR}/ubo.cpp
         ${CMAKE_CURRENT_LIST_DIR}/ubo.h)

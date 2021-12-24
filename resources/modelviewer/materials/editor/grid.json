@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "shader": "file://shaders/unlitTextured.json",
+    "texture": "file://textures/editor/grid.json"
+  }
+}

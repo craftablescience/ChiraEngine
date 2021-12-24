@@ -6,6 +6,9 @@
 #include <entity/imgui/console/console.h>
 #include <entity/imgui/profiler/profiler.h>
 #include <utility/dialogs.h>
+#include <render/material/texturedMaterial.h>
+
+#include <utility>
 
 using namespace chira;
 
@@ -23,26 +26,21 @@ public:
         ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y - ImGui::GetFrameHeight()));
     }
     void renderContents() override {
-        ImGui::Text("lol");
+        ImGui::Text("%s", modelViewerGui::loadedFile.c_str());
     }
+    void setLoadedFile(const std::string& meshName, sharedPointer<material> mat) {
+        if (meshName == dynamic_cast<mesh3d*>(engine::getRoot()->getChild("modelViewerMesh"))->getMeshResource()->getIdentifier())
+            return;
+        engine::getRoot()->removeChild("modelViewerMesh");
+        engine::getRoot()->addChild(new mesh3d{"modelViewerMesh", resource::getResource<meshResource>(meshName, std::move(mat))});
+        modelViewerGui::loadedFile = meshName;
+    }
+private:
+    std::string loadedFile;
 };
 
-bool openJSONFile(std::string& out) {
-    std::string path = openResource("*.json");
-    if (!path.empty()) {
-        out = path;
-        return true;
-    }
-    logger::log(INFO, "File Picker", TR("generic.operation.cancelled"));
-    return false;
-}
-
-void loadMesh(const std::string& path) {
-    logger::log(INFO_IMPORTANT, "path", path);
-}
-
 int main() {
-    engine::preInit("settings_cmdlcompiler.json");
+    engine::preInit("settings_modelviewer.json");
     resource::addResourceProvider(new filesystemResourceProvider{"modelviewer"});
     translationManager::addTranslationFile("file://i18n/modelviewer");
 
@@ -59,28 +57,36 @@ int main() {
     }));
 #endif
 
-    engine::addInitFunction([]() {
+    std::string_view uiUUID;
+    sharedPointer<texturedMaterial> mat;
+    engine::addInitFunction([&uiUUID, &mat]() {
         engine::setBackgroundColor(colorRGB::solid(0.15f));
 
-        auto camera = new freecam{cameraProjectionMode::PERSPECTIVE, false};
+        engine::captureMouse(true);
+        auto camera = new freecam{cameraProjectionMode::PERSPECTIVE, 120.f, true};
         engine::getRoot()->addChild(camera);
         engine::getRoot()->setMainCamera(camera);
 
-        engine::getRoot()->addChild(new modelViewerGui{});
+        uiUUID = engine::getRoot()->addChild(new modelViewerGui{});
+        mat = resource::getResource<texturedMaterial>("file://materials/editor/grid.json");
+        auto gridMesh = resource::getResource<meshResource>("file://meshes/editor/grid.json", mat.castDynamic<material>());
+        engine::getRoot()->addChild(new mesh3d{"modelViewerMesh", gridMesh});
 
         // todo: make this an engine function
         glfwSetWindowAspectRatio(engine::getWindow(), 500, 600);
     });
     engine::init();
 
-    engine::addRenderFunction([]() {
+    engine::addRenderFunction([&uiUUID, &mat]() {
         // todo(i18n)
         if (ImGui::BeginMainMenuBar()) {
             if (ImGui::BeginMenu("File")) {
-                if (ImGui::MenuItem("Open Model")) {
-                    std::string path;
-                    openJSONFile(path);
-                    loadMesh(path);
+                if (ImGui::MenuItem("Open...")) {
+                    std::string path = dialogs::openResource("*.json");
+                    if (!path.empty()) {
+                        dynamic_cast<modelViewerGui*>(engine::getRoot()->getChild(uiUUID.data()))->setLoadedFile(path, mat.castDynamic<material>());
+                    } else
+                        dialogs::popupError("File selected is not a resource!");
                 }
                 ImGui::Separator();
                 if (ImGui::MenuItem("Exit")) {

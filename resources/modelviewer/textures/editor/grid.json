@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "image": "file://textures/editor/grid.png"
+  },
+  "properties": {
+    "format": "RGB"
+  }
+}

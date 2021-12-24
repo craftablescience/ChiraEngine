@@ -1,6 +1,6 @@
 #include <core/engine.h>
 #include <sound/oggFileSound.h>
-#include <render/phongMaterial.h>
+#include <render/material/phongMaterial.h>
 #include <hook/discordRichPresence.h>
 #include <resource/provider/filesystemResourceProvider.h>
 #include <entity/3d/model/mesh3d.h>
@@ -56,7 +56,7 @@ int main() {
         //region Add a teapot with a static rigidbody
         auto staticTeapot = new bulletRigidBody{"static", "file://physics/ground_static.json"};
         staticTeapot->translate(glm::vec3{3,0,-13});
-        auto cubeMaterial = resource::getResource<phongMaterial>("file://materials/cubeMaterial.json");
+        auto cubeMaterial = resource::getResource<phongMaterial>("file://materials/cube.json");
         auto cubeMesh = resource::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial.castDynamic<material>());
         staticTeapot->addChild(new mesh3d{"teapotMesh", cubeMesh});
 
@@ -106,7 +106,7 @@ int main() {
         //endregion
 
         //region Set a nice skybox
-        engine::getRoot()->setSkybox("file://materials/skyboxShanghaiMaterial.json");
+        engine::getRoot()->setSkybox("file://materials/skybox/shanghai.json");
         //endregion
     });
     engine::init();

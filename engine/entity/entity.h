@@ -23,7 +23,7 @@ namespace chira {
         std::string_view getName() const;
         entity* getChild(const std::string& name_);
         bool hasChild(const std::string& name_);
-        void addChild(entity* child);
+        std::string_view addChild(entity* child);
         void removeChild(const std::string& name_);
         void removeAllChildren();
     protected:

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <resource/propertiesResource.h>
-#include "shader.h"
+#include "../shader.h"
 
 namespace chira {
     class material : public propertiesResource {

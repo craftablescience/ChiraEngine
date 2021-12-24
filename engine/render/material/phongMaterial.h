@@ -1,7 +1,7 @@
 #pragma once
 
 #include "material.h"
-#include "texture.h"
+#include "../texture.h"
 
 namespace chira {
     class phongMaterial : public material {

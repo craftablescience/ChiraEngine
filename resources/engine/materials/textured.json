@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "shader": "file://shaders/unlit.json",
+    "texture": "file://textures/missing.json"
+  }
+}

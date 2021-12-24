@@ -16,7 +16,7 @@
 #include <resource/shaderResource.h>
 #include <loader/mesh/objMeshLoader.h>
 #include <loader/mesh/primitiveMeshLoader.h>
-#include <render/texturedMaterial.h>
+#include <render/material/texturedMaterial.h>
 #include <physics/bulletPhysicsProvider.h>
 #include <render/ubo.h>
 #include <event/events.h>
@@ -287,6 +287,8 @@ void engine::init() {
     meshResource::addMeshLoader("obj", new objMeshLoader{});
 
     engine::displaySplashScreen();
+    resource::cleanup();
+
     glfwSwapInterval(1);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS); // Wiki says modern hardware is fine with this and it looks better
