@@ -5,9 +5,7 @@
 #include <i18n/translationManager.h>
 #include <resource/provider/filesystemResourceProvider.h>
 
-using namespace chira;
-
-std::string dialogs::openFile(const std::string& pattern, const std::string& description) {
+std::string chira::dialogOpenFile(const std::string& pattern, const std::string& description) {
     const char* filter[1] = {pattern.c_str()};
     std::string path;
     auto result = tinyfd_openFileDialog(
@@ -21,7 +19,7 @@ std::string dialogs::openFile(const std::string& pattern, const std::string& des
     return "";
 }
 
-std::string dialogs::openResource(const std::string& pattern, const std::string& description) {
+std::string chira::dialogOpenResource(const std::string& pattern, const std::string& description) {
     const char* filter[1] = {pattern.c_str()};
     auto result = tinyfd_openFileDialog(
             TR("ui.window.select_file").c_str(),
@@ -32,19 +30,34 @@ std::string dialogs::openResource(const std::string& pattern, const std::string&
     return "";
 }
 
-void dialogs::popupInfo(const std::string& message) {
-    tinyfd_messageBox("Info", message.c_str(), "ok", "info", 1);
+void chira::dialogPopupInfo(const std::string& message, const std::string& title) {
+    tinyfd_messageBox(title.c_str(), message.c_str(), "ok", "info", 1);
 }
 
-void dialogs::popupWarning(const std::string& message) {
-    tinyfd_messageBox("Warning", message.c_str(), "ok", "warning", 1);
+void chira::dialogPopupWarning(const std::string& message, const std::string& title) {
+    tinyfd_messageBox(title.c_str(), message.c_str(), "ok", "warning", 1);
 }
 
-void dialogs::popupError(const std::string& message) {
-    tinyfd_messageBox("Error", message.c_str(), "ok", "error", 1);
+void chira::dialogPopupError(const std::string& message, const std::string& title) {
+    tinyfd_messageBox(title.c_str(), message.c_str(), "ok", "error", 1);
 }
 
-bool dialogs::popupQuestion(const std::string& question, bool useYesNo, const std::string& title) {
+bool chira::dialogPopupInfoChoice(const std::string& message, bool useYesNo, const std::string& title) {
+    return static_cast<bool>(
+            tinyfd_messageBox(title.c_str(), message.c_str(), useYesNo? "yesno" : "okcancel", "info", 1));
+}
+
+bool chira::dialogPopupWarningChoice(const std::string& message, bool useYesNo, const std::string& title) {
+    return static_cast<bool>(
+            tinyfd_messageBox(title.c_str(), message.c_str(), useYesNo? "yesno" : "okcancel", "warning", 1));
+}
+
+bool chira::dialogPopupErrorChoice(const std::string& message, bool useYesNo, const std::string& title) {
+    return static_cast<bool>(
+            tinyfd_messageBox(title.c_str(), message.c_str(), useYesNo? "yesno" : "okcancel", "error", 1));
+}
+
+bool chira::dialogPopupQuestion(const std::string& question, bool useYesNo, const std::string& title) {
     return static_cast<bool>(
             tinyfd_messageBox(title.c_str(), question.c_str(), useYesNo? "yesno" : "okcancel", "question", 1));
 }

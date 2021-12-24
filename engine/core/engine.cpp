@@ -4,7 +4,6 @@
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
-#include <cstdlib>
 #include <i18n/translationManager.h>
 #include <config/glVersion.h>
 #include <loader/settings/jsonSettingsLoader.h>
@@ -25,6 +24,7 @@
 #if __has_include(<windows.h>) && !defined(DEBUG)
 #include <windows.h>
 #endif
+#include <utility/assertions.h>
 
 using namespace chira;
 
@@ -47,10 +47,6 @@ bool engine::mouseCaptured = false;
 bool engine::started = false;
 bool engine::iconified = false;
 double engine::lastTime, engine::currentTime, engine::lastMouseX, engine::lastMouseY;
-
-void engine::errorCallback(int error, const char* description) {
-    logger::log(ERR, "GLFW", fmt::format(TR("error.glfw.generic"), error, description));
-}
 
 void engine::framebufferSizeCallback(GLFWwindow* w, int width, int height) {
     glViewport(0, 0, width, height);
@@ -157,7 +153,9 @@ void engine::init() {
         logger::log(ERR, "GLFW", TR("error.glfw.undefined"));
         exit(EXIT_FAILURE);
     }
-    glfwSetErrorCallback(engine::errorCallback);
+    glfwSetErrorCallback([](int error, const char* description) {
+        logger::log(ERR, "GLFW", fmt::format(TR("error.glfw.generic"), error, description));
+    });
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -593,17 +591,15 @@ double engine::getDeltaTime() {
 }
 
 void engine::setIcon(const std::string& iconPath) {
-#if DEBUG
-    assert(engine::started);
-#endif
+    // todo(i18n)
+    assert(engine::isStarted(), "Engine is not started: have you called engine::preInit() and engine::init()?");
     GLFWimage images[1];
     int width, height, bitsPerPixel;
     image icon(
             ((filesystemResourceProvider*) resource::getResourceProviderWithResource("file://" + iconPath))->getPath() + "/" + iconPath,
             &width, &height, &bitsPerPixel, 4, false);
-#if DEBUG
-    assert(icon.getData());
-#endif
+    // todo(i18n)
+    assert(icon.getData(), "Icon has no data");
     images[0].width = width;
     images[0].height = height;
     images[0].pixels = icon.getData();

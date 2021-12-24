@@ -3,6 +3,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/pointer/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/string/CMakeLists.txt)
 
 list(APPEND ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/assertions.h
         ${CMAKE_CURRENT_LIST_DIR}/curlMemoryWriter.cpp
         ${CMAKE_CURRENT_LIST_DIR}/curlMemoryWriter.h
         ${CMAKE_CURRENT_LIST_DIR}/dialogs.cpp

@@ -94,7 +94,6 @@ namespace chira {
         /// Note: PNGs must have a bit depth of 8 or less* (less not tested)
         static void setIcon(const std::string& iconPath);
         static void displaySplashScreen();
-        static void errorCallback(int error, const char* description);
         static void framebufferSizeCallback(GLFWwindow* w, int width, int height);
         static void keyboardCallback(GLFWwindow* w, int key, int scancode, int action, int mods);
         static void keyboardRepeatingCallback();
