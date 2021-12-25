@@ -1,18 +1,12 @@
 #pragma once
 
-#include <resource/propertiesResource.h>
-#include "../shader.h"
+#include "materialFactory.h"
 
 namespace chira {
-    class untexturedMaterial : public propertiesResource {
+    class untexturedMaterial : public baseMaterial {
     public:
-        explicit untexturedMaterial(const std::string& identifier_);
-        void compile(const nlohmann::json& properties) override;
-        virtual void use();
-        sharedPointer<shader> getShader();
-    protected:
-        sharedPointer<shader> shaderPtr;
+        explicit untexturedMaterial(const std::string& identifier_) : baseMaterial(identifier_) {}
     private:
-        REGISTER_PROPERTY_RESOURCE_TYPE(untexturedMaterial);
+        REGISTER_MATERIAL_TYPE(untexturedMaterial);
     };
 }

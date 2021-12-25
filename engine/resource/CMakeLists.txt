@@ -10,7 +10,6 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/fontResource.h
         ${CMAKE_CURRENT_LIST_DIR}/meshResource.h
         ${CMAKE_CURRENT_LIST_DIR}/meshResource.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/propertiesResource.cpp
         ${CMAKE_CURRENT_LIST_DIR}/propertiesResource.h
         ${CMAKE_CURRENT_LIST_DIR}/resource.cpp
         ${CMAKE_CURRENT_LIST_DIR}/resource.h

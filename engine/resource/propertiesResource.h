@@ -39,27 +39,4 @@ namespace chira {
                 return defaultValue;
         }
     };
-
-    /// Currently used for materials
-    class propertiesResourceFactory {
-        using factoryFunction = std::function<sharedPointer<propertiesResource>(const std::string&)>;
-    public:
-        propertiesResourceFactory() = delete;
-        static bool registerResourceType(const std::string& name, factoryFunction createFunc);
-        static const factoryFunction& getResourceType(const std::string& name);
-    private:
-        static inline std::unordered_map<std::string, factoryFunction> factoryMethods;
-    };
 }
-
-#define REGISTER_PROPERTY_RESOURCE_TYPE(resourceClassName)                                     \
-    static inline bool resourceClassName##FactoryRegistryHelper =                              \
-    chira::propertiesResourceFactory::registerResourceType(                                    \
-        #resourceClassName,                                                                    \
-        [](const std::string& identifier) -> chira::sharedPointer<chira::propertiesResource> { \
-            return chira::resource::getResource<resourceClassName>(identifier)                 \
-                   .castReinterpret<chira::propertiesResource>();                              \
-        }                                                                                      \
-    )
-
-#define GET_PROPERTY(baseType, type, identifier) chira::propertiesResourceFactory::getResourceType(type)(identifier).castReinterpret<baseType>()

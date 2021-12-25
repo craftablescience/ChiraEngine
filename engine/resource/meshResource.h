@@ -13,10 +13,10 @@ namespace chira {
         ~meshResource() override;
         void compile(const nlohmann::json& properties) override;
         void render(const glm::mat4& model);
-        sharedPointer<untexturedMaterial> getMaterial() {
+        sharedPointer<baseMaterial> getMaterial() {
             return this->materialPtr;
         }
-        void setMaterial(sharedPointer<untexturedMaterial> newMaterial) {
+        void setMaterial(sharedPointer<baseMaterial> newMaterial) {
             this->materialPtr = std::move(newMaterial);
         }
 
@@ -26,7 +26,7 @@ namespace chira {
         int depthFunction = GL_LEQUAL;
         bool backfaceCulling = true;
         int cullType = GL_BACK;
-        sharedPointer<untexturedMaterial> materialPtr;
+        sharedPointer<baseMaterial> materialPtr;
         unsigned int vboHandle = -1, vaoHandle = -1, eboHandle = -1;
         std::vector<vertex> vertices{};
         std::vector<unsigned int> indices{};

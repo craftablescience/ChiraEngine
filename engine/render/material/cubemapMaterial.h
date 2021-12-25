@@ -12,6 +12,6 @@ namespace chira {
     protected:
         sharedPointer<textureCubemap> cubemap;
     private:
-        REGISTER_PROPERTY_RESOURCE_TYPE(cubemapMaterial);
+        REGISTER_MATERIAL_TYPE(cubemapMaterial);
     };
 }

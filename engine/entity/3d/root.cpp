@@ -30,7 +30,7 @@ camera3d* root::getMainCamera() {
 }
 
 void root::setSkybox(const std::string& cubemapId) {
-    this->skybox->setMaterial(resource::getResource<cubemapMaterial>(cubemapId).castReinterpret<untexturedMaterial>());
+    this->skybox->setMaterial(resource::getResource<cubemapMaterial>(cubemapId).castReinterpret<baseMaterial>());
     this->renderSkybox = true;
 }
 

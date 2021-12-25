@@ -12,6 +12,6 @@ namespace chira {
     protected:
         sharedPointer<texture> tex;
     private:
-        REGISTER_PROPERTY_RESOURCE_TYPE(texturedMaterial);
+        REGISTER_MATERIAL_TYPE(texturedMaterial);
     };
 }
