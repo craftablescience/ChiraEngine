@@ -11,7 +11,7 @@ namespace chira {
         using texture::setTextureUnit;
         using texture::getTextureUnit;
         using texture::getHandle;
-    private:
+    protected:
         // Inherited format, used as format_fd
         int format_bk = GL_RGBA;
         int format_up = GL_RGBA;
