@@ -1,12 +1,12 @@
 #pragma once
 
-#include "material.h"
+#include "untexturedMaterial.h"
 #include "../texture.h"
 
 namespace chira {
-    class texturedMaterial : public material {
+    class texturedMaterial : public untexturedMaterial {
     public:
-        explicit texturedMaterial(const std::string& identifier_) : material(identifier_) {}
+        explicit texturedMaterial(const std::string& identifier_) : untexturedMaterial(identifier_) {}
         void compile(const nlohmann::json& properties) override;
         void use() override;
     private:

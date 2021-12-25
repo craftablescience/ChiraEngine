@@ -1,12 +1,6 @@
+include(${CMAKE_CURRENT_SOURCE_DIR}/engine/render/material/CMakeLists.txt)
+
 list(APPEND ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/material/cubemapMaterial.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/material/cubemapMaterial.h
-        ${CMAKE_CURRENT_LIST_DIR}/material/material.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/material/material.h
-        ${CMAKE_CURRENT_LIST_DIR}/material/phongMaterial.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/material/phongMaterial.h
-        ${CMAKE_CURRENT_LIST_DIR}/material/texturedMaterial.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/material/texturedMaterial.h
         ${CMAKE_CURRENT_LIST_DIR}/light.cpp
         ${CMAKE_CURRENT_LIST_DIR}/light.h
         ${CMAKE_CURRENT_LIST_DIR}/shader.cpp

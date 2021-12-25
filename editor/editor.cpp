@@ -57,7 +57,7 @@ int main() {
         auto staticTeapot = new bulletRigidBody{"static", "file://physics/ground_static.json"};
         staticTeapot->translate(glm::vec3{3,0,-13});
         auto cubeMaterial = resource::getResource<phongMaterial>("file://materials/cube.json");
-        auto cubeMesh = resource::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial.castDynamic<material>());
+        auto cubeMesh = resource::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial.castDynamic<untexturedMaterial>());
         staticTeapot->addChild(new mesh3d{"teapotMesh", cubeMesh});
 
         auto fallingTeapot = new bulletRigidBody{"file://physics/cube_dynamic.json"};

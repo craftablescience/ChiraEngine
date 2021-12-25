@@ -5,7 +5,7 @@
 using namespace chira;
 
 void phongMaterial::compile(const nlohmann::json& properties) {
-    material::compile(properties);
+    untexturedMaterial::compile(properties);
     this->diffuse = resource::getResource<texture>(properties["dependencies"]["diffuse"]);
     this->specular = resource::getResource<texture>(properties["dependencies"]["specular"]);
     this->diffuse->setTextureUnit(GL_TEXTURE0);
@@ -18,7 +18,7 @@ void phongMaterial::compile(const nlohmann::json& properties) {
 void phongMaterial::use() {
     this->diffuse->use();
     this->specular->use();
-    material::use();
+    untexturedMaterial::use();
 }
 
 void phongMaterial::setShininess(float shininess) {

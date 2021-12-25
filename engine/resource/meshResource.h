@@ -4,19 +4,19 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <loader/mesh/abstractMeshLoader.h>
-#include <render/material/material.h>
+#include "render/material/untexturedMaterial.h"
 
 namespace chira {
     class meshResource : public propertiesResource {
     public:
-        meshResource(const std::string& identifier_, sharedPointer<material> material_);
+        meshResource(const std::string& identifier_, sharedPointer<untexturedMaterial> material_);
         ~meshResource() override;
         void compile(const nlohmann::json& properties) override;
         void render(const glm::mat4& model);
-        sharedPointer<material> getMaterial() {
+        sharedPointer<untexturedMaterial> getMaterial() {
             return this->materialPtr;
         }
-        void setMaterial(sharedPointer<material> newMaterial) {
+        void setMaterial(sharedPointer<untexturedMaterial> newMaterial) {
             this->materialPtr = std::move(newMaterial);
         }
         static void addMeshLoader(const std::string& name, abstractMeshLoader* meshLoader);
@@ -25,7 +25,7 @@ namespace chira {
         int depthFunction = GL_LEQUAL;
         bool backfaceCulling = true;
         int cullType = GL_BACK;
-        sharedPointer<material> materialPtr;
+        sharedPointer<untexturedMaterial> materialPtr;
         unsigned int vboHandle = -1, vaoHandle = -1, eboHandle = -1;
         std::vector<vertex> vertices{};
         std::vector<unsigned int> indices{};

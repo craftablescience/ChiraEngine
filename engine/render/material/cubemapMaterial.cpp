@@ -5,7 +5,7 @@
 using namespace chira;
 
 void cubemapMaterial::compile(const nlohmann::json& properties) {
-    material::compile(properties);
+    untexturedMaterial::compile(properties);
     this->cubemap = resource::getResource<textureCubemap>(properties["dependencies"]["cubemap"]);
     this->cubemap->setTextureUnit(GL_TEXTURE0);
     this->shaderPtr->use();
@@ -13,6 +13,6 @@ void cubemapMaterial::compile(const nlohmann::json& properties) {
 }
 
 void cubemapMaterial::use() {
-    material::use();
+    untexturedMaterial::use();
     this->cubemap->use();
 }

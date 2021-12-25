@@ -4,9 +4,9 @@
 #include "../shader.h"
 
 namespace chira {
-    class material : public propertiesResource {
+    class untexturedMaterial : public propertiesResource {
     public:
-        explicit material(const std::string& identifier_);
+        explicit untexturedMaterial(const std::string& identifier_);
         void compile(const nlohmann::json& properties) override;
         virtual void use();
         sharedPointer<shader> getShader();

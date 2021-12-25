@@ -28,7 +28,7 @@ public:
     void renderContents() override {
         ImGui::Text("%s", modelViewerGui::loadedFile.c_str());
     }
-    void setLoadedFile(const std::string& meshName, sharedPointer<material> mat) {
+    void setLoadedFile(const std::string& meshName, sharedPointer<untexturedMaterial> mat) {
         if (meshName == dynamic_cast<mesh3d*>(engine::getRoot()->getChild("modelViewerMesh"))->getMeshResource()->getIdentifier())
             return;
         engine::getRoot()->removeChild("modelViewerMesh");
@@ -69,7 +69,7 @@ int main() {
 
         uiUUID = engine::getRoot()->addChild(new modelViewerGui{});
         mat = resource::getResource<texturedMaterial>("file://materials/editor/grid.json");
-        auto gridMesh = resource::getResource<meshResource>("file://meshes/editor/grid.json", mat.castDynamic<material>());
+        auto gridMesh = resource::getResource<meshResource>("file://meshes/editor/grid.json", mat.castDynamic<untexturedMaterial>());
         engine::getRoot()->addChild(new mesh3d{"modelViewerMesh", gridMesh});
 
         // todo: make this an engine function
@@ -84,7 +84,7 @@ int main() {
                 if (ImGui::MenuItem("Open...")) {
                     std::string path = dialogs::openResource("*.json");
                     if (!path.empty()) {
-                        dynamic_cast<modelViewerGui*>(engine::getRoot()->getChild(uiUUID.data()))->setLoadedFile(path, mat.castDynamic<material>());
+                        dynamic_cast<modelViewerGui*>(engine::getRoot()->getChild(uiUUID.data()))->setLoadedFile(path, mat.castDynamic<untexturedMaterial>());
                     } else
                         dialogs::popupError("File selected is not a resource!");
                 }
