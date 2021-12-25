@@ -6,9 +6,9 @@
 #include <entity/imgui/console/console.h>
 #include <entity/imgui/profiler/profiler.h>
 #include <utility/dialogs.h>
-#include <render/material/texturedMaterial.h>
 
-#include <utility>
+// Register all materials with the material factory
+#include <utility/materialTypes.h>
 
 using namespace chira;
 
@@ -16,10 +16,10 @@ class modelViewerGui : public window {
 public:
     modelViewerGui() : window(TR("ui.window.title"), true) {
         this->flags |=
-                ImGuiWindowFlags_NoTitleBar |
+                ImGuiWindowFlags_NoTitleBar   |
                 ImGuiWindowFlags_NoDecoration |
-                ImGuiWindowFlags_NoResize |
-                ImGuiWindowFlags_NoBackground;
+                ImGuiWindowFlags_NoResize     |
+                ImGuiWindowFlags_NoBackground ;
     }
     void preRenderContents() override {
         ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetFrameHeight()));
@@ -41,6 +41,7 @@ private:
 
 int main() {
     engine::preInit("settings_modelviewer.json");
+    resource::addResourceProvider(new filesystemResourceProvider{"editor"});
     resource::addResourceProvider(new filesystemResourceProvider{"modelviewer"});
     translationManager::addTranslationFile("file://i18n/modelviewer");
 

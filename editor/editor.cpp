@@ -94,10 +94,7 @@ int main() {
         //endregion
 
         //region Apply some lighting properties to the mesh
-        auto teapotMaterial = cubeMesh->getMaterial().castReinterpret<phongMaterial>();
-        teapotMaterial->setShininess();
-        teapotMaterial->setLambertFactor();
-        auto teapotShader = teapotMaterial->getShader();
+        auto teapotShader = cubeMesh->getMaterial()->getShader();
         teapotShader->use();
         teapotShader->setUniform("light.ambient", 0.1f, 0.1f, 0.1f);
         teapotShader->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);

@@ -3,5 +3,6 @@
     "shader": "file://shaders/phonglit.json",
     "diffuse": "file://textures/container_diffuse.json",
     "specular": "file://textures/container_specular.json"
-  }
+  },
+  "properties": {}
 }

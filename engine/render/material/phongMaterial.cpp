@@ -13,6 +13,9 @@ void phongMaterial::compile(const nlohmann::json& properties) {
     this->shaderPtr->use();
     this->shaderPtr->setUniform("material.diffuse", 0);
     this->shaderPtr->setUniform("material.specular", 1);
+
+    this->setShininess(    getPropertyOrDefault(properties["properties"], "shininess",     32.f));
+    this->setLambertFactor(getPropertyOrDefault(properties["properties"], "lambertFactor", 1.f));
 }
 
 void phongMaterial::use() {

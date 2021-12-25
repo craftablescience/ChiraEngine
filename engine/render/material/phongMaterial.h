@@ -9,8 +9,8 @@ namespace chira {
         explicit phongMaterial(const std::string& identifier_) : untexturedMaterial(identifier_) {}
         void compile(const nlohmann::json& properties) override;
         void use() override;
-        void setShininess(float shininess = 32.0f);
-        void setLambertFactor(float lambertFactor = 1.0f);
+        void setShininess(float shininess);
+        void setLambertFactor(float lambertFactor);
     protected:
         sharedPointer<texture> diffuse;
         sharedPointer<texture> specular;
