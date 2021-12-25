@@ -30,6 +30,14 @@ std::string chira::dialogOpenResource(const std::string& pattern, const std::str
     return "";
 }
 
+std::string chira::dialogInput(const std::string& message, const std::string& title, const std::string& placeholder) {
+    return {tinyfd_inputBox(title.c_str(), message.c_str(), placeholder.c_str())};
+}
+
+std::string chira::dialogPassword(const std::string& message, const std::string& title) {
+    return {tinyfd_inputBox(title.c_str(), message.c_str(), nullptr)};
+}
+
 void chira::dialogPopupInfo(const std::string& message, const std::string& title) {
     tinyfd_messageBox(title.c_str(), message.c_str(), "ok", "info", 1);
 }

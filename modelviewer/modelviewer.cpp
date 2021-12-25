@@ -41,7 +41,6 @@ private:
 
 int main() {
     engine::preInit("settings_modelviewer.json");
-    resource::addResourceProvider(new filesystemResourceProvider{"editor"});
     resource::addResourceProvider(new filesystemResourceProvider{"modelviewer"});
     translationManager::addTranslationFile("file://i18n/modelviewer");
 
@@ -80,12 +79,17 @@ int main() {
         // todo(i18n)
         if (ImGui::BeginMainMenuBar()) {
             if (ImGui::BeginMenu("File")) {
-                if (ImGui::MenuItem("Open...")) {
+                if (ImGui::MenuItem("Open Model...")) {
                     std::string path = dialogOpenResource("*.json");
                     if (!path.empty()) {
                         dynamic_cast<modelViewerGui*>(engine::getRoot()->getChild(uiUUID.data()))->setLoadedFile(path);
                     } else
                         dialogPopupError("File selected is not a resource!");
+                }
+                if (ImGui::MenuItem("Add Resource Path...")) {
+                    // todo: use folder picker
+                    // todo: check if provider already exists
+                    resource::addResourceProvider(new filesystemResourceProvider{dialogInput("Enter folder name:")});
                 }
                 ImGui::Separator();
                 if (ImGui::MenuItem("Exit")) {

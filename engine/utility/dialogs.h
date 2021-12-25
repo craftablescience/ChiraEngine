@@ -8,6 +8,11 @@ namespace chira {
     /// Returns a relative path to the resource selected, or an empty string if none selected.
     std::string dialogOpenResource(const std::string& pattern, const std::string& description = "");
 
+    /// Display a popup window with an input box.
+    std::string dialogInput(const std::string& message = "", const std::string& title = "Input", const std::string& placeholder = "");
+    /// Display a popup window with a password box.
+    std::string dialogPassword(const std::string& message = "", const std::string& title = "Password");
+
     /// Display a popup info window with the specified message.
     void dialogPopupInfo(const std::string& message, const std::string& title = "Info");
     /// Display a popup warning window with the specified message.
