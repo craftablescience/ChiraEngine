@@ -12,5 +12,7 @@ namespace chira {
         sharedPointer<shader> getShader();
     protected:
         sharedPointer<shader> shaderPtr;
+    private:
+        REGISTER_PROPERTY_RESOURCE_TYPE(untexturedMaterial);
     };
 }

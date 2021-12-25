@@ -9,7 +9,7 @@
 namespace chira {
     class meshResource : public propertiesResource {
     public:
-        meshResource(const std::string& identifier_, sharedPointer<untexturedMaterial> material_);
+        explicit meshResource(const std::string& identifier_) : propertiesResource(identifier_) {}
         ~meshResource() override;
         void compile(const nlohmann::json& properties) override;
         void render(const glm::mat4& model);
@@ -19,6 +19,7 @@ namespace chira {
         void setMaterial(sharedPointer<untexturedMaterial> newMaterial) {
             this->materialPtr = std::move(newMaterial);
         }
+
         static void addMeshLoader(const std::string& name, abstractMeshLoader* meshLoader);
         static abstractMeshLoader* getMeshLoader(const std::string& name);
     private:

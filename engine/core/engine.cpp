@@ -372,7 +372,8 @@ void engine::init() {
 void engine::displaySplashScreen() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     auto mat = resource::getResource<texturedMaterial>(TR("resource.material.splashscreen_material_path"));
-    auto plane = resource::getResource<meshResource>("file://meshes/plane.json", mat.castDynamic<untexturedMaterial>());
+    auto plane = resource::getResource<meshResource>("file://meshes/plane.json");
+    plane->setMaterial(mat.castReinterpret<untexturedMaterial>());
     plane->render(glm::identity<glm::mat4>());
     glfwSwapBuffers(engine::window);
 }

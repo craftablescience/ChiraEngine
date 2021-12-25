@@ -28,11 +28,11 @@ public:
     void renderContents() override {
         ImGui::Text("%s", modelViewerGui::loadedFile.c_str());
     }
-    void setLoadedFile(const std::string& meshName, sharedPointer<untexturedMaterial> mat) {
+    void setLoadedFile(const std::string& meshName) {
         if (meshName == dynamic_cast<mesh3d*>(engine::getRoot()->getChild("modelViewerMesh"))->getMeshResource()->getIdentifier())
             return;
         engine::getRoot()->removeChild("modelViewerMesh");
-        engine::getRoot()->addChild(new mesh3d{"modelViewerMesh", resource::getResource<meshResource>(meshName, std::move(mat))});
+        engine::getRoot()->addChild(new mesh3d{"modelViewerMesh", resource::getResource<meshResource>(meshName)});
         modelViewerGui::loadedFile = meshName;
     }
 private:
@@ -58,8 +58,7 @@ int main() {
 #endif
 
     std::string_view uiUUID;
-    sharedPointer<texturedMaterial> mat;
-    engine::addInitFunction([&uiUUID, &mat]() {
+    engine::addInitFunction([&uiUUID]() {
         engine::setBackgroundColor(colorRGB::solid(0.15f));
 
         engine::captureMouse(true);
@@ -68,8 +67,7 @@ int main() {
         engine::getRoot()->setMainCamera(camera);
 
         uiUUID = engine::getRoot()->addChild(new modelViewerGui{});
-        mat = resource::getResource<texturedMaterial>("file://materials/editor/grid.json");
-        auto gridMesh = resource::getResource<meshResource>("file://meshes/editor/grid.json", mat.castDynamic<untexturedMaterial>());
+        auto gridMesh = resource::getResource<meshResource>("file://meshes/editor/grid.json");
         engine::getRoot()->addChild(new mesh3d{"modelViewerMesh", gridMesh});
 
         // todo: make this an engine function
@@ -77,16 +75,16 @@ int main() {
     });
     engine::init();
 
-    engine::addRenderFunction([&uiUUID, &mat]() {
+    engine::addRenderFunction([&uiUUID]() {
         // todo(i18n)
         if (ImGui::BeginMainMenuBar()) {
             if (ImGui::BeginMenu("File")) {
                 if (ImGui::MenuItem("Open...")) {
-                    std::string path = dialogs::openResource("*.json");
+                    std::string path = dialogOpenResource("*.json");
                     if (!path.empty()) {
-                        dynamic_cast<modelViewerGui*>(engine::getRoot()->getChild(uiUUID.data()))->setLoadedFile(path, mat.castDynamic<untexturedMaterial>());
+                        dynamic_cast<modelViewerGui*>(engine::getRoot()->getChild(uiUUID.data()))->setLoadedFile(path);
                     } else
-                        dialogs::popupError("File selected is not a resource!");
+                        dialogPopupError("File selected is not a resource!");
                 }
                 ImGui::Separator();
                 if (ImGui::MenuItem("Exit")) {

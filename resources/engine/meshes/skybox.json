@@ -1,6 +1,8 @@
 {
   "dependencies": {
-    "model": "cube"
+    "model": "cube",
+    "material": "file://materials/unlit.json",
+    "materialType": "untexturedMaterial"
   },
   "properties": {
     "loader": "primitive",

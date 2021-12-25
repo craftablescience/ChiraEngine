@@ -56,8 +56,7 @@ int main() {
         //region Add a teapot with a static rigidbody
         auto staticTeapot = new bulletRigidBody{"static", "file://physics/ground_static.json"};
         staticTeapot->translate(glm::vec3{3,0,-13});
-        auto cubeMaterial = resource::getResource<phongMaterial>("file://materials/cube.json");
-        auto cubeMesh = resource::getResource<meshResource>("file://meshes/teapot.json", cubeMaterial.castDynamic<untexturedMaterial>());
+        auto cubeMesh = resource::getResource<meshResource>("file://meshes/teapot.json");
         staticTeapot->addChild(new mesh3d{"teapotMesh", cubeMesh});
 
         auto fallingTeapot = new bulletRigidBody{"file://physics/cube_dynamic.json"};
@@ -95,14 +94,15 @@ int main() {
         //endregion
 
         //region Apply some lighting properties to the mesh
-        cubeMaterial->setShininess();
-        cubeMaterial->setLambertFactor();
-        auto cubeShader = cubeMaterial->getShader();
-        cubeShader->use();
-        cubeShader->setUniform("light.ambient", 0.1f, 0.1f, 0.1f);
-        cubeShader->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);
-        cubeShader->setUniform("light.specular", 1.0f, 1.0f, 1.0f);
-        cubeShader->setUniform("light.position", 0.0f, 5.0f, 0.0f);
+        auto teapotMaterial = cubeMesh->getMaterial().castReinterpret<phongMaterial>();
+        teapotMaterial->setShininess();
+        teapotMaterial->setLambertFactor();
+        auto teapotShader = teapotMaterial->getShader();
+        teapotShader->use();
+        teapotShader->setUniform("light.ambient", 0.1f, 0.1f, 0.1f);
+        teapotShader->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);
+        teapotShader->setUniform("light.specular", 1.0f, 1.0f, 1.0f);
+        teapotShader->setUniform("light.position", 0.0f, 5.0f, 0.0f);
         //endregion
 
         //region Set a nice skybox

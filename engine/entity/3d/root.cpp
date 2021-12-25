@@ -5,14 +5,14 @@
 using namespace chira;
 
 root::root(const std::string& name_) : world3d(nullptr, name_) {
-    this->skybox = resource::getResource<meshResource>("file://meshes/skybox.json", sharedPointer<untexturedMaterial>{});
+    this->skybox = resource::getResource<meshResource>("file://meshes/skybox.json");
 }
 
 void root::render() {
     for (auto& [key, entity] : this->children) {
         entity->render(glm::identity<glm::mat4>());
     }
-    if (this->skybox->getMaterial()) {
+    if (this->renderSkybox) {
         this->skybox->render(glm::identity<glm::mat4>());
     }
 }
@@ -30,11 +30,12 @@ camera3d* root::getMainCamera() {
 }
 
 void root::setSkybox(const std::string& cubemapId) {
-    this->skybox->setMaterial(resource::getResource<cubemapMaterial>(cubemapId).castDynamic<untexturedMaterial>());
+    this->skybox->setMaterial(resource::getResource<cubemapMaterial>(cubemapId).castReinterpret<untexturedMaterial>());
+    this->renderSkybox = true;
 }
 
 sharedPointer<cubemapMaterial> root::getSkybox() {
-    return this->skybox->getMaterial().castDynamic<cubemapMaterial>();
+    return this->skybox->getMaterial().castReinterpret<cubemapMaterial>();
 }
 
 void root::clearTree() {

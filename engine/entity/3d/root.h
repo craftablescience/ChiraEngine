@@ -32,6 +32,7 @@ namespace chira {
         using world3d::removeAllChildren;
     private:
         sharedPointer<meshResource> skybox;
+        bool renderSkybox = false;
         camera3d* mainCamera = nullptr;
         using world3d::render;
         void clearTree();

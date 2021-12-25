@@ -8,10 +8,8 @@ using namespace chira;
 
 std::unordered_map<std::string, std::unique_ptr<abstractMeshLoader>> meshResource::meshLoaders{};
 
-meshResource::meshResource(const std::string& identifier_, sharedPointer<untexturedMaterial> material_) :
-    propertiesResource(identifier_), materialPtr(std::move(material_)) {}
-
 void meshResource::compile(const nlohmann::json& properties) {
+    this->materialPtr = GET_PROPERTY(untexturedMaterial, properties["dependencies"]["materialType"], properties["dependencies"]["material"]);
     if (properties["properties"].contains("depthFunction")) {
         this->depthFunction = meshResource::getDepthFuncFromString(properties["properties"]["depthFunction"]);
     }
