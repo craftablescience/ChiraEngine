@@ -1,6 +1,7 @@
 #include "freecam.h"
 
 #include <core/engine.h>
+#include <utility/pointer/assert_cast.h>
 
 using namespace chira;
 
@@ -28,43 +29,43 @@ void freecam::setupKeybinds() {
     engine::addKeybind(keybind(GLFW_KEY_W, GLFW_REPEAT,[]() {
         if (!engine::isMouseCaptured())
             return;
-        if (auto cam = dynamic_cast<freecam*>(engine::getRoot()->getMainCamera()))
+        if (auto cam = assert_cast<freecam*>(engine::getRoot()->getMainCamera()))
             cam->translateWithRotation(glm::vec3{0, 0, -cam->getMovementSpeed() * engine::getDeltaTime()});
     }));
     engine::addKeybind(keybind(GLFW_KEY_S, GLFW_REPEAT,[]() {
         if (!engine::isMouseCaptured())
             return;
-        if (auto* cam = dynamic_cast<freecam*>(engine::getRoot()->getMainCamera()))
+        if (auto* cam = assert_cast<freecam*>(engine::getRoot()->getMainCamera()))
             cam->translateWithRotation(glm::vec3{0, 0, cam->getMovementSpeed() * engine::getDeltaTime()});
     }));
     engine::addKeybind(keybind(GLFW_KEY_A, GLFW_REPEAT,[]() {
         if (!engine::isMouseCaptured())
             return;
-        if (auto* cam = dynamic_cast<freecam*>(engine::getRoot()->getMainCamera()))
+        if (auto* cam = assert_cast<freecam*>(engine::getRoot()->getMainCamera()))
             cam->translateWithRotation(glm::vec3{-cam->getMovementSpeed() * engine::getDeltaTime(), 0, 0});
     }));
     engine::addKeybind(keybind(GLFW_KEY_D, GLFW_REPEAT,[]() {
         if (!engine::isMouseCaptured())
             return;
-        if (auto* cam = dynamic_cast<freecam*>(engine::getRoot()->getMainCamera()))
+        if (auto* cam = assert_cast<freecam*>(engine::getRoot()->getMainCamera()))
             cam->translateWithRotation(glm::vec3{cam->getMovementSpeed() * engine::getDeltaTime(), 0, 0});
     }));
     engine::addKeybind(keybind(GLFW_KEY_SPACE, GLFW_REPEAT,[]() {
         if (!engine::isMouseCaptured())
             return;
-        if (auto* cam = dynamic_cast<freecam*>(engine::getRoot()->getMainCamera()))
+        if (auto* cam = assert_cast<freecam*>(engine::getRoot()->getMainCamera()))
             cam->translateWithRotation(glm::vec3{0, cam->getMovementSpeed() * engine::getDeltaTime(), 0});
     }));
     engine::addKeybind(keybind(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT,[]() {
         if (!engine::isMouseCaptured())
             return;
-        if (auto* cam = dynamic_cast<freecam*>(engine::getRoot()->getMainCamera()))
+        if (auto* cam = assert_cast<freecam*>(engine::getRoot()->getMainCamera()))
             cam->translateWithRotation(glm::vec3{0, -cam->getMovementSpeed() * engine::getDeltaTime(), 0});
     }));
     engine::addMousebind(mousebind(mouseActions::MOVE, [](double xOffset, double yOffset) {
         if (!engine::isMouseCaptured())
             return;
-        if (auto* cam = dynamic_cast<freecam*>(engine::getRoot()->getMainCamera())) {
+        if (auto* cam = assert_cast<freecam*>(engine::getRoot()->getMainCamera())) {
             xOffset *= cam->getMouseSensitivity() * engine::getDeltaTime();
             yOffset *= cam->getMouseSensitivity() * engine::getDeltaTime();
 

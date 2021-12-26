@@ -15,9 +15,11 @@ namespace chira {
         virtual void setPosition(const glm::vec3& newPos);
         virtual void setRotation(const glm::quat& newRot);
         virtual glm::vec3 getPosition();
-        /// Note: to reduce complexity, currently only the global position is accessible.
         virtual glm::vec3 getGlobalPosition();
+        /// Note: the global rotation is inaccessible.
         virtual glm::quat getRotation();
+        /// The size of the entity.
+        virtual glm::vec3 getAABB();
         virtual void translate(const glm::vec3& translateByAmount);
         virtual void translateWithRotation(const glm::vec3& translateByAmount);
         virtual void rotate(const glm::quat& rotateByAmount);

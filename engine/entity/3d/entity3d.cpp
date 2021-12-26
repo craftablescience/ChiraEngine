@@ -34,6 +34,10 @@ glm::quat entity3d::getRotation() {
     return this->rotation;
 }
 
+glm::vec3 entity3d::getAABB() {
+    return {};
+}
+
 void entity3d::translate(const glm::vec3& translateByAmount) {
     this->position += translateByAmount;
 }
