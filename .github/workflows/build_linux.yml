@@ -36,14 +36,3 @@ jobs:
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: ChiraEngine-linux-${{matrix.compiler}}-${{matrix.build_type}}
-        path: |
-          ${{github.workspace}}/build/resources/
-          ${{github.workspace}}/build/ChiraEngineGui
-          ${{github.workspace}}/build/ChiraModelViewer
-          ${{github.workspace}}/build/*.s*
-        retention-days: 7
