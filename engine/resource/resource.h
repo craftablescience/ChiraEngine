@@ -41,7 +41,7 @@ namespace chira {
             auto id = resource::splitResourceIdentifier(identifier);
             const std::string& provider = id.first, name = id.second;
             if (resource::resources[provider].count(name) > 0) {
-                return resource::resources[provider][name].castDynamic<resourceType>();
+                return resource::resources[provider][name].castReinterpret<resourceType>();
             }
             return resource::getUniqueResource<resourceType>(identifier, params...);
         }
@@ -61,7 +61,7 @@ namespace chira {
             auto id = resource::splitResourceIdentifier(identifier);
             const std::string& provider = id.first, name = id.second;
             if (resource::resources[provider].count(name) > 0) {
-                return resource::resources[provider][name].castDynamic<resourceType>();
+                return resource::resources[provider][name].castReinterpret<resourceType>();
             }
             resource::logResourceError("error.resource.cached_resource_not_found", identifier);
             return sharedPointer<resourceType>{};
@@ -75,7 +75,7 @@ namespace chira {
                 if (i->get()->hasResource(name)) {
                     resource::resources[provider][name] = sharedPointer<resource>(new resourceType{identifier, params...});
                     i->get()->compileResource(name, resource::resources[provider][name].get());
-                    return resource::resources[provider][name].castDynamic<resourceType>();
+                    return resource::resources[provider][name].castReinterpret<resourceType>();
                 }
             }
             resource::logResourceError("error.resource.resource_not_found", identifier);
