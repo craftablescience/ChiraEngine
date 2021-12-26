@@ -8,7 +8,7 @@ namespace chira {
 #ifdef DEBUG
         auto cast = dynamic_cast<T>(obj);
         // todo(i18n)
-        assert(cast, std::string{"Object in file "} + __FILE__ + " at line " + std::to_string(__LINE__) + " could not be cast");
+        chira_assert(cast, std::string{"Object in file "} + __FILE__ + " at line " + std::to_string(__LINE__) + " could not be cast");
         return cast;
 #else
         return static_cast<T>(obj);

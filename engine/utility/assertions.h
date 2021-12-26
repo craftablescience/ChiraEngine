@@ -6,19 +6,17 @@
 #include "dialogs.h"
 #endif
 
-#include <cassert>
-#undef assert
-
 namespace chira {
-    inline void assert(bool shouldAssert, const std::string& message = "") {
+    inline void assert_internal(bool shouldAssert, const std::string& message, const char* FILE, int LINE) {
         // Assertions fail when false
         if (shouldAssert)
             return;
-        std::string assertMessage = std::string{"Assertion in file "} + __FILE__ + \
-                                " at line " + std::to_string(__LINE__) + '\n' + message;
+        std::string assertMessage = std::string{"Assertion in file "} + FILE + " at line " + std::to_string(LINE) + '\n' + message;
         logger::log(ERR, "Assert", assertMessage);
 #ifdef DEBUG
         dialogPopupError(assertMessage, "Assertion Failed");
 #endif
     }
 }
+
+#define chira_assert(shouldAssert, message) chira::assert_internal(shouldAssert, message, __FILE__, __LINE__)
