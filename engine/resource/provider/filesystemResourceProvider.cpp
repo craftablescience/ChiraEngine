@@ -6,6 +6,10 @@
 
 using namespace chira;
 
+filesystemResourceProvider::filesystemResourceProvider(const std::string& path_) :
+        abstractResourceProvider(FILESYSTEM_PROVIDER_NAME),
+        path(FILESYSTEM_ROOT_FOLDER + '/' + strip(path_, "/")) {}
+
 bool filesystemResourceProvider::hasResource(const std::string& name) {
     // Update your compiler if compilation fails because of std::filesystem
     return std::filesystem::exists(std::filesystem::current_path().append(this->path).append(name));
@@ -20,6 +24,17 @@ void filesystemResourceProvider::compileResource(const std::string& name, resour
     bytes[fileSize] = '\0';
     resource->compile(bytes, (std::size_t) fileSize + 1);
     delete[] bytes;
+}
+
+std::string filesystemResourceProvider::getAbsoluteResourcePath(const std::string& identifier) {
+    // Make sure we've been passed a valid identifier
+    auto name = resource::splitResourceIdentifier(identifier).second;
+    if (!this->hasResource(name))
+        return "";
+    auto absPath = std::filesystem::current_path().append(this->path).append(name).string();
+    // Replace cringe Windows-style backslashes
+    std::replace_if(absPath.begin(), absPath.end(), []( char c ){ return c == '\\'; }, '/');
+    return absPath;
 }
 
 std::string filesystemResourceProvider::getResourcePath(const std::string& absolutePath) {
