@@ -10,7 +10,11 @@ void MaterialTextured::compile(const nlohmann::json& properties) {
     this->shader->setUniform("tex", 0); // todo: why is it called this?
 }
 
-void MaterialTextured::use() {
+void MaterialTextured::use() const {
     this->texture->use();
     MaterialUntextured::use();
+}
+
+SharedPointer<Texture> MaterialTextured::getTexture() const {
+    return this->texture;
 }

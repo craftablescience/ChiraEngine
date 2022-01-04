@@ -21,8 +21,8 @@ namespace chira {
         virtual void render(const glm::mat4& parentTransform);
         [[nodiscard]] Entity* getParent() const;
         std::string_view getName() const;
-        Entity* getChild(const std::string& name_);
-        bool hasChild(const std::string& name_);
+        Entity* getChild(const std::string& name_) const;
+        bool hasChild(const std::string& name_) const;
         std::string_view addChild(Entity* child);
         void removeChild(const std::string& name_);
         void removeAllChildren();

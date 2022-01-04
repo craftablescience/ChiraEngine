@@ -10,12 +10,12 @@ namespace chira {
     class FilesystemResourceProvider : public AbstractResourceProvider {
     public:
         explicit FilesystemResourceProvider(const std::string& path_);
-        bool hasResource(const std::string& name) override;
-        void compileResource(const std::string& name, Resource* resource) override;
+        [[nodiscard]] bool hasResource(const std::string& name) const override;
+        void compileResource(const std::string& name, Resource* resource) const override;
         [[nodiscard]] const std::string& getPath() const {
             return path;
         }
-        std::string getAbsoluteResourcePath(const std::string& identifier);
+        [[nodiscard]] std::string getAbsoluteResourcePath(const std::string& identifier) const;
 
         /// Takes an absolute path of a resource file and converts it to a resource identifier.
         /// Does not check if the resource identifier actually points to a valid resource.

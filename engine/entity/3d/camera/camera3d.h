@@ -18,7 +18,7 @@ namespace chira {
         const glm::mat4& getProjection() const {
             return this->projection;
         }
-        virtual glm::mat4 getView() {
+        glm::mat4 getView() {
             return glm::lookAt(this->position, this->position + this->getFrontVector(), this->getUpVector());
         }
         void setFieldOfView(float fov_) {

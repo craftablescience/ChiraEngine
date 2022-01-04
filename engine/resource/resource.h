@@ -19,7 +19,7 @@ namespace chira {
         explicit Resource(std::string identifier_) : identifier(std::move(identifier_)) {}
         virtual ~Resource();
         virtual void compile(const unsigned char buffer[], std::size_t bufferLength) {}
-        [[nodiscard]] const std::string& getIdentifier() const noexcept {
+        [[nodiscard]] const std::string& getIdentifier() const {
             return this->identifier;
         }
     protected:

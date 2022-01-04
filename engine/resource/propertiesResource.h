@@ -32,9 +32,9 @@ namespace chira {
         virtual void compile(const nlohmann::json& properties) = 0;
 
         template<typename T>
-        T getPropertyOrDefault(const nlohmann::json& dictionary, const std::string& key, T defaultValue) {
+        T getPropertyOrDefault(const nlohmann::json& dictionary, const std::string& key, T defaultValue) const {
             if (dictionary.contains(key))
-                return dictionary[key];
+                return dictionary.at(key);
             else
                 return defaultValue;
         }

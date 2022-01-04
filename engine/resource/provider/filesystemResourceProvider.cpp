@@ -10,12 +10,12 @@ FilesystemResourceProvider::FilesystemResourceProvider(const std::string& path_)
         AbstractResourceProvider(FILESYSTEM_PROVIDER_NAME),
         path(FILESYSTEM_ROOT_FOLDER + '/' + strip(path_, "/")) {}
 
-bool FilesystemResourceProvider::hasResource(const std::string& name) {
+bool FilesystemResourceProvider::hasResource(const std::string& name) const {
     // Update your compiler if compilation fails because of std::filesystem
     return std::filesystem::exists(std::filesystem::current_path().append(this->path).append(name));
 }
 
-void FilesystemResourceProvider::compileResource(const std::string& name, Resource* resource) {
+void FilesystemResourceProvider::compileResource(const std::string& name, Resource* resource) const {
     std::ifstream ifs((std::filesystem::current_path().append(this->path).append(name).string()).c_str(), std::ios::in | std::ios::binary | std::ios::ate);
     std::ifstream::pos_type fileSize = ifs.tellg();
     ifs.seekg(0, std::ios::beg);
@@ -26,7 +26,7 @@ void FilesystemResourceProvider::compileResource(const std::string& name, Resour
     delete[] bytes;
 }
 
-std::string FilesystemResourceProvider::getAbsoluteResourcePath(const std::string& identifier) {
+std::string FilesystemResourceProvider::getAbsoluteResourcePath(const std::string& identifier) const {
     // Make sure we've been passed a valid identifier
     auto name = Resource::splitResourceIdentifier(identifier).second;
     if (!this->hasResource(name))

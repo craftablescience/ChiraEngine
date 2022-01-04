@@ -25,7 +25,7 @@ void Root::setMainCamera(Camera3d* camera) {
     this->mainCamera = camera;
 }
 
-Camera3d* Root::getMainCamera() {
+Camera3d* Root::getMainCamera() const {
     return this->mainCamera;
 }
 
@@ -34,11 +34,11 @@ void Root::setSkybox(const std::string& cubemapId) {
     this->renderSkybox = true;
 }
 
-SharedPointer<MaterialCubemap> Root::getSkybox() {
+SharedPointer<MaterialCubemap> Root::getSkybox() const {
     return this->skybox->getMaterial().castAssert<MaterialCubemap>();
 }
 
-void Root::clearTree() {
+void Root::clearTree() const {
     for (const auto& [name_, ent] : this->children) {
         delete ent;
     }

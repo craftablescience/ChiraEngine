@@ -36,11 +36,11 @@ std::string_view Entity::getName() const {
     return this->name;
 }
 
-Entity* Entity::getChild(const std::string& name_) {
-    return this->children[name_];
+Entity* Entity::getChild(const std::string& name_) const {
+    return this->children.at(name_);
 }
 
-bool Entity::hasChild(const std::string& name_) {
+bool Entity::hasChild(const std::string& name_) const {
     return this->children.count(name_) > 0;
 }
 

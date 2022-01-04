@@ -13,25 +13,25 @@ void JSONSettingsLoader::addCategory(const std::string& category) {
     }
 }
 
-void JSONSettingsLoader::getValue(const std::string& category, const std::string& name, int* value) {
+void JSONSettingsLoader::getValue(const std::string& category, const std::string& name, int* value) const {
     if (this->hasValue(category, name)) {
         *value = this->settings[category][name];
     }
 }
 
-void JSONSettingsLoader::getValue(const std::string& category, const std::string& name, double* value) {
+void JSONSettingsLoader::getValue(const std::string& category, const std::string& name, double* value) const {
     if (this->hasValue(category, name)) {
         *value = this->settings[category][name];
     }
 }
 
-void JSONSettingsLoader::getValue(const std::string& category, const std::string& name, std::string* value) {
+void JSONSettingsLoader::getValue(const std::string& category, const std::string& name, std::string* value) const {
     if (this->hasValue(category, name)) {
         *value = this->settings[category][name];
     }
 }
 
-void JSONSettingsLoader::getValue(const std::string& category, const std::string& name, bool* value) {
+void JSONSettingsLoader::getValue(const std::string& category, const std::string& name, bool* value) const {
     if (this->hasValue(category, name)) {
         *value = this->settings[category][name];
     }
@@ -89,11 +89,11 @@ void JSONSettingsLoader::setValue(const std::string& category, const std::string
     }
 }
 
-bool JSONSettingsLoader::hasCategory(const std::string& category) {
+bool JSONSettingsLoader::hasCategory(const std::string& category) const {
     return this->settings.contains(category);
 }
 
-bool JSONSettingsLoader::hasValue(const std::string& category, const std::string& name) {
+bool JSONSettingsLoader::hasValue(const std::string& category, const std::string& name) const {
     return this->settings.contains(category) && this->settings[category].contains(name);
 }
 

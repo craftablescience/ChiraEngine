@@ -9,6 +9,9 @@ namespace chira {
         bool operator==(const Position& other) const {
             return this->x == other.x && this->y == other.y && this->z == other.z;
         }
+        bool operator!=(const Position& other) const {
+            return !operator==(other);
+        }
     };
 
     struct Normal {
@@ -16,6 +19,9 @@ namespace chira {
         explicit Normal(GLfloat r = 0, GLfloat g = 0, GLfloat b = 0);
         bool operator==(const Normal& other) const {
             return this->r == other.r && this->g == other.g && this->b == other.b;
+        }
+        bool operator!=(const Normal& other) const {
+            return !operator==(other);
         }
     };
 
@@ -25,6 +31,9 @@ namespace chira {
         bool operator==(const Color& other) const {
             return this->r == other.r && this->g == other.g && this->b == other.b;
         }
+        bool operator!=(const Color& other) const {
+            return !operator==(other);
+        }
     };
 
     struct UV {
@@ -32,6 +41,9 @@ namespace chira {
         explicit UV(GLfloat u = 0, GLfloat v = 0);
         bool operator==(const UV& other) const {
             return this->u == other.u && this->v == other.v;
+        }
+        bool operator!=(const UV& other) const {
+            return !operator==(other);
         }
     };
 
@@ -50,6 +62,9 @@ namespace chira {
         Vertex();
         bool operator==(const Vertex& other) const {
             return this->pos == other.pos && this->norm == other.norm && this->col == other.col && this->uvMap == other.uvMap;
+        }
+        bool operator!=(const Vertex& other) const {
+            return !operator==(other);
         }
     };
 }

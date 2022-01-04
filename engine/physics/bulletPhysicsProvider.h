@@ -10,8 +10,8 @@ namespace chira {
         BulletPhysicsProvider();
         void updatePhysics(double delta) override;
         void stop() override;
-        void addRigidBody(btRigidBody* rb);
-        void removeRigidBody(btRigidBody* rb);
+        void addRigidBody(btRigidBody* rb) const;
+        void removeRigidBody(btRigidBody* rb) const;
         void setGravity(glm::vec3 gravity) override;
     private:
         std::unique_ptr<btDefaultCollisionConfiguration> collisionConfiguration;

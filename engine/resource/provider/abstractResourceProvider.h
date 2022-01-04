@@ -7,11 +7,11 @@ namespace chira {
     public:
         explicit AbstractResourceProvider(std::string name) : providerName(std::move(name)) {}
         virtual ~AbstractResourceProvider() = default;
-        const std::string& getName() {
+        const std::string& getName() const {
             return this->providerName;
         }
-        virtual bool hasResource(const std::string& name) = 0;
-        virtual void compileResource(const std::string& name, Resource* resource) = 0;
+        virtual bool hasResource(const std::string& name) const = 0;
+        virtual void compileResource(const std::string& name, Resource* resource) const = 0;
     protected:
         std::string providerName;
     };

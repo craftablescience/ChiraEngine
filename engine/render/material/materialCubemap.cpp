@@ -12,7 +12,11 @@ void MaterialCubemap::compile(const nlohmann::json& properties) {
     this->shader->setUniform("cubemap", 0);
 }
 
-void MaterialCubemap::use() {
+void MaterialCubemap::use() const {
     MaterialUntextured::use();
     this->cubemap->use();
+}
+
+SharedPointer<TextureCubemap> MaterialCubemap::getTextureCubemap() const {
+    return this->cubemap;
 }

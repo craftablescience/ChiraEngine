@@ -7,7 +7,7 @@
 
 using namespace chira;
 
-void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) {
+void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) const {
     std::vector<Position> vertexBuffer;
     std::vector<UV> uvBuffer;
     std::vector<Normal> normalBuffer;
@@ -88,7 +88,7 @@ void OBJMeshLoader::addVertex(const Vertex& v, unsigned int* currentIndex, std::
     }
 }
 
-std::vector<byte> OBJMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) {
+std::vector<byte> OBJMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) const {
     // todo: make obj mesh
     return {};
 }

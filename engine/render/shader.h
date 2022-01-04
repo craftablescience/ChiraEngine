@@ -10,7 +10,7 @@ namespace chira {
         explicit Shader(const std::string& identifier_);
         void compile(const nlohmann::json& properties) override;
         ~Shader() override;
-        void use();
+        void use() const;
         void setUniform(const std::string& name, bool value) const;
         void setUniform(const std::string& name, unsigned int value) const;
         void setUniform(const std::string& name, int value) const;

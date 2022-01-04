@@ -6,7 +6,7 @@
 
 using namespace chira;
 
-void PrimitiveMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) {
+void PrimitiveMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) const {
     if (identifier == "plane") {
         vertices.assign({
             Vertex( 1.0f, 1.0f, 0.0f, 1.0f, 1.0f),
@@ -66,7 +66,7 @@ void PrimitiveMeshLoader::loadMesh(const std::string& identifier, std::vector<Ve
     }
 }
 
-std::vector<byte> PrimitiveMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) {
+std::vector<byte> PrimitiveMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) const {
     // todo(i18n)
     chira_assert(false, "It should be impossible to ever call this method!");
     return {};

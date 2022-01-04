@@ -7,7 +7,7 @@
 
 using namespace chira;
 
-void ChiraMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) {
+void ChiraMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) const {
     auto meshData = Resource::getResource<BinaryResource>(identifier);
     if (meshData->getBufferLength() < CHIRA_MESH_HEADER_SIZE) {
         // die
@@ -26,7 +26,7 @@ void ChiraMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex
     }
 }
 
-std::vector<byte> ChiraMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) {
+std::vector<byte> ChiraMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) const {
     std::vector<byte> bytebuffer;
     ChiraMeshHeader header;
     header.version = 1;

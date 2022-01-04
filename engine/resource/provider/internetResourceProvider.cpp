@@ -10,7 +10,7 @@
 
 using namespace chira;
 
-void InternetResourceProvider::compileResource(const std::string& name, Resource* resource) {
+void InternetResourceProvider::compileResource(const std::string& name, Resource* resource) const {
     curlpp::Easy request;
     CurlMemoryWriter mWriterChunk;
     try {

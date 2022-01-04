@@ -14,7 +14,7 @@ namespace chira {
         ~MeshResource() override;
         void compile(const nlohmann::json& properties) override;
         void render(const glm::mat4& model);
-        SharedPointer<MaterialBase> getMaterial() {
+        [[nodiscard]] SharedPointer<MaterialBase> getMaterial() const {
             return this->material;
         }
         void setMaterial(SharedPointer<MaterialBase> newMaterial) {

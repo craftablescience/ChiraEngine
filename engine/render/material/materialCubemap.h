@@ -8,7 +8,8 @@ namespace chira {
     public:
         explicit MaterialCubemap(const std::string& identifier_) : MaterialUntextured(identifier_) {}
         void compile(const nlohmann::json& properties) override;
-        void use() override;
+        void use() const override;
+        [[nodiscard]] SharedPointer<TextureCubemap> getTextureCubemap() const;
     protected:
         SharedPointer<TextureCubemap> cubemap;
     private:

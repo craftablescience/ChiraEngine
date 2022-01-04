@@ -15,7 +15,7 @@ BulletPhysicsProvider::BulletPhysicsProvider() {
             this->solver.get(),
             this->collisionConfiguration.get());
     // Don't use bulletPhysicsProvider::setGravity because virtual method shouldn't be used in constructor
-    this->dynamicsWorld->setGravity(btVector3(0, -12, 0));
+    this->dynamicsWorld->setGravity(btVector3{0, -12, 0});
 }
 
 void BulletPhysicsProvider::updatePhysics(double delta) {
@@ -36,11 +36,11 @@ void BulletPhysicsProvider::stop() {
     }
 }
 
-void BulletPhysicsProvider::addRigidBody(btRigidBody* rb) {
+void BulletPhysicsProvider::addRigidBody(btRigidBody* rb) const {
     this->dynamicsWorld->addRigidBody(rb);
 }
 
-void BulletPhysicsProvider::removeRigidBody(btRigidBody* rb) {
+void BulletPhysicsProvider::removeRigidBody(btRigidBody* rb) const {
     this->dynamicsWorld->removeRigidBody(rb);
 }
 

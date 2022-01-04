@@ -13,7 +13,7 @@ namespace chira {
     public:
         explicit UBO(std::string name_, unsigned int size);
         [[nodiscard]] unsigned int getBindingPoint() const;
-        void update(const unsigned char buffer[], GLsizeiptr length);
+        void update(const unsigned char buffer[], GLsizeiptr length) const;
         void bindToShader(Shader* shader_) const;
     protected:
         unsigned int bindingPoint = 0;
@@ -25,7 +25,7 @@ namespace chira {
     class UBO_PV : public UBO {
     public:
         static UBO_PV* get();
-        void update(const glm::mat4& proj, const glm::mat4& view);
+        void update(const glm::mat4& proj, const glm::mat4& view) const;
     private:
         using UBO::update;
         explicit UBO_PV(const std::string& name);

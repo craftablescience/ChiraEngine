@@ -5,8 +5,8 @@
 namespace chira {
     class ChiraMeshLoader : public AbstractMeshLoader {
     public:
-        void loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) override;
-        std::vector<byte> createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) override;
+        void loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) const override;
+        [[nodiscard]] std::vector<byte> createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) const override;
     };
 
     struct ChiraMeshHeader {

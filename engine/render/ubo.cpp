@@ -24,7 +24,7 @@ void UBO::bindToShader(Shader* shader_) const {
     glUniformBlockBinding(shader_->getHandle(), glGetUniformBlockIndex(shader_->getHandle(), this->name.c_str()), this->bindingPoint);
 }
 
-void UBO::update(const unsigned char buffer[], GLsizeiptr length) {
+void UBO::update(const unsigned char buffer[], GLsizeiptr length) const {
     glBindBuffer(GL_UNIFORM_BUFFER, this->handle);
     glBufferData(GL_UNIFORM_BUFFER, length, buffer, GL_STATIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -40,7 +40,7 @@ UBO_PV* UBO_PV::get() {
     return UBO_PV::singleton.get();
 }
 
-void UBO_PV::update(const glm::mat4& proj, const glm::mat4& view) {
+void UBO_PV::update(const glm::mat4& proj, const glm::mat4& view) const {
     constexpr std::size_t mat4_size = sizeof(glm::mat4);
     glBindBuffer(GL_UNIFORM_BUFFER, this->handle);
     glBufferSubData(GL_UNIFORM_BUFFER, 0 * mat4_size, mat4_size, glm::value_ptr(proj));

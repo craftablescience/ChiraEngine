@@ -25,9 +25,8 @@ glm::vec3 Entity3d::getPosition() {
 }
 
 glm::vec3 Entity3d::getGlobalPosition() { // NOLINT(misc-no-recursion)
-    if (auto parent3d = assert_cast<Entity3d*>(this->parent)) {
+    if (auto parent3d = assert_cast<Entity3d*>(this->parent))
         return this->getPosition() + parent3d->getGlobalPosition();
-    }
     return this->getPosition();
 }
 

@@ -150,7 +150,7 @@ void BulletColliderResource::compile(const nlohmann::json& properties) {
     }
 }
 
-btRigidBody* BulletColliderResource::getNewRigidBody() {
+btRigidBody* BulletColliderResource::getNewRigidBody() const {
     btRigidBody::btRigidBodyConstructionInfo info(
             this->mass,
             new btDefaultMotionState(this->transform),

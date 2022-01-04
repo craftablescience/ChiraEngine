@@ -9,10 +9,6 @@ namespace chira {
         EditorCamera3d(Entity* parent_, const std::string& name_, CameraProjectionMode mode, float fov_ = 90.0f, bool controls = true);
         explicit EditorCamera3d(CameraProjectionMode mode, float fov_ = 90.0f, bool controls = true);
         EditorCamera3d(const std::string& name_, CameraProjectionMode mode, float fov_ = 90.0f, bool controls = true);
-        glm::mat4 getView() override {
-            // todo: factor in distance var
-            return glm::lookAt(this->position, this->position + this->getFrontVector(), this->getUpVector());
-        }
         glm::quat getRotation() override {
             return glm::angleAxis(glm::radians(this->yaw), glm::vec3(0,1,0)) * glm::angleAxis(glm::radians(-this->pitch), glm::vec3(1,0,0));
         }

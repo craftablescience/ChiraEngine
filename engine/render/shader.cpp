@@ -30,7 +30,7 @@ Shader::~Shader() {
     if (this->handle != -1) glDeleteProgram(this->handle);
 }
 
-void Shader::use() {
+void Shader::use() const {
     glUseProgram(this->handle);
 }
 

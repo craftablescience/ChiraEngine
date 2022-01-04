@@ -16,7 +16,7 @@ namespace chira {
         [[nodiscard]] bool hasTranslation(const std::string& key) const;
         /// Note: Currently nlohmann::json does not support string_view unfortunately.
         /// If this ever changes, please change this function to use it!
-        std::string getTranslation(const std::string& identifier);
+        std::string getTranslation(const std::string& identifier) const;
         [[nodiscard]] std::unordered_map<std::string, std::string> getAllTranslations() const;
     private:
         std::string language;

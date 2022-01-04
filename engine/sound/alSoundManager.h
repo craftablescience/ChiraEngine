@@ -15,7 +15,7 @@ namespace chira {
         void setListenerPosition(const glm::vec3& newPosition) override;
         void setListenerRotation(const glm::vec3& newRotation, const glm::vec3& up) override;
         void addSound(const std::string& soundName, AbstractSound* sound) override;
-        AbstractSound* getSound(const std::string& soundName) override;
+        AbstractSound* getSound(const std::string& soundName) const override;
     private:
         ALCdevice* device = nullptr;
         ALCcontext* context = nullptr;

@@ -71,6 +71,6 @@ void ALSoundManager::addSound(const std::string& soundName, AbstractSound* sound
     this->sounds.insert(std::pair(soundName, sound));
 }
 
-AbstractSound* ALSoundManager::getSound(const std::string& soundName) {
+AbstractSound* ALSoundManager::getSound(const std::string& soundName) const {
     return this->sounds.at(soundName).get();
 }

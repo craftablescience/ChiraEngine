@@ -12,10 +12,10 @@ BinaryResource::~BinaryResource() {
     delete[] this->buffer_;
 }
 
-const unsigned char* BinaryResource::getBuffer() const noexcept {
+const unsigned char* BinaryResource::getBuffer() const {
     return this->buffer_;
 }
 
-std::size_t BinaryResource::getBufferLength() const noexcept {
+std::size_t BinaryResource::getBufferLength() const {
     return this->bufferLength_;
 }

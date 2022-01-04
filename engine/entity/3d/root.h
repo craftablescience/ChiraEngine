@@ -13,16 +13,16 @@ namespace chira {
         void render();
         glm::vec3 getGlobalPosition() override;
         void setMainCamera(Camera3d* camera);
-        Camera3d* getMainCamera();
+        Camera3d* getMainCamera() const;
         void setSkybox(const std::string& cubemapId);
-        SharedPointer<MaterialCubemap> getSkybox();
-        glm::vec3 getAudioListeningPosition() {
+        [[nodiscard]] SharedPointer<MaterialCubemap> getSkybox() const;
+        glm::vec3 getAudioListeningPosition() const {
             return this->mainCamera->getPosition();
         }
-        glm::vec3 getAudioListeningRotation() {
+        glm::vec3 getAudioListeningRotation() const {
             return glm::eulerAngles(this->mainCamera->getRotation());
         }
-        glm::vec3 getAudioListeningUpVector() {
+        glm::vec3 getAudioListeningUpVector() const {
             return this->mainCamera->getUpVector();
         }
         using World3d::hasChild;
@@ -35,6 +35,6 @@ namespace chira {
         bool renderSkybox = false;
         Camera3d* mainCamera = nullptr;
         using World3d::render;
-        void clearTree();
+        void clearTree() const;
     };
 }

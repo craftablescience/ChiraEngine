@@ -30,7 +30,7 @@ namespace chira {
     public:
         explicit BulletColliderResource(const std::string& identifier_) : PropertiesResource(identifier_) {}
         void compile(const nlohmann::json& properties) override;
-        btRigidBody* getNewRigidBody();
+        [[nodiscard]] btRigidBody* getNewRigidBody() const;
         static BulletColliderType getBulletColliderTypeFromString(const std::string& colliderTypeStr);
     private:
         std::unique_ptr<btCollisionShape> collider;

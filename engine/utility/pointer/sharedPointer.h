@@ -94,17 +94,17 @@ namespace chira {
         T* get() const noexcept {
             return this->ptr;
         }
-        T& operator*() const noexcept {
+        T& operator*() const {
             return *this->ptr;
         }
         T* operator->() const noexcept {
             return this->ptr;
         }
-        bool operator!() const {
-            return !(bool(this->ptr));
-        }
         explicit operator bool() const {
             return bool(this->ptr);
+        }
+        bool operator!() const {
+            return !(bool(this->ptr));
         }
         [[nodiscard]] unsigned int useCount() const {
             if (this->data)

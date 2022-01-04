@@ -3,7 +3,7 @@
 namespace chira {
     class AbstractImage {
     public:
-        [[nodiscard]] virtual unsigned char* getData() {
+        [[nodiscard]] virtual unsigned char* getData() const {
             return this->data;
         }
         virtual ~AbstractImage() = default;

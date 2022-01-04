@@ -18,10 +18,18 @@ void MaterialPhong::compile(const nlohmann::json& properties) {
     this->setLambertFactor(getPropertyOrDefault(properties["properties"], "lambertFactor", 1.f));
 }
 
-void MaterialPhong::use() {
+void MaterialPhong::use() const {
     this->diffuse->use();
     this->specular->use();
     MaterialUntextured::use();
+}
+
+SharedPointer<Texture> MaterialPhong::getTextureDiffuse() const {
+    return this->diffuse;
+}
+
+SharedPointer<Texture> MaterialPhong::getTextureSpecular() const {
+    return this->specular;
 }
 
 void MaterialPhong::setShininess(float shininess) {
