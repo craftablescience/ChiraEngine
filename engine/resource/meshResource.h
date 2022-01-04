@@ -5,7 +5,7 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <loader/mesh/abstractMeshLoader.h>
-#include "render/material/materialUntextured.h"
+#include "render/material/materialTypes.h"
 
 namespace chira {
     class MeshResource : public PropertiesResource {

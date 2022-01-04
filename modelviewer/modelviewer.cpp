@@ -6,7 +6,6 @@
 #include <entity/imgui/console/console.h>
 #include <entity/imgui/profiler/profiler.h>
 #include <utility/dialogs.h>
-#include <render/material/materialTypes.h>
 
 using namespace chira;
 
@@ -34,7 +33,7 @@ public:
         ModelViewerGui::loadedFile = meshName;
     }
 private:
-    std::string loadedFile;
+    std::string loadedFile = "file://meshes/editor/grid.json";
 };
 
 int main() {

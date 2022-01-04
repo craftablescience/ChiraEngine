@@ -3,7 +3,7 @@
 #include <functional>
 #include <string>
 #include <resource/propertiesResource.h>
-#include "../shader.h"
+#include <render/shader.h>
 
 namespace chira {
     class MaterialBase : public PropertiesResource {
@@ -28,7 +28,7 @@ namespace chira {
 }
 
 #define REGISTER_MATERIAL_TYPE(ResourceClassName)                                              \
-    static inline bool ResourceClassName##FactoryRegistryHelper =                              \
+    static inline const bool ResourceClassName##FactoryRegistryHelper =                        \
     chira::MaterialFactory::registerMaterialType(                                              \
         #ResourceClassName,                                                                    \
         [](const std::string& identifier) -> chira::SharedPointer<chira::MaterialBase> {       \

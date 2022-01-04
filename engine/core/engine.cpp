@@ -15,7 +15,6 @@
 #include <resource/shaderResource.h>
 #include <loader/mesh/objMeshLoader.h>
 #include <loader/mesh/primitiveMeshLoader.h>
-#include <render/material/materialTypes.h>
 #include <physics/bulletPhysicsProvider.h>
 #include <render/ubo.h>
 #include <event/events.h>
@@ -24,6 +23,7 @@
 #include <utility/assertions.h>
 #if __has_include(<windows.h>) && !defined(DEBUG)
 #include <windows.h>
+#undef ERROR
 #endif
 
 using namespace chira;
@@ -630,7 +630,7 @@ Profiler* Engine::getProfiler() {
 #if DEBUG
     return Engine::profiler;
 #else
-    logger::log(ERR, "Engine::getProfiler", "Profiler window is not present in release build!");
+    Logger::log(LogType::ERROR, "Engine::getProfiler", "Profiler window is not present in release build!");
     return nullptr;
 #endif
 }
