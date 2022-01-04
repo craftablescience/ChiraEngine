@@ -8,30 +8,30 @@
 
 using namespace chira;
 
-struct sharedResourcePtrTestBase {
+struct SharedPointerTestBase {
     int x = 10;
-    virtual ~sharedResourcePtrTestBase() = default;
+    virtual ~SharedPointerTestBase() = default;
 };
 
-struct sharedResourcePtrTestDerived : public sharedResourcePtrTestBase {
+struct SharedPointerTestDerived : public SharedPointerTestBase {
     int y = -10;
 };
 
-TEST(sharedResourcePtr, createFromPointer) {
-    auto a = sharedPointer<sharedResourcePtrTestBase>(new sharedResourcePtrTestBase{});
+TEST(sharedPointer, createFromPointer) {
+    auto a = SharedPointer<SharedPointerTestBase>(new SharedPointerTestBase{});
     EXPECT_EQ(a.useCount(), 1);
     EXPECT_EQ(a->x, 10);
     EXPECT_EQ((*a).x, 10);
 }
 
-TEST(sharedResourcePtr, createFromSharedCopyConstructor) {
-    auto a = sharedPointer<sharedResourcePtrTestBase>(new sharedResourcePtrTestBase{});
+TEST(sharedPointer, createFromSharedCopyConstructor) {
+    auto a = SharedPointer<SharedPointerTestBase>(new SharedPointerTestBase{});
     a.setHolderAmountForDelete(0);
     EXPECT_EQ(a.useCount(), 1);
     EXPECT_EQ(a->x, 10);
     EXPECT_EQ((*a).x, 10);
     {
-        auto b = sharedPointer<sharedResourcePtrTestBase>{a};
+        auto b = SharedPointer<SharedPointerTestBase>{a};
         EXPECT_EQ(a.useCount(), 2);
         EXPECT_EQ(b.useCount(), 2);
         EXPECT_EQ(a.get(), b.get());
@@ -41,8 +41,8 @@ TEST(sharedResourcePtr, createFromSharedCopyConstructor) {
     EXPECT_EQ((*a).x, 10);
 }
 
-TEST(sharedResourcePtr, createFromSharedCopyAssignment) {
-    auto a = sharedPointer<sharedResourcePtrTestBase>(new sharedResourcePtrTestBase{});
+TEST(sharedPointer, createFromSharedCopyAssignment) {
+    auto a = SharedPointer<SharedPointerTestBase>(new SharedPointerTestBase{});
     a.setHolderAmountForDelete(0);
     EXPECT_EQ(a.useCount(), 1);
     EXPECT_EQ(a->x, 10);
@@ -58,8 +58,8 @@ TEST(sharedResourcePtr, createFromSharedCopyAssignment) {
     EXPECT_EQ((*a).x, 10);
 }
 
-TEST(sharedResourcePtr, createFromCastDynamic) {
-    auto a = sharedPointer<sharedResourcePtrTestDerived>(new sharedResourcePtrTestDerived{});
+TEST(sharedPointer, createFromCastDynamic) {
+    auto a = SharedPointer<SharedPointerTestDerived>(new SharedPointerTestDerived{});
     a.setHolderAmountForDelete(0);
     EXPECT_EQ(a.useCount(), 1);
     EXPECT_EQ(a->x, 10);
@@ -67,14 +67,14 @@ TEST(sharedResourcePtr, createFromCastDynamic) {
     EXPECT_EQ((*a).x, 10);
     EXPECT_EQ((*a).y, -10);
     {
-        auto b = a.castDynamic<sharedResourcePtrTestBase>();
+        auto b = a.castDynamic<SharedPointerTestBase>();
         EXPECT_EQ(a.useCount(), 2);
         EXPECT_EQ(b.useCount(), 2);
         EXPECT_EQ(a.get(), b.get());
         EXPECT_EQ(b->x, 10);
         b->x += 10;
 
-        auto c = b.castDynamic<sharedResourcePtrTestDerived>();
+        auto c = b.castDynamic<SharedPointerTestDerived>();
         EXPECT_EQ(a.useCount(), 3);
         EXPECT_EQ(b.useCount(), 3);
         EXPECT_EQ(c.useCount(), 3);

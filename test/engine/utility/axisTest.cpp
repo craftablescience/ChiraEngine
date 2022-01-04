@@ -9,18 +9,18 @@
 using namespace chira;
 
 TEST(axis, getAxisFromString) {
-    EXPECT_EQ(getAxisFromString("X"), axis::X);
-    EXPECT_EQ(getAxisFromString("Y"), axis::Y);
-    EXPECT_EQ(getAxisFromString("Z"), axis::Z);
+    EXPECT_EQ(getAxisFromString("X"), Axis::X);
+    EXPECT_EQ(getAxisFromString("Y"), Axis::Y);
+    EXPECT_EQ(getAxisFromString("Z"), Axis::Z);
 }
 
 TEST(axis, getSignedAxisFromString) {
-    EXPECT_EQ(getSignedAxisFromString("XP"), signedAxis::XP);
-    EXPECT_EQ(getSignedAxisFromString("YP"), signedAxis::YP);
-    EXPECT_EQ(getSignedAxisFromString("ZP"), signedAxis::ZP);
-    EXPECT_EQ(getSignedAxisFromString("XN"), signedAxis::XN);
-    EXPECT_EQ(getSignedAxisFromString("YN"), signedAxis::YN);
-    EXPECT_EQ(getSignedAxisFromString("ZN"), signedAxis::ZN);
+    EXPECT_EQ(getSignedAxisFromString("XP"), SignedAxis::XP);
+    EXPECT_EQ(getSignedAxisFromString("YP"), SignedAxis::YP);
+    EXPECT_EQ(getSignedAxisFromString("ZP"), SignedAxis::ZP);
+    EXPECT_EQ(getSignedAxisFromString("XN"), SignedAxis::XN);
+    EXPECT_EQ(getSignedAxisFromString("YN"), SignedAxis::YN);
+    EXPECT_EQ(getSignedAxisFromString("ZN"), SignedAxis::ZN);
 }
 
 #pragma clang diagnostic pop

@@ -11,11 +11,11 @@ namespace chira {
     constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_PREFIX = "#";
     constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_SUFFIX = "#";
 
-    class shaderResource : public resource, public handleObject<int> {
+    class ShaderResource : public Resource, public HandleObject<int> {
     public:
-        shaderResource(const std::string& identifier_, int type_);
+        ShaderResource(const std::string& identifier_, int type_);
         void compile(const unsigned char buffer[], std::size_t bufferLength) override;
-        ~shaderResource() override;
+        ~ShaderResource() override;
         [[nodiscard]] unsigned int getType() const;
         static void addPreprocessorSymbol(const std::string& name, const std::string& value);
         static void setPreprocessorPrefix(const std::string& prefix);

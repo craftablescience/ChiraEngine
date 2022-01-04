@@ -9,11 +9,11 @@
 #include "angelscriptHelpers.h"
 
 namespace chira {
-    class angelscriptHolder;
+    class AngelscriptHolder;
 
-    class angelscriptProvider : public abstractScriptProvider {
+    class AngelscriptProvider : public AbstractScriptProvider {
     public:
-        angelscriptProvider();
+        AngelscriptProvider();
         void initProvider() override;
         void initScripts() override;
         void render(double delta) override;
@@ -36,6 +36,6 @@ namespace chira {
         asIScriptEngine* asEngine = nullptr;
     private:
         bool started;
-        std::vector<std::unique_ptr<angelscriptHolder>> scripts{};
+        std::vector<std::unique_ptr<AngelscriptHolder>> scripts{};
     };
 }

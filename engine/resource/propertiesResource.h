@@ -23,9 +23,9 @@ namespace chira {
      * classes, this is only the recommendation on how to
      * store meta-resource files.
      */
-    class propertiesResource : public resource {
+    class PropertiesResource : public Resource {
     public:
-        explicit propertiesResource(const std::string& identifier_) : resource(identifier_) {}
+        explicit PropertiesResource(const std::string& identifier_) : Resource(identifier_) {}
         void compile(const unsigned char buffer[], std::size_t bufferLength) final {
             this->compile(nlohmann::json::parse(std::string{reinterpret_cast<const char*>(buffer), bufferLength}));
         }

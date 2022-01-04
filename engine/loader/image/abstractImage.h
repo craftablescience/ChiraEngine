@@ -1,12 +1,12 @@
 #pragma once
 
 namespace chira {
-    class abstractImage {
+    class AbstractImage {
     public:
         [[nodiscard]] virtual unsigned char* getData() {
             return this->data;
         }
-        virtual ~abstractImage() = default;
+        virtual ~AbstractImage() = default;
     protected:
         // The pointer is deleted by subclass(es)
         unsigned char* data = nullptr;

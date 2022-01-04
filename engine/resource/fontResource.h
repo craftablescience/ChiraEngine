@@ -8,9 +8,9 @@ namespace chira {
     /// Using resource::precacheResource in your init function is recommended \n
     /// Before this function, the font list is purged \n
     /// After this function, the fonts will be baked, and there will be cake
-    class fontResource : public propertiesResource {
+    class FontResource : public PropertiesResource {
     public:
-        explicit fontResource(const std::string& identifier_) : propertiesResource(identifier_) {}
+        explicit FontResource(const std::string& identifier_) : PropertiesResource(identifier_) {}
         void compile(const nlohmann::json& properties) override;
         [[nodiscard]] ImFont* getFont() const;
         [[nodiscard]] const std::string& getName() const;

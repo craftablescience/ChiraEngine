@@ -4,7 +4,7 @@
 #include <btBulletDynamicsCommon.h>
 
 namespace chira {
-    enum class bulletColliderType {
+    enum class BulletColliderType {
         BULLET_INVALID,
         BULLET_BOX,
         BULLET_BVH_TRIANGLE_MESH,
@@ -26,15 +26,15 @@ namespace chira {
 
     /// Note: this does not add or remove the collider to the physics world.
     /// This must be done by a component.
-    class bulletColliderResource : public propertiesResource {
+    class BulletColliderResource : public PropertiesResource {
     public:
-        explicit bulletColliderResource(const std::string& identifier_) : propertiesResource(identifier_) {}
+        explicit BulletColliderResource(const std::string& identifier_) : PropertiesResource(identifier_) {}
         void compile(const nlohmann::json& properties) override;
         btRigidBody* getNewRigidBody();
-        static bulletColliderType getBulletColliderTypeFromString(const std::string& colliderTypeStr);
+        static BulletColliderType getBulletColliderTypeFromString(const std::string& colliderTypeStr);
     private:
         std::unique_ptr<btCollisionShape> collider;
-        bulletColliderType colliderType = bulletColliderType::BULLET_INVALID;
+        BulletColliderType colliderType = BulletColliderType::BULLET_INVALID;
         btScalar mass = 0.0;
         btTransform transform;
         btVector3 localInertia;

@@ -4,7 +4,7 @@
 #include <fmt/core.h>
 
 namespace chira {
-    class translationManager {
+    class TranslationManager {
     public:
         static void setLanguage(const std::string& languageCode);
         static const std::string& getLanguage();
@@ -22,4 +22,4 @@ namespace chira {
 }
 
 /// Just a handy shortcut, since this function call can be quite long.
-#define TR(ID) chira::translationManager::getTranslation(ID)
+#define TR(ID) chira::TranslationManager::getTranslation(ID)

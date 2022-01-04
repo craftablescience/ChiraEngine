@@ -2,19 +2,17 @@
 #include <resource/provider/filesystemResourceProvider.h>
 #include <entity/3d/model/mesh3d.h>
 #include <i18n/translationManager.h>
-#include <entity/3d/camera/freecam.h>
+#include <entity/3d/camera/editorCamera3d.h>
 #include <entity/imgui/console/console.h>
 #include <entity/imgui/profiler/profiler.h>
 #include <utility/dialogs.h>
-
-// Register all materials with the material factory
-#include <utility/materialTypes.h>
+#include <render/material/materialTypes.h>
 
 using namespace chira;
 
-class modelViewerGui : public window {
+class ModelViewerGui : public Window {
 public:
-    modelViewerGui() : window(TR("ui.window.title"), true) {
+    ModelViewerGui() : Window(TR("ui.window.title"), true) {
         this->flags |=
                 ImGuiWindowFlags_NoTitleBar   |
                 ImGuiWindowFlags_NoDecoration |
@@ -26,80 +24,80 @@ public:
         ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y - ImGui::GetFrameHeight()));
     }
     void renderContents() override {
-        ImGui::Text("%s", modelViewerGui::loadedFile.c_str());
+        ImGui::Text("%s", ModelViewerGui::loadedFile.c_str());
     }
     void setLoadedFile(const std::string& meshName) {
-        if (meshName == dynamic_cast<mesh3d*>(engine::getRoot()->getChild("modelViewerMesh"))->getMeshResource()->getIdentifier())
+        if (meshName == assert_cast<Mesh3d*>(Engine::getRoot()->getChild("modelViewerMesh"))->getMeshResource()->getIdentifier())
             return;
-        engine::getRoot()->removeChild("modelViewerMesh");
-        engine::getRoot()->addChild(new mesh3d{"modelViewerMesh", resource::getResource<meshResource>(meshName)});
-        modelViewerGui::loadedFile = meshName;
+        Engine::getRoot()->removeChild("modelViewerMesh");
+        Engine::getRoot()->addChild(new Mesh3d{"modelViewerMesh", Resource::getResource<MeshResource>(meshName)});
+        ModelViewerGui::loadedFile = meshName;
     }
 private:
     std::string loadedFile;
 };
 
 int main() {
-    engine::preInit("settings_modelviewer.json");
-    resource::addResourceProvider(new filesystemResourceProvider{"modelviewer"});
-    translationManager::addTranslationFile("file://i18n/modelviewer");
+    Engine::preInit("settings_modelviewer.json");
+    Resource::addResourceProvider(new FilesystemResourceProvider{"modelviewer"});
+    TranslationManager::addTranslationFile("file://i18n/modelviewer");
 
     // Forcibly overwrite the window size to be smaller
-    engine::getSettingsLoader()->setValue("graphics", "windowWidth", 500, true, false);
-    engine::getSettingsLoader()->setValue("graphics", "windowHeight", 600, true, true);
+    Engine::getSettingsLoader()->setValue("graphics", "windowWidth", 500, true, false);
+    Engine::getSettingsLoader()->setValue("graphics", "windowHeight", 600, true, true);
 
 #ifdef DEBUG
-    engine::addKeybind(keybind(GLFW_KEY_GRAVE_ACCENT, GLFW_PRESS, []() {
-        engine::getConsole()->setVisible(!engine::getConsole()->isVisible());
+    Engine::addKeybind(Keybind(GLFW_KEY_GRAVE_ACCENT, GLFW_PRESS, []{
+        Engine::getConsole()->setVisible(!Engine::getConsole()->isVisible());
     }));
-    engine::addKeybind(keybind(GLFW_KEY_F1, GLFW_PRESS, []() {
-        engine::getProfiler()->setVisible(!engine::getProfiler()->isVisible());
+    Engine::addKeybind(Keybind(GLFW_KEY_F1, GLFW_PRESS, []{
+        Engine::getProfiler()->setVisible(!Engine::getProfiler()->isVisible());
     }));
 #endif
 
     std::string_view uiUUID;
-    engine::addInitFunction([&uiUUID]() {
-        engine::setBackgroundColor(colorRGB::solid(0.15f));
+    Engine::addInitFunction([&uiUUID]{
+        Engine::setBackgroundColor(ColorRGB::solid(0.15f));
 
-        engine::captureMouse(true);
-        auto camera = new freecam{cameraProjectionMode::PERSPECTIVE, 120.f, true};
-        engine::getRoot()->addChild(camera);
-        engine::getRoot()->setMainCamera(camera);
+        Engine::captureMouse(true);
+        auto camera = new EditorCamera3d{CameraProjectionMode::PERSPECTIVE, 120.f, true};
+        Engine::getRoot()->addChild(camera);
+        Engine::getRoot()->setMainCamera(camera);
 
-        uiUUID = engine::getRoot()->addChild(new modelViewerGui{});
-        auto gridMesh = resource::getResource<meshResource>("file://meshes/editor/grid.json");
-        engine::getRoot()->addChild(new mesh3d{"modelViewerMesh", gridMesh});
+        uiUUID = Engine::getRoot()->addChild(new ModelViewerGui{});
+        auto gridMesh = Resource::getResource<MeshResource>("file://meshes/editor/grid.json");
+        Engine::getRoot()->addChild(new Mesh3d{"modelViewerMesh", gridMesh});
 
         // todo: make this an engine function
-        glfwSetWindowAspectRatio(engine::getWindow(), 500, 600);
+        glfwSetWindowAspectRatio(Engine::getWindow(), 500, 600);
     });
-    engine::init();
+    Engine::init();
 
-    engine::addRenderFunction([&uiUUID]() {
+    Engine::addRenderFunction([&uiUUID]{
         // todo(i18n)
         if (ImGui::BeginMainMenuBar()) {
             if (ImGui::BeginMenu("File")) {
                 if (ImGui::MenuItem("Open Model...")) {
                     std::string path = dialogOpenResource("*.json");
                     if (!path.empty()) {
-                        dynamic_cast<modelViewerGui*>(engine::getRoot()->getChild(uiUUID.data()))->setLoadedFile(path);
+                        assert_cast<ModelViewerGui*>(Engine::getRoot()->getChild(uiUUID.data()))->setLoadedFile(path);
                     } else
                         dialogPopupError("File selected is not a resource!");
                 }
                 if (ImGui::MenuItem("Add Resource Path...")) {
                     // todo: use folder picker
                     // todo: check if provider already exists
-                    resource::addResourceProvider(new filesystemResourceProvider{dialogInput("Enter folder name:")});
+                    Resource::addResourceProvider(new FilesystemResourceProvider{dialogInput("Enter folder name:")});
                 }
                 ImGui::Separator();
                 if (ImGui::MenuItem("Exit")) {
                     // todo: make this an engine function
-                    glfwSetWindowShouldClose(engine::getWindow(), GLFW_TRUE);
+                    glfwSetWindowShouldClose(Engine::getWindow(), GLFW_TRUE);
                 }
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
         }
     });
-    engine::run();
+    Engine::run();
 }

@@ -5,20 +5,20 @@
 
 using namespace chira;
 
-curlMemoryWriter::curlMemoryWriter() {
+CurlMemoryWriter::CurlMemoryWriter() {
     this->m_pBuffer = nullptr;
     // Max of 20,000 bytes
     this->m_pBuffer = (unsigned char*) std::malloc(20000 * sizeof(unsigned char));
     this->m_Size = 0;
 }
 
-curlMemoryWriter::~curlMemoryWriter() {
+CurlMemoryWriter::~CurlMemoryWriter() {
     if (this->m_pBuffer) {
         std::free(this->m_pBuffer);
     }
 }
 
-void* curlMemoryWriter::w_realloc(void* ptr, std::size_t size) {
+void* CurlMemoryWriter::w_realloc(void* ptr, std::size_t size) {
     if (ptr) {
         return std::realloc(ptr, size);
     } else {
@@ -26,7 +26,7 @@ void* curlMemoryWriter::w_realloc(void* ptr, std::size_t size) {
     }
 }
 
-std::size_t curlMemoryWriter::writeMemoryCallback(const char* ptr, std::size_t size, std::size_t nmemb) {
+std::size_t CurlMemoryWriter::writeMemoryCallback(const char* ptr, std::size_t size, std::size_t nmemb) {
     // Calculate the real size of the incoming buffer
     std::size_t realsize = size * nmemb;
 

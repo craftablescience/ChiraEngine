@@ -4,25 +4,25 @@
 #include <physics/bulletColliderResource.h>
 
 namespace chira {
-    class bulletRigidBody : public entity3d {
+    class BulletRigidBody : public Entity3d {
     public:
-        bulletRigidBody(entity* parent_, const std::string& colliderId);
-        bulletRigidBody(entity* parent_, const std::string& name_, const std::string& colliderId);
-        explicit bulletRigidBody(const std::string& colliderId);
-        bulletRigidBody(const std::string& name_, const std::string& colliderId);
-        ~bulletRigidBody() override;
+        BulletRigidBody(Entity* parent_, const std::string& colliderId);
+        BulletRigidBody(Entity* parent_, const std::string& name_, const std::string& colliderId);
+        explicit BulletRigidBody(const std::string& colliderId);
+        BulletRigidBody(const std::string& name_, const std::string& colliderId);
+        ~BulletRigidBody() override;
         void render(const glm::mat4& parentTransform) override;
-        void setPosition(const glm::vec3& newPos) override;
-        void setRotation(const glm::quat& newRot) override;
+        void setPosition(glm::vec3 newPos) override;
+        void setRotation(glm::quat newRot) override;
         glm::vec3 getPosition() override;
         glm::quat getRotation() override;
-        void translate(const glm::vec3& translateByAmount) override;
-        void rotate(const glm::quat& rotateByAmount) override;
+        void translate(glm::vec3 translateByAmount) override;
+        void rotate(glm::quat rotateByAmount) override;
     protected:
-        sharedPointer<bulletColliderResource> collider;
+        SharedPointer<BulletColliderResource> collider;
         btRigidBody* rigidBody;
     private:
         // I'm not bothering with this
-        using entity3d::translateWithRotation;
+        using Entity3d::translateWithRotation;
     };
 }

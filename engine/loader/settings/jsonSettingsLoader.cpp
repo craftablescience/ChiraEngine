@@ -5,39 +5,39 @@
 
 using namespace chira;
 
-jsonSettingsLoader::jsonSettingsLoader(const std::string& path) : abstractFileSettingsLoader(path), settings() {}
+JSONSettingsLoader::JSONSettingsLoader(const std::string& path) : AbstractFileSettingsLoader(path), settings() {}
 
-void jsonSettingsLoader::addCategory(const std::string& category) {
+void JSONSettingsLoader::addCategory(const std::string& category) {
     if (!this->settings.contains(category)) {
         this->settings[category] = nlohmann::json::object();
     }
 }
 
-void jsonSettingsLoader::getValue(const std::string& category, const std::string& name, int* value) {
+void JSONSettingsLoader::getValue(const std::string& category, const std::string& name, int* value) {
     if (this->hasValue(category, name)) {
         *value = this->settings[category][name];
     }
 }
 
-void jsonSettingsLoader::getValue(const std::string& category, const std::string& name, double* value) {
+void JSONSettingsLoader::getValue(const std::string& category, const std::string& name, double* value) {
     if (this->hasValue(category, name)) {
         *value = this->settings[category][name];
     }
 }
 
-void jsonSettingsLoader::getValue(const std::string& category, const std::string& name, std::string* value) {
+void JSONSettingsLoader::getValue(const std::string& category, const std::string& name, std::string* value) {
     if (this->hasValue(category, name)) {
         *value = this->settings[category][name];
     }
 }
 
-void jsonSettingsLoader::getValue(const std::string& category, const std::string& name, bool* value) {
+void JSONSettingsLoader::getValue(const std::string& category, const std::string& name, bool* value) {
     if (this->hasValue(category, name)) {
         *value = this->settings[category][name];
     }
 }
 
-void jsonSettingsLoader::setValue(const std::string& category, const std::string& name, int value, bool overwrite, bool save) {
+void JSONSettingsLoader::setValue(const std::string& category, const std::string& name, int value, bool overwrite, bool save) {
     if (!overwrite && this->hasValue(category, name)) {
         return;
     }
@@ -50,7 +50,7 @@ void jsonSettingsLoader::setValue(const std::string& category, const std::string
     }
 }
 
-void jsonSettingsLoader::setValue(const std::string& category, const std::string& name, double value, bool overwrite, bool save) {
+void JSONSettingsLoader::setValue(const std::string& category, const std::string& name, double value, bool overwrite, bool save) {
     if (!overwrite && this->hasValue(category, name)) {
         return;
     }
@@ -63,7 +63,7 @@ void jsonSettingsLoader::setValue(const std::string& category, const std::string
     }
 }
 
-void jsonSettingsLoader::setValue(const std::string& category, const std::string& name, const std::string& value, bool overwrite, bool save) {
+void JSONSettingsLoader::setValue(const std::string& category, const std::string& name, const std::string& value, bool overwrite, bool save) {
     if (!overwrite && this->hasValue(category, name)) {
         return;
     }
@@ -76,7 +76,7 @@ void jsonSettingsLoader::setValue(const std::string& category, const std::string
     }
 }
 
-void jsonSettingsLoader::setValue(const std::string& category, const std::string& name, bool value, bool overwrite, bool save) {
+void JSONSettingsLoader::setValue(const std::string& category, const std::string& name, bool value, bool overwrite, bool save) {
     if (!overwrite && this->hasValue(category, name)) {
         return;
     }
@@ -89,15 +89,15 @@ void jsonSettingsLoader::setValue(const std::string& category, const std::string
     }
 }
 
-bool jsonSettingsLoader::hasCategory(const std::string& category) {
+bool JSONSettingsLoader::hasCategory(const std::string& category) {
     return this->settings.contains(category);
 }
 
-bool jsonSettingsLoader::hasValue(const std::string& category, const std::string& name) {
+bool JSONSettingsLoader::hasValue(const std::string& category, const std::string& name) {
     return this->settings.contains(category) && this->settings[category].contains(name);
 }
 
-void jsonSettingsLoader::load() {
+void JSONSettingsLoader::load() {
     std::ifstream fileCheck(this->getFilePath());
     if (!fileCheck.good()) {
         // Make new file if it doesn't exist
@@ -109,9 +109,9 @@ void jsonSettingsLoader::load() {
     nlohmann::json input;
     inputFile >> input;
     inputFile.close();
-    for (nlohmann::json::iterator element = input.begin(); element != input.end(); ++element) {
+    for (auto element = input.begin(); element != input.end(); ++element) {
         if (this->hasCategory(element.key())) {
-            for (nlohmann::json::iterator value = element.value().begin(); value != element.value().end(); ++value) {
+            for (auto value = element.value().begin(); value != element.value().end(); ++value) {
                 this->settings[element.key()][value.key()] = value.value();
             }
         } else {
@@ -120,7 +120,7 @@ void jsonSettingsLoader::load() {
     }
 }
 
-void jsonSettingsLoader::save() {
+void JSONSettingsLoader::save() {
     std::ofstream output(this->getFilePath());
     output << std::setw(4) << this->settings << std::endl;
 }

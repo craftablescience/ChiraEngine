@@ -7,11 +7,11 @@ namespace chira {
     const std::string FILESYSTEM_ROOT_FOLDER = "resources"; // NOLINT(cert-err58-cpp)
     const std::string FILESYSTEM_PROVIDER_NAME = "file"; // NOLINT(cert-err58-cpp)
 
-    class filesystemResourceProvider : public abstractResourceProvider {
+    class FilesystemResourceProvider : public AbstractResourceProvider {
     public:
-        explicit filesystemResourceProvider(const std::string& path_);
+        explicit FilesystemResourceProvider(const std::string& path_);
         bool hasResource(const std::string& name) override;
-        void compileResource(const std::string& name, resource* resource) override;
+        void compileResource(const std::string& name, Resource* resource) override;
         [[nodiscard]] const std::string& getPath() const {
             return path;
         }

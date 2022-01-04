@@ -12,7 +12,10 @@ namespace chira {
         if (shouldAssert)
             return;
         std::string assertMessage = std::string{"Assertion in file "} + FILE + " at line " + std::to_string(LINE) + '\n' + message;
-        logger::log(ERR, "Assert", assertMessage);
+#pragma push_macro("ERROR")
+#undef ERROR
+        Logger::log(LogType::ERROR, "Assert", assertMessage);
+#pragma pop_macro("ERROR")
 #ifdef DEBUG
         dialogPopupError(assertMessage, "Assertion Failed");
 #endif

@@ -2,16 +2,17 @@
 
 #include <utility/logger.h>
 #include <i18n/translationManager.h>
+#include <utility/assertions.h>
 
 using namespace chira;
 
-void primitiveMeshLoader::loadMesh(const std::string& identifier, std::vector<vertex>& vertices, std::vector<unsigned int>& indices) {
+void PrimitiveMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) {
     if (identifier == "plane") {
         vertices.assign({
-            vertex( 1.0f, 1.0f, 0.0f, 1.0f, 1.0f),
-            vertex( 1.0f,-1.0f, 0.0f, 1.0f, 0.0f),
-            vertex(-1.0f,-1.0f, 0.0f, 0.0f, 0.0f),
-            vertex(-1.0f, 1.0f, 0.0f, 0.0f, 1.0f)
+            Vertex( 1.0f, 1.0f, 0.0f, 1.0f, 1.0f),
+            Vertex( 1.0f,-1.0f, 0.0f, 1.0f, 0.0f),
+            Vertex(-1.0f,-1.0f, 0.0f, 0.0f, 0.0f),
+            Vertex(-1.0f, 1.0f, 0.0f, 0.0f, 1.0f)
         });
         indices.assign({
             0, 1, 3,
@@ -19,32 +20,32 @@ void primitiveMeshLoader::loadMesh(const std::string& identifier, std::vector<ve
         });
     } else if (identifier == "cube") {
         vertices.assign({
-            vertex(-0.5f, -0.5f, -0.5f, 0.0f, 0.0f),
-            vertex(0.5f, -0.5f, -0.5f,  1.0f, 0.0f),
-            vertex(0.5f,  0.5f, -0.5f,  1.0f, 1.0f),
-            vertex(-0.5f,  0.5f, -0.5f,  0.0f, 1.0f),
-            vertex(-0.5f, -0.5f,  0.5f,  0.0f, 0.0f),
-            vertex(0.5f, -0.5f,  0.5f,  1.0f, 0.0f),
-            vertex(0.5f,  0.5f,  0.5f,  1.0f, 1.0f),
-            vertex(-0.5f,  0.5f,  0.5f,  0.0f, 1.0f),
+            Vertex(-0.5f, -0.5f, -0.5f, 0.0f, 0.0f),
+            Vertex(0.5f, -0.5f, -0.5f,  1.0f, 0.0f),
+            Vertex(0.5f,  0.5f, -0.5f,  1.0f, 1.0f),
+            Vertex(-0.5f,  0.5f, -0.5f,  0.0f, 1.0f),
+            Vertex(-0.5f, -0.5f,  0.5f,  0.0f, 0.0f),
+            Vertex(0.5f, -0.5f,  0.5f,  1.0f, 0.0f),
+            Vertex(0.5f,  0.5f,  0.5f,  1.0f, 1.0f),
+            Vertex(-0.5f,  0.5f,  0.5f,  0.0f, 1.0f),
 
-            vertex(-0.5f,  0.5f, -0.5f,  0.0f, 0.0f),
-            vertex(-0.5f, -0.5f, -0.5f,  1.0f, 0.0f),
-            vertex(-0.5f, -0.5f,  0.5f,  1.0f, 1.0f),
-            vertex(-0.5f,  0.5f,  0.5f,  0.0f, 1.0f),
-            vertex(0.5f, -0.5f, -0.5f,  0.0f, 0.0f),
-            vertex(0.5f,  0.5f, -0.5f,  1.0f, 0.0f),
-            vertex(0.5f,  0.5f,  0.5f,  1.0f, 1.0f),
-            vertex(0.5f, -0.5f,  0.5f,  0.0f, 1.0f),
+            Vertex(-0.5f,  0.5f, -0.5f,  0.0f, 0.0f),
+            Vertex(-0.5f, -0.5f, -0.5f,  1.0f, 0.0f),
+            Vertex(-0.5f, -0.5f,  0.5f,  1.0f, 1.0f),
+            Vertex(-0.5f,  0.5f,  0.5f,  0.0f, 1.0f),
+            Vertex(0.5f, -0.5f, -0.5f,  0.0f, 0.0f),
+            Vertex(0.5f,  0.5f, -0.5f,  1.0f, 0.0f),
+            Vertex(0.5f,  0.5f,  0.5f,  1.0f, 1.0f),
+            Vertex(0.5f, -0.5f,  0.5f,  0.0f, 1.0f),
 
-            vertex(-0.5f, -0.5f, -0.5f,  0.0f, 0.0f),
-            vertex(0.5f, -0.5f, -0.5f,  1.0f, 0.0f),
-            vertex(0.5f, -0.5f,  0.5f,  1.0f, 1.0f),
-            vertex(-0.5f, -0.5f,  0.5f,  0.0f, 1.0f),
-            vertex(0.5f,  0.5f, -0.5f,   0.0f, 0.0f),
-            vertex(-0.5f,  0.5f, -0.5f,  1.0f, 0.0f),
-            vertex(-0.5f,  0.5f,  0.5f,  1.0f, 1.0f),
-            vertex(0.5f,  0.5f,  0.5f,   0.0f, 1.0f)
+            Vertex(-0.5f, -0.5f, -0.5f,  0.0f, 0.0f),
+            Vertex(0.5f, -0.5f, -0.5f,  1.0f, 0.0f),
+            Vertex(0.5f, -0.5f,  0.5f,  1.0f, 1.0f),
+            Vertex(-0.5f, -0.5f,  0.5f,  0.0f, 1.0f),
+            Vertex(0.5f,  0.5f, -0.5f,   0.0f, 0.0f),
+            Vertex(-0.5f,  0.5f, -0.5f,  1.0f, 0.0f),
+            Vertex(-0.5f,  0.5f,  0.5f,  1.0f, 1.0f),
+            Vertex(0.5f,  0.5f,  0.5f,   0.0f, 1.0f)
         });
         indices.assign({
              0,  3,  2,
@@ -61,11 +62,12 @@ void primitiveMeshLoader::loadMesh(const std::string& identifier, std::vector<ve
             22, 23, 20
         });
     } else {
-        logger::log(ERR, "PrimitiveMeshLoader", TR("error.primitive_loader.invalid_identifier"));
+        Logger::log(LogType::ERROR, "PrimitiveMeshLoader", TR("error.primitive_loader.invalid_identifier"));
     }
 }
 
-std::vector<unsigned char> primitiveMeshLoader::createMesh(const std::vector<vertex>& vertices, const std::vector<unsigned int>& indices) {
-    // it should be impossible to call this method
+std::vector<byte> PrimitiveMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) {
+    // todo(i18n)
+    chira_assert(false, "It should be impossible to ever call this method!");
     return {};
 }

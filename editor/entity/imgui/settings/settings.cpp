@@ -6,18 +6,18 @@
 
 using namespace chira;
 
-settings::settings(const ImVec2& windowSize) : window(TR("ui.settings.title"), false, windowSize) {
-    engine::getSettingsLoader()->getValue("graphics", "windowWidth", &this->windowWidth);
-    engine::getSettingsLoader()->getValue("graphics", "windowHeight", &this->windowHeight);
-    engine::getSettingsLoader()->getValue("graphics", "startMaximized", &this->startMaximized);
-    engine::getSettingsLoader()->getValue("graphics", "fullscreen", &this->fullscreen);
-    engine::getSettingsLoader()->getValue("input", "rawMouseMotion", &this->rawMouseMotion);
-    engine::getSettingsLoader()->getValue("input", "invertYAxis", &this->invertYAxis);
-    engine::getSettingsLoader()->getValue("ui", "language", &this->language);
-    engine::getSettingsLoader()->getValue("engineGui", "discordIntegration", &this->discordIntegration);
+Settings::Settings(const ImVec2& windowSize) : Window(TR("ui.settings.title"), false, windowSize) {
+    Engine::getSettingsLoader()->getValue("graphics", "windowWidth", &this->windowWidth);
+    Engine::getSettingsLoader()->getValue("graphics", "windowHeight", &this->windowHeight);
+    Engine::getSettingsLoader()->getValue("graphics", "startMaximized", &this->startMaximized);
+    Engine::getSettingsLoader()->getValue("graphics", "fullscreen", &this->fullscreen);
+    Engine::getSettingsLoader()->getValue("input", "rawMouseMotion", &this->rawMouseMotion);
+    Engine::getSettingsLoader()->getValue("input", "invertYAxis", &this->invertYAxis);
+    Engine::getSettingsLoader()->getValue("ui", "language", &this->language);
+    Engine::getSettingsLoader()->getValue("engineGui", "discordIntegration", &this->discordIntegration);
 }
 
-void settings::renderContents() {
+void Settings::renderContents() {
     constexpr float inputWidth = 150.0f;
 
     ImGui::PushItemWidth(inputWidth);
@@ -34,14 +34,14 @@ void settings::renderContents() {
     ImGui::Checkbox(TR("ui.settings.discord_integration").c_str(), &this->discordIntegration);
     ImGui::Separator();
     if (ImGui::Button(TR("ui.settings.apply").c_str())) {
-        engine::getSettingsLoader()->setValue("graphics", "windowWidth", this->windowWidth, true, false);
-        engine::getSettingsLoader()->setValue("graphics", "windowHeight", this->windowHeight, true, false);
-        engine::getSettingsLoader()->setValue("graphics", "startMaximized", this->startMaximized, true, false);
-        engine::getSettingsLoader()->setValue("graphics", "fullscreen", this->fullscreen, true, false);
-        engine::getSettingsLoader()->setValue("input", "rawMouseMotion", this->rawMouseMotion, true, false);
-        engine::getSettingsLoader()->setValue("input", "invertYAxis", this->invertYAxis, true, false);
-        engine::getSettingsLoader()->setValue("ui", "language", this->language, true, false);
-        engine::getSettingsLoader()->setValue("engineGui", "discordIntegration", this->discordIntegration, true, false);
-        engine::getSettingsLoader()->save();
+        Engine::getSettingsLoader()->setValue("graphics", "windowWidth", this->windowWidth, true, false);
+        Engine::getSettingsLoader()->setValue("graphics", "windowHeight", this->windowHeight, true, false);
+        Engine::getSettingsLoader()->setValue("graphics", "startMaximized", this->startMaximized, true, false);
+        Engine::getSettingsLoader()->setValue("graphics", "fullscreen", this->fullscreen, true, false);
+        Engine::getSettingsLoader()->setValue("input", "rawMouseMotion", this->rawMouseMotion, true, false);
+        Engine::getSettingsLoader()->setValue("input", "invertYAxis", this->invertYAxis, true, false);
+        Engine::getSettingsLoader()->setValue("ui", "language", this->language, true, false);
+        Engine::getSettingsLoader()->setValue("engineGui", "discordIntegration", this->discordIntegration, true, false);
+        Engine::getSettingsLoader()->save();
     }
 }

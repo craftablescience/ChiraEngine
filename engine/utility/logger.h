@@ -6,12 +6,12 @@
 #include "uuidGenerator.h"
 
 namespace chira {
-    enum loggerType {
+    enum class LogType {
         INFO,           // white
         INFO_IMPORTANT, // green
         OUTPUT,         // blue
-        WARN,        // yellow
-        ERR           // red
+        WARNING,        // yellow
+        ERROR           // red
     };
 
     constexpr std::string_view LOGGER_INFO_PREFIX = "[*]";
@@ -20,13 +20,14 @@ namespace chira {
     constexpr std::string_view LOGGER_WARNING_PREFIX = "[W]";
     constexpr std::string_view LOGGER_ERROR_PREFIX = "[E]";
 
-    class logger {
+    class Logger {
+        using loggingCallback = std::function<void(LogType,const std::string&,const std::string&)>;
     public:
-        static void log(const loggerType& type, const std::string& source, const std::string& message);
-        static uuids::uuid addCallback(const std::function<void(const loggerType&,const std::string&,const std::string&)>& function);
-        static void runLogHooks(const loggerType& type, const std::string& source, const std::string& message);
+        static void log(LogType type, const std::string& source, const std::string& message);
+        static uuids::uuid addCallback(const loggingCallback& callback);
+        static void runLogHooks(LogType type, const std::string& source, const std::string& message);
         static void removeCallback(const uuids::uuid& id);
     private:
-        static std::unordered_map<uuids::uuid, std::function<void(const loggerType&,const std::string&,const std::string&)>> callbacks;
+        static inline std::unordered_map<uuids::uuid, loggingCallback> callbacks;
     };
 }

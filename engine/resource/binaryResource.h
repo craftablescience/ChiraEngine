@@ -3,11 +3,11 @@
 #include "resource.h"
 
 namespace chira {
-    class binaryResource : public resource {
+    class BinaryResource : public Resource {
     public:
-        explicit binaryResource(const std::string& identifier_) : resource(identifier_) {}
+        explicit BinaryResource(const std::string& identifier_) : Resource(identifier_) {}
         void compile(const unsigned char buffer[], std::size_t bufferLength) override;
-        ~binaryResource() override;
+        ~BinaryResource() override;
         [[nodiscard]] const unsigned char* getBuffer() const noexcept;
         [[nodiscard]] std::size_t getBufferLength() const noexcept;
     private:

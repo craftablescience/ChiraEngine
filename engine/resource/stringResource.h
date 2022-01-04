@@ -3,11 +3,11 @@
 #include "resource.h"
 
 namespace chira {
-    class stringResource : public resource {
+    class StringResource : public Resource {
     public:
-        explicit stringResource(const std::string& identifier_) : resource(identifier_) {}
+        explicit StringResource(const std::string& identifier_) : Resource(identifier_) {}
         void compile(const unsigned char buffer[], std::size_t bufferLength) override;
-        [[nodiscard]] const std::string& getString() const noexcept;
+        [[nodiscard]] const std::string& getString() const;
     private:
         std::string data;
     };

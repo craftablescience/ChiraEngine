@@ -4,85 +4,86 @@
 #include <physics/bulletPhysicsProvider.h>
 #include <resource/resource.h>
 #include <utility/math/bulletConversions.h>
+#include <utility/pointer/assert_cast.h>
 
 using namespace chira;
 
-bulletRigidBody::bulletRigidBody(entity* parent_, const std::string& colliderId) : entity3d(parent_) {
-    this->collider = resource::getResource<bulletColliderResource>(colliderId);
+BulletRigidBody::BulletRigidBody(Entity* parent_, const std::string& colliderId) : Entity3d(parent_) {
+    this->collider = Resource::getResource<BulletColliderResource>(colliderId);
     this->rigidBody = this->collider->getNewRigidBody();
     this->rigidBody->translate(glmToBullet(this->position));
-    dynamic_cast<bulletPhysicsProvider*>(engine::getPhysicsProvider())->addRigidBody(this->rigidBody);
+    assert_cast<BulletPhysicsProvider*>(Engine::getPhysicsProvider())->addRigidBody(this->rigidBody);
 }
 
-bulletRigidBody::bulletRigidBody(entity* parent_, const std::string& name_, const std::string& colliderId) : entity3d(parent_, name_) {
-    this->collider = resource::getResource<bulletColliderResource>(colliderId);
+BulletRigidBody::BulletRigidBody(Entity* parent_, const std::string& name_, const std::string& colliderId) : Entity3d(parent_, name_) {
+    this->collider = Resource::getResource<BulletColliderResource>(colliderId);
     this->rigidBody = this->collider->getNewRigidBody();
     this->rigidBody->translate(glmToBullet(this->position));
-    dynamic_cast<bulletPhysicsProvider*>(engine::getPhysicsProvider())->addRigidBody(this->rigidBody);
+    assert_cast<BulletPhysicsProvider*>(Engine::getPhysicsProvider())->addRigidBody(this->rigidBody);
 }
 
-bulletRigidBody::bulletRigidBody(const std::string& colliderId) : entity3d() {
-    this->collider = resource::getResource<bulletColliderResource>(colliderId);
+BulletRigidBody::BulletRigidBody(const std::string& colliderId) : Entity3d() {
+    this->collider = Resource::getResource<BulletColliderResource>(colliderId);
     this->rigidBody = this->collider->getNewRigidBody();
     this->rigidBody->translate(glmToBullet(this->position));
-    dynamic_cast<bulletPhysicsProvider*>(engine::getPhysicsProvider())->addRigidBody(this->rigidBody);
+    assert_cast<BulletPhysicsProvider*>(Engine::getPhysicsProvider())->addRigidBody(this->rigidBody);
 }
 
-bulletRigidBody::bulletRigidBody(const std::string& name_, const std::string& colliderId) : entity3d(nullptr, name_) {
-    this->collider = resource::getResource<bulletColliderResource>(colliderId);
+BulletRigidBody::BulletRigidBody(const std::string& name_, const std::string& colliderId) : Entity3d(nullptr, name_) {
+    this->collider = Resource::getResource<BulletColliderResource>(colliderId);
     this->rigidBody = this->collider->getNewRigidBody();
     this->rigidBody->translate(glmToBullet(this->position));
-    dynamic_cast<bulletPhysicsProvider*>(engine::getPhysicsProvider())->addRigidBody(this->rigidBody);
+    assert_cast<BulletPhysicsProvider*>(Engine::getPhysicsProvider())->addRigidBody(this->rigidBody);
 }
 
-bulletRigidBody::~bulletRigidBody() {
-    dynamic_cast<bulletPhysicsProvider*>(engine::getPhysicsProvider())->removeRigidBody(this->rigidBody);
+BulletRigidBody::~BulletRigidBody() {
+    assert_cast<BulletPhysicsProvider*>(Engine::getPhysicsProvider())->removeRigidBody(this->rigidBody);
 }
 
-void bulletRigidBody::render(const glm::mat4& parentTransform) {
+void BulletRigidBody::render(const glm::mat4& parentTransform) {
     this->position = bulletToGLM(this->rigidBody->getWorldTransform().getOrigin());
     this->rotation = bulletToGLM(this->rigidBody->getWorldTransform().getRotation());
-    entity3d::render(parentTransform);
+    Entity3d::render(parentTransform);
 }
 
-void bulletRigidBody::setPosition(const glm::vec3& newPos) {
+void BulletRigidBody::setPosition(glm::vec3 newPos) {
     btTransform newTransform;
     newTransform.setOrigin(glmToBullet(newPos));
     newTransform.setRotation(this->rigidBody->getOrientation());
     this->rigidBody->setWorldTransform(newTransform);
     this->rigidBody->getMotionState()->setWorldTransform(newTransform);
-    entity3d::setPosition(newPos);
+    Entity3d::setPosition(newPos);
 }
 
-void bulletRigidBody::setRotation(const glm::quat& newRot) {
+void BulletRigidBody::setRotation(glm::quat newRot) {
     btTransform newTransform;
     newTransform.setOrigin(this->rigidBody->getCenterOfMassPosition());
     newTransform.setRotation(glmToBullet(newRot));
     this->rigidBody->setWorldTransform(newTransform);
     this->rigidBody->getMotionState()->setWorldTransform(newTransform);
-    entity3d::setRotation(newRot);
+    Entity3d::setRotation(newRot);
 }
 
-glm::vec3 bulletRigidBody::getPosition() {
+glm::vec3 BulletRigidBody::getPosition() {
     this->position = bulletToGLM(this->rigidBody->getWorldTransform().getOrigin());
-    return entity3d::getPosition();
+    return Entity3d::getPosition();
 }
 
-glm::quat bulletRigidBody::getRotation() {
+glm::quat BulletRigidBody::getRotation() {
     this->rotation = bulletToGLM(this->rigidBody->getWorldTransform().getRotation());
-    return entity3d::getRotation();
+    return Entity3d::getRotation();
 }
 
-void bulletRigidBody::translate(const glm::vec3& translateByAmount) {
+void BulletRigidBody::translate(glm::vec3 translateByAmount) {
     this->rigidBody->translate(glmToBullet(translateByAmount));
-    entity3d::translate(translateByAmount);
+    Entity3d::translate(translateByAmount);
 }
 
-void bulletRigidBody::rotate(const glm::quat& rotateByAmount) {
+void BulletRigidBody::rotate(glm::quat rotateByAmount) {
     btTransform newTransform;
     newTransform.setOrigin(this->rigidBody->getCenterOfMassPosition());
     newTransform.setRotation(this->rigidBody->getOrientation() + glmToBullet(rotateByAmount));
     this->rigidBody->setWorldTransform(newTransform);
     this->rigidBody->getMotionState()->setWorldTransform(newTransform);
-    entity3d::rotate(rotateByAmount);
+    Entity3d::rotate(rotateByAmount);
 }

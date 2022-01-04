@@ -3,13 +3,13 @@
 #include <string>
 
 namespace chira {
-    enum class axis {
+    enum class Axis {
         X,
         Y,
         Z
     };
 
-    enum class signedAxis {
+    enum class SignedAxis {
         XP,
         XN,
         YP,
@@ -18,6 +18,6 @@ namespace chira {
         ZN
     };
 
-    axis getAxisFromString(const std::string& str);
-    signedAxis getSignedAxisFromString(const std::string& str);
+    Axis getAxisFromString(const std::string& str);
+    SignedAxis getSignedAxisFromString(const std::string& str);
 }

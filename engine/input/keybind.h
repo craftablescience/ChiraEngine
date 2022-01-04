@@ -3,10 +3,10 @@
 #include <functional>
 
 namespace chira {
-    class keybind {
+    class Keybind {
     public:
         // todo: allow keybinds to have multiple fire buttons
-        keybind(int button, int action, const std::function<void()>& function, bool isMouse = false);
+        Keybind(int button, int action, const std::function<void()>& function, bool isMouse = false);
         [[nodiscard]] int getButton() const;
         [[nodiscard]] int getAction() const;
         [[nodiscard]] bool isMouse() const;

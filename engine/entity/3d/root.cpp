@@ -4,11 +4,11 @@
 
 using namespace chira;
 
-root::root(const std::string& name_) : world3d(nullptr, name_) {
-    this->skybox = resource::getResource<meshResource>("file://meshes/skybox.json");
+Root::Root(const std::string& name_) : World3d(nullptr, name_) {
+    this->skybox = Resource::getResource<MeshResource>("file://meshes/skybox.json");
 }
 
-void root::render() {
+void Root::render() {
     for (auto& [key, entity] : this->children) {
         entity->render(glm::identity<glm::mat4>());
     }
@@ -17,28 +17,28 @@ void root::render() {
     }
 }
 
-glm::vec3 root::getGlobalPosition() {
+glm::vec3 Root::getGlobalPosition() {
     return this->position;
 }
 
-void root::setMainCamera(camera3d* camera) {
+void Root::setMainCamera(Camera3d* camera) {
     this->mainCamera = camera;
 }
 
-camera3d* root::getMainCamera() {
+Camera3d* Root::getMainCamera() {
     return this->mainCamera;
 }
 
-void root::setSkybox(const std::string& cubemapId) {
-    this->skybox->setMaterial(resource::getResource<cubemapMaterial>(cubemapId).castReinterpret<baseMaterial>());
+void Root::setSkybox(const std::string& cubemapId) {
+    this->skybox->setMaterial(Resource::getResource<MaterialCubemap>(cubemapId).castAssert<MaterialBase>());
     this->renderSkybox = true;
 }
 
-sharedPointer<cubemapMaterial> root::getSkybox() {
-    return this->skybox->getMaterial().castReinterpret<cubemapMaterial>();
+SharedPointer<MaterialCubemap> Root::getSkybox() {
+    return this->skybox->getMaterial().castAssert<MaterialCubemap>();
 }
 
-void root::clearTree() {
+void Root::clearTree() {
     for (const auto& [name_, ent] : this->children) {
         delete ent;
     }

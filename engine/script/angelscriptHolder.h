@@ -3,16 +3,16 @@
 #include "angelscriptProvider.h"
 
 namespace chira {
-    class angelscriptProvider;
+    class AngelscriptProvider;
 
-    class angelscriptHolder {
+    class AngelscriptHolder {
     public:
-        explicit angelscriptHolder(const std::string& path);
-        virtual ~angelscriptHolder();
-        void init(angelscriptProvider* provider);
-        void render(angelscriptProvider* provider, double delta);
-        void stop(angelscriptProvider* provider);
-        std::string getIdentifier() {
+        explicit AngelscriptHolder(const std::string& path);
+        virtual ~AngelscriptHolder();
+        void init(AngelscriptProvider* provider);
+        void render(AngelscriptProvider* provider, double delta);
+        void stop(AngelscriptProvider* provider);
+        [[nodiscard]] std::string getIdentifier() const {
             return this->identifier;
         }
     private:

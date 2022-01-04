@@ -6,16 +6,16 @@
 #include "abstractSound.h"
 
 namespace chira {
-    class alSoundManager : public abstractSoundManager {
+    class ALSoundManager : public AbstractSoundManager {
     public:
-        ~alSoundManager() override;
+        ~ALSoundManager() override;
         void init() override;
         void update() override;
         void stop() override;
         void setListenerPosition(const glm::vec3& newPosition) override;
         void setListenerRotation(const glm::vec3& newRotation, const glm::vec3& up) override;
-        void addSound(const std::string& soundName, abstractSound* sound) override;
-        abstractSound* getSound(const std::string& soundName) override;
+        void addSound(const std::string& soundName, AbstractSound* sound) override;
+        AbstractSound* getSound(const std::string& soundName) override;
     private:
         ALCdevice* device = nullptr;
         ALCcontext* context = nullptr;

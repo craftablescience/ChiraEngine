@@ -2,7 +2,7 @@
   "dependencies": {
     "model": "file://meshes/teapot.obj",
     "material": "file://materials/teapot.json",
-    "materialType": "phongMaterial"
+    "materialType": "MaterialPhong"
   },
   "properties": {
     "loader": "obj",

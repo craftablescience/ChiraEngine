@@ -4,59 +4,59 @@
 
 using namespace chira;
 
-entity::entity(entity* parent_) {
+Entity::Entity(Entity* parent_) {
     this->parent = parent_;
-    this->name = uuidGenerator::getNewUUIDString();
+    this->name = UUIDGenerator::getNewUUIDString();
 }
 
-entity::entity(entity* parent_, const std::string& name_) {
+Entity::Entity(Entity* parent_, const std::string& name_) {
     this->parent = parent_;
     this->name = name_;
 }
 
-entity::entity() : entity(nullptr) {}
+Entity::Entity() : Entity(nullptr) {}
 
-entity::entity(const std::string& name_) : entity(nullptr, name_) {}
+Entity::Entity(const std::string& name_) : Entity(nullptr, name_) {}
 
-entity::~entity() {
+Entity::~Entity() {
     this->removeAllChildren();
 }
 
-void entity::render(const glm::mat4& parentTransform) { // NOLINT(misc-no-recursion)
+void Entity::render(const glm::mat4& parentTransform) { // NOLINT(misc-no-recursion)
     for (auto& [key, entity] : this->children) {
         entity->render(parentTransform);
     }
 }
 
-entity* entity::getParent() const {
+Entity* Entity::getParent() const {
     return this->parent;
 }
 
-std::string_view entity::getName() const {
+std::string_view Entity::getName() const {
     return this->name;
 }
 
-entity* entity::getChild(const std::string& name_) {
+Entity* Entity::getChild(const std::string& name_) {
     return this->children[name_];
 }
 
-bool entity::hasChild(const std::string& name_) {
+bool Entity::hasChild(const std::string& name_) {
     return this->children.count(name_) > 0;
 }
 
-std::string_view entity::addChild(entity* child) {
+std::string_view Entity::addChild(Entity* child) {
     child->setParent(this);
     this->children[child->getName().data()] = child;
     return child->getName();
 }
 
-void entity::removeChild(const std::string& name_) {
+void Entity::removeChild(const std::string& name_) {
     this->children[name_]->removeAllChildren();
     delete this->children[name_];
     this->children.erase(name_);
 }
 
-void entity::removeAllChildren() { // NOLINT(misc-no-recursion)
+void Entity::removeAllChildren() { // NOLINT(misc-no-recursion)
     for (const auto& [name_, ent_] : this->children) {
         ent_->removeAllChildren();
         delete ent_;

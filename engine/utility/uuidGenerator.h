@@ -4,11 +4,11 @@
 #include <uuid.h>
 
 namespace chira {
-    class uuidGenerator {
+    class UUIDGenerator {
     private:
-        class uuidGeneratorInstance {
+        class UUIDGeneratorInstance {
         public:
-            uuidGeneratorInstance();
+            UUIDGeneratorInstance();
             [[nodiscard]] std::mt19937* getGenerator() const;
         private:
             std::random_device rd{};
@@ -19,6 +19,6 @@ namespace chira {
         static uuids::uuid getNewUUID();
         static std::string getNewUUIDString();
     private:
-        static std::unique_ptr<uuidGeneratorInstance> generator;
+        static std::unique_ptr<UUIDGeneratorInstance> generator;
     };
 }

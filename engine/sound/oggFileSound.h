@@ -19,7 +19,7 @@ namespace chira {
     constexpr std::size_t OGG_NUM_BUFFERS = 4;
     constexpr ALsizei OGG_BUFFER_SIZE = 65536;
 
-    struct oggStreamData {
+    struct OGGStreamData {
         ALuint buffers[OGG_NUM_BUFFERS];
         std::string filename;
         std::ifstream file;
@@ -35,10 +35,10 @@ namespace chira {
         std::size_t duration;
     };
 
-    class oggFileSound : public abstractSound {
+    class OGGFileSound : public AbstractSound {
     public:
         bool init(const std::string& filename);
-        bool init(const std::string& filename, float pitch_, float gain_, const glm::vec3& position_, soundType type_, bool loop_, bool is3d_) override;
+        bool init(const std::string& filename, float pitch_, float gain_, const glm::vec3& position_, SoundType type_, bool loop_, bool is3d_) override;
         void play() override;
         void update() override;
         void stop() override;
@@ -49,7 +49,7 @@ namespace chira {
         static std::size_t readOggVorbisCallback(void* destination, std::size_t size1, std::size_t size2, void* fileHandle);
         static std::int32_t seekOggVorbisCallback(void* fileHandle, ogg_int64_t to, std::int32_t type);
         static long int tellOggVorbisCallback(void* fileHandle);
-        oggStreamData audioData{};
+        OGGStreamData audioData{};
         bool hasBeenPlayedPreviously = false; // fixes bug where sound cannot be played twice
     };
 }

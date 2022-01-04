@@ -3,11 +3,11 @@
 #include "abstractMeshLoader.h"
 
 namespace chira {
-    class objMeshLoader : public abstractMeshLoader {
+    class OBJMeshLoader : public AbstractMeshLoader {
     public:
-        void loadMesh(const std::string& identifier, std::vector<vertex>& vertices, std::vector<unsigned int>& indices) override;
-        std::vector<unsigned char> createMesh(const std::vector<vertex>& vertices, const std::vector<unsigned int>& indices) override;
+        void loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) override;
+        std::vector<byte> createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) override;
     private:
-        static void addVertex(const vertex& v, unsigned int* currentIndex, std::vector<vertex>& vertices, std::vector<unsigned int>& indices);
+        static void addVertex(const Vertex& v, unsigned int* currentIndex, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
     };
 }

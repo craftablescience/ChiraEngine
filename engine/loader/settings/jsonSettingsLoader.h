@@ -4,10 +4,10 @@
 #include "abstractFileSettingsLoader.h"
 
 namespace chira {
-    class jsonSettingsLoader : public abstractFileSettingsLoader {
+    class JSONSettingsLoader : public AbstractFileSettingsLoader {
     public:
-        explicit jsonSettingsLoader(const std::string& path);
-        ~jsonSettingsLoader() override = default;
+        explicit JSONSettingsLoader(const std::string& path);
+        ~JSONSettingsLoader() override = default;
 
         void addCategory(const std::string& category) override;
 

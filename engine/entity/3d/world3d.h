@@ -3,11 +3,11 @@
 #include "entity3d.h"
 
 namespace chira {
-    class world3d : public entity3d {
+    class World3d : public Entity3d {
     public:
-        explicit world3d(entity* parent_) : entity3d(parent_) {}
-        world3d(entity* parent_, const std::string& name_) : entity3d(parent_, name_) {}
-        world3d() : entity3d() {}
-        explicit world3d(const std::string& name_) : entity3d(name_) {}
+        explicit World3d(Entity* parent_) : Entity3d(parent_) {}
+        World3d(Entity* parent_, const std::string& name_) : Entity3d(parent_, name_) {}
+        World3d() : Entity3d() {}
+        explicit World3d(const std::string& name_) : Entity3d(name_) {}
     };
 }

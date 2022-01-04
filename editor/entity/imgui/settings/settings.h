@@ -6,9 +6,9 @@
 
 using namespace chira;
 
-class settings : public window {
+class Settings : public Window {
 public:
-    explicit settings(const ImVec2& windowSize = ImVec2(0,0));
+    explicit Settings(const ImVec2& windowSize = ImVec2(0,0));
     void renderContents() override;
 private:
     // Fields are initialized by values in settings loader

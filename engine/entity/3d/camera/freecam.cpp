@@ -5,74 +5,74 @@
 
 using namespace chira;
 
-freecam::freecam(entity* parent_, const cameraProjectionMode& mode, float fov_, bool controls) : camera3d(parent_, mode, fov_) {
+Freecam::Freecam(Entity* parent_, CameraProjectionMode mode, float fov_, bool controls) : Camera3d(parent_, mode, fov_) {
     if (controls)
-        freecam::setupKeybinds();
+        Freecam::setupKeybinds();
 }
 
-freecam::freecam(entity* parent_, const std::string& name_, const cameraProjectionMode& mode, float fov_, bool controls) : camera3d(parent_, mode, fov_) {
+Freecam::Freecam(Entity* parent_, const std::string& name_, CameraProjectionMode mode, float fov_, bool controls) : Camera3d(parent_, mode, fov_) {
     if (controls)
-        freecam::setupKeybinds();
+        Freecam::setupKeybinds();
 }
 
-freecam::freecam(const cameraProjectionMode& mode, float fov_, bool controls) : camera3d(mode, fov_) {
+Freecam::Freecam(CameraProjectionMode mode, float fov_, bool controls) : Camera3d(mode, fov_) {
     if (controls)
-        freecam::setupKeybinds();
+        Freecam::setupKeybinds();
 }
 
-freecam::freecam(const std::string& name_, const cameraProjectionMode& mode, float fov_, bool controls) : camera3d(name_, mode, fov_) {
+Freecam::Freecam(const std::string& name_, CameraProjectionMode mode, float fov_, bool controls) : Camera3d(name_, mode, fov_) {
     if (controls)
-        freecam::setupKeybinds();
+        Freecam::setupKeybinds();
 }
 
-void freecam::setupKeybinds() {
-    engine::addKeybind(keybind(GLFW_KEY_W, GLFW_REPEAT,[]() {
-        if (!engine::isMouseCaptured())
+void Freecam::setupKeybinds() {
+    Engine::addKeybind(Keybind(GLFW_KEY_W, GLFW_REPEAT, []{
+        if (!Engine::isMouseCaptured())
             return;
-        if (auto cam = assert_cast<freecam*>(engine::getRoot()->getMainCamera()))
-            cam->translateWithRotation(glm::vec3{0, 0, -cam->getMovementSpeed() * engine::getDeltaTime()});
+        if (auto cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()))
+            cam->translateWithRotation(glm::vec3{0, 0, -cam->getMovementSpeed() * Engine::getDeltaTime()});
     }));
-    engine::addKeybind(keybind(GLFW_KEY_S, GLFW_REPEAT,[]() {
-        if (!engine::isMouseCaptured())
+    Engine::addKeybind(Keybind(GLFW_KEY_S, GLFW_REPEAT, []{
+        if (!Engine::isMouseCaptured())
             return;
-        if (auto* cam = assert_cast<freecam*>(engine::getRoot()->getMainCamera()))
-            cam->translateWithRotation(glm::vec3{0, 0, cam->getMovementSpeed() * engine::getDeltaTime()});
+        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()))
+            cam->translateWithRotation(glm::vec3{0, 0, cam->getMovementSpeed() * Engine::getDeltaTime()});
     }));
-    engine::addKeybind(keybind(GLFW_KEY_A, GLFW_REPEAT,[]() {
-        if (!engine::isMouseCaptured())
+    Engine::addKeybind(Keybind(GLFW_KEY_A, GLFW_REPEAT, []{
+        if (!Engine::isMouseCaptured())
             return;
-        if (auto* cam = assert_cast<freecam*>(engine::getRoot()->getMainCamera()))
-            cam->translateWithRotation(glm::vec3{-cam->getMovementSpeed() * engine::getDeltaTime(), 0, 0});
+        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()))
+            cam->translateWithRotation(glm::vec3{-cam->getMovementSpeed() * Engine::getDeltaTime(), 0, 0});
     }));
-    engine::addKeybind(keybind(GLFW_KEY_D, GLFW_REPEAT,[]() {
-        if (!engine::isMouseCaptured())
+    Engine::addKeybind(Keybind(GLFW_KEY_D, GLFW_REPEAT, []{
+        if (!Engine::isMouseCaptured())
             return;
-        if (auto* cam = assert_cast<freecam*>(engine::getRoot()->getMainCamera()))
-            cam->translateWithRotation(glm::vec3{cam->getMovementSpeed() * engine::getDeltaTime(), 0, 0});
+        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()))
+            cam->translateWithRotation(glm::vec3{cam->getMovementSpeed() * Engine::getDeltaTime(), 0, 0});
     }));
-    engine::addKeybind(keybind(GLFW_KEY_SPACE, GLFW_REPEAT,[]() {
-        if (!engine::isMouseCaptured())
+    Engine::addKeybind(Keybind(GLFW_KEY_SPACE, GLFW_REPEAT, []{
+        if (!Engine::isMouseCaptured())
             return;
-        if (auto* cam = assert_cast<freecam*>(engine::getRoot()->getMainCamera()))
-            cam->translateWithRotation(glm::vec3{0, cam->getMovementSpeed() * engine::getDeltaTime(), 0});
+        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()))
+            cam->translateWithRotation(glm::vec3{0, cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
     }));
-    engine::addKeybind(keybind(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT,[]() {
-        if (!engine::isMouseCaptured())
+    Engine::addKeybind(Keybind(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT, []{
+        if (!Engine::isMouseCaptured())
             return;
-        if (auto* cam = assert_cast<freecam*>(engine::getRoot()->getMainCamera()))
-            cam->translateWithRotation(glm::vec3{0, -cam->getMovementSpeed() * engine::getDeltaTime(), 0});
+        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()))
+            cam->translateWithRotation(glm::vec3{0, -cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
     }));
-    engine::addMousebind(mousebind(mouseActions::MOVE, [](double xOffset, double yOffset) {
-        if (!engine::isMouseCaptured())
+    Engine::addMousebind(Mousebind(MouseActions::MOVE, [](double xOffset, double yOffset) {
+        if (!Engine::isMouseCaptured())
             return;
-        if (auto* cam = assert_cast<freecam*>(engine::getRoot()->getMainCamera())) {
-            xOffset *= cam->getMouseSensitivity() * engine::getDeltaTime();
-            yOffset *= cam->getMouseSensitivity() * engine::getDeltaTime();
+        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera())) {
+            xOffset *= cam->getMouseSensitivity() * Engine::getDeltaTime();
+            yOffset *= cam->getMouseSensitivity() * Engine::getDeltaTime();
 
             cam->yaw -= (float) xOffset;
 
             bool invertYAxis = false;
-            engine::getSettingsLoader()->getValue("input", "invertYAxis", &invertYAxis);
+            Engine::getSettingsLoader()->getValue("input", "invertYAxis", &invertYAxis);
             if (invertYAxis)
                 cam->pitch -= (float) yOffset;
             else
@@ -84,7 +84,7 @@ void freecam::setupKeybinds() {
                 cam->pitch = -89.8f;
         }
     }));
-    engine::addKeybind(keybind(GLFW_KEY_TAB, GLFW_PRESS, []() {
-        engine::captureMouse(!engine::isMouseCaptured());
+    Engine::addKeybind(Keybind(GLFW_KEY_TAB, GLFW_PRESS, []{
+        Engine::captureMouse(!Engine::isMouseCaptured());
     }));
 }

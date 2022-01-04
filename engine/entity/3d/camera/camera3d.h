@@ -3,22 +3,22 @@
 #include "../entity3d.h"
 
 namespace chira {
-    enum class cameraProjectionMode {
+    enum class CameraProjectionMode {
         PERSPECTIVE,
         //ORTHOGRAPHIC
     };
 
-    class camera3d : public entity3d {
+    class Camera3d : public Entity3d {
     public:
-        camera3d(entity* parent_, const cameraProjectionMode& mode, float fov_ = 90.0f);
-        camera3d(entity* parent_, const std::string& name_, const cameraProjectionMode& mode, float fov_ = 90.0f);
-        explicit camera3d(const cameraProjectionMode& mode, float fov_ = 90.0f);
-        explicit camera3d(const std::string& name_, const cameraProjectionMode& mode, float fov_ = 90.0f);
+        Camera3d(Entity* parent_, CameraProjectionMode mode, float fov_ = 90.0f);
+        Camera3d(Entity* parent_, const std::string& name_, CameraProjectionMode mode, float fov_ = 90.0f);
+        explicit Camera3d(CameraProjectionMode mode, float fov_ = 90.0f);
+        Camera3d(const std::string& name_, CameraProjectionMode mode, float fov_ = 90.0f);
         void createProjection(int windowWidth, int windowHeight);
         const glm::mat4& getProjection() const {
             return this->projection;
         }
-        glm::mat4 getView() {
+        virtual glm::mat4 getView() {
             return glm::lookAt(this->position, this->position + this->getFrontVector(), this->getUpVector());
         }
         void setFieldOfView(float fov_) {
@@ -50,7 +50,7 @@ namespace chira {
         }
     protected:
         glm::mat4 projection{};
-        cameraProjectionMode projectionMode;
+        CameraProjectionMode projectionMode;
         float fov = 90.0f;
     };
 }

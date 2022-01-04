@@ -1,40 +1,43 @@
 #pragma once
 
+#include "assert_cast.h"
+
 namespace chira {
-    enum class pointerCastType {
+    enum class PointerCastType {
         STATIC_CAST,
         DYNAMIC_CAST,
         REINTERPRET_CAST,
+        ASSERT_CAST,
         C_CAST
     };
 
-    struct sharedPointerMetadata {
+    struct SharedPointerMetadata {
         unsigned int refCount = 1;
         /// If the refcount is less than or equal to this number in the destructor (after it is subtracted once),
         /// this is the last holder of the pointer and sharedPointer::ptr will be deleted.\n
         /// 1 is the regular value, because this class is intended to be used as a resource, and the resource
         /// manager always holds 1 copy of the pointer.
         unsigned int holderAmountForDelete = 1;
-        sharedPointerMetadata() = default;
-        explicit sharedPointerMetadata(unsigned int refCount_) : refCount(refCount_) {}
-        sharedPointerMetadata(unsigned int refCount_, unsigned int holderAmountForDelete_) : refCount(refCount_), holderAmountForDelete(holderAmountForDelete_) {}
-        sharedPointerMetadata(const sharedPointerMetadata& other) = delete;
-        sharedPointerMetadata& operator=(const sharedPointerMetadata& other) = delete;
-        sharedPointerMetadata(sharedPointerMetadata&& other) = delete;
-        sharedPointerMetadata& operator=(sharedPointerMetadata&& other) = delete;
+        SharedPointerMetadata() = default;
+        explicit SharedPointerMetadata(unsigned int refCount_) : refCount(refCount_) {}
+        SharedPointerMetadata(unsigned int refCount_, unsigned int holderAmountForDelete_) : refCount(refCount_), holderAmountForDelete(holderAmountForDelete_) {}
+        SharedPointerMetadata(const SharedPointerMetadata& other) = delete;
+        SharedPointerMetadata& operator=(const SharedPointerMetadata& other) = delete;
+        SharedPointerMetadata(SharedPointerMetadata&& other) = delete;
+        SharedPointerMetadata& operator=(SharedPointerMetadata&& other) = delete;
     };
 
     template<typename T>
-    class sharedPointer {
+    class SharedPointer {
     public:
-        sharedPointer() = default;
-        explicit sharedPointer(T* inputPtr) : ptr(inputPtr), data(new sharedPointerMetadata{1}) {}
-        sharedPointer(T* inputPtr, sharedPointerMetadata* data_) : ptr(inputPtr), data(data_) {
+        SharedPointer() = default;
+        explicit SharedPointer(T* inputPtr) : ptr(inputPtr), data(new SharedPointerMetadata{1}) {}
+        SharedPointer(T* inputPtr, SharedPointerMetadata* data_) : ptr(inputPtr), data(data_) {
             if (this->data) {
                 this->data->refCount++;
             }
         }
-        sharedPointer<T>& operator=(const sharedPointer<T>& other) noexcept {
+        SharedPointer<T>& operator=(const SharedPointer<T>& other) noexcept {
             if (this != &other) {
                 if ((this->data) && (this->data->refCount <= 1)) {
                     delete this->ptr;
@@ -48,7 +51,7 @@ namespace chira {
             }
             return *this;
         }
-        sharedPointer(const sharedPointer<T>& other) noexcept {
+        SharedPointer(const SharedPointer<T>& other) noexcept {
             if (this != &other) {
                 if ((this->data) && (this->data->refCount <= 1)) {
                     delete this->ptr;
@@ -61,7 +64,7 @@ namespace chira {
                 }
             }
         }
-        sharedPointer<T>& operator=(sharedPointer<T>&& other) noexcept {
+        SharedPointer<T>& operator=(SharedPointer<T>&& other) noexcept {
             if ((this->data) && (this->data->refCount <= 1)) {
                 delete this->ptr;
                 delete this->data;
@@ -72,10 +75,10 @@ namespace chira {
             other.data = nullptr;
             return *this;
         }
-        sharedPointer(sharedPointer<T>&& other) noexcept {
+        SharedPointer(SharedPointer<T>&& other) noexcept {
             *this = std::move(other);
         }
-        ~sharedPointer() {
+        ~SharedPointer() {
             if (!this->data) {
                 delete this->ptr;
                 return;
@@ -97,58 +100,63 @@ namespace chira {
         T* operator->() const noexcept {
             return this->ptr;
         }
-        bool operator!() const noexcept {
+        bool operator!() const {
             return !(bool(this->ptr));
         }
-        explicit operator bool() const noexcept {
+        explicit operator bool() const {
             return bool(this->ptr);
         }
-        [[nodiscard]] unsigned int useCount() const noexcept {
-            if (this->data) {
+        [[nodiscard]] unsigned int useCount() const {
+            if (this->data)
                 return this->data->refCount;
-            } else {
+            else
                 return 0;
-            }
         }
-        [[nodiscard]] unsigned int getHolderAmountForDelete() const noexcept {
+        [[nodiscard]] unsigned int getHolderAmountForDelete() const {
             if (this->data) {
                 return this->data->holderAmountForDelete;
             } else {
                 return 0;
             }
         }
-        void setHolderAmountForDelete(unsigned int newHolderAmountForDelete) noexcept {
+        void setHolderAmountForDelete(unsigned int newHolderAmountForDelete) const {
             if (this->data) {
                 this->data->holderAmountForDelete = newHolderAmountForDelete;
             }
         }
         template<typename U>
-        sharedPointer<U> castStatic() const {
-            return sharedPointer<U>(static_cast<U*>(this->ptr), this->data);
+        SharedPointer<U> castStatic() const {
+            return SharedPointer<U>(static_cast<U*>(this->ptr), this->data);
         }
         template<typename U>
-        sharedPointer<U> castDynamic() const {
-            return sharedPointer<U>(dynamic_cast<U*>(this->ptr), this->data);
+        SharedPointer<U> castDynamic() const {
+            return SharedPointer<U>(dynamic_cast<U*>(this->ptr), this->data);
         }
         template<typename U>
-        sharedPointer<U> castReinterpret() const {
-            return sharedPointer<U>(reinterpret_cast<U*>(this->ptr), this->data);
+        SharedPointer<U> castAssert() const {
+            return SharedPointer<U>(assert_cast<U*>(this->ptr), this->data);
         }
         template<typename U>
-        sharedPointer<U> cast(const pointerCastType& type) const {
+        SharedPointer<U> castReinterpret() const {
+            return SharedPointer<U>(reinterpret_cast<U*>(this->ptr), this->data);
+        }
+        template<typename U>
+        SharedPointer<U> cast(PointerCastType type) const {
             switch (type) {
-                case pointerCastType::STATIC_CAST:
+                case PointerCastType::STATIC_CAST:
                     return this->castStatic<U>();
-                case pointerCastType::DYNAMIC_CAST:
+                case PointerCastType::DYNAMIC_CAST:
                     return this->castDynamic<U>();
-                case pointerCastType::REINTERPRET_CAST:
+                case PointerCastType::REINTERPRET_CAST:
                     return this->castReinterpret<U>();
-                case pointerCastType::C_CAST:
-                    return sharedPointer<U>((U*)(this->ptr), this->data);
+                case PointerCastType::ASSERT_CAST:
+                    return this->castAssert<U>();
+                case PointerCastType::C_CAST:
+                    return SharedPointer<U>((U*)(this->ptr), this->data);
             }
         }
     protected:
         T* ptr = nullptr;
-        sharedPointerMetadata* data = nullptr;
+        SharedPointerMetadata* data = nullptr;
     };
 }

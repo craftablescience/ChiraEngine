@@ -6,20 +6,20 @@
 #include "../shader.h"
 
 namespace chira {
-    class baseMaterial : public propertiesResource {
+    class MaterialBase : public PropertiesResource {
     public:
-        explicit baseMaterial(const std::string& identifier_);
+        explicit MaterialBase(const std::string& identifier_);
         void compile(const nlohmann::json& properties) override;
         virtual void use();
-        sharedPointer<shader> getShader();
+        [[nodiscard]] SharedPointer<Shader> getShader() const;
     protected:
-        sharedPointer<shader> shaderPtr;
+        SharedPointer<Shader> shader;
     };
 
-    class materialFactory {
-        using factoryFunction = std::function<sharedPointer<baseMaterial>(const std::string&)>;
+    class MaterialFactory {
+        using factoryFunction = std::function<SharedPointer<MaterialBase>(const std::string&)>;
     public:
-        materialFactory() = delete;
+        MaterialFactory() = delete;
         static bool registerMaterialType(const std::string& name, factoryFunction createFunc);
         static const factoryFunction& getMaterialType(const std::string& name);
     private:
@@ -27,14 +27,14 @@ namespace chira {
     };
 }
 
-#define REGISTER_MATERIAL_TYPE(resourceClassName)                                              \
-    static inline bool resourceClassName##FactoryRegistryHelper =                              \
-    chira::materialFactory::registerMaterialType(                                              \
-        #resourceClassName,                                                                    \
-        [](const std::string& identifier) -> chira::sharedPointer<chira::baseMaterial> {       \
-            return chira::resource::getResource<resourceClassName>(identifier)                 \
-                   .castReinterpret<chira::baseMaterial>();                                    \
+#define REGISTER_MATERIAL_TYPE(ResourceClassName)                                              \
+    static inline bool ResourceClassName##FactoryRegistryHelper =                              \
+    chira::MaterialFactory::registerMaterialType(                                              \
+        #ResourceClassName,                                                                    \
+        [](const std::string& identifier) -> chira::SharedPointer<chira::MaterialBase> {       \
+            return chira::Resource::getResource<ResourceClassName>(identifier)                 \
+                   .castAssert<chira::MaterialBase>();                                         \
         }                                                                                      \
     )
 
-#define GET_MATERIAL(type, identifier) chira::materialFactory::getMaterialType(type)(identifier).castReinterpret<chira::baseMaterial>()
+#define GET_MATERIAL(type, identifier) chira::MaterialFactory::getMaterialType(type)(identifier).castAssert<chira::MaterialBase>()

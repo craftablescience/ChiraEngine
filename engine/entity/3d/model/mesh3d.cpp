@@ -4,7 +4,7 @@
 
 using namespace chira;
 
-void mesh3d::render(const glm::mat4& parentTransform) {
+void Mesh3d::render(const glm::mat4& parentTransform) {
     this->mesh->render(transformToMatrix(parentTransform, this->position, this->rotation));
-    entity3d::render(parentTransform);
+    Entity3d::render(parentTransform);
 }

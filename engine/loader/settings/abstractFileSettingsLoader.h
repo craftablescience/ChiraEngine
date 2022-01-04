@@ -3,9 +3,9 @@
 #include "abstractSettingsLoader.h"
 
 namespace chira {
-    class abstractFileSettingsLoader : public abstractSettingsLoader {
+    class AbstractFileSettingsLoader : public AbstractSettingsLoader {
     public:
-        explicit abstractFileSettingsLoader(const std::string& path);
+        explicit AbstractFileSettingsLoader(const std::string& path);
         void setFilePath(const std::string& path);
         [[nodiscard]] std::string getFilePath() const {
             return this->filepath;

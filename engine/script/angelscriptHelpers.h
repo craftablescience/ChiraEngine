@@ -38,14 +38,14 @@ namespace chira {
         explicit asTypeString(const std::string& name_ = "") : asSimpleTypeString(name_) {}
         [[nodiscard]] std::string type() const override {
             std::string type = typeid(T).name();
-    #if defined(__clang__) || defined(__GNUG__)
+#if defined(__clang__) || defined(__GNUG__)
             int status;
             char* demangled_name = abi::__cxa_demangle(type.c_str(), nullptr, nullptr, &status);
             if (status == 0) {
                 type = demangled_name;
                 std::free(demangled_name);
             }
-    #endif
+#endif
             return type;
         }
     };

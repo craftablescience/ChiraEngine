@@ -7,32 +7,32 @@
 
 using namespace chira;
 
-void chiraMeshLoader::loadMesh(const std::string& identifier, std::vector<vertex>& vertices, std::vector<unsigned int>& indices) {
-    auto meshData = resource::getResource<binaryResource>(identifier);
+void ChiraMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) {
+    auto meshData = Resource::getResource<BinaryResource>(identifier);
     if (meshData->getBufferLength() < CHIRA_MESH_HEADER_SIZE) {
         // die
-        logger::log(ERR, "CMDL", fmt::format(TR("error.cmdl_loader.invalid_data"), identifier));
+        Logger::log(LogType::ERROR, "CMDL", fmt::format(TR("error.cmdl_loader.invalid_data"), identifier));
         return;
     }
-    chiraMeshHeader header;
+    ChiraMeshHeader header;
     memcpy(&header, meshData->getBuffer(), CHIRA_MESH_HEADER_SIZE);
 
     // read mesh data
     if (header.version == 1) {
         vertices.resize(header.vertexCount);
-        memcpy(&vertices[0], meshData->getBuffer() + CHIRA_MESH_HEADER_SIZE, header.vertexCount * sizeof(vertex));
+        memcpy(&vertices[0], meshData->getBuffer() + CHIRA_MESH_HEADER_SIZE, header.vertexCount * sizeof(Vertex));
         indices.resize(header.indexCount);
-        memcpy(&indices[0], meshData->getBuffer() + CHIRA_MESH_HEADER_SIZE + (header.vertexCount * sizeof(vertex)), header.indexCount * sizeof(unsigned int));
+        memcpy(&indices[0], meshData->getBuffer() + CHIRA_MESH_HEADER_SIZE + (header.vertexCount * sizeof(Vertex)), header.indexCount * sizeof(unsigned int));
     }
 }
 
-std::vector<unsigned char> chiraMeshLoader::createMesh(const std::vector<vertex>& vertices, const std::vector<unsigned int>& indices) {
-    std::vector<unsigned char> bytebuffer;
-    chiraMeshHeader header;
+std::vector<byte> ChiraMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) {
+    std::vector<byte> bytebuffer;
+    ChiraMeshHeader header;
     header.version = 1;
     header.vertexCount = vertices.size();
     header.indexCount = indices.size();
-    const unsigned int VERTEX_SIZE = (sizeof(vertex) * header.vertexCount);
+    const unsigned int VERTEX_SIZE = (sizeof(Vertex) * header.vertexCount);
     const unsigned int INDEX_SIZE = (sizeof(unsigned int) * header.indexCount);
 
     // Since each element in bytebuffer is one byte wide, this works

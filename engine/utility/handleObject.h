@@ -2,7 +2,7 @@
 
 namespace chira {
     template<typename T>
-    class handleObject {
+    class HandleObject {
     public:
         [[nodiscard]] T getHandle() const {
             return this->handle;

@@ -3,9 +3,9 @@
 #include <string>
 
 namespace chira {
-    class abstractSettingsLoader {
+    class AbstractSettingsLoader {
     public:
-        virtual ~abstractSettingsLoader() = default;
+        virtual ~AbstractSettingsLoader() = default;
 
         virtual void addCategory(const std::string& category) = 0;
 

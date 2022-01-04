@@ -5,24 +5,24 @@
 
 using namespace chira;
 
-console::console(const ImVec2& windowSize) : window(TR("ui.console.title"), false, windowSize) {
-    this->loggingId = logger::addCallback([=](const loggerType& type, const std::string& source, const std::string& message) {
-        console::engineLoggingHook(type, source, message);
+Console::Console(const ImVec2& windowSize) : Window(TR("ui.console.title"), false, windowSize) {
+    this->loggingId = Logger::addCallback([=](LogType type, const std::string& source, const std::string& message) {
+        this->engineLoggingHook(type, source, message);
     });
     this->clearLog();
     this->autoScroll = true;
 }
 
-console::~console() {
+Console::~Console() {
     this->clearLog();
     for (auto& i : this->history) {
         free(i);
     }
-    logger::removeCallback(this->loggingId);
+    Logger::removeCallback(this->loggingId);
 }
 
-void console::renderContents() {
-    console::setTheme();
+void Console::renderContents() {
+    Console::setTheme();
     ImGui::Checkbox("Autoscroll", &this->autoScroll);
     ImGui::Separator();
     ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
@@ -66,54 +66,54 @@ void console::renderContents() {
     }
 
     ImGui::EndChild();
-    console::resetTheme();
+    Console::resetTheme();
 }
 
-void console::clearLog() {
+void Console::clearLog() {
     for (auto& item : this->items) {
         free(item);
     }
     this->items.clear();
 }
 
-void console::addLog(const std::string& message) {
+void Console::addLog(const std::string& message) {
     this->items.push_back(strdup(message.c_str()));
 }
 
-void console::precacheResource() {
-    this->font = resource::getResource<fontResource>(TR("resource.font.console_font_path"));
+void Console::precacheResource() {
+    this->font = Resource::getResource<FontResource>(TR("resource.font.console_font_path"));
 }
 
-void console::engineLoggingHook(const loggerType type, const std::string& source, const std::string& message) {
+void Console::engineLoggingHook(LogType type, const std::string& source, const std::string& message) {
     switch (type) {
-        case INFO:
+        case LogType::INFO:
             this->addLog(std::string(LOGGER_INFO_PREFIX) + "[" + source + "] " + message);
             break;
-        case INFO_IMPORTANT:
+        case LogType::INFO_IMPORTANT:
             this->addLog(std::string(LOGGER_INFO_IMPORTANT_PREFIX) + "[" + source + "] " + message);
             break;
-        case OUTPUT:
+        case LogType::OUTPUT:
             this->addLog(std::string(LOGGER_OUTPUT_PREFIX) + "[" + source + "] " + message);
             break;
-        case WARN:
+        case LogType::WARNING:
             this->addLog(std::string(LOGGER_WARNING_PREFIX) + "[" + source + "] " + message);
             break;
-        case ERR:
+        case LogType::ERROR:
             this->addLog(std::string(LOGGER_ERROR_PREFIX) + "[" + source + "] " + message);
             break;
     }
 }
 
-void console::setTheme() {
+void Console::setTheme() {
     if (!this->font) {
-        this->font = resource::getResource<fontResource>(TR("resource.font.console_font_path"));
+        this->font = Resource::getResource<FontResource>(TR("resource.font.console_font_path"));
     }
     ImGui::PushFont(this->font->getFont());
     ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 4.0f);
 }
 
-void console::resetTheme() const {
+void Console::resetTheme() const {
     ImGui::PopStyleVar(1);
     ImGui::PopStyleColor(1);
     ImGui::PopFont();

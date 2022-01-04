@@ -5,11 +5,11 @@
 #include <utility/handleObject.h>
 
 namespace chira {
-    class shader : public propertiesResource, public handleObject<int> {
+    class Shader : public PropertiesResource, public HandleObject<int> {
     public:
-        explicit shader(const std::string& identifier_);
+        explicit Shader(const std::string& identifier_);
         void compile(const nlohmann::json& properties) override;
-        ~shader() override;
+        ~Shader() override;
         void use();
         void setUniform(const std::string& name, bool value) const;
         void setUniform(const std::string& name, unsigned int value) const;

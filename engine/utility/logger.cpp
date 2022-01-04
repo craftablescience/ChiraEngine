@@ -4,43 +4,41 @@
 
 using namespace chira;
 
-std::unordered_map<uuids::uuid, std::function<void(const loggerType&,const std::string&,const std::string&)>> logger::callbacks{};
-
-void logger::log(const loggerType& type, const std::string& source, const std::string& message) {
+void Logger::log(LogType type, const std::string& source, const std::string& message) {
     switch (type) {
         // Using std::endl here instead of '\n'
         // sometimes with the latter, the buffer doesn't get flushed until the application exits
-        case INFO:
+        case LogType::INFO:
             std::cout << LOGGER_INFO_PREFIX << "[" << source << "] " << message << std::endl;
             break;
-        case INFO_IMPORTANT:
+        case LogType::INFO_IMPORTANT:
             std::cout << "\x1B[32m" << LOGGER_INFO_IMPORTANT_PREFIX << "[" << source << "] " << message << "\033[0m" << std::endl;
             break;
-        case OUTPUT:
+        case LogType::OUTPUT:
             std::cout << "\x1B[34m" << LOGGER_OUTPUT_PREFIX << "[" << source << "] " << message << "\033[0m" << std::endl;
             break;
-        case WARN:
+        case LogType::WARNING:
             std::cout << "\x1B[33m" << LOGGER_WARNING_PREFIX << "[" << source << "] " << message << "\033[0m" << std::endl;
             break;
-        case ERR:
+        case LogType::ERROR:
             std::cout << "\x1B[31m" << LOGGER_ERROR_PREFIX << "[" << source << "] " << message << "\033[0m" << std::endl;
             break;
     }
-    logger::runLogHooks(type, source, message);
+    Logger::runLogHooks(type, source, message);
 }
 
-uuids::uuid logger::addCallback(const std::function<void(const loggerType&,const std::string&,const std::string&)>& function) {
-    auto id = uuidGenerator::getNewUUID();
-    logger::callbacks[id] = function;
+uuids::uuid Logger::addCallback(const loggingCallback& callback) {
+    auto id = UUIDGenerator::getNewUUID();
+    Logger::callbacks[id] = callback;
     return id;
 }
 
-void logger::runLogHooks(const loggerType& type, const std::string& source, const std::string& message) {
-    for (const auto& [id, function] : logger::callbacks) {
-        function(type, source, message);
+void Logger::runLogHooks(LogType type, const std::string& source, const std::string& message) {
+    for (const auto& [id, callback] : Logger::callbacks) {
+        callback(type, source, message);
     }
 }
 
-void logger::removeCallback(const uuids::uuid& id) {
-    logger::callbacks.erase(id);
+void Logger::removeCallback(const uuids::uuid& id) {
+    Logger::callbacks.erase(id);
 }

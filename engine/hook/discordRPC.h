@@ -1,12 +1,13 @@
 #pragma once
 
 #include <string>
-#include <discord_rpc.h>
+
+class DiscordUser;
 
 namespace chira {
     /// Updates are handled by the engine. All you need to do is run the init() method.
     /// After that, any setter functions will change the status after the frame is rendered.
-    class discordRichPresence {
+    class DiscordRPC {
     public:
         static void init(const std::string& appId);
         static bool initialized();
@@ -32,9 +33,5 @@ namespace chira {
         static std::string smallImageText;
         static std::int64_t startTimestamp;
         static std::int64_t endTimestamp;
-
-        static void callbackReady(const DiscordUser* connectedUser);
-        static void callbackDisconnected(int errcode, const char* message);
-        static void callbackError(int errcode, const char* message);
     };
 }

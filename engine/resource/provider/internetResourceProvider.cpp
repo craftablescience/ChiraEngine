@@ -10,11 +10,11 @@
 
 using namespace chira;
 
-void internetResourceProvider::compileResource(const std::string& name, resource* resource) {
+void InternetResourceProvider::compileResource(const std::string& name, Resource* resource) {
     curlpp::Easy request;
-    curlMemoryWriter mWriterChunk;
+    CurlMemoryWriter mWriterChunk;
     try {
-        request.setOpt(curlpp::options::WriteFunction(std::bind(&curlMemoryWriter::writeMemoryCallback, &mWriterChunk, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)));
+        request.setOpt(curlpp::options::WriteFunction(std::bind(&CurlMemoryWriter::writeMemoryCallback, &mWriterChunk, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)));
         request.setOpt(curlpp::options::Url(this->providerName + "://" + name));
         request.setOpt(curlpp::options::Port(this->port));
         request.perform();
@@ -23,9 +23,14 @@ void internetResourceProvider::compileResource(const std::string& name, resource
         buffer[mWriterChunk.m_Size] = '\0';
         resource->compile(buffer, mWriterChunk.m_Size + 1);
         delete[] buffer;
-    } catch (curlpp::RuntimeError& e) {
-        logger::log(ERR, fmt::format("Internet Resource Provider ({}:{})", this->providerName, this->port), e.what());
-    } catch (curlpp::LogicError& e) {
-        logger::log(ERR, fmt::format("Internet Resource Provider ({}:{})", this->providerName, this->port), e.what());
     }
+    // Go to hell macros
+#pragma push_macro("ERROR")
+#undef ERROR
+    catch (curlpp::RuntimeError& e) {
+        Logger::log(LogType::ERROR, fmt::format("Internet Resource Provider ({}:{})", this->providerName, this->port), e.what());
+    } catch (curlpp::LogicError& e) {
+        Logger::log(LogType::ERROR, fmt::format("Internet Resource Provider ({}:{})", this->providerName, this->port), e.what());
+    }
+#pragma pop_macro("ERROR")
 }

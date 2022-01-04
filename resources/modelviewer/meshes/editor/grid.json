@@ -2,7 +2,7 @@
   "dependencies": {
     "model": "file://meshes/editor/grid.obj",
     "material": "file://materials/editor/grid.json",
-    "materialType": "texturedMaterial"
+    "materialType": "MaterialTextured"
   },
   "properties": {
     "loader": "obj",

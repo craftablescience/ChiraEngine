@@ -7,14 +7,14 @@
 #include <utility/handleObject.h>
 
 namespace chira {
-    class shader;
+    class Shader;
 
-    class ubo : public handleObject<unsigned int> {
+    class UBO : public HandleObject<unsigned int> {
     public:
-        explicit ubo(std::string name_, unsigned int size);
+        explicit UBO(std::string name_, unsigned int size);
         [[nodiscard]] unsigned int getBindingPoint() const;
         void update(const unsigned char buffer[], GLsizeiptr length);
-        void bindToShader(shader* shader_) const;
+        void bindToShader(Shader* shader_) const;
     protected:
         unsigned int bindingPoint = 0;
         std::string name;
@@ -22,13 +22,13 @@ namespace chira {
     };
 
     /// Stores two mat4 values, named PV
-    class uboPV : public ubo {
+    class UBO_PV : public UBO {
     public:
-        static uboPV* get();
+        static UBO_PV* get();
         void update(const glm::mat4& proj, const glm::mat4& view);
     private:
-        using ubo::update;
-        explicit uboPV(const std::string& name);
-        static std::unique_ptr<uboPV> singleton;
+        using UBO::update;
+        explicit UBO_PV(const std::string& name);
+        static std::unique_ptr<UBO_PV> singleton;
     };
 }

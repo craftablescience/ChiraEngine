@@ -1,25 +1,25 @@
 #pragma once
 
 namespace chira {
-    struct colorR {
+    struct ColorR {
         float r;
-        explicit colorR(float R = 0.f);
+        explicit ColorR(float R = 0.f);
     };
 
-    struct colorRG : public colorR {
+    struct ColorRG : public ColorR {
         float g;
-        explicit colorRG(float R = 0.f, float G = 0.f);
+        explicit ColorRG(float R = 0.f, float G = 0.f);
     };
 
-    struct colorRGB : public colorRG {
+    struct ColorRGB : public ColorRG {
         float b;
-        explicit colorRGB(float R = 0.f, float G = 0.f, float B = 0.f);
-        static colorRGB solid(float all);
+        explicit ColorRGB(float R = 0.f, float G = 0.f, float B = 0.f);
+        static ColorRGB solid(float all);
     };
 
-    struct colorRGBA : public colorRGB {
+    struct ColorRGBA : public ColorRGB {
         float a;
-        explicit colorRGBA(float R = 0.f, float G = 0.f, float B = 0.f, float A = 1.f);
-        static colorRGBA solid(float all, float A);
+        explicit ColorRGBA(float R = 0.f, float G = 0.f, float B = 0.f, float A = 1.f);
+        static ColorRGBA solid(float all, float A);
     };
 }

@@ -5,19 +5,19 @@
 #include "../window.h"
 
 namespace chira {
-    class console : public window {
+    class Console : public Window {
     public:
-        explicit console(const ImVec2& windowSize = ImVec2(800, 600));
-        ~console() override;
+        explicit Console(const ImVec2& windowSize = ImVec2(800, 600));
+        ~Console() override;
         void renderContents() override;
         void clearLog();
         void addLog(const std::string& message);
         void precacheResource();
-        void engineLoggingHook(loggerType type, const std::string& source, const std::string& message);
+        void engineLoggingHook(LogType type, const std::string& source, const std::string& message);
         void setTheme();
         void resetTheme() const;
     private:
-        sharedPointer<fontResource> font;
+        SharedPointer<FontResource> font;
         ImVector<char*> items;
         ImVector<char*> history;
         bool autoScroll;

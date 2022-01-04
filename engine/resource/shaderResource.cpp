@@ -8,23 +8,23 @@
 
 using namespace chira;
 
-std::string shaderResource::preprocessorPrefix = std::string{SHADER_PREPROCESSOR_DEFAULT_PREFIX}; // NOLINT(cert-err58-cpp)
-std::string shaderResource::preprocessorSuffix = std::string{SHADER_PREPROCESSOR_DEFAULT_SUFFIX}; // NOLINT(cert-err58-cpp)
-std::unordered_map<std::string, std::string> shaderResource::preprocessorSymbols{};
+std::string ShaderResource::preprocessorPrefix = std::string{SHADER_PREPROCESSOR_DEFAULT_PREFIX}; // NOLINT(cert-err58-cpp)
+std::string ShaderResource::preprocessorSuffix = std::string{SHADER_PREPROCESSOR_DEFAULT_SUFFIX}; // NOLINT(cert-err58-cpp)
+std::unordered_map<std::string, std::string> ShaderResource::preprocessorSymbols{};
 
 // todo: add #include preprocessing
-shaderResource::shaderResource(const std::string& identifier_, int type_) : resource(identifier_), handleObject<int>(), type(type_) {}
+ShaderResource::ShaderResource(const std::string& identifier_, int type_) : Resource(identifier_), HandleObject<int>(), type(type_) {}
 
-void shaderResource::compile(const unsigned char buffer[], std::size_t bufferLength) {
+void ShaderResource::compile(const unsigned char buffer[], std::size_t bufferLength) {
     if (this->handle != -1) return;
     this->handle = glCreateShader(type);
     std::ostringstream oBuffer;
     oBuffer << GL_VERSION_STRING << "\n\n" << buffer;
     this->data = oBuffer.str();
-    for (const auto& [key, value] : shaderResource::preprocessorSymbols) {
-        std::string fullKey = shaderResource::preprocessorPrefix;
+    for (const auto& [key, value] : ShaderResource::preprocessorSymbols) {
+        std::string fullKey = ShaderResource::preprocessorPrefix;
         fullKey += key;
-        fullKey += shaderResource::preprocessorSuffix;
+        fullKey += ShaderResource::preprocessorSuffix;
         this->data = std::regex_replace(this->data.data(), std::regex{fullKey}, value);
     }
     const char* dat = this->data.c_str();
@@ -35,36 +35,36 @@ void shaderResource::compile(const unsigned char buffer[], std::size_t bufferLen
 #endif
 }
 
-shaderResource::~shaderResource() {
+ShaderResource::~ShaderResource() {
     if (this->handle != -1) glDeleteShader(this->handle);
 }
 
-void shaderResource::checkForCompilationErrors() const {
+void ShaderResource::checkForCompilationErrors() const {
     int success;
     char infoLog[512];
     glGetShaderiv(this->handle, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(this->handle, 512, nullptr, infoLog);
-        logger::log(ERR, "Shader Resource", fmt::format(TR("error.shader_resource.compilation_failure"), this->type, infoLog));
+        Logger::log(LogType::ERROR, "Shader Resource", fmt::format(TR("error.shader_resource.compilation_failure"), this->type, infoLog));
     }
 }
 
-unsigned int shaderResource::getType() const {
+unsigned int ShaderResource::getType() const {
     return this->type;
 }
 
-void shaderResource::addPreprocessorSymbol(const std::string& name, const std::string& value) {
-    if (shaderResource::preprocessorSymbols.count(name) == 0) {
-        shaderResource::preprocessorSymbols.insert(std::pair<std::string, std::string>{name, value});
+void ShaderResource::addPreprocessorSymbol(const std::string& name, const std::string& value) {
+    if (ShaderResource::preprocessorSymbols.count(name) == 0) {
+        ShaderResource::preprocessorSymbols.insert(std::pair<std::string, std::string>{name, value});
     } else {
-        shaderResource::preprocessorSymbols[name] = value;
+        ShaderResource::preprocessorSymbols[name] = value;
     }
 }
 
-void shaderResource::setPreprocessorPrefix(const std::string& prefix) {
-    shaderResource::preprocessorPrefix = prefix;
+void ShaderResource::setPreprocessorPrefix(const std::string& prefix) {
+    ShaderResource::preprocessorPrefix = prefix;
 }
 
-void shaderResource::setPreprocessorSuffix(const std::string& suffix) {
-    shaderResource::preprocessorSuffix = suffix;
+void ShaderResource::setPreprocessorSuffix(const std::string& suffix) {
+    ShaderResource::preprocessorSuffix = suffix;
 }

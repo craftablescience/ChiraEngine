@@ -10,7 +10,7 @@
 #include <memory>
 
 namespace chira {
-    class markdown {
+    class Markdown {
     public:
         /*
         void LoadFonts(float fontSize_ = 12.0f) {
@@ -28,11 +28,11 @@ namespace chira {
         }
         */
         static void create(const std::string& markdown_) {
-            markdown::mdConfig->linkCallback = markdown::linkCallback;
-            //markdown::mdConfig.headingFormats[0] = {H1, true};
-            //markdown::mdConfig.headingFormats[1] = {H2, true};
-            //markdown::mdConfig.headingFormats[2] = {H3, false};
-            markdown::mdConfig->userData = nullptr;
+            Markdown::mdConfig->linkCallback = Markdown::linkCallback;
+            //Markdown::mdConfig.headingFormats[0] = {H1, true};
+            //Markdown::mdConfig.headingFormats[1] = {H2, true};
+            //Markdown::mdConfig.headingFormats[2] = {H3, false};
+            Markdown::mdConfig->userData = nullptr;
             ImGui::Markdown(markdown_.c_str(), markdown_.length(), *mdConfig);
         }
     private:

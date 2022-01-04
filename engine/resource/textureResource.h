@@ -4,11 +4,11 @@
 #include <loader/image/abstractImage.h>
 
 namespace chira {
-    class textureResource : public resource {
+    class TextureResource : public Resource {
     public:
-        explicit textureResource(const std::string& identifier_, bool vFlip_ = true);
+        explicit TextureResource(const std::string& identifier_, bool vFlip_ = true);
         void compile(const unsigned char buffer[], std::size_t bufferLen) override;
-        [[nodiscard]] abstractImage* getFile() const {
+        [[nodiscard]] AbstractImage* getFile() const {
             return this->file.get();
         }
         [[nodiscard]] unsigned char* getData() const {
@@ -27,7 +27,7 @@ namespace chira {
             return this->vFlip;
         }
     protected:
-        std::unique_ptr<abstractImage> file = nullptr;
+        std::unique_ptr<AbstractImage> file = nullptr;
         int width = -1;
         int height = -1;
         int bitDepth = -1;

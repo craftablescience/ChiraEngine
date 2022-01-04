@@ -3,18 +3,18 @@
 #include <functional>
 
 namespace chira {
-    enum class mouseActions {
+    enum class MouseActions {
         MOVE,
         SCROLL
     };
 
-    class mousebind {
+    class Mousebind {
     public:
-        mousebind(const mouseActions& type, const std::function<void(double,double)>& function);
-        [[nodiscard]] mouseActions getType() const;
+        Mousebind(MouseActions type, const std::function<void(double,double)>& function);
+        [[nodiscard]] MouseActions getType() const;
         void run(double x, double y);
     private:
-        mouseActions type;
+        MouseActions type;
         std::function<void(double,double)> fire;
     };
 }

@@ -5,9 +5,9 @@
 #include <resource/textureResource.h>
 
 namespace chira {
-    class texture : public propertiesResource {
+    class Texture : public PropertiesResource {
     public:
-        explicit texture(const std::string& identifier_, bool cacheTexture = true);
+        explicit Texture(const std::string& identifier_, bool cacheTexture = true);
         void compile(const nlohmann::json& properties) override;
         virtual void use() const;
         void setTextureUnit(int textureUnit);
@@ -16,7 +16,7 @@ namespace chira {
     protected:
         unsigned int handle = 0;
         int activeTextureUnit = -1;
-        sharedPointer<textureResource> file;
+        SharedPointer<TextureResource> file;
         int format = GL_RGBA;
         int wrapModeS = GL_REPEAT;
         int wrapModeT = GL_REPEAT;

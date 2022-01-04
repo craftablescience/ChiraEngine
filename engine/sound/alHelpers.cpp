@@ -26,7 +26,7 @@ bool chira::checkForALErrors(const std::string& filename, const std::uint_fast32
             default:
                 error = fmt::format(TR("error.openal.al_unknown"), alError);
         }
-        logger::log(ERR, "OpenAL", fmt::format(TR("error.openal.generic"), filename, line, error));
+        Logger::log(LogType::ERROR, "OpenAL", fmt::format(TR("error.openal.generic"), filename, line, error));
         return false;
     }
     return true;
@@ -55,7 +55,7 @@ bool chira::checkForALCErrors(const std::string& filename, const std::uint_fast3
             default:
                 error = fmt::format(TR("error.openal.alc_unknown"), alcError);
         }
-        logger::log(ERR, "OpenAL", fmt::format(TR("error.openal.generic"), filename, line, error));
+        Logger::log(LogType::ERROR, "OpenAL", fmt::format(TR("error.openal.generic"), filename, line, error));
         return false;
     }
     return true;

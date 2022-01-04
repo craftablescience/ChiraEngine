@@ -9,11 +9,11 @@
 using namespace chira;
 
 TEST(uuidGenerator, getNewUUID) {
-    EXPECT_FALSE(uuidGenerator::getNewUUID().is_nil());
+    EXPECT_FALSE(UUIDGenerator::getNewUUID().is_nil());
 }
 
 TEST(uuidGenerator, getNewUUIDString) {
-    EXPECT_EQ(uuidGenerator::getNewUUIDString().length(), 36);
+    EXPECT_EQ(UUIDGenerator::getNewUUIDString().length(), 36);
 }
 
 #pragma clang diagnostic pop

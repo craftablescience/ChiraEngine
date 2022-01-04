@@ -3,19 +3,19 @@
 #include "world3d.h"
 #include "camera/camera3d.h"
 #include <resource/meshResource.h>
-#include <render/material/cubemapMaterial.h>
+#include <render/material/materialCubemap.h>
 
 namespace chira {
-    class root : private world3d {
-        friend class engine;
+    class Root : private World3d {
+        friend class Engine;
     public:
-        explicit root(const std::string& name_);
+        explicit Root(const std::string& name_);
         void render();
         glm::vec3 getGlobalPosition() override;
-        void setMainCamera(camera3d* camera);
-        camera3d* getMainCamera();
+        void setMainCamera(Camera3d* camera);
+        Camera3d* getMainCamera();
         void setSkybox(const std::string& cubemapId);
-        sharedPointer<cubemapMaterial> getSkybox();
+        SharedPointer<MaterialCubemap> getSkybox();
         glm::vec3 getAudioListeningPosition() {
             return this->mainCamera->getPosition();
         }
@@ -25,16 +25,16 @@ namespace chira {
         glm::vec3 getAudioListeningUpVector() {
             return this->mainCamera->getUpVector();
         }
-        using world3d::hasChild;
-        using world3d::addChild;
-        using world3d::getChild;
-        using world3d::removeChild;
-        using world3d::removeAllChildren;
+        using World3d::hasChild;
+        using World3d::addChild;
+        using World3d::getChild;
+        using World3d::removeChild;
+        using World3d::removeAllChildren;
     private:
-        sharedPointer<meshResource> skybox;
+        SharedPointer<MeshResource> skybox;
         bool renderSkybox = false;
-        camera3d* mainCamera = nullptr;
-        using world3d::render;
+        Camera3d* mainCamera = nullptr;
+        using World3d::render;
         void clearTree();
     };
 }

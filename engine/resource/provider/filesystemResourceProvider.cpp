@@ -6,16 +6,16 @@
 
 using namespace chira;
 
-filesystemResourceProvider::filesystemResourceProvider(const std::string& path_) :
-        abstractResourceProvider(FILESYSTEM_PROVIDER_NAME),
+FilesystemResourceProvider::FilesystemResourceProvider(const std::string& path_) :
+        AbstractResourceProvider(FILESYSTEM_PROVIDER_NAME),
         path(FILESYSTEM_ROOT_FOLDER + '/' + strip(path_, "/")) {}
 
-bool filesystemResourceProvider::hasResource(const std::string& name) {
+bool FilesystemResourceProvider::hasResource(const std::string& name) {
     // Update your compiler if compilation fails because of std::filesystem
     return std::filesystem::exists(std::filesystem::current_path().append(this->path).append(name));
 }
 
-void filesystemResourceProvider::compileResource(const std::string& name, resource* resource) {
+void FilesystemResourceProvider::compileResource(const std::string& name, Resource* resource) {
     std::ifstream ifs((std::filesystem::current_path().append(this->path).append(name).string()).c_str(), std::ios::in | std::ios::binary | std::ios::ate);
     std::ifstream::pos_type fileSize = ifs.tellg();
     ifs.seekg(0, std::ios::beg);
@@ -26,9 +26,9 @@ void filesystemResourceProvider::compileResource(const std::string& name, resour
     delete[] bytes;
 }
 
-std::string filesystemResourceProvider::getAbsoluteResourcePath(const std::string& identifier) {
+std::string FilesystemResourceProvider::getAbsoluteResourcePath(const std::string& identifier) {
     // Make sure we've been passed a valid identifier
-    auto name = resource::splitResourceIdentifier(identifier).second;
+    auto name = Resource::splitResourceIdentifier(identifier).second;
     if (!this->hasResource(name))
         return "";
     auto absPath = std::filesystem::current_path().append(this->path).append(name).string();
@@ -37,7 +37,7 @@ std::string filesystemResourceProvider::getAbsoluteResourcePath(const std::strin
     return absPath;
 }
 
-std::string filesystemResourceProvider::getResourcePath(const std::string& absolutePath) {
+std::string FilesystemResourceProvider::getResourcePath(const std::string& absolutePath) {
     // Make sure we've been passed a valid resource path
     if (absolutePath.find(FILESYSTEM_ROOT_FOLDER) == std::string::npos)
         return "";

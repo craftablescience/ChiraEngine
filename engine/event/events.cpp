@@ -2,39 +2,39 @@
 
 using namespace chira;
 
-std::vector<std::string> events::broadcastsLastFrame;
-std::vector<std::string> events::broadcastsThisFrame;
-bool events::isRunningCallbacks = false;
-std::unordered_map<std::string, std::vector<std::any>> events::calledEvents;
-std::unordered_map<std::string, std::vector<std::any>> events::calledEventsFallback;
-std::unordered_map<std::string, std::vector<std::pair<uuids::uuid, std::function<void(const std::any&)>>>> events::listeners;
+std::vector<std::string> Events::broadcastsLastFrame;
+std::vector<std::string> Events::broadcastsThisFrame;
+bool Events::isRunningCallbacks = false;
+std::unordered_map<std::string, std::vector<std::any>> Events::calledEvents;
+std::unordered_map<std::string, std::vector<std::any>> Events::calledEventsFallback;
+std::unordered_map<std::string, std::vector<std::pair<uuids::uuid, std::function<void(const std::any&)>>>> Events::listeners;
 
-void events::broadcast(const std::string& name) {
-    if (std::count(events::broadcastsThisFrame.begin(), events::broadcastsThisFrame.end(), name) == 0)
-        events::broadcastsThisFrame.push_back(name);
+void Events::broadcast(const std::string& name) {
+    if (std::count(Events::broadcastsThisFrame.begin(), Events::broadcastsThisFrame.end(), name) == 0)
+        Events::broadcastsThisFrame.push_back(name);
 }
 
-bool events::hasBroadcast(const std::string& name) {
-    return std::count(events::broadcastsLastFrame.begin(), events::broadcastsLastFrame.end(), name) > 0;
+bool Events::hasBroadcast(const std::string& name) {
+    return std::count(Events::broadcastsLastFrame.begin(), Events::broadcastsLastFrame.end(), name) > 0;
 }
 
-void events::createEvent(const std::string& name, const std::any& data) {
-    auto& eventMap = events::isRunningCallbacks? events::calledEventsFallback : events::calledEvents;
+void Events::createEvent(const std::string& name, const std::any& data) {
+    auto& eventMap = Events::isRunningCallbacks ? Events::calledEventsFallback : Events::calledEvents;
     if (eventMap.count(name) == 0)
         eventMap[name] = std::vector<std::any>{};
     eventMap[name].push_back(data);
 }
 
-uuids::uuid events::addListener(const std::string& name, const std::function<void(const std::any&)>& callback) {
-    if (events::listeners.count(name) == 0)
-        events::listeners[name] = std::vector<std::pair<uuids::uuid, std::function<void(const std::any&)>>>{};
-    auto id = uuidGenerator::getNewUUID();
-    events::listeners[name].push_back(std::make_pair(id, callback));
+uuids::uuid Events::addListener(const std::string& name, const std::function<void(const std::any&)>& callback) {
+    if (Events::listeners.count(name) == 0)
+        Events::listeners[name] = std::vector<std::pair<uuids::uuid, std::function<void(const std::any&)>>>{};
+    auto id = UUIDGenerator::getNewUUID();
+    Events::listeners[name].push_back(std::make_pair(id, callback));
     return id;
 }
 
-bool events::removeListener(const uuids::uuid& id) {
-    for (auto& [name, list] : events::listeners) {
+bool Events::removeListener(const uuids::uuid& id) {
+    for (auto& [name, list] : Events::listeners) {
         for (auto i = list.begin(); i < list.end(); i++) {
             if (i->first == id) {
                 list.erase(i);
@@ -45,17 +45,17 @@ bool events::removeListener(const uuids::uuid& id) {
     return false;
 }
 
-void events::clearBroadcasts() {
-    events::broadcastsLastFrame.clear();
-    std::swap(events::broadcastsThisFrame, events::broadcastsLastFrame);
+void Events::clearBroadcasts() {
+    Events::broadcastsLastFrame.clear();
+    std::swap(Events::broadcastsThisFrame, Events::broadcastsLastFrame);
 }
 
-void events::runCallbacks() {
-    events::isRunningCallbacks = true;
-    while (!events::calledEvents.empty()) {
-        for (const auto& [name, data] : events::calledEvents) {
-            if (events::listeners.count(name) > 0) {
-                for (auto& [id, callback] : events::listeners[name]) {
+void Events::runCallbacks() {
+    Events::isRunningCallbacks = true;
+    while (!Events::calledEvents.empty()) {
+        for (const auto& [name, data] : Events::calledEvents) {
+            if (Events::listeners.count(name) > 0) {
+                for (auto& [id, callback] : Events::listeners[name]) {
                     for (const auto& datum : data) {
                         // Yeah it's four nested loops, sue me
                         callback(datum);
@@ -63,13 +63,13 @@ void events::runCallbacks() {
                 }
             }
         }
-        events::calledEvents.clear();
-        std::swap(events::calledEvents, events::calledEventsFallback);
+        Events::calledEvents.clear();
+        std::swap(Events::calledEvents, Events::calledEventsFallback);
     }
-    events::isRunningCallbacks = false;
+    Events::isRunningCallbacks = false;
 }
 
-void events::update() {
-    events::runCallbacks();
-    events::clearBroadcasts();
+void Events::update() {
+    Events::runCallbacks();
+    Events::clearBroadcasts();
 }

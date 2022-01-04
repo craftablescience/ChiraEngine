@@ -18,12 +18,12 @@
 #include <utility/math/color.h>
 
 namespace chira {
-    class console;
-    class profiler;
+    class Console;
+    class Profiler;
 
     const std::string ENGINE_FILESYSTEM_PATH = "engine"; // NOLINT(cert-err58-cpp)
 
-    class engine {
+    class Engine {
     public:
         /// Ran at the very start of your program. Readies the engine for you to add features before init().
         static void preInit(const std::string& configPath = "settings.json");
@@ -36,27 +36,27 @@ namespace chira {
         static void addRenderFunction(const std::function<void()>& render);
         static void addStopFunction(const std::function<void()>& stop);
 
-        static void setBackgroundColor(colorRGB color);
+        static void setBackgroundColor(ColorRGB color);
         static glm::vec2 getWindowSize();
         static int getWindowWidth();
         static int getWindowHeight();
         static void setWindowSize(int width, int height);
 
-        static void addKeybind(const keybind& keybind);
-        static std::vector<keybind>* getKeybinds();
-        static void addMousebind(const mousebind& mousebind);
-        static std::vector<mousebind>* getMousebinds();
+        static void addKeybind(const Keybind& keybind);
+        static std::vector<Keybind>* getKeybinds();
+        static void addMousebind(const Mousebind& mousebind);
+        static std::vector<Mousebind>* getMousebinds();
 
-        static angelscriptProvider* getAngelscriptProvider();
-        static void setSoundManager(abstractSoundManager* newSoundManager);
-        static abstractSoundManager* getSoundManager();
+        static AngelscriptProvider* getAngelscriptProvider();
+        static void setSoundManager(AbstractSoundManager* newSoundManager);
+        static AbstractSoundManager* getSoundManager();
 
-        static abstractSettingsLoader* getSettingsLoader();
-        static void setSettingsLoader(abstractSettingsLoader* newSettingsLoader);
-        static abstractPhysicsProvider* getPhysicsProvider();
-        static void setPhysicsProvider(abstractPhysicsProvider* newPhysicsProvider);
+        static AbstractSettingsLoader* getSettingsLoader();
+        static void setSettingsLoader(AbstractSettingsLoader* newSettingsLoader);
+        static AbstractPhysicsProvider* getPhysicsProvider();
+        static void setPhysicsProvider(AbstractPhysicsProvider* newPhysicsProvider);
 
-        [[nodiscard]] static root* getRoot();
+        [[nodiscard]] static Root* getRoot();
 
         static void callRegisteredFunctions(const std::vector<std::function<void()>>* list);
 
@@ -66,24 +66,24 @@ namespace chira {
         [[nodiscard]] static double getDeltaTime();
         static void captureMouse(bool capture);
         [[nodiscard]] static bool isMouseCaptured();
-        static console* getConsole();
-        static profiler* getProfiler();
+        static Console* getConsole();
+        static Profiler* getProfiler();
         [[nodiscard]] static bool isIconified();
     private:
         static GLFWwindow* window;
         static std::vector<std::function<void()>> initFunctions;
         static std::vector<std::function<void()>> renderFunctions;
         static std::vector<std::function<void()>> stopFunctions;
-        static std::unique_ptr<angelscriptProvider> angelscript;
-        static std::unique_ptr<abstractSoundManager> soundManager;
-        static std::vector<keybind> keybinds;
-        static std::vector<mousebind> mousebinds;
-        static std::unique_ptr<abstractSettingsLoader> settingsLoader;
-        static std::unique_ptr<abstractPhysicsProvider> physicsProvider;
-        static root* treeRoot;
-        static console* consoleUI;
+        static std::unique_ptr<AngelscriptProvider> angelscript;
+        static std::unique_ptr<AbstractSoundManager> soundManager;
+        static std::vector<Keybind> keybinds;
+        static std::vector<Mousebind> mousebinds;
+        static std::unique_ptr<AbstractSettingsLoader> settingsLoader;
+        static std::unique_ptr<AbstractPhysicsProvider> physicsProvider;
+        static Root* root;
+        static Console* console;
 #ifdef DEBUG
-        static profiler* profilerUI;
+        static Profiler* profiler;
 #endif
         static bool mouseCaptured;
         static bool started;

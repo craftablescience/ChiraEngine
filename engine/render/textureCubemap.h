@@ -3,14 +3,14 @@
 #include "texture.h"
 
 namespace chira {
-    class textureCubemap : public texture {
+    class TextureCubemap : public Texture {
     public:
-        explicit textureCubemap(const std::string& identifier_);
+        explicit TextureCubemap(const std::string& identifier_);
         void compile(const nlohmann::json& properties) override;
         void use() const override;
-        using texture::setTextureUnit;
-        using texture::getTextureUnit;
-        using texture::getHandle;
+        using Texture::setTextureUnit;
+        using Texture::getTextureUnit;
+        using Texture::getHandle;
     protected:
         // Inherited format, used as format_fd
         int format_bk = GL_RGBA;

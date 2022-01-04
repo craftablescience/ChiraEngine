@@ -3,12 +3,12 @@
 #include "camera3d.h"
 
 namespace chira {
-    class freecam : public camera3d {
+    class Freecam : public Camera3d {
     public:
-        freecam(entity* parent_, const cameraProjectionMode& mode, float fov_ = 90.0f, bool controls = true);
-        freecam(entity* parent_, const std::string& name_, const cameraProjectionMode& mode, float fov_ = 90.0f, bool controls = true);
-        explicit freecam(const cameraProjectionMode& mode, float fov_ = 90.0f, bool controls = true);
-        explicit freecam(const std::string& name_, const cameraProjectionMode& mode, float fov_ = 90.0f, bool controls = true);
+        Freecam(Entity* parent_, CameraProjectionMode mode, float fov_ = 90.0f, bool controls = true);
+        Freecam(Entity* parent_, const std::string& name_, CameraProjectionMode mode, float fov_ = 90.0f, bool controls = true);
+        explicit Freecam(CameraProjectionMode mode, float fov_ = 90.0f, bool controls = true);
+        Freecam(const std::string& name_, CameraProjectionMode mode, float fov_ = 90.0f, bool controls = true);
         glm::quat getRotation() override {
             return glm::angleAxis(glm::radians(this->yaw), glm::vec3(0,1,0)) * glm::angleAxis(glm::radians(-this->pitch), glm::vec3(1,0,0));
         }
@@ -32,7 +32,7 @@ namespace chira {
         bool capturedMouse = false;
         static void setupKeybinds();
     private:
-        using entity3d::setRotation;
-        using entity3d::rotate;
+        using Entity3d::setRotation;
+        using Entity3d::rotate;
     };
 }

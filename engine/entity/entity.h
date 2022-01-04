@@ -8,30 +8,30 @@
 namespace chira {
     /// The base entity class. Note that the name of an entity stored in the name variable should
     /// match the name assigned to the entity in the parent's entity map.
-    class entity {
+    class Entity {
     public:
         /// Initializes name to a random UUID.
-        explicit entity(entity* parent_);
-        entity(entity* parent_, const std::string& name_);
+        explicit Entity(Entity* parent_);
+        Entity(Entity* parent_, const std::string& name_);
         /// Initializes name to a random UUID.
-        entity();
-        explicit entity(const std::string& name_);
-        virtual ~entity();
+        Entity();
+        explicit Entity(const std::string& name_);
+        virtual ~Entity();
         /// Renders all this entity's children.
         virtual void render(const glm::mat4& parentTransform);
-        [[nodiscard]] entity* getParent() const;
+        [[nodiscard]] Entity* getParent() const;
         std::string_view getName() const;
-        entity* getChild(const std::string& name_);
+        Entity* getChild(const std::string& name_);
         bool hasChild(const std::string& name_);
-        std::string_view addChild(entity* child);
+        std::string_view addChild(Entity* child);
         void removeChild(const std::string& name_);
         void removeAllChildren();
     protected:
-        entity* parent;
+        Entity* parent;
         std::string name;
-        std::unordered_map<std::string,entity*> children{};
+        std::unordered_map<std::string, Entity*> children;
         /// For internal use only.
-        void setParent(entity* newParent) {
+        void setParent(Entity* newParent) {
             this->parent = newParent;
         }
     };

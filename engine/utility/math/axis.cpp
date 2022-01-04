@@ -3,34 +3,34 @@
 #include <utility/logger.h>
 #include <i18n/translationManager.h>
 
-chira::axis chira::getAxisFromString(const std::string& str) {
-    if (str == "X") {
-        return axis::X;
-    } else if (str == "Y") {
-        return axis::Y;
-    } else if (str == "Z") {
-        return axis::Z;
-    } else {
-        logger::log(ERR, "axis::getAxisFromString", fmt::format(TR("error.axis.invalid_value"), str, "axis"));
-        return axis::Z; // oh no
+chira::Axis chira::getAxisFromString(const std::string& str) {
+    if (str == "X")
+        return Axis::X;
+    else if (str == "Y")
+        return Axis::Y;
+    else if (str == "Z")
+        return Axis::Z;
+    else {
+        Logger::log(LogType::ERROR, "axis::getAxisFromString", fmt::format(TR("error.axis.invalid_value"), str, "axis"));
+        return Axis::Z; // todo: put an assert here
     }
 }
 
-chira::signedAxis chira::getSignedAxisFromString(const std::string& str) {
-    if (str == "XP") {
-        return signedAxis::XP;
-    } else if (str == "XN") {
-        return signedAxis::XN;
-    } else if (str == "YP") {
-        return signedAxis::YP;
-    } else if (str == "YN") {
-        return signedAxis::YN;
-    } else if (str == "ZP") {
-        return signedAxis::ZP;
-    } else if (str == "ZN") {
-        return signedAxis::ZN;
-    } else {
-        logger::log(ERR, "axis::getSignedAxisFromString", fmt::format(TR("error.axis.invalid_value"), str, "signedAxis"));
-        return signedAxis::ZN; // oh no
+chira::SignedAxis chira::getSignedAxisFromString(const std::string& str) {
+    if (str == "XP")
+        return SignedAxis::XP;
+    else if (str == "XN")
+        return SignedAxis::XN;
+    else if (str == "YP")
+        return SignedAxis::YP;
+    else if (str == "YN")
+        return SignedAxis::YN;
+    else if (str == "ZP")
+        return SignedAxis::ZP;
+    else if (str == "ZN")
+        return SignedAxis::ZN;
+    else {
+        Logger::log(LogType::ERROR, "axis::getSignedAxisFromString", fmt::format(TR("error.axis.invalid_value"), str, "signedAxis"));
+        return SignedAxis::ZN; // todo: put an assert here
     }
 }

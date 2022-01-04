@@ -8,8 +8,8 @@
 #include <utility/uuidGenerator.h>
 
 namespace chira {
-    class events {
-        friend class engine;
+    class Events {
+        friend class Engine;
     public:
         /// Visible on the next frame
         static void broadcast(const std::string& name);
