@@ -19,7 +19,7 @@ namespace chira {
         /// Note: the global rotation is inaccessible.
         virtual glm::quat getRotation();
         /// The size of the entity.
-        virtual glm::vec3 getAABB();
+        virtual glm::vec3 getAABB() const;
         virtual void translate(glm::vec3 translateByAmount);
         virtual void translateWithRotation(glm::vec3 translateByAmount);
         virtual void rotate(glm::quat rotateByAmount);

@@ -25,47 +25,42 @@ Freecam::Freecam(const std::string& name_, CameraProjectionMode mode, float fov_
         Freecam::setupKeybinds();
 }
 
+bool Freecam::getActive() const {
+    return this->active && Engine::isMouseCaptured();
+}
+
+void Freecam::setActive(bool active_) {
+    Engine::captureMouse(active_);
+    this->active = active_;
+}
+
 void Freecam::setupKeybinds() {
     Engine::addKeybind(Keybind(GLFW_KEY_W, GLFW_REPEAT, []{
-        if (!Engine::isMouseCaptured())
-            return;
-        if (auto cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()))
+        if (auto cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{0, 0, -cam->getMovementSpeed() * Engine::getDeltaTime()});
     }));
     Engine::addKeybind(Keybind(GLFW_KEY_S, GLFW_REPEAT, []{
-        if (!Engine::isMouseCaptured())
-            return;
-        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()))
+        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{0, 0, cam->getMovementSpeed() * Engine::getDeltaTime()});
     }));
     Engine::addKeybind(Keybind(GLFW_KEY_A, GLFW_REPEAT, []{
-        if (!Engine::isMouseCaptured())
-            return;
-        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()))
+        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{-cam->getMovementSpeed() * Engine::getDeltaTime(), 0, 0});
     }));
     Engine::addKeybind(Keybind(GLFW_KEY_D, GLFW_REPEAT, []{
-        if (!Engine::isMouseCaptured())
-            return;
-        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()))
+        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{cam->getMovementSpeed() * Engine::getDeltaTime(), 0, 0});
     }));
     Engine::addKeybind(Keybind(GLFW_KEY_SPACE, GLFW_REPEAT, []{
-        if (!Engine::isMouseCaptured())
-            return;
-        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()))
+        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{0, cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
     }));
     Engine::addKeybind(Keybind(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT, []{
-        if (!Engine::isMouseCaptured())
-            return;
-        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()))
+        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{0, -cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
     }));
     Engine::addMousebind(Mousebind(MouseActions::MOVE, [](double xOffset, double yOffset) {
-        if (!Engine::isMouseCaptured())
-            return;
-        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera())) {
+        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive()) {
             xOffset *= cam->getMouseSensitivity() * Engine::getDeltaTime();
             yOffset *= cam->getMouseSensitivity() * Engine::getDeltaTime();
 
@@ -85,6 +80,7 @@ void Freecam::setupKeybinds() {
         }
     }));
     Engine::addKeybind(Keybind(GLFW_KEY_TAB, GLFW_PRESS, []{
-        Engine::captureMouse(!Engine::isMouseCaptured());
+        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam)
+            cam->setActive(!cam->getActive());
     }));
 }

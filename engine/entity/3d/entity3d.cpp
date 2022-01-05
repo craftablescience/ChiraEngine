@@ -34,7 +34,7 @@ glm::quat Entity3d::getRotation() {
     return this->rotation;
 }
 
-glm::vec3 Entity3d::getAABB() {
+glm::vec3 Entity3d::getAABB() const {
     return {};
 }
 

@@ -58,7 +58,6 @@ int main() {
     Engine::addInitFunction([&uiUUID]{
         Engine::setBackgroundColor(ColorRGB::solid(0.15f));
 
-        Engine::captureMouse(true);
         auto camera = new EditorCamera3d{CameraProjectionMode::PERSPECTIVE, 120.f, true};
         Engine::getRoot()->addChild(camera);
         Engine::getRoot()->setMainCamera(camera);
@@ -67,7 +66,7 @@ int main() {
         auto gridMesh = Resource::getResource<MeshResource>("file://meshes/editor/grid.json");
         Engine::getRoot()->addChild(new Mesh3d{"modelViewerMesh", gridMesh});
 
-        // todo: make this an engine function
+        // todo: abstract this somehow
         glfwSetWindowAspectRatio(Engine::getWindow(), 500, 600);
     });
     Engine::init();

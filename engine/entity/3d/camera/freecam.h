@@ -24,12 +24,14 @@ namespace chira {
         [[nodiscard]] float getMouseSensitivity() const {
             return this->mouseSensitivity;
         }
+        [[nodiscard]] bool getActive() const;
+        void setActive(bool active_);
     protected:
-        float movementSpeed = 4.f;
+        float movementSpeed    = 4.f;
         float mouseSensitivity = 6.f;
         float pitch = 0.f;
-        float yaw = 0.f;
-        bool capturedMouse = false;
+        float yaw   = 0.f;
+        bool active = false;
         static void setupKeybinds();
     private:
         using Entity3d::setRotation;

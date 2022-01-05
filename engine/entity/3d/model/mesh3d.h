@@ -12,6 +12,7 @@ namespace chira {
         explicit Mesh3d(SharedPointer<MeshResource> mesh_) : Entity3d(), mesh(std::move(mesh_)) {}
         Mesh3d(const std::string& name_, SharedPointer<MeshResource> mesh_) : Entity3d(name_), mesh(std::move(mesh_)) {}
         void render(const glm::mat4& parentTransform) override;
+        glm::vec3 getAABB() const override;
         [[nodiscard]] SharedPointer<MeshResource> getMeshResource() const {
             return this->mesh;
         }

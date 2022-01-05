@@ -57,8 +57,8 @@ void Engine::framebufferSizeCallback(GLFWwindow* w, int width, int height) {
 
 void Engine::keyboardCallback(GLFWwindow* w, int key, int scancode, int action, int mods) {
     if (action == GLFW_REPEAT) return;
-    for (Keybind& k : *Engine::getKeybinds()) {
-        if (k.getButton() == key && k.getAction() == action) {
+    for (Keybind& k : Engine::keybinds) {
+        if (!k.isMouse() && k.getButton() == key && k.getAction() == action) {
             k.run();
         }
     }
@@ -66,15 +66,15 @@ void Engine::keyboardCallback(GLFWwindow* w, int key, int scancode, int action, 
 
 void Engine::keyboardRepeatingCallback() {
     for (Keybind& k : Engine::keybinds) {
-        if (glfwGetKey(Engine::window, k.getButton()) && k.getAction() == GLFW_REPEAT) {
+        if (!k.isMouse() && glfwGetKey(Engine::window, k.getButton()) && k.getAction() == GLFW_REPEAT) {
             k.run();
         }
     }
 }
 
 void Engine::mouseButtonCallback(GLFWwindow* w, int button, int action, int mods) {
-    for (Keybind& k : *Engine::getKeybinds()) {
-        if (k.getButton() == button && k.getAction() == action) {
+    for (Keybind& k : Engine::keybinds) {
+        if (k.isMouse() && k.getButton() == button && k.getAction() == action) {
             k.run();
         }
     }
@@ -82,7 +82,7 @@ void Engine::mouseButtonCallback(GLFWwindow* w, int button, int action, int mods
 
 void Engine::mouseButtonRepeatingCallback() {
     for (Keybind& k : Engine::keybinds) {
-        if (k.isMouse() && (glfwGetMouseButton(Engine::window, k.getButton()) && k.getAction() == GLFW_REPEAT)) {
+        if (k.isMouse() && k.getAction() == GLFW_REPEAT && glfwGetMouseButton(Engine::window, k.getButton())) {
             k.run();
         }
     }
@@ -97,7 +97,7 @@ void Engine::mouseMovementCallback(GLFWwindow* w, double xPos, double yPos) {
     double xOffset = xPos - Engine::lastMouseX;
     double yOffset = yPos - Engine::lastMouseY;
 
-    for (Mousebind& bind : *Engine::getMousebinds()) {
+    for (Mousebind& bind : Engine::mousebinds) {
         if (bind.getType() == MouseActions::MOVE) {
             bind.run(xOffset, yOffset);
         }
