@@ -9,6 +9,8 @@ namespace chira {
     std::string dialogOpenFolder();
     /// Returns a relative path to the resource selected, or an empty string if none selected.
     std::string dialogOpenResource(const std::string& pattern, const std::string& description = "");
+    /// Return an absolute path to the file to create, or an empty string if Cancel pressed.
+    std::string dialogSaveFile(const std::string& pattern, const std::string& defaultName = "", const std::string& description = "");
 
     /// Display a popup window with an input box.
     std::string dialogInput(const std::string& message = "", const std::string& title = "Input", const std::string& placeholder = "");

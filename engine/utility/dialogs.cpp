@@ -40,6 +40,20 @@ std::string chira::dialogOpenResource(const std::string& pattern, const std::str
     return "";
 }
 
+std::string chira::dialogSaveFile(const std::string& pattern, const std::string& defaultName, const std::string& description) {
+    const char* filter[1] = {pattern.c_str()};
+    std::string path;
+    auto result = tinyfd_saveFileDialog(
+            TR("ui.window.save_file").c_str(),
+            (std::filesystem::current_path().string() + defaultName).c_str(), 1,
+            filter, description.empty() ? nullptr : description.c_str());
+    if (result) {
+        path = result;
+        return path;
+    }
+    return "";
+}
+
 std::string chira::dialogInput(const std::string& message, const std::string& title, const std::string& placeholder) {
     return {tinyfd_inputBox(title.c_str(), message.c_str(), placeholder.c_str())};
 }

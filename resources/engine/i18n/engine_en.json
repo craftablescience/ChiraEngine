@@ -4,6 +4,7 @@
 
   "ui.window.title": "Chira Engine",
   "ui.window.select_file": "Select File",
+  "ui.window.save_file": "Save File",
   "ui.console.title": "Console",
   "ui.profiler.title": "Profiler",
 
