@@ -1,10 +1,9 @@
 {
   "dependencies": {
-    "model": "plane",
-    "material": "file://materials/unlit.json",
-    "materialType": "MaterialUntextured"
+    "model": "plane"
   },
   "properties": {
+    "materialSetInCode": true,
     "loader": "primitive",
     "depthFunction": "NEVER",
     "backfaceCulling": false,

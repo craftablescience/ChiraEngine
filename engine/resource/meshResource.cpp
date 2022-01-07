@@ -9,16 +9,15 @@ using namespace chira;
 std::unordered_map<std::string, std::unique_ptr<AbstractMeshLoader>> MeshResource::meshLoaders{};
 
 void MeshResource::compile(const nlohmann::json& properties) {
-    this->material = GET_MATERIAL(properties["dependencies"]["materialType"], properties["dependencies"]["material"]);
-    if (properties["properties"].contains("depthFunction")) {
+    if (!getPropertyOrDefault(properties["properties"], "materialSetInCode", false))
+        this->material = GET_MATERIAL(properties["dependencies"]["materialType"], properties["dependencies"]["material"]);
+    if (properties["properties"].contains("depthFunction"))
         this->depthFunction = MeshResource::getDepthFuncFromString(properties["properties"]["depthFunction"]);
-    }
-    if (properties["properties"].contains("backfaceCulling")) {
+    if (properties["properties"].contains("backfaceCulling"))
         this->backfaceCulling = properties["properties"]["backfaceCulling"];
-    }
-    if (properties["properties"].contains("cullType")) {
+    if (properties["properties"].contains("cullType"))
         this->cullType = MeshResource::getCullTypeFromString(properties["properties"]["cullType"]);
-    }
+
     MeshResource::getMeshLoader(properties["properties"]["loader"])->loadMesh(properties["dependencies"]["model"], this->vertices, this->indices);
 
     glGenVertexArrays(1, &(this->vaoHandle));
