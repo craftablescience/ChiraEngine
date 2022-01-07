@@ -1,3 +1,4 @@
+#include <fstream>
 #include <core/engine.h>
 #include <resource/provider/filesystemResourceProvider.h>
 #include <entity/3d/model/mesh3d.h>
@@ -6,7 +7,6 @@
 #include <entity/imgui/console/console.h>
 #include <entity/imgui/profiler/profiler.h>
 #include <utility/dialogs.h>
-#include <fstream>
 
 using namespace chira;
 
@@ -27,7 +27,7 @@ public:
         ImGui::Text("%s", ModelViewerGui::loadedFile.c_str());
     }
     void setLoadedFile(const std::string& meshName) {
-        if (meshName == assert_cast<Mesh3d*>(Engine::getRoot()->getChild(this->meshId.data()))->getMeshResource()->getIdentifier())
+        if (meshName == Engine::getRoot()->getChild<Mesh3d>(this->meshId.data())->getMeshResource()->getIdentifier())
             return;
         Engine::getRoot()->removeChild(this->meshId.data());
         this->meshId = Engine::getRoot()->addChild(new Mesh3d{Resource::getResource<MeshResource>(meshName)});
@@ -45,7 +45,7 @@ inline void addModelSelected(const std::string_view& modelId) {
     std::string path = dialogOpenResource("*.json");
     if (path.empty())
         return dialogPopupError(TR("error.modelviewer.file_is_not_resource"));
-    assert_cast<ModelViewerGui*>(Engine::getRoot()->getChild(modelId.data()))->setLoadedFile(path);
+    Engine::getRoot()->getChild<ModelViewerGui>(modelId.data())->setLoadedFile(path);
 }
 
 inline void addResourceFolderSelected() {
@@ -75,8 +75,8 @@ inline void convertToModelTypeSelected(const std::string& extension, const std::
     if (filepath.empty())
         return;
     std::ofstream file{filepath, std::ios::binary};
-    auto meshId = assert_cast<ModelViewerGui*>(Engine::getRoot()->getChild(guiId.data()))->getMeshId();
-    std::vector<byte> meshData = assert_cast<Mesh3d*>(Engine::getRoot()->getChild(meshId.data()))->getMeshData(type);
+    auto meshId = Engine::getRoot()->getChild<ModelViewerGui>(guiId.data())->getMeshId();
+    std::vector<byte> meshData = Engine::getRoot()->getChild<Mesh3d>(meshId.data())->getMeshData(type);
     file.write(reinterpret_cast<const char*>(&meshData.front()), static_cast<std::streamsize>(meshData.size()));
 }
 

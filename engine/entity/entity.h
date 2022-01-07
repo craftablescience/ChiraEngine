@@ -4,6 +4,7 @@
 #include <string>
 #include <string_view>
 #include <glm/glm.hpp>
+#include <utility/pointer/assert_cast.h>
 
 namespace chira {
     /// The base entity class. Note that the name of an entity stored in the name variable should
@@ -21,7 +22,13 @@ namespace chira {
         virtual void render(const glm::mat4& parentTransform);
         [[nodiscard]] Entity* getParent() const;
         std::string_view getName() const;
-        Entity* getChild(const std::string& name_) const;
+        Entity* getChild(const std::string& name_) const {
+            return this->children.at(name_);
+        }
+        template<typename EntityType>
+        EntityType* getChild(const std::string& name_) const {
+            return assert_cast<EntityType*>(this->getChild(name_));
+        }
         bool hasChild(const std::string& name_) const;
         std::string_view addChild(Entity* child);
         void removeChild(const std::string& name_);
