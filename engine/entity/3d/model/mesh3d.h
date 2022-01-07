@@ -16,6 +16,9 @@ namespace chira {
         [[nodiscard]] SharedPointer<MeshResource> getMeshResource() const {
             return this->mesh;
         }
+        [[nodiscard]] std::vector<byte> getMeshData(const std::string& meshLoader) const {
+            return this->mesh->getMeshData(meshLoader);
+        }
     private:
         SharedPointer<MeshResource> mesh;
     };

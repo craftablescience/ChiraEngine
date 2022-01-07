@@ -6,6 +6,7 @@
 #include <entity/imgui/console/console.h>
 #include <entity/imgui/profiler/profiler.h>
 #include <utility/dialogs.h>
+#include <fstream>
 
 using namespace chira;
 
@@ -31,6 +32,9 @@ public:
         Engine::getRoot()->removeChild(this->meshId.data());
         this->meshId = Engine::getRoot()->addChild(new Mesh3d{Resource::getResource<MeshResource>(meshName)});
         ModelViewerGui::loadedFile = meshName;
+    }
+    [[nodiscard]] std::string_view getMeshId() const {
+        return this->meshId;
     }
 private:
     std::string loadedFile = "file://meshes/editor/grid.json";
@@ -64,6 +68,24 @@ inline void addResourceFolderSelected() {
         Resource::addResourceProvider(new FilesystemResourceProvider{resourceFolderPath});
     else
         dialogPopupError(TR("error.modelviewer.resource_folder_already_registered"));
+}
+
+inline void convertToModelTypeSelected(const std::string& extension, const std::string& type, const std::string_view guiId) {
+    std::string filepath = dialogSaveFile(extension);
+    if (filepath.empty())
+        return;
+    std::ofstream file{filepath, std::ios::binary};
+    auto meshId = assert_cast<ModelViewerGui*>(Engine::getRoot()->getChild(guiId.data()))->getMeshId();
+    std::vector<byte> meshData = assert_cast<Mesh3d*>(Engine::getRoot()->getChild(meshId.data()))->getMeshData(type);
+    file.write(reinterpret_cast<const char*>(&meshData.front()), static_cast<std::streamsize>(meshData.size()));
+}
+
+inline void convertToOBJSelected(const std::string_view guiId) {
+    convertToModelTypeSelected(".obj", "obj", guiId);
+}
+
+inline void convertToCMDLSelected(const std::string_view guiId) {
+    convertToModelTypeSelected(".cmdl", "cmdl", guiId);
 }
 
 int main() {
@@ -114,8 +136,10 @@ int main() {
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu(TRC("ui.menubar.convert"))) { // Convert
-                if (ImGui::MenuItem(TRC("ui.menubar.convert_to_obj"))) {} // Convert to OBJ...
-                if (ImGui::MenuItem(TRC("ui.menubar.convert_to_cmdl"))) {} // Convert to CMDL...
+                if (ImGui::MenuItem(TRC("ui.menubar.convert_to_obj"))) // Convert to OBJ...
+                    convertToOBJSelected(uiUUID);
+                if (ImGui::MenuItem(TRC("ui.menubar.convert_to_cmdl"))) // Convert to CMDL...
+                    convertToCMDLSelected(uiUUID);
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();

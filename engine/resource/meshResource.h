@@ -19,6 +19,9 @@ namespace chira {
         void setMaterial(SharedPointer<MaterialBase> newMaterial) {
             this->material = std::move(newMaterial);
         }
+        [[nodiscard]] std::vector<byte> getMeshData(const std::string& meshLoader) const {
+            return MeshResource::getMeshLoader(meshLoader)->createMesh(this->vertices, this->indices);
+        }
 
         static void addMeshLoader(const std::string& name, AbstractMeshLoader* meshLoader);
         static AbstractMeshLoader* getMeshLoader(const std::string& name);
