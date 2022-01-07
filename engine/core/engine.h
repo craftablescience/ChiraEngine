@@ -41,6 +41,7 @@ namespace chira {
         static int getWindowWidth();
         static int getWindowHeight();
         static void setWindowSize(int width, int height);
+        static void shouldStopAfterThisFrame(bool yes);
 
         static void addKeybind(const Keybind& keybind);
         static std::vector<Keybind>* getKeybinds();

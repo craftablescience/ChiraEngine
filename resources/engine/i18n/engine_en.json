@@ -7,6 +7,16 @@
   "ui.console.title": "Console",
   "ui.profiler.title": "Profiler",
 
+  "ui.menubar.file": "File",
+  "ui.menubar.new": "New",
+  "ui.menubar.open": "Open",
+  "ui.menubar.save": "Save",
+  "ui.menubar.save_as": "Save As...",
+  "ui.menubar.exit": "Exit",
+  "ui.menubar.edit": "Edit",
+  "ui.menubar.undo": "Undo",
+  "ui.menubar.redo": "Redo",
+
   "generic.operation.cancelled": "Operation cancelled",
 
   "debug.glfw.version": "Using GLFW v{}.{}.{}",

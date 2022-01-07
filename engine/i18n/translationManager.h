@@ -23,3 +23,4 @@ namespace chira {
 
 /// Just a handy shortcut, since this function call can be quite long.
 #define TR(ID) chira::TranslationManager::getTranslation(ID)
+#define TRC(ID) TR(ID).c_str()

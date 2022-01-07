@@ -169,7 +169,7 @@ void Engine::init() {
     Engine::getSettingsLoader()->getValue("graphics", "windowHeight", &windowHeight);
     bool fullscreen = false;
     Engine::getSettingsLoader()->getValue("graphics", "fullscreen", &fullscreen);
-    Engine::window = glfwCreateWindow(windowWidth, windowHeight, TR("ui.window.title").c_str(), nullptr, nullptr);
+    Engine::window = glfwCreateWindow(windowWidth, windowHeight, TRC("ui.window.title"), nullptr, nullptr);
     if (fullscreen) {
         const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         glfwWindowHint(GLFW_RED_BITS, mode->redBits);
@@ -382,7 +382,7 @@ void Engine::run() {
     Engine::lastTime = Engine::currentTime;
     Engine::currentTime = glfwGetTime();
 
-    while (!glfwWindowShouldClose(Engine::window)) {
+    do {
         Engine::physicsProvider->updatePhysics(Engine::getDeltaTime());
         Engine::render();
         Engine::soundManager->setListenerPosition(Engine::getRoot()->getAudioListeningPosition());
@@ -396,7 +396,7 @@ void Engine::run() {
             DiscordRPC::updatePresence();
         Events::update();
         Resource::cleanup();
-    }
+    } while (!glfwWindowShouldClose(Engine::window));
     Engine::stop();
 }
 
@@ -480,6 +480,10 @@ int Engine::getWindowHeight() {
 
 void Engine::setWindowSize(int width, int height) {
     glfwSetWindowSize(Engine::window, width, height);
+}
+
+void Engine::shouldStopAfterThisFrame(bool yes) {
+    glfwSetWindowShouldClose(Engine::window, yes ? GLFW_TRUE : GLFW_FALSE);
 }
 
 void Engine::addKeybind(const Keybind& keybind) {

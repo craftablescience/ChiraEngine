@@ -36,7 +36,14 @@ private:
     std::string loadedFile = "file://meshes/editor/grid.json";
 };
 
-void addResourceFolderSelected() {
+inline void addModelSelected(const std::string_view& modelId) {
+    std::string path = dialogOpenResource("*.json");
+    if (path.empty())
+        return dialogPopupError(TR("error.modelviewer.file_is_not_resource"));
+    assert_cast<ModelViewerGui*>(Engine::getRoot()->getChild(modelId.data()))->setLoadedFile(path);
+}
+
+inline void addResourceFolderSelected() {
     auto folder = dialogOpenFolder();
     if (folder.empty())
         return dialogPopupError(TR("error.modelviewer.resource_folder_not_selected"));
@@ -89,30 +96,20 @@ int main() {
         auto gridMesh = Resource::getResource<MeshResource>("file://meshes/editor/grid.json");
         Engine::getRoot()->addChild(new Mesh3d{"modelViewerMesh", gridMesh});
 
-        // todo: abstract glfw functions
         glfwSetWindowAspectRatio(Engine::getWindow(), 500, 600);
     });
     Engine::init();
 
     Engine::addRenderFunction([&uiUUID]{
-        // todo(i18n)
         if (ImGui::BeginMainMenuBar()) {
-            if (ImGui::BeginMenu("File")) {
-                if (ImGui::MenuItem("Open Model...")) {
-                    std::string path = dialogOpenResource("*.json");
-                    if (!path.empty()) {
-                        assert_cast<ModelViewerGui*>(Engine::getRoot()->getChild(uiUUID.data()))->setLoadedFile(path);
-                    } else
-                        dialogPopupError("File selected is not a resource!");
-                }
-                if (ImGui::MenuItem("Add Resource Folder...")) {
+            if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
+                if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) // Open Model...
+                    addModelSelected(uiUUID);
+                if (ImGui::MenuItem(TRC("ui.menubar.add_resource_folder"))) // Add Resource Folder...
                     addResourceFolderSelected();
-                }
                 ImGui::Separator();
-                if (ImGui::MenuItem("Exit")) {
-                    // todo: abstract glfw functions
-                    glfwSetWindowShouldClose(Engine::getWindow(), GLFW_TRUE);
-                }
+                if (ImGui::MenuItem(TRC("ui.menubar.exit"))) // Exit
+                    Engine::shouldStopAfterThisFrame(true);
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();

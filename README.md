@@ -46,7 +46,7 @@ Again, the goal of the engine is to have as much customization as possible, whil
 - GLAD (OpenGL 4.5 Core, no extensions)
 - GLFW v3.3.6
 - GLM v0.9.9.8
-- Dear ImGui v1.85 (docking)
+- Dear ImGui v1.86 (docking)
 - imgui_markdown
 - nlohmann_json v3.10.4
 - libogg v1.3.5
@@ -58,7 +58,7 @@ Again, the goal of the engine is to have as much customization as possible, whil
 
 ## Compilation (Windows)
 *Note: If CMake complains about a missing curl library, download the DLL from [https://curl.se/windows/](https://curl.se/windows/).
-It's in the bin folder. Copy it out of the zip file, and add `-DCURL_LIBRARY="path/to/curl.dll"` to CMake's build arguments.
+It's in the bin folder. Copy it out of the zip file, and add* `-DCURL_LIBRARY="path/to/curl.dll"` *to CMake's build arguments.
 You may need to copy the DLL to the binary folder as well.
 Alternatively, you can install curl through [MSYS2](https://www.msys2.org/).*
 
