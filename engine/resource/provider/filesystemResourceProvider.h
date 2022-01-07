@@ -13,7 +13,7 @@ namespace chira {
         [[nodiscard]] bool hasResource(const std::string& name) const override;
         void compileResource(const std::string& name, Resource* resource) const override;
         [[nodiscard]] const std::string& getPath() const {
-            return path;
+            return this->path;
         }
         [[nodiscard]] std::string getAbsoluteResourcePath(const std::string& identifier) const;
 
