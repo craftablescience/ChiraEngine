@@ -2,6 +2,9 @@
   "ui.window.title": "Chira Model Viewer",
   "ui.menubar.open_model": "Open Model...",
   "ui.menubar.add_resource_folder": "Add Resource Folder...",
+  "ui.menubar.convert": "Convert",
+  "ui.menubar.convert_to_obj": "Convert to OBJ...",
+  "ui.menubar.convert_to_cmdl": "Convert to CMDL...",
 
   "error.modelviewer.file_is_not_resource": "File selected is not a resource!",
   "error.modelviewer.resource_folder_already_registered": "Resource folder is already registered.",

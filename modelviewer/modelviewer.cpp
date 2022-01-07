@@ -11,7 +11,7 @@ using namespace chira;
 
 class ModelViewerGui : public Window {
 public:
-    ModelViewerGui() : Window(TR("ui.window.title"), true) {
+    explicit ModelViewerGui(const std::string_view& meshId_) : Window(TR("ui.window.title"), true), meshId(meshId_) {
         this->flags |=
                 ImGuiWindowFlags_NoTitleBar   |
                 ImGuiWindowFlags_NoDecoration |
@@ -26,14 +26,15 @@ public:
         ImGui::Text("%s", ModelViewerGui::loadedFile.c_str());
     }
     void setLoadedFile(const std::string& meshName) {
-        if (meshName == assert_cast<Mesh3d*>(Engine::getRoot()->getChild("modelViewerMesh"))->getMeshResource()->getIdentifier())
+        if (meshName == assert_cast<Mesh3d*>(Engine::getRoot()->getChild(this->meshId.data()))->getMeshResource()->getIdentifier())
             return;
-        Engine::getRoot()->removeChild("modelViewerMesh");
-        Engine::getRoot()->addChild(new Mesh3d{"modelViewerMesh", Resource::getResource<MeshResource>(meshName)});
+        Engine::getRoot()->removeChild(this->meshId.data());
+        this->meshId = Engine::getRoot()->addChild(new Mesh3d{Resource::getResource<MeshResource>(meshName)});
         ModelViewerGui::loadedFile = meshName;
     }
 private:
     std::string loadedFile = "file://meshes/editor/grid.json";
+    std::string_view meshId;
 };
 
 inline void addModelSelected(const std::string_view& modelId) {
@@ -91,10 +92,10 @@ int main() {
         Engine::getRoot()->addChild(camera);
         Engine::getRoot()->setMainCamera(camera);
 
-        uiUUID = Engine::getRoot()->addChild(new ModelViewerGui{});
-
-        auto gridMesh = Resource::getResource<MeshResource>("file://meshes/editor/grid.json");
-        Engine::getRoot()->addChild(new Mesh3d{"modelViewerMesh", gridMesh});
+        const auto modelViewerGui = new ModelViewerGui{
+            Engine::getRoot()->addChild(new Mesh3d{Resource::getResource<MeshResource>("file://meshes/editor/grid.json")})
+        };
+        uiUUID = Engine::getRoot()->addChild(modelViewerGui);
 
         glfwSetWindowAspectRatio(Engine::getWindow(), 500, 600);
     });
@@ -110,6 +111,11 @@ int main() {
                 ImGui::Separator();
                 if (ImGui::MenuItem(TRC("ui.menubar.exit"))) // Exit
                     Engine::shouldStopAfterThisFrame(true);
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu(TRC("ui.menubar.convert"))) { // Convert
+                if (ImGui::MenuItem(TRC("ui.menubar.convert_to_obj"))) {} // Convert to OBJ...
+                if (ImGui::MenuItem(TRC("ui.menubar.convert_to_cmdl"))) {} // Convert to CMDL...
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
