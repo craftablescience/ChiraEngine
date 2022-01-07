@@ -26,6 +26,10 @@ void FilesystemResourceProvider::compileResource(const std::string& name, Resour
     delete[] bytes;
 }
 
+std::string FilesystemResourceProvider::getFolder() const {
+    return stripLeft(this->getPath(), FILESYSTEM_ROOT_FOLDER + '/');
+}
+
 std::string FilesystemResourceProvider::getAbsoluteResourcePath(const std::string& identifier) const {
     // Make sure we've been passed a valid identifier
     auto name = Resource::splitResourceIdentifier(identifier).second;
@@ -38,6 +42,11 @@ std::string FilesystemResourceProvider::getAbsoluteResourcePath(const std::strin
 }
 
 std::string FilesystemResourceProvider::getResourcePath(const std::string& absolutePath) {
+    // Add the resource provider prefix
+    return FILESYSTEM_PROVIDER_NAME + RESOURCE_ID_SEPARATOR.data() + FilesystemResourceProvider::getResourceFolderPath(absolutePath);
+}
+
+std::string FilesystemResourceProvider::getResourceFolderPath(const std::string& absolutePath) {
     // Make sure we've been passed a valid resource path
     if (absolutePath.find(FILESYSTEM_ROOT_FOLDER) == std::string::npos)
         return "";
@@ -54,7 +63,5 @@ std::string FilesystemResourceProvider::getResourcePath(const std::string& absol
     // Remove the namespace
     index = path.find('/') + 1;
     path = path.substr(index);
-
-    // Add the resource provider
-    return FILESYSTEM_PROVIDER_NAME + RESOURCE_ID_SEPARATOR.data() + path;
+    return path;
 }

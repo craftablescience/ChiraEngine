@@ -107,6 +107,8 @@ namespace chira {
 
         static std::pair<std::string, std::string> splitResourceIdentifier(const std::string& identifier);
 
+        static const std::vector<std::unique_ptr<AbstractResourceProvider>>& getResourceProviders(const std::string& providerName);
+
         /// If resource is present in the cache and has a reference count less than or equal to 2, mark it for removal.
         static void removeResource(const std::string& identifier);
 

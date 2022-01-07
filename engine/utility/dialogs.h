@@ -5,6 +5,8 @@
 namespace chira {
     /// Returns an absolute path to the file selected, or an empty string if none selected.
     std::string dialogOpenFile(const std::string& pattern, const std::string& description = "");
+    /// Returns an absolute path to the folder selected, or an empty string if none selected.
+    std::string dialogOpenFolder();
     /// Returns a relative path to the resource selected, or an empty string if none selected.
     std::string dialogOpenResource(const std::string& pattern, const std::string& description = "");
 

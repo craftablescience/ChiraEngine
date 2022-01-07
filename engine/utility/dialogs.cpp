@@ -19,6 +19,16 @@ std::string chira::dialogOpenFile(const std::string& pattern, const std::string&
     return "";
 }
 
+std::string chira::dialogOpenFolder() {
+    std::string path;
+    auto result = tinyfd_selectFolderDialog(TR("ui.window.select_file").c_str(), std::filesystem::current_path().string().c_str());
+    if (result) {
+        path = result;
+        return path;
+    }
+    return "";
+}
+
 std::string chira::dialogOpenResource(const std::string& pattern, const std::string& description) {
     const char* filter[1] = {pattern.c_str()};
     auto result = tinyfd_openFileDialog(

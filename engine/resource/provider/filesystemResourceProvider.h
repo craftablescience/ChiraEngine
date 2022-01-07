@@ -15,11 +15,16 @@ namespace chira {
         [[nodiscard]] const std::string& getPath() const {
             return this->path;
         }
+        [[nodiscard]] std::string getFolder() const;
         [[nodiscard]] std::string getAbsoluteResourcePath(const std::string& identifier) const;
 
         /// Takes an absolute path of a resource file and converts it to a resource identifier.
         /// Does not check if the resource identifier actually points to a valid resource.
         static std::string getResourcePath(const std::string& absolutePath);
+        /// Takes an absolute path of a resource folder and converts it to a valid input path
+        /// for a FilesystemResourceProvider. Does not check if the resource identifier
+        /// actually points to a valid resource.
+        static std::string getResourceFolderPath(const std::string& absolutePath);
     private:
         std::string path;
     };

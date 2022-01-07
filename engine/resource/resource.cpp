@@ -53,6 +53,10 @@ std::pair<std::string, std::string> Resource::splitResourceIdentifier(const std:
     return out;
 }
 
+const std::vector<std::unique_ptr<AbstractResourceProvider>>& Resource::getResourceProviders(const std::string& providerName) {
+    return Resource::providers.at(providerName);
+}
+
 void Resource::removeResource(const std::string& identifier) {
     auto id = Resource::splitResourceIdentifier(identifier);
     const std::string& provider = id.first, name = id.second;

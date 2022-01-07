@@ -36,6 +36,28 @@ private:
     std::string loadedFile = "file://meshes/editor/grid.json";
 };
 
+void addResourceFolderSelected() {
+    auto folder = dialogOpenFolder();
+    if (folder.empty())
+        return dialogPopupError(TR("error.modelviewer.resource_folder_not_selected"));
+
+    auto resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(folder);
+    if (resourceFolderPath.empty())
+        return dialogPopupError(TR("error.modelviewer.resource_folder_not_valid"));
+
+    bool resourceExists = false;
+    for (const auto &fileProvider: Resource::getResourceProviders(FILESYSTEM_PROVIDER_NAME)) {
+        if (resourceFolderPath == assert_cast<FilesystemResourceProvider*>(fileProvider.get())->getFolder()) {
+            resourceExists = true;
+            break;
+        }
+    }
+    if (!resourceExists)
+        Resource::addResourceProvider(new FilesystemResourceProvider{resourceFolderPath});
+    else
+        dialogPopupError(TR("error.modelviewer.resource_folder_already_registered"));
+}
+
 int main() {
     Engine::preInit("settings_modelviewer.json");
     Resource::addResourceProvider(new FilesystemResourceProvider{"modelviewer"});
@@ -63,10 +85,11 @@ int main() {
         Engine::getRoot()->setMainCamera(camera);
 
         uiUUID = Engine::getRoot()->addChild(new ModelViewerGui{});
+
         auto gridMesh = Resource::getResource<MeshResource>("file://meshes/editor/grid.json");
         Engine::getRoot()->addChild(new Mesh3d{"modelViewerMesh", gridMesh});
 
-        // todo: abstract this somehow
+        // todo: abstract glfw functions
         glfwSetWindowAspectRatio(Engine::getWindow(), 500, 600);
     });
     Engine::init();
@@ -82,14 +105,12 @@ int main() {
                     } else
                         dialogPopupError("File selected is not a resource!");
                 }
-                if (ImGui::MenuItem("Add Resource Path...")) {
-                    // todo: use folder picker
-                    // todo: check if provider already exists
-                    Resource::addResourceProvider(new FilesystemResourceProvider{dialogInput("Enter folder name:")});
+                if (ImGui::MenuItem("Add Resource Folder...")) {
+                    addResourceFolderSelected();
                 }
                 ImGui::Separator();
                 if (ImGui::MenuItem("Exit")) {
-                    // todo: make this an engine function
+                    // todo: abstract glfw functions
                     glfwSetWindowShouldClose(Engine::getWindow(), GLFW_TRUE);
                 }
                 ImGui::EndMenu();
