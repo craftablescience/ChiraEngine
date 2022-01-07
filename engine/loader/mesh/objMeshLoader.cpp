@@ -4,6 +4,7 @@
 #include <resource/stringResource.h>
 #include <i18n/translationManager.h>
 #include <utility/logger.h>
+#include <sstream>
 
 using namespace chira;
 
@@ -13,7 +14,7 @@ void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>&
     std::vector<Normal> normalBuffer;
 
     auto meshData = Resource::getResource<StringResource>(identifier);
-    std::istringstream meshDataStream = std::istringstream{meshData->getString()};
+    std::istringstream meshDataStream{meshData->getString()};
 
     std::string line;
     unsigned int currentIndex = 0;
@@ -89,6 +90,34 @@ void OBJMeshLoader::addVertex(const Vertex& v, unsigned int* currentIndex, std::
 }
 
 std::vector<byte> OBJMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) const {
-    // todo: make obj mesh
-    return {};
+    std::vector<Position> positions;
+    std::vector<UV> uvs;
+    std::vector<Normal> normals;
+    positions.reserve(indices.size());
+    uvs.reserve(indices.size());
+    normals.reserve(indices.size());
+
+    for (const auto index : indices) {
+        positions.push_back(vertices[index].position);
+        uvs.push_back(vertices[index].uv);
+        normals.push_back(vertices[index].normal);
+    }
+    std::stringstream meshDataStream;
+    // The following could be modified to actually use indices and save file space...
+    // But it doesn't have to be right now :P
+    for (const auto position : positions) meshDataStream << "v " << position.x << ' ' << position.y << ' ' << position.z << '\n';
+    for (const auto uv       : uvs)       meshDataStream << "vt " << uv.u << ' ' << uv.v << '\n';
+    for (const auto normal   : normals)   meshDataStream << "vn " << normal.r << ' ' << normal.g << ' ' << normal.b << '\n';
+    for (unsigned int i = 0; i < vertices.size(); i += 3) {
+        meshDataStream << "f " << i   << '/' << i   << '/' << i   << ' '
+                               << i+1 << '/' << i+1 << '/' << i+1 << ' '
+                               << i+2 << '/' << i+2 << '/' << i+2 << '\n';
+    }
+    meshDataStream >> std::noskipws;
+
+    std::vector<byte> out;
+    byte temp;
+    while (meshDataStream >> temp)
+        out.push_back(temp);
+    return out;
 }

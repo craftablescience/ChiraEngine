@@ -48,10 +48,10 @@ namespace chira {
     };
 
     struct Vertex {
-        Position pos;
-        Normal norm;
-        Color col;
-        UV uvMap;
+        Position position;
+        Normal normal;
+        Color color;
+        UV uv;
         Vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat rr, GLfloat gg, GLfloat bb, GLfloat u, GLfloat v);
         Vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat rr, GLfloat gg, GLfloat bb);
         Vertex(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat g, GLfloat b, GLfloat u, GLfloat v);
@@ -61,7 +61,10 @@ namespace chira {
         Vertex(const struct Position& pos, const struct Normal& norm, const struct Color& col, const struct UV& tex);
         Vertex();
         bool operator==(const Vertex& other) const {
-            return this->pos == other.pos && this->norm == other.norm && this->col == other.col && this->uvMap == other.uvMap;
+            return this->position == other.position &&
+                   this->normal == other.normal &&
+                   this->color == other.color &&
+                   this->uv == other.uv;
         }
         bool operator!=(const Vertex& other) const {
             return !operator==(other);
