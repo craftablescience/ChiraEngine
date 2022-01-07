@@ -14,6 +14,7 @@
 #include <resource/provider/internetResourceProvider.h>
 #include <resource/shaderResource.h>
 #include <loader/mesh/objMeshLoader.h>
+#include <loader/mesh/chiraMeshLoader.h>
 #include <loader/mesh/primitiveMeshLoader.h>
 #include <physics/bulletPhysicsProvider.h>
 #include <render/ubo.h>
@@ -283,6 +284,7 @@ void Engine::init() {
 
     MeshResource::addMeshLoader("primitive", new PrimitiveMeshLoader{});
     MeshResource::addMeshLoader("obj", new OBJMeshLoader{});
+    MeshResource::addMeshLoader("cmdl", new ChiraMeshLoader{});
 
     Engine::displaySplashScreen();
     Resource::cleanup();
