@@ -6,7 +6,7 @@
 #include <i18n/translationManager.h>
 #include <entity/3d/physics/bulletRigidBody.h>
 #include <entity/imgui/settings/settings.h>
-#include <entity/3d/camera/freecam.h>
+#include <entity/3d/camera/editorCamera3d.h>
 #include <entity/imgui/console/console.h>
 #include <entity/imgui/profiler/profiler.h>
 
@@ -75,8 +75,7 @@ int main() {
         //endregion
 
         //region Add the camera
-        Engine::captureMouse(true);
-        auto camera = new Freecam{CameraProjectionMode::PERSPECTIVE};
+        auto camera = new EditorCamera3d{CameraProjectionMode::PERSPECTIVE};
         Engine::getRoot()->addChild(camera);
         Engine::getRoot()->setMainCamera(camera);
         camera->translate(glm::vec3{0,0,15});
