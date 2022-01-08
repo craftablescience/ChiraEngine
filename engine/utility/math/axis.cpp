@@ -11,8 +11,8 @@ chira::Axis chira::getAxisFromString(const std::string& str) {
     else if (str == "Z")
         return Axis::Z;
     else {
-        Logger::log(LogType::ERROR, "axis::getAxisFromString", fmt::format(TR("error.axis.invalid_value"), str, "axis"));
-        return Axis::Z; // todo: put an assert here
+        chira_assert(false, fmt::format(TR("error.axis.invalid_value"), str, "axis"));
+        return Axis::Z;
     }
 }
 
@@ -30,7 +30,7 @@ chira::SignedAxis chira::getSignedAxisFromString(const std::string& str) {
     else if (str == "ZN")
         return SignedAxis::ZN;
     else {
-        Logger::log(LogType::ERROR, "axis::getSignedAxisFromString", fmt::format(TR("error.axis.invalid_value"), str, "signedAxis"));
-        return SignedAxis::ZN; // todo: put an assert here
+        chira_assert(false, fmt::format(TR("error.axis.invalid_value"), str, "signedAxis"));
+        return SignedAxis::ZN;
     }
 }

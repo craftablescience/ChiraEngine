@@ -598,15 +598,13 @@ double Engine::getDeltaTime() {
 }
 
 void Engine::setIcon(const std::string& iconPath) {
-    // todo(i18n)
-    chira_assert(Engine::isStarted(), "Engine is not started: have you called Engine::preInit() and Engine::init()?");
+    chira_assert(Engine::isStarted(), TR("error.engine.not_initialized"));
     GLFWimage images[1];
     int width, height, bitsPerPixel;
     Image icon(
             assert_cast<FilesystemResourceProvider*>(Resource::getResourceProviderWithResource("file://" + iconPath))->getPath() + "/" + iconPath,
             &width, &height, &bitsPerPixel, 4, false);
-    // todo(i18n)
-    chira_assert(icon.getData(), "Icon has no data");
+    chira_assert(icon.getData(), TR("error.engine.icon_has_no_data"));
     images[0].width = width;
     images[0].height = height;
     images[0].pixels = icon.getData();

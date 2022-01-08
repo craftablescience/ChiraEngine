@@ -6,7 +6,6 @@
 template<typename T, typename U>
 T assert_cast(U obj) {
     auto cast = dynamic_cast<T>(obj);
-    // todo(i18n)
     chira_assert(cast, "Object could not be cast");
     return cast;
 }

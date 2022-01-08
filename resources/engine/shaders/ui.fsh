@@ -6,9 +6,9 @@ in VS_OUT {
     vec2 TexCoord;
 } i;
 
-uniform sampler2D tex;
+uniform sampler2D texture0;
 
 void main()
 {
-    FragColor = texture(tex, i.TexCoord);
+    FragColor = texture(texture0, i.TexCoord);
 }

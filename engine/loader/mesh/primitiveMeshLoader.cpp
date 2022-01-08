@@ -67,7 +67,6 @@ void PrimitiveMeshLoader::loadMesh(const std::string& identifier, std::vector<Ve
 }
 
 std::vector<byte> PrimitiveMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) const {
-    // todo(i18n)
-    chira_assert(false, "It should be impossible to ever call this method!");
+    chira_assert(false, TR("error.primitive_loader.invalid_method"));
     return {};
 }

@@ -7,7 +7,7 @@ void MaterialTextured::compile(const nlohmann::json& properties) {
     this->texture = Resource::getResource<Texture>(properties["dependencies"]["texture"]);
     this->texture->setTextureUnit(GL_TEXTURE0);
     this->shader->use();
-    this->shader->setUniform("tex", 0); // todo: why is it called this?
+    this->shader->setUniform("texture0", 0);
 }
 
 void MaterialTextured::use() const {
