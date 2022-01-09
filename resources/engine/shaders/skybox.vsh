@@ -5,11 +5,7 @@ layout (location = 3) in vec2 iTexCoord;
 
 out vec3 TexCoords;
 
-layout (std140) uniform PV {
-    mat4 p;
-    mat4 v;
-    mat4 pv;
-};
+#include file://shaders/ubo/pv.glsl#
 
 void main() {
     TexCoords = iPos;

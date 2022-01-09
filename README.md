@@ -10,6 +10,7 @@ A fully customizable (and heavily work-in-progress) MIT-licensed game engine, wr
 To summarize the major features:
 - Native Windows and Linux support (OpenGL 4.5 Core)
 - As extensible as possible: register custom logging hooks, sound providers, resource types and providers, etc.
+- Custom preprocessing of GLSL shaders, with macros and #include directives
 - Robust resource loading and management to facilitate sharing of congruent data
 - Data-oriented design, using entities as building blocks
 - Hassle-free Discord Rich Presence

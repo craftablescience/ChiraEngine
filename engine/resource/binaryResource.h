@@ -10,7 +10,7 @@ namespace chira {
         ~BinaryResource() override;
         [[nodiscard]] const unsigned char* getBuffer() const;
         [[nodiscard]] std::size_t getBufferLength() const;
-    private:
+    protected:
         unsigned char* buffer_ = nullptr;
         std::size_t bufferLength_ = 0;
     };

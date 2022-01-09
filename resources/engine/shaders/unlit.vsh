@@ -9,12 +9,8 @@ out VS_OUT {
    vec2 TexCoord;
 } o;
 
-layout (std140) uniform PV {
-   mat4 p;
-   mat4 v;
-   mat4 pv;
-};
-uniform mat4 m;
+#include file://shaders/ubo/pv.glsl#
+#include file://shaders/uniform/m.glsl#
 
 void main() {
    gl_Position = pv * m * vec4(iPos, 1.0);

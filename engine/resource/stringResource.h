@@ -8,7 +8,7 @@ namespace chira {
         explicit StringResource(const std::string& identifier_) : Resource(identifier_) {}
         void compile(const unsigned char buffer[], std::size_t bufferLength) override;
         [[nodiscard]] const std::string& getString() const;
-    private:
+    protected:
         std::string data;
     };
 }

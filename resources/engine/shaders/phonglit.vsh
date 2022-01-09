@@ -18,12 +18,8 @@ out VS_OUT {
     Light lightOut;
 } o;
 
-layout (std140) uniform PV {
-    mat4 p;
-    mat4 v;
-    mat4 pv;
-};
-uniform mat4 m;
+#include file://shaders/ubo/pv.glsl#
+#include file://shaders/uniform/m.glsl#
 
 uniform Light light;
 
