@@ -12,6 +12,10 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
+# Globally compile with PIC
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -fPIC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+
 # This is mostly for detecting Clang
 string(TOLOWER "${CMAKE_CXX_COMPILER_ID}" COMPILER_ID)
 
@@ -30,9 +34,6 @@ if(CHIRA_BUILD_STATIC)
 else()
     # Build with dynamic (shared) dependencies
     set(BUILD_SHARED_LIBS ON)
-    # Globally compile with PIC
-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -fPIC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
 # GOOGLETEST
