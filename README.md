@@ -11,25 +11,19 @@ To summarize the major features:
 - Native Windows and Linux support (OpenGL 4.5 Core)
 - As extensible as possible: register custom logging hooks, sound providers, resource types and providers, etc.
 - Robust resource loading and management to facilitate sharing of congruent data
-- Data-oriented design, using worlds ➡ entities ➡ components as building blocks
-  - Components can exist standalone if necessary
-  - Entities are components that handle registration of other components with the engine, and provide connecting glue between components. They can also be added standalone
-  - Worlds are entities that manage groups of entities, and provide the same code glue entities provide for components
+- Data-oriented design, using entities as building blocks
 - Hassle-free Discord Rich Presence
 - Inline text localization
 - AngelScript support, with common function hooks and types registered
-- Abstract input system using C++11 lambdas (or a reference to a function)
-- Bullet physics engine built-in
-- Event queue to communicate between components
+- Bullet physics engine built-in, with common physics types registered
+- Event queue to communicate between entities (or other parts of the engine)
 - Settings manager, which saves to and loads from a JSON file (with smart overwriting) for modifiable settings without recompiling
-- The sound manager can be changed, and scripting providers (defined by the user) can be added
-- Logger built-in with colored text and hooks, and a console GUI which uses the logging hook system
+- Sound manager can be changed at runtime
+- Logger built-in with colored text and hooks, and a console GUI window which uses the logging hook system
 
 ## Planned Features
-- Abstract ImGUI windows and expose relevant functions to scripting
 - Create an editor UI to make games with
 - Revamp scripting, allow adding custom scripting providers
-- Remove AngelScript, add JavaScript scripting support
 - Add more graphics features
 - Implement the assimp library for model loading
 - Particle systems! Preferably offloaded to the GPU
@@ -57,17 +51,13 @@ Again, the goal of the engine is to have as much customization as possible, whil
 - TinyFileDialogs v3.8.8
 
 ## Compilation (Windows)
-*Note: If CMake complains about a missing curl library, download the DLL from [https://curl.se/windows/](https://curl.se/windows/).
-It's in the bin folder. Copy it out of the zip file, and add* `-DCURL_LIBRARY="path/to/curl.dll"` *to CMake's build arguments.
-You may need to copy the DLL to the binary folder as well.
-Alternatively, you can install curl through [MSYS2](https://www.msys2.org/).*
+- **CLion (recommended)**: The project will compile without any prior configuration, but you will most likely need to install the Windows SDK (see below).
 
-- **CLion (recommended)**: The project will compile without any prior configuration, but you will need to install the Windows SDK (see below).
-
-- Visual Studio 2019: You will need to install the following components:
+- Visual Studio 2019: You will need to install (most of) the following components. Some are not required, like the AddressSanitizer and Just-In-Time debugger.
   ![image](https://user-images.githubusercontent.com/26600014/128105644-cfa92f30-dc96-4476-a4c9-8d8b5f3ce129.png)
   
-  Additionally, compiling with MSVC will produce an error for x64 targets, due to a bug with AngelScript (see [the AngelScript docs](https://www.angelcode.com/angelscript/sdk/docs/manual/doc_compile_lib.html#doc_compile_win64) for more information).
+  Compiling with MSVC will produce an error for x64 targets, due to a bug with AngelScript (see [the AngelScript docs](https://www.angelcode.com/angelscript/sdk/docs/manual/doc_compile_lib.html#doc_compile_win64) for more information).
+  It will also build the engine and its dependencies statically.
   I strongly recommend compiling with MinGW, but if you can't, target x86.
 
 ## Compilation (Linux)

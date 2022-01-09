@@ -230,10 +230,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/en
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} ${ENGINE_LINK_LIBRARIES})
 
-# Copy engine resources
-add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources/engine ${CMAKE_BINARY_DIR}/resources/engine)
-
 # CHIRAENGINEGUI
 option(CHIRA_BUILD_EDITOR "Build the editor GUI application" ON)
 if(CHIRA_BUILD_EDITOR)
@@ -265,8 +261,14 @@ if(CHIRA_BUILD_TESTS AND (NOT MSVC))
     gtest_discover_tests(ChiraTest)
 endif()
 
-# Compiling for Windows requires the resources be copied before the RC file is compiled
+# Compiling for Windows requires the resources be copied before the RC file is compiled, for executables that have an icon
 # However, I'd like to avoid making a custom target, perhaps someday the Linux method can be used for both platforms
+
+# Copy engine resources
+add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources/engine ${CMAKE_BINARY_DIR}/resources/engine)
+
+# Copy editor resources
 if(CHIRA_BUILD_EDITOR)
     if(WIN32)
         # Resource files
@@ -280,7 +282,7 @@ if(CHIRA_BUILD_EDITOR)
     endif()
 endif()
 
-# Ditto
+# Copy model viewer resources
 if(CHIRA_BUILD_MODEL_VIEWER)
     if(WIN32)
         # Resource files
@@ -294,7 +296,7 @@ if(CHIRA_BUILD_MODEL_VIEWER)
     endif()
 endif()
 
-# Copy engine resources for tests (again...)
+# Copy test resources
 if(CHIRA_BUILD_TESTS AND (NOT MSVC))
     add_custom_command(TARGET ChiraTest PRE_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources/test ${CMAKE_BINARY_DIR}/resources/test)
