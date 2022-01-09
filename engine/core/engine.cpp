@@ -1,5 +1,6 @@
 #include "engine.h"
 
+#include <glad/gl.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #define IMGUI_USER_CONFIG <config/imguiConfig.h>
@@ -32,79 +33,6 @@
 
 using namespace chira;
 
-GLFWwindow* Engine::window = nullptr;
-std::vector<std::function<void()>> Engine::initFunctions;
-std::vector<std::function<void()>> Engine::renderFunctions;
-std::vector<std::function<void()>> Engine::stopFunctions;
-std::unique_ptr<AngelscriptProvider> Engine::angelscript = nullptr;
-std::unique_ptr<AbstractSoundManager> Engine::soundManager = nullptr;
-std::unique_ptr<AbstractSettingsLoader> Engine::settingsLoader = nullptr;
-std::unique_ptr<AbstractPhysicsProvider> Engine::physicsProvider = nullptr;
-Root* Engine::root = nullptr;
-Console* Engine::console = nullptr;
-#ifdef DEBUG
-Profiler* Engine::profiler = nullptr;
-#endif
-bool Engine::mouseCaptured = false;
-bool Engine::started = false;
-bool Engine::iconified = false;
-double Engine::lastTime, Engine::currentTime, Engine::lastMouseX, Engine::lastMouseY;
-
-void Engine::keyboardCallback(GLFWwindow* w, int key, int scancode, int action, int mods) {
-    if (action == GLFW_REPEAT) return;
-    for (auto& keybind : InputManager::getKeyButtonCallbacks()) {
-        if (keybind.getKey() == static_cast<Key>(key) && keybind.getEventType() == static_cast<InputKeyEventType>(action))
-            keybind();
-    }
-}
-
-void Engine::keyboardRepeatingCallback() {
-    for (auto& keybind : InputManager::getKeyButtonCallbacks()) {
-        if (glfwGetKey(Engine::window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
-            keybind();
-    }
-}
-
-void Engine::mouseButtonCallback(GLFWwindow* w, int key, int action, int mods) {
-    if (action == GLFW_REPEAT) return;
-    for (auto& keybind : InputManager::getMouseButtonCallbacks()) {
-        if (keybind.getKey() == static_cast<Key>(key) && keybind.getEventType() == static_cast<InputKeyEventType>(action))
-            keybind();
-    }
-}
-
-void Engine::mouseButtonRepeatingCallback() {
-    for (auto& keybind : InputManager::getMouseButtonCallbacks()) {
-        if (glfwGetMouseButton(Engine::window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
-            keybind();
-    }
-}
-
-void Engine::mouseMovementCallback(GLFWwindow* w, double xPos, double yPos) {
-    if (Engine::lastMouseX == -1) Engine::lastMouseX = xPos;
-    if (Engine::lastMouseY == -1) Engine::lastMouseY = yPos;
-
-    int width, height;
-    glfwGetWindowSize(Engine::window, &width, &height);
-    double xOffset = xPos - Engine::lastMouseX;
-    double yOffset = yPos - Engine::lastMouseY;
-
-    for (auto& movebind : InputManager::getMouseMovementCallbacks()) {
-        if (movebind.getType() == InputMouseMovementEventType::MOVE)
-            movebind(xOffset, yOffset);
-    }
-
-    Engine::lastMouseX = xPos;
-    Engine::lastMouseY = yPos;
-}
-
-void Engine::mouseScrollCallback(GLFWwindow* w, double x, double y) {
-    for (auto& movebind : InputManager::getMouseMovementCallbacks()) {
-        if (movebind.getType() == InputMouseMovementEventType::SCROLL)
-            movebind(x,y);
-    }
-}
-
 void Engine::preInit(const std::string& configPath) {
 #ifdef _WIN32
     // #define CP_UTF8 65001 in windows.h
@@ -116,7 +44,7 @@ void Engine::preInit(const std::string& configPath) {
     Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
     Resource::addResourceProvider(new InternetResourceProvider{"http", 80});
     Resource::addResourceProvider(new InternetResourceProvider{"https", 443});
-    Engine::setSettingsLoader(new JSONSettingsLoader(configPath));
+    Engine::setSettingsLoader(new JSONSettingsLoader{configPath});
     std::string defaultLang;
     Engine::getSettingsLoader()->getValue("ui", "language", &defaultLang);
     TranslationManager::setLanguage(defaultLang);
@@ -125,6 +53,15 @@ void Engine::preInit(const std::string& configPath) {
     Engine::currentTime = 0;
     Engine::lastMouseX = -1;
     Engine::lastMouseY = -1;
+}
+
+void Engine::displaySplashScreen() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    auto mat = Resource::getResource<MaterialTextured>(TR("resource.material.splashscreen_material_path"));
+    auto plane = Resource::getResource<MeshResource>("file://meshes/plane.json");
+    plane->setMaterial(mat.castAssert<MaterialBase>());
+    plane->render(glm::identity<glm::mat4>());
+    glfwSwapBuffers(Engine::window);
 }
 
 void Engine::init() {
@@ -156,6 +93,11 @@ void Engine::init() {
     bool fullscreen = false;
     Engine::getSettingsLoader()->getValue("graphics", "fullscreen", &fullscreen);
     Engine::window = glfwCreateWindow(windowWidth, windowHeight, TRC("ui.window.title"), nullptr, nullptr);
+    if (!Engine::window) {
+        Logger::log(LogType::ERROR, "GLFW", TR("error.glfw.window"));
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
     if (fullscreen) {
         const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         glfwWindowHint(GLFW_RED_BITS, mode->redBits);
@@ -163,21 +105,13 @@ void Engine::init() {
         glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
         glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
         glfwSetWindowMonitor(Engine::window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
-    }
-    if (!Engine::window) {
-        Logger::log(LogType::ERROR, "GLFW", TR("error.glfw.window"));
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-    glfwMakeContextCurrent(Engine::window);
-
-    if (!fullscreen) {
+    } else {
         bool startMaximized = true;
         Engine::getSettingsLoader()->getValue("graphics", "startMaximized", &startMaximized);
-        if (startMaximized) {
+        if (startMaximized)
             glfwMaximizeWindow(Engine::window);
-        }
     }
+    glfwMakeContextCurrent(Engine::window);
     Engine::setIcon("file://textures/ui/icon.png");
 
     int major, minor, rev;
@@ -246,12 +180,6 @@ void Engine::init() {
         }, nullptr);
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
     }
-
-    int vertexAttributes, textureUnits;
-    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &vertexAttributes);
-    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &textureUnits);
-    Logger::log(LogType::INFO, "OpenGL", fmt::format(TR("debug.opengl.vertex_attributes"), vertexAttributes));
-    Logger::log(LogType::INFO, "OpenGL", fmt::format(TR("debug.opengl.texture_units"), textureUnits));
 #endif
 
     int width, height;
@@ -282,10 +210,43 @@ void Engine::init() {
     if (glfwRawMouseMotionSupported() && rawMouseMotion)
         glfwSetInputMode(Engine::window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 
-    glfwSetKeyCallback(Engine::window, Engine::keyboardCallback);
-    glfwSetMouseButtonCallback(Engine::window, Engine::mouseButtonCallback);
-    glfwSetCursorPosCallback(Engine::window, Engine::mouseMovementCallback);
-    glfwSetScrollCallback(Engine::window, Engine::mouseScrollCallback);
+    glfwSetKeyCallback(Engine::window, [](GLFWwindow* w, int key, int scancode, int action, int mods) {
+        if (action == GLFW_REPEAT) return;
+        for (auto& keybind : InputManager::getKeyButtonCallbacks()) {
+            if (keybind.getKey() == static_cast<Key>(key) && keybind.getEventType() == static_cast<InputKeyEventType>(action))
+                keybind();
+        }
+    });
+    glfwSetMouseButtonCallback(Engine::window, [](GLFWwindow* w, int key, int action, int mods) {
+        if (action == GLFW_REPEAT) return;
+        for (auto& keybind : InputManager::getMouseButtonCallbacks()) {
+            if (keybind.getKey() == static_cast<Key>(key) && keybind.getEventType() == static_cast<InputKeyEventType>(action))
+                keybind();
+        }
+    });
+    glfwSetCursorPosCallback(Engine::window, [](GLFWwindow* w, double xPos, double yPos) {
+        if (Engine::lastMouseX == -1) Engine::lastMouseX = xPos;
+        if (Engine::lastMouseY == -1) Engine::lastMouseY = yPos;
+
+        int width, height;
+        glfwGetWindowSize(Engine::window, &width, &height);
+        double xOffset = xPos - Engine::lastMouseX;
+        double yOffset = yPos - Engine::lastMouseY;
+
+        for (auto& movebind : InputManager::getMouseMovementCallbacks()) {
+            if (movebind.getType() == InputMouseMovementEventType::MOVE)
+                movebind(xOffset, yOffset);
+        }
+
+        Engine::lastMouseX = xPos;
+        Engine::lastMouseY = yPos;
+    });
+    glfwSetScrollCallback(Engine::window, [](GLFWwindow* w, double x, double y) {
+        for (auto& movebind : InputManager::getMouseMovementCallbacks()) {
+            if (movebind.getType() == InputMouseMovementEventType::SCROLL)
+                movebind(x,y);
+        }
+    });
     glfwSetWindowIconifyCallback(Engine::window, [](GLFWwindow* w, int isIconified) {
         Engine::iconified = (isIconified == GLFW_TRUE);
     });
@@ -300,13 +261,11 @@ void Engine::init() {
     io.Fonts->Clear();
     ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    Logger::log(LogType::INFO, "ImGui", TR("debug.imgui.success"));
 
     bool openalEnabled = true;
     Engine::getSettingsLoader()->getValue("audio", "openal", &openalEnabled);
-    if (openalEnabled) {
+    if (openalEnabled)
         Engine::setSoundManager(new ALSoundManager{});
-    }
     Engine::soundManager->init();
 
     // todo: move this to a general lighting manager
@@ -328,9 +287,8 @@ void Engine::init() {
 
     bool bulletEnabled = true;
     Engine::getSettingsLoader()->getValue("physics", "bullet", &bulletEnabled);
-    if (bulletEnabled) {
+    if (bulletEnabled)
         Engine::setPhysicsProvider(new BulletPhysicsProvider{});
-    }
 
     Engine::angelscript = std::make_unique<AngelscriptProvider>();
     Engine::angelscript->initProvider();
@@ -349,19 +307,10 @@ void Engine::init() {
 #if DEBUG
     Engine::root->addChild(Engine::profiler);
 #endif
-    Engine::callRegisteredFunctions(&Engine::initFunctions);
+    Engine::callRegisteredFunctions(Engine::initFunctions);
     Engine::angelscript->initScripts();
 
     io.Fonts->Build();
-}
-
-void Engine::displaySplashScreen() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    auto mat = Resource::getResource<MaterialTextured>(TR("resource.material.splashscreen_material_path"));
-    auto plane = Resource::getResource<MeshResource>("file://meshes/plane.json");
-    plane->setMaterial(mat.castAssert<MaterialBase>());
-    plane->render(glm::identity<glm::mat4>());
-    glfwSwapBuffers(Engine::window);
 }
 
 void Engine::run() {
@@ -369,47 +318,54 @@ void Engine::run() {
     Engine::currentTime = glfwGetTime();
 
     do {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        Engine::lastTime = Engine::currentTime;
+        Engine::currentTime = glfwGetTime();
+
         Engine::physicsProvider->updatePhysics(Engine::getDeltaTime());
-        Engine::render();
+
+        UBO_PV::get()->update(Engine::getRoot()->getMainCamera()->getProjection(), Engine::getRoot()->getMainCamera()->getView());
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        Engine::callRegisteredFunctions(Engine::renderFunctions);
+        Engine::angelscript->render(Engine::getDeltaTime());
+        Engine::root->render();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         Engine::soundManager->setListenerPosition(Engine::getRoot()->getAudioListeningPosition());
         Engine::soundManager->setListenerRotation(Engine::getRoot()->getAudioListeningRotation(), Engine::getRoot()->getAudioListeningUpVector());
         Engine::soundManager->update();
-        glfwSwapBuffers(Engine::window);
+
         glfwPollEvents();
-        Engine::keyboardRepeatingCallback();
-        Engine::mouseButtonRepeatingCallback();
+        for (auto& keybind : InputManager::getKeyButtonCallbacks()) {
+            if (glfwGetKey(Engine::window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
+                keybind();
+        }
+        for (auto& keybind : InputManager::getMouseButtonCallbacks()) {
+            if (glfwGetMouseButton(Engine::window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
+                keybind();
+        }
+
         if (DiscordRPC::initialized())
             DiscordRPC::updatePresence();
         Events::update();
         Resource::cleanup();
+
+        glfwSwapBuffers(Engine::window);
     } while (!glfwWindowShouldClose(Engine::window));
     Engine::stop();
-}
-
-void Engine::render() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    Engine::lastTime = Engine::currentTime;
-    Engine::currentTime = glfwGetTime();
-
-    UBO_PV::get()->update(Engine::getRoot()->getMainCamera()->getProjection(), Engine::getRoot()->getMainCamera()->getView());
-
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-
-    Engine::callRegisteredFunctions(&(Engine::renderFunctions));
-    Engine::angelscript->render(Engine::getDeltaTime());
-    Engine::root->render();
-
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Engine::stop() {
     Logger::log(LogType::INFO_IMPORTANT, "Engine", TR("debug.engine.exit"));
 
-    Engine::callRegisteredFunctions(&(Engine::stopFunctions));
+    Engine::callRegisteredFunctions(Engine::stopFunctions);
     Engine::angelscript->stop();
 
     if (DiscordRPC::initialized()) {
@@ -479,16 +435,16 @@ AngelscriptProvider* Engine::getAngelscriptProvider() {
     return Engine::angelscript.get();
 }
 
-void Engine::setSoundManager(AbstractSoundManager* newSoundManager) {
-    Engine::soundManager.reset(newSoundManager);
-}
-
 AbstractSoundManager* Engine::getSoundManager() {
     if (!Engine::soundManager) {
         Logger::log(LogType::WARNING, "Engine::getSoundManager", fmt::format(TR("error.engine.invalid_access"), "sound manager", "Engine::setSoundManager"));
         return nullptr;
     }
     return Engine::soundManager.get();
+}
+
+void Engine::setSoundManager(AbstractSoundManager* newSoundManager) {
+    Engine::soundManager.reset(newSoundManager);
 }
 
 AbstractSettingsLoader* Engine::getSettingsLoader() {
@@ -514,10 +470,6 @@ AbstractPhysicsProvider* Engine::getPhysicsProvider() {
 
 void Engine::setPhysicsProvider(AbstractPhysicsProvider* newPhysicsProvider) {
     Engine::physicsProvider.reset(newPhysicsProvider);
-}
-
-Root* Engine::getRoot() {
-    return Engine::root;
 }
 
 void Engine::setSettingsLoaderDefaults() {
@@ -546,14 +498,27 @@ void Engine::setSettingsLoaderDefaults() {
     Engine::settingsLoader->save();
 }
 
-void Engine::callRegisteredFunctions(const std::vector<std::function<void()>>* list) {
-    for (const auto& func : *list) {
+void Engine::callRegisteredFunctions(const std::vector<std::function<void()>>& list) {
+    for (const auto& func : list) {
         func();
     }
 }
 
-GLFWwindow* Engine::getWindow() {
-    return Engine::window;
+Root* Engine::getRoot() {
+    return Engine::root;
+}
+
+Console* Engine::getConsole() {
+    return Engine::console;
+}
+
+Profiler* Engine::getProfiler() {
+#if DEBUG
+    return Engine::profiler;
+#else
+    Logger::log(LogType::ERROR, "Engine::getProfiler", "Profiler window is not present in release build!");
+    return nullptr;
+#endif
 }
 
 bool Engine::isStarted() {
@@ -562,20 +527,6 @@ bool Engine::isStarted() {
 
 double Engine::getDeltaTime() {
     return Engine::currentTime - Engine::lastTime;
-}
-
-void Engine::setIcon(const std::string& iconPath) {
-    chira_assert(Engine::isStarted(), TR("error.engine.not_initialized"));
-    GLFWimage images[1];
-    int width, height, bitsPerPixel;
-    Image icon(
-            assert_cast<FilesystemResourceProvider*>(Resource::getResourceProviderWithResource(iconPath))->getAbsoluteResourcePath(iconPath),
-            &width, &height, &bitsPerPixel, 4, false);
-    chira_assert(icon.getData(), TR("error.engine.icon_has_no_data"));
-    images[0].width = width;
-    images[0].height = height;
-    images[0].pixels = icon.getData();
-    glfwSetWindowIcon(Engine::window, 1, images);
 }
 
 void Engine::captureMouse(bool capture) {
@@ -593,19 +544,20 @@ bool Engine::isMouseCaptured() {
     return Engine::mouseCaptured;
 }
 
-Console* Engine::getConsole() {
-    return Engine::console;
-}
-
-Profiler* Engine::getProfiler() {
-#if DEBUG
-    return Engine::profiler;
-#else
-    Logger::log(LogType::ERROR, "Engine::getProfiler", "Profiler window is not present in release build!");
-    return nullptr;
-#endif
-}
-
 bool Engine::isIconified() {
     return Engine::iconified;
+}
+
+void Engine::setIcon(const std::string& iconPath) {
+    chira_assert(Engine::isStarted(), TR("error.engine.not_initialized"));
+    GLFWimage images[1];
+    int width, height, bitsPerPixel;
+    Image icon(
+            assert_cast<FilesystemResourceProvider*>(Resource::getResourceProviderWithResource(iconPath))->getAbsoluteResourcePath(iconPath),
+            &width, &height, &bitsPerPixel, 4, false);
+    chira_assert(icon.getData(), TR("error.engine.icon_has_no_data"));
+    images[0].width = width;
+    images[0].height = height;
+    images[0].pixels = icon.getData();
+    glfwSetWindowIcon(Engine::window, 1, images);
 }
