@@ -92,7 +92,7 @@ namespace chira {
         static double lastTime, currentTime, lastMouseX, lastMouseY;
 
         static void setSettingsLoaderDefaults();
-        /// Note: PNGs must have a bit depth of 8 or less* (less not tested)
+        /// Note: Images must have a bit depth of 8, in RGB format
         static void setIcon(const std::string& iconPath);
         static void displaySplashScreen();
         static void framebufferSizeCallback(GLFWwindow* w, int width, int height);

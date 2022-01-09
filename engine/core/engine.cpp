@@ -193,14 +193,7 @@ void Engine::init() {
             glfwMaximizeWindow(Engine::window);
         }
     }
-
-    if (Engine::getSettingsLoader()->hasValue("engine", "iconPath")) {
-        std::string path;
-        Engine::getSettingsLoader()->getValue("engine", "iconPath", &path);
-        Engine::setIcon(path);
-    } else {
-        Logger::log(LogType::WARNING, "Engine", TR("error.engine.unset_icon_path"));
-    }
+    Engine::setIcon("file://textures/ui/icon.png");
 
     int major, minor, rev;
     glfwGetVersion(&major, &minor, &rev);
@@ -555,7 +548,6 @@ Root* Engine::getRoot() {
 void Engine::setSettingsLoaderDefaults() {
     Engine::settingsLoader->load();
     Engine::settingsLoader->addCategory("engine");
-    Engine::settingsLoader->setValue("engine", "iconPath", std::string("textures/ui/icon.png"), false, false);
     Engine::settingsLoader->setValue("engine", "consoleColoredText", true, false, false);
     Engine::settingsLoader->setValue("engine", "maxPointLights", 64, false, false);
     Engine::settingsLoader->setValue("engine", "maxDirectionalLights", 4, false, false);
@@ -575,7 +567,7 @@ void Engine::setSettingsLoaderDefaults() {
     Engine::settingsLoader->setValue("input", "invertYAxis", false, false, false);
     Engine::settingsLoader->addCategory("ui");
     // todo: use computer language as default
-    Engine::settingsLoader->setValue("ui", "language", std::string("en"), false, false);
+    Engine::settingsLoader->setValue("ui", "language", std::string{"en"}, false, false);
     Engine::settingsLoader->save();
 }
 
@@ -602,7 +594,7 @@ void Engine::setIcon(const std::string& iconPath) {
     GLFWimage images[1];
     int width, height, bitsPerPixel;
     Image icon(
-            assert_cast<FilesystemResourceProvider*>(Resource::getResourceProviderWithResource("file://" + iconPath))->getPath() + "/" + iconPath,
+            assert_cast<FilesystemResourceProvider*>(Resource::getResourceProviderWithResource(iconPath))->getAbsoluteResourcePath(iconPath),
             &width, &height, &bitsPerPixel, 4, false);
     chira_assert(icon.getData(), TR("error.engine.icon_has_no_data"));
     images[0].width = width;
