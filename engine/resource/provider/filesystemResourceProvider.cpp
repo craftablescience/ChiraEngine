@@ -43,7 +43,9 @@ std::string FilesystemResourceProvider::getAbsoluteResourcePath(const std::strin
 
 std::string FilesystemResourceProvider::getResourcePath(const std::string& absolutePath) {
     // Add the resource provider prefix
-    return FILESYSTEM_PROVIDER_NAME + RESOURCE_ID_SEPARATOR.data() + FilesystemResourceProvider::getResourceFolderPath(absolutePath);
+    if (auto path = FilesystemResourceProvider::getResourceFolderPath(absolutePath); !path.empty())
+        return FILESYSTEM_PROVIDER_NAME + RESOURCE_ID_SEPARATOR.data() + path;
+    return "";
 }
 
 std::string FilesystemResourceProvider::getResourceFolderPath(const std::string& absolutePath) {
