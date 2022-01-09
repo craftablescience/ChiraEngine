@@ -1,5 +1,6 @@
 #include <fstream>
 #include <core/engine.h>
+#include <input/inputManager.h>
 #include <resource/provider/filesystemResourceProvider.h>
 #include <entity/3d/model/mesh3d.h>
 #include <i18n/translationManager.h>
@@ -98,12 +99,12 @@ int main() {
     Engine::getSettingsLoader()->setValue("graphics", "windowHeight", 600, true, true);
 
 #ifdef DEBUG
-    Engine::addKeybind(Keybind(GLFW_KEY_GRAVE_ACCENT, GLFW_PRESS, []{
+    InputManager::addCallback(InputKeyButton{Key::GRAVE_ACCENT, InputKeyEventType::PRESSED, []{
         Engine::getConsole()->setVisible(!Engine::getConsole()->isVisible());
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_F1, GLFW_PRESS, []{
+    }});
+    InputManager::addCallback(InputKeyButton{Key::F1, InputKeyEventType::PRESSED, []{
         Engine::getProfiler()->setVisible(!Engine::getProfiler()->isVisible());
-    }));
+    }});
 #endif
 
     std::string_view uiUUID;
@@ -118,8 +119,6 @@ int main() {
             Engine::getRoot()->addChild(new Mesh3d{Resource::getResource<MeshResource>("file://meshes/editor/grid.json")})
         };
         uiUUID = Engine::getRoot()->addChild(modelViewerGui);
-
-        glfwSetWindowAspectRatio(Engine::getWindow(), 500, 600);
     });
     Engine::init();
 

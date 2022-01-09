@@ -1,6 +1,7 @@
 #include "editorCamera3d.h"
 
 #include <core/engine.h>
+#include <input/inputManager.h>
 #include <utility/pointer/assert_cast.h>
 
 using namespace chira;
@@ -26,31 +27,39 @@ EditorCamera3d::EditorCamera3d(const std::string& name_, CameraProjectionMode mo
 }
 
 void EditorCamera3d::setupKeybinds() {
-    Engine::addKeybind(Keybind(GLFW_KEY_W, GLFW_REPEAT, []{
+    InputManager::addCallback(InputKeyButton{Key::W, InputKeyEventType::REPEAT, []{
         if (auto cam = assert_cast<EditorCamera3d*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{0, 0, -cam->getMovementSpeed() * Engine::getDeltaTime()});
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_S, GLFW_REPEAT, []{
+    }});
+    InputManager::addCallback(InputKeyButton{Key::S, InputKeyEventType::REPEAT, []{
         if (auto* cam = assert_cast<EditorCamera3d*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{0, 0, cam->getMovementSpeed() * Engine::getDeltaTime()});
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_A, GLFW_REPEAT, []{
+    }});
+    InputManager::addCallback(InputKeyButton{Key::A, InputKeyEventType::REPEAT, []{
         if (auto* cam = assert_cast<EditorCamera3d*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{-cam->getMovementSpeed() * Engine::getDeltaTime(), 0, 0});
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_D, GLFW_REPEAT, []{
+    }});
+    InputManager::addCallback(InputKeyButton{Key::D, InputKeyEventType::REPEAT, []{
         if (auto* cam = assert_cast<EditorCamera3d*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{cam->getMovementSpeed() * Engine::getDeltaTime(), 0, 0});
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_SPACE, GLFW_REPEAT, []{
+    }});
+    InputManager::addCallback(InputKeyButton{Key::SPACE, InputKeyEventType::REPEAT, []{
         if (auto* cam = assert_cast<EditorCamera3d*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{0, cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT, []{
+    }});
+    InputManager::addCallback(InputKeyButton{Key::LEFT_SHIFT, InputKeyEventType::REPEAT, []{
         if (auto* cam = assert_cast<EditorCamera3d*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{0, -cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
-    }));
-    Engine::addMousebind(Mousebind(MouseActions::MOVE, [](double xOffset, double yOffset) {
+    }});
+    InputManager::addCallback(InputMouseButton{Key::MOUSE_RIGHT, InputKeyEventType::PRESSED, []{
+        if (auto* cam = assert_cast<EditorCamera3d*>(Engine::getRoot()->getMainCamera()); cam)
+            cam->setActive(true);
+    }});
+    InputManager::addCallback(InputMouseButton{Key::MOUSE_RIGHT, InputKeyEventType::RELEASED, []{
+        if (auto* cam = assert_cast<EditorCamera3d*>(Engine::getRoot()->getMainCamera()); cam)
+            cam->setActive(false);
+    }});
+    InputManager::addCallback(InputMouseMovement{InputMouseMovementEventType::MOVE, [](double xOffset, double yOffset) {
         if (auto* cam = assert_cast<EditorCamera3d*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive()) {
             xOffset *= cam->getMouseSensitivity() * Engine::getDeltaTime();
             yOffset *= cam->getMouseSensitivity() * Engine::getDeltaTime();
@@ -69,21 +78,13 @@ void EditorCamera3d::setupKeybinds() {
             else if (cam->pitch < -89.8f)
                 cam->pitch = -89.8f;
         }
-    }));
-    Engine::addKeybind(Keybind(GLFW_MOUSE_BUTTON_2, GLFW_PRESS, []{
-        if (auto* cam = assert_cast<EditorCamera3d*>(Engine::getRoot()->getMainCamera()); cam)
-            cam->setActive(true);
-    }, true));
-    Engine::addKeybind(Keybind(GLFW_MOUSE_BUTTON_2, GLFW_RELEASE, []{
-        if (auto* cam = assert_cast<EditorCamera3d*>(Engine::getRoot()->getMainCamera()); cam)
-            cam->setActive(false);
-    }, true));
-    Engine::addMousebind(Mousebind(MouseActions::SCROLL, [](double xOffset, double yOffset) {
+    }});
+    InputManager::addCallback(InputMouseMovement{InputMouseMovementEventType::SCROLL, [](double x, double y) {
         if (auto* cam = assert_cast<EditorCamera3d*>(Engine::getRoot()->getMainCamera()); cam)
             cam->translateWithRotation(glm::vec3{
-                xOffset * cam->getMovementSpeed() / 40,
+                x * cam->getMovementSpeed() / 40,
                 0,
-                -yOffset * cam->getMovementSpeed() / 40 // negate for OpenGL
+                -y * cam->getMovementSpeed() / 40 // negate for OpenGL
             });
-    }));
+    }});
 }

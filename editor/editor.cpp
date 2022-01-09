@@ -1,4 +1,5 @@
 #include <core/engine.h>
+#include <input/inputManager.h>
 #include <sound/oggFileSound.h>
 #include <hook/discordRPC.h>
 #include <resource/provider/filesystemResourceProvider.h>
@@ -22,26 +23,26 @@ int main() {
     bool discordEnabled;
     Engine::getSettingsLoader()->getValue("engineGui", "discordIntegration", &discordEnabled);
 
-    Engine::addKeybind(Keybind(GLFW_KEY_ESCAPE, GLFW_PRESS, []{
+    InputManager::addCallback(InputKeyButton{Key::ESCAPE, InputKeyEventType::PRESSED, []{
         Engine::stop();
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_1, GLFW_PRESS, []{
+    }});
+    InputManager::addCallback(InputKeyButton{Key::ONE, InputKeyEventType::PRESSED, []{
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_2, GLFW_PRESS, []{
+    }});
+    InputManager::addCallback(InputKeyButton{Key::TWO, InputKeyEventType::PRESSED, []{
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_GRAVE_ACCENT, GLFW_PRESS, []{
+    }});
+    InputManager::addCallback(InputKeyButton{Key::GRAVE_ACCENT, InputKeyEventType::PRESSED, []{
         Engine::getConsole()->setVisible(!Engine::getConsole()->isVisible());
-    }));
+    }});
 #ifdef DEBUG
-    Engine::addKeybind(Keybind(GLFW_KEY_F1, GLFW_PRESS, []{
+    InputManager::addCallback(InputKeyButton{Key::F1, InputKeyEventType::PRESSED, []{
         Engine::getProfiler()->setVisible(!Engine::getProfiler()->isVisible());
-    }));
+    }});
 #endif
-    Engine::addKeybind(Keybind(GLFW_KEY_M, GLFW_PRESS, []{
+    InputManager::addCallback(InputKeyButton{Key::M, InputKeyEventType::PRESSED, []{
         Engine::getSoundManager()->getSound("helloWorld")->play();
-    }));
+    }});
 
     Engine::addInitFunction([&discordEnabled]{
         //region Enable Discord Rich Presence
@@ -69,9 +70,9 @@ int main() {
         //region Add the settings UI window
         auto settingsUI = new Settings{};
         Engine::getRoot()->addChild(settingsUI);
-        Engine::addKeybind(Keybind(GLFW_KEY_O, GLFW_PRESS, [settingsUI]{
+        InputManager::addCallback(InputKeyButton{Key::O, InputKeyEventType::PRESSED, [settingsUI]{
             settingsUI->setVisible(!settingsUI->isVisible());
-        }));
+        }});
         //endregion
 
         //region Add the camera

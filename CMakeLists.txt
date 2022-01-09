@@ -15,12 +15,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 # This is mostly for detecting Clang
 string(TOLOWER "${CMAKE_CXX_COMPILER_ID}" COMPILER_ID)
 
-# Global compile options
-if(UNIX OR MINGW)
-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -fPIC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-endif()
-
 option(CHIRA_BUILD_STATIC "Build Chira Engine's dependencies statically" OFF)
 # todo: clang kind of partially works with shared libs? look into this later
 if(MSVC OR (COMPILER_ID MATCHES "clang"))
@@ -36,6 +30,9 @@ if(CHIRA_BUILD_STATIC)
 else()
     # Build with dynamic (shared) dependencies
     set(BUILD_SHARED_LIBS ON)
+    # Globally compile with PIC
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -fPIC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
 # GOOGLETEST

@@ -1,14 +1,10 @@
 #pragma once
 
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 #include <map>
 #include <functional>
 #include <vector>
 #include <memory>
-#include <input/keybind.h>
-#include <input/mousebind.h>
 #include <loader/settings/abstractSettingsLoader.h>
 #include <script/abstractScriptProvider.h>
 #include <script/angelscriptProvider.h>
@@ -16,6 +12,8 @@
 #include <physics/abstractPhysicsProvider.h>
 #include <entity/3d/root.h>
 #include <utility/math/color.h>
+
+class GLFWwindow;
 
 namespace chira {
     class Console;
@@ -42,11 +40,6 @@ namespace chira {
         static int getWindowHeight();
         static void setWindowSize(int width, int height);
         static void shouldStopAfterThisFrame(bool yes);
-
-        static void addKeybind(const Keybind& keybind);
-        static std::vector<Keybind>* getKeybinds();
-        static void addMousebind(const Mousebind& mousebind);
-        static std::vector<Mousebind>* getMousebinds();
 
         static AngelscriptProvider* getAngelscriptProvider();
         static void setSoundManager(AbstractSoundManager* newSoundManager);
@@ -77,8 +70,6 @@ namespace chira {
         static std::vector<std::function<void()>> stopFunctions;
         static std::unique_ptr<AngelscriptProvider> angelscript;
         static std::unique_ptr<AbstractSoundManager> soundManager;
-        static std::vector<Keybind> keybinds;
-        static std::vector<Mousebind> mousebinds;
         static std::unique_ptr<AbstractSettingsLoader> settingsLoader;
         static std::unique_ptr<AbstractPhysicsProvider> physicsProvider;
         static Root* root;
@@ -95,13 +86,11 @@ namespace chira {
         /// Note: Images must have a bit depth of 8, in RGB format
         static void setIcon(const std::string& iconPath);
         static void displaySplashScreen();
-        static void framebufferSizeCallback(GLFWwindow* w, int width, int height);
         static void keyboardCallback(GLFWwindow* w, int key, int scancode, int action, int mods);
         static void keyboardRepeatingCallback();
-        static void mouseButtonCallback(GLFWwindow* w, int button, int action, int mods);
+        static void mouseButtonCallback(GLFWwindow* w, int key, int action, int mods);
         static void mouseButtonRepeatingCallback();
         static void mouseMovementCallback(GLFWwindow* w, double xPos, double yPos);
-        static void mouseScrollCallback(GLFWwindow* w, double xPos, double yPos);
-        static void windowIconifyCallback(GLFWwindow* w, int isIconified);
+        static void mouseScrollCallback(GLFWwindow* w, double x, double y);
     };
 }

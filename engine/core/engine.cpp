@@ -1,11 +1,14 @@
 #include "engine.h"
 
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 #define IMGUI_USER_CONFIG <config/imguiConfig.h>
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <i18n/translationManager.h>
 #include <config/glVersion.h>
+#include <input/inputManager.h>
 #include <loader/settings/jsonSettingsLoader.h>
 #include <loader/image/image.h>
 #include <sound/alSoundManager.h>
@@ -35,8 +38,6 @@ std::vector<std::function<void()>> Engine::renderFunctions;
 std::vector<std::function<void()>> Engine::stopFunctions;
 std::unique_ptr<AngelscriptProvider> Engine::angelscript = nullptr;
 std::unique_ptr<AbstractSoundManager> Engine::soundManager = nullptr;
-std::vector<Keybind> Engine::keybinds;
-std::vector<Mousebind> Engine::mousebinds;
 std::unique_ptr<AbstractSettingsLoader> Engine::settingsLoader = nullptr;
 std::unique_ptr<AbstractPhysicsProvider> Engine::physicsProvider = nullptr;
 Root* Engine::root = nullptr;
@@ -49,43 +50,33 @@ bool Engine::started = false;
 bool Engine::iconified = false;
 double Engine::lastTime, Engine::currentTime, Engine::lastMouseX, Engine::lastMouseY;
 
-void Engine::framebufferSizeCallback(GLFWwindow* w, int width, int height) {
-    glViewport(0, 0, width, height);
-    if (Engine::root) {
-        Engine::root->getMainCamera()->createProjection(width, height);
-    }
-}
-
 void Engine::keyboardCallback(GLFWwindow* w, int key, int scancode, int action, int mods) {
     if (action == GLFW_REPEAT) return;
-    for (Keybind& k : Engine::keybinds) {
-        if (!k.isMouse() && k.getButton() == key && k.getAction() == action) {
-            k.run();
-        }
+    for (auto& keybind : InputManager::getKeyButtonCallbacks()) {
+        if (keybind.getKey() == static_cast<Key>(key) && keybind.getEventType() == static_cast<InputKeyEventType>(action))
+            keybind();
     }
 }
 
 void Engine::keyboardRepeatingCallback() {
-    for (Keybind& k : Engine::keybinds) {
-        if (!k.isMouse() && glfwGetKey(Engine::window, k.getButton()) && k.getAction() == GLFW_REPEAT) {
-            k.run();
-        }
+    for (auto& keybind : InputManager::getKeyButtonCallbacks()) {
+        if (glfwGetKey(Engine::window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
+            keybind();
     }
 }
 
-void Engine::mouseButtonCallback(GLFWwindow* w, int button, int action, int mods) {
-    for (Keybind& k : Engine::keybinds) {
-        if (k.isMouse() && k.getButton() == button && k.getAction() == action) {
-            k.run();
-        }
+void Engine::mouseButtonCallback(GLFWwindow* w, int key, int action, int mods) {
+    if (action == GLFW_REPEAT) return;
+    for (auto& keybind : InputManager::getMouseButtonCallbacks()) {
+        if (keybind.getKey() == static_cast<Key>(key) && keybind.getEventType() == static_cast<InputKeyEventType>(action))
+            keybind();
     }
 }
 
 void Engine::mouseButtonRepeatingCallback() {
-    for (Keybind& k : Engine::keybinds) {
-        if (k.isMouse() && k.getAction() == GLFW_REPEAT && glfwGetMouseButton(Engine::window, k.getButton())) {
-            k.run();
-        }
+    for (auto& keybind : InputManager::getMouseButtonCallbacks()) {
+        if (glfwGetMouseButton(Engine::window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
+            keybind();
     }
 }
 
@@ -98,26 +89,20 @@ void Engine::mouseMovementCallback(GLFWwindow* w, double xPos, double yPos) {
     double xOffset = xPos - Engine::lastMouseX;
     double yOffset = yPos - Engine::lastMouseY;
 
-    for (Mousebind& bind : Engine::mousebinds) {
-        if (bind.getType() == MouseActions::MOVE) {
-            bind.run(xOffset, yOffset);
-        }
+    for (auto& movebind : InputManager::getMouseMovementCallbacks()) {
+        if (movebind.getType() == InputMouseMovementEventType::MOVE)
+            movebind(xOffset, yOffset);
     }
 
     Engine::lastMouseX = xPos;
     Engine::lastMouseY = yPos;
 }
 
-void Engine::mouseScrollCallback(GLFWwindow* w, double xPos, double yPos) {
-    for (Mousebind& bind : *Engine::getMousebinds()) {
-        if (bind.getType() == MouseActions::SCROLL) {
-            bind.run(xPos, yPos);
-        }
+void Engine::mouseScrollCallback(GLFWwindow* w, double x, double y) {
+    for (auto& movebind : InputManager::getMouseMovementCallbacks()) {
+        if (movebind.getType() == InputMouseMovementEventType::SCROLL)
+            movebind(x,y);
     }
-}
-
-void Engine::windowIconifyCallback(GLFWwindow* w, int isIconified) {
-    Engine::iconified = (isIconified == GLFW_TRUE);
 }
 
 void Engine::preInit(const std::string& configPath) {
@@ -272,7 +257,11 @@ void Engine::init() {
     int width, height;
     glfwGetFramebufferSize(Engine::window, &width, &height);
     glViewport(0, 0, width, height);
-    glfwSetFramebufferSizeCallback(Engine::window, Engine::framebufferSizeCallback);
+    glfwSetFramebufferSizeCallback(Engine::window, [](GLFWwindow* w, int width, int height) {
+        glViewport(0, 0, width, height);
+        if (Engine::root && Engine::root->getMainCamera())
+            Engine::root->getMainCamera()->createProjection(width, height);
+    });
     Engine::setBackgroundColor(ColorRGB{});
 
     MeshResource::addMeshLoader("primitive", new PrimitiveMeshLoader{});
@@ -290,14 +279,16 @@ void Engine::init() {
     glfwSetInputMode(Engine::window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
     bool rawMouseMotion = false;
     Engine::getSettingsLoader()->getValue("input", "rawMouseMotion", &rawMouseMotion);
-    if (glfwRawMouseMotionSupported() && rawMouseMotion) {
+    if (glfwRawMouseMotionSupported() && rawMouseMotion)
         glfwSetInputMode(Engine::window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-    }
+
     glfwSetKeyCallback(Engine::window, Engine::keyboardCallback);
     glfwSetMouseButtonCallback(Engine::window, Engine::mouseButtonCallback);
     glfwSetCursorPosCallback(Engine::window, Engine::mouseMovementCallback);
     glfwSetScrollCallback(Engine::window, Engine::mouseScrollCallback);
-    glfwSetWindowIconifyCallback(Engine::window, Engine::windowIconifyCallback);
+    glfwSetWindowIconifyCallback(Engine::window, [](GLFWwindow* w, int isIconified) {
+        Engine::iconified = (isIconified == GLFW_TRUE);
+    });
 
 #ifdef DEBUG
     IMGUI_CHECKVERSION();
@@ -479,22 +470,6 @@ void Engine::setWindowSize(int width, int height) {
 
 void Engine::shouldStopAfterThisFrame(bool yes) {
     glfwSetWindowShouldClose(Engine::window, yes ? GLFW_TRUE : GLFW_FALSE);
-}
-
-void Engine::addKeybind(const Keybind& keybind) {
-    Engine::keybinds.push_back(keybind);
-}
-
-std::vector<Keybind>* Engine::getKeybinds() {
-    return &(Engine::keybinds);
-}
-
-void Engine::addMousebind(const Mousebind& mousebind) {
-    Engine::mousebinds.push_back(mousebind);
-}
-
-std::vector<Mousebind>* Engine::getMousebinds() {
-    return &(Engine::mousebinds);
 }
 
 AngelscriptProvider* Engine::getAngelscriptProvider() {

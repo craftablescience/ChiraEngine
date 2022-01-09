@@ -1,6 +1,7 @@
 #include "freecam.h"
 
 #include <core/engine.h>
+#include <input/inputManager.h>
 #include <utility/pointer/assert_cast.h>
 
 using namespace chira;
@@ -35,31 +36,35 @@ void Freecam::setActive(bool active_) {
 }
 
 void Freecam::setupKeybinds() {
-    Engine::addKeybind(Keybind(GLFW_KEY_W, GLFW_REPEAT, []{
+    InputManager::addCallback(InputKeyButton{Key::W, InputKeyEventType::REPEAT, []{
         if (auto cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{0, 0, -cam->getMovementSpeed() * Engine::getDeltaTime()});
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_S, GLFW_REPEAT, []{
+    }});
+    InputManager::addCallback(InputKeyButton{Key::S, InputKeyEventType::REPEAT, []{
         if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{0, 0, cam->getMovementSpeed() * Engine::getDeltaTime()});
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_A, GLFW_REPEAT, []{
+    }});
+    InputManager::addCallback(InputKeyButton{Key::A, InputKeyEventType::REPEAT, []{
         if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{-cam->getMovementSpeed() * Engine::getDeltaTime(), 0, 0});
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_D, GLFW_REPEAT, []{
+    }});
+    InputManager::addCallback(InputKeyButton{Key::D, InputKeyEventType::REPEAT, []{
         if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{cam->getMovementSpeed() * Engine::getDeltaTime(), 0, 0});
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_SPACE, GLFW_REPEAT, []{
+    }});
+    InputManager::addCallback(InputKeyButton{Key::SPACE, InputKeyEventType::REPEAT, []{
         if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{0, cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_LEFT_SHIFT, GLFW_REPEAT, []{
+    }});
+    InputManager::addCallback(InputKeyButton{Key::LEFT_SHIFT, InputKeyEventType::REPEAT, []{
         if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive())
             cam->translateWithRotation(glm::vec3{0, -cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
-    }));
-    Engine::addMousebind(Mousebind(MouseActions::MOVE, [](double xOffset, double yOffset) {
+    }});
+    InputManager::addCallback(InputKeyButton{Key::TAB, InputKeyEventType::PRESSED, []{
+        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam)
+            cam->setActive(!cam->getActive());
+    }});
+    InputManager::addCallback(InputMouseMovement{InputMouseMovementEventType::MOVE, [](double xOffset, double yOffset) {
         if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam && cam->getActive()) {
             xOffset *= cam->getMouseSensitivity() * Engine::getDeltaTime();
             yOffset *= cam->getMouseSensitivity() * Engine::getDeltaTime();
@@ -78,9 +83,5 @@ void Freecam::setupKeybinds() {
             else if (cam->pitch < -89.8f)
                 cam->pitch = -89.8f;
         }
-    }));
-    Engine::addKeybind(Keybind(GLFW_KEY_TAB, GLFW_PRESS, []{
-        if (auto* cam = assert_cast<Freecam*>(Engine::getRoot()->getMainCamera()); cam)
-            cam->setActive(!cam->getActive());
-    }));
+    }});
 }
