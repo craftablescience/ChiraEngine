@@ -23,6 +23,10 @@ void ShaderResource::compile(const unsigned char buffer[], std::size_t bufferLen
     StringResource::compile(buffer, bufferLength);
     this->data = std::string{GL_VERSION_STRING} + "\n\n" + this->data;
 
+    // WARNING: The following code is HYPER SENSITIVE
+    // If you change ANYTHING it will BREAK HORRIBLY
+    // TEST ALL CHANGES
+
     // Includes
     static const std::regex includes{ShaderResource::preprocessorPrefix +
                                      "(include[ \t]+([a-z:\\/.]+))" +
@@ -33,8 +37,11 @@ void ShaderResource::compile(const unsigned char buffer[], std::size_t bufferLen
     for (std::sregex_iterator it{this->data.begin(), this->data.end(), includes}; it != std::sregex_iterator{}; it++) {
         if (it->str(2) == this->identifier)
             continue;
-        auto contents = Resource::getResource<StringResource>(it->str(2));
-        ShaderResource::addPreprocessorSymbol(it->str(1), contents->getString());
+        if (ShaderResource::preprocessorSymbols.count(it->str(2)) == 0) {
+            auto contents = Resource::getResource<StringResource>(it->str(2));
+            ShaderResource::addPreprocessorSymbol(it->str(1), contents->getString());
+        }
+        Resource::cleanup(); // todo: clean up from resource destructor
     }
 
     // Macros

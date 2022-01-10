@@ -1,8 +1,6 @@
 #include "engine.h"
 
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 #define IMGUI_USER_CONFIG <config/imguiConfig.h>
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>

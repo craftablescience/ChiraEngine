@@ -4,6 +4,10 @@
 #include <functional>
 #include <vector>
 #include <memory>
+
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
 #include <loader/settings/abstractSettingsLoader.h>
 #include <script/abstractScriptProvider.h>
 #include <script/angelscriptProvider.h>
@@ -11,8 +15,6 @@
 #include <physics/abstractPhysicsProvider.h>
 #include <entity/3d/root.h>
 #include <utility/math/color.h>
-
-class GLFWwindow;
 
 namespace chira {
     class Console;
