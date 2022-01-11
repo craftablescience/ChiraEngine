@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 
 #include <utility/string/stringRemove.h>
+#include <utility/string/stringSplit.h>
 #include <utility/string/stringStrip.h>
 
 using namespace chira;
@@ -17,6 +18,24 @@ TEST(stringRemove, remove) {
     EXPECT_STREQ(test1.c_str(), "Test tring");
     EXPECT_STREQ(test2.c_str(), "Tes Sring");
     EXPECT_STREQ(test3.c_str(), "Tet String");
+}
+
+TEST(stringSplit, splitString1) {
+    std::string test = "TestString1:TestString2:TestString3";
+    auto vec = split(test, ':');
+    ASSERT_EQ(vec.size(), 3);
+    EXPECT_STREQ(vec[0].c_str(), "TestString1");
+    EXPECT_STREQ(vec[1].c_str(), "TestString2");
+    EXPECT_STREQ(vec[2].c_str(), "TestString3");
+}
+
+TEST(stringSplit, splitString2) {
+    std::string test = "Test String 1,Test String 2,Test String 3";
+    auto vec = split(test, ',');
+    ASSERT_EQ(vec.size(), 3);
+    EXPECT_STREQ(vec[0].c_str(), "Test String 1");
+    EXPECT_STREQ(vec[1].c_str(), "Test String 2");
+    EXPECT_STREQ(vec[2].c_str(), "Test String 3");
 }
 
 TEST(stringStrip, stripWhitespace) {
