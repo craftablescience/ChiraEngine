@@ -39,6 +39,7 @@ Again, the goal of the engine is to have as much customization as possible, whil
 | Clang    | Fully supported (on MinGW) | Fully supported  |
 | MSVC     | Partially supported*       | N/A              |
 | Clang-CL | Untested                   | N/A              |
+
 *MSVC cannot compile the engine's dependencies as
 shared libraries, and can only compile for x86.
 
