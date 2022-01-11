@@ -37,13 +37,13 @@ Again, the goal of the engine is to have as much customization as possible, whil
 - cURL v7.77.0
 - cURLpp v0.8.1
 - Discord RPC
-- {fmt} v8.0.1
+- {fmt} v8.1.1
 - GLAD (OpenGL 4.5 Core, no extensions)
-- GLFW v3.3.6
-- GLM v0.9.9.8
+- GLFW v3.3.7
+- GLM v0.9.9.9
 - Dear ImGui v1.86 (docking)
 - imgui_markdown
-- nlohmann_json v3.10.4
+- nlohmann_json v3.10.5
 - libogg v1.3.5
 - libvorbis v1.3.7
 - OpenAL Soft v1.21.1

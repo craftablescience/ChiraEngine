@@ -53,6 +53,7 @@ namespace chira {
         struct Friends {
             static steam::ISteamFriends* get();
             static std::string getPersonaName();
+            // todo: wrap around the rest
         };
 
         struct Utils {
