@@ -38,10 +38,9 @@ void ShaderResource::compile(const unsigned char buffer[], std::size_t bufferLen
         if (it->str(2) == this->identifier)
             continue;
         if (ShaderResource::preprocessorSymbols.count(it->str(2)) == 0) {
-            auto contents = Resource::getResource<StringResource>(it->str(2));
+            auto contents = Resource::getUniqueUncachedResource<StringResource>(it->str(2));
             ShaderResource::addPreprocessorSymbol(it->str(1), contents->getString());
         }
-        Resource::cleanup(); // todo: clean up from resource destructor
     }
 
     // Macros

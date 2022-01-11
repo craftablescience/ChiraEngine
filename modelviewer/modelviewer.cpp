@@ -13,7 +13,9 @@ using namespace chira;
 
 class ModelViewerGui : public Window {
 public:
-    explicit ModelViewerGui(const std::string_view& meshId_) : Window(TR("ui.window.title"), true), meshId(meshId_) {
+    explicit ModelViewerGui(const std::string_view& meshId_)
+        : Window(TR("ui.window.title"), true)
+        , meshId(meshId_) {
         this->flags |=
                 ImGuiWindowFlags_NoTitleBar   |
                 ImGuiWindowFlags_NoDecoration |
@@ -31,6 +33,7 @@ public:
         if (meshName == Engine::getRoot()->getChild<Mesh3d>(this->meshId.data())->getMeshResource()->getIdentifier())
             return;
         Engine::getRoot()->removeChild(this->meshId.data());
+        Resource::cleanup();
         this->meshId = Engine::getRoot()->addChild(new Mesh3d{Resource::getResource<MeshResource>(meshName)});
         ModelViewerGui::loadedFile = meshName;
     }

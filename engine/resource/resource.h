@@ -96,6 +96,22 @@ namespace chira {
             Resource::logResourceError("error.resource.resource_not_found", identifier);
         }
 
+        /// You might want to use this sparingly as it defeats the entire point of a cached, shared resource system.
+        template<typename ResourceType, typename... Params>
+        static std::unique_ptr<ResourceType> getUniqueUncachedResource(const std::string& identifier, Params... params) {
+            auto id = Resource::splitResourceIdentifier(identifier);
+            const std::string& provider = id.first, name = id.second;
+            for (auto i = Resource::providers[provider].rbegin(); i != Resource::providers[provider].rend(); i++) {
+                if (i->get()->hasResource(name)) {
+                    auto resource = std::make_unique<ResourceType>(identifier, params...);
+                    i->get()->compileResource(name, resource.get());
+                    return resource;
+                }
+            }
+            Resource::logResourceError("error.resource.resource_not_found", identifier);
+            return nullptr;
+        }
+
         /// The only way to make a propertiesResource without a provider is to make it unique, and not to cache it.
         /// You might want to use this sparingly as it defeats the entire point of a cached, shared resource system.
         template<typename ResourceType, typename... Params>
