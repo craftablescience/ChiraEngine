@@ -2,7 +2,7 @@
 
 #include <string>
 
-class DiscordUser;
+struct DiscordUser;
 
 namespace chira {
     /// Updates are handled by the engine. All you need to do is run the init() method.
