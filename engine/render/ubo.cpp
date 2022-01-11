@@ -11,7 +11,7 @@ UBO::UBO(std::string name_, unsigned int size) : HandleObject<unsigned int>(), n
     this->bindingPoint = UBO::uboBindingPoint++;
     glGenBuffers(1, &this->handle);
     glBindBuffer(GL_UNIFORM_BUFFER, this->handle);
-    glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, this->bindingPoint);
     glBindBufferRange(GL_UNIFORM_BUFFER, this->bindingPoint, this->handle, 0, size);
 }
@@ -26,7 +26,7 @@ void UBO::bindToShader(Shader* shader_) const {
 
 void UBO::update(const unsigned char buffer[], GLsizeiptr length) const {
     glBindBuffer(GL_UNIFORM_BUFFER, this->handle);
-    glBufferData(GL_UNIFORM_BUFFER, length, buffer, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, length, buffer, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
