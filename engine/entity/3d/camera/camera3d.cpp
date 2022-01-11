@@ -4,22 +4,30 @@
 
 using namespace chira;
 
-Camera3d::Camera3d(Entity* parent_, CameraProjectionMode mode, float fov_) : Entity3d(parent_), fov(fov_) {
+Camera3d::Camera3d(Entity* parent_, CameraProjectionMode mode, float fov_)
+    : Entity3d(parent_)
+    , fov(fov_) {
     this->projectionMode = mode;
     this->createProjection(Engine::getWindowWidth(), Engine::getWindowHeight());
 }
 
-Camera3d::Camera3d(Entity* parent_, const std::string& name_, CameraProjectionMode mode, float fov_) : Entity3d(parent_, name_), fov(fov_) {
+Camera3d::Camera3d(Entity* parent_, const std::string& name_, CameraProjectionMode mode, float fov_)
+    : Entity3d(parent_, name_)
+    , fov(fov_) {
     this->projectionMode = mode;
     this->createProjection(Engine::getWindowWidth(), Engine::getWindowHeight());
 }
 
-Camera3d::Camera3d(CameraProjectionMode mode, float fov_) : Entity3d(), fov(fov_) {
+Camera3d::Camera3d(CameraProjectionMode mode, float fov_)
+    : Entity3d()
+    , fov(fov_) {
     this->projectionMode = mode;
     this->createProjection(Engine::getWindowWidth(), Engine::getWindowHeight());
 }
 
-Camera3d::Camera3d(const std::string& name_, CameraProjectionMode mode, float fov_) : Entity3d(name_), fov(fov_) {
+Camera3d::Camera3d(const std::string& name_, CameraProjectionMode mode, float fov_)
+    : Entity3d(name_)
+    , fov(fov_) {
     this->projectionMode = mode;
     this->createProjection(Engine::getWindowWidth(), Engine::getWindowHeight());
 }

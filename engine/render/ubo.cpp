@@ -7,7 +7,7 @@ using namespace chira;
 
 unsigned int UBO::uboBindingPoint = 0;
 
-UBO::UBO(std::string name_, unsigned int size) : HandleObject<unsigned int>(), name(std::move(name_)) {
+UBO::UBO(std::string name_, unsigned int size) : HandleObject<unsigned int>(0), name(std::move(name_)) {
     this->bindingPoint = UBO::uboBindingPoint++;
     glGenBuffers(1, &this->handle);
     glBindBuffer(GL_UNIFORM_BUFFER, this->handle);

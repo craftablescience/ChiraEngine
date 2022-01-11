@@ -4,7 +4,7 @@
 
 using namespace chira;
 
-Root::Root(const std::string& name_) : World3d(nullptr, name_) {
+Root::Root(const std::string& name_) : World3d(name_) {
     this->skybox = Resource::getResource<MeshResource>("file://meshes/skybox.json");
 }
 

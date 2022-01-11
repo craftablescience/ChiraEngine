@@ -9,7 +9,9 @@ namespace chira {
     /// Additionally, the "name" passed to it is the protocol it uses (e.g. http, https, ftp, etc.)
     class InternetResourceProvider : public AbstractResourceProvider {
     public:
-        explicit InternetResourceProvider(const std::string& name_, unsigned short port_) : AbstractResourceProvider(name_), port(port_) {}
+        explicit InternetResourceProvider(const std::string& name_, unsigned short port_)
+            : AbstractResourceProvider(name_)
+            , port(port_) {}
         /// Redefines this function to always return true.
         /// This is better than sending a request to the URI and seeing if it's valid, because that will take a lot of time.
         /// It lets us request the resource immediately, but you must know beforehand that it's a valid URI.

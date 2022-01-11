@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility/primitiveTypes.h>
+
 namespace chira {
     class AbstractImage {
     public:
@@ -9,6 +11,6 @@ namespace chira {
         virtual ~AbstractImage() = default;
     protected:
         // The pointer is deleted by subclass(es)
-        unsigned char* data = nullptr;
+        byte* data = nullptr;
     };
 }

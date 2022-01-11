@@ -13,7 +13,10 @@ std::string ShaderResource::preprocessorPrefix = std::string{SHADER_PREPROCESSOR
 std::string ShaderResource::preprocessorSuffix = std::string{SHADER_PREPROCESSOR_DEFAULT_SUFFIX}; // NOLINT(cert-err58-cpp)
 std::unordered_map<std::string, std::string> ShaderResource::preprocessorSymbols{};
 
-ShaderResource::ShaderResource(const std::string& identifier_, int type_) : StringResource(identifier_), HandleObject<int>(), type(type_) {}
+ShaderResource::ShaderResource(const std::string& identifier_, int type_)
+    : StringResource(identifier_)
+    , HandleObject<int>()
+    , type(type_) {}
 
 void ShaderResource::compile(const unsigned char buffer[], std::size_t bufferLength) {
     if (this->handle != -1)

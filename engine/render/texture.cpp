@@ -6,7 +6,9 @@
 
 using namespace chira;
 
-Texture::Texture(const std::string& identifier_, bool cacheTexture) : PropertiesResource(identifier_), cache(cacheTexture) {}
+Texture::Texture(const std::string& identifier_, bool cacheTexture)
+    : PropertiesResource(identifier_)
+    , cache(cacheTexture) {}
 
 void Texture::compile(const nlohmann::json& properties) {
     this->format = getFormatFromString(getPropertyOrDefault<std::string>(properties["properties"], "format", std::string("RGBA")));
@@ -20,11 +22,10 @@ void Texture::compile(const nlohmann::json& properties) {
         return;
     glGenTextures(1, &this->handle);
 
-    if (this->activeTextureUnit == -1) {
+    if (this->activeTextureUnit == -1)
         glActiveTexture(GL_TEXTURE0);
-    } else {
+    else
         glActiveTexture(this->activeTextureUnit);
-    }
     glBindTexture(GL_TEXTURE_2D, this->handle);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrapModeS);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrapModeT);
@@ -33,9 +34,8 @@ void Texture::compile(const nlohmann::json& properties) {
 
     if (texData->getFile() && texData->getFile()->getData()) {
         glTexImage2D(GL_TEXTURE_2D, 0, this->format, texData->getWidth(), texData->getHeight(), 0, this->format, GL_UNSIGNED_BYTE, texData->getData());
-        if (this->mipmaps) {
+        if (this->mipmaps)
             glGenerateMipmap(GL_TEXTURE_2D);
-        }
     } else {
         Logger::log(LogType::ERROR, "Texture", TR("error.opengl.texture_compile"));
     }

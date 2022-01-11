@@ -23,8 +23,8 @@ namespace chira {
         virtual void setValue(const std::string& category, const std::string& name, const std::string& value, bool overwrite, bool save) = 0;
         virtual void setValue(const std::string& category, const std::string& name, bool value, bool overwrite, bool save) = 0;
 
-        virtual bool hasCategory(const std::string& category) const = 0;
-        virtual bool hasValue(const std::string& category, const std::string& name) const = 0;
+        [[nodiscard]] virtual bool hasCategory(const std::string& category) const = 0;
+        [[nodiscard]] virtual bool hasValue(const std::string& category, const std::string& name) const = 0;
         virtual void load() = 0;
         virtual void save() = 0;
     };

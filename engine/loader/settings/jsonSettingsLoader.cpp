@@ -5,7 +5,9 @@
 
 using namespace chira;
 
-JSONSettingsLoader::JSONSettingsLoader(const std::string& path) : AbstractFileSettingsLoader(path), settings() {}
+JSONSettingsLoader::JSONSettingsLoader(const std::string& path)
+    : AbstractFileSettingsLoader(path)
+    , settings() {}
 
 void JSONSettingsLoader::addCategory(const std::string& category) {
     if (!this->settings.contains(category)) {

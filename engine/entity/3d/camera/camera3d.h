@@ -5,7 +5,7 @@
 namespace chira {
     enum class CameraProjectionMode {
         PERSPECTIVE,
-        //ORTHOGRAPHIC
+        //ORTHOGRAPHIC,
     };
 
     class Camera3d : public Entity3d {

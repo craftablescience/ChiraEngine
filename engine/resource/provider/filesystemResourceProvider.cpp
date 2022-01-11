@@ -6,9 +6,9 @@
 
 using namespace chira;
 
-FilesystemResourceProvider::FilesystemResourceProvider(const std::string& path_) :
-        AbstractResourceProvider(FILESYSTEM_PROVIDER_NAME),
-        path(FILESYSTEM_ROOT_FOLDER + '/' + strip(path_, '/')) {}
+FilesystemResourceProvider::FilesystemResourceProvider(const std::string& path_)
+    : AbstractResourceProvider(FILESYSTEM_PROVIDER_NAME)
+    , path(FILESYSTEM_ROOT_FOLDER + '/' + strip(path_, '/')) {}
 
 bool FilesystemResourceProvider::hasResource(const std::string& name) const {
     // Update your compiler if compilation fails because of std::filesystem

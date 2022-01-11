@@ -9,7 +9,9 @@
 
 using namespace chira;
 
-Shader::Shader(const std::string& identifier_) : PropertiesResource(identifier_), HandleObject<int>() {}
+Shader::Shader(const std::string& identifier_)
+    : PropertiesResource(identifier_)
+    , HandleObject<int>() {}
 
 void Shader::compile(const nlohmann::json& properties) {
     this->handle = glCreateProgram();
