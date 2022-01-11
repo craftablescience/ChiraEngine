@@ -28,6 +28,9 @@
 #include <windows.h>
 #undef ERROR
 #endif
+#ifdef CHIRA_BUILD_WITH_STEAMWORKS
+#include <hook/steamAPI.h>
+#endif
 
 using namespace chira;
 
@@ -288,6 +291,13 @@ void Engine::init() {
     if (bulletEnabled)
         Engine::setPhysicsProvider(new BulletPhysicsProvider{});
 
+#ifdef CHIRA_BUILD_WITH_STEAMWORKS
+    bool steamEnabled = false;
+    Engine::getSettingsLoader()->getValue("engine", "steamworks", &steamEnabled);
+    if (steamEnabled && !SteamAPI::initSteam())
+        Logger::log(LogType::ERROR, "Steam", "Could not initialize Steam API!"); // todo(i18n)
+#endif
+
     Engine::angelscript = std::make_unique<AngelscriptProvider>();
     Engine::angelscript->initProvider();
     // Static function:
@@ -352,6 +362,10 @@ void Engine::run() {
 
         if (DiscordRPC::initialized())
             DiscordRPC::updatePresence();
+#ifdef CHIRA_BUILD_WITH_STEAMWORKS
+        if (SteamAPI::initialized())
+            SteamAPI::runCallbacks();
+#endif
         Events::update();
         Resource::cleanup();
 
@@ -366,9 +380,12 @@ void Engine::stop() {
     Engine::callRegisteredFunctions(Engine::stopFunctions);
     Engine::angelscript->stop();
 
-    if (DiscordRPC::initialized()) {
+    if (DiscordRPC::initialized())
         DiscordRPC::shutdown();
-    }
+#ifdef CHIRA_BUILD_WITH_STEAMWORKS
+    if (SteamAPI::initialized())
+        SteamAPI::shutdown();
+#endif
 
     Engine::soundManager->stop();
     delete Engine::root;
@@ -477,6 +494,7 @@ void Engine::setSettingsLoaderDefaults() {
     Engine::settingsLoader->setValue("engine", "maxPointLights", 64, false, false);
     Engine::settingsLoader->setValue("engine", "maxDirectionalLights", 4, false, false);
     Engine::settingsLoader->setValue("engine", "maxSpotLights", 4, false, false);
+    Engine::settingsLoader->setValue("engine", "steamworks", false, false, false);
     Engine::settingsLoader->addCategory("audio");
     Engine::settingsLoader->setValue("audio", "openal", true, false, false);
     Engine::settingsLoader->addCategory("physics");

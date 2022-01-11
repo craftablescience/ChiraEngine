@@ -154,6 +154,11 @@ list(APPEND ENGINE_LINK_LIBRARIES ogg)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/vorbis)
 list(APPEND ENGINE_LINK_LIBRARIES vorbis vorbisenc vorbisfile)
 
+# LIBLOADER
+set(LIBLOADER_BUILD_TEST OFF CACHE BOOL "" FORCE)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/libloader)
+list(APPEND ENGINE_LINK_LIBRARIES LibLoader)
+
 # NLOHMANN_JSON
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/json)
@@ -173,8 +178,13 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/tinyfiledialogs)
 list(APPEND ENGINE_LINK_LIBRARIES tinyfiledialogs)
 
 # CHIRAENGINE
+option(CHIRA_BUILD_WITH_STEAMWORKS "Build Chira Engine with Steamworks API features" ON)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/CMakeLists.txt)
 add_library(${PROJECT_NAME} STATIC ${ENGINE_SOURCES})
+
+if(CHIRA_BUILD_WITH_STEAMWORKS)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_BUILD_WITH_STEAMWORKS)
+endif()
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD2)
 if(CHIRA_BUILD_STATIC)
