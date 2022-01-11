@@ -31,6 +31,17 @@ To summarize the major features:
 
 Again, the goal of the engine is to have as much customization as possible, while still maintaining ease of use.
 
+## Supported Compilers
+
+|          | Windows                    | Linux            |
+|----------|----------------------------|------------------|
+| GCC      | Fully supported (on MinGW) | Fully supported  |
+| Clang    | Fully supported (on MinGW) | Fully supported  |
+| MSVC     | Partially supported*       | N/A              |
+| Clang-CL | Untested                   | N/A              |
+*MSVC cannot compile the engine's dependencies as
+shared libraries, and can only compile for x86.
+
 ## Bundled Dependencies
 - AngelScript v2.34.0
 - Bullet v3.21
@@ -51,7 +62,7 @@ Again, the goal of the engine is to have as much customization as possible, whil
 - stduuid v1.1
 - TinyFileDialogs v3.8.8
 
-## Compilation (Windows)
+## Development (Windows)
 - **CLion (recommended)**: The project will compile without any prior configuration, but you will most likely need to install the Windows SDK (see below).
 
 - Visual Studio 2019: You will need to install (most of) the following components. Some are not required, like the AddressSanitizer and Just-In-Time debugger.
@@ -61,7 +72,7 @@ Again, the goal of the engine is to have as much customization as possible, whil
   It will also build the engine and its dependencies statically.
   I strongly recommend compiling with MinGW, but if you can't, target x86.
 
-## Compilation (Linux)
+## Development (Linux)
 - **CLion (recommended)**: The project will compile without any prior configuration, but you will need to install a few things first.
   
   On Debian-based distros, run:

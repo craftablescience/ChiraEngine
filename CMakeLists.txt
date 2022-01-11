@@ -12,18 +12,27 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-# Globally compile with PIC
-if(UNIX OR MINGW)
-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -fPIC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+# Compile with PIC
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# This is for detecting Clang, MSVC, and Clang-CL
+string(TOLOWER "${CMAKE_CXX_COMPILER_ID}" CHIRA_COMPILER_ID)
+string(TOLOWER "${CMAKE_CXX_SIMULATE_ID}" CHIRA_SIMULATE_ID)
+set(CHIRA_COMPILER_CLANG OFF)
+set(CHIRA_COMPILER_MSVC  OFF)
+if(MSVC)
+    set(CHIRA_COMPILER_MSVC ON)
+endif()
+if(CHIRA_COMPILER_ID MATCHES "clang")
+    if(NOT (CHIRA_SIMULATE_ID MATCHES "msvc"))
+        set(CHIRA_COMPILER_CLANG ON)
+    else()
+        set(CHIRA_COMPILER_MSVC  ON)
+    endif()
 endif()
 
-# This is mostly for detecting Clang
-string(TOLOWER "${CMAKE_CXX_COMPILER_ID}" COMPILER_ID)
-
 option(CHIRA_BUILD_STATIC "Build Chira Engine's dependencies statically" OFF)
-# todo: clang kind of partially works with shared libs? look into this later
-if(MSVC OR (COMPILER_ID MATCHES "clang"))
+if(CHIRA_COMPILER_MSVC)
     set(CHIRA_BUILD_STATIC ON)
 endif()
 if(CHIRA_BUILD_STATIC)
@@ -40,7 +49,10 @@ endif()
 
 # GOOGLETEST
 option(CHIRA_BUILD_TESTS "Run Chira Engine's built-in tests" ON)
-if(CHIRA_BUILD_TESTS AND (NOT MSVC))
+if(CHIRA_COMPILER_MSVC)
+    set(CHIRA_BUILD_TESTS OFF)
+endif()
+if(CHIRA_BUILD_TESTS)
     # For some reason Visual Studio doesn't like this
     include(FetchContent)
     FetchContent_Declare(
@@ -58,6 +70,10 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript)
 list(APPEND ENGINE_LINK_LIBRARIES angelscript)
 
 # BULLET
+if((NOT CHIRA_BUILD_STATIC) AND CHIRA_COMPILER_CLANG)
+    # Program has a fit at runtime if Bullet isn't statically linked compiling with clang
+    set(BUILD_SHARED_LIBS OFF)
+endif()
 cmake_policy(SET CMP0077 NEW)
 set(PKGCONFIG_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 set(USE_GRAPHICAL_BENCHMARK OFF CACHE BOOL "" FORCE)
@@ -67,17 +83,19 @@ set(BUILD_BULLET2_DEMOS     OFF CACHE BOOL "" FORCE)
 set(BUILD_OPENGL3_DEMOS     OFF CACHE BOOL "" FORCE)
 set(BUILD_EXTRAS            OFF CACHE BOOL "" FORCE)
 set(BUILD_UNIT_TESTS        OFF CACHE BOOL "" FORCE)
-# No networking support... yet
 set(BUILD_ENET              OFF CACHE BOOL "" FORCE)
 set(BUILD_CLSOCKET          OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/bullet)
-list(APPEND ENGINE_LINK_LIBRARIES BulletDynamics BulletCollision LinearMath)
+list(APPEND ENGINE_LINK_LIBRARIES Bullet3Common BulletDynamics BulletCollision LinearMath)
+if((NOT CHIRA_BUILD_STATIC) AND CHIRA_COMPILER_CLANG)
+    set(BUILD_SHARED_LIBS ON)
+endif()
 
 # CURL
 set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
 set(HTTP_ONLY ON CACHE BOOL "" FORCE)
 set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
-if(CHIRA_BUILD_STATIC AND MSVC)
+if(CHIRA_BUILD_STATIC AND CHIRA_COMPILER_MSVC)
     set(CURL_STATIC_CRT ON CACHE BOOL "" FORCE)
 else()
     set(CURL_STATIC_CRT OFF CACHE BOOL "" FORCE)
@@ -88,7 +106,7 @@ set(CURL_LIBRARY libcurl)
 list(APPEND ENGINE_LINK_LIBRARIES libcurl)
 
 # CURLPP
-if(CHIRA_BUILD_STATIC AND MSVC)
+if(CHIRA_BUILD_STATIC AND CHIRA_COMPILER_MSVC)
     set(CURLPP_STATIC_CRT ON CACHE BOOL "" FORCE)
 else()
     set(CURLPP_STATIC_CRT OFF CACHE BOOL "" FORCE)
@@ -192,14 +210,14 @@ if(CHIRA_BUILD_STATIC)
 endif()
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     target_compile_definitions(${PROJECT_NAME} PUBLIC DEBUG)
-    if(COMPILER_ID MATCHES "clang")
+    if(CHIRA_COMPILER_CLANG)
         target_compile_options(${PROJECT_NAME} PUBLIC -fno-limit-debug-info)
     endif()
     if(UNIX OR MINGW)
         # On UNIX, build with debug friendly optimizations and debug symbols
         # On windows, just disable optimizations entirely
         target_compile_options(${PROJECT_NAME} PUBLIC -Og -g)
-    elseif(MSVC)
+    elseif(CHIRA_COMPILER_MSVC)
         target_compile_options(${PROJECT_NAME} PUBLIC /Od)
     endif()
 elseif(CMAKE_BUILD_TYPE MATCHES Release)
@@ -207,7 +225,7 @@ elseif(CMAKE_BUILD_TYPE MATCHES Release)
     # Build with max optimizations and don't omit stack ptr for debugging reasons
     if(UNIX OR MINGW)
         target_compile_options(${PROJECT_NAME} PUBLIC -O3 -fno-omit-frame-pointer)
-    elseif(MSVC)
+    elseif(CHIRA_COMPILER_MSVC)
         target_compile_options(${PROJECT_NAME} PUBLIC /O2)
     endif()
 endif()
@@ -216,7 +234,7 @@ option(CHIRA_BUILD_WITH_WARNINGS "Build Chira Engine with warnings enabled" ON)
 if(CHIRA_BUILD_WITH_WARNINGS)
     if(UNIX OR MINGW)
         target_compile_options(${PROJECT_NAME} PUBLIC -Wall)
-    elseif(MSVC)
+    elseif(CHIRA_COMPILER_MSVC)
         target_compile_options(${PROJECT_NAME} PUBLIC /Wall)
     endif()
 endif()
@@ -266,7 +284,7 @@ if(CHIRA_BUILD_MODEL_VIEWER)
     target_include_directories(ChiraModelViewer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/modelviewer)
 endif()
 
-if(CHIRA_BUILD_TESTS AND (NOT MSVC))
+if(CHIRA_BUILD_TESTS)
     add_executable(ChiraTest ${TEST_SOURCES})
     target_link_libraries(ChiraTest PUBLIC ${PROJECT_NAME} ${OPENGL_LIBRARIES} gtest_main)
     include(GoogleTest)
@@ -309,7 +327,7 @@ if(CHIRA_BUILD_MODEL_VIEWER)
 endif()
 
 # Copy test resources
-if(CHIRA_BUILD_TESTS AND (NOT MSVC))
+if(CHIRA_BUILD_TESTS)
     add_custom_command(TARGET ChiraTest PRE_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources/test ${CMAKE_BINARY_DIR}/resources/test)
     add_custom_command(TARGET ChiraTest PRE_BUILD
