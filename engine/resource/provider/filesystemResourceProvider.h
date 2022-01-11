@@ -27,6 +27,8 @@ namespace chira {
         static std::string getResourceFolderPath(const std::string& absolutePath);
         /// Takes a resource identifier and returns the full absolute path, if it exists.
         static std::string getResourceAbsolutePath(const std::string& identifier);
+
+        static inline constexpr short FILEPATH_MAX_LENGTH = 1024;
     private:
         std::string path;
     };

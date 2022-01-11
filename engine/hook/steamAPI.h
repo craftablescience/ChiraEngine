@@ -85,19 +85,33 @@ namespace chira {
         };
 
         struct Apps {
-            static steam::ISteamApps*       get();
-            static bool                     userOwnsThisAppID();
-            static bool                     isLowViolence();
-            static bool                     isCybercafe();
-            static bool                     isVACBanned();
-            static std::string              getCurrentGameLanguage();
-            static std::vector<std::string> getAvailableGameLanguages();
-            static bool                     isSubscribedApp(std::uint32_t appID);
-            static bool                     isDLCInstalled(std::uint32_t appID);
-            static std::uint32_t            getEarliestPurchaseUnixTime(std::uint32_t appID);
-            static bool                     isSubscribedFromFreeWeekend();
-            static int                      getDLCCount();
-            // todo: wrap around the rest
+            static steam::ISteamApps*         get();
+            static bool                       userOwnsThisAppID();
+            static bool                       isLowViolence();
+            static bool                       isCybercafe();
+            static bool                       isVACBanned();
+            static std::string                getCurrentGameLanguage();
+            static std::vector<std::string>   getAvailableGameLanguages();
+            static bool                       isSubscribedApp(std::uint32_t appID);
+            static bool                       isDLCInstalled(std::uint32_t appID);
+            static std::uint32_t              getEarliestPurchaseUnixTime(std::uint32_t appID);
+            static bool                       isSubscribedFromFreeWeekend();
+            static int                        getDLCCount();
+            static bool                       getDLCData(int dlc, std::uint32_t* appID, bool* available, std::string& name);
+            static void                       installDLC(std::uint32_t appID);
+            static void                       uninstallDLC(std::uint32_t appID);
+            static std::string                getCurrentBranch();
+            static bool                       markContentCorrupt(bool missingFilesOnly);
+            static std::vector<std::uint32_t> getInstalledDepots(std::uint32_t appID);
+            static std::string                getAppInstallPath(std::uint32_t appID);
+            static bool                       isAppInstalled(std::uint32_t appID);
+            static std::uint64_t              getAppOwner();
+            static std::string                getLaunchParameter(const std::string& key);
+            static bool                       getDLCDownloadProgress(std::uint32_t appID, std::uint64_t* bytesDownloaded, std::uint64_t* bytesTotal);
+            static int                        getAppBuildID();
+            static std::uint64_t              getFileDetails(const std::string& filename);
+            static bool                       isSubscribedFromFamilySharing();
+            static bool                       isTimedTrial(std::uint32_t* secondsAllowed, std::uint32_t* secondsPlayed);
         };
 
         struct UGC {

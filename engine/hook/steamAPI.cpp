@@ -1,6 +1,8 @@
 #include "steamAPI.h"
 
 #include <libloader.hpp>
+#undef MAX_PATH
+
 #include <resource/provider/filesystemResourceProvider.h>
 #include <utility/logger.h>
 #include <utility/string/stringSplit.h>
@@ -80,7 +82,7 @@ ISteamUser* SteamAPI::User::get() {
 }
 
 bool SteamAPI::User::isLoggedOn() {
-    return steamFunctionWrapper("SteamAPI_ISteamUser_BLoggedOn", false, SteamAPI::User::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamUser_BLoggedOn", false, SteamAPI::User::get());
 }
 
 std::uint64_t SteamAPI::User::getSteamID() {
@@ -88,7 +90,7 @@ std::uint64_t SteamAPI::User::getSteamID() {
 }
 
 bool SteamAPI::User::isBehindNAT() {
-    return steamFunctionWrapper("SteamAPI_ISteamUser_BIsBehindNAT", false, SteamAPI::User::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamUser_BIsBehindNAT", false, SteamAPI::User::get());
 }
 
 int SteamAPI::User::getGameBadgeLevel(bool foil, int series) {
@@ -100,19 +102,19 @@ int SteamAPI::User::getPlayerSteamLevel() {
 }
 
 bool SteamAPI::User::isPhoneVerified() {
-    return steamFunctionWrapper("SteamAPI_ISteamUser_BIsPhoneVerified", false, SteamAPI::User::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamUser_BIsPhoneVerified", false, SteamAPI::User::get());
 }
 
 bool SteamAPI::User::isTwoFactorAuthenticationEnabled() {
-    return steamFunctionWrapper("SteamAPI_ISteamUser_BIsTwoFactorEnabled", false, SteamAPI::User::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamUser_BIsTwoFactorEnabled", false, SteamAPI::User::get());
 }
 
 bool SteamAPI::User::isPhoneIdentifying() {
-    return steamFunctionWrapper("SteamAPI_ISteamUser_BIsPhoneIdentifying", false, SteamAPI::User::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamUser_BIsPhoneIdentifying", false, SteamAPI::User::get());
 }
 
 bool SteamAPI::User::isPhoneRequiringVerification() {
-    return steamFunctionWrapper("SteamAPI_ISteamUser_BIsPhoneRequiringVerification", false, SteamAPI::User::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamUser_BIsPhoneRequiringVerification", false, SteamAPI::User::get());
 }
 
 std::uint64_t SteamAPI::User::getMarketEligibility() {
@@ -152,15 +154,15 @@ std::uint32_t SteamAPI::Utils::getServerRealTime() {
 }
 
 std::string SteamAPI::Utils::getIPCountry() {
-    return steamFunctionStringWrapper("SteamAPI_ISteamUtils_GetIPCountry", "", SteamAPI::Utils::get());
+    return steamFunctionStringWrapper<bool>("SteamAPI_ISteamUtils_GetIPCountry", "", SteamAPI::Utils::get());
 }
 
 bool SteamAPI::Utils::getImageSize(int imageID, std::uint32_t* width, std::uint32_t* height) {
-    return steamFunctionWrapper("SteamAPI_ISteamUtils_GetImageSize", false, SteamAPI::Utils::get(), imageID, width, height);
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamUtils_GetImageSize", false, SteamAPI::Utils::get(), imageID, width, height);
 }
 
 bool SteamAPI::Utils::getImageRGBA(int imageID, std::uint8_t* imageBuffer, int imageBufferSize) {
-    return steamFunctionWrapper("SteamAPI_ISteamUtils_GetImageRGBA", false, SteamAPI::Utils::get(), imageID, imageBuffer, imageBufferSize);
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamUtils_GetImageRGBA", false, SteamAPI::Utils::get(), imageID, imageBuffer, imageBufferSize);
 }
 
 std::uint8_t SteamAPI::Utils::getCurrentBatteryPower() {
@@ -181,11 +183,11 @@ std::uint32_t SteamAPI::Utils::getIPCCallCount() {
 }
 
 bool SteamAPI::Utils::isOverlayEnabled() {
-    return steamFunctionWrapper("SteamAPI_ISteamUtils_IsOverlayEnabled", false, SteamAPI::Utils::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamUtils_IsOverlayEnabled", false, SteamAPI::Utils::get());
 }
 
 bool SteamAPI::Utils::isRunningInVR() {
-    return steamFunctionWrapper("SteamAPI_ISteamUtils_IsSteamRunningInVR", false, SteamAPI::Utils::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamUtils_IsSteamRunningInVR", false, SteamAPI::Utils::get());
 }
 
 void SteamAPI::Utils::setOverlayNotificationInset(int horizontalInset, int verticalInset) {
@@ -194,7 +196,7 @@ void SteamAPI::Utils::setOverlayNotificationInset(int horizontalInset, int verti
 }
 
 bool SteamAPI::Utils::isBigPictureModeOn() {
-    return steamFunctionWrapper("SteamAPI_ISteamUtils_IsSteamInBigPictureMode", false, SteamAPI::Utils::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamUtils_IsSteamInBigPictureMode", false, SteamAPI::Utils::get());
 }
 
 void SteamAPI::Utils::startVRDashboard() {
@@ -203,7 +205,7 @@ void SteamAPI::Utils::startVRDashboard() {
 }
 
 bool SteamAPI::Utils::isVRHeadsetStreamingEnabled() {
-    return steamFunctionWrapper("SteamAPI_ISteamUtils_IsVRHeadsetStreamingEnabled", false, SteamAPI::Utils::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamUtils_IsVRHeadsetStreamingEnabled", false, SteamAPI::Utils::get());
 }
 
 void SteamAPI::Utils::setVRHeadsetStreamingEnabled(bool enabled) {
@@ -212,7 +214,7 @@ void SteamAPI::Utils::setVRHeadsetStreamingEnabled(bool enabled) {
 }
 
 bool SteamAPI::Utils::isRunningOnSteamDeck() {
-    return steamFunctionWrapper("SteamAPI_ISteamUtils_IsSteamRunningOnSteamDeck", false, SteamAPI::Utils::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamUtils_IsSteamRunningOnSteamDeck", false, SteamAPI::Utils::get());
 }
 
 void SteamAPI::Utils::setGameLauncherMode(bool launcherMode) {
@@ -237,19 +239,19 @@ ISteamApps* SteamAPI::Apps::get() {
 }
 
 bool SteamAPI::Apps::userOwnsThisAppID() {
-    return steamFunctionWrapper("SteamAPI_ISteamApps_BIsSubscribed", false, SteamAPI::Apps::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamApps_BIsSubscribed", false, SteamAPI::Apps::get());
 }
 
 bool SteamAPI::Apps::isLowViolence() {
-    return steamFunctionWrapper("SteamAPI_ISteamApps_BIsLowViolence", false, SteamAPI::Apps::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamApps_BIsLowViolence", false, SteamAPI::Apps::get());
 }
 
 bool SteamAPI::Apps::isCybercafe() {
-    return steamFunctionWrapper("SteamAPI_ISteamApps_BIsCybercafe", false, SteamAPI::Apps::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamApps_BIsCybercafe", false, SteamAPI::Apps::get());
 }
 
 bool SteamAPI::Apps::isVACBanned() {
-    return steamFunctionWrapper("SteamAPI_ISteamApps_BIsVACBanned", false, SteamAPI::Apps::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamApps_BIsVACBanned", false, SteamAPI::Apps::get());
 }
 
 std::string SteamAPI::Apps::getCurrentGameLanguage() {
@@ -261,11 +263,11 @@ std::vector<std::string> SteamAPI::Apps::getAvailableGameLanguages() {
 }
 
 bool SteamAPI::Apps::isSubscribedApp(std::uint32_t appID) {
-    return steamFunctionWrapper("SteamAPI_ISteamApps_BIsSubscribedApp", false, SteamAPI::Apps::get(), appID);
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamApps_BIsSubscribedApp", false, SteamAPI::Apps::get(), appID);
 }
 
 bool SteamAPI::Apps::isDLCInstalled(std::uint32_t appID) {
-    return steamFunctionWrapper("SteamAPI_ISteamApps_BIsDlcInstalled", false, SteamAPI::Apps::get(), appID);
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamApps_BIsDlcInstalled", false, SteamAPI::Apps::get(), appID);
 }
 
 std::uint32_t SteamAPI::Apps::getEarliestPurchaseUnixTime(std::uint32_t appID) {
@@ -273,11 +275,116 @@ std::uint32_t SteamAPI::Apps::getEarliestPurchaseUnixTime(std::uint32_t appID) {
 }
 
 bool SteamAPI::Apps::isSubscribedFromFreeWeekend() {
-    return steamFunctionWrapper("SteamAPI_ISteamApps_BIsSubscribedFromFreeWeekend", false, SteamAPI::Apps::get());
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamApps_BIsSubscribedFromFreeWeekend", false, SteamAPI::Apps::get());
 }
 
 int SteamAPI::Apps::getDLCCount() {
     return steamFunctionWrapper<int>("SteamAPI_ISteamApps_GetDLCCount", 0, SteamAPI::Apps::get());
+}
+
+bool SteamAPI::Apps::getDLCData(int dlc, std::uint32_t* appID, bool* available, std::string& name) {
+    if (auto apps = SteamAPI::Apps::get()) {
+        bool isValid = false;
+        char* cname = new char[FilesystemResourceProvider::FILEPATH_MAX_LENGTH];
+        SteamAPI::get().call("SteamAPI_ISteamApps_BGetDLCDataByIndex", isValid, apps, dlc, appID, available, cname, static_cast<std::int32_t>(FilesystemResourceProvider::FILEPATH_MAX_LENGTH));
+        if (!isValid) {
+            delete[] cname;
+            return false;
+        }
+        name = cname;
+        delete[] cname;
+        return true;
+    }
+    return false;
+}
+
+void SteamAPI::Apps::installDLC(std::uint32_t appID) {
+    if (auto apps = SteamAPI::Apps::get())
+        SteamAPI::get().callVoid("SteamAPI_ISteamApps_InstallDLC", apps, appID);
+}
+
+void SteamAPI::Apps::uninstallDLC(std::uint32_t appID) {
+    if (auto apps = SteamAPI::Apps::get())
+        SteamAPI::get().callVoid("SteamAPI_ISteamApps_UninstallDLC", apps, appID);
+}
+
+std::string SteamAPI::Apps::getCurrentBranch() {
+    if (auto apps = SteamAPI::Apps::get()) {
+        char* out = new char[FilesystemResourceProvider::FILEPATH_MAX_LENGTH];
+        bool isOnBeta = false;
+        SteamAPI::get().call("SteamAPI_ISteamApps_GetCurrentBetaName", isOnBeta, apps, out, static_cast<std::int32_t>(FilesystemResourceProvider::FILEPATH_MAX_LENGTH));
+        if (!isOnBeta) {
+            delete[] out;
+            return "";
+        }
+        std::string path{out};
+        delete[] out;
+        return path;
+    }
+    return "";
+}
+
+bool SteamAPI::Apps::markContentCorrupt(bool missingFilesOnly) {
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamApps_MarkContentCorrupt", false, SteamAPI::Apps::get(), missingFilesOnly);
+}
+
+std::vector<std::uint32_t> SteamAPI::Apps::getInstalledDepots(std::uint32_t appID) {
+    if (auto apps = SteamAPI::Apps::get()) {
+        auto* out = new std::uint32_t[32]; // GodotSteam uses 32 so we do too
+        std::uint32_t size = 0;
+        SteamAPI::get().call("SteamAPI_ISteamApps_GetInstalledDepots", size, apps, appID, out, 32);
+        std::vector<std::uint32_t> depots;
+        for (unsigned int i = 0; i < size; i++) {
+            depots.push_back(out[i]);
+        }
+        delete[] out;
+        return depots;
+    }
+    return {};
+}
+
+std::string SteamAPI::Apps::getAppInstallPath(std::uint32_t appID) {
+    if (auto apps = SteamAPI::Apps::get()) {
+        auto* out = new char[FilesystemResourceProvider::FILEPATH_MAX_LENGTH];
+        std::uint32_t size = 0;
+        SteamAPI::get().call("SteamAPI_ISteamApps_GetAppInstallDir", size, apps, appID, out, static_cast<std::uint32_t>(FilesystemResourceProvider::FILEPATH_MAX_LENGTH));
+        std::string path{out, size};
+        delete[] out;
+        return path;
+    }
+    return "";
+}
+
+bool SteamAPI::Apps::isAppInstalled(std::uint32_t appID) {
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamApps_BIsAppInstalled", false, SteamAPI::Apps::get(), appID);
+}
+
+std::uint64_t SteamAPI::Apps::getAppOwner() {
+    return steamFunctionWrapper<std::uint64_t>("SteamAPI_ISteamApps_GetAppOwner", 0, SteamAPI::Apps::get());
+}
+
+std::string SteamAPI::Apps::getLaunchParameter(const std::string& key) {
+    return steamFunctionStringWrapper("SteamAPI_ISteamApps_GetLaunchQueryParam", "", SteamAPI::Apps::get(), key.c_str());
+}
+
+bool SteamAPI::Apps::getDLCDownloadProgress(std::uint32_t appID, std::uint64_t* bytesDownloaded, std::uint64_t* bytesTotal) {
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamApps_GetDlcDownloadProgress", false, SteamAPI::Apps::get(), appID, bytesDownloaded, bytesTotal);
+}
+
+int SteamAPI::Apps::getAppBuildID() {
+    return steamFunctionWrapper<int>("SteamAPI_ISteamApps_GetAppBuildId", 0, SteamAPI::Apps::get());
+}
+
+std::uint64_t SteamAPI::Apps::getFileDetails(const std::string& filename) {
+    return steamFunctionWrapper<std::uint64_t>("SteamAPI_ISteamApps_GetFileDetails", 0, SteamAPI::Apps::get(), filename.c_str());
+}
+
+bool SteamAPI::Apps::isSubscribedFromFamilySharing() {
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamApps_BIsSubscribedFromFamilySharing", false, SteamAPI::Apps::get());
+}
+
+bool SteamAPI::Apps::isTimedTrial(std::uint32_t* secondsAllowed, std::uint32_t* secondsPlayed) {
+    return steamFunctionWrapper<bool>("SteamAPI_ISteamApps_BIsTimedTrial", false, SteamAPI::Apps::get(), secondsAllowed, secondsPlayed);
 }
 
 // -------------------------------- UGC -------------------------------- //
