@@ -5,8 +5,8 @@
 #include <vector>
 #include <nlohmann/json.hpp>
 #include <utility/pointer/sharedPointer.h>
+#include <utility/logger.h>
 #include "provider/abstractResourceProvider.h"
-#include "utility/logger.h"
 
 namespace chira {
     constexpr std::string_view RESOURCE_ID_SEPARATOR = "://";

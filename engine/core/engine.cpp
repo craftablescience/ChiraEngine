@@ -568,9 +568,7 @@ void Engine::setIcon(const std::string& iconPath) {
     chira_assert(Engine::isStarted(), TR("error.engine.not_initialized"));
     GLFWimage images[1];
     int width, height, bitsPerPixel;
-    Image icon(
-            assert_cast<FilesystemResourceProvider*>(Resource::getResourceProviderWithResource(iconPath))->getAbsoluteResourcePath(iconPath),
-            &width, &height, &bitsPerPixel, 4, false);
+    Image icon(FilesystemResourceProvider::getResourceAbsolutePath(iconPath), &width, &height, &bitsPerPixel, 4, false);
     chira_assert(icon.getData(), TR("error.engine.icon_has_no_data"));
     images[0].width = width;
     images[0].height = height;

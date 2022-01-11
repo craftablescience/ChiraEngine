@@ -1,7 +1,6 @@
 #include "oggFileSound.h"
 
 #include <resource/provider/filesystemResourceProvider.h>
-#include <resource/resource.h>
 #include <ogg/os_types.h>
 #include <vorbis/codec.h>
 #include <i18n/translationManager.h>
@@ -9,11 +8,11 @@
 
 using namespace chira;
 
-bool OGGFileSound::init(const std::string& filename) {
-    return this->init(filename, 1.0f, 1.0f, glm::vec3{}, SoundType::EFFECT, false, true);
+bool OGGFileSound::init(const std::string& identifier) {
+    return this->init(identifier, 1.0f, 1.0f, glm::vec3{}, SoundType::EFFECT, false, true);
 }
 
-bool OGGFileSound::init(const std::string& filename, float pitch_, float gain_, const glm::vec3& position_, SoundType type_, bool loop_, bool is3d_) {
+bool OGGFileSound::init(const std::string& identifier, float pitch_, float gain_, const glm::vec3& position_, SoundType type_, bool loop_, bool is3d_) {
     this->pitch = pitch_;
     this->gain = gain_;
     this->setPosition(position_);
@@ -21,10 +20,10 @@ bool OGGFileSound::init(const std::string& filename, float pitch_, float gain_, 
     this->loop = loop_;
     this->is3d = is3d_;
 
-    this->audioData.filename = assert_cast<FilesystemResourceProvider*>(Resource::getResourceProviderWithResource("file://sounds/" + filename))->getPath() + "/sounds/" + filename;
+    this->audioData.filename = FilesystemResourceProvider::getResourceAbsolutePath(identifier);
     this->audioData.file.open(this->audioData.filename, std::ios::binary);
     if (!this->audioData.file.is_open()) {
-        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.file_open_failure"), filename));
+        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.file_open_failure"), identifier));
         return false;
     }
     this->audioData.file.seekg(0, std::ios_base::beg);
@@ -41,7 +40,7 @@ bool OGGFileSound::init(const std::string& filename, float pitch_, float gain_, 
     oggCallbacks.tell_func = tellOggVorbisCallback;
 
     if (ov_open_callbacks(reinterpret_cast<void*>(&this->audioData), &this->audioData.oggVorbisFile, nullptr, -1, oggCallbacks) < 0) {
-        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.ov_open_callbacks_missing"), filename));
+        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.ov_open_callbacks_missing"), identifier));
         return false;
     }
 
@@ -67,19 +66,19 @@ bool OGGFileSound::init(const std::string& filename, float pitch_, float gain_, 
     alCall(alGenBuffers, OGG_NUM_BUFFERS, &this->audioData.buffers[0]);
 
     if (this->audioData.file.eof()) {
-        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.file_empty"), filename));
+        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.file_empty"), identifier));
         return false;
     } else if(this->audioData.file.fail()) {
-        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.fail_bit_set"), filename));
+        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.fail_bit_set"), identifier));
         return false;
     } else if (!this->audioData.file) {
-        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.file_missing"), filename));
+        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.file_missing"), identifier));
         return false;
     }
-    return this->readFile(this->audioData.filename);
+    return this->readFile();
 }
 
-bool OGGFileSound::readFile(const std::string& filename) {
+bool OGGFileSound::readFile() {
     char* data = new char[OGG_BUFFER_SIZE];
     for (std::uint8_t i = 0; i < OGG_NUM_BUFFERS; ++i) {
         std::int32_t dataSoFar = 0;
@@ -87,16 +86,16 @@ bool OGGFileSound::readFile(const std::string& filename) {
             auto result = (std::int32_t) ov_read(&this->audioData.oggVorbisFile, &data[dataSoFar], OGG_BUFFER_SIZE - dataSoFar, 0, 2, 1, reinterpret_cast<int*>(&this->audioData.oggCurrentSection));
             switch (result) {
                 case OV_HOLE:
-                    Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_HOLE", i, filename));
+                    Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_HOLE", i, this->audioData.filename));
                     break;
                 case OV_EBADLINK:
-                    Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_EBADLINK", i, filename));
+                    Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_EBADLINK", i, this->audioData.filename));
                     break;
                 case OV_EINVAL:
-                    Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_EINVAL", i, filename));
+                    Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_EINVAL", i, this->audioData.filename));
                     break;
                 case 0:
-                    Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "EOF", i, filename));
+                    Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "EOF", i, this->audioData.filename));
                     break;
                 default:
                     break;
@@ -112,7 +111,7 @@ bool OGGFileSound::readFile(const std::string& filename) {
         } else if (this->audioData.channels == 2 && this->audioData.bitsPerSample == 16) {
             this->audioData.format = AL_FORMAT_STEREO16;
         } else {
-            Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.unrecognized_format"), this->audioData.channels, this->audioData.bitsPerSample, filename));
+            Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.unrecognized_format"), this->audioData.channels, this->audioData.bitsPerSample, this->audioData.filename));
             delete[] data;
             return false;
         }
@@ -132,7 +131,7 @@ void OGGFileSound::play() {
     if (!this->playing) {
         if (this->hasBeenPlayedPreviously) {
             this->seekBeginning();
-            this->readFile(this->audioData.filename);
+            this->readFile();
         }
         this->playing = true;
         alCall(alSourceStop, this->audioData.source);

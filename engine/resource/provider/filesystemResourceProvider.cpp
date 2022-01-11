@@ -30,7 +30,7 @@ std::string FilesystemResourceProvider::getFolder() const {
     return stripLeft(this->getPath(), FILESYSTEM_ROOT_FOLDER + '/');
 }
 
-std::string FilesystemResourceProvider::getAbsoluteResourcePath(const std::string& identifier) const {
+std::string FilesystemResourceProvider::getLocalResourceAbsolutePath(const std::string& identifier) const {
     // Make sure we've been passed a valid identifier
     auto name = Resource::splitResourceIdentifier(identifier).second;
     if (!this->hasResource(name))
@@ -41,7 +41,7 @@ std::string FilesystemResourceProvider::getAbsoluteResourcePath(const std::strin
     return absPath;
 }
 
-std::string FilesystemResourceProvider::getResourcePath(const std::string& absolutePath) {
+std::string FilesystemResourceProvider::getResourceIdentifier(const std::string& absolutePath) {
     // Add the resource provider prefix
     if (auto path = FilesystemResourceProvider::getResourceFolderPath(absolutePath); !path.empty())
         return FILESYSTEM_PROVIDER_NAME + RESOURCE_ID_SEPARATOR.data() + path;
@@ -66,4 +66,8 @@ std::string FilesystemResourceProvider::getResourceFolderPath(const std::string&
     index = path.find('/') + 1;
     path = path.substr(index);
     return path;
+}
+
+std::string FilesystemResourceProvider::getResourceAbsolutePath(const std::string& identifier) {
+    return assert_cast<FilesystemResourceProvider*>(Resource::getResourceProviderWithResource(identifier))->getLocalResourceAbsolutePath(identifier);
 }

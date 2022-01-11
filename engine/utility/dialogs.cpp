@@ -36,7 +36,7 @@ std::string chira::dialogOpenResource(const std::string& pattern, const std::str
             std::filesystem::current_path().string().c_str(), 1,
             filter, description.empty() ? nullptr : description.c_str(), 0);
     if (result)
-        return FilesystemResourceProvider::getResourcePath(std::string{result});
+        return FilesystemResourceProvider::getResourceIdentifier(std::string{result});
     return "";
 }
 

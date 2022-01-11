@@ -37,14 +37,14 @@ namespace chira {
 
     class OGGFileSound : public AbstractSound {
     public:
-        bool init(const std::string& filename);
-        bool init(const std::string& filename, float pitch_, float gain_, const glm::vec3& position_, SoundType type_, bool loop_, bool is3d_) override;
+        bool init(const std::string& identifier);
+        bool init(const std::string& identifier, float pitch_, float gain_, const glm::vec3& position_, SoundType type_, bool loop_, bool is3d_) override;
         void play() override;
         void update() override;
         void stop() override;
         void discard() override;
     private:
-        bool readFile(const std::string& filename);
+        bool readFile();
         void seekBeginning();
         static std::size_t readOggVorbisCallback(void* destination, std::size_t size1, std::size_t size2, void* fileHandle);
         static std::int32_t seekOggVorbisCallback(void* fileHandle, ogg_int64_t to, std::int32_t type);

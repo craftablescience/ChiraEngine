@@ -33,9 +33,8 @@ AbstractResourceProvider* Resource::getResourceProviderWithResource(const std::s
     auto id = Resource::splitResourceIdentifier(identifier);
     const std::string& provider = id.first, name = id.second;
     for (auto i = Resource::providers[provider].rbegin(); i < Resource::providers[provider].rend(); i++) {
-        if (i->get()->hasResource(name)) {
+        if (i->get()->hasResource(name))
             return i->get();
-        }
     }
     Logger::log(LogType::ERROR, "Resource", fmt::format(TR("error.resource.resource_not_found"), identifier));
     return nullptr;
@@ -62,9 +61,8 @@ void Resource::removeResource(const std::string& identifier) {
     const std::string& provider = id.first, name = id.second;
     // If the count is 2, then it's being held by the resource manager and the object requesting its removal.
     // Anything below 2 means it should be already deleted everywhere except the resource manager.
-    if (Resource::resources[provider].count(name) > 0 && Resource::resources[provider][name].useCount() <= 2) {
+    if (Resource::resources[provider].count(name) > 0 && Resource::resources[provider][name].useCount() <= 2)
         Resource::garbageResources.push_back(identifier);
-    }
 }
 
 void Resource::cleanup() {

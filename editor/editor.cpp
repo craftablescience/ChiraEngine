@@ -88,7 +88,7 @@ int main() {
 
         //region Add a test sound
         auto* sound = new OGGFileSound();
-        sound->init("helloWorldCutMono.ogg");
+        sound->init("file://sounds/helloWorldCutMono.ogg");
         Engine::getSoundManager()->addSound("helloWorld", sound);
         //endregion
 
