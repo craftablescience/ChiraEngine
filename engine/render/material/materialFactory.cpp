@@ -17,12 +17,17 @@ SharedPointer<Shader> MaterialBase::getShader() const {
 }
 
 bool MaterialFactory::registerMaterialType(const std::string& name, MaterialFactory::factoryFunction createFunc) {
-    if (MaterialFactory::factoryMethods.count(name) > 0)
+    if (MaterialFactory::getFactoryMethods().count(name) > 0)
         return false;
-    MaterialFactory::factoryMethods[name] = std::move(createFunc);
+    MaterialFactory::getFactoryMethods()[name] = std::move(createFunc);
     return true;
 }
 
 const MaterialFactory::factoryFunction& MaterialFactory::getMaterialType(const std::string& name) {
-    return MaterialFactory::factoryMethods[name];
+    return MaterialFactory::getFactoryMethods()[name];
+}
+
+std::unordered_map<std::string, MaterialFactory::factoryFunction>& MaterialFactory::getFactoryMethods() {
+    static std::unordered_map<std::string, factoryFunction> factoryFunctions;
+    return factoryFunctions;
 }

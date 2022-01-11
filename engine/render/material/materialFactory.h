@@ -23,7 +23,7 @@ namespace chira {
         static bool registerMaterialType(const std::string& name, factoryFunction createFunc);
         static const factoryFunction& getMaterialType(const std::string& name);
     private:
-        static inline std::unordered_map<std::string, factoryFunction> factoryMethods;
+        static std::unordered_map<std::string, factoryFunction>& getFactoryMethods();
     };
 }
 
