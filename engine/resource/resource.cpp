@@ -56,6 +56,16 @@ const std::vector<std::unique_ptr<AbstractResourceProvider>>& Resource::getResou
     return Resource::providers.at(providerName);
 }
 
+bool Resource::hasResource(const std::string& identifier) {
+    auto id = Resource::splitResourceIdentifier(identifier);
+    const std::string& provider = id.first, name = id.second;
+    for (auto i = Resource::providers[provider].rbegin(); i != Resource::providers[provider].rend(); i++) {
+        if (i->get()->hasResource(name))
+            return true;
+    }
+    return false;
+}
+
 void Resource::removeResource(const std::string& identifier) {
     auto id = Resource::splitResourceIdentifier(identifier);
     const std::string& provider = id.first, name = id.second;

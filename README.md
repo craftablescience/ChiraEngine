@@ -13,7 +13,7 @@ To summarize the major features:
 - Custom preprocessing of GLSL shaders, with macros and #include directives
 - Robust resource loading and management to facilitate sharing of congruent data
 - Data-oriented design, using entities as building blocks
-- Hassle-free Discord Rich Presence
+- Hassle-free Discord Rich Presence and Steamworks API wrappers
 - Inline text localization
 - AngelScript support, with common function hooks and types registered
 - Bullet physics engine built-in, with common physics types registered

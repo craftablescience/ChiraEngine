@@ -125,6 +125,8 @@ namespace chira {
 
         static const std::vector<std::unique_ptr<AbstractResourceProvider>>& getResourceProviders(const std::string& providerName);
 
+        static bool hasResource(const std::string& identifier);
+
         /// If resource is present in the cache and has a reference count less than or equal to 2, mark it for removal.
         static void removeResource(const std::string& identifier);
 

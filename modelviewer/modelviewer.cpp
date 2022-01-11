@@ -32,6 +32,10 @@ public:
     void setLoadedFile(const std::string& meshName) {
         if (meshName == Engine::getRoot()->getChild<Mesh3d>(this->meshId.data())->getMeshResource()->getIdentifier())
             return;
+        if (!Resource::hasResource(meshName)) {
+            dialogPopupError("Resource identifier " + meshName + " does not point to a visible resource.");
+            return;
+        }
         Engine::getRoot()->removeChild(this->meshId.data());
         Resource::cleanup();
         this->meshId = Engine::getRoot()->addChild(new Mesh3d{Resource::getResource<MeshResource>(meshName)});

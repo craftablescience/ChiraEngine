@@ -1,8 +1,6 @@
 #include "steamAPI.h"
 
 #include <libloader.hpp>
-#undef MAX_PATH
-
 #include <resource/provider/filesystemResourceProvider.h>
 #include <utility/logger.h>
 #include <utility/string/stringSplit.h>
