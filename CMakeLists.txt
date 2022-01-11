@@ -70,7 +70,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript)
 list(APPEND ENGINE_LINK_LIBRARIES angelscript)
 
 # BULLET
-if((NOT CHIRA_BUILD_STATIC) AND CHIRA_COMPILER_CLANG)
+if(WIN32 AND ((NOT CHIRA_BUILD_STATIC) AND CHIRA_COMPILER_CLANG))
     # Program has a fit at runtime if Bullet isn't statically linked compiling with clang
     set(BUILD_SHARED_LIBS OFF)
 endif()
@@ -87,7 +87,7 @@ set(BUILD_ENET              OFF CACHE BOOL "" FORCE)
 set(BUILD_CLSOCKET          OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/bullet)
 list(APPEND ENGINE_LINK_LIBRARIES Bullet3Common BulletDynamics BulletCollision LinearMath)
-if((NOT CHIRA_BUILD_STATIC) AND CHIRA_COMPILER_CLANG)
+if(WIN32 AND ((NOT CHIRA_BUILD_STATIC) AND CHIRA_COMPILER_CLANG))
     set(BUILD_SHARED_LIBS ON)
 endif()
 
