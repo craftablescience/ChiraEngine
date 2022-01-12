@@ -78,7 +78,7 @@ void Engine::init() {
         exit(EXIT_FAILURE);
     }
     glfwSetErrorCallback([](int error, const char* description) {
-        Logger::log(LogType::ERROR, "GLFW", fmt::format(TR("error.glfw.generic"), error, description));
+        Logger::log(LogType::ERROR, "GLFW", TRF("error.glfw.generic", error, description));
     });
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
@@ -117,7 +117,7 @@ void Engine::init() {
 
     int major, minor, rev;
     glfwGetVersion(&major, &minor, &rev);
-    Logger::log(LogType::INFO, "GLFW", fmt::format(TR("debug.glfw.version"), major, minor, rev));
+    Logger::log(LogType::INFO, "GLFW", TRF("debug.glfw.version", major, minor, rev));
 
     if (!gladLoadGL(glfwGetProcAddress)) {
         Logger::log(LogType::ERROR, "OpenGL", fmt::format("error.opengl.version", GL_VERSION_STRING_PRETTY));
@@ -445,14 +445,14 @@ void Engine::shouldStopAfterThisFrame(bool yes) {
 
 AngelscriptProvider* Engine::getAngelscriptProvider() {
     if (!Engine::angelscript) {
-        Logger::log(LogType::ERROR, "Engine::getAngelscriptProvider", fmt::format(TR("error.engine.script_provider_missing"), "AngelScript"));
+        Logger::log(LogType::ERROR, "Engine::getAngelscriptProvider", TRF("error.engine.script_provider_missing", "AngelScript"));
     }
     return Engine::angelscript.get();
 }
 
 AbstractSoundManager* Engine::getSoundManager() {
     if (!Engine::soundManager) {
-        Logger::log(LogType::WARNING, "Engine::getSoundManager", fmt::format(TR("error.engine.invalid_access"), "sound manager", "Engine::setSoundManager"));
+        Logger::log(LogType::WARNING, "Engine::getSoundManager", TRF("error.engine.invalid_access", "sound manager", "Engine::setSoundManager"));
         return nullptr;
     }
     return Engine::soundManager.get();
@@ -464,7 +464,7 @@ void Engine::setSoundManager(AbstractSoundManager* newSoundManager) {
 
 AbstractSettingsLoader* Engine::getSettingsLoader() {
     if (!Engine::settingsLoader) {
-        Logger::log(LogType::WARNING, "Engine::getSettingsLoader", fmt::format(TR("error.engine.invalid_access"), "settings loader", "Engine::setSettingsLoader"));
+        Logger::log(LogType::WARNING, "Engine::getSettingsLoader", TRF("error.engine.invalid_access", "settings loader", "Engine::setSettingsLoader"));
         return nullptr;
     }
     return Engine::settingsLoader.get();
@@ -477,7 +477,7 @@ void Engine::setSettingsLoader(AbstractSettingsLoader* newSettingsLoader) {
 
 AbstractPhysicsProvider* Engine::getPhysicsProvider() {
     if (!Engine::physicsProvider) {
-        Logger::log(LogType::WARNING, "Engine::getPhysicsProvider", fmt::format(TR("error.engine.invalid_access"), "physics provider", "Engine::setPhysicsProvider"));
+        Logger::log(LogType::WARNING, "Engine::getPhysicsProvider", TRF("error.engine.invalid_access", "physics provider", "Engine::setPhysicsProvider"));
         return nullptr;
     }
     return Engine::physicsProvider.get();

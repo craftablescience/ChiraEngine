@@ -47,14 +47,13 @@ void TranslationManager::addUniversalFile(const std::string& identifier) {
 }
 
 std::string TranslationManager::getTranslation(const std::string& identifier) { // NOLINT(misc-no-recursion)
-    if (TranslationManager::languageStrings.count(identifier) > 0) {
+    if (TranslationManager::languageStrings.count(identifier) > 0)
         return TranslationManager::languageStrings[identifier];
-    }
-    if (TranslationManager::languageStrings.count("error.translation_manager.missing_translation") > 0) {
-        Logger::log(LogType::ERROR, "I18N", fmt::format(TR("error.translation_manager.missing_translation"), TranslationManager::getLanguageNameFromCode(TranslationManager::currentLanguage), identifier));
-    } else {
+    else if (TranslationManager::languageStrings.count("error.translation_manager.missing_translation") > 0)
+        Logger::log(LogType::ERROR, "I18N", TRF("error.translation_manager.missing_translation", TranslationManager::getLanguageNameFromCode(TranslationManager::currentLanguage), identifier));
+    else
         // Turns out if we're missing one string, we could be missing all of them! Just default to English
         Logger::log(LogType::ERROR, "I18N", fmt::format("Missing {} translation of \"{}\"", TranslationManager::getLanguageNameFromCode(TranslationManager::currentLanguage), identifier));
-    }
+    // Fallback
     return identifier + "#" + TranslationManager::currentLanguage;
 }

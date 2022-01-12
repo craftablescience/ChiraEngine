@@ -24,9 +24,9 @@ bool chira::checkForALErrors(const std::string& filename, const std::uint_fast32
                 error = TR("error.openal.al_out_of_memory");
                 break;
             default:
-                error = fmt::format(TR("error.openal.al_unknown"), alError);
+                error = TRF("error.openal.al_unknown", alError);
         }
-        Logger::log(LogType::ERROR, "OpenAL", fmt::format(TR("error.openal.generic"), filename, line, error));
+        Logger::log(LogType::ERROR, "OpenAL", TRF("error.openal.generic", filename, line, error));
         return false;
     }
     return true;
@@ -53,9 +53,9 @@ bool chira::checkForALCErrors(const std::string& filename, const std::uint_fast3
                 error = TR("error.openal.alc_out_of_memory");
                 break;
             default:
-                error = fmt::format(TR("error.openal.alc_unknown"), alcError);
+                error = TRF("error.openal.alc_unknown", alcError);
         }
-        Logger::log(LogType::ERROR, "OpenAL", fmt::format(TR("error.openal.generic"), filename, line, error));
+        Logger::log(LogType::ERROR, "OpenAL", TRF("error.openal.generic", filename, line, error));
         return false;
     }
     return true;

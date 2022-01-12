@@ -42,7 +42,7 @@ void Shader::checkForCompilationErrors() const {
     glGetProgramiv(this->handle, GL_LINK_STATUS, &success);
     if(!success) {
         glGetProgramInfoLog(this->handle, 512, nullptr, infoLog);
-        Logger::log(LogType::ERROR, "Shader", fmt::format(TR("error.opengl.shader_linking"), infoLog));
+        Logger::log(LogType::ERROR, "Shader", TRF("error.opengl.shader_linking", infoLog));
     }
 }
 

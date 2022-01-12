@@ -1,6 +1,5 @@
 #include "axis.h"
 
-#include <utility/logger.h>
 #include <i18n/translationManager.h>
 
 chira::Axis chira::getAxisFromString(const std::string& str) {
@@ -11,7 +10,7 @@ chira::Axis chira::getAxisFromString(const std::string& str) {
     else if (str == "Z")
         return Axis::Z;
     else {
-        chira_assert(false, fmt::format(TR("error.axis.invalid_value"), str, "axis"));
+        chira_assert(false, TRF("error.axis.invalid_value", str, "axis"));
         return Axis::Z;
     }
 }
@@ -30,7 +29,7 @@ chira::SignedAxis chira::getSignedAxisFromString(const std::string& str) {
     else if (str == "ZN")
         return SignedAxis::ZN;
     else {
-        chira_assert(false, fmt::format(TR("error.axis.invalid_value"), str, "signedAxis"));
+        chira_assert(false, TRF("error.axis.invalid_value", str, "signedAxis"));
         return SignedAxis::ZN;
     }
 }

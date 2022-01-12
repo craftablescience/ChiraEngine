@@ -36,7 +36,7 @@ AbstractResourceProvider* Resource::getResourceProviderWithResource(const std::s
         if (i->get()->hasResource(name))
             return i->get();
     }
-    Logger::log(LogType::ERROR, "Resource", fmt::format(TR("error.resource.resource_not_found"), identifier));
+    Logger::log(LogType::ERROR, "Resource", TRF("error.resource.resource_not_found", identifier));
     return nullptr;
 }
 
@@ -47,7 +47,7 @@ std::pair<std::string, std::string> Resource::splitResourceIdentifier(const std:
         out.first = identifier.substr(0, pos);
         out.second = identifier.substr(pos + RESOURCE_ID_SEPARATOR.length());
     } else {
-        Logger::log(LogType::ERROR, "Resource", fmt::format(TR("error.resource.cannot_split_identifier"), identifier));
+        Logger::log(LogType::ERROR, "Resource", TRF("error.resource.cannot_split_identifier", identifier));
     }
     return out;
 }
@@ -88,7 +88,7 @@ void Resource::discardAll() {
     for (const auto& [providerName, resourceMap] : Resource::resources) {
         for (const auto& [name, resource] : resourceMap) {
             // This really shouldn't happen, but it should work out if it does, hence the warning
-            Logger::log(LogType::WARNING, "Resource", fmt::format(TR("warn.resource.deleting_resource_at_exit"),
+            Logger::log(LogType::WARNING, "Resource", TRF("warn.resource.deleting_resource_at_exit",
                                                       Resource::resources[providerName].at(name)->getIdentifier(),
                                                       Resource::resources[providerName].at(name).useCount()));
         }
@@ -98,5 +98,5 @@ void Resource::discardAll() {
 }
 
 void Resource::logResourceError(const std::string& identifier, const std::string& resourceName) {
-    Logger::log(LogType::ERROR, "Resource", fmt::format(TR(identifier), resourceName));
+    Logger::log(LogType::ERROR, "Resource", TRF(identifier, resourceName));
 }

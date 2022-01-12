@@ -23,7 +23,7 @@ bool OGGFileSound::init(const std::string& identifier, float pitch_, float gain_
     this->audioData.filename = FilesystemResourceProvider::getResourceAbsolutePath(identifier);
     this->audioData.file.open(this->audioData.filename, std::ios::binary);
     if (!this->audioData.file.is_open()) {
-        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.file_open_failure"), identifier));
+        Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.file_open_failure", identifier));
         return false;
     }
     this->audioData.file.seekg(0, std::ios_base::beg);
@@ -40,7 +40,7 @@ bool OGGFileSound::init(const std::string& identifier, float pitch_, float gain_
     oggCallbacks.tell_func = tellOggVorbisCallback;
 
     if (ov_open_callbacks(reinterpret_cast<void*>(&this->audioData), &this->audioData.oggVorbisFile, nullptr, -1, oggCallbacks) < 0) {
-        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.ov_open_callbacks_missing"), identifier));
+        Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.ov_open_callbacks_missing", identifier));
         return false;
     }
 
@@ -66,13 +66,13 @@ bool OGGFileSound::init(const std::string& identifier, float pitch_, float gain_
     alCall(alGenBuffers, OGG_NUM_BUFFERS, &this->audioData.buffers[0]);
 
     if (this->audioData.file.eof()) {
-        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.file_empty"), identifier));
+        Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.file_empty", identifier));
         return false;
     } else if(this->audioData.file.fail()) {
-        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.fail_bit_set"), identifier));
+        Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.fail_bit_set", identifier));
         return false;
     } else if (!this->audioData.file) {
-        Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.file_missing"), identifier));
+        Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.file_missing", identifier));
         return false;
     }
     return this->readFile();
@@ -86,16 +86,16 @@ bool OGGFileSound::readFile() {
             auto result = (std::int32_t) ov_read(&this->audioData.oggVorbisFile, &data[dataSoFar], OGG_BUFFER_SIZE - dataSoFar, 0, 2, 1, reinterpret_cast<int*>(&this->audioData.oggCurrentSection));
             switch (result) {
                 case OV_HOLE:
-                    Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_HOLE", i, this->audioData.filename));
+                    Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.initial_read_error", "OV_HOLE", i, this->audioData.filename));
                     break;
                 case OV_EBADLINK:
-                    Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_EBADLINK", i, this->audioData.filename));
+                    Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.initial_read_error", "OV_EBADLINK", i, this->audioData.filename));
                     break;
                 case OV_EINVAL:
-                    Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "OV_EINVAL", i, this->audioData.filename));
+                    Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.initial_read_error", "OV_EINVAL", i, this->audioData.filename));
                     break;
                 case 0:
-                    Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.initial_read_error"), "EOF", i, this->audioData.filename));
+                    Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.initial_read_error", "EOF", i, this->audioData.filename));
                     break;
                 default:
                     break;
@@ -111,7 +111,7 @@ bool OGGFileSound::readFile() {
         } else if (this->audioData.channels == 2 && this->audioData.bitsPerSample == 16) {
             this->audioData.format = AL_FORMAT_STEREO16;
         } else {
-            Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.unrecognized_format"), this->audioData.channels, this->audioData.bitsPerSample, this->audioData.filename));
+            Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.unrecognized_format", this->audioData.channels, this->audioData.bitsPerSample, this->audioData.filename));
             delete[] data;
             return false;
         }
@@ -158,13 +158,13 @@ void OGGFileSound::update() {
         while (sizeRead < OGG_BUFFER_SIZE) {
             auto result = (std::int32_t) ov_read(&this->audioData.oggVorbisFile, &data[sizeRead], OGG_BUFFER_SIZE - sizeRead, 0, 2, 1, reinterpret_cast<int*>(&this->audioData.oggCurrentSection));
             if (result == OV_HOLE) {
-                Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.buffer_update_error"), "OV_HOLE", this->audioData.filename));
+                Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.buffer_update_error", "OV_HOLE", this->audioData.filename));
                 break;
             } else if (result == OV_EBADLINK) {
-                Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.buffer_update_error"), "OV_EBADLINK", this->audioData.filename));
+                Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.buffer_update_error", "OV_EBADLINK", this->audioData.filename));
                 break;
             } else if (result == OV_EINVAL) {
-                Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.buffer_update_error"), "OV_EINVAL", this->audioData.filename));
+                Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.buffer_update_error", "OV_EINVAL", this->audioData.filename));
                 break;
             } else if (result == 0) {
                 if (!this->loop) {
@@ -181,7 +181,7 @@ void OGGFileSound::update() {
             alCall(alSourceQueueBuffers, this->audioData.source, 1, &buffer);
         }
         if (dataSizeToBuffer < OGG_BUFFER_SIZE) {
-            Logger::log(LogType::WARNING, "OGG", fmt::format(TR("error.ogg.data_missing"), this->audioData.filename));
+            Logger::log(LogType::WARNING, "OGG", TRF("error.ogg.data_missing", this->audioData.filename));
         }
         ALint state;
         alCall(alGetSourcei, this->audioData.source, AL_SOURCE_STATE, &state);
@@ -199,26 +199,26 @@ void OGGFileSound::seekBeginning() {
     std::int32_t seekResult = ov_raw_seek(&this->audioData.oggVorbisFile, 0);
     switch (seekResult) {
         case OV_ENOSEEK:
-            Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_ENOSEEK", this->audioData.filename));
+            Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.loop_read_error", "OV_ENOSEEK", this->audioData.filename));
             break;
         case OV_EINVAL:
-            Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EINVAL", this->audioData.filename));
+            Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.loop_read_error", "OV_EINVAL", this->audioData.filename));
             break;
         case OV_EREAD:
-            Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EREAD", this->audioData.filename));
+            Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.loop_read_error", "OV_EREAD", this->audioData.filename));
             break;
         case OV_EFAULT:
-            Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EFAULT", this->audioData.filename));
+            Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.loop_read_error", "OV_EFAULT", this->audioData.filename));
             break;
         case OV_EOF:
-            Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EOF", this->audioData.filename));
+            Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.loop_read_error", "OV_EOF", this->audioData.filename));
             break;
         case OV_EBADLINK:
-            Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.loop_read_error"), "OV_EBADLINK", this->audioData.filename));
+            Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.loop_read_error", "OV_EBADLINK", this->audioData.filename));
             break;
         default:
             if (seekResult != 0) {
-                Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.unknown"), "OV_RAW_SEEK", this->audioData.filename));
+                Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.unknown", "OV_RAW_SEEK", this->audioData.filename));
             }
     }
 }
@@ -248,7 +248,7 @@ std::size_t OGGFileSound::readOggVorbisCallback(void* destination, std::size_t s
     if (!audioData->file.is_open()) {
         audioData->file.open(audioData->filename, std::ios::binary);
         if (!audioData->file.is_open()) {
-            Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.file_open_failure"), audioData->filename));
+            Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.file_open_failure", audioData->filename));
             return 0;
         }
     }
@@ -259,11 +259,11 @@ std::size_t OGGFileSound::readOggVorbisCallback(void* destination, std::size_t s
         if (audioData->file.eof()) {
             audioData->file.clear();
         } else if (audioData->file.fail()) {
-            Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.fail_bit_set"), audioData->filename));
+            Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.fail_bit_set", audioData->filename));
             audioData->file.clear();
             return 0;
         } else if (audioData->file.bad()) {
-            Logger::log(LogType::ERROR, "OGG", fmt::format(TR("error.ogg.bad_bit_set"), audioData->filename));
+            Logger::log(LogType::ERROR, "OGG", TRF("error.ogg.bad_bit_set", audioData->filename));
             audioData->file.clear();
             return 0;
         }

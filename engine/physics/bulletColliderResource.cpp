@@ -32,7 +32,7 @@ void BulletColliderResource::compile(const nlohmann::json& properties) {
 
         case BulletColliderType::BULLET_BVH_TRIANGLE_MESH:
             // todo
-            Logger::log(LogType::ERROR, "BulletColliderResource", fmt::format(TR("error.bullet_collider_resource.unimplemented"), properties["properties"]["colliderType"]));
+            Logger::log(LogType::ERROR, "BulletColliderResource", TRF("error.bullet_collider_resource.unimplemented", properties["properties"]["colliderType"]));
             break;
 
         case BulletColliderType::BULLET_CAPSULE:
@@ -60,7 +60,7 @@ void BulletColliderResource::compile(const nlohmann::json& properties) {
 
         case BulletColliderType::BULLET_COMPOUND:
             // todo
-            Logger::log(LogType::ERROR, "BulletColliderResource", fmt::format(TR("error.bullet_collider_resource.unimplemented"), properties["properties"]["colliderType"]));
+            Logger::log(LogType::ERROR, "BulletColliderResource", TRF("error.bullet_collider_resource.unimplemented", properties["properties"]["colliderType"]));
             break;
 
         case BulletColliderType::BULLET_CONE:
@@ -90,7 +90,7 @@ void BulletColliderResource::compile(const nlohmann::json& properties) {
         case BulletColliderType::BULLET_CONVEX_POINT_CLOUD: // todo
         case BulletColliderType::BULLET_CONVEX_POLYHEDRON: // todo
         case BulletColliderType::BULLET_CONVEX_TRIANGLE_MESH: // todo
-            Logger::log(LogType::ERROR, "BulletColliderResource", fmt::format(TR("error.bullet_collider_resource.unimplemented"), properties["properties"]["colliderType"]));
+            Logger::log(LogType::ERROR, "BulletColliderResource", TRF("error.bullet_collider_resource.unimplemented", properties["properties"]["colliderType"]));
             break;
 
         case BulletColliderType::BULLET_CYLINDER:
@@ -123,7 +123,7 @@ void BulletColliderResource::compile(const nlohmann::json& properties) {
         case BulletColliderType::BULLET_MULTIMATERIAL_TRIANGLE_MESH: // todo
         case BulletColliderType::BULLET_MULTISPHERE: // todo
         case BulletColliderType::BULLET_SDF_COLLISION: // todo
-            Logger::log(LogType::ERROR, "BulletColliderResource", fmt::format(TR("error.bullet_collider_resource.unimplemented"), properties["properties"]["colliderType"]));
+            Logger::log(LogType::ERROR, "BulletColliderResource", TRF("error.bullet_collider_resource.unimplemented", properties["properties"]["colliderType"]));
             break;
 
         case BulletColliderType::BULLET_SPHERE:
@@ -193,6 +193,6 @@ BulletColliderType BulletColliderResource::getBulletColliderTypeFromString(const
     else if (colliderTypeStr == "BULLET_STATIC_PLANE")
         return BulletColliderType::BULLET_STATIC_PLANE;
 
-    Logger::log(LogType::WARNING, "BulletColliderResource", fmt::format(TR("warn.bullet_collider_resource.invalid_collider_type"), colliderTypeStr));
+    Logger::log(LogType::WARNING, "BulletColliderResource", TRF("warn.bullet_collider_resource.invalid_collider_type", colliderTypeStr));
     return BulletColliderType::BULLET_INVALID;
 }

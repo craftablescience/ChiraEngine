@@ -22,4 +22,5 @@ namespace chira {
     }
 }
 
+// should use std::source_location if ever moving to C++20
 #define chira_assert(shouldAssert, message) chira::assert_internal(shouldAssert, message, __FILE__, __LINE__)

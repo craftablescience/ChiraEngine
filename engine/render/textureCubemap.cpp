@@ -48,7 +48,7 @@ void TextureCubemap::compile(const nlohmann::json& properties) {
         if (files[i]->getFile() && files[i]->getFile()->getData()) {
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, formats[i], files[i]->getWidth(), files[i]->getHeight(), 0, formats[i], GL_UNSIGNED_BYTE, files[i]->getData());
         } else {
-            Logger::log(LogType::ERROR, "TextureCubemap", fmt::format(TR("error.opengl.texture_cubemap_compile"), i));
+            Logger::log(LogType::ERROR, "TextureCubemap", TRF("error.opengl.texture_cubemap_compile", i));
         }
     }
     if (this->mipmaps)

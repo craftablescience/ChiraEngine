@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef CHIRA_BUILD_STATIC
+#ifdef CHIRA_BUILD_WITH_MSVC_COMPAT
 #define AL_LIBTYPE_STATIC
 #endif
 #include <AL/al.h>

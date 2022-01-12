@@ -73,7 +73,7 @@ void ShaderResource::checkForCompilationErrors() const {
     glGetShaderiv(this->handle, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(this->handle, 512, nullptr, infoLog);
-        Logger::log(LogType::ERROR, "Shader Resource", fmt::format(TR("error.shader_resource.compilation_failure"), this->type, infoLog));
+        Logger::log(LogType::ERROR, "Shader Resource", TRF("error.shader_resource.compilation_failure", this->type, infoLog));
     }
 }
 

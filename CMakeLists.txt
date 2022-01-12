@@ -31,19 +31,17 @@ if(CHIRA_COMPILER_ID MATCHES "clang")
     endif()
 endif()
 
-option(CHIRA_BUILD_STATIC "Build Chira Engine's dependencies statically" OFF)
+option(CHIRA_BUILD_WITH_MSVC_COMPAT "Build most of Chira Engine's dependencies statically" OFF)
 if(CHIRA_COMPILER_MSVC)
-    set(CHIRA_BUILD_STATIC ON)
+    set(CHIRA_BUILD_WITH_MSVC_COMPAT ON)
 endif()
-if(CHIRA_BUILD_STATIC)
-    # Note: Distributing with static libs disabled means your distribution
-    #       falls under LGPLv2.1 licensing, which you probably want to avoid.
+if(CHIRA_BUILD_WITH_MSVC_COMPAT)
+    # Note: Distributing with statically build libraries means your distribution
+    #       might fall under LGPLv2.1 licensing, which you probably want to avoid.
     #       In other words, it's not recommended, but if you have to, it works.
-    # todo: Currently it appears curlpp and OpenAL ignore this
     set(BUILD_SHARED_LIBS OFF)
     add_definitions(-DLIBTYPE=STATIC)
 else()
-    # Build with dynamic (shared) dependencies
     set(BUILD_SHARED_LIBS ON)
 endif()
 
@@ -59,7 +57,6 @@ if(CHIRA_BUILD_TESTS)
             googletest
             URL https://github.com/google/googletest/archive/e2239ee6043f73722e7aa812a459f54a28552929.zip
     )
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(googletest)
     enable_testing()
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/engine/CMakeLists.txt)
@@ -70,7 +67,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript)
 list(APPEND ENGINE_LINK_LIBRARIES angelscript)
 
 # BULLET
-if(WIN32 AND ((NOT CHIRA_BUILD_STATIC) AND CHIRA_COMPILER_CLANG))
+if(WIN32 AND ((NOT CHIRA_BUILD_WITH_MSVC_COMPAT) AND CHIRA_COMPILER_CLANG))
     # Program has a fit at runtime if Bullet isn't statically linked compiling with clang
     set(BUILD_SHARED_LIBS OFF)
 endif()
@@ -87,7 +84,8 @@ set(BUILD_ENET              OFF CACHE BOOL "" FORCE)
 set(BUILD_CLSOCKET          OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/bullet)
 list(APPEND ENGINE_LINK_LIBRARIES Bullet3Common BulletDynamics BulletCollision LinearMath)
-if(WIN32 AND ((NOT CHIRA_BUILD_STATIC) AND CHIRA_COMPILER_CLANG))
+if(WIN32 AND ((NOT CHIRA_BUILD_WITH_MSVC_COMPAT) AND CHIRA_COMPILER_CLANG))
+    # And re-enable building as shared libraries
     set(BUILD_SHARED_LIBS ON)
 endif()
 
@@ -95,7 +93,7 @@ endif()
 set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
 set(HTTP_ONLY ON CACHE BOOL "" FORCE)
 set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
-if(CHIRA_BUILD_STATIC AND CHIRA_COMPILER_MSVC)
+if(CHIRA_BUILD_WITH_MSVC_COMPAT AND CHIRA_COMPILER_MSVC)
     set(CURL_STATIC_CRT ON CACHE BOOL "" FORCE)
 else()
     set(CURL_STATIC_CRT OFF CACHE BOOL "" FORCE)
@@ -106,7 +104,7 @@ set(CURL_LIBRARY libcurl)
 list(APPEND ENGINE_LINK_LIBRARIES libcurl)
 
 # CURLPP
-if(CHIRA_BUILD_STATIC AND CHIRA_COMPILER_MSVC)
+if(CHIRA_BUILD_WITH_MSVC_COMPAT AND CHIRA_COMPILER_MSVC)
     set(CURLPP_STATIC_CRT ON CACHE BOOL "" FORCE)
 else()
     set(CURLPP_STATIC_CRT OFF CACHE BOOL "" FORCE)
@@ -205,8 +203,8 @@ if(CHIRA_BUILD_WITH_STEAMWORKS)
 endif()
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD2)
-if(CHIRA_BUILD_STATIC)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_BUILD_STATIC)
+if(CHIRA_BUILD_WITH_MSVC_COMPAT)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_BUILD_WITH_MSVC_COMPAT)
 endif()
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     target_compile_definitions(${PROJECT_NAME} PUBLIC DEBUG)

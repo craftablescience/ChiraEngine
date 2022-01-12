@@ -22,12 +22,12 @@ void ALSoundManager::init() {
     this->device = alcOpenDevice(nullptr);
     if (!this->device) {
         Logger::log(LogType::WARNING, "OpenAL", TR("error.openal.open_device_failure"));
-        std::vector<std::string> devices{};
+        std::vector<std::string> devices;
         alcGetAvailableDevices(devices, nullptr);
         if (devices.empty()) {
             Logger::log(LogType::ERROR, "OpenAL", TR("error.openal.no_devices_available"));
         } else {
-            Logger::log(LogType::ERROR, "OpenAL", fmt::format(TR("error.openal.using_nondefault_device"), devices[0]));
+            Logger::log(LogType::ERROR, "OpenAL", TRF("error.openal.using_nondefault_device", devices[0]));
             this->device = alcOpenDevice(devices[0].c_str());
         }
     }

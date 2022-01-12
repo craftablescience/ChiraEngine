@@ -45,7 +45,7 @@ void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>&
             while (iss >> objIndices[counter]) {
                 objIndices[counter] -= 1;
                 if (counter >= 9) {
-                    Logger::log(LogType::WARNING, "OBJ", fmt::format(TR("warn.obj_loader.not_triangulated"), identifier));
+                    Logger::log(LogType::WARNING, "OBJ", TRF("warn.obj_loader.not_triangulated", identifier));
                     break;
                 } else if (counter >= 6) {
                     includeUVs = true;
