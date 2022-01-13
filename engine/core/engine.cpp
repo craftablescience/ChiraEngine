@@ -23,7 +23,7 @@
 #include <event/events.h>
 #include <entity/imgui/console/console.h>
 #include <entity/imgui/profiler/profiler.h>
-#include <utility/assertions.h>
+#include <utility/debug/assertions.h>
 #if __has_include(<windows.h>) && !defined(DEBUG)
 #include <windows.h>
 #undef ERROR
@@ -294,8 +294,8 @@ void Engine::init() {
 #ifdef CHIRA_BUILD_WITH_STEAMWORKS
     bool steamEnabled = false;
     Engine::getSettingsLoader()->getValue("engine", "steamworks", &steamEnabled);
-    if (steamEnabled && !SteamAPI::initSteam())
-        Logger::log(LogType::ERROR, "Steam", "Could not initialize Steam API!"); // todo(i18n)
+    if (steamEnabled && !SteamAPI::Client::initSteam())
+        Logger::log(LogType::ERROR, "Steam", TR("error.steam.initialization_failure"));
 #endif
 
     Engine::angelscript = std::make_unique<AngelscriptProvider>();
@@ -363,8 +363,8 @@ void Engine::run() {
         if (DiscordRPC::initialized())
             DiscordRPC::updatePresence();
 #ifdef CHIRA_BUILD_WITH_STEAMWORKS
-        if (SteamAPI::initialized())
-            SteamAPI::runCallbacks();
+        if (SteamAPI::Client::initialized())
+            SteamAPI::Client::runCallbacks();
 #endif
         Events::update();
         Resource::cleanup();
@@ -383,8 +383,8 @@ void Engine::stop() {
     if (DiscordRPC::initialized())
         DiscordRPC::shutdown();
 #ifdef CHIRA_BUILD_WITH_STEAMWORKS
-    if (SteamAPI::initialized())
-        SteamAPI::shutdown();
+    if (SteamAPI::Client::initialized())
+        SteamAPI::Client::shutdown();
 #endif
 
     Engine::soundManager->stop();

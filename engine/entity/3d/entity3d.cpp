@@ -1,7 +1,7 @@
 #include "entity3d.h"
 
 #include <utility/math/matrix.h>
-#include <utility/pointer/assert_cast.h>
+#include <utility/debug/assertions.h>
 
 using namespace chira;
 

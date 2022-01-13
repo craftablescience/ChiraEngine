@@ -4,7 +4,7 @@
 #include <physics/bulletPhysicsProvider.h>
 #include <resource/resource.h>
 #include <utility/math/bulletConversions.h>
-#include <utility/pointer/assert_cast.h>
+#include <utility/debug/assertions.h>
 
 using namespace chira;
 

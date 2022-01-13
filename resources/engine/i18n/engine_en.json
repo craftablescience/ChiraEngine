@@ -95,5 +95,6 @@
   "error.ogg.unrecognized_format": "Unrecognized OGG format with {} channels, {} bps, in \"{}\"",
   "error.ogg.unknown": "Unknown error encountered in {} in \"{}\"",
   "error.primitive_loader.invalid_identifier": "Identifier must be a valid name (e.g. \"cube\")",
-  "error.primitive_loader.invalid_method": "It should be impossible to ever call this method!"
+  "error.primitive_loader.invalid_method": "It should be impossible to ever call this method!",
+  "error.steam.initialization_failure": "Could not initialize Steam API!"
 }

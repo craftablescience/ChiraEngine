@@ -36,6 +36,12 @@ const library& SteamAPI::get() {
     return steamBinary;
 }
 
+ISteamClient* SteamAPI::Client::get() {
+    ISteamClient* client = nullptr;
+    SteamAPI::get().call<ISteamClient*>("SteamClient", client);
+    return client;
+}
+
 #if !defined(_WIN32) && (!defined(__clang__) && (defined(__GNUC__) || defined(__GNUG__)))
 #define __cdecl __attribute__((__cdecl__))
 #endif
@@ -46,28 +52,55 @@ extern "C" void __cdecl steamAPILoggingHook(int severity, const char* descriptio
         Logger::log(LogType::WARNING, "Steam", std::string{description});
 }
 
-bool SteamAPI::initSteam() {
-    if (SteamAPI::isInitialized)
+bool SteamAPI::Client::initSteam() {
+    if (SteamAPI::Client::isInitialized)
         return true;
     if (auto utils = SteamAPI::Utils::get())
         SteamAPI::get().call("SteamAPI_ISteamUtils_SetWarningMessageHook", utils, &steamAPILoggingHook);
     bool out;
     if (SteamAPI::get().call<bool>("SteamAPI_Init", out)) {
-        SteamAPI::isInitialized = out;
+        SteamAPI::Client::isInitialized = out;
+        // Handle callbacks manually
+        SteamAPI::get().callVoid("SteamAPI_ManualDispatch_Init");
         return out;
     }
     return false;
 }
 
-bool SteamAPI::initialized() {
-    return SteamAPI::isInitialized;
+bool SteamAPI::Client::initialized() {
+    return SteamAPI::Client::isInitialized;
 }
 
-void SteamAPI::runCallbacks() {
-    SteamAPI::get().callVoid("SteamAPI_RunCallbacks");
+void SteamAPI::Client::runCallbacks() {
+    std::int32_t steamPipe;
+    if (auto client = SteamAPI::Client::get())
+        steamPipe = steamFunctionWrapper<std::int32_t>("SteamAPI_GetHSteamPipe", 0, client);
+    else
+        return;
+    SteamAPI::get().callVoid("SteamAPI_ManualDispatch_RunFrame", steamPipe);
+    CallbackMessage callback{};
+    while (steamFunctionWrapper<bool>("SteamAPI_ManualDispatch_GetNextCallback", false, steamPipe, &callback)) {
+        if (callback.callbackType == Callbacks::Completed::callbackType) {
+            // todo: codes busted
+            //auto* pCallCompleted = reinterpret_cast<Callbacks::Completed*>(&callback.param);
+            //void* pTmpCallResult = malloc(callback.size);
+            //if (bool failed = false; steamFunctionWrapper<bool>("SteamAPI_ManualDispatch_GetAPICallResult", false, steamPipe, pCallCompleted->asyncCallbackId, pTmpCallResult, callback.param, callback.callbackType, &failed)) {
+            //    // Dispatch the call result to the registered handler(s) for the
+            //    // call identified by pCallCompleted->m_hAsyncCall
+            //} else
+            //    Logger::log(LogType::ERROR, "Steam", "Callback handler epic fail");
+            //free(pTmpCallResult);
+        } else {
+            // Look at callback.m_iCallback to see what kind of callback it is,
+            // and dispatch to appropriate handler(s)
+        }
+        SteamAPI::get().callVoid("SteamAPI_ManualDispatch_FreeLastCallback", steamPipe);
+    }
+    // Not called automatically anymore!
+    SteamAPI::get().callVoid("SteamAPI_ReleaseCurrentThreadMemory");
 }
 
-void SteamAPI::shutdown() {
+void SteamAPI::Client::shutdown() {
     SteamAPI::get().callVoid("SteamAPI_Shutdown");
 }
 
@@ -129,6 +162,10 @@ ISteamFriends* SteamAPI::Friends::get() {
 
 std::string SteamAPI::Friends::getPersonaName() {
     return steamFunctionStringWrapper("SteamAPI_ISteamFriends_GetPersonaName", "", SteamAPI::Friends::get());
+}
+
+std::uint64_t SteamAPI::Friends::setPersonaName(const std::string& name) {
+    return steamFunctionWrapper<std::uint64_t>("SteamAPI_ISteamFriends_SetPersonaName", 0, SteamAPI::Friends::get(), name.c_str());
 }
 
 // -------------------------------- UTILS -------------------------------- //

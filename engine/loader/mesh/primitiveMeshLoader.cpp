@@ -2,7 +2,7 @@
 
 #include <utility/logger.h>
 #include <i18n/translationManager.h>
-#include <utility/assertions.h>
+#include <utility/debug/assertions.h>
 
 using namespace chira;
 

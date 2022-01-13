@@ -4,7 +4,7 @@
 #include <string>
 #include <string_view>
 #include <glm/glm.hpp>
-#include <utility/pointer/assert_cast.h>
+#include <utility/debug/assertions.h>
 
 namespace chira {
     /// The base entity class. Note that the name of an entity stored in the name variable should

@@ -10,6 +10,7 @@ namespace libloader {
 
 namespace steam {
     // Singleton types
+    struct ISteamClient    {};
     struct ISteamUser      {};
     struct ISteamFriends   {};
     struct ISteamUtils     {};
@@ -24,17 +25,57 @@ namespace steam {
         BOTTOM_LEFT  = 2,
         BOTTOM_RIGHT = 3,
     };
+
+    // Structs
+    struct CallbackMessage {
+        std::int32_t user;
+        int callbackType;
+        std::uint8_t* param;
+        int size;
+    };
+
+    struct Callbacks {
+    private:
+        static constexpr const int callbackBaseIdUser = 100;
+        static constexpr const int callbackBaseIdFriends = 300;
+        static constexpr const int callbackBaseIdContentServer = 600;
+        static constexpr const int callbackBaseIdUtils = 700;
+        static constexpr const int callbackBaseIdApps = 1000;
+        static constexpr const int callbackBaseIdUserStats = 1100;
+        static constexpr const int callbackBaseId2Async = 1900;
+        static constexpr const int callbackBaseIdGameStats = 2000;
+        static constexpr const int callbackBaseIdStreamLauncher = 2600;
+        static constexpr const int callbackBaseIdController = 2800;
+        static constexpr const int callbackBaseIdUGC = 3400;
+        static constexpr const int callbackBaseIdStreamClient = 3500;
+        static constexpr const int callbackBaseIdAppList = 3900;
+        static constexpr const int callbackBaseIdGameNotification = 4400;
+        static constexpr const int callbackBaseIdParentalSettings = 5000;
+        static constexpr const int callbackBaseIdGameSearch = 5200;
+        static constexpr const int callbackBaseIdSTAR = 5500;
+    public:
+        struct Completed {
+            static constexpr const int callbackType = Callbacks::callbackBaseIdUtils + 3;
+            std::uint64_t asyncCallbackId;
+            int callbackId;
+            std::uint32_t size;
+        };
+    };
 }
 
 namespace chira {
     struct SteamAPI {
         static const libloader::library& get();
 
-        // Startup & shutdown
-        static bool initSteam();
-        static bool initialized();
-        static void runCallbacks();
-        static void shutdown();
+        struct Client {
+            static steam::ISteamClient* get();
+            static bool initSteam();
+            static bool initialized();
+            static void runCallbacks();
+            static void shutdown();
+        private:
+            static inline bool isInitialized = false;
+        };
 
         struct User {
             static steam::ISteamUser* get();
@@ -52,8 +93,8 @@ namespace chira {
 
         struct Friends {
             static steam::ISteamFriends* get();
-            static std::string getPersonaName();
-            // todo: wrap around the rest
+            static std::string   getPersonaName();
+            static std::uint64_t setPersonaName(const std::string& name);
         };
 
         struct Utils {
@@ -118,7 +159,5 @@ namespace chira {
             static steam::ISteamUGC* get();
             // todo: implement wrappers
         };
-    private:
-        static inline bool isInitialized = false;
     };
 }

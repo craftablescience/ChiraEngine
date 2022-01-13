@@ -1,6 +1,6 @@
 #pragma once
 
-#include "assert_cast.h"
+#include <utility/debug/assertions.h>
 
 namespace chira {
     enum class PointerCastType {

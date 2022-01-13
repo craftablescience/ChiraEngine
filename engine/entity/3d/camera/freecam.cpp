@@ -2,7 +2,7 @@
 
 #include <core/engine.h>
 #include <input/inputManager.h>
-#include <utility/pointer/assert_cast.h>
+#include <utility/debug/assertions.h>
 
 using namespace chira;
 
