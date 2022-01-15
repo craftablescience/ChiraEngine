@@ -103,7 +103,7 @@ jobs:
           spectre: false
 
       - name: Configure CMake
-        run: cmake -G "Visual Studio 16 2019" -A x86 -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+        run: cmake -G "Ninja" -A x86 -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
 
       - name: Build
         run: cmake --build build --config ${{matrix.build_type}}
