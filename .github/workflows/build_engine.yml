@@ -1,0 +1,92 @@
+name: Build Engine
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # nothing here
+jobs:
+  build-linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [ Debug, Release ]
+        compiler: [ gcc, clang ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Install Necessary Packages
+        run: sudo apt update && sudo apt install -y cmake build-essential xorg-dev mesa-common-dev mesa-utils libssl-dev libasound2-dev libpulse-dev libjack-dev
+
+      - name: Install Clang
+        if: ${{ matrix.compiler == 'clang' }}
+        uses: egor-tensin/setup-clang@v1
+        with:
+          version: 13
+          platform: x64
+
+      - name: Configure CMake
+        run: cmake -G "Unix Makefiles" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
+
+  build-mingw:
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Debug, Release]
+        sys: [mingw64, clang64]
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Install MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{matrix.sys}}
+        update: true
+        install: >-
+          git
+          make
+        pacboy: >-
+          toolchain:p
+          cmake:p
+
+    - name: Configure CMake (mingw64)
+      if: ${{ matrix.sys == 'mingw64' }}
+      run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
+
+    - name: Configure CMake (clang64)
+      if: ${{ matrix.sys == 'clang64' }}
+      run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_C_COMPILER="/clang64/bin/clang.exe" -DCMAKE_CXX_COMPILER="/clang64/bin/clang++.exe"
+
+    - name: Build
+      run: cmake --build build --config ${{matrix.build_type}}
+
+  build-msvc:
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Configure CMake
+        run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+
+      - name: Build
+        run: cmake --build build --config ${{matrix.build_type}}
