@@ -100,11 +100,14 @@ jobs:
           spectre: false
 
       - name: Configure CMake
+        shell: powershell
         run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
 
       - name: Build
+        shell: powershell
         run: cmake --build build --config ${{matrix.build_type}}
 
       - name: Test
+        shell: powershell
         working-directory: ${{github.workspace}}/build
         run: ctest -C ${{matrix.build_type}}
