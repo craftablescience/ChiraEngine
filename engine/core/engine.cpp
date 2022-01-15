@@ -494,7 +494,9 @@ void Engine::setSettingsLoaderDefaults() {
     Engine::settingsLoader->setValue("engine", "maxPointLights", 64, false, false);
     Engine::settingsLoader->setValue("engine", "maxDirectionalLights", 4, false, false);
     Engine::settingsLoader->setValue("engine", "maxSpotLights", 4, false, false);
+#ifdef CHIRA_BUILD_WITH_STEAMWORKS
     Engine::settingsLoader->setValue("engine", "steamworks", false, false, false);
+#endif
     Engine::settingsLoader->addCategory("audio");
     Engine::settingsLoader->setValue("audio", "openal", true, false, false);
     Engine::settingsLoader->addCategory("physics");
