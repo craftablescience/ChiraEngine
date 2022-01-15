@@ -94,7 +94,7 @@ jobs:
           submodules: recursive
 
       - name: Set up MSVC
-        uses: ilammy/msvc-dev-cmd@v1.10
+        uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x86
           spectre: false
