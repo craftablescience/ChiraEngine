@@ -187,6 +187,8 @@ namespace steam {
 namespace chira {
     struct SteamAPI {
         static const libloader::library& get();
+        /// For debug use only!
+        static void generateAppIDFile(unsigned int appID);
 
         struct Client {
             static steam::ISteamClient* get();

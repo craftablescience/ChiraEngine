@@ -1,5 +1,6 @@
 #include "steamAPI.h"
 
+#include <fstream>
 #include <libloader.hpp>
 #include <event/events.h>
 #include <resource/provider/filesystemResourceProvider.h>
@@ -36,6 +37,12 @@ inline std::string steamFunctionStringWrapper(const std::string& function, const
 const library& SteamAPI::get() {
     static library steamBinary{FILESYSTEM_ROOT_FOLDER + "/engine/bin/steam_api"};
     return steamBinary;
+}
+
+void SteamAPI::generateAppIDFile(unsigned int appID) {
+    std::ofstream file{"steam_appid.txt"};
+    file << std::to_string(appID) << std::endl;
+    file.close();
 }
 
 ISteamClient* SteamAPI::Client::get() {

@@ -10,6 +10,9 @@
 #include <entity/3d/camera/editorCamera3d.h>
 #include <entity/imgui/console/console.h>
 #include <entity/imgui/profiler/profiler.h>
+#if defined(CHIRA_BUILD_WITH_STEAMWORKS) && defined(DEBUG)
+#include <hook/steamAPI.h>
+#endif
 
 using namespace chira;
 
@@ -22,6 +25,13 @@ int main() {
     Engine::getSettingsLoader()->setValue("engineGui", "discordIntegration", true, false, true);
     bool discordEnabled;
     Engine::getSettingsLoader()->getValue("engineGui", "discordIntegration", &discordEnabled);
+
+#ifdef CHIRA_BUILD_WITH_STEAMWORKS
+    Engine::getSettingsLoader()->setValue("engine", "steamworks", true, true, true);
+#ifdef DEBUG
+    SteamAPI::generateAppIDFile(1728950);
+#endif
+#endif
 
     InputManager::addCallback(InputKeyButton{Key::ESCAPE, InputKeyEventType::PRESSED, []{
         Engine::stop();
