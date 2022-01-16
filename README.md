@@ -1,6 +1,5 @@
 # Chira Engine
-![Windows Workflow Status](https://img.shields.io/github/workflow/status/craftablescience/ChiraEngine/Build%20(Windows)?label=Windows)
-![Linux Workflow Status](https://img.shields.io/github/workflow/status/craftablescience/ChiraEngine/Build%20(Linux)?label=Linux)
+![Windows Workflow Status](https://img.shields.io/github/workflow/status/craftablescience/ChiraEngine/Build%20Engine?label=Builds%20and%20Tests)
 ![License](https://img.shields.io/github/license/craftablescience/ChiraEngine?label=License)
 ![Discord](https://img.shields.io/discord/678074864346857482?label=Discord&logo=Discord&logoColor=%23FFFFFF)
 
