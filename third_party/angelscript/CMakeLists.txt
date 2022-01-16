@@ -86,6 +86,8 @@ add_library(${PROJECT_NAME}
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptbuilder/scriptbuilder.cpp
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptdictionary/scriptdictionary.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptdictionary/scriptdictionary.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/addons/scriptgrid/scriptgrid.h
+        ${CMAKE_CURRENT_LIST_DIR}/addons/scriptgrid/scriptgrid.cpp
         ${CMAKE_CURRENT_LIST_DIR}/addons/scripthandle/scripthandle.h
         ${CMAKE_CURRENT_LIST_DIR}/addons/scripthandle/scripthandle.cpp
         ${CMAKE_CURRENT_LIST_DIR}/addons/scriptmath/scriptmath.h

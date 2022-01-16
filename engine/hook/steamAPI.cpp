@@ -3,6 +3,7 @@
 #include <libloader.hpp>
 #include <event/events.h>
 #include <resource/provider/filesystemResourceProvider.h>
+#include <utility/platformDefines.h>
 #include <utility/logger.h>
 #include <utility/string/stringSplit.h>
 
@@ -43,10 +44,7 @@ ISteamClient* SteamAPI::Client::get() {
     return client;
 }
 
-#if !defined(_WIN32) && (!defined(__clang__) && (defined(__GNUC__) || defined(__GNUG__)))
-#define __cdecl __attribute__((__cdecl__))
-#endif
-extern "C" void __cdecl steamAPILoggingHook(int severity, const char* description) {
+extern "C" void CHIRA_CDECL steamAPILoggingHook(int severity, const char* description) {
     if (severity < 1)
         Logger::log(LogType::INFO, "Steam", std::string{description});
     else

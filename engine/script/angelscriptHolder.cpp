@@ -19,7 +19,7 @@ AngelscriptHolder::~AngelscriptHolder() {
 void AngelscriptHolder::init(AngelscriptProvider* provider) {
     CScriptBuilder builder;
     int r;
-    if (r = builder.StartNewModule(provider->asEngine, this->identifier.c_str()); r < 0) {
+    if (r = builder.StartNewModule(provider->getAngelscriptEngine(), this->identifier.c_str()); r < 0) {
         Logger::log(LogType::ERROR, "AngelScript", TRF("error.angelscript.unrecoverable_error", this->identifier));
         return;
     }
@@ -33,14 +33,14 @@ void AngelscriptHolder::init(AngelscriptProvider* provider) {
         return;
     }
 
-    this->scriptContext = provider->asEngine->CreateContext();
-    asIScriptModule* module = provider->asEngine->GetModule(this->identifier.c_str());
+    this->scriptContext = provider->getAngelscriptEngine()->CreateContext();
+    asIScriptModule* module = provider->getAngelscriptEngine()->GetModule(this->identifier.c_str());
     if (this->initFunc = module->GetFunctionByDecl("void init()"); !this->initFunc) {
         Logger::log(LogType::ERROR, "AngelScript", TRF("error.angelscript.missing_function", this->identifier, "void init()"));
         return;
     }
-    if (this->renderFunc = module->GetFunctionByDecl("void render(double delta)"); !this->renderFunc) {
-        Logger::log(LogType::ERROR, "AngelScript", TRF("error.angelscript.missing_function", this->identifier, "void render(double delta)"));
+    if (this->renderFunc = module->GetFunctionByDecl("void render()"); !this->renderFunc) {
+        Logger::log(LogType::ERROR, "AngelScript", TRF("error.angelscript.missing_function", this->identifier, "void render()"));
         return;
     }
     if (this->stopFunc = module->GetFunctionByDecl("void stop()"); !this->stopFunc) {
@@ -56,7 +56,6 @@ void AngelscriptHolder::init(AngelscriptProvider* provider) {
 
 void AngelscriptHolder::render(AngelscriptProvider* provider, double delta) {
     this->scriptContext->Prepare(this->renderFunc);
-    this->scriptContext->SetArgDouble(0, delta);
     if (int r = this->scriptContext->Execute(); r != asEXECUTION_FINISHED) {
         Logger::log(LogType::ERROR, "AngelScript", TRF("error.angelscript.exception", this->identifier, this->scriptContext->GetExceptionString()));
     }

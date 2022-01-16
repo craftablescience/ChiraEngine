@@ -4,7 +4,7 @@ void init() {
     print("script initiated");
 }
 
-void render(double delta) {
+void render() {
 //    x += float(delta);
 //    while (x > 1) {
 //        x -= 1;

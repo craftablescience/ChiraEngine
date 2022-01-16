@@ -2,6 +2,7 @@
 
 #include <string>
 #include <sstream>
+#include <utility/string/stringStrip.h>
 
 #if defined(__clang__) || defined(__GNUG__)
 #include <cxxabi.h>
@@ -21,10 +22,10 @@ namespace chira {
         }
         std::string operator()() const {
             std::ostringstream os;
-            if (!prefix.empty()) os << prefix << ' ';
+            if (!this->prefix.empty()) os << this->prefix << ' ';
             os << type();
-            if (!suffix.empty()) os << ' ' << suffix;
-            if (!name.empty()) os << ' ' << name;
+            if (!this->suffix.empty()) os << ' ' << this->suffix;
+            if (!this->name.empty()) os << ' ' << this->name;
             return os.str();
         }
         [[nodiscard]] virtual std::string type() const = 0;
@@ -38,7 +39,7 @@ namespace chira {
         explicit asTypeString(const std::string& name_ = "") : asSimpleTypeString(name_) {}
         [[nodiscard]] std::string type() const override {
             std::string type = typeid(T).name();
-#if defined(__clang__) || defined(__GNUG__)
+#if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
             int status;
             char* demangled_name = abi::__cxa_demangle(type.c_str(), nullptr, nullptr, &status);
             if (status == 0) {
@@ -101,23 +102,22 @@ namespace chira {
     template<typename R, typename... ArgTypes>
     struct asTypeString<R(ArgTypes...)> {
         std::string name;
-
         explicit asTypeString(const std::string& name_) {
             this->name = name_;
         }
-
         std::string operator()() const {
             std::ostringstream os;
-            os << asTypeString<R>()() << ' ' << name << '(';
+            os << asTypeString<R>()() << ' ' << this->name << '(';
             ((os << asTypeString<ArgTypes>().as_param()() << ", "), ...);
             os.seekp(-2, std::stringstream::cur);
             os << ")";
-            return os.str();
+            return stripRight(os.str());
         }
     };
 
+    // Cool template black magic
     template<typename R, typename... ArgTypes>
     struct asTypeString<R(*)(ArgTypes...)> : asTypeString<R(ArgTypes...)> {
-        explicit asTypeString(const std::string &name_) : asTypeString<R(ArgTypes...)>(name_) {}
+        explicit asTypeString(const std::string& name_) : asTypeString<R(ArgTypes...)>(name_) {}
     };
 }

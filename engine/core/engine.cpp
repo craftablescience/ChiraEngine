@@ -299,7 +299,6 @@ void Engine::init() {
 #endif
 
     Engine::angelscript = std::make_unique<AngelscriptProvider>();
-    Engine::angelscript->initProvider();
     // Static function:
     //Engine::angelscript->registerGlobalFunction(Engine::setBackgroundColor, "setBackgroundColor");
     // Method:
@@ -316,7 +315,7 @@ void Engine::init() {
     Engine::root->addChild(Engine::profiler);
 #endif
     Engine::callRegisteredFunctions(Engine::initFunctions);
-    Engine::angelscript->initScripts();
+    Engine::angelscript->init();
 
     io.Fonts->Build();
 }
