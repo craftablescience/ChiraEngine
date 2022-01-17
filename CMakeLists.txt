@@ -47,11 +47,7 @@ endif()
 
 # GOOGLETEST
 option(CHIRA_BUILD_TESTS "Run Chira Engine's built-in tests" ON)
-if(CHIRA_COMPILER_MSVC)
-    set(CHIRA_BUILD_TESTS OFF)
-endif()
 if(CHIRA_BUILD_TESTS)
-    # For some reason Visual Studio doesn't like this
     include(FetchContent)
     FetchContent_Declare(
             googletest
@@ -233,7 +229,7 @@ if(CHIRA_BUILD_WITH_WARNINGS)
     if(UNIX OR MINGW)
         target_compile_options(${PROJECT_NAME} PUBLIC -Wall)
     elseif(CHIRA_COMPILER_MSVC)
-        target_compile_options(${PROJECT_NAME} PUBLIC /Wall)
+        target_compile_options(${PROJECT_NAME} PUBLIC /W4) # not all, because MSVC has loads of idiotic errors
     endif()
 endif()
 
