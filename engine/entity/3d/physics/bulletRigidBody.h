@@ -1,10 +1,11 @@
 #pragma once
 
 #include "../entity3d.h"
+#include "abstractRigidBody.h"
 #include <physics/bulletColliderResource.h>
 
 namespace chira {
-    class BulletRigidBody : public Entity3d {
+    class BulletRigidBody : public Entity3d, public AbstractRigidBody {
     public:
         BulletRigidBody(Entity* parent_, const std::string& colliderId);
         BulletRigidBody(Entity* parent_, const std::string& name_, const std::string& colliderId);

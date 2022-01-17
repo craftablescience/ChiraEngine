@@ -11,6 +11,7 @@ using namespace chira;
 BulletRigidBody::BulletRigidBody(Entity* parent_, const std::string& colliderId) : Entity3d(parent_) {
     this->collider = Resource::getResource<BulletColliderResource>(colliderId);
     this->rigidBody = this->collider->getNewRigidBody();
+    this->rigidBody->setUserPointer(this);
     this->rigidBody->translate(glmToBullet(this->position));
     assert_cast<BulletPhysicsProvider*>(Engine::getPhysicsProvider())->addRigidBody(this->rigidBody);
 }

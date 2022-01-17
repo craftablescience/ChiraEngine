@@ -1,6 +1,7 @@
 #include "bulletPhysicsProvider.h"
 
 #include <core/engine.h>
+#include <utility/math/bulletConversions.h>
 
 using namespace chira;
 
@@ -46,4 +47,18 @@ void BulletPhysicsProvider::removeRigidBody(btRigidBody* rb) const {
 
 void BulletPhysicsProvider::setGravity(const glm::vec3 gravity) {
     this->dynamicsWorld->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
+}
+
+AbstractRigidBody* BulletPhysicsProvider::traceRay(const glm::vec3 start, const glm::vec3 end) const {
+    const btVector3 bStart = glmToBullet(start);
+    const btVector3 bEnd   = glmToBullet(end);
+    btCollisionWorld::ClosestRayResultCallback rayCallback{bStart, bEnd};
+    this->dynamicsWorld->rayTest(bStart, bEnd, rayCallback);
+    if (rayCallback.hasHit())
+        return static_cast<AbstractRigidBody*>(rayCallback.m_collisionObject->getUserPointer());
+    return nullptr;
+}
+
+AbstractRigidBody* BulletPhysicsProvider::traceRay(const glm::vec3 start, const glm::vec3 direction, const float magnitude) const {
+    return this->traceRay(start, start + (direction * magnitude));
 }

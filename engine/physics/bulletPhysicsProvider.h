@@ -13,6 +13,8 @@ namespace chira {
         void addRigidBody(btRigidBody* rb) const;
         void removeRigidBody(btRigidBody* rb) const;
         void setGravity(glm::vec3 gravity) override;
+        [[nodiscard]] AbstractRigidBody* traceRay(glm::vec3 start, glm::vec3 end) const override;
+        [[nodiscard]] AbstractRigidBody* traceRay(glm::vec3 start, glm::vec3 direction, float magnitude) const override;
     private:
         std::unique_ptr<btDefaultCollisionConfiguration> collisionConfiguration;
         std::unique_ptr<btCollisionDispatcher> dispatcher;
