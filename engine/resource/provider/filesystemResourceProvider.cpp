@@ -16,11 +16,11 @@ bool FilesystemResourceProvider::hasResource(const std::string& name) const {
 }
 
 void FilesystemResourceProvider::compileResource(const std::string& name, Resource* resource) const {
+    std::uintmax_t fileSize = std::filesystem::file_size(std::filesystem::current_path().append(this->path).append(name));
     std::ifstream ifs((std::filesystem::current_path().append(this->path).append(name).string()).c_str(), std::ios::in | std::ios::binary | std::ios::ate);
-    std::ifstream::pos_type fileSize = ifs.tellg();
     ifs.seekg(0, std::ios::beg);
     auto* bytes = new unsigned char[(std::size_t) fileSize + 1];
-    ifs.read(reinterpret_cast<char*>(bytes), fileSize);
+    ifs.read(reinterpret_cast<char*>(bytes), static_cast<std::streamsize>(fileSize));
     bytes[fileSize] = '\0';
     resource->compile(bytes, (std::size_t) fileSize + 1);
     delete[] bytes;
