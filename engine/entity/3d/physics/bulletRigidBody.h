@@ -22,7 +22,7 @@ namespace chira {
         SharedPointer<BulletColliderResource> collider;
         btRigidBody* rigidBody;
     private:
-        // I'm not bothering with this
+        // I'm not bothering with this for now
         using Entity3d::translateWithRotation;
     };
 }

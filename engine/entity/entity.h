@@ -7,6 +7,8 @@
 #include <utility/debug/assertions.h>
 
 namespace chira {
+    class Root;
+
     /// The base entity class. Note that the name of an entity stored in the name variable should
     /// match the name assigned to the entity in the parent's entity map.
     class Entity {
@@ -21,6 +23,7 @@ namespace chira {
         /// Renders all this entity's children.
         virtual void render(const glm::mat4& parentTransform);
         [[nodiscard]] Entity* getParent() const;
+        [[nodiscard]] virtual const Root* getRoot() const;
         std::string_view getName() const;
         Entity* getChild(const std::string& name_) const {
             return this->children.at(name_);

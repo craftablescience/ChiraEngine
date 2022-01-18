@@ -46,8 +46,6 @@ namespace chira {
         static void setSoundManager(AbstractSoundManager* newSoundManager);
         [[nodiscard]] static AbstractSettingsLoader* getSettingsLoader();
         static void setSettingsLoader(AbstractSettingsLoader* newSettingsLoader);
-        [[nodiscard]] static AbstractPhysicsProvider* getPhysicsProvider();
-        static void setPhysicsProvider(AbstractPhysicsProvider* newPhysicsProvider);
 
         [[nodiscard]] static Root* getRoot();
         [[nodiscard]] static Console* getConsole();
@@ -58,6 +56,7 @@ namespace chira {
         [[nodiscard]] static double getDeltaTime();
         static void captureMouse(bool capture);
         [[nodiscard]] static bool isMouseCaptured();
+        [[nodiscard]] static glm::vec2 getMousePosition();
         [[nodiscard]] static bool isIconified();
         /// Note: Images must have a bit depth of 8, in RGB format
         static void setIcon(const std::string& iconPath);
@@ -67,7 +66,6 @@ namespace chira {
         static inline std::unique_ptr<AngelscriptProvider>     angelscript;
         static inline std::unique_ptr<AbstractSoundManager>    soundManager;
         static inline std::unique_ptr<AbstractSettingsLoader>  settingsLoader;
-        static inline std::unique_ptr<AbstractPhysicsProvider> physicsProvider;
         static inline Root* root;
         static inline Console* console;
 #ifdef DEBUG

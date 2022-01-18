@@ -5,7 +5,6 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/3d/entity3d.h
         ${CMAKE_CURRENT_LIST_DIR}/3d/root.cpp
         ${CMAKE_CURRENT_LIST_DIR}/3d/root.h
-        ${CMAKE_CURRENT_LIST_DIR}/3d/world3d.h
         ${CMAKE_CURRENT_LIST_DIR}/3d/camera/camera3d.cpp
         ${CMAKE_CURRENT_LIST_DIR}/3d/camera/camera3d.h
         ${CMAKE_CURRENT_LIST_DIR}/3d/camera/editorCamera3d.cpp

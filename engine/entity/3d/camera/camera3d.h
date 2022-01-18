@@ -3,6 +3,8 @@
 #include "../entity3d.h"
 
 namespace chira {
+    class AbstractRigidBody;
+
     enum class CameraProjectionMode {
         PERSPECTIVE,
         //ORTHOGRAPHIC,
@@ -14,7 +16,7 @@ namespace chira {
         Camera3d(Entity* parent_, const std::string& name_, CameraProjectionMode mode, float fov_ = 90.0f);
         explicit Camera3d(CameraProjectionMode mode, float fov_ = 90.0f);
         Camera3d(const std::string& name_, CameraProjectionMode mode, float fov_ = 90.0f);
-        void createProjection(int windowWidth, int windowHeight);
+        void createProjection(glm::vec2 windowSize);
         const glm::mat4& getProjection() const {
             return this->projection;
         }
@@ -48,6 +50,9 @@ namespace chira {
             out.z =     2 * (this->getRotation().x * this->getRotation().z - this->getRotation().w * this->getRotation().y);
             return out;
         }
+        AbstractRigidBody* traceRayFromCoords(glm::vec2 coords, float length);
+        AbstractRigidBody* traceRayFromMouse(float length);
+        AbstractRigidBody* traceRayFromCenter(float length);
     protected:
         glm::mat4 projection{};
         CameraProjectionMode projectionMode;

@@ -188,8 +188,8 @@ void Engine::init() {
     glViewport(0, 0, width, height);
     glfwSetFramebufferSizeCallback(Engine::window, [](GLFWwindow* w, int width, int height) {
         glViewport(0, 0, width, height);
-        if (Engine::root && Engine::root->getMainCamera())
-            Engine::root->getMainCamera()->createProjection(width, height);
+        if (Engine::root && Engine::root->getCamera())
+            Engine::root->getCamera()->createProjection(glm::vec2{width, height});
     });
     Engine::setBackgroundColor(ColorRGB{});
 
@@ -289,7 +289,7 @@ void Engine::init() {
     bool bulletEnabled = true;
     Engine::getSettingsLoader()->getValue("physics", "bullet", &bulletEnabled);
     if (bulletEnabled)
-        Engine::setPhysicsProvider(new BulletPhysicsProvider{});
+        AbstractPhysicsProvider::setPhysicsProvider(new BulletPhysicsProvider{});
 
 #ifdef CHIRA_BUILD_WITH_STEAMWORKS
     bool steamEnabled = false;
@@ -330,9 +330,9 @@ void Engine::run() {
         Engine::lastTime = Engine::currentTime;
         Engine::currentTime = glfwGetTime();
 
-        Engine::physicsProvider->updatePhysics(Engine::getDeltaTime());
+        AbstractPhysicsProvider::getPhysicsProvider()->updatePhysics(Engine::getDeltaTime());
 
-        UBO_PV::get()->update(Engine::getRoot()->getMainCamera()->getProjection(), Engine::getRoot()->getMainCamera()->getView());
+        UBO_PV::get()->update(Engine::getRoot()->getCamera()->getProjection(), Engine::getRoot()->getCamera()->getView());
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -388,7 +388,7 @@ void Engine::stop() {
 
     Engine::soundManager->stop();
     delete Engine::root;
-    Engine::physicsProvider->stop();
+    AbstractPhysicsProvider::getPhysicsProvider()->stop();
     Resource::discardAll();
 
     ImGui_ImplOpenGL3_Shutdown();
@@ -443,17 +443,14 @@ void Engine::shouldStopAfterThisFrame(bool yes) {
 }
 
 AngelscriptProvider* Engine::getAngelscriptProvider() {
-    if (!Engine::angelscript) {
+    if (!Engine::angelscript)
         Logger::log(LogType::ERROR, "Engine::getAngelscriptProvider", TRF("error.engine.script_provider_missing", "AngelScript"));
-    }
     return Engine::angelscript.get();
 }
 
 AbstractSoundManager* Engine::getSoundManager() {
-    if (!Engine::soundManager) {
+    if (!Engine::soundManager)
         Logger::log(LogType::WARNING, "Engine::getSoundManager", TRF("error.engine.invalid_access", "sound manager", "Engine::setSoundManager"));
-        return nullptr;
-    }
     return Engine::soundManager.get();
 }
 
@@ -462,28 +459,14 @@ void Engine::setSoundManager(AbstractSoundManager* newSoundManager) {
 }
 
 AbstractSettingsLoader* Engine::getSettingsLoader() {
-    if (!Engine::settingsLoader) {
+    if (!Engine::settingsLoader)
         Logger::log(LogType::WARNING, "Engine::getSettingsLoader", TRF("error.engine.invalid_access", "settings loader", "Engine::setSettingsLoader"));
-        return nullptr;
-    }
     return Engine::settingsLoader.get();
 }
 
 void Engine::setSettingsLoader(AbstractSettingsLoader* newSettingsLoader) {
     Engine::settingsLoader.reset(newSettingsLoader);
     Engine::setSettingsLoaderDefaults();
-}
-
-AbstractPhysicsProvider* Engine::getPhysicsProvider() {
-    if (!Engine::physicsProvider) {
-        Logger::log(LogType::WARNING, "Engine::getPhysicsProvider", TRF("error.engine.invalid_access", "physics provider", "Engine::setPhysicsProvider"));
-        return nullptr;
-    }
-    return Engine::physicsProvider.get();
-}
-
-void Engine::setPhysicsProvider(AbstractPhysicsProvider* newPhysicsProvider) {
-    Engine::physicsProvider.reset(newPhysicsProvider);
 }
 
 void Engine::setSettingsLoaderDefaults() {
@@ -559,6 +542,12 @@ void Engine::captureMouse(bool capture) {
 
 bool Engine::isMouseCaptured() {
     return Engine::mouseCaptured;
+}
+
+glm::vec2 Engine::getMousePosition() {
+    double x = -1.0, y = -1.0;
+    glfwGetCursorPos(Engine::window, &x, &y);
+    return {x,y};
 }
 
 bool Engine::isIconified() {

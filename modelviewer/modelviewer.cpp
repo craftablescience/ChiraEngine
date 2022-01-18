@@ -118,9 +118,10 @@ int main() {
     Engine::addInitFunction([&uiUUID]{
         Engine::setBackgroundColor(ColorRGB::solid(0.15f));
 
-        auto camera = new EditorCamera3d{CameraProjectionMode::PERSPECTIVE, 120.f, true};
+        auto camera = new EditorCamera3d{CameraProjectionMode::PERSPECTIVE, 120.f};
         Engine::getRoot()->addChild(camera);
-        Engine::getRoot()->setMainCamera(camera);
+        Engine::getRoot()->setCamera(camera);
+        EditorCamera3d::setupKeybinds();
 
         const auto modelViewerGui = new ModelViewerGui{
             Engine::getRoot()->addChild(new Mesh3d{Resource::getResource<MeshResource>("file://meshes/editor/grid.json")})

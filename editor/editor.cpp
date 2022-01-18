@@ -88,7 +88,8 @@ int main() {
         //region Add the camera
         auto camera = new EditorCamera3d{CameraProjectionMode::PERSPECTIVE};
         Engine::getRoot()->addChild(camera);
-        Engine::getRoot()->setMainCamera(camera);
+        Engine::getRoot()->setCamera(camera);
+        EditorCamera3d::setupKeybinds();
         camera->translate(glm::vec3{0,0,15});
         //endregion
 

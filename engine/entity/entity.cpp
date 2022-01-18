@@ -32,6 +32,10 @@ Entity* Entity::getParent() const {
     return this->parent;
 }
 
+const Root* Entity::getRoot() const { // NOLINT(misc-no-recursion)
+    return this->parent->getRoot();
+}
+
 std::string_view Entity::getName() const {
     return this->name;
 }

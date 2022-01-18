@@ -1,4 +1,5 @@
 list(APPEND ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/abstractPhysicsProvider.cpp
         ${CMAKE_CURRENT_LIST_DIR}/abstractPhysicsProvider.h
         ${CMAKE_CURRENT_LIST_DIR}/bulletColliderResource.cpp
         ${CMAKE_CURRENT_LIST_DIR}/bulletColliderResource.h

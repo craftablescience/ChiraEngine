@@ -58,15 +58,16 @@ if(CHIRA_BUILD_TESTS)
     include(${CMAKE_CURRENT_SOURCE_DIR}/test/engine/CMakeLists.txt)
 endif()
 
+if(WIN32 AND ((NOT CHIRA_BUILD_WITH_MSVC_COMPAT) AND CHIRA_COMPILER_CLANG))
+    # Program has a fit at runtime if AngelScript and Bullet aren't statically linked compiling with clang
+    set(BUILD_SHARED_LIBS OFF)
+endif()
+
 # ANGELSCRIPT
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript)
 list(APPEND ENGINE_LINK_LIBRARIES angelscript)
 
 # BULLET
-if(WIN32 AND ((NOT CHIRA_BUILD_WITH_MSVC_COMPAT) AND CHIRA_COMPILER_CLANG))
-    # Program has a fit at runtime if Bullet isn't statically linked compiling with clang
-    set(BUILD_SHARED_LIBS OFF)
-endif()
 cmake_policy(SET CMP0077 NEW)
 set(PKGCONFIG_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 set(USE_GRAPHICAL_BENCHMARK OFF CACHE BOOL "" FORCE)
@@ -80,6 +81,7 @@ set(BUILD_ENET              OFF CACHE BOOL "" FORCE)
 set(BUILD_CLSOCKET          OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/bullet)
 list(APPEND ENGINE_LINK_LIBRARIES Bullet3Common BulletDynamics BulletCollision LinearMath)
+
 if(WIN32 AND ((NOT CHIRA_BUILD_WITH_MSVC_COMPAT) AND CHIRA_COMPILER_CLANG))
     # And re-enable building as shared libraries
     set(BUILD_SHARED_LIBS ON)

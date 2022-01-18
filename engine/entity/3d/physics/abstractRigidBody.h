@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../entity3d.h"
+#include <utility/uuidGenerator.h>
 
 namespace chira {
     class AbstractRigidBody : public Entity3d {
