@@ -15,7 +15,7 @@ namespace chira {
         static void addUniversalFile(const std::string& identifier);
         static std::string getTranslation(const std::string& identifier);
         template<typename... Params> static std::string getTranslation(const std::string& identifier, Params... params) {
-            return fmt::format(TranslationManager::getTranslation(identifier), params...);
+            return fmt::format(fmt::runtime(TranslationManager::getTranslation(identifier)), params...);
         }
 
     private:

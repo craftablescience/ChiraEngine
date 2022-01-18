@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include "abstractResourceProvider.h"
 
 namespace chira {
