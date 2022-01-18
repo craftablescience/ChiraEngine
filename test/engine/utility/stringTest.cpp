@@ -4,11 +4,36 @@
 
 #include <gtest/gtest.h>
 
+#include <utility/string/stringContains.h>
 #include <utility/string/stringRemove.h>
 #include <utility/string/stringSplit.h>
 #include <utility/string/stringStrip.h>
 
 using namespace chira;
+
+TEST(stringContains, startsWith) {
+    std::string test = "StartEnd";
+    EXPECT_TRUE(startsWith(test, "Start"));
+    EXPECT_TRUE(startsWith(test, 'S'));
+    EXPECT_FALSE(startsWith(test, "xxx"));
+    EXPECT_FALSE(startsWith(test, 'x'));
+}
+
+TEST(stringContains, endsWith) {
+    std::string test = "StartEnd";
+    EXPECT_TRUE(endsWith(test, "End"));
+    EXPECT_TRUE(endsWith(test, 'd'));
+    EXPECT_FALSE(endsWith(test, "xxx"));
+    EXPECT_FALSE(endsWith(test, 'x'));
+}
+
+TEST(stringContains, contains) {
+    std::string test = "StartEnd";
+    EXPECT_TRUE(contains(test, "tEn"));
+    EXPECT_TRUE(contains(test, 'E'));
+    EXPECT_FALSE(contains(test, "txn"));
+    EXPECT_FALSE(contains(test, 'x'));
+}
 
 TEST(stringRemove, remove) {
     std::string test1 = "Test String", test2 = "Test String", test3 = "Test String";
@@ -20,22 +45,18 @@ TEST(stringRemove, remove) {
     EXPECT_STREQ(test3.c_str(), "Tet String");
 }
 
-TEST(stringSplit, splitString1) {
-    std::string test = "TestString1:TestString2:TestString3";
-    auto vec = split(test, ':');
-    ASSERT_EQ(vec.size(), 3);
-    EXPECT_STREQ(vec[0].c_str(), "TestString1");
-    EXPECT_STREQ(vec[1].c_str(), "TestString2");
-    EXPECT_STREQ(vec[2].c_str(), "TestString3");
-}
+TEST(stringSplit, splitString) {
+    auto vec1 = split("TestString1:TestString2:TestString3", ':');
+    ASSERT_EQ(vec1.size(), 3);
+    EXPECT_STREQ(vec1[0].c_str(), "TestString1");
+    EXPECT_STREQ(vec1[1].c_str(), "TestString2");
+    EXPECT_STREQ(vec1[2].c_str(), "TestString3");
 
-TEST(stringSplit, splitString2) {
-    std::string test = "Test String 1,Test String 2,Test String 3";
-    auto vec = split(test, ',');
-    ASSERT_EQ(vec.size(), 3);
-    EXPECT_STREQ(vec[0].c_str(), "Test String 1");
-    EXPECT_STREQ(vec[1].c_str(), "Test String 2");
-    EXPECT_STREQ(vec[2].c_str(), "Test String 3");
+    auto vec2 = split("Test String 1,Test String 2,Test String 3", ',');
+    ASSERT_EQ(vec2.size(), 3);
+    EXPECT_STREQ(vec2[0].c_str(), "Test String 1");
+    EXPECT_STREQ(vec2[1].c_str(), "Test String 2");
+    EXPECT_STREQ(vec2[2].c_str(), "Test String 3");
 }
 
 TEST(stringStrip, stripWhitespace) {
