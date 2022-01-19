@@ -1,6 +1,6 @@
 #include "fileInputStream.h"
 
-#include <fmt/core.h>
+#include <i18n/translationManager.h>
 #include <utility/logger.h>
 
 using namespace chira;
@@ -9,8 +9,7 @@ FileInputStream::FileInputStream(const std::string& filepath, bool binary) {
     errno = 0;
     this->stream = fopen(filepath.c_str(), binary ? "rb" : "r");
     if (!this->stream)
-        //todo(i18n)
-        Logger::log(LogType::ERROR, "FileInputStream", fmt::format("File {} is not accessible: error {}", filepath, errno));
+        Logger::log(LogType::ERROR, "FileInputStream", TRF("error.file_input_stream.file_inaccessible", filepath, errno));
 }
 
 FileInputStream::~FileInputStream() {
