@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-#include <utility/primitiveTypes.h>
+#include <utility/platform.h>
 
 namespace libloader {
     class library;

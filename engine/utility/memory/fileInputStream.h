@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include <utility/primitiveTypes.h>
+#include <utility/platform.h>
 
 namespace chira {
     class FileInputStream {
@@ -21,7 +21,7 @@ namespace chira {
         void seek(long pos) const;
         void seek(long offset, int offsetFrom) const;
         [[nodiscard]] long tell() const;
-        [[nodiscard]] std::vector<chira::byte> readBytes(unsigned int length) const;
+        [[nodiscard]] std::vector<byte> readBytes(unsigned int length) const;
         template<typename T>
         T read(bool swapEndian_ = false) const {
             T wrongEndian = 0;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <utility/primitiveTypes.h>
+#include <utility/platform.h>
 
 namespace chira {
     class AbstractImage {

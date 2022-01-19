@@ -4,7 +4,6 @@
 #include <libloader.hpp>
 #include <event/events.h>
 #include <resource/provider/filesystemResourceProvider.h>
-#include <utility/platformDefines.h>
 #include <utility/logger.h>
 #include <utility/string/stringSplit.h>
 
@@ -35,7 +34,7 @@ inline std::string steamFunctionStringWrapper(const std::string& function, const
 }
 
 const library& SteamAPI::get() {
-    static library steamBinary{FILESYSTEM_ROOT_FOLDER + "/engine/bin/steam_api"};
+    static library steamBinary{FILESYSTEM_ROOT_FOLDER + "/engine/bin/steam_api" + std::to_string(ENVIRONMENT_TYPE)};
     return steamBinary;
 }
 
@@ -51,21 +50,12 @@ ISteamClient* SteamAPI::Client::get() {
     return client;
 }
 
-extern "C" void CHIRA_CDECL steamAPILoggingHook(int severity, const char* description) {
-    if (severity < 1)
-        Logger::log(LogType::INFO, "Steam", std::string{description});
-    else
-        Logger::log(LogType::WARNING, "Steam", std::string{description});
-}
-
 bool SteamAPI::Client::initSteam() {
     if (SteamAPI::Client::isInitialized)
         return true;
     bool out;
     if (SteamAPI::get().call<bool>("SteamAPI_Init", out)) {
         SteamAPI::Client::isInitialized = out;
-        if (auto client = SteamAPI::Client::get(); out && client)
-            SteamAPI::get().callVoid("SteamAPI_ISteamClient_SetWarningMessageHook", client, &steamAPILoggingHook);
         // Handle callbacks manually
         SteamAPI::get().callVoid("SteamAPI_ManualDispatch_Init");
         return out;

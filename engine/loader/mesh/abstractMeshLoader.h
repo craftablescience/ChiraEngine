@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <utility/math/vertex.h>
-#include <utility/primitiveTypes.h>
+#include <utility/platform.h>
 
 namespace chira {
     struct AbstractMeshLoader {
