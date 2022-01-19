@@ -406,7 +406,7 @@ std::string SteamAPI::Apps::getAppInstallPath(std::uint32_t appID) {
         auto* out = new char[FilesystemResourceProvider::FILEPATH_MAX_LENGTH];
         std::uint32_t size = 0;
         SteamAPI::get().call("SteamAPI_ISteamApps_GetAppInstallDir", size, apps, appID, out, static_cast<std::uint32_t>(FilesystemResourceProvider::FILEPATH_MAX_LENGTH));
-        std::string path{out, size};
+        std::string path{out, size - 1};
         delete[] out;
         return path;
     }

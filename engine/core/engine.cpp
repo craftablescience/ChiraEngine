@@ -294,7 +294,7 @@ void Engine::init() {
 #ifdef CHIRA_BUILD_WITH_STEAMWORKS
     bool steamEnabled = false;
     Engine::getSettingsLoader()->getValue("engine", "steamworks", &steamEnabled);
-    if (steamEnabled && !SteamAPI::Client::initSteam())
+    if (steamEnabled && (!SteamAPI::Client::initialized() && !SteamAPI::Client::initSteam()))
         Logger::log(LogType::ERROR, "Steam", TR("error.steam.initialization_failure"));
 #endif
 
