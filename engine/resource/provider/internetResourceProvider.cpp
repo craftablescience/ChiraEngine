@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <fmt/core.h>
 #include <utility/logger.h>
-#include <utility/curlMemoryWriter.h>
+#include <utility/memory/curlMemoryWriter.h>
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 #include <resource/resource.h>

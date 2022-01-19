@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <vector>
 #include <nlohmann/json.hpp>
-#include <utility/pointer/sharedPointer.h>
+#include <utility/memory/sharedPointer.h>
 #include <utility/logger.h>
 #include "provider/abstractResourceProvider.h"
 

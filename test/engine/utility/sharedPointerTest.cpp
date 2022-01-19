@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include <utility/pointer/sharedPointer.h>
+#include <utility/memory/sharedPointer.h>
 
 using namespace chira;
 
