@@ -1,66 +1,36 @@
 #pragma once
 
+#include <cstdio>
 #include <string>
 #include <vector>
-#include <fstream>
 
 #include <utility/primitiveTypes.h>
 
 namespace chira {
     class FileInputStream {
     public:
-        FileInputStream(const std::string& filepath, bool binary = true) {
-            this->stream.open(filepath, binary ? (std::ios::in | std::ios::binary) : std::ios::in);
-        }
-        ~FileInputStream() {
-            this->stream.close();
-        }
+        explicit FileInputStream(const std::string& filepath, bool binary = true);
+        ~FileInputStream();
         FileInputStream(const FileInputStream& other) = delete;
-        void operator=(const FileInputStream& other) = delete;
-        FileInputStream(FileInputStream&& other) {
-            this->stream = std::move(other.stream);
-        }
-        void operator=(FileInputStream&& other) {
-            this->stream = std::move(other.stream);
-        }
-        std::vector<chira::byte> readBytes(unsigned int length) {
-            std::vector<chira::byte> out;
-            out.reserve(length);
-            this->stream.read(reinterpret_cast<char*>(&out[0]), length);
-            return out;
-        }
+        FileInputStream& operator=(const FileInputStream& other) = delete;
+        FileInputStream(FileInputStream&& other) noexcept;
+        FileInputStream& operator=(FileInputStream&& other) noexcept;
+        explicit operator bool() const;
+        bool operator!() const;
+        void seek(long pos) const;
+        void seek(long offset, int offsetFrom) const;
+        [[nodiscard]] long tell() const;
+        [[nodiscard]] std::vector<chira::byte> readBytes(unsigned int length) const;
         template<typename T>
-        T read() {
+        T read(bool swapEndian_ = false) const {
             T wrongEndian = 0;
-            this->stream.read(reinterpret_cast<char*>(&wrongEndian), sizeof(T));
-            return swapEndian<T>(wrongEndian);
+            auto bytes = this->readBytes(sizeof(T));
+            memcpy(&wrongEndian, &bytes[0], sizeof(T));
+            return swapEndian_ ? swapEndian<T>(wrongEndian) : wrongEndian;
         }
-        std::string readString() {
-            std::string out;
-            char temp;
-            temp = this->read<char>();
-            while (temp != '\0') {
-                out += temp;
-                temp = this->read<char>();
-            }
-            return out;
-        }
-        [[nodiscard]] const std::ifstream& getStream() const {
-            return this->stream;
-        }
-
-        template<typename T>
-        static inline T swapEndian(T t) {
-            union {
-                T t;
-                chira::byte u8[sizeof(T)];
-            } source{}, dest{};
-            source.t = t;
-            for (size_t k = 0; k < sizeof(T); k++)
-                dest.u8[k] = source.u8[sizeof(T) - k - 1];
-            return dest.t;
-        }
-    private:
-        std::ifstream stream;
+        [[nodiscard]] std::string readString() const;
+        [[nodiscard]] byte peek(long offset = 0) const;
+    protected:
+        FILE* stream;
     };
 }
