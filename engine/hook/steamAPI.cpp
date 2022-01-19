@@ -61,11 +61,11 @@ extern "C" void CHIRA_CDECL steamAPILoggingHook(int severity, const char* descri
 bool SteamAPI::Client::initSteam() {
     if (SteamAPI::Client::isInitialized)
         return true;
-    if (auto utils = SteamAPI::Utils::get())
-        SteamAPI::get().call("SteamAPI_ISteamUtils_SetWarningMessageHook", utils, &steamAPILoggingHook);
     bool out;
     if (SteamAPI::get().call<bool>("SteamAPI_Init", out)) {
         SteamAPI::Client::isInitialized = out;
+        if (auto client = SteamAPI::Client::get(); out && client)
+            SteamAPI::get().callVoid("SteamAPI_ISteamClient_SetWarningMessageHook", client, &steamAPILoggingHook);
         // Handle callbacks manually
         SteamAPI::get().callVoid("SteamAPI_ManualDispatch_Init");
         return out;
