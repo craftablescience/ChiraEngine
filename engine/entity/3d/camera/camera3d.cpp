@@ -30,6 +30,8 @@ Camera3d::Camera3d(const std::string& name_, CameraProjectionMode mode, float fo
 }
 
 void Camera3d::createProjection(glm::vec2 windowSize) {
+    if (windowSize.x <= 0 || windowSize.y <= 0)
+        return;
     switch (this->projectionMode) {
         case CameraProjectionMode::PERSPECTIVE:
             this->projection = glm::perspective(glm::radians(this->fov / 2), windowSize.x / windowSize.y, 0.1f, 1024.0f);
