@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstring>
 #include <cstdio>
 #include <string>
 #include <vector>
@@ -25,7 +26,7 @@ namespace chira {
         T read(bool swapEndian_ = false) const {
             T wrongEndian = 0;
             auto bytes = this->readBytes(sizeof(T));
-            memcpy(&wrongEndian, &bytes[0], sizeof(T));
+            std::memcpy(&wrongEndian, &bytes[0], sizeof(T));
             return swapEndian_ ? swapEndian<T>(wrongEndian) : wrongEndian;
         }
         [[nodiscard]] std::string readString() const;

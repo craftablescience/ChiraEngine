@@ -1,8 +1,9 @@
 #include "oggFileSound.h"
 
-#include <resource/provider/filesystemResourceProvider.h>
+#include <cstring>
 #include <ogg/os_types.h>
 #include <vorbis/codec.h>
+#include <resource/provider/filesystemResourceProvider.h>
 #include <i18n/translationManager.h>
 #include <utility/logger.h>
 
@@ -269,7 +270,7 @@ std::size_t OGGFileSound::readOggVorbisCallback(void* destination, std::size_t s
         }
     }
     audioData->sizeConsumed += length;
-    memcpy(destination, &moreData[0], length);
+    std::memcpy(destination, &moreData[0], length);
     delete[] moreData;
     audioData->file.clear();
     return length;

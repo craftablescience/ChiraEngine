@@ -1,5 +1,6 @@
 #include "internetResourceProvider.h"
 
+#include <cstring>
 #include <algorithm>
 #include <fmt/core.h>
 #include <utility/logger.h>
@@ -19,7 +20,7 @@ void InternetResourceProvider::compileResource(const std::string& name, Resource
         request.setOpt(curlpp::options::Port(this->port));
         request.perform();
         auto buffer = new unsigned char[mWriterChunk.m_Size + 1];
-        memcpy(buffer, mWriterChunk.m_pBuffer, mWriterChunk.m_Size);
+        std::memcpy(buffer, mWriterChunk.m_pBuffer, mWriterChunk.m_Size);
         buffer[mWriterChunk.m_Size] = '\0';
         resource->compile(buffer, mWriterChunk.m_Size + 1);
         delete[] buffer;
