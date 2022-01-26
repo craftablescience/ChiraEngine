@@ -5,19 +5,23 @@
 using namespace chira;
 
 Root::Root(Entity* parent_) : Entity(parent_) {
-    this->skybox = Resource::getResource<MeshDataResource>("file://meshes/skybox.json");
+    this->skybox.addCube({}, 1, 1, 1, false);
+    this->skybox.update();
 }
 
 Root::Root(Entity* parent_, const std::string& name_) : Entity(parent_, name_) {
-    this->skybox = Resource::getResource<MeshDataResource>("file://meshes/skybox.json");
+    this->skybox.addCube({}, 1, 1, 1, false);
+    this->skybox.update();
 }
 
 Root::Root() : Entity() {
-    this->skybox = Resource::getResource<MeshDataResource>("file://meshes/skybox.json");
+    this->skybox.addCube({}, 1, 1, 1, false);
+    this->skybox.update();
 }
 
 Root::Root(const std::string& name_) : Entity(name_) {
-    this->skybox = Resource::getResource<MeshDataResource>("file://meshes/skybox.json");
+    this->skybox.addCube({}, 1, 1, 1, false);
+    this->skybox.update();
 }
 
 void Root::render() {
@@ -25,7 +29,7 @@ void Root::render() {
         entity->render(glm::identity<glm::mat4>());
     }
     if (this->renderSkybox) {
-        this->skybox->render(glm::identity<glm::mat4>());
+        this->skybox.render(glm::identity<glm::mat4>());
     }
 }
 
@@ -43,12 +47,12 @@ Camera* Root::getCamera() const {
 }
 
 void Root::setSkybox(const std::string& cubemapId) {
-    this->skybox->setMaterial(Resource::getResource<MaterialCubemap>(cubemapId).castAssert<MaterialBase>());
+    this->skybox.setMaterial(Resource::getResource<MaterialCubemap>(cubemapId).castAssert<MaterialBase>());
     this->renderSkybox = true;
 }
 
 SharedPointer<MaterialCubemap> Root::getSkybox() const {
-    return this->skybox->getMaterial().castAssert<MaterialCubemap>();
+    return this->skybox.getMaterial().castAssert<MaterialCubemap>();
 }
 
 glm::vec2 Root::getMousePosition() const {

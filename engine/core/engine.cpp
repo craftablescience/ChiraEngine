@@ -18,6 +18,7 @@
 #include <loader/mesh/objMeshLoader.h>
 #include <loader/mesh/chiraMeshLoader.h>
 #include <loader/mesh/primitiveMeshLoader.h>
+#include <render/mesh/meshDataResource.h>
 #include <physics/bulletPhysicsProvider.h>
 #include <render/ubo.h>
 #include <event/events.h>

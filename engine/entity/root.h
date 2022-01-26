@@ -2,7 +2,7 @@
 
 #include <entity/entity.h>
 #include <entity/camera/camera.h>
-#include <render/mesh/meshDataResource.h>
+#include <render/mesh/meshDataBuilder.h>
 #include <render/material/materialCubemap.h>
 
 namespace chira {
@@ -40,7 +40,7 @@ namespace chira {
         using Entity::removeAllChildren;
     private:
         using Entity::render;
-        SharedPointer<MeshDataResource> skybox;
+        MeshDataBuilder skybox;
         bool renderSkybox = false;
         Camera* mainCamera = nullptr;
         void clearTree() const;
