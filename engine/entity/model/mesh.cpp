@@ -5,10 +5,7 @@
 using namespace chira;
 
 void Mesh::render(glm::mat4 parentTransform) {
-    this->mesh->render(transformToMatrix(parentTransform, this->position, this->rotation));
+    if (this->visible)
+        this->mesh->render(transformToMatrix(parentTransform, this->position, this->rotation));
     Entity::render(parentTransform);
-}
-
-glm::vec3 Mesh::getAABB() const {
-    return {}; // todo: get aabb from mesh
 }

@@ -19,7 +19,6 @@ namespace chira {
             this->mesh = Resource::getResource<MeshDataResource>(meshId);
         }
         void render(glm::mat4 parentTransform) override;
-        glm::vec3 getAABB() const override;
         [[nodiscard]] SharedPointer<MeshDataResource> getMeshResource() const {
             return this->mesh;
         }

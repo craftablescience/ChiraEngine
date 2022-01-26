@@ -12,6 +12,18 @@ namespace chira {
         glm::quat getRotation() override {
             return glm::angleAxis(glm::radians(this->yaw), glm::vec3{0,1,0}) * glm::angleAxis(glm::radians(-this->pitch), glm::vec3{1,0,0});
         }
+        void setPitch(float pitch_) {
+            this->pitch = pitch_;
+        }
+        [[nodiscard]] float getPitch() const {
+            return this->pitch;
+        }
+        void setYaw(float yaw_) {
+            this->yaw = yaw_;
+        }
+        [[nodiscard]] float getYaw() const {
+            return this->yaw;
+        }
         void setMovementSpeed(float movementSpeed_) {
             this->movementSpeed = movementSpeed_;
         }

@@ -34,95 +34,97 @@ void MeshDataBuilder::addSquare(Vertex v1, Vertex v2, Vertex v3, Vertex v4, bool
     this->addTriangle(v3, v4, v1, addDuplicate);
 }
 
-void MeshDataBuilder::addCube(glm::vec3 center, unsigned int x, unsigned int y, unsigned int z, bool visibleOutside, bool addDuplicate) {
-    const float x2 = static_cast<float>(x) / 2;
-    const float y2 = static_cast<float>(y) / 2;
-    const float z2 = static_cast<float>(z) / 2;
+void MeshDataBuilder::addCube(Vertex center, glm::vec3 size, bool visibleOutside, bool addDuplicate) {
+    const float x2 = size.x / 2;
+    const float y2 = size.y / 2;
+    const float z2 = size.z / 2;
+    const glm::vec3 mid{center.position.x, center.position.y, center.position.z};
+    const glm::vec3 col{center.color.r,    center.color.g,    center.color.b};
 
     if (visibleOutside) {
         this->addSquare(
-                {center.x - x2, center.y + y2, center.z + z2, 0, 0},
-                {center.x + x2, center.y + y2, center.z + z2, 1, 0},
-                {center.x + x2, center.y + y2, center.z - z2, 1, 1},
-                {center.x - x2, center.y + y2, center.z - z2, 0, 1},
+                {mid.x - x2, mid.y + y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 0, 0},
+                {mid.x + x2, mid.y + y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 0},
+                {mid.x + x2, mid.y + y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 1, 1},
+                {mid.x - x2, mid.y + y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 1},
                 addDuplicate
         );
         this->addSquare(
-                {center.x - x2, center.y - y2, center.z - z2, 1, 0},
-                {center.x + x2, center.y - y2, center.z - z2, 0, 0},
-                {center.x + x2, center.y - y2, center.z + z2, 0, 1},
-                {center.x - x2, center.y - y2, center.z + z2, 1, 1},
+                {mid.x - x2, mid.y - y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 1, 0},
+                {mid.x + x2, mid.y - y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 0},
+                {mid.x + x2, mid.y - y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 0, 1},
+                {mid.x - x2, mid.y - y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 1},
                 addDuplicate
         );
         this->addSquare(
-                {center.x - x2, center.y + y2, center.z + z2, 0, 0},
-                {center.x - x2, center.y - y2, center.z + z2, 0, 1},
-                {center.x + x2, center.y - y2, center.z + z2, 1, 1},
-                {center.x + x2, center.y + y2, center.z + z2, 1, 0},
+                {mid.x - x2, mid.y + y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 0, 0},
+                {mid.x - x2, mid.y - y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 0, 1},
+                {mid.x + x2, mid.y - y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 1},
+                {mid.x + x2, mid.y + y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 0},
                 addDuplicate
         );
         this->addSquare(
-                {center.x + x2, center.y + y2, center.z - z2, 1, 0},
-                {center.x + x2, center.y - y2, center.z - z2, 1, 1},
-                {center.x - x2, center.y - y2, center.z - z2, 0, 1},
-                {center.x - x2, center.y + y2, center.z - z2, 0, 0},
+                {mid.x + x2, mid.y + y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 1, 0},
+                {mid.x + x2, mid.y - y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 1, 1},
+                {mid.x - x2, mid.y - y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 1},
+                {mid.x - x2, mid.y + y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 0},
                 addDuplicate
         );
         this->addSquare(
-                {center.x + x2, center.y + y2, center.z + z2, 1, 0},
-                {center.x + x2, center.y - y2, center.z + z2, 1, 1},
-                {center.x + x2, center.y - y2, center.z - z2, 0, 1},
-                {center.x + x2, center.y + y2, center.z - z2, 0, 0},
+                {mid.x + x2, mid.y + y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 0},
+                {mid.x + x2, mid.y - y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 1},
+                {mid.x + x2, mid.y - y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 1},
+                {mid.x + x2, mid.y + y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 0},
                 addDuplicate
         );
         this->addSquare(
-                {center.x - x2, center.y - y2, center.z - z2, 0, 1},
-                {center.x - x2, center.y - y2, center.z + z2, 1, 1},
-                {center.x - x2, center.y + y2, center.z + z2, 1, 0},
-                {center.x - x2, center.y + y2, center.z - z2, 0, 0},
+                {mid.x - x2, mid.y - y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 1},
+                {mid.x - x2, mid.y - y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 1},
+                {mid.x - x2, mid.y + y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 0},
+                {mid.x - x2, mid.y + y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 0},
                 addDuplicate
         );
     } else {
         this->addSquare(
-                {center.x - x2, center.y + y2, center.z - z2, 0, 1},
-                {center.x + x2, center.y + y2, center.z - z2, 1, 1},
-                {center.x + x2, center.y + y2, center.z + z2, 1, 0},
-                {center.x - x2, center.y + y2, center.z + z2, 0, 0},
+                {mid.x - x2, mid.y + y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 1},
+                {mid.x + x2, mid.y + y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 1, 1},
+                {mid.x + x2, mid.y + y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 0},
+                {mid.x - x2, mid.y + y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 0, 0},
                 addDuplicate
         );
         this->addSquare(
-                {center.x - x2, center.y - y2, center.z + z2, 1, 1},
-                {center.x + x2, center.y - y2, center.z + z2, 0, 1},
-                {center.x + x2, center.y - y2, center.z - z2, 0, 0},
-                {center.x - x2, center.y - y2, center.z - z2, 1, 0},
+                {mid.x - x2, mid.y - y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 1},
+                {mid.x + x2, mid.y - y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 0, 1},
+                {mid.x + x2, mid.y - y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 0},
+                {mid.x - x2, mid.y - y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 1, 0},
                 addDuplicate
         );
         this->addSquare(
-                {center.x + x2, center.y + y2, center.z + z2, 1, 0},
-                {center.x + x2, center.y - y2, center.z + z2, 1, 1},
-                {center.x - x2, center.y - y2, center.z + z2, 0, 1},
-                {center.x - x2, center.y + y2, center.z + z2, 0, 0},
+                {mid.x + x2, mid.y + y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 0},
+                {mid.x + x2, mid.y - y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 1},
+                {mid.x - x2, mid.y - y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 0, 1},
+                {mid.x - x2, mid.y + y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 0, 0},
                 addDuplicate
         );
         this->addSquare(
-                {center.x - x2, center.y + y2, center.z - z2, 0, 0},
-                {center.x - x2, center.y - y2, center.z - z2, 0, 1},
-                {center.x + x2, center.y - y2, center.z - z2, 1, 1},
-                {center.x + x2, center.y + y2, center.z - z2, 1, 0},
+                {mid.x - x2, mid.y + y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 0},
+                {mid.x - x2, mid.y - y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 1},
+                {mid.x + x2, mid.y - y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 1, 1},
+                {mid.x + x2, mid.y + y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 1, 0},
                 addDuplicate
         );
         this->addSquare(
-                {center.x + x2, center.y + y2, center.z - z2, 0, 0},
-                {center.x + x2, center.y - y2, center.z - z2, 0, 1},
-                {center.x + x2, center.y - y2, center.z + z2, 1, 1},
-                {center.x + x2, center.y + y2, center.z + z2, 1, 0},
+                {mid.x + x2, mid.y + y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 0},
+                {mid.x + x2, mid.y - y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 1},
+                {mid.x + x2, mid.y - y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 1},
+                {mid.x + x2, mid.y + y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 0},
                 addDuplicate
         );
         this->addSquare(
-                {center.x - x2, center.y + y2, center.z - z2, 0, 0},
-                {center.x - x2, center.y + y2, center.z + z2, 1, 0},
-                {center.x - x2, center.y - y2, center.z + z2, 1, 1},
-                {center.x - x2, center.y - y2, center.z - z2, 0, 1},
+                {mid.x - x2, mid.y + y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 0},
+                {mid.x - x2, mid.y + y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 0},
+                {mid.x - x2, mid.y - y2, mid.z + z2, 0, 0, 0, col.x, col.y, col.z, 1, 1},
+                {mid.x - x2, mid.y - y2, mid.z - z2, 0, 0, 0, col.x, col.y, col.z, 0, 1},
                 addDuplicate
         );
     }
@@ -140,4 +142,8 @@ void MeshDataBuilder::update() {
     if (!this->initialized)
         this->setupForRendering();
     this->updateMeshData();
+}
+
+void MeshDataBuilder::clear() {
+    this->clearMeshData();
 }

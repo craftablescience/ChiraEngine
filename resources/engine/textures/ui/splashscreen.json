@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "image": "file://textures/ui/splash_en.png"
+    "image": "file://textures/ui/splashscreen.png"
   },
   "properties": {
     "format": "RGB"

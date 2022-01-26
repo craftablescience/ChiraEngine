@@ -15,7 +15,7 @@ void MeshDataResource::compile(const nlohmann::json& properties) {
     if (properties["properties"].contains("cullType"))
         this->cullType = MeshDataResource::getCullTypeFromString(properties["properties"]["cullType"]);
 
-    this->setMeshData(properties["properties"]["loader"], properties["dependencies"]["model"], false);
+    this->appendMeshData(properties["properties"]["loader"], properties["dependencies"]["model"]);
     this->setupForRendering();
 }
 

@@ -25,9 +25,7 @@ namespace chira {
         [[nodiscard]] Entity* getParent() const;
         [[nodiscard]] virtual const Root* getRoot() const;
         [[nodiscard]] std::string getName() const;
-        Entity* getChild(const std::string& name_) const {
-            return this->children.at(name_);
-        }
+        Entity* getChild(const std::string& name_) const;
         template<typename EntityType>
         EntityType* getChild(const std::string& name_) const {
             return assert_cast<EntityType*>(this->getChild(name_));
@@ -36,14 +34,14 @@ namespace chira {
         std::string addChild(Entity* child);
         void removeChild(const std::string& name_);
         void removeAllChildren();
+        [[nodiscard]] bool isVisible() const;
+        void setVisible(bool visibility);
         virtual void setPosition(glm::vec3 newPos);
         virtual void setRotation(glm::quat newRot);
         virtual glm::vec3 getPosition();
         virtual glm::vec3 getGlobalPosition();
         /// Note: the global rotation is inaccessible.
         virtual glm::quat getRotation();
-        /// The size of the entity.
-        virtual glm::vec3 getAABB() const;
         virtual void translate(glm::vec3 translateByAmount);
         virtual void translateWithRotation(glm::vec3 translateByAmount);
         virtual void rotate(glm::quat rotateByAmount);
@@ -52,6 +50,7 @@ namespace chira {
         Entity* parent;
         std::string name;
         std::unordered_map<std::string, Entity*> children;
+        bool visible = true;
 
         // The following are in local space and are relative to the parent.
         glm::vec3 position{};

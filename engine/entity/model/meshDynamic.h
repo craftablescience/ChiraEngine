@@ -11,7 +11,6 @@ namespace chira {
         MeshDynamic() : Entity() {}
         explicit MeshDynamic(const std::string& name_) : Entity(name_) {}
         void render(glm::mat4 parentTransform) override;
-        glm::vec3 getAABB() const override;
         [[nodiscard]] MeshDataBuilder* getMesh();
     private:
         MeshDataBuilder mesh;

@@ -1,6 +1,5 @@
 {
   "resource.font.console_font_path": "file://fonts/console_en.json",
-  "resource.material.splashscreen_material_path": "file://materials/splashscreen_en.json",
 
   "ui.window.title": "Chira Engine",
   "ui.window.select_file": "Select File",

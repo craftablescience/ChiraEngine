@@ -1,6 +1,8 @@
 #include "meshData.h"
 
 #include <cstddef>
+#include <limits>
+#include <algorithm>
 #include <utility/math/matrix.h>
 
 using namespace chira;
@@ -33,13 +35,15 @@ void MeshData::setupForRendering() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     this->initialized = true;
+    this->markAABBDirty();
 }
 
-void MeshData::updateMeshData() const {
+void MeshData::updateMeshData() {
     if (!this->initialized)
         return;
     glNamedBufferData(this->vboHandle, static_cast<GLsizeiptr>(this->vertices.size() * sizeof(Vertex)), &this->vertices[0], this->drawMode);
     glNamedBufferData(this->eboHandle, static_cast<GLsizeiptr>(this->indices.size() * sizeof(unsigned int)), &this->indices[0], this->drawMode);
+    this->markAABBDirty();
 }
 
 void MeshData::render(glm::mat4 model) {
@@ -81,10 +85,31 @@ std::vector<byte> MeshData::getMeshData(const std::string& meshLoader) const {
     return AbstractMeshLoader::getMeshLoader(meshLoader)->createMesh(this->vertices, this->indices);
 }
 
-void MeshData::setMeshData(const std::string& loader, const std::string& identifier, bool clearExistingVertices) {
-    if (clearExistingVertices) {
-        this->vertices.clear();
-        this->indices.clear();
-    }
+void MeshData::appendMeshData(const std::string& loader, const std::string& identifier) {
     AbstractMeshLoader::getMeshLoader(loader)->loadMesh(identifier, this->vertices, this->indices);
+}
+
+void MeshData::clearMeshData() {
+    this->vertices.clear();
+    this->indices.clear();
+}
+
+AABB MeshData::getAABB() {
+    if (this->isAABBDirty()) {
+        glm::vec3 minPos, maxPos;
+        if (!this->vertices.empty()) {
+            minPos = glm::vec3{std::numeric_limits<float>::max()};
+            maxPos = glm::vec3{std::numeric_limits<float>::min()};
+        }
+        for (const auto v : this->vertices) {
+            minPos.x = std::min(minPos.x, v.position.x);
+            minPos.y = std::min(minPos.y, v.position.y);
+            minPos.z = std::min(minPos.z, v.position.z);
+            maxPos.x = std::max(maxPos.x, v.position.x);
+            maxPos.y = std::max(maxPos.y, v.position.y);
+            maxPos.z = std::max(maxPos.z, v.position.z);
+        }
+        this->setAABB(minPos, maxPos);
+    }
+    return AABBObject::getAABB();
 }

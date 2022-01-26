@@ -11,11 +11,8 @@ namespace chira {
         virtual void preRenderContents() {};
         virtual void renderContents() = 0;
         virtual void postRenderContents() {};
-        void setVisible(bool visible);
-        [[nodiscard]] bool isVisible() const;
     protected:
         std::string title;
-        bool isVisible_;
         ImVec2 nextWindowSize;
         ImGuiCond_ windowSizeCondition;
         ImGuiWindowFlags flags;

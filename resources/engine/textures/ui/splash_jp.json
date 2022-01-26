@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "image": "file://textures/ui/splash_jp.png"
-  },
-  "properties": {
-    "format": "RGB"
-  }
-}

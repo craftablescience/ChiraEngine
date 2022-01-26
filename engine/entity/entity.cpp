@@ -24,9 +24,8 @@ Entity::~Entity() {
 
 void Entity::render(glm::mat4 parentTransform) { // NOLINT(misc-no-recursion)
     glm::mat4 transform = transformToMatrix(parentTransform, this->position, this->rotation);
-    for (auto& [key, entity] : this->children) {
+    for (auto& [key, entity] : this->children)
         entity->render(transform);
-    }
 }
 
 Entity* Entity::getParent() const {
@@ -39,6 +38,10 @@ const Root* Entity::getRoot() const { // NOLINT(misc-no-recursion)
 
 std::string Entity::getName() const {
     return this->name;
+}
+
+Entity* Entity::getChild(const std::string& name_) const {
+    return this->children.at(name_);
 }
 
 bool Entity::hasChild(const std::string& name_) const {
@@ -65,6 +68,14 @@ void Entity::removeAllChildren() { // NOLINT(misc-no-recursion)
     this->children.clear();
 }
 
+bool Entity::isVisible() const {
+    return this->visible;
+}
+
+void Entity::setVisible(bool visibility) {
+    this->visible = visibility;
+}
+
 void Entity::setPosition(glm::vec3 newPos) {
     this->position = newPos;
 }
@@ -83,10 +94,6 @@ glm::vec3 Entity::getGlobalPosition() { // NOLINT(misc-no-recursion)
 
 glm::quat Entity::getRotation() {
     return this->rotation;
-}
-
-glm::vec3 Entity::getAABB() const {
-    return {};
 }
 
 void Entity::translate(glm::vec3 translateByAmount) {

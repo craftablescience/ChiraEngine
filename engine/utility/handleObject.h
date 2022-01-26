@@ -5,6 +5,7 @@ namespace chira {
     class HandleObject {
     public:
         explicit HandleObject(T defaultValue = -1) : handle(defaultValue) {}
+        virtual ~HandleObject() = default;
         [[nodiscard]] T getHandle() const {
             return this->handle;
         }

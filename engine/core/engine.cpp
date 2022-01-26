@@ -59,7 +59,7 @@ void Engine::preInit(const std::string& configPath) {
 
 void Engine::displaySplashScreen() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    auto mat = Resource::getResource<MaterialTextured>(TR("resource.material.splashscreen_material_path"));
+    auto mat = Resource::getResource<MaterialTextured>("file://materials/splashscreen.json");
     auto plane = Resource::getResource<MeshDataResource>("file://meshes/plane.json");
     plane->setMaterial(mat.castAssert<MaterialBase>());
     plane->render(glm::identity<glm::mat4>());

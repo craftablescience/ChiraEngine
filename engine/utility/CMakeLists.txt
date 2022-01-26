@@ -5,6 +5,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/memory/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/string/CMakeLists.txt)
 
 list(APPEND ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/aabbObject.h
         ${CMAKE_CURRENT_LIST_DIR}/dialogs.cpp
         ${CMAKE_CURRENT_LIST_DIR}/dialogs.h
         ${CMAKE_CURRENT_LIST_DIR}/handleObject.h
