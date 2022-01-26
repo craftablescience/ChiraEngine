@@ -38,16 +38,13 @@ void MeshData::setupForRendering() {
 void MeshData::updateMeshData() const {
     if (!this->initialized)
         return;
-    glBindBuffer(GL_ARRAY_BUFFER, this->vboHandle);
-    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->vertices.size() * sizeof(Vertex)), &this->vertices[0], this->drawMode);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->eboHandle);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->indices.size() * sizeof(unsigned int)), &this->indices[0], this->drawMode);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glNamedBufferData(this->vboHandle, static_cast<GLsizeiptr>(this->vertices.size() * sizeof(Vertex)), &this->vertices[0], this->drawMode);
+    glNamedBufferData(this->eboHandle, static_cast<GLsizeiptr>(this->indices.size() * sizeof(unsigned int)), &this->indices[0], this->drawMode);
 }
 
 void MeshData::render(glm::mat4 model) {
     if (!this->initialized)
-        return;
+        this->setupForRendering();
     if (this->material) {
         this->material->use();
         if (this->material->getShader()->usesModelMatrix())
