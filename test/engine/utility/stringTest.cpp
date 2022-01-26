@@ -1,7 +1,3 @@
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunknown-pragmas"
-#pragma ide diagnostic ignored "cert-err58-cpp"
-
 #include <gtest/gtest.h>
 
 #include <utility/string/stringContains.h>
@@ -90,5 +86,3 @@ TEST(stringStrip, stringStripModifyOriginal) {
     EXPECT_STREQ(test2.c_str(), "test");
     EXPECT_STREQ(test3.c_str(), "test");
 }
-
-#pragma clang diagnostic pop

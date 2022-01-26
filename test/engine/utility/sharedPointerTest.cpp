@@ -1,7 +1,3 @@
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunknown-pragmas"
-#pragma ide diagnostic ignored "cert-err58-cpp"
-
 #include <gtest/gtest.h>
 
 #include <utility/memory/sharedPointer.h>
@@ -86,5 +82,3 @@ TEST(sharedPointer, createFromCastDynamic) {
     EXPECT_EQ(a->x, 20);
     EXPECT_EQ((*a).x, 20);
 }
-
-#pragma clang diagnostic pop

@@ -1,7 +1,3 @@
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunknown-pragmas"
-#pragma ide diagnostic ignored "cert-err58-cpp"
-
 #include <gtest/gtest.h>
 
 #include <resource/provider/filesystemResourceProvider.h>
@@ -31,5 +27,3 @@ TEST(filesystemResourceProvider, getResourceIdentifier) {
     auto path4 = FilesystemResourceProvider::getResourceIdentifier("/this/is/not/a/valid/path/file.txt");
     EXPECT_STREQ(path4.c_str(), "");
 }
-
-#pragma clang diagnostic pop
