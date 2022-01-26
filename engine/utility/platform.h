@@ -23,14 +23,15 @@ namespace chira {
     using byte = std::uint8_t;
 
     // This makes it a bit easier to use in strings and such
-#ifdef CHIRA_64BIT
-    static constexpr const int ENVIRONMENT_TYPE = 64;
-#endif
-#ifdef CHIRA_32BIT
+#if defined(CHIRA_32BIT)
     static constexpr const int ENVIRONMENT_TYPE = 32;
+#elif defined(CHIRA_64BIT)
+    static constexpr const int ENVIRONMENT_TYPE = 64;
+#else
+    #error "A CHIRA_XXBIT macro must be set!"
 #endif
 
-    /// Reverses the byte order of a type. Should really only be used with numbers.
+    /// Changes the endianness of a type. Should really only be used with numbers.
     template<typename T>
     static inline T swapEndian(T t) {
         union {

@@ -22,9 +22,10 @@ Entity::~Entity() {
     this->removeAllChildren();
 }
 
-void Entity::render(const glm::mat4& parentTransform) { // NOLINT(misc-no-recursion)
+void Entity::render(glm::mat4 parentTransform) { // NOLINT(misc-no-recursion)
+    glm::mat4 transform = transformToMatrix(parentTransform, this->position, this->rotation);
     for (auto& [key, entity] : this->children) {
-        entity->render(parentTransform);
+        entity->render(transform);
     }
 }
 
@@ -36,7 +37,7 @@ const Root* Entity::getRoot() const { // NOLINT(misc-no-recursion)
     return this->parent->getRoot();
 }
 
-std::string_view Entity::getName() const {
+std::string Entity::getName() const {
     return this->name;
 }
 
@@ -44,9 +45,9 @@ bool Entity::hasChild(const std::string& name_) const {
     return this->children.count(name_) > 0;
 }
 
-std::string_view Entity::addChild(Entity* child) {
+std::string Entity::addChild(Entity* child) {
     child->setParent(this);
-    this->children[child->getName().data()] = child;
+    this->children[child->getName()] = child;
     return child->getName();
 }
 
@@ -62,4 +63,48 @@ void Entity::removeAllChildren() { // NOLINT(misc-no-recursion)
         delete ent_;
     }
     this->children.clear();
+}
+
+void Entity::setPosition(glm::vec3 newPos) {
+    this->position = newPos;
+}
+
+void Entity::setRotation(glm::quat newRot) {
+    this->rotation = newRot;
+}
+
+glm::vec3 Entity::getPosition() {
+    return this->position;
+}
+
+glm::vec3 Entity::getGlobalPosition() { // NOLINT(misc-no-recursion)
+    return this->getPosition() + this->parent->getGlobalPosition();
+}
+
+glm::quat Entity::getRotation() {
+    return this->rotation;
+}
+
+glm::vec3 Entity::getAABB() const {
+    return {};
+}
+
+void Entity::translate(glm::vec3 translateByAmount) {
+    this->position += translateByAmount;
+}
+
+void Entity::translateWithRotation(glm::vec3 translateByAmount) {
+    glm::quat p{glm::length(translateByAmount), translateByAmount.x, translateByAmount.y, translateByAmount.z};
+    p = this->getRotation() * p * glm::conjugate(this->getRotation());
+    this->translate(glm::vec3{p.x, p.y, p.z});
+}
+
+void Entity::rotate(glm::quat rotateByAmount) {
+    this->rotation += rotateByAmount;
+}
+
+void Entity::rotate(glm::vec3 rotateByAmount) {
+    this->rotation = glm::rotate(this->rotation, rotateByAmount.x, glm::vec3{1,0,0});
+    this->rotation = glm::rotate(this->rotation, rotateByAmount.y, glm::vec3{0,1,0});
+    this->rotation = glm::rotate(this->rotation, rotateByAmount.z, glm::vec3{0,0,1});
 }

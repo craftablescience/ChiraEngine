@@ -21,8 +21,8 @@
 #include <physics/bulletPhysicsProvider.h>
 #include <render/ubo.h>
 #include <event/events.h>
-#include <entity/imgui/console/console.h>
-#include <entity/imgui/profiler/profiler.h>
+#include <entity/imgui/console.h>
+#include <entity/imgui/profiler.h>
 #include <utility/debug/assertions.h>
 #if __has_include(<windows.h>) && !defined(DEBUG)
 #include <windows.h>
@@ -59,7 +59,7 @@ void Engine::preInit(const std::string& configPath) {
 void Engine::displaySplashScreen() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     auto mat = Resource::getResource<MaterialTextured>(TR("resource.material.splashscreen_material_path"));
-    auto plane = Resource::getResource<MeshResource>("file://meshes/plane.json");
+    auto plane = Resource::getResource<MeshDataResource>("file://meshes/plane.json");
     plane->setMaterial(mat.castAssert<MaterialBase>());
     plane->render(glm::identity<glm::mat4>());
     glfwSwapBuffers(Engine::window);
@@ -193,9 +193,9 @@ void Engine::init() {
     });
     Engine::setBackgroundColor(ColorRGB{});
 
-    MeshResource::addMeshLoader("primitive", new PrimitiveMeshLoader{});
-    MeshResource::addMeshLoader("obj", new OBJMeshLoader{});
-    MeshResource::addMeshLoader("cmdl", new ChiraMeshLoader{});
+    AbstractMeshLoader::addMeshLoader("primitive", new PrimitiveMeshLoader{});
+    AbstractMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
+    AbstractMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
 
     Engine::displaySplashScreen();
     Resource::cleanup();

@@ -1,24 +1,10 @@
+include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/camera/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/imgui/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/model/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/physics/CMakeLists.txt)
+
 list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/entity.cpp
         ${CMAKE_CURRENT_LIST_DIR}/entity.h
-        ${CMAKE_CURRENT_LIST_DIR}/3d/entity3d.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/3d/entity3d.h
-        ${CMAKE_CURRENT_LIST_DIR}/3d/root.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/3d/root.h
-        ${CMAKE_CURRENT_LIST_DIR}/3d/camera/camera3d.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/3d/camera/camera3d.h
-        ${CMAKE_CURRENT_LIST_DIR}/3d/camera/editorCamera3d.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/3d/camera/editorCamera3d.h
-        ${CMAKE_CURRENT_LIST_DIR}/3d/camera/freecam.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/3d/camera/freecam.h
-        ${CMAKE_CURRENT_LIST_DIR}/3d/model/mesh3d.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/3d/model/mesh3d.h
-        ${CMAKE_CURRENT_LIST_DIR}/3d/physics/abstractRigidBody.h
-        ${CMAKE_CURRENT_LIST_DIR}/3d/physics/bulletRigidBody.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/3d/physics/bulletRigidBody.h
-        ${CMAKE_CURRENT_LIST_DIR}/imgui/window.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/imgui/window.h
-        ${CMAKE_CURRENT_LIST_DIR}/imgui/console/console.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/imgui/console/console.h
-        ${CMAKE_CURRENT_LIST_DIR}/imgui/profiler/profiler.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/imgui/profiler/profiler.h)
+        ${CMAKE_CURRENT_LIST_DIR}/root.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/root.h)

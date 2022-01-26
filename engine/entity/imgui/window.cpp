@@ -10,7 +10,7 @@ Window::Window(const std::string& title_, bool startVisible, const ImVec2& windo
     this->flags = 0;
 }
 
-void Window::render(const glm::mat4& parentTransform) {
+void Window::render(glm::mat4 parentTransform) {
     if (this->isVisible_) {
         ImGui::SetNextWindowSize(this->nextWindowSize, this->windowSizeCondition);
         this->preRenderContents();

@@ -7,7 +7,7 @@ namespace chira {
     class Window : public Entity {
     public:
         Window(const std::string& title_, bool startVisible, const ImVec2& windowSize = ImVec2(), bool enforceSize = false);
-        void render(const glm::mat4& parentTransform) override;
+        void render(glm::mat4 parentTransform) override;
         virtual void preRenderContents() {};
         virtual void renderContents() = 0;
         virtual void postRenderContents() {};

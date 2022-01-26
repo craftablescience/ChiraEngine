@@ -27,7 +27,7 @@ namespace chira {
     };
 }
 
-#define REGISTER_MATERIAL_TYPE(ResourceClassName)                                              \
+#define CHIRA_REGISTER_MATERIAL_TYPE(ResourceClassName)                                        \
     static inline const bool ResourceClassName##FactoryRegistryHelper =                        \
     chira::MaterialFactory::registerMaterialType(                                              \
         #ResourceClassName,                                                                    \
@@ -37,4 +37,5 @@ namespace chira {
         }                                                                                      \
     )
 
-#define GET_MATERIAL(type, identifier) chira::MaterialFactory::getMaterialType(type)(identifier).castAssert<chira::MaterialBase>()
+#define CHIRA_GET_MATERIAL(type, identifier) \
+    chira::MaterialFactory::getMaterialType(type)(identifier).castAssert<chira::MaterialBase>()

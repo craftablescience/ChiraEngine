@@ -13,6 +13,6 @@ namespace chira {
     protected:
         SharedPointer<Texture> texture;
     private:
-        REGISTER_MATERIAL_TYPE(MaterialTextured);
+        CHIRA_REGISTER_MATERIAL_TYPE(MaterialTextured);
     };
 }

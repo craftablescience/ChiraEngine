@@ -3,13 +3,13 @@
 #include <sound/oggFileSound.h>
 #include <hook/discordRPC.h>
 #include <resource/provider/filesystemResourceProvider.h>
-#include <entity/3d/model/mesh3d.h>
 #include <i18n/translationManager.h>
-#include <entity/3d/physics/bulletRigidBody.h>
-#include <entity/imgui/settings/settings.h>
-#include <entity/3d/camera/editorCamera3d.h>
-#include <entity/imgui/console/console.h>
-#include <entity/imgui/profiler/profiler.h>
+#include <entity/model/mesh.h>
+#include <entity/physics/bulletRigidBody.h>
+#include <entity/camera/editorCamera.h>
+#include <entity/imgui/console.h>
+#include <entity/imgui/profiler.h>
+#include <entity/imgui/settings.h>
 #if defined(CHIRA_BUILD_WITH_STEAMWORKS) && defined(DEBUG)
 #include <hook/steamAPI.h>
 #endif
@@ -64,16 +64,14 @@ int main() {
         //endregion
 
         //region Add a teapot with a static rigidbody
-        auto staticTeapot = new BulletRigidBody{"static", "file://physics/ground_static.json"};
+        auto staticTeapot = new BulletRigidBody{"file://physics/ground_static.json"};
         staticTeapot->translate(glm::vec3{3,0,-13});
-        auto cubeMesh = Resource::getResource<MeshResource>("file://meshes/teapot.json");
-        staticTeapot->addChild(new Mesh3d{"teapotMesh", cubeMesh});
+        staticTeapot->addChild(new Mesh{"file://meshes/teapot.json"});
+        Engine::getRoot()->addChild(staticTeapot);
 
         auto fallingTeapot = new BulletRigidBody{"file://physics/cube_dynamic.json"};
         fallingTeapot->translate(glm::vec3{0,15,-10});
-        fallingTeapot->addChild(new Mesh3d{cubeMesh});
-
-        Engine::getRoot()->addChild(staticTeapot);
+        fallingTeapot->addChild(new Mesh{"file://meshes/teapot.json"});
         Engine::getRoot()->addChild(fallingTeapot);
         //endregion
 
@@ -86,10 +84,10 @@ int main() {
         //endregion
 
         //region Add the camera
-        auto camera = new EditorCamera3d{CameraProjectionMode::PERSPECTIVE};
+        auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE};
         Engine::getRoot()->addChild(camera);
         Engine::getRoot()->setCamera(camera);
-        EditorCamera3d::setupKeybinds();
+        EditorCamera::setupKeybinds();
         camera->translate(glm::vec3{0,0,15});
         //endregion
 
@@ -98,13 +96,14 @@ int main() {
         //endregion
 
         //region Add a test sound
-        auto* sound = new OGGFileSound();
+        auto sound = new OGGFileSound();
         sound->init("file://sounds/helloWorldCutMono.ogg");
         Engine::getSoundManager()->addSound("helloWorld", sound);
         //endregion
 
         //region Apply some lighting properties to the mesh
-        const auto teapotShader = cubeMesh->getMaterial()->getShader();
+        auto teapotMesh = Resource::getResource<MeshDataResource>("file://meshes/teapot.json");
+        const auto teapotShader = teapotMesh->getMaterial()->getShader();
         teapotShader->use();
         teapotShader->setUniform("light.ambient", 0.1f, 0.1f, 0.1f);
         teapotShader->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);

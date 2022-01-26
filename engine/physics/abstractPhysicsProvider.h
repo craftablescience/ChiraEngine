@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <glm/vec3.hpp>
-#include <entity/3d/physics/abstractRigidBody.h>
+#include <entity/physics/abstractRigidBody.h>
 
 namespace chira {
     class AbstractPhysicsProvider {

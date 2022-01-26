@@ -17,6 +17,6 @@ namespace chira {
         SharedPointer<Texture> diffuse;
         SharedPointer<Texture> specular;
     private:
-        REGISTER_MATERIAL_TYPE(MaterialPhong);
+        CHIRA_REGISTER_MATERIAL_TYPE(MaterialPhong);
     };
 }

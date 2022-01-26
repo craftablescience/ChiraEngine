@@ -7,6 +7,6 @@ namespace chira {
     public:
         explicit MaterialUntextured(const std::string& identifier_) : MaterialBase(identifier_) {}
     private:
-        REGISTER_MATERIAL_TYPE(MaterialUntextured);
+        CHIRA_REGISTER_MATERIAL_TYPE(MaterialUntextured);
     };
 }

@@ -1,21 +1,22 @@
 #include <fstream>
+#include <utility>
 #include <core/engine.h>
 #include <input/inputManager.h>
 #include <resource/provider/filesystemResourceProvider.h>
-#include <entity/3d/model/mesh3d.h>
 #include <i18n/translationManager.h>
-#include <entity/3d/camera/editorCamera3d.h>
-#include <entity/imgui/console/console.h>
-#include <entity/imgui/profiler/profiler.h>
+#include <entity/model/mesh.h>
+#include <entity/camera/editorCamera.h>
+#include <entity/imgui/console.h>
+#include <entity/imgui/profiler.h>
 #include <utility/dialogs.h>
 
 using namespace chira;
 
 class ModelViewerGui : public Window {
 public:
-    explicit ModelViewerGui(const std::string_view& meshId_)
+    explicit ModelViewerGui(std::string meshId_)
         : Window(TR("ui.window.title"), true)
-        , meshId(meshId_) {
+        , meshId(std::move(meshId_)) {
         this->flags |=
                 ImGuiWindowFlags_NoTitleBar   |
                 ImGuiWindowFlags_NoDecoration |
@@ -30,30 +31,30 @@ public:
         ImGui::Text("%s", ModelViewerGui::loadedFile.c_str());
     }
     void setLoadedFile(const std::string& meshName) {
-        if (meshName == Engine::getRoot()->getChild<Mesh3d>(this->meshId.data())->getMeshResource()->getIdentifier())
+        if (meshName == Engine::getRoot()->getChild<Mesh>(this->meshId)->getMeshResource()->getIdentifier())
             return;
         if (!Resource::hasResource(meshName)) {
             dialogPopupError("Resource identifier " + meshName + " does not point to a visible resource.");
             return;
         }
-        Engine::getRoot()->removeChild(this->meshId.data());
+        Engine::getRoot()->removeChild(this->meshId);
         Resource::cleanup();
-        this->meshId = Engine::getRoot()->addChild(new Mesh3d{Resource::getResource<MeshResource>(meshName)});
+        this->meshId = Engine::getRoot()->addChild(new Mesh{meshName});
         ModelViewerGui::loadedFile = meshName;
     }
-    [[nodiscard]] std::string_view getMeshId() const {
+    [[nodiscard]] std::string getMeshId() const {
         return this->meshId;
     }
 private:
     std::string loadedFile = "file://meshes/editor/grid.json";
-    std::string_view meshId;
+    std::string meshId;
 };
 
-inline void addModelSelected(const std::string_view& modelId) {
+inline void addModelSelected(const std::string& modelId) {
     std::string path = dialogOpenResource("*.json");
     if (path.empty())
         return dialogPopupError(TR("error.modelviewer.file_is_not_resource"));
-    Engine::getRoot()->getChild<ModelViewerGui>(modelId.data())->setLoadedFile(path);
+    Engine::getRoot()->getChild<ModelViewerGui>(modelId)->setLoadedFile(path);
 }
 
 inline void addResourceFolderSelected() {
@@ -66,7 +67,7 @@ inline void addResourceFolderSelected() {
         return dialogPopupError(TR("error.modelviewer.resource_folder_not_valid"));
 
     bool resourceExists = false;
-    for (const auto &fileProvider: Resource::getResourceProviders(FILESYSTEM_PROVIDER_NAME)) {
+    for (const auto& fileProvider : Resource::getResourceProviders(FILESYSTEM_PROVIDER_NAME)) {
         if (resourceFolderPath == assert_cast<FilesystemResourceProvider*>(fileProvider.get())->getFolder()) {
             resourceExists = true;
             break;
@@ -78,21 +79,21 @@ inline void addResourceFolderSelected() {
         dialogPopupError(TR("error.modelviewer.resource_folder_already_registered"));
 }
 
-inline void convertToModelTypeSelected(const std::string& extension, const std::string& type, const std::string_view guiId) {
+inline void convertToModelTypeSelected(const std::string& extension, const std::string& type, const std::string& guiId) {
     std::string filepath = dialogSaveFile(extension);
     if (filepath.empty())
         return;
     std::ofstream file{filepath, std::ios::binary};
-    auto meshId = Engine::getRoot()->getChild<ModelViewerGui>(guiId.data())->getMeshId();
-    std::vector<byte> meshData = Engine::getRoot()->getChild<Mesh3d>(meshId.data())->getMeshData(type);
+    auto meshId = Engine::getRoot()->getChild<ModelViewerGui>(guiId)->getMeshId();
+    std::vector<byte> meshData = Engine::getRoot()->getChild<Mesh>(meshId)->getMeshData(type);
     file.write(reinterpret_cast<const char*>(&meshData.front()), static_cast<std::streamsize>(meshData.size()));
 }
 
-inline void convertToOBJSelected(const std::string_view guiId) {
+inline void convertToOBJSelected(const std::string& guiId) {
     convertToModelTypeSelected(".obj", "obj", guiId);
 }
 
-inline void convertToCMDLSelected(const std::string_view guiId) {
+inline void convertToCMDLSelected(const std::string& guiId) {
     convertToModelTypeSelected(".cmdl", "cmdl", guiId);
 }
 
@@ -114,17 +115,17 @@ int main() {
     }});
 #endif
 
-    std::string_view uiUUID;
+    std::string uiUUID;
     Engine::addInitFunction([&uiUUID]{
         Engine::setBackgroundColor(ColorRGB::solid(0.15f));
 
-        auto camera = new EditorCamera3d{CameraProjectionMode::PERSPECTIVE, 120.f};
+        auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};
         Engine::getRoot()->addChild(camera);
         Engine::getRoot()->setCamera(camera);
-        EditorCamera3d::setupKeybinds();
+        EditorCamera::setupKeybinds();
 
-        const auto modelViewerGui = new ModelViewerGui{
-            Engine::getRoot()->addChild(new Mesh3d{Resource::getResource<MeshResource>("file://meshes/editor/grid.json")})
+        auto modelViewerGui = new ModelViewerGui{
+            Engine::getRoot()->addChild(new Mesh{"file://meshes/editor/grid.json"})
         };
         uiUUID = Engine::getRoot()->addChild(modelViewerGui);
     });

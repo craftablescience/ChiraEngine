@@ -2,9 +2,9 @@
 
 #include <unordered_map>
 #include <string>
-#include <string_view>
 #include <glm/glm.hpp>
 #include <utility/debug/assertions.h>
+#include <utility/math/matrix.h>
 
 namespace chira {
     class Root;
@@ -21,10 +21,10 @@ namespace chira {
         explicit Entity(const std::string& name_);
         virtual ~Entity();
         /// Renders all this entity's children.
-        virtual void render(const glm::mat4& parentTransform);
+        virtual void render(glm::mat4 parentTransform);
         [[nodiscard]] Entity* getParent() const;
         [[nodiscard]] virtual const Root* getRoot() const;
-        std::string_view getName() const;
+        [[nodiscard]] std::string getName() const;
         Entity* getChild(const std::string& name_) const {
             return this->children.at(name_);
         }
@@ -32,14 +32,31 @@ namespace chira {
         EntityType* getChild(const std::string& name_) const {
             return assert_cast<EntityType*>(this->getChild(name_));
         }
-        bool hasChild(const std::string& name_) const;
-        std::string_view addChild(Entity* child);
+        [[nodiscard]] bool hasChild(const std::string& name_) const;
+        std::string addChild(Entity* child);
         void removeChild(const std::string& name_);
         void removeAllChildren();
+        virtual void setPosition(glm::vec3 newPos);
+        virtual void setRotation(glm::quat newRot);
+        virtual glm::vec3 getPosition();
+        virtual glm::vec3 getGlobalPosition();
+        /// Note: the global rotation is inaccessible.
+        virtual glm::quat getRotation();
+        /// The size of the entity.
+        virtual glm::vec3 getAABB() const;
+        virtual void translate(glm::vec3 translateByAmount);
+        virtual void translateWithRotation(glm::vec3 translateByAmount);
+        virtual void rotate(glm::quat rotateByAmount);
+        virtual void rotate(glm::vec3 rotateByAmount);
     protected:
         Entity* parent;
         std::string name;
         std::unordered_map<std::string, Entity*> children;
+
+        // The following are in local space and are relative to the parent.
+        glm::vec3 position{};
+        glm::quat rotation = glm::identity<glm::quat>();
+
         /// For internal use only.
         void setParent(Entity* newParent) {
             this->parent = newParent;

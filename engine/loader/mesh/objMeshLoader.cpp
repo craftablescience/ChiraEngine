@@ -77,7 +77,7 @@ void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>&
     }
 }
 
-void OBJMeshLoader::addVertex(const Vertex& v, unsigned int* currentIndex, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) {
+void OBJMeshLoader::addVertex(Vertex v, unsigned int* currentIndex, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) {
     auto position = std::find(vertices.begin(), vertices.end(), v);
     if (position != vertices.end()) {
         unsigned int index = position - vertices.begin();
