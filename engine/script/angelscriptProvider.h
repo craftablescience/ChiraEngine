@@ -28,8 +28,6 @@ namespace chira {
         int registerGlobalFunction(F f, const std::string& name, const std::string& decl) {
             return this->asEngine->RegisterGlobalFunction(decl.c_str(), asFUNCTION(f), asCALL_CDECL);
         }
-
-        static void print(const std::string& message);
     private:
         bool started = false;
         asIScriptEngine* asEngine = nullptr;

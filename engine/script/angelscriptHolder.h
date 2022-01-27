@@ -10,16 +10,16 @@ namespace chira {
         explicit AngelscriptHolder(const std::string& path);
         virtual ~AngelscriptHolder();
         void init(AngelscriptProvider* provider);
-        void render(AngelscriptProvider* provider, double delta);
-        void stop(AngelscriptProvider* provider);
+        void render();
+        void stop();
         [[nodiscard]] std::string getIdentifier() const {
             return this->identifier;
         }
     private:
         std::string identifier;
-        asIScriptContext* scriptContext = nullptr;
-        asIScriptFunction* initFunc = nullptr;
-        asIScriptFunction* renderFunc = nullptr;
-        asIScriptFunction* stopFunc = nullptr;
+        asIScriptContext*  scriptContext = nullptr;
+        asIScriptFunction* initFunc      = nullptr;
+        asIScriptFunction* renderFunc    = nullptr;
+        asIScriptFunction* stopFunc      = nullptr;
     };
 }

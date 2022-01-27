@@ -96,7 +96,7 @@ void MeshData::clearMeshData() {
 
 AABB MeshData::getAABB() {
     if (this->isAABBDirty()) {
-        glm::vec3 minPos, maxPos;
+        glm::vec3 minPos{}, maxPos{};
         if (!this->vertices.empty()) {
             minPos = glm::vec3{std::numeric_limits<float>::max()};
             maxPos = glm::vec3{std::numeric_limits<float>::min()};

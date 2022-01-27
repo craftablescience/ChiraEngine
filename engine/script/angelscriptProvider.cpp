@@ -38,6 +38,10 @@ void CHIRA_CDECL messageCallback(const asSMessageInfo* msg, void*) {
     }
 }
 
+void CHIRA_CDECL print(const std::string& message) {
+    Logger::log(LogType::OUTPUT, "AngelScript", message);
+}
+
 AngelscriptProvider::AngelscriptProvider() {
     this->asEngine = asCreateScriptEngine();
     this->asEngine->SetMessageCallback(asFUNCTION(messageCallback), nullptr, asCALL_CDECL);
@@ -54,7 +58,7 @@ AngelscriptProvider::AngelscriptProvider() {
     RegisterScriptWeakRef(    this->asEngine);
     RegisterScriptAny(        this->asEngine);
 
-    this->registerGlobalFunction(AngelscriptProvider::print, "print");
+    this->registerGlobalFunction(print, "print");
 }
 
 asIScriptEngine* AngelscriptProvider::getAngelscriptEngine() const {
@@ -70,13 +74,13 @@ void AngelscriptProvider::init() {
 
 void AngelscriptProvider::render(double delta) {
     for (const auto& script : this->scripts) {
-        script->render(this, delta);
+        script->render();
     }
 }
 
 void AngelscriptProvider::stop() {
     for (const auto& script : this->scripts) {
-        script->stop(this);
+        script->stop();
     }
 }
 
@@ -85,8 +89,4 @@ void AngelscriptProvider::addScript(const std::string& script) {
     if (this->started) {
         this->scripts[this->scripts.size() - 1]->init(this);
     }
-}
-
-void AngelscriptProvider::print(const std::string& message) {
-    Logger::log(LogType::OUTPUT, "AngelScript", message);
 }

@@ -1,5 +1,6 @@
 #include "console.h"
 
+#include <cstring>
 #include <resource/resource.h>
 #include <i18n/translationManager.h>
 

@@ -31,8 +31,8 @@ namespace chira {
     static inline const bool ResourceClassName##FactoryRegistryHelper =                        \
     chira::MaterialFactory::registerMaterialType(                                              \
         #ResourceClassName,                                                                    \
-        [](const std::string& identifier) -> chira::SharedPointer<chira::MaterialBase> {       \
-            return chira::Resource::getResource<ResourceClassName>(identifier)                 \
+        [](const std::string& materialId) -> chira::SharedPointer<chira::MaterialBase> {       \
+            return chira::Resource::getResource<ResourceClassName>(materialId)                 \
                    .castAssert<chira::MaterialBase>();                                         \
         }                                                                                      \
     )

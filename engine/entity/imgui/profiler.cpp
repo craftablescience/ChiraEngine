@@ -9,12 +9,12 @@ Profiler::Profiler(const ImVec2& windowSize) : Window(TR("ui.profiler.title"), f
 void Profiler::renderContents() {
     if (ImGui::BeginTable("Resources", 3)) {
         for (const auto& [providerName, resourceMap] : Resource::resources) {
-            for (const auto& [name, resource] : resourceMap) {
+            for (const auto& [resourceName, resource] : resourceMap) {
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
                 ImGui::Text("%s", providerName.c_str());
                 ImGui::TableSetColumnIndex(1);
-                ImGui::Text("%s", name.c_str());
+                ImGui::Text("%s", resourceName.c_str());
                 ImGui::TableSetColumnIndex(2);
                 ImGui::Text("%d", resource.useCount());
             }

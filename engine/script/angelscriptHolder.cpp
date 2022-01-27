@@ -54,14 +54,14 @@ void AngelscriptHolder::init(AngelscriptProvider* provider) {
     }
 }
 
-void AngelscriptHolder::render(AngelscriptProvider* provider, double delta) {
+void AngelscriptHolder::render() {
     this->scriptContext->Prepare(this->renderFunc);
     if (int r = this->scriptContext->Execute(); r != asEXECUTION_FINISHED) {
         Logger::log(LogType::ERROR, "AngelScript", TRF("error.angelscript.exception", this->identifier, this->scriptContext->GetExceptionString()));
     }
 }
 
-void AngelscriptHolder::stop(AngelscriptProvider* provider) {
+void AngelscriptHolder::stop() {
     this->scriptContext->Prepare(this->stopFunc);
     if (int r = this->scriptContext->Execute(); r != asEXECUTION_FINISHED) {
         Logger::log(LogType::ERROR, "AngelScript", TRF("error.angelscript.exception", this->identifier, this->scriptContext->GetExceptionString()));
