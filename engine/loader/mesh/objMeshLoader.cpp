@@ -9,9 +9,9 @@
 using namespace chira;
 
 void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) const {
-    std::vector<Position> vertexBuffer;
-    std::vector<UV> uvBuffer;
-    std::vector<Normal> normalBuffer;
+    std::vector<glm::vec3> vertexBuffer;
+    std::vector<ColorRG> uvBuffer;
+    std::vector<ColorRGB> normalBuffer;
 
     auto meshData = Resource::getResource<StringResource>(identifier);
     std::istringstream meshDataStream{meshData->getString()};
@@ -20,17 +20,17 @@ void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>&
     unsigned int currentIndex = 0;
     while (std::getline(meshDataStream, line)) {
         if (line.substr(0,2) == "v ") {
-            Position pos;
+            glm::vec3 pos;
             std::istringstream iss(line.substr(2));
             iss >> pos.x >> pos.y >> pos.z;
             vertexBuffer.push_back(pos);
         } else if (line.substr(0,3) == "vt ") {
-            UV uv;
+            ColorRG uv;
             std::istringstream iss(line.substr(2));
-            iss >> uv.u >> uv.v;
+            iss >> uv.r >> uv.g;
             uvBuffer.push_back(uv);
         } else if (line.substr(0,3) == "vn ") {
-            Normal normal;
+            ColorRGB normal;
             std::istringstream iss(line.substr(2));
             iss >> normal.r >> normal.g >> normal.b;
             normalBuffer.push_back(normal);
@@ -53,25 +53,28 @@ void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>&
                 counter++;
             }
             if (includeUVs) {
-                addVertex(Vertex(vertexBuffer[objIndices[0]].x, vertexBuffer[objIndices[0]].y, vertexBuffer[objIndices[0]].z,
-                                 normalBuffer[objIndices[2]].r, normalBuffer[objIndices[2]].g, normalBuffer[objIndices[2]].b,
-                                 uvBuffer[objIndices[1]].u, uvBuffer[objIndices[1]].v), &currentIndex, vertices, indices);
-                addVertex(Vertex(vertexBuffer[objIndices[3]].x, vertexBuffer[objIndices[3]].y, vertexBuffer[objIndices[3]].z,
-                                 normalBuffer[objIndices[5]].r, normalBuffer[objIndices[5]].g, normalBuffer[objIndices[5]].b,
-                                 uvBuffer[objIndices[4]].u, uvBuffer[objIndices[4]].v), &currentIndex, vertices, indices);
-                addVertex(Vertex(vertexBuffer[objIndices[6]].x, vertexBuffer[objIndices[6]].y, vertexBuffer[objIndices[6]].z,
-                                 normalBuffer[objIndices[8]].r, normalBuffer[objIndices[8]].g, normalBuffer[objIndices[8]].b,
-                                 uvBuffer[objIndices[7]].u, uvBuffer[objIndices[7]].v), &currentIndex, vertices, indices);
+                addVertex({{vertexBuffer[objIndices[0]].x, vertexBuffer[objIndices[0]].y, vertexBuffer[objIndices[0]].z},
+                           {normalBuffer[objIndices[2]].r, normalBuffer[objIndices[2]].g, normalBuffer[objIndices[2]].b},
+                           {uvBuffer[objIndices[1]].r, uvBuffer[objIndices[1]].g}},
+                          &currentIndex, vertices, indices);
+                addVertex({{vertexBuffer[objIndices[3]].x, vertexBuffer[objIndices[3]].y, vertexBuffer[objIndices[3]].z},
+                           {normalBuffer[objIndices[5]].r, normalBuffer[objIndices[5]].g, normalBuffer[objIndices[5]].b},
+                           {uvBuffer[objIndices[4]].r, uvBuffer[objIndices[4]].g}},
+                          &currentIndex, vertices, indices);
+                addVertex({{vertexBuffer[objIndices[6]].x, vertexBuffer[objIndices[6]].y, vertexBuffer[objIndices[6]].z},
+                           {normalBuffer[objIndices[8]].r, normalBuffer[objIndices[8]].g, normalBuffer[objIndices[8]].b},
+                           {uvBuffer[objIndices[7]].r, uvBuffer[objIndices[7]].g}},
+                          &currentIndex, vertices, indices);
             } else {
-                addVertex(Vertex(vertexBuffer[objIndices[0]].x, vertexBuffer[objIndices[0]].y, vertexBuffer[objIndices[0]].z,
-                                 normalBuffer[objIndices[1]].r, normalBuffer[objIndices[1]].g, normalBuffer[objIndices[1]].b),
-                                 &currentIndex, vertices, indices);
-                addVertex(Vertex(vertexBuffer[objIndices[2]].x, vertexBuffer[objIndices[2]].y, vertexBuffer[objIndices[2]].z,
-                                 normalBuffer[objIndices[3]].r, normalBuffer[objIndices[3]].g, normalBuffer[objIndices[3]].b),
-                                 &currentIndex, vertices, indices);
-                addVertex(Vertex(vertexBuffer[objIndices[4]].x, vertexBuffer[objIndices[4]].y, vertexBuffer[objIndices[4]].z,
-                                 normalBuffer[objIndices[5]].r, normalBuffer[objIndices[5]].g, normalBuffer[objIndices[5]].b),
-                                 &currentIndex, vertices, indices);
+                addVertex({{vertexBuffer[objIndices[0]].x, vertexBuffer[objIndices[0]].y, vertexBuffer[objIndices[0]].z},
+                           {normalBuffer[objIndices[1]].r, normalBuffer[objIndices[1]].g, normalBuffer[objIndices[1]].b}},
+                          &currentIndex, vertices, indices);
+                addVertex({{vertexBuffer[objIndices[2]].x, vertexBuffer[objIndices[2]].y, vertexBuffer[objIndices[2]].z},
+                           {normalBuffer[objIndices[3]].r, normalBuffer[objIndices[3]].g, normalBuffer[objIndices[3]].b}},
+                          &currentIndex, vertices, indices);
+                addVertex({{vertexBuffer[objIndices[4]].x, vertexBuffer[objIndices[4]].y, vertexBuffer[objIndices[4]].z},
+                           {normalBuffer[objIndices[5]].r, normalBuffer[objIndices[5]].g, normalBuffer[objIndices[5]].b}},
+                          &currentIndex, vertices, indices);
             }
         }
     }
@@ -90,9 +93,9 @@ void OBJMeshLoader::addVertex(Vertex v, unsigned int* currentIndex, std::vector<
 }
 
 std::vector<byte> OBJMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) const {
-    std::vector<Position> positions;
-    std::vector<UV> uvs;
-    std::vector<Normal> normals;
+    std::vector<glm::vec3> positions;
+    std::vector<ColorRG> uvs;
+    std::vector<ColorRGB> normals;
     positions.reserve(indices.size());
     uvs.reserve(indices.size());
     normals.reserve(indices.size());
@@ -106,7 +109,7 @@ std::vector<byte> OBJMeshLoader::createMesh(const std::vector<Vertex>& vertices,
     // The following could be modified to actually use indices and save file space...
     // But it doesn't have to be right now :P
     for (const auto position : positions) meshDataStream << "v " << position.x << ' ' << position.y << ' ' << position.z << '\n';
-    for (const auto uv       : uvs)       meshDataStream << "vt " << uv.u << ' ' << uv.v << '\n';
+    for (const auto uv       : uvs)       meshDataStream << "vt " << uv.r << ' ' << uv.g << '\n';
     for (const auto normal   : normals)   meshDataStream << "vn " << normal.r << ' ' << normal.g << ' ' << normal.b << '\n';
     for (unsigned int i = 0; i < vertices.size(); i += 3) {
         meshDataStream << "f " << i   << '/' << i   << '/' << i   << ' '

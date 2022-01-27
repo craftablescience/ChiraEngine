@@ -17,7 +17,7 @@
 #include <resource/shaderResource.h>
 #include <loader/mesh/objMeshLoader.h>
 #include <loader/mesh/chiraMeshLoader.h>
-#include <loader/mesh/primitiveMeshLoader.h>
+#include <render/mesh/meshDataBuilder.h>
 #include <render/mesh/meshDataResource.h>
 #include <physics/bulletPhysicsProvider.h>
 #include <render/ubo.h>
@@ -60,9 +60,10 @@ void Engine::preInit(const std::string& configPath) {
 void Engine::displaySplashScreen() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     auto mat = Resource::getResource<MaterialTextured>("file://materials/splashscreen.json");
-    auto plane = Resource::getResource<MeshDataResource>("file://meshes/plane.json");
-    plane->setMaterial(mat.castAssert<MaterialBase>());
-    plane->render(glm::identity<glm::mat4>());
+    MeshDataBuilder plane;
+    plane.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
+    plane.setMaterial(mat.castAssert<MaterialBase>());
+    plane.render(glm::identity<glm::mat4>());
     glfwSwapBuffers(Engine::window);
 }
 
@@ -194,7 +195,6 @@ void Engine::init() {
     });
     Engine::setBackgroundColor(ColorRGB{});
 
-    AbstractMeshLoader::addMeshLoader("primitive", new PrimitiveMeshLoader{});
     AbstractMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     AbstractMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
 

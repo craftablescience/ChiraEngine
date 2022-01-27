@@ -10,9 +10,7 @@ namespace chira {
         void addTriangle(Vertex v1, Vertex v2, Vertex v3, bool addDuplicate = false);
         /// Vertex v4 forms a face with vertex v1 and v3.
         void addSquare(Vertex v1, Vertex v2, Vertex v3, Vertex v4, bool addDuplicate = false);
-        //todo: implement more mesh builder methods
-        //void addSquare(Vertex center, glm::vec2 size, SignedAxis normal, int offset = 0, bool addDuplicate = false);
-        //void addSquare(Vertex center, glm::vec2 size, glm::vec3 rotation, bool addDuplicate = false);
+        void addSquare(Vertex center, glm::vec2 size, SignedAxis normal, float offset = 0, bool addDuplicate = false);
         void addCube(Vertex center, glm::vec3 size, bool visibleOutside = true, bool addDuplicate = false);
         void enableBackfaceCulling(bool backfaceCulling_);
         [[nodiscard]] bool isBackfaceCullingEnabled() const;

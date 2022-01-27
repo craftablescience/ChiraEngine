@@ -4,26 +4,27 @@
 
 using namespace chira;
 
-ColorR::ColorR(float R) {
-    this->r = std::clamp(R, 0.f, 1.f);
-}
+ColorR::ColorR(float R)
+    : r(std::clamp(R, 0.f, 1.f)) {}
+ColorR::ColorR() : ColorR(0) {}
 
-ColorRG::ColorRG(float R, float G) : ColorR(R) {
-    this->g = std::clamp(G, 0.f, 1.f);
-}
+ColorRG::ColorRG(float R, float G)
+    : r(std::clamp(R, 0.f, 1.f))
+    , g(std::clamp(G, 0.f, 1.f)) {}
+ColorRG::ColorRG(float all) : ColorRG(all, all) {}
+ColorRG::ColorRG() : ColorRG(0) {}
 
-ColorRGB::ColorRGB(float R, float G, float B) : ColorRG(R,G) {
-    this->b = std::clamp(B, 0.f, 1.f);
-}
+ColorRGB::ColorRGB(float R, float G, float B)
+    : r(std::clamp(R, 0.f, 1.f))
+    , g(std::clamp(G, 0.f, 1.f))
+    , b(std::clamp(B, 0.f, 1.f)) {}
+ColorRGB::ColorRGB(float all) : ColorRGB(all, all, all) {}
+ColorRGB::ColorRGB() : ColorRGB(0) {}
 
-ColorRGB ColorRGB::solid(float all) {
-    return ColorRGB{all, all, all};
-}
-
-ColorRGBA::ColorRGBA(float R, float G, float B, float A) : ColorRGB(R,G,B) {
-    this->a = std::clamp(A, 0.f, 1.f);
-}
-
-ColorRGBA ColorRGBA::solid(float all, float A) {
-    return ColorRGBA{all, all, all, A};
-}
+ColorRGBA::ColorRGBA(float R, float G, float B, float A)
+    : r(std::clamp(R, 0.f, 1.f))
+    , g(std::clamp(G, 0.f, 1.f))
+    , b(std::clamp(B, 0.f, 1.f))
+    , a(std::clamp(A, 0.f, 1.f)) {}
+ColorRGBA::ColorRGBA(float all, float A) : ColorRGBA(all, all, all, A) {}
+ColorRGBA::ColorRGBA() : ColorRGBA(0) {}

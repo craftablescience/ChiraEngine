@@ -118,7 +118,7 @@ int main() {
 #endif
 
     Engine::addInitFunction([]{
-        Engine::setBackgroundColor(ColorRGB::solid(0.15f));
+        Engine::setBackgroundColor(ColorRGB{0.15f});
 
         auto camera = new EditorCamera{"camera", CameraProjectionMode::PERSPECTIVE, 120.f};
         camera->translate({-6.f * sqrtf(3.f), 6, 0});
@@ -134,13 +134,12 @@ int main() {
         auto gridMesh = grid->getMesh();
         gridMesh->setMaterial(CHIRA_GET_MATERIAL("MaterialUntextured", "file://materials/unlit.json"));
         for (int i = -5; i <= 5; i++) {
-            auto f = static_cast<GLfloat>(i);
-            gridMesh->addCube({f, 0, 0}, {0.025f, 0.025f, 10.f});
-            gridMesh->addCube({0, 0, f}, {10.f, 0.025f, 0.025f});
+            gridMesh->addCube(Vertex{{i, 0, 0}}, {0.025f, 0.025f, 10.f});
+            gridMesh->addCube(Vertex{{0, 0, i}}, {10.f, 0.025f, 0.025f});
         }
-        gridMesh->addCube({2.5f, 0, 0, 0, 0, 0, 1, 0, 0}, {5.f + 0.026f, 0.03f, 0.03f});
-        gridMesh->addCube({0, 0, 2.5f, 0, 0, 0, 0, 0, 1}, {0.03f, 0.03f, 5.f + 0.026f});
-        gridMesh->addCube({0, 0, 0, 0, 0, 0, 0, 1, 0}, glm::vec3{0.05f});
+        gridMesh->addCube({{2.5f, 0, 0}, {0, 0, 0}, {1, 0, 0}}, {5.f + 0.026f, 0.03f, 0.03f});
+        gridMesh->addCube({{0, 0, 2.5f}, {0, 0, 0}, {0, 0, 1}}, {0.03f, 0.03f, 5.f + 0.026f});
+        gridMesh->addCube({{0, 0, 0},    {0, 0, 0}, {0, 1, 0}}, glm::vec3{0.05f});
         Engine::getRoot()->addChild(grid);
     });
     Engine::init();

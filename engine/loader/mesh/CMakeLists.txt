@@ -4,6 +4,4 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/chiraMeshLoader.cpp
         ${CMAKE_CURRENT_LIST_DIR}/chiraMeshLoader.h
         ${CMAKE_CURRENT_LIST_DIR}/objMeshLoader.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/objMeshLoader.h
-        ${CMAKE_CURRENT_LIST_DIR}/primitiveMeshLoader.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/primitiveMeshLoader.h)
+        ${CMAKE_CURRENT_LIST_DIR}/objMeshLoader.h)

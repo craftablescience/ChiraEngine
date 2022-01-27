@@ -3,23 +3,58 @@
 namespace chira {
     struct ColorR {
         float r;
-        explicit ColorR(float R = 0.f);
+        explicit ColorR(float R);
+        ColorR();
+        bool operator==(const ColorR& other) const {
+            return this->r == other.r;
+        }
+        bool operator!=(const ColorR& other) const {
+            return !this->operator==(other);
+        }
     };
 
-    struct ColorRG : public ColorR {
+    struct ColorRG {
+        float r;
         float g;
-        explicit ColorRG(float R = 0.f, float G = 0.f);
+        ColorRG(float R, float G);
+        explicit ColorRG(float all);
+        ColorRG();
+        bool operator==(const ColorRG& other) const {
+            return this->r == other.r && this->g == other.g;
+        }
+        bool operator!=(const ColorRG& other) const {
+            return !this->operator==(other);
+        }
     };
 
-    struct ColorRGB : public ColorRG {
+    struct ColorRGB {
+        float r;
+        float g;
         float b;
-        explicit ColorRGB(float R = 0.f, float G = 0.f, float B = 0.f);
-        static ColorRGB solid(float all);
+        ColorRGB(float R, float G, float B);
+        explicit ColorRGB(float all);
+        ColorRGB();
+        bool operator==(const ColorRGB& other) const {
+            return this->r == other.r && this->g == other.g && this->b == other.b;
+        }
+        bool operator!=(const ColorRGB& other) const {
+            return !this->operator==(other);
+        }
     };
 
-    struct ColorRGBA : public ColorRGB {
+    struct ColorRGBA {
+        float r;
+        float g;
+        float b;
         float a;
-        explicit ColorRGBA(float R = 0.f, float G = 0.f, float B = 0.f, float A = 1.f);
-        static ColorRGBA solid(float all, float A);
+        ColorRGBA(float R, float G, float B, float A = 1.f);
+        explicit ColorRGBA(float all, float A = 1.f);
+        ColorRGBA();
+        bool operator==(const ColorRGBA& other) const {
+            return this->r == other.r && this->g == other.g && this->b == other.b && this->a == other.a;
+        }
+        bool operator!=(const ColorRGBA& other) const {
+            return !this->operator==(other);
+        }
     };
 }
