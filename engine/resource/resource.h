@@ -43,7 +43,7 @@ namespace chira {
             if (Resource::resources[provider].count(name) > 0) {
                 return Resource::resources[provider][name].castAssert<ResourceType>();
             }
-            return Resource::getUniqueResource<ResourceType>(identifier, params...);
+            return Resource::getUniqueResource<ResourceType>(identifier, std::forward<Params>(params)...);
         }
 
         template<typename ResourceType, typename... Params>
@@ -53,7 +53,7 @@ namespace chira {
             if (Resource::resources[provider].count(name) > 0) {
                 return; // Already in cache
             }
-            Resource::precacheUniqueResource<ResourceType>(identifier, params...);
+            Resource::precacheUniqueResource<ResourceType>(identifier, std::forward<Params>(params)...);
         }
 
         template<typename ResourceType>
@@ -73,7 +73,7 @@ namespace chira {
             const std::string& provider = id.first, name = id.second;
             for (auto i = Resource::providers[provider].rbegin(); i != Resource::providers[provider].rend(); i++) {
                 if (i->get()->hasResource(name)) {
-                    Resource::resources[provider][name] = SharedPointer<Resource>(new ResourceType{identifier, params...});
+                    Resource::resources[provider][name] = SharedPointer<Resource>(new ResourceType{identifier, std::forward<Params>(params)...});
                     i->get()->compileResource(name, Resource::resources[provider][name].get());
                     return Resource::resources[provider][name].castAssert<ResourceType>();
                 }
@@ -88,7 +88,7 @@ namespace chira {
             const std::string& provider = id.first, name = id.second;
             for (auto i = Resource::providers[provider].rbegin(); i != Resource::providers[provider].rend(); i++) {
                 if (i->get()->hasResource(name)) {
-                    Resource::resources[provider][name] = SharedPointer<Resource>(new ResourceType{identifier, params...});
+                    Resource::resources[provider][name] = SharedPointer<Resource>(new ResourceType{identifier, std::forward<Params>(params)...});
                     i->get()->compileResource(name, Resource::resources[provider][name].get());
                     return; // Precached!
                 }
@@ -103,7 +103,7 @@ namespace chira {
             const std::string& provider = id.first, name = id.second;
             for (auto i = Resource::providers[provider].rbegin(); i != Resource::providers[provider].rend(); i++) {
                 if (i->get()->hasResource(name)) {
-                    auto resource = std::make_unique<ResourceType>(identifier, params...);
+                    auto resource = std::make_unique<ResourceType>(identifier, std::forward<Params>(params)...);
                     i->get()->compileResource(name, resource.get());
                     return resource;
                 }
@@ -116,7 +116,7 @@ namespace chira {
         /// You might want to use this sparingly as it defeats the entire point of a cached, shared resource system.
         template<typename ResourceType, typename... Params>
         static std::unique_ptr<ResourceType> getUniqueUncachedPropertyResource(const std::string& identifier, const nlohmann::json& props, Params... params) {
-            auto resource = std::make_unique<ResourceType>(identifier, params...);
+            auto resource = std::make_unique<ResourceType>(identifier, std::forward<Params>(params)...);
             resource->compile(props);
             return resource;
         }
