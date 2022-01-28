@@ -15,7 +15,7 @@
 
 using namespace chira;
 
-void CHIRA_CDECL messageCallback(const asSMessageInfo* msg, void*) {
+static void CHIRA_CDECL messageCallback(const asSMessageInfo* msg, void*) {
     switch (msg->type) {
         case asMSGTYPE_INFORMATION:
             Logger::log(LogType::OUTPUT, "AngelScript",
@@ -38,7 +38,7 @@ void CHIRA_CDECL messageCallback(const asSMessageInfo* msg, void*) {
     }
 }
 
-void CHIRA_CDECL print(const std::string& message) {
+static void CHIRA_CDECL print(const std::string& message) {
     Logger::log(LogType::OUTPUT, "AngelScript", message);
 }
 

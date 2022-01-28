@@ -56,14 +56,14 @@ private:
     bool showGrid = true;
 };
 
-inline void addModelSelected() {
+static inline void addModelSelected() {
     std::string path = dialogOpenResource("*.json");
     if (path.empty())
         return dialogPopupError(TR("error.modelviewer.file_is_not_resource"));
     ModelViewerGui::get()->setLoadedFile(path);
 }
 
-inline void addResourceFolderSelected() {
+static inline void addResourceFolderSelected() {
     auto folder = dialogOpenFolder();
     if (folder.empty())
         return dialogPopupError(TR("error.modelviewer.resource_folder_not_selected"));
@@ -85,7 +85,7 @@ inline void addResourceFolderSelected() {
         dialogPopupError(TR("error.modelviewer.resource_folder_already_registered"));
 }
 
-inline void convertToModelTypeSelected(const std::string& extension, const std::string& type) {
+static inline void convertToModelTypeSelected(const std::string& extension, const std::string& type) {
     std::string filepath = dialogSaveFile(extension);
     if (filepath.empty())
         return;
@@ -95,11 +95,11 @@ inline void convertToModelTypeSelected(const std::string& extension, const std::
     file.write(reinterpret_cast<const char*>(&meshData[0]), static_cast<std::streamsize>(meshData.size()));
 }
 
-inline void convertToOBJSelected() {
+static inline void convertToOBJSelected() {
     convertToModelTypeSelected(".obj", "obj");
 }
 
-inline void convertToCMDLSelected() {
+static inline void convertToCMDLSelected() {
     convertToModelTypeSelected(".cmdl", "cmdl");
 }
 
