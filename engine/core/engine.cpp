@@ -252,6 +252,13 @@ void Engine::init() {
     glfwSetWindowIconifyCallback(Engine::window, [](GLFWwindow* w, int isIconified) {
         Engine::iconified = (isIconified == GLFW_TRUE);
     });
+    glfwSetDropCallback(Engine::window, [](GLFWwindow* window, int count, const char** paths) {
+        std::vector<std::string> files;
+        files.reserve(count);
+        for (int i = 0; i < count; i++)
+            files.emplace_back(paths[i]);
+        Events::createEvent("chira::engine::files_dropped", files);
+    });
 
 #ifdef DEBUG
     IMGUI_CHECKVERSION();
