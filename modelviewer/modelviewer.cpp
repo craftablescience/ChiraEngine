@@ -88,11 +88,16 @@ static inline void addResourceFolderSelected() {
 static inline void convertToModelTypeSelected(const std::string& extension, const std::string& type) {
     std::string filepath = dialogSaveFile(extension);
     if (filepath.empty())
-        return;
-    std::ofstream file{filepath, std::ios::binary};
+        return dialogPopupError(TR("error.modelviewer.filename_empty"));
+
     auto meshId = ModelViewerGui::get()->getMeshId();
+    if (!Engine::getRoot()->hasChild(meshId))
+        return dialogPopupError(TR("error.modelviewer.no_model_present"));
+
+    std::ofstream file{filepath, std::ios::binary};
     std::vector<byte> meshData = Engine::getRoot()->getChild<Mesh>(meshId)->getMeshData(type);
     file.write(reinterpret_cast<const char*>(&meshData[0]), static_cast<std::streamsize>(meshData.size()));
+    file.close();
 }
 
 static inline void convertToOBJSelected() {
