@@ -9,9 +9,9 @@
 namespace chira {
     class Shader;
 
-    class UBO : public HandleObject<unsigned int> {
+    class UniformBufferObject : public HandleObject<unsigned int> {
     public:
-        explicit UBO(std::string name_, unsigned int size);
+        explicit UniformBufferObject(std::string name_, unsigned int size);
         [[nodiscard]] unsigned int getBindingPoint() const;
         void update(const unsigned char buffer[], GLsizeiptr length) const;
         void bindToShader(Shader* shader_) const;
@@ -22,13 +22,13 @@ namespace chira {
     };
 
     /// Stores two mat4 values, named PV
-    class UBO_PV : public UBO {
+    class UBO_PerspectiveView : public UniformBufferObject {
     public:
-        static UBO_PV* get();
+        static UBO_PerspectiveView* get();
         void update(const glm::mat4& proj, const glm::mat4& view) const;
     private:
-        using UBO::update;
-        explicit UBO_PV(const std::string& name);
-        static std::unique_ptr<UBO_PV> singleton;
+        using UniformBufferObject::update;
+        UBO_PerspectiveView();
+        static std::unique_ptr<UBO_PerspectiveView> singleton;
     };
 }

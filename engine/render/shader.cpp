@@ -24,12 +24,13 @@ void Shader::compile(const nlohmann::json& properties) {
     this->checkForCompilationErrors();
 #endif
     if (getPropertyOrDefault(properties["properties"], "usesPV", true))
-        UBO_PV::get()->bindToShader(this);
+        UBO_PerspectiveView::get()->bindToShader(this);
     this->usesModel = getPropertyOrDefault(properties["properties"], "usesM", true);
 }
 
 Shader::~Shader() {
-    if (this->handle != -1) glDeleteProgram(this->handle);
+    if (this->handle != -1)
+        glDeleteProgram(this->handle);
 }
 
 void Shader::use() const {
@@ -37,7 +38,7 @@ void Shader::use() const {
 }
 
 void Shader::checkForCompilationErrors() const {
-    int success;
+    int success = 0;
     char infoLog[512];
     glGetProgramiv(this->handle, GL_LINK_STATUS, &success);
     if(!success) {
@@ -110,10 +111,6 @@ void Shader::setUniform(const std::string& name, float value1, float value2, flo
     glUniform4f(glGetUniformLocation(this->handle, name.c_str()), value1, value2, value3, value4);
 }
 
-void Shader::setUniform(const std::string& name, const glm::mat4& value) const {
+void Shader::setUniform(const std::string& name, glm::mat4 value) const {
     glUniformMatrix4fv(glGetUniformLocation(this->handle, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
-}
-
-void Shader::setUniform(const std::string& name, glm::mat4* value) const {
-    glUniformMatrix4fv(glGetUniformLocation(this->handle, name.c_str()), 1, GL_FALSE, glm::value_ptr(*value));
 }

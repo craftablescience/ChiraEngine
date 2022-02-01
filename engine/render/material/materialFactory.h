@@ -4,6 +4,7 @@
 #include <string>
 #include <resource/propertiesResource.h>
 #include <render/shader.h>
+#include <utility/abstractFactory.h>
 
 namespace chira {
     class MaterialBase : public PropertiesResource {
@@ -16,26 +17,18 @@ namespace chira {
         SharedPointer<Shader> shader;
     };
 
-    class MaterialFactory {
-        using factoryFunction = std::function<SharedPointer<MaterialBase>(const std::string&)>;
-    public:
-        MaterialFactory() = delete;
-        static bool registerMaterialType(const std::string& name, factoryFunction createFunc);
-        static const factoryFunction& getMaterialType(const std::string& name);
-    private:
-        static std::unordered_map<std::string, factoryFunction>& getFactoryMethods();
-    };
+    class MaterialFactory : public AbstractFactory<SharedPointer<MaterialBase>> {};
 }
 
-#define CHIRA_REGISTER_MATERIAL_TYPE(ResourceClassName)                                        \
-    static inline const bool ResourceClassName##FactoryRegistryHelper =                        \
-    chira::MaterialFactory::registerMaterialType(                                              \
-        #ResourceClassName,                                                                    \
-        [](const std::string& materialId) -> chira::SharedPointer<chira::MaterialBase> {       \
-            return chira::Resource::getResource<ResourceClassName>(materialId)                 \
-                   .castAssert<chira::MaterialBase>();                                         \
-        }                                                                                      \
-    )
+#define CHIRA_REGISTER_MATERIAL_TYPE(ResourceClassName)                                         \
+    static inline const bool ResourceClassName##FactoryRegistryHelper =                         \
+        chira::MaterialFactory::registerTypeFactory(                                            \
+            #ResourceClassName,                                                                 \
+            [](const std::string& materialId) -> chira::SharedPointer<chira::MaterialBase> {    \
+                return chira::Resource::getResource<ResourceClassName>(materialId)              \
+                       .castAssert<chira::MaterialBase>();                                      \
+            }                                                                                   \
+        )
 
 #define CHIRA_GET_MATERIAL(type, identifier) \
-    chira::MaterialFactory::getMaterialType(type)(identifier).castAssert<chira::MaterialBase>()
+    chira::MaterialFactory::getTypeFactory(type)(identifier).castAssert<chira::MaterialBase>()

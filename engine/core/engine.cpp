@@ -191,7 +191,7 @@ void Engine::init() {
     glfwSetFramebufferSizeCallback(Engine::window, [](GLFWwindow* w, int width, int height) {
         glViewport(0, 0, width, height);
         if (Engine::root && Engine::root->getCamera())
-            Engine::root->getCamera()->createProjection(glm::vec2{width, height});
+            Engine::root->getCamera()->createProjection({width, height});
     });
     Engine::setBackgroundColor(ColorRGB{});
 
@@ -340,7 +340,7 @@ void Engine::run() {
 
         AbstractPhysicsProvider::getPhysicsProvider()->updatePhysics(Engine::getDeltaTime());
 
-        UBO_PV::get()->update(Engine::getRoot()->getCamera()->getProjection(), Engine::getRoot()->getCamera()->getView());
+        UBO_PerspectiveView::get()->update(Engine::getRoot()->getCamera()->getProjection(), Engine::getRoot()->getCamera()->getView());
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();

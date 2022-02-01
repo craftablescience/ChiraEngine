@@ -52,7 +52,7 @@ void MeshData::render(glm::mat4 model) {
     if (this->material) {
         this->material->use();
         if (this->material->getShader()->usesModelMatrix())
-            this->material->getShader()->setUniform("m", &model);
+            this->material->getShader()->setUniform("m", model);
     }
     glDepthFunc(this->depthFunction);
     if (this->backfaceCulling) {
