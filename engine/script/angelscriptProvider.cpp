@@ -10,6 +10,7 @@
 #include <scriptmath/scriptmathcomplex.h>
 #include <scriptstdstring/scriptstdstring.h>
 #include <weakref/weakref.h>
+
 #include <utility/platform.h>
 #include <utility/logger.h>
 
@@ -66,27 +67,23 @@ asIScriptEngine* AngelscriptProvider::getAngelscriptEngine() const {
 }
 
 void AngelscriptProvider::init() {
-    for (const auto& script : this->scripts) {
+    for (const auto& script : this->scripts)
         script->init(this);
-    }
     this->started = true;
 }
 
-void AngelscriptProvider::render(double delta) {
-    for (const auto& script : this->scripts) {
+void AngelscriptProvider::render() {
+    for (const auto& script : this->scripts)
         script->render();
-    }
 }
 
 void AngelscriptProvider::stop() {
-    for (const auto& script : this->scripts) {
+    for (const auto& script : this->scripts)
         script->stop();
-    }
 }
 
 void AngelscriptProvider::addScript(const std::string& script) {
     this->scripts.push_back(std::make_unique<AngelscriptHolder>(script));
-    if (this->started) {
+    if (this->started)
         this->scripts[this->scripts.size() - 1]->init(this);
-    }
 }

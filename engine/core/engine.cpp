@@ -347,7 +347,7 @@ void Engine::run() {
         ImGui::NewFrame();
 
         Engine::callRegisteredFunctions(Engine::renderFunctions);
-        Engine::angelscript->render(Engine::getDeltaTime());
+        Engine::angelscript->render();
         Engine::root->render();
 
         ImGui::Render();
@@ -562,11 +562,11 @@ bool Engine::isIconified() {
     return Engine::iconified;
 }
 
-void Engine::setIcon(const std::string& iconPath) {
+void Engine::setIcon(const std::string& iconIdentifier) {
     chira_assert(Engine::isStarted(), TR("error.engine.not_initialized"));
     GLFWimage images[1];
     int width, height, bitsPerPixel;
-    Image icon(FilesystemResourceProvider::getResourceAbsolutePath(iconPath), &width, &height, &bitsPerPixel, 4, false);
+    Image icon(FilesystemResourceProvider::getResourceAbsolutePath(iconIdentifier), &width, &height, &bitsPerPixel, 4, false);
     chira_assert(icon.getData(), TR("error.engine.icon_has_no_data"));
     images[0].width = width;
     images[0].height = height;

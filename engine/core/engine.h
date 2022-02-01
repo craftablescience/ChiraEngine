@@ -1,6 +1,5 @@
 #pragma once
 
-#include <map>
 #include <functional>
 #include <vector>
 #include <memory>
@@ -9,7 +8,6 @@
 #include <GLFW/glfw3.h>
 
 #include <loader/settings/abstractSettingsLoader.h>
-#include <script/abstractScriptProvider.h>
 #include <script/angelscriptProvider.h>
 #include <sound/abstractSoundManager.h>
 #include <physics/abstractPhysicsProvider.h>
@@ -28,6 +26,7 @@ namespace chira {
         static void preInit(const std::string& configPath = "settings.json");
         static void init();
         static void run();
+        /// Should not be called manually! Use <code>Engine::shouldStopAfterThisFrame(true)</code> instead!
         static void stop();
 
         static void addInitFunction(const std::function<void()>& init);
@@ -58,14 +57,14 @@ namespace chira {
         [[nodiscard]] static bool isMouseCaptured();
         [[nodiscard]] static glm::vec2 getMousePosition();
         [[nodiscard]] static bool isIconified();
-        /// Note: Images must have a bit depth of 8, in RGB format
-        static void setIcon(const std::string& iconPath);
+        /// Note: Images must have a bit depth of 8
+        static void setIcon(const std::string& iconIdentifier);
     private:
         static inline GLFWwindow* window;
         static inline std::vector<std::function<void()>> initFunctions, renderFunctions, stopFunctions;
-        static inline std::unique_ptr<AngelscriptProvider>     angelscript;
-        static inline std::unique_ptr<AbstractSoundManager>    soundManager;
-        static inline std::unique_ptr<AbstractSettingsLoader>  settingsLoader;
+        static inline std::unique_ptr<AngelscriptProvider> angelscript;
+        static inline std::unique_ptr<AbstractSoundManager> soundManager;
+        static inline std::unique_ptr<AbstractSettingsLoader> settingsLoader;
         static inline Root* root;
         static inline Console* console;
 #ifdef DEBUG

@@ -16,13 +16,13 @@ namespace chira {
         AngelscriptProvider();
         [[nodiscard]] asIScriptEngine* getAngelscriptEngine() const;
         void init() override;
-        void render(double delta) override;
+        void render() override;
         void stop() override;
         void addScript(const std::string& script);
 
         template<typename F>
         int registerGlobalFunction(F f, const std::string& name) {
-            return registerGlobalFunction<F>(f, name, asTypeString<F>(name)());
+            return registerGlobalFunction(f, name, asTypeString<F>(name)());
         }
         template<typename F>
         int registerGlobalFunction(F f, const std::string& name, const std::string& decl) {
@@ -31,6 +31,6 @@ namespace chira {
     private:
         bool started = false;
         asIScriptEngine* asEngine = nullptr;
-        std::vector<std::unique_ptr<AngelscriptHolder>> scripts{};
+        std::vector<std::unique_ptr<AngelscriptHolder>> scripts;
     };
 }
