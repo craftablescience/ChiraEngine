@@ -6,8 +6,8 @@
 #include <entity/model/mesh.h>
 #include <entity/model/meshDynamic.h>
 #include <entity/camera/editorCamera.h>
-#include <entity/imgui/console.h>
-#include <entity/imgui/profiler.h>
+#include <entity/gui/console.h>
+#include <entity/gui/profiler.h>
 #include <utility/dialogs.h>
 
 using namespace chira;

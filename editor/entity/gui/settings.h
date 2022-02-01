@@ -2,7 +2,7 @@
 
 #include <utility/logger.h>
 #include <resource/fontResource.h>
-#include <entity/imgui/window.h>
+#include <entity/gui/window.h>
 
 using namespace chira;
 

@@ -1,5 +1,5 @@
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/debug/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/imgui/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/gui/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/math/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/memory/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/string/CMakeLists.txt)

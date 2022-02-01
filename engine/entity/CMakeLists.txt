@@ -1,5 +1,5 @@
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/camera/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/imgui/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/gui/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/model/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/physics/CMakeLists.txt)
 

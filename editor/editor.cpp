@@ -7,9 +7,9 @@
 #include <entity/model/mesh.h>
 #include <entity/physics/bulletRigidBody.h>
 #include <entity/camera/editorCamera.h>
-#include <entity/imgui/console.h>
-#include <entity/imgui/profiler.h>
-#include <entity/imgui/settings.h>
+#include <entity/gui/console.h>
+#include <entity/gui/profiler.h>
+#include <entity/gui/settings.h>
 #if defined(CHIRA_BUILD_WITH_STEAMWORKS) && defined(DEBUG)
 #include <hook/steamAPI.h>
 #endif

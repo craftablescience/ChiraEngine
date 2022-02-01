@@ -22,8 +22,8 @@
 #include <physics/bulletPhysicsProvider.h>
 #include <render/ubo.h>
 #include <event/events.h>
-#include <entity/imgui/console.h>
-#include <entity/imgui/profiler.h>
+#include <entity/gui/console.h>
+#include <entity/gui/profiler.h>
 #include <utility/debug/assertions.h>
 #if __has_include(<windows.h>) && !defined(DEBUG)
 #include <windows.h>
