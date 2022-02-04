@@ -4,23 +4,28 @@
 
 using namespace chira;
 
-Frame::Frame(const std::string& name_, int width_, int height_, ColorRGB backgroundColor_, bool smoothResize)
+Frame::Frame(const std::string& name_, int width_, int height_, ColorRGB backgroundColor_, bool smoothResize, bool initNow)
     : Root(name_)
     , backgroundColor(backgroundColor_)
     , width(width_)
     , height(height_) {
-    createFramebuffer(smoothResize);
+    if (initNow)
+        this->createFramebuffer(smoothResize);
 }
 
-Frame::Frame(int width_, int height_, ColorRGB backgroundColor_, bool smoothResize)
+Frame::Frame(int width_, int height_, ColorRGB backgroundColor_, bool smoothResize, bool initNow)
     : Root()
     , backgroundColor(backgroundColor_)
     , width(width_)
     , height(height_) {
-    createFramebuffer(smoothResize);
+    if (initNow)
+        this->createFramebuffer(smoothResize);
 }
 
 void Frame::createFramebuffer(bool smoothResize) {
+    if (this->fboHandle != 0)
+        return;
+
     glGenFramebuffers(1, &this->fboHandle);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fboHandle);
 

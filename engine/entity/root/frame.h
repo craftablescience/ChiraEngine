@@ -2,11 +2,13 @@
 
 #include "root.h"
 
+//todo: add/remove postprocessing effects
+
 namespace chira {
     class Frame : public Root {
     public:
-        Frame(const std::string& name_, int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true);
-        Frame(int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true);
+        Frame(const std::string& name_, int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
+        Frame(int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
         void render(glm::mat4 parentTransform) override;
         ~Frame() override;
         const Frame* getFrame() const override;
