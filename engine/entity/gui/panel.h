@@ -4,9 +4,9 @@
 #include <entity/entity.h>
 
 namespace chira {
-    class Window : public Entity {
+    class Panel : public Entity {
     public:
-        Window(const std::string& title_, bool startVisible, ImVec2 windowSize = {}, bool enforceSize = false);
+        Panel(const std::string& title_, bool startVisible, ImVec2 windowSize = {}, bool enforceSize = false);
         void render(glm::mat4 parentTransform) override;
         virtual void preRenderContents() {};
         virtual void renderContents() = 0;

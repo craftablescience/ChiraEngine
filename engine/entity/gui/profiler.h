@@ -1,9 +1,9 @@
 #pragma once
 
-#include "window.h"
+#include "panel.h"
 
 namespace chira {
-    class Profiler : public Window {
+    class Profiler : public Panel {
     public:
         explicit Profiler(ImVec2 windowSize = ImVec2{800, 600});
         void renderContents() override;

@@ -1,8 +1,8 @@
-#include "window.h"
+#include "panel.h"
 
 using namespace chira;
 
-Window::Window(const std::string& title_, bool startVisible, ImVec2 windowSize, bool enforceSize) {
+Panel::Panel(const std::string& title_, bool startVisible, ImVec2 windowSize, bool enforceSize) {
     this->title = title_;
     this->visible = startVisible;
     this->nextWindowSize = windowSize;
@@ -10,7 +10,7 @@ Window::Window(const std::string& title_, bool startVisible, ImVec2 windowSize, 
     this->flags = 0;
 }
 
-void Window::render(glm::mat4 parentTransform) {
+void Panel::render(glm::mat4 parentTransform) {
     if (this->visible) {
         ImGui::SetNextWindowSize(this->nextWindowSize, this->windowSizeCondition);
         this->preRenderContents();

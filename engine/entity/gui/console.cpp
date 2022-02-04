@@ -6,7 +6,7 @@
 
 using namespace chira;
 
-Console::Console(ImVec2 windowSize) : Window(TR("ui.console.title"), false, windowSize) {
+Console::Console(ImVec2 windowSize) : Panel(TR("ui.console.title"), false, windowSize) {
     this->loggingId = Logger::addCallback([&](LogType type, const std::string& source, const std::string& message) {
         switch (type) {
             case LogType::INFO:

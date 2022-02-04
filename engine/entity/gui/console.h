@@ -2,10 +2,10 @@
 
 #include <resource/fontResource.h>
 #include <utility/logger.h>
-#include "window.h"
+#include "panel.h"
 
 namespace chira {
-    class Console : public Window {
+    class Console : public Panel {
     public:
         explicit Console(ImVec2 windowSize = ImVec2{800, 600});
         ~Console() override;

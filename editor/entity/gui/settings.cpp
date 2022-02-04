@@ -6,7 +6,7 @@
 
 using namespace chira;
 
-Settings::Settings(const ImVec2& windowSize) : Window(TR("ui.settings.title"), false, windowSize) {
+Settings::Settings(const ImVec2& windowSize) : Panel(TR("ui.settings.title"), false, windowSize) {
     Engine::getSettingsLoader()->getValue("graphics", "windowWidth", &this->windowWidth);
     Engine::getSettingsLoader()->getValue("graphics", "windowHeight", &this->windowHeight);
     Engine::getSettingsLoader()->getValue("graphics", "startMaximized", &this->startMaximized);

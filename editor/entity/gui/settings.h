@@ -2,11 +2,11 @@
 
 #include <utility/logger.h>
 #include <resource/fontResource.h>
-#include <entity/gui/window.h>
+#include <entity/gui/panel.h>
 
 using namespace chira;
 
-class Settings : public Window {
+class Settings : public Panel {
 public:
     explicit Settings(const ImVec2& windowSize = ImVec2(0,0));
     void renderContents() override;

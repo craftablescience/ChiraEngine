@@ -12,9 +12,9 @@
 
 using namespace chira;
 
-class ModelViewerGui : public Window {
+class ModelViewerGui : public Panel {
 public:
-    ModelViewerGui() : Window(TR("ui.window.title"), true) {
+    ModelViewerGui() : Panel(TR("ui.window.title"), true) {
         this->flags |=
                 ImGuiWindowFlags_NoTitleBar   |
                 ImGuiWindowFlags_NoDecoration |
