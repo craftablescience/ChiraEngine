@@ -292,19 +292,22 @@ endif()
 
 # Copy engine resources
 add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources/engine ${CMAKE_BINARY_DIR}/resources/engine)
+        COMMAND ${CMAKE_COMMAND}
+        -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources/engine ${CMAKE_BINARY_DIR}/resources/engine)
 
 # Copy editor resources
 if(CHIRA_BUILD_EDITOR)
     if(WIN32)
         # Resource files
         add_custom_target(copyEditorResources ALL
-                COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/editor ${CMAKE_BINARY_DIR}/resources/editor)
+                COMMAND ${CMAKE_COMMAND}
+                -E copy_directory ${CMAKE_SOURCE_DIR}/resources/editor ${CMAKE_BINARY_DIR}/resources/editor)
         add_dependencies(ChiraEngineGui copyEditorResources)
     else()
         # Resource files
         add_custom_command(TARGET ChiraEngineGui PRE_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/editor ${CMAKE_BINARY_DIR}/resources/editor)
+                COMMAND ${CMAKE_COMMAND}
+                -E copy_directory ${CMAKE_SOURCE_DIR}/resources/editor ${CMAKE_BINARY_DIR}/resources/editor)
     endif()
 endif()
 
@@ -313,19 +316,23 @@ if(CHIRA_BUILD_MODEL_VIEWER)
     if(WIN32)
         # Resource files
         add_custom_target(copyChiraModelViewerResources ALL
-                COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/modelviewer ${CMAKE_BINARY_DIR}/resources/modelviewer)
+                COMMAND ${CMAKE_COMMAND}
+                -E copy_directory ${CMAKE_SOURCE_DIR}/resources/modelviewer ${CMAKE_BINARY_DIR}/resources/modelviewer)
         add_dependencies(ChiraModelViewer copyChiraModelViewerResources)
     else()
         # Resource files
         add_custom_command(TARGET ChiraModelViewer PRE_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources/modelviewer ${CMAKE_BINARY_DIR}/resources/modelviewer)
+                COMMAND ${CMAKE_COMMAND}
+                -E copy_directory ${CMAKE_SOURCE_DIR}/resources/modelviewer ${CMAKE_BINARY_DIR}/resources/modelviewer)
     endif()
 endif()
 
 # Copy test resources
 if(CHIRA_BUILD_TESTS)
     add_custom_command(TARGET ChiraTest PRE_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources/test ${CMAKE_BINARY_DIR}/resources/test)
+            COMMAND ${CMAKE_COMMAND}
+            -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources/test ${CMAKE_BINARY_DIR}/resources/test)
     add_custom_command(TARGET ChiraTest PRE_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/bin/ ${CMAKE_BINARY_DIR})
+            COMMAND ${CMAKE_COMMAND}
+            -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/bin/ ${CMAKE_BINARY_DIR})
 endif()

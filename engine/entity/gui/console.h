@@ -7,13 +7,12 @@
 namespace chira {
     class Console : public Window {
     public:
-        explicit Console(const ImVec2& windowSize = ImVec2(800, 600));
+        explicit Console(ImVec2 windowSize = ImVec2{800, 600});
         ~Console() override;
         void renderContents() override;
         void clearLog();
         void addLog(const std::string& message);
         void precacheResource();
-        void engineLoggingHook(LogType type, const std::string& source, const std::string& message);
         void setTheme();
         void resetTheme() const;
     private:

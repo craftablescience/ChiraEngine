@@ -6,9 +6,25 @@
 
 using namespace chira;
 
-Console::Console(const ImVec2& windowSize) : Window(TR("ui.console.title"), false, windowSize) {
-    this->loggingId = Logger::addCallback([=](LogType type, const std::string& source, const std::string& message) {
-        this->engineLoggingHook(type, source, message);
+Console::Console(ImVec2 windowSize) : Window(TR("ui.console.title"), false, windowSize) {
+    this->loggingId = Logger::addCallback([&](LogType type, const std::string& source, const std::string& message) {
+        switch (type) {
+            case LogType::INFO:
+                this->addLog(std::string{LOGGER_INFO_PREFIX} + "[" + source + "] " + message);
+                break;
+            case LogType::INFO_IMPORTANT:
+                this->addLog(std::string{LOGGER_INFO_IMPORTANT_PREFIX} + "[" + source + "] " + message);
+                break;
+            case LogType::OUTPUT:
+                this->addLog(std::string{LOGGER_OUTPUT_PREFIX} + "[" + source + "] " + message);
+                break;
+            case LogType::WARNING:
+                this->addLog(std::string{LOGGER_WARNING_PREFIX} + "[" + source + "] " + message);
+                break;
+            case LogType::ERROR:
+                this->addLog(std::string{LOGGER_ERROR_PREFIX} + "[" + source + "] " + message);
+                break;
+        }
     });
     this->clearLog();
     this->autoScroll = true;
@@ -83,26 +99,6 @@ void Console::addLog(const std::string& message) {
 
 void Console::precacheResource() {
     this->font = Resource::getResource<FontResource>(TR("resource.font.console_font_path"));
-}
-
-void Console::engineLoggingHook(LogType type, const std::string& source, const std::string& message) {
-    switch (type) {
-        case LogType::INFO:
-            this->addLog(std::string(LOGGER_INFO_PREFIX) + "[" + source + "] " + message);
-            break;
-        case LogType::INFO_IMPORTANT:
-            this->addLog(std::string(LOGGER_INFO_IMPORTANT_PREFIX) + "[" + source + "] " + message);
-            break;
-        case LogType::OUTPUT:
-            this->addLog(std::string(LOGGER_OUTPUT_PREFIX) + "[" + source + "] " + message);
-            break;
-        case LogType::WARNING:
-            this->addLog(std::string(LOGGER_WARNING_PREFIX) + "[" + source + "] " + message);
-            break;
-        case LogType::ERROR:
-            this->addLog(std::string(LOGGER_ERROR_PREFIX) + "[" + source + "] " + message);
-            break;
-    }
 }
 
 void Console::setTheme() {

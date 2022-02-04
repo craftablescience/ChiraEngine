@@ -4,19 +4,9 @@
 
 using namespace chira;
 
-Entity::Entity(Entity* parent_) {
-    this->parent = parent_;
-    this->name = UUIDGenerator::getNewUUIDString();
-}
+Entity::Entity(std::string name_) : name(std::move(name_)) {}
 
-Entity::Entity(Entity* parent_, const std::string& name_) {
-    this->parent = parent_;
-    this->name = name_;
-}
-
-Entity::Entity() : Entity(nullptr) {}
-
-Entity::Entity(const std::string& name_) : Entity(nullptr, name_) {}
+Entity::Entity() : Entity(UUIDGenerator::getNewUUIDString()) {}
 
 Entity::~Entity() {
     this->removeAllChildren();

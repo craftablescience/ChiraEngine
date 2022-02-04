@@ -4,7 +4,7 @@
 
 using namespace chira;
 
-Profiler::Profiler(const ImVec2& windowSize) : Window(TR("ui.profiler.title"), false, windowSize) {}
+Profiler::Profiler(ImVec2 windowSize) : Window(TR("ui.profiler.title"), false, windowSize) {}
 
 void Profiler::renderContents() {
     if (ImGui::BeginTable("Resources", 3)) {

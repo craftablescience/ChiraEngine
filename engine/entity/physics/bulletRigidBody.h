@@ -6,10 +6,8 @@
 namespace chira {
     class BulletRigidBody : public AbstractRigidBody {
     public:
-        BulletRigidBody(Entity* parent_, const std::string& colliderId);
-        BulletRigidBody(Entity* parent_, const std::string& name_, const std::string& colliderId);
-        explicit BulletRigidBody(const std::string& colliderId);
         BulletRigidBody(const std::string& name_, const std::string& colliderId);
+        explicit BulletRigidBody(const std::string& colliderId);
         ~BulletRigidBody() override;
         void render(glm::mat4 parentTransform) override;
         void setPosition(glm::vec3 newPos) override;

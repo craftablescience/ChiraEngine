@@ -13,12 +13,9 @@ namespace chira {
     /// match the name assigned to the entity in the parent's entity map.
     class Entity {
     public:
-        /// Initializes name to a random UUID.
-        explicit Entity(Entity* parent_);
-        Entity(Entity* parent_, const std::string& name_);
+        explicit Entity(std::string name_);
         /// Initializes name to a random UUID.
         Entity();
-        explicit Entity(const std::string& name_);
         virtual ~Entity();
         /// Renders all this entity's children.
         virtual void render(glm::mat4 parentTransform);
@@ -47,7 +44,7 @@ namespace chira {
         virtual void rotate(glm::quat rotateByAmount);
         virtual void rotate(glm::vec3 rotateByAmount);
     protected:
-        Entity* parent;
+        Entity* parent = nullptr;
         std::string name;
         std::unordered_map<std::string, Entity*> children;
         bool visible = true;

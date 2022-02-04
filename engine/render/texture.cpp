@@ -8,6 +8,7 @@ using namespace chira;
 
 Texture::Texture(const std::string& identifier_, bool cacheTexture)
     : PropertiesResource(identifier_)
+    , HandleObject<unsigned int>(0)
     , cache(cacheTexture) {}
 
 void Texture::compile(const nlohmann::json& properties) {
@@ -59,10 +60,6 @@ void Texture::setTextureUnit(int textureUnit) {
 
 int Texture::getTextureUnit() const {
     return this->activeTextureUnit;
-}
-
-unsigned int Texture::getHandle() const {
-    return this->handle;
 }
 
 int Texture::getFormatFromString(const std::string& formatName) {

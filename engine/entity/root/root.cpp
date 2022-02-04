@@ -4,12 +4,7 @@
 
 using namespace chira;
 
-Root::Root(Entity* parent_) : Entity(parent_) {
-    this->skybox.addCube({}, {1, 1, 1}, false);
-    this->skybox.update();
-}
-
-Root::Root(Entity* parent_, const std::string& name_) : Entity(parent_, name_) {
+Root::Root(const std::string& name_) : Entity(name_) {
     this->skybox.addCube({}, {1, 1, 1}, false);
     this->skybox.update();
 }

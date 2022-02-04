@@ -11,8 +11,7 @@ namespace chira {
     class Root : private Entity {
         friend class Engine;
     public:
-        explicit Root(Entity* parent_);
-        Root(Entity* parent_, const std::string& name_);
+        explicit Root(const std::string& name_);
         Root();
         explicit Root(const std::string& name_);
         void render();

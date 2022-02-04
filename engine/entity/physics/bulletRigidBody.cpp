@@ -8,15 +8,7 @@
 
 using namespace chira;
 
-BulletRigidBody::BulletRigidBody(Entity* parent_, const std::string& colliderId) : AbstractRigidBody(parent_) {
-    this->collider = Resource::getResource<BulletColliderResource>(colliderId);
-    this->rigidBody = this->collider->getNewRigidBody();
-    this->rigidBody->setUserPointer(this);
-    this->rigidBody->translate(glmToBullet(this->position));
-    assert_cast<BulletPhysicsProvider*>(AbstractPhysicsProvider::getPhysicsProvider())->addRigidBody(this->rigidBody);
-}
-
-BulletRigidBody::BulletRigidBody(Entity* parent_, const std::string& name_, const std::string& colliderId) : AbstractRigidBody(parent_, name_) {
+BulletRigidBody::BulletRigidBody(const std::string& name_, const std::string& colliderId) : AbstractRigidBody(name_) {
     this->collider = Resource::getResource<BulletColliderResource>(colliderId);
     this->rigidBody = this->collider->getNewRigidBody();
     this->rigidBody->setUserPointer(this);
@@ -25,14 +17,6 @@ BulletRigidBody::BulletRigidBody(Entity* parent_, const std::string& name_, cons
 }
 
 BulletRigidBody::BulletRigidBody(const std::string& colliderId) : AbstractRigidBody() {
-    this->collider = Resource::getResource<BulletColliderResource>(colliderId);
-    this->rigidBody = this->collider->getNewRigidBody();
-    this->rigidBody->setUserPointer(this);
-    this->rigidBody->translate(glmToBullet(this->position));
-    assert_cast<BulletPhysicsProvider*>(AbstractPhysicsProvider::getPhysicsProvider())->addRigidBody(this->rigidBody);
-}
-
-BulletRigidBody::BulletRigidBody(const std::string& name_, const std::string& colliderId) : AbstractRigidBody(name_) {
     this->collider = Resource::getResource<BulletColliderResource>(colliderId);
     this->rigidBody = this->collider->getNewRigidBody();
     this->rigidBody->setUserPointer(this);

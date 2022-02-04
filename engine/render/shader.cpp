@@ -29,8 +29,7 @@ void Shader::compile(const nlohmann::json& properties) {
 }
 
 Shader::~Shader() {
-    if (this->handle != -1)
-        glDeleteProgram(this->handle);
+    glDeleteProgram(this->handle);
 }
 
 void Shader::use() const {

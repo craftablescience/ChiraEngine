@@ -5,26 +5,14 @@
 
 using namespace chira;
 
-Camera::Camera(Entity* parent_, CameraProjectionMode mode, float fov_)
-    : Entity(parent_)
-    , fov(fov_) {
-    this->projectionMode = mode;
-}
-
-Camera::Camera(Entity* parent_, const std::string& name_, CameraProjectionMode mode, float fov_)
-    : Entity(parent_, name_)
+Camera::Camera(const std::string& name_, CameraProjectionMode mode, float fov_)
+    : Entity(name_)
     , fov(fov_) {
     this->projectionMode = mode;
 }
 
 Camera::Camera(CameraProjectionMode mode, float fov_)
     : Entity()
-    , fov(fov_) {
-    this->projectionMode = mode;
-}
-
-Camera::Camera(const std::string& name_, CameraProjectionMode mode, float fov_)
-    : Entity(name_)
     , fov(fov_) {
     this->projectionMode = mode;
 }

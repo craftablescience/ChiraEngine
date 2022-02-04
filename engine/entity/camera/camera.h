@@ -12,10 +12,8 @@ namespace chira {
 
     class Camera : public Entity {
     public:
-        Camera(Entity* parent_, CameraProjectionMode mode, float fov_ = 90.0f);
-        Camera(Entity* parent_, const std::string& name_, CameraProjectionMode mode, float fov_ = 90.0f);
-        explicit Camera(CameraProjectionMode mode, float fov_ = 90.0f);
-        Camera(const std::string& name_, CameraProjectionMode mode, float fov_ = 90.0f);
+        Camera(const std::string& name_, CameraProjectionMode mode, float fov_ = 90.f);
+        explicit Camera(CameraProjectionMode mode, float fov_ = 90.f);
         void createProjection(glm::vec2 windowSize);
         const glm::mat4& getProjection() const {
             return this->projection;

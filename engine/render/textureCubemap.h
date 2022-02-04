@@ -8,9 +8,6 @@ namespace chira {
         explicit TextureCubemap(const std::string& identifier_);
         void compile(const nlohmann::json& properties) override;
         void use() const override;
-        using Texture::setTextureUnit;
-        using Texture::getTextureUnit;
-        using Texture::getHandle;
     protected:
         // Inherited format, used as format_fd
         int format_bk = GL_RGBA;

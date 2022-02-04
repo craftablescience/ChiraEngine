@@ -3,18 +3,17 @@
 #include <glad/gl.h>
 #include <resource/propertiesResource.h>
 #include <resource/textureResource.h>
+#include <utility/handleObject.h>
 
 namespace chira {
-    class Texture : public PropertiesResource {
+    class Texture : public PropertiesResource, public HandleObject<unsigned int> {
     public:
         explicit Texture(const std::string& identifier_, bool cacheTexture = true);
         void compile(const nlohmann::json& properties) override;
         virtual void use() const;
         void setTextureUnit(int textureUnit);
         [[nodiscard]] int getTextureUnit() const;
-        [[nodiscard]] unsigned int getHandle() const;
     protected:
-        unsigned int handle = 0;
         int activeTextureUnit = -1;
         SharedPointer<TextureResource> file;
         int format = GL_RGBA;
