@@ -1,28 +1,20 @@
 name: Feature Request
-description: Suggest a feature
-title: "Feature: [Title]"
+description: Request a feature
+title: Feature Title Here
 labels: [enhancement]
 body:
 - type: dropdown
   attributes:
-    label: Component to improve
+    label: Component to Improve
     options: [Audio, Documentation, Render, "Core Engine", UI/UX, Other]
   validations:
     required: true
 - type: textarea
   attributes:
-    label: Describe your suggestion
-    description: Give a clear explanation of what you want us to add. Feel free to add pictures or video.
+    label: Describe Your Suggestion
+    description: Give a clear explanation of what you want to be added. Feel free to add pictures or video.
     placeholder: |
       Please don't give vague suggestions.
       How does it work? What is the expected outcome?
-  validations:
-    required: true
-- type: textarea
-  attributes:
-    label: Expected result
-    description: Describe how the end result should look like and work.
-    placeholder: |
-      When I do X I want Y to happen.
   validations:
     required: true
