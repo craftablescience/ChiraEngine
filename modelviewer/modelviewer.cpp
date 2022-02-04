@@ -123,7 +123,7 @@ int main() {
 #endif
 
     Engine::addInitFunction([]{
-        Engine::setBackgroundColor(ColorRGB{0.15f});
+        Engine::getRoot()->setBackgroundColor(ColorRGB{0.15f});
 
         auto camera = new EditorCamera{"camera", CameraProjectionMode::PERSPECTIVE, 120.f};
         camera->translate({-6.f * sqrtf(3.f), 6, 0});

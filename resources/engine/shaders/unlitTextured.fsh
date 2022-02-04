@@ -7,9 +7,7 @@ in VS_OUT {
 } i;
 
 uniform sampler2D texture0;
-uniform vec3 viewerPosition;
 
-void main()
-{
+void main() {
     FragColor = texture(texture0, i.TexCoord) * vec4(i.Color, 1.0);
 }

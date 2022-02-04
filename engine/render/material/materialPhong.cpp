@@ -19,9 +19,9 @@ void MaterialPhong::compile(const nlohmann::json& properties) {
 }
 
 void MaterialPhong::use() const {
+    MaterialUntextured::use();
     this->diffuse->use();
     this->specular->use();
-    MaterialUntextured::use();
 }
 
 SharedPointer<Texture> MaterialPhong::getTextureDiffuse() const {

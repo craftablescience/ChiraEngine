@@ -49,15 +49,20 @@ void Frame::createFramebuffer(bool smoothResize) {
 }
 
 void Frame::render(glm::mat4 parentTransform) {
+    this->render(parentTransform, Entity::getFrame()->getFramebufferHandle(), Entity::getFrame()->width, Entity::getFrame()->height);
+}
+
+void Frame::render(glm::mat4 parentTransform, unsigned int parentFBOHandle, int parentWidth, int parentHeight) {
     glViewport(0, 0, this->width, this->height);
+    glBindFramebuffer(GL_FRAMEBUFFER, this->fboHandle);
     glClearColor(this->backgroundColor.r, this->backgroundColor.g, this->backgroundColor.b, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
     Root::render(std::forward<glm::mat4>(parentTransform));
 
-    glBindFramebuffer(GL_FRAMEBUFFER, Entity::getFrame()->getFramebufferHandle());
-    glViewport(0, 0, Entity::getFrame()->width, Entity::getFrame()->height);
+    glBindFramebuffer(GL_FRAMEBUFFER, parentFBOHandle);
+    glViewport(0, 0, parentWidth, parentHeight);
 }
 
 Frame::~Frame() {

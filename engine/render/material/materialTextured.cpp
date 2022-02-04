@@ -11,8 +11,8 @@ void MaterialTextured::compile(const nlohmann::json& properties) {
 }
 
 void MaterialTextured::use() const {
-    this->texture->use();
     MaterialUntextured::use();
+    this->texture->use();
 }
 
 SharedPointer<Texture> MaterialTextured::getTexture() const {

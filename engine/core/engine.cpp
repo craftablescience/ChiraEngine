@@ -193,7 +193,6 @@ void Engine::init() {
         if (Engine::root && Engine::root->getCamera())
             Engine::root->getCamera()->createProjection({width, height});
     });
-    Engine::setBackgroundColor(ColorRGB{});
 
     AbstractMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     AbstractMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
@@ -315,7 +314,7 @@ void Engine::init() {
     auto defaultFont = Resource::getResource<FontResource>("file://fonts/default.json");
     ImGui::GetIO().FontDefault = defaultFont->getFont();
 
-    Engine::root = new Root{"root"};
+    Engine::root = new Window{"title", 1600, 900};
     Engine::root->addChild(Engine::console);
 #if DEBUG
     Engine::root->addChild(Engine::profiler);
@@ -331,9 +330,6 @@ void Engine::run() {
     Engine::currentTime = glfwGetTime();
 
     do {
-        //todo(viewport): make this just color
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         Engine::lastTime = Engine::currentTime;
         Engine::currentTime = glfwGetTime();
 
@@ -415,10 +411,6 @@ void Engine::addRenderFunction(const std::function<void()>& render) {
 
 void Engine::addStopFunction(const std::function<void()>& stop) {
     Engine::stopFunctions.push_back(stop);
-}
-
-void Engine::setBackgroundColor(ColorRGB color) {
-    glClearColor(color.r, color.g, color.b, 1.f);
 }
 
 glm::vec2 Engine::getWindowSize() {
@@ -509,7 +501,7 @@ void Engine::callRegisteredFunctions(const std::vector<std::function<void()>>& l
     }
 }
 
-Root* Engine::getRoot() {
+Window* Engine::getRoot() {
     return Engine::root;
 }
 

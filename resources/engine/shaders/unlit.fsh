@@ -6,9 +6,6 @@ in VS_OUT {
     vec2 TexCoord;
 } i;
 
-uniform vec3 viewerPosition;
-
-void main()
-{
+void main() {
     FragColor = vec4(i.Color, 1.0);
 }

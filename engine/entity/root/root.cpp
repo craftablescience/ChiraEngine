@@ -2,6 +2,7 @@
 
 #include <core/engine.h>
 #include <render/ubo.h>
+#include "frame.h"
 
 using namespace chira;
 
@@ -16,8 +17,6 @@ Root::Root() : Entity() {
 }
 
 void Root::render(glm::mat4 parentTransform) {
-    glEnable(GL_DEPTH_TEST); //todo(viewport): remove when a Frame/Window is the new tree root
-
     if (this->mainCamera)
         UBO_PerspectiveView::get()->update(this->mainCamera->getProjection(), this->mainCamera->getView());
 
@@ -36,7 +35,7 @@ glm::vec3 Root::getGlobalPosition() {
 
 void Root::setCamera(Camera* camera) {
     this->mainCamera = camera;
-    this->mainCamera->createProjection(this->getFrameSize());
+    this->mainCamera->createProjection(this->getFrame()->getFrameSize());
 }
 
 Camera* Root::getCamera() const {
@@ -50,16 +49,6 @@ void Root::setSkybox(const std::string& cubemapId) {
 
 SharedPointer<MaterialCubemap> Root::getSkybox() const {
     return this->skybox.getMaterial().castAssert<MaterialCubemap>();
-}
-
-glm::vec2 Root::getMousePosition() const { // NOLINT(misc-no-recursion)
-    return Engine::getMousePosition(); //todo(viewport)
-    //return this->getRoot()->getMousePosition();
-}
-
-glm::vec2 Root::getFrameSize() const { // NOLINT(misc-no-recursion)
-    return Engine::getWindowSize(); //todo(viewport)
-    //return this->getRoot()->getFrameSize();
 }
 
 void Root::clearTree() const {

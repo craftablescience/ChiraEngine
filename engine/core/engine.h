@@ -11,7 +11,7 @@
 #include <script/angelscriptProvider.h>
 #include <sound/abstractSoundManager.h>
 #include <physics/abstractPhysicsProvider.h>
-#include <entity/root/root.h>
+#include <entity/root/window.h>
 #include <utility/math/color.h>
 
 namespace chira {
@@ -33,7 +33,6 @@ namespace chira {
         static void addRenderFunction(const std::function<void()>& render);
         static void addStopFunction(const std::function<void()>& stop);
 
-        static void setBackgroundColor(ColorRGB color);
         [[nodiscard]] static glm::vec2 getWindowSize();
         [[nodiscard]] static int getWindowWidth();
         [[nodiscard]] static int getWindowHeight();
@@ -46,7 +45,7 @@ namespace chira {
         [[nodiscard]] static AbstractSettingsLoader* getSettingsLoader();
         static void setSettingsLoader(AbstractSettingsLoader* newSettingsLoader);
 
-        [[nodiscard]] static Root* getRoot();
+        [[nodiscard]] static Window* getRoot();
         [[nodiscard]] static Console* getConsole();
         [[nodiscard]] static Profiler* getProfiler();
 
@@ -65,7 +64,7 @@ namespace chira {
         static inline std::unique_ptr<AngelscriptProvider> angelscript;
         static inline std::unique_ptr<AbstractSoundManager> soundManager;
         static inline std::unique_ptr<AbstractSettingsLoader> settingsLoader;
-        static inline Root* root;
+        static inline Window* root;
         static inline Console* console;
 #ifdef DEBUG
         static inline Profiler* profiler;
