@@ -6,15 +6,9 @@
 
 using namespace chira;
 
-Root::Root(const std::string& name_) : Entity(name_) {
-    this->skybox.addCube({}, {1, 1, 1}, false);
-    this->skybox.update();
-}
+Root::Root(const std::string& name_) : Entity(name_) {}
 
-Root::Root() : Entity() {
-    this->skybox.addCube({}, {1, 1, 1}, false);
-    this->skybox.update();
-}
+Root::Root() : Entity() {}
 
 void Root::render(glm::mat4 parentTransform) {
     if (this->mainCamera)
@@ -43,6 +37,11 @@ Camera* Root::getCamera() const {
 }
 
 void Root::setSkybox(const std::string& cubemapId) {
+    if (!this->skyboxMeshCreated) {
+        this->skybox.addCube({}, {1, 1, 1}, false);
+        this->skybox.update();
+        this->skyboxMeshCreated = true;
+    }
     this->skybox.setMaterial(Resource::getResource<MaterialCubemap>(cubemapId).castAssert<MaterialBase>());
     this->renderSkybox = true;
 }

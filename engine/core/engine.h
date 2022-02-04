@@ -4,8 +4,9 @@
 #include <vector>
 #include <memory>
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+//todo(viewport): move to Window
+#define IMGUI_USER_CONFIG <config/imguiConfig.h>
+#include <imgui.h>
 
 #include <loader/settings/abstractSettingsLoader.h>
 #include <script/angelscriptProvider.h>
@@ -33,33 +34,20 @@ namespace chira {
         static void addRenderFunction(const std::function<void()>& render);
         static void addStopFunction(const std::function<void()>& stop);
 
-        [[nodiscard]] static glm::vec2 getWindowSize();
-        [[nodiscard]] static int getWindowWidth();
-        [[nodiscard]] static int getWindowHeight();
-        static void setWindowSize(int width, int height);
-        static void shouldStopAfterThisFrame(bool yes);
-
         [[nodiscard]] static AngelscriptProvider* getAngelscriptProvider();
         [[nodiscard]] static AbstractSoundManager* getSoundManager();
         static void setSoundManager(AbstractSoundManager* newSoundManager);
         [[nodiscard]] static AbstractSettingsLoader* getSettingsLoader();
         static void setSettingsLoader(AbstractSettingsLoader* newSettingsLoader);
 
-        [[nodiscard]] static Window* getRoot();
+        [[nodiscard]] static Window* getWindow();
         [[nodiscard]] static Console* getConsole();
         [[nodiscard]] static Profiler* getProfiler();
 
         [[nodiscard]] static bool isStarted();
         /// Note: only guaranteed to work after run() in a render method
         [[nodiscard]] static double getDeltaTime();
-        static void captureMouse(bool capture);
-        [[nodiscard]] static bool isMouseCaptured();
-        [[nodiscard]] static glm::vec2 getMousePosition();
-        [[nodiscard]] static bool isIconified();
-        /// Note: Images must have a bit depth of 8
-        static void setIcon(const std::string& iconIdentifier);
     private:
-        static inline GLFWwindow* window;
         static inline std::vector<std::function<void()>> initFunctions, renderFunctions, stopFunctions;
         static inline std::unique_ptr<AngelscriptProvider> angelscript;
         static inline std::unique_ptr<AbstractSoundManager> soundManager;
@@ -69,10 +57,9 @@ namespace chira {
 #ifdef DEBUG
         static inline Profiler* profiler;
 #endif
-        static inline bool mouseCaptured, started, iconified; // false
-        static inline double lastTime, currentTime, lastMouseX, lastMouseY; // 0.0
+        static inline bool started = false;
+        static inline double lastTime = 0.0, currentTime = 0.0;
 
-        static void displaySplashScreen();
         static void setSettingsLoaderDefaults();
         static void callRegisteredFunctions(const std::vector<std::function<void()>>& list);
     };

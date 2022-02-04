@@ -8,23 +8,31 @@ Frame::Frame(const std::string& name_, int width_, int height_, ColorRGB backgro
     : Root(name_)
     , backgroundColor(backgroundColor_)
     , width(width_)
-    , height(height_) {
+    , height(height_)
+    , linearFiltering(smoothResize) {
     if (initNow)
-        this->createFramebuffer(smoothResize);
+        this->createFramebuffer();
 }
 
 Frame::Frame(int width_, int height_, ColorRGB backgroundColor_, bool smoothResize, bool initNow)
     : Root()
     , backgroundColor(backgroundColor_)
     , width(width_)
-    , height(height_) {
+    , height(height_)
+    , linearFiltering(smoothResize) {
     if (initNow)
-        this->createFramebuffer(smoothResize);
+        this->createFramebuffer();
 }
 
-void Frame::createFramebuffer(bool smoothResize) {
-    if (this->fboHandle != 0)
-        return;
+void Frame::createFramebuffer() {
+    if (this->fboHandle != 0) {
+        glDeleteRenderbuffers(1, &this->rboHandle);
+        glDeleteTextures(1, &this->colorTexHandle);
+        glDeleteFramebuffers(1, &this->fboHandle);
+        this->fboHandle = 0;
+        this->colorTexHandle = 0;
+        this->rboHandle = 0;
+    }
 
     glGenFramebuffers(1, &this->fboHandle);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fboHandle);
@@ -32,8 +40,8 @@ void Frame::createFramebuffer(bool smoothResize) {
     glGenTextures(1, &this->colorTexHandle);
     glBindTexture(GL_TEXTURE_2D, this->colorTexHandle);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->width, this->height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, smoothResize ? GL_LINEAR : GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, smoothResize ? GL_LINEAR : GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->linearFiltering ? GL_LINEAR : GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->linearFiltering ? GL_LINEAR : GL_NEAREST);
     glBindTexture(GL_TEXTURE_2D, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->colorTexHandle, 0);
 
@@ -87,8 +95,16 @@ unsigned int Frame::getColorTextureHandle() const {
     return this->colorTexHandle;
 }
 
-glm::vec2 Frame::getFrameSize() const {
+glm::vec<2, int> Frame::getFrameSize() const {
     return {this->width, this->height};
+}
+
+void Frame::setFrameSize(glm::vec<2, int> newSize) {
+    this->width = newSize.x;
+    this->height = newSize.y;
+    this->createFramebuffer();
+    if (this->getCamera())
+        this->getCamera()->createProjection(newSize);
 }
 
 ColorRGB Frame::getBackgroundColor() const {

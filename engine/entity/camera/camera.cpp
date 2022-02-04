@@ -62,5 +62,5 @@ AbstractRigidBody* Camera::traceRayFromMouse(float length) {
 }
 
 AbstractRigidBody* Camera::traceRayFromCenter(float length) {
-    return this->traceRayFromCoords(this->getWindow()->getFrameSize() / 2.f, length);
+    return this->traceRayFromCoords(this->getWindow()->getFrameSize() / 2, length);
 }

@@ -31,20 +31,20 @@ public:
     }
     void renderContents() override {
         ImGui::Checkbox(TRC("ui.modelviewer.show_grid"), &this->showGrid);
-        Engine::getRoot()->getChild("grid")->setVisible(this->showGrid);
+        Engine::getWindow()->getChild("grid")->setVisible(this->showGrid);
         ImGui::Text("%s", ModelViewerGui::loadedFile.c_str());
     }
     void setLoadedFile(const std::string& meshName) {
-        if (Engine::getRoot()->hasChild(this->meshId) && meshName == Engine::getRoot()->getChild<Mesh>(this->meshId)->getMeshResource()->getIdentifier())
+        if (Engine::getWindow()->hasChild(this->meshId) && meshName == Engine::getWindow()->getChild<Mesh>(this->meshId)->getMeshResource()->getIdentifier())
             return;
         if (!Resource::hasResource(meshName)) {
             dialogPopupError(TRF("error.modelviewer.resource_is_invalid", meshName));
             return;
         }
-        if (Engine::getRoot()->hasChild(this->meshId))
-            Engine::getRoot()->removeChild(this->meshId);
+        if (Engine::getWindow()->hasChild(this->meshId))
+            Engine::getWindow()->removeChild(this->meshId);
         Resource::cleanup();
-        this->meshId = Engine::getRoot()->addChild(new Mesh{meshName});
+        this->meshId = Engine::getWindow()->addChild(new Mesh{meshName});
         ModelViewerGui::loadedFile = meshName;
     }
     [[nodiscard]] std::string getMeshId() const {
@@ -91,11 +91,11 @@ static inline void convertToModelTypeSelected(const std::string& extension, cons
         return dialogPopupError(TR("error.modelviewer.filename_empty"));
 
     auto meshId = ModelViewerGui::get()->getMeshId();
-    if (!Engine::getRoot()->hasChild(meshId))
+    if (!Engine::getWindow()->hasChild(meshId))
         return dialogPopupError(TR("error.modelviewer.no_model_present"));
 
     std::ofstream file{filepath, std::ios::binary};
-    std::vector<byte> meshData = Engine::getRoot()->getChild<Mesh>(meshId)->getMeshData(type);
+    std::vector<byte> meshData = Engine::getWindow()->getChild<Mesh>(meshId)->getMeshData(type);
     file.write(reinterpret_cast<const char*>(&meshData[0]), static_cast<std::streamsize>(meshData.size()));
     file.close();
 }
@@ -123,17 +123,17 @@ int main() {
 #endif
 
     Engine::addInitFunction([]{
-        Engine::getRoot()->setBackgroundColor(ColorRGB{0.15f});
+        Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
 
-        auto camera = new EditorCamera{"camera", CameraProjectionMode::PERSPECTIVE, 120.f};
+        auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};
         camera->translate({-6.f * sqrtf(3.f), 6, 0});
         camera->setPitch(30.f);
         camera->setYaw(270.f);
-        Engine::getRoot()->addChild(camera);
-        Engine::getRoot()->setCamera(camera);
+        Engine::getWindow()->addChild(camera);
+        Engine::getWindow()->setCamera(camera);
         EditorCamera::setupKeybinds();
 
-        Engine::getRoot()->addChild(ModelViewerGui::get());
+        Engine::getWindow()->addChild(ModelViewerGui::get());
 
         auto grid = new MeshDynamic{"grid"};
         auto gridMesh = grid->getMesh();
@@ -145,7 +145,7 @@ int main() {
         gridMesh->addCube({{2.5f, 0, 0}, {0, 0, 0}, {1, 0, 0}}, {5.f + 0.026f, 0.03f, 0.03f});
         gridMesh->addCube({{0, 0, 2.5f}, {0, 0, 0}, {0, 0, 1}}, {0.03f, 0.03f, 5.f + 0.026f});
         gridMesh->addCube({{0, 0, 0},    {0, 0, 0}, {0, 1, 0}}, glm::vec3{0.05f});
-        Engine::getRoot()->addChild(grid);
+        Engine::getWindow()->addChild(grid);
     });
     Engine::init();
 
@@ -158,7 +158,7 @@ int main() {
                     addResourceFolderSelected();
                 ImGui::Separator();
                 if (ImGui::MenuItem(TRC("ui.menubar.exit"))) // Exit
-                    Engine::shouldStopAfterThisFrame(true);
+                    Engine::getWindow()->shouldStopAfterThisFrame();
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu(TRC("ui.menubar.convert"))) { // Convert

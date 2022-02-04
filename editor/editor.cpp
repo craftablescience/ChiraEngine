@@ -67,17 +67,17 @@ int main() {
         auto staticTeapot = new BulletRigidBody{"file://physics/ground_static.json"};
         staticTeapot->translate(glm::vec3{3,0,-13});
         staticTeapot->addChild(new Mesh{"file://meshes/teapot.json"});
-        Engine::getRoot()->addChild(staticTeapot);
+        Engine::getWindow()->addChild(staticTeapot);
 
         auto fallingTeapot = new BulletRigidBody{"file://physics/cube_dynamic.json"};
         fallingTeapot->translate(glm::vec3{0,15,-10});
         fallingTeapot->addChild(new Mesh{"file://meshes/teapot.json"});
-        Engine::getRoot()->addChild(fallingTeapot);
+        Engine::getWindow()->addChild(fallingTeapot);
         //endregion
 
         //region Add the settings UI window
         auto settingsUI = new Settings{};
-        Engine::getRoot()->addChild(settingsUI);
+        Engine::getWindow()->addChild(settingsUI);
         InputManager::addCallback(InputKeyButton{Key::O, InputKeyEventType::PRESSED, [settingsUI]{
             settingsUI->setVisible(!settingsUI->isVisible());
         }});
@@ -85,8 +85,8 @@ int main() {
 
         //region Add the camera
         auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE};
-        Engine::getRoot()->addChild(camera);
-        Engine::getRoot()->setCamera(camera);
+        Engine::getWindow()->addChild(camera);
+        Engine::getWindow()->setCamera(camera);
         EditorCamera::setupKeybinds();
         camera->translate(glm::vec3{0,0,15});
         //endregion
@@ -112,7 +112,7 @@ int main() {
         //endregion
 
         //region Set a nice skybox
-        Engine::getRoot()->setSkybox("file://materials/skybox/shanghai.json");
+        Engine::getWindow()->setSkybox("file://materials/skybox/shanghai.json");
         //endregion
     });
     Engine::init();

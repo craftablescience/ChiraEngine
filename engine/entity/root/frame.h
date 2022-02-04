@@ -16,14 +16,16 @@ namespace chira {
         Frame* getFrame() override;
         [[nodiscard]] unsigned int getFramebufferHandle() const;
         [[nodiscard]] unsigned int getColorTextureHandle() const;
-        glm::vec2 getFrameSize() const;
+        glm::vec<2, int> getFrameSize() const;
+        virtual void setFrameSize(glm::vec<2, int> newSize);
         [[nodiscard]] ColorRGB getBackgroundColor() const;
         void setBackgroundColor(ColorRGB color);
     protected:
         unsigned int fboHandle = 0, colorTexHandle = 0, rboHandle = 0;
         ColorRGB backgroundColor{};
         int width = 0, height = 0;
-        /// Only run this once on construction please. Thanks
-        void createFramebuffer(bool smoothResize);
+        bool linearFiltering = true;
+        /// Deletes the existing framebuffer if one already exists.
+        void createFramebuffer();
     };
 }

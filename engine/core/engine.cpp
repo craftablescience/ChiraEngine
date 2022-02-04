@@ -1,15 +1,12 @@
 #include "engine.h"
 
 #include <glad/gl.h>
-#define IMGUI_USER_CONFIG <config/imguiConfig.h>
-#include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <i18n/translationManager.h>
 #include <config/glVersion.h>
 #include <input/inputManager.h>
 #include <loader/settings/jsonSettingsLoader.h>
-#include <loader/image/image.h>
 #include <sound/alSoundManager.h>
 #include <hook/discordRPC.h>
 #include <resource/provider/filesystemResourceProvider.h>
@@ -17,8 +14,6 @@
 #include <resource/shaderResource.h>
 #include <loader/mesh/objMeshLoader.h>
 #include <loader/mesh/chiraMeshLoader.h>
-#include <render/mesh/meshDataBuilder.h>
-#include <render/mesh/meshDataResource.h>
 #include <physics/bulletPhysicsProvider.h>
 #include <render/ubo.h>
 #include <event/events.h>
@@ -51,20 +46,6 @@ void Engine::preInit(const std::string& configPath) {
     Engine::getSettingsLoader()->getValue("ui", "language", &defaultLang);
     TranslationManager::setLanguage(defaultLang);
     TranslationManager::addTranslationFile("file://i18n/engine");
-    Engine::lastTime = 0;
-    Engine::currentTime = 0;
-    Engine::lastMouseX = -1;
-    Engine::lastMouseY = -1;
-}
-
-void Engine::displaySplashScreen() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    auto mat = Resource::getResource<MaterialTextured>("file://materials/splashscreen.json");
-    MeshDataBuilder plane;
-    plane.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-    plane.setMaterial(mat.castAssert<MaterialBase>());
-    plane.render(glm::identity<glm::mat4>());
-    glfwSwapBuffers(Engine::window);
 }
 
 void Engine::init() {
@@ -82,52 +63,16 @@ void Engine::init() {
     glfwSetErrorCallback([](int error, const char* description) {
         Logger::log(LogType::ERROR, "GLFW", TRF("error.glfw.generic", error, description));
     });
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#ifdef DEBUG
-    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
-#endif
 
-    int windowWidth = 1600;
-    Engine::getSettingsLoader()->getValue("graphics", "windowWidth", &windowWidth);
-    int windowHeight = 900;
-    Engine::getSettingsLoader()->getValue("graphics", "windowHeight", &windowHeight);
-    bool fullscreen = false;
-    Engine::getSettingsLoader()->getValue("graphics", "fullscreen", &fullscreen);
-    Engine::window = glfwCreateWindow(windowWidth, windowHeight, TRC("ui.window.title"), nullptr, nullptr);
-    if (!Engine::window) {
-        Logger::log(LogType::ERROR, "GLFW", TR("error.glfw.window"));
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-    if (fullscreen) {
-        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-        glfwSetWindowMonitor(Engine::window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
-    } else {
-        bool startMaximized = true;
-        Engine::getSettingsLoader()->getValue("graphics", "startMaximized", &startMaximized);
-        if (startMaximized)
-            glfwMaximizeWindow(Engine::window);
-    }
-    glfwMakeContextCurrent(Engine::window);
-    Engine::setIcon("file://textures/ui/icon.png");
+    Engine::root = new Window{"title", 1600, 900};
+    Engine::root->addChild(Engine::console);
+#ifdef DEBUG
+    Engine::root->addChild(Engine::profiler);
 
     int major, minor, rev;
     glfwGetVersion(&major, &minor, &rev);
     Logger::log(LogType::INFO, "GLFW", TRF("debug.glfw.version", major, minor, rev));
 
-    if (!gladLoadGL(glfwGetProcAddress)) {
-        Logger::log(LogType::ERROR, "OpenGL", fmt::format("error.opengl.version", GL_VERSION_STRING_PRETTY));
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-
-#ifdef DEBUG
     int flags;
     glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
     if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
@@ -185,77 +130,10 @@ void Engine::init() {
     }
 #endif
 
-    int width, height;
-    glfwGetFramebufferSize(Engine::window, &width, &height);
-    glViewport(0, 0, width, height);
-    glfwSetFramebufferSizeCallback(Engine::window, [](GLFWwindow* w, int width, int height) {
-        glViewport(0, 0, width, height);
-        if (Engine::root && Engine::root->getCamera())
-            Engine::root->getCamera()->createProjection({width, height});
-    });
+    Window::displaySplashScreen();
 
     AbstractMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     AbstractMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
-
-    Engine::displaySplashScreen();
-    Resource::cleanup();
-
-    glfwSwapInterval(1);
-
-    glfwSetInputMode(Engine::window, GLFW_STICKY_KEYS, GLFW_TRUE);
-    glfwSetInputMode(Engine::window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
-    bool rawMouseMotion = false;
-    Engine::getSettingsLoader()->getValue("input", "rawMouseMotion", &rawMouseMotion);
-    if (glfwRawMouseMotionSupported() && rawMouseMotion)
-        glfwSetInputMode(Engine::window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-
-    glfwSetKeyCallback(Engine::window, [](GLFWwindow* w, int key, int scancode, int action, int mods) {
-        if (action == GLFW_REPEAT) return;
-        for (auto& keybind : InputManager::getKeyButtonCallbacks()) {
-            if (keybind.getKey() == static_cast<Key>(key) && keybind.getEventType() == static_cast<InputKeyEventType>(action))
-                keybind();
-        }
-    });
-    glfwSetMouseButtonCallback(Engine::window, [](GLFWwindow* w, int key, int action, int mods) {
-        if (action == GLFW_REPEAT) return;
-        for (auto& keybind : InputManager::getMouseButtonCallbacks()) {
-            if (keybind.getKey() == static_cast<Key>(key) && keybind.getEventType() == static_cast<InputKeyEventType>(action))
-                keybind();
-        }
-    });
-    glfwSetCursorPosCallback(Engine::window, [](GLFWwindow* w, double xPos, double yPos) {
-        if (Engine::lastMouseX == -1) Engine::lastMouseX = xPos;
-        if (Engine::lastMouseY == -1) Engine::lastMouseY = yPos;
-
-        int width, height;
-        glfwGetWindowSize(Engine::window, &width, &height);
-        double xOffset = xPos - Engine::lastMouseX;
-        double yOffset = yPos - Engine::lastMouseY;
-
-        for (auto& movebind : InputManager::getMouseMovementCallbacks()) {
-            if (movebind.getType() == InputMouseMovementEventType::MOVE)
-                movebind(xOffset, yOffset);
-        }
-
-        Engine::lastMouseX = xPos;
-        Engine::lastMouseY = yPos;
-    });
-    glfwSetScrollCallback(Engine::window, [](GLFWwindow* w, double x, double y) {
-        for (auto& movebind : InputManager::getMouseMovementCallbacks()) {
-            if (movebind.getType() == InputMouseMovementEventType::SCROLL)
-                movebind(x,y);
-        }
-    });
-    glfwSetWindowIconifyCallback(Engine::window, [](GLFWwindow* w, int isIconified) {
-        Engine::iconified = (isIconified == GLFW_TRUE);
-    });
-    glfwSetDropCallback(Engine::window, [](GLFWwindow* window, int count, const char** paths) {
-        std::vector<std::string> files;
-        files.reserve(count);
-        for (int i = 0; i < count; i++)
-            files.emplace_back(paths[i]);
-        Events::createEvent("chira::engine::files_dropped", files);
-    });
 
 #ifdef DEBUG
     IMGUI_CHECKVERSION();
@@ -263,7 +141,7 @@ void Engine::init() {
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(Engine::window, true);
+    ImGui_ImplGlfw_InitForOpenGL(Engine::root->window, true);
     io.Fonts->Clear();
     ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -314,11 +192,6 @@ void Engine::init() {
     auto defaultFont = Resource::getResource<FontResource>("file://fonts/default.json");
     ImGui::GetIO().FontDefault = defaultFont->getFont();
 
-    Engine::root = new Window{"title", 1600, 900};
-    Engine::root->addChild(Engine::console);
-#if DEBUG
-    Engine::root->addChild(Engine::profiler);
-#endif
     Engine::callRegisteredFunctions(Engine::initFunctions);
     Engine::angelscript->init();
 
@@ -346,17 +219,17 @@ void Engine::run() {
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        Engine::soundManager->setListenerPosition(Engine::getRoot()->getAudioListeningPosition());
-        Engine::soundManager->setListenerRotation(Engine::getRoot()->getAudioListeningRotation(), Engine::getRoot()->getAudioListeningUpVector());
+        Engine::soundManager->setListenerPosition(Engine::getWindow()->getAudioListeningPosition());
+        Engine::soundManager->setListenerRotation(Engine::getWindow()->getAudioListeningRotation(), Engine::getWindow()->getAudioListeningUpVector());
         Engine::soundManager->update();
 
         glfwPollEvents();
         for (auto& keybind : InputManager::getKeyButtonCallbacks()) {
-            if (glfwGetKey(Engine::window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
+            if (glfwGetKey(Engine::root->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
                 keybind();
         }
         for (auto& keybind : InputManager::getMouseButtonCallbacks()) {
-            if (glfwGetMouseButton(Engine::window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
+            if (glfwGetMouseButton(Engine::root->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
                 keybind();
         }
 
@@ -369,8 +242,8 @@ void Engine::run() {
         Events::update();
         Resource::cleanup();
 
-        glfwSwapBuffers(Engine::window);
-    } while (!glfwWindowShouldClose(Engine::window));
+        glfwSwapBuffers(Engine::root->window);
+    } while (!glfwWindowShouldClose(Engine::root->window));
     Engine::stop();
 }
 
@@ -396,7 +269,6 @@ void Engine::stop() {
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
-    glfwDestroyWindow(Engine::window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
@@ -411,32 +283,6 @@ void Engine::addRenderFunction(const std::function<void()>& render) {
 
 void Engine::addStopFunction(const std::function<void()>& stop) {
     Engine::stopFunctions.push_back(stop);
-}
-
-glm::vec2 Engine::getWindowSize() {
-    int w, h;
-    glfwGetWindowSize(Engine::window, &w, &h);
-    return {w, h};
-}
-
-int Engine::getWindowWidth() {
-    int w, h;
-    glfwGetWindowSize(Engine::window, &w, &h);
-    return w;
-}
-
-int Engine::getWindowHeight() {
-    int w, h;
-    glfwGetWindowSize(Engine::window, &w, &h);
-    return h;
-}
-
-void Engine::setWindowSize(int width, int height) {
-    glfwSetWindowSize(Engine::window, width, height);
-}
-
-void Engine::shouldStopAfterThisFrame(bool yes) {
-    glfwSetWindowShouldClose(Engine::window, yes ? GLFW_TRUE : GLFW_FALSE);
 }
 
 AngelscriptProvider* Engine::getAngelscriptProvider() {
@@ -501,7 +347,7 @@ void Engine::callRegisteredFunctions(const std::vector<std::function<void()>>& l
     }
 }
 
-Window* Engine::getRoot() {
+Window* Engine::getWindow() {
     return Engine::root;
 }
 
@@ -524,41 +370,4 @@ bool Engine::isStarted() {
 
 double Engine::getDeltaTime() {
     return Engine::currentTime - Engine::lastTime;
-}
-
-void Engine::captureMouse(bool capture) {
-    Engine::mouseCaptured = capture;
-    if (capture) {
-        glfwSetInputMode(Engine::window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
-    } else {
-        glfwSetInputMode(Engine::window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
-    }
-}
-
-bool Engine::isMouseCaptured() {
-    return Engine::mouseCaptured;
-}
-
-glm::vec2 Engine::getMousePosition() {
-    double x = -1.0, y = -1.0;
-    glfwGetCursorPos(Engine::window, &x, &y);
-    return {x,y};
-}
-
-bool Engine::isIconified() {
-    return Engine::iconified;
-}
-
-void Engine::setIcon(const std::string& iconIdentifier) {
-    chira_assert(Engine::isStarted(), TR("error.engine.not_initialized"));
-    GLFWimage images[1];
-    int width, height, bitsPerPixel;
-    Image icon(FilesystemResourceProvider::getResourceAbsolutePath(iconIdentifier), &width, &height, &bitsPerPixel, 4, false);
-    chira_assert(icon.getData(), TR("error.engine.icon_has_no_data"));
-    images[0].width = width;
-    images[0].height = height;
-    images[0].pixels = icon.getData();
-    glfwSetWindowIcon(Engine::window, 1, images);
 }

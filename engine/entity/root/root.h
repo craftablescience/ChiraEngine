@@ -35,6 +35,7 @@ namespace chira {
     protected:
         MeshDataBuilder skybox;
         bool renderSkybox = false;
+        bool skyboxMeshCreated = false;
         Camera* mainCamera = nullptr;
         void clearTree() const;
     };

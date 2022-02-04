@@ -8,39 +8,39 @@ using namespace chira;
 
 void EditorCamera::setupKeybinds() {
     InputManager::addCallback(InputKeyButton{Key::W, InputKeyEventType::REPEAT, []{
-        if (auto cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive())
-            cam->translateWithRotation(glm::vec3{0, 0, -cam->getMovementSpeed() * Engine::getDeltaTime()});
+        if (auto cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
+            cam->translateWithRotation({0, 0, -cam->getMovementSpeed() * Engine::getDeltaTime()});
     }});
     InputManager::addCallback(InputKeyButton{Key::S, InputKeyEventType::REPEAT, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive())
-            cam->translateWithRotation(glm::vec3{0, 0, cam->getMovementSpeed() * Engine::getDeltaTime()});
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
+            cam->translateWithRotation({0, 0, cam->getMovementSpeed() * Engine::getDeltaTime()});
     }});
     InputManager::addCallback(InputKeyButton{Key::A, InputKeyEventType::REPEAT, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive())
-            cam->translateWithRotation(glm::vec3{-cam->getMovementSpeed() * Engine::getDeltaTime(), 0, 0});
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
+            cam->translateWithRotation({-cam->getMovementSpeed() * Engine::getDeltaTime(), 0, 0});
     }});
     InputManager::addCallback(InputKeyButton{Key::D, InputKeyEventType::REPEAT, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive())
-            cam->translateWithRotation(glm::vec3{cam->getMovementSpeed() * Engine::getDeltaTime(), 0, 0});
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
+            cam->translateWithRotation({cam->getMovementSpeed() * Engine::getDeltaTime(), 0, 0});
     }});
     InputManager::addCallback(InputKeyButton{Key::SPACE, InputKeyEventType::REPEAT, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive())
-            cam->translateWithRotation(glm::vec3{0, cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
+            cam->translateWithRotation({0, cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
     }});
     InputManager::addCallback(InputKeyButton{Key::LEFT_SHIFT, InputKeyEventType::REPEAT, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive())
-            cam->translateWithRotation(glm::vec3{0, -cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
+            cam->translateWithRotation({0, -cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
     }});
     InputManager::addCallback(InputMouseButton{Key::MOUSE_RIGHT, InputKeyEventType::PRESSED, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()))
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()))
             cam->setActive(true);
     }});
     InputManager::addCallback(InputMouseButton{Key::MOUSE_RIGHT, InputKeyEventType::RELEASED, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()))
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()))
             cam->setActive(false);
     }});
     InputManager::addCallback(InputMouseMovement{InputMouseMovementEventType::MOVE, [](double xOffset, double yOffset) {
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive()) {
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive()) {
             xOffset *= cam->getMouseSensitivity() * Engine::getDeltaTime();
             yOffset *= cam->getMouseSensitivity() * Engine::getDeltaTime();
 
@@ -60,8 +60,8 @@ void EditorCamera::setupKeybinds() {
         }
     }});
     InputManager::addCallback(InputMouseMovement{InputMouseMovementEventType::SCROLL, [](double x, double y) {
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()))
-            cam->translateWithRotation(glm::vec3{
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()))
+            cam->translateWithRotation({
                 x * cam->getMovementSpeed() / 40,
                 0,
                 -y * cam->getMovementSpeed() / 40 // negate for OpenGL
