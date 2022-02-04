@@ -11,7 +11,7 @@
 #include <script/angelscriptProvider.h>
 #include <sound/abstractSoundManager.h>
 #include <physics/abstractPhysicsProvider.h>
-#include <entity/root.h>
+#include <entity/root/root.h>
 #include <utility/math/color.h>
 
 namespace chira {

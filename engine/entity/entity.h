@@ -8,9 +8,13 @@
 
 namespace chira {
     class Root;
+    class Frame;
+    class Window;
 
     /// The base entity class. Note that the name of an entity stored in the name variable should
-    /// match the name assigned to the entity in the parent's entity map.
+    /// match the name assigned to the entity in the parent's entity map.\n
+    /// Note the entity tree must have a Window as the root entity, always!\n
+    /// Window objects are Frame objects, Frame objects are Root objects (the wonders of inheritance)
     class Entity {
     public:
         explicit Entity(std::string name_);
@@ -19,8 +23,13 @@ namespace chira {
         virtual ~Entity();
         /// Renders all this entity's children.
         virtual void render(glm::mat4 parentTransform);
+        virtual const Window* getWindow() const;
+        virtual Window* getWindow();
+        virtual const Frame* getFrame() const;
+        virtual Frame* getFrame();
+        virtual const Root* getRoot() const;
+        virtual Root* getRoot();
         [[nodiscard]] Entity* getParent() const;
-        [[nodiscard]] virtual const Root* getRoot() const;
         [[nodiscard]] std::string getName() const;
         Entity* getChild(const std::string& name_) const;
         template<typename EntityType>

@@ -18,12 +18,32 @@ void Entity::render(glm::mat4 parentTransform) { // NOLINT(misc-no-recursion)
         entity->render(transform);
 }
 
-Entity* Entity::getParent() const {
-    return this->parent;
+const Window* Entity::getWindow() const { // NOLINT(misc-no-recursion)
+    return this->parent->getWindow();
+}
+
+Window* Entity::getWindow() { // NOLINT(misc-no-recursion)
+    return this->parent->getWindow();
+}
+
+const Frame* Entity::getFrame() const { // NOLINT(misc-no-recursion)
+    return this->parent->getFrame();
+}
+
+Frame* Entity::getFrame() { // NOLINT(misc-no-recursion)
+    return this->parent->getFrame();
 }
 
 const Root* Entity::getRoot() const { // NOLINT(misc-no-recursion)
     return this->parent->getRoot();
+}
+
+Root* Entity::getRoot() { // NOLINT(misc-no-recursion)
+    return this->parent->getRoot();
+}
+
+Entity* Entity::getParent() const {
+    return this->parent;
 }
 
 std::string Entity::getName() const {

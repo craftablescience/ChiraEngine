@@ -2,7 +2,7 @@
 
 using namespace chira;
 
-Window::Window(const std::string& title_, bool startVisible, const ImVec2& windowSize, bool enforceSize) {
+Window::Window(const std::string& title_, bool startVisible, ImVec2 windowSize, bool enforceSize) {
     this->title = title_;
     this->visible = startVisible;
     this->nextWindowSize = windowSize;

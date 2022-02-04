@@ -8,15 +8,17 @@
 namespace chira {
     class Camera;
 
-    class Root : private Entity {
+    /// The Root is an in-world entity. It is designed to contain a collection of entities, like a "map".
+    /// It will never be the true root of the scene, that honor goes to a FrameRoot or WindowRoot.
+    class Root : public Entity {
         friend class Engine;
     public:
         explicit Root(const std::string& name_);
         Root();
-        explicit Root(const std::string& name_);
-        void render();
+        void render(glm::mat4 parentTransform) override;
         glm::vec3 getGlobalPosition() override;
         const Root* getRoot() const override;
+        Root* getRoot() override;
         void setCamera(Camera* camera);
         Camera* getCamera() const;
         void setSkybox(const std::string& cubemapId);
@@ -30,15 +32,9 @@ namespace chira {
         glm::vec3 getAudioListeningUpVector() const {
             return this->mainCamera->getUpVector();
         }
-        glm::vec2 getMousePosition() const;
-        glm::vec2 getWindowSize() const;
-        using Entity::hasChild;
-        using Entity::addChild;
-        using Entity::getChild;
-        using Entity::removeChild;
-        using Entity::removeAllChildren;
-    private:
-        using Entity::render;
+        virtual glm::vec2 getMousePosition() const;
+        virtual glm::vec2 getFrameSize() const;
+    protected:
         MeshDataBuilder skybox;
         bool renderSkybox = false;
         Camera* mainCamera = nullptr;

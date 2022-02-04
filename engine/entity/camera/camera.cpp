@@ -1,6 +1,6 @@
 #include "camera.h"
 
-#include "../root.h"
+#include <entity/root/root.h>
 #include <physics/abstractPhysicsProvider.h>
 
 using namespace chira;
@@ -31,7 +31,7 @@ void Camera::createProjection(glm::vec2 windowSize) {
 }
 
 AbstractRigidBody* Camera::traceRayFromCoords(glm::vec2 coords, float length) {
-    glm::vec2 windowSize = this->getRoot()->getWindowSize();
+    const glm::vec2 windowSize = this->getRoot()->getFrameSize();
 
     glm::vec4 rayStartNDC{
             (coords.x / windowSize.x - 0.5f) * 2.f, // [0,screenX] -> [-1,1]
@@ -62,5 +62,5 @@ AbstractRigidBody* Camera::traceRayFromMouse(float length) {
 }
 
 AbstractRigidBody* Camera::traceRayFromCenter(float length) {
-    return this->traceRayFromCoords(this->getRoot()->getWindowSize() / 2.f, length);
+    return this->traceRayFromCoords(this->getRoot()->getFrameSize() / 2.f, length);
 }

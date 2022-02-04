@@ -202,8 +202,6 @@ void Engine::init() {
     Resource::cleanup();
 
     glfwSwapInterval(1);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS); // Wiki says modern hardware is fine with this and it looks better
 
     glfwSetInputMode(Engine::window, GLFW_STICKY_KEYS, GLFW_TRUE);
     glfwSetInputMode(Engine::window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
@@ -333,6 +331,7 @@ void Engine::run() {
     Engine::currentTime = glfwGetTime();
 
     do {
+        //todo(viewport): make this just color
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         Engine::lastTime = Engine::currentTime;
@@ -340,15 +339,13 @@ void Engine::run() {
 
         AbstractPhysicsProvider::getPhysicsProvider()->updatePhysics(Engine::getDeltaTime());
 
-        UBO_PerspectiveView::get()->update(Engine::getRoot()->getCamera()->getProjection(), Engine::getRoot()->getCamera()->getView());
-
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
         Engine::callRegisteredFunctions(Engine::renderFunctions);
         Engine::angelscript->render();
-        Engine::root->render();
+        Engine::root->render(glm::identity<glm::mat4>());
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -1,7 +1,6 @@
 #include "freecam.h"
 
 #include <core/engine.h>
-#include <entity/root.h>
 #include <input/inputManager.h>
 #include <utility/debug/assertions.h>
 
