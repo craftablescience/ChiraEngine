@@ -55,6 +55,7 @@
   "error.engine.not_initialized": "Engine is not started: have you called Engine::preInit() and Engine::init()?",
   "error.engine.script_provider_missing": "{} is not initialized yet",
   "error.engine.invalid_access": "Must set {} in {} for this call to function",
+  "error.engine.cannot_find_window": "Cannot find window \"{}\"! Returning main window...",
   "error.engine.missing_translation_manager": "Huh? The translation manager is missing! This should never happen, ever!",
   "error.translation_manager.missing_translation": "Could not find {} translation of \"{}\"",
   "error.resource.resource_not_found": "Resource {} was not found",

@@ -1,7 +1,10 @@
 #pragma once
 
 #define IMGUI_ENABLE_WIN32_DEFAULT_IME_FUNCTIONS
+
 #define IMGUI_HAS_DOCK
+
+#define IMGUI_USE_WCHAR32
 
 #ifndef DEBUG
 #define IMGUI_DISABLE_DEMO_WINDOWS

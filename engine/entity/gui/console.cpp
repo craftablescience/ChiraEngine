@@ -28,6 +28,7 @@ Console::Console(ImVec2 windowSize) : Panel(TR("ui.console.title"), false, windo
     });
     this->clearLog();
     this->autoScroll = true;
+    this->font = Resource::getResource<FontResource>(TR("resource.font.console_font_path"));
 }
 
 Console::~Console() {
@@ -95,10 +96,6 @@ void Console::clearLog() {
 
 void Console::addLog(const std::string& message) {
     this->items.push_back(strdup(message.c_str()));
-}
-
-void Console::precacheResource() {
-    this->font = Resource::getResource<FontResource>(TR("resource.font.console_font_path"));
 }
 
 void Console::setTheme() {

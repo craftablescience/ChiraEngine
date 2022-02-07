@@ -12,7 +12,6 @@ namespace chira {
         void renderContents() override;
         void clearLog();
         void addLog(const std::string& message);
-        void precacheResource();
         void setTheme();
         void resetTheme() const;
     private:

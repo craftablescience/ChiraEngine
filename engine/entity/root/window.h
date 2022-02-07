@@ -3,6 +3,8 @@
 #include "frame.h"
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#define IMGUI_USER_CONFIG <config/imguiConfig.h>
+#include <imgui.h>
 
 namespace chira {
     class Window : public Frame {
@@ -23,15 +25,17 @@ namespace chira {
         void setIcon(const std::string& identifier) const;
         void shouldStopAfterThisFrame(bool yes = true) const;
         /// Renders the splashscreen to all window's default framebuffer
-        static void displaySplashScreen();
+        void displaySplashScreen();
     protected:
         MeshDataBuilder surface;
         GLFWwindow* window = nullptr;
-        bool mouseCaptured = false, iconified = false;
+        ImGuiContext* guiContext = nullptr;
+        bool mouseCaptured = false, iconified = false, fullscreen;
         double lastMouseX = -1.0, lastMouseY = -1.0;
-        Window(const std::string& name_, const std::string& title_, int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true);
-        Window(const std::string& title_, int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true);
+        Window(const std::string& name_, const std::string& title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true);
+        Window(const std::string& title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true);
     private:
-        bool createGLFWWindow();
+        static ImFontAtlas* getFontAtlasInstance();
+        bool createGLFWWindow(const std::string& title);
     };
 }

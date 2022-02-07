@@ -37,6 +37,7 @@ namespace chira {
         [[nodiscard]] bool getActive() const;
         void setActive(bool active_);
 
+        //todo(input): this is dumb
         static void setupKeybinds();
     protected:
         float movementSpeed    = 4.f;

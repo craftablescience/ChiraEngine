@@ -1,31 +1,29 @@
 #include "engine.h"
 
 #include <glad/gl.h>
-#include <backends/imgui_impl_glfw.h>
-#include <backends/imgui_impl_opengl3.h>
-#include <i18n/translationManager.h>
+
 #include <config/glVersion.h>
-#include <input/inputManager.h>
-#include <loader/settings/jsonSettingsLoader.h>
-#include <sound/alSoundManager.h>
+#include <event/events.h>
 #include <hook/discordRPC.h>
+#ifdef CHIRA_BUILD_WITH_STEAMWORKS
+#include <hook/steamAPI.h>
+#endif
+#include <i18n/translationManager.h>
+#include <input/inputManager.h>
+#include <loader/mesh/objMeshLoader.h>
+#include <loader/mesh/chiraMeshLoader.h>
+#include <loader/settings/jsonSettingsLoader.h>
+#include <physics/bulletPhysicsProvider.h>
 #include <resource/provider/filesystemResourceProvider.h>
 #include <resource/provider/internetResourceProvider.h>
 #include <resource/shaderResource.h>
-#include <loader/mesh/objMeshLoader.h>
-#include <loader/mesh/chiraMeshLoader.h>
-#include <physics/bulletPhysicsProvider.h>
 #include <render/ubo.h>
-#include <event/events.h>
-#include <entity/gui/console.h>
-#include <entity/gui/profiler.h>
+#include <sound/alSoundManager.h>
 #include <utility/debug/assertions.h>
+
 #if __has_include(<windows.h>) && !defined(DEBUG)
 #include <windows.h>
 #undef ERROR
-#endif
-#ifdef CHIRA_BUILD_WITH_STEAMWORKS
-#include <hook/steamAPI.h>
 #endif
 
 using namespace chira;
@@ -48,13 +46,8 @@ void Engine::preInit(const std::string& configPath) {
     TranslationManager::addTranslationFile("file://i18n/engine");
 }
 
-void Engine::init() {
+void Engine::init(const std::function<void()>& callbackOnInit) {
     Engine::started = true;
-
-    Engine::console = new Console{};
-#ifdef DEBUG
-    Engine::profiler = new Profiler{};
-#endif
 
     if (!glfwInit()) {
         Logger::log(LogType::ERROR, "GLFW", TR("error.glfw.undefined"));
@@ -64,15 +57,21 @@ void Engine::init() {
         Logger::log(LogType::ERROR, "GLFW", TRF("error.glfw.generic", error, description));
     });
 
-    Engine::root = new Window{"title", 1600, 900};
-    Engine::root->addChild(Engine::console);
+    int windowWidth = 1600;
+    Engine::getSettingsLoader()->getValue("graphics", "windowWidth", &windowWidth);
+    int windowHeight = 900;
+    Engine::getSettingsLoader()->getValue("graphics", "windowHeight", &windowHeight);
+    bool fullscreen = false;
+    Engine::getSettingsLoader()->getValue("graphics", "fullscreen", &fullscreen);
+
+    Window::getFontAtlasInstance()->AddFontDefault();
+#ifdef CHIRA_BUILD_WITH_MULTIWINDOW
+    Engine::addWindow(TR("ui.window.title"), windowWidth, windowHeight, fullscreen);
+#else
+    Engine::windows.emplace_back(new Window{TR("ui.window.title"), windowWidth, windowHeight, fullscreen});
+#endif
+
 #ifdef DEBUG
-    Engine::root->addChild(Engine::profiler);
-
-    int major, minor, rev;
-    glfwGetVersion(&major, &minor, &rev);
-    Logger::log(LogType::INFO, "GLFW", TRF("debug.glfw.version", major, minor, rev));
-
     int flags;
     glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
     if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
@@ -128,28 +127,17 @@ void Engine::init() {
         }, nullptr);
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
     }
+
+    IMGUI_CHECKVERSION();
 #endif
 
-    Window::displaySplashScreen();
+    Engine::windows[0]->displaySplashScreen();
+    Resource::cleanup();
 
     AbstractMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     AbstractMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
 
-#ifdef DEBUG
-    IMGUI_CHECKVERSION();
-#endif
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(Engine::root->window, true);
-    io.Fonts->Clear();
-    ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
-    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-    bool openalEnabled = true;
-    Engine::getSettingsLoader()->getValue("audio", "openal", &openalEnabled);
-    if (openalEnabled)
-        Engine::setSoundManager(new ALSoundManager{});
+    Engine::setSoundManager(new ALSoundManager{});
     Engine::soundManager->init();
 
     // todo: move this to a general lighting manager
@@ -169,10 +157,7 @@ void Engine::init() {
         ShaderResource::addPreprocessorSymbol("MAX_SPOT_LIGHTS", std::to_string(maxLights));
     }
 
-    bool bulletEnabled = true;
-    Engine::getSettingsLoader()->getValue("physics", "bullet", &bulletEnabled);
-    if (bulletEnabled)
-        AbstractPhysicsProvider::setPhysicsProvider(new BulletPhysicsProvider{});
+    AbstractPhysicsProvider::setPhysicsProvider(new BulletPhysicsProvider{});
 
 #ifdef CHIRA_BUILD_WITH_STEAMWORKS
     bool steamEnabled = false;
@@ -186,52 +171,39 @@ void Engine::init() {
     //Engine::angelscript->registerGlobalFunction(Engine::setBackgroundColor, "setBackgroundColor");
     // Method:
     //Engine::angelscript->asEngine->RegisterGlobalFunction("void showConsole(bool)", asMETHOD(Engine, showConsole), asCALL_THISCALL_ASGLOBAL, this);
-
-    io.Fonts->AddFontDefault();
-    Engine::console->precacheResource();
-    auto defaultFont = Resource::getResource<FontResource>("file://fonts/default.json");
-    ImGui::GetIO().FontDefault = defaultFont->getFont();
-
-    Engine::callRegisteredFunctions(Engine::initFunctions);
+    callbackOnInit();
     Engine::angelscript->init();
 
-    io.Fonts->Build();
+    Window::getFontAtlasInstance()->Build();
 }
 
-void Engine::run() {
-    Engine::lastTime = Engine::currentTime;
-    Engine::currentTime = glfwGetTime();
-
+void Engine::run(const std::function<void()>& callbackOnStop) {
     do {
         Engine::lastTime = Engine::currentTime;
         Engine::currentTime = glfwGetTime();
 
         AbstractPhysicsProvider::getPhysicsProvider()->updatePhysics(Engine::getDeltaTime());
 
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        Engine::callRegisteredFunctions(Engine::renderFunctions);
         Engine::angelscript->render();
-        Engine::root->render(glm::identity<glm::mat4>());
+        for (auto& window : Engine::windows)
+            window->render(glm::identity<glm::mat4>());
 
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        glfwPollEvents();
+        for (auto& window : Engine::windows) {
+            for (auto &keybind: InputManager::getKeyButtonCallbacks()) {
+                if (glfwGetKey(window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
+                    keybind();
+            }
+            for (auto &keybind: InputManager::getMouseButtonCallbacks()) {
+                if (glfwGetMouseButton(window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
+                    keybind();
+            }
+        }
 
+        //todo(multiview): figure out sound
         Engine::soundManager->setListenerPosition(Engine::getWindow()->getAudioListeningPosition());
         Engine::soundManager->setListenerRotation(Engine::getWindow()->getAudioListeningRotation(), Engine::getWindow()->getAudioListeningUpVector());
         Engine::soundManager->update();
-
-        glfwPollEvents();
-        for (auto& keybind : InputManager::getKeyButtonCallbacks()) {
-            if (glfwGetKey(Engine::root->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
-                keybind();
-        }
-        for (auto& keybind : InputManager::getMouseButtonCallbacks()) {
-            if (glfwGetMouseButton(Engine::root->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
-                keybind();
-        }
 
         if (DiscordRPC::initialized())
             DiscordRPC::updatePresence();
@@ -240,17 +212,21 @@ void Engine::run() {
             SteamAPI::Client::runCallbacks();
 #endif
         Events::update();
+
+        auto windowIterator = Engine::windows.begin();
+        while (windowIterator != Engine::windows.end()) {
+            if (glfwWindowShouldClose(windowIterator->get()->window))
+                Engine::windows.erase(windowIterator);
+            else
+                windowIterator++;
+        }
+
         Resource::cleanup();
+    } while (!Engine::windows.empty() && !glfwWindowShouldClose(Engine::getWindow()->window));
 
-        glfwSwapBuffers(Engine::root->window);
-    } while (!glfwWindowShouldClose(Engine::root->window));
-    Engine::stop();
-}
-
-void Engine::stop() {
     Logger::log(LogType::INFO_IMPORTANT, "Engine", TR("debug.engine.exit"));
 
-    Engine::callRegisteredFunctions(Engine::stopFunctions);
+    callbackOnStop();
     Engine::angelscript->stop();
 
     if (DiscordRPC::initialized())
@@ -261,28 +237,12 @@ void Engine::stop() {
 #endif
 
     Engine::soundManager->stop();
-    delete Engine::root;
+    Engine::windows.clear();
     AbstractPhysicsProvider::getPhysicsProvider()->stop();
     Resource::discardAll();
 
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-
     glfwTerminate();
     exit(EXIT_SUCCESS);
-}
-
-void Engine::addInitFunction(const std::function<void()>& init) {
-    Engine::initFunctions.push_back(init);
-}
-
-void Engine::addRenderFunction(const std::function<void()>& render) {
-    Engine::renderFunctions.push_back(render);
-}
-
-void Engine::addStopFunction(const std::function<void()>& stop) {
-    Engine::stopFunctions.push_back(stop);
 }
 
 AngelscriptProvider* Engine::getAngelscriptProvider() {
@@ -322,10 +282,7 @@ void Engine::setSettingsLoaderDefaults() {
 #ifdef CHIRA_BUILD_WITH_STEAMWORKS
     Engine::settingsLoader->setValue("engine", "steamworks", false, false, false);
 #endif
-    Engine::settingsLoader->addCategory("audio");
-    Engine::settingsLoader->setValue("audio", "openal", true, false, false);
     Engine::settingsLoader->addCategory("physics");
-    Engine::settingsLoader->setValue("physics", "bullet", true, false, false);
     Engine::getSettingsLoader()->setValue("physics", "subStep", 4, false, false);
     Engine::settingsLoader->addCategory("graphics");
     Engine::settingsLoader->setValue("graphics", "windowWidth", 1600, false, false);
@@ -341,28 +298,37 @@ void Engine::setSettingsLoaderDefaults() {
     Engine::settingsLoader->save();
 }
 
-void Engine::callRegisteredFunctions(const std::vector<std::function<void()>>& list) {
-    for (const auto& func : list) {
-        func();
+Window* Engine::getWindow() {
+    if (Engine::windows.empty())
+        return nullptr;
+    return Engine::windows[0].get();
+}
+
+#ifdef CHIRA_BUILD_WITH_MULTIWINDOW
+Window* Engine::getWindow(const std::string& name) {
+    for (auto& window : Engine::windows) {
+        if (window->getName() == name) {
+            return window.get();
+        }
+    }
+    Logger::log(LogType::ERROR, "Engine", TRF("error.engine.cannot_find_window", name));
+    return Engine::windows[0].get();
+}
+
+std::string Engine::addWindow(const std::string& title, int width, int height, bool fullscreen, ColorRGB backgroundColor, bool smoothResize) {
+    Engine::windows.emplace_back(new Window{title, width, height, fullscreen, backgroundColor, smoothResize});
+    return Engine::windows[Engine::windows.size() - 1]->getName();
+}
+
+void Engine::removeWindow(const std::string& name) {
+    for (std::size_t i = 0; i < Engine::windows.size(); i++) {
+        if (Engine::windows[i]->getName() == name) {
+            Engine::windows.erase(Engine::windows.begin() + static_cast<long long int>(i));
+            return;
+        }
     }
 }
-
-Window* Engine::getWindow() {
-    return Engine::root;
-}
-
-Console* Engine::getConsole() {
-    return Engine::console;
-}
-
-Profiler* Engine::getProfiler() {
-#if DEBUG
-    return Engine::profiler;
-#else
-    Logger::log(LogType::ERROR, "Engine::getProfiler", "Profiler window is not present in release build!");
-    return nullptr;
 #endif
-}
 
 bool Engine::isStarted() {
     return Engine::started;

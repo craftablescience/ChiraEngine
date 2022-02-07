@@ -6,16 +6,13 @@
 using namespace chira;
 
 ALSoundManager::~ALSoundManager() {
-    if (!alcCall(alcMakeContextCurrent, this->contextCurrent, this->device, nullptr)) {
+    if (!alcCall(alcMakeContextCurrent, this->contextCurrent, this->device, nullptr))
         Logger::log(LogType::ERROR, "OpenAL", TR("error.openal.remove_context"));
-    }
-    if (!alcCall(alcDestroyContext, this->device, this->context)) {
+    if (!alcCall(alcDestroyContext, this->device, this->context))
         Logger::log(LogType::ERROR, "OpenAL", TR("error.openal.destroy_context"));
-    }
     ALCboolean closed;
-    if (!alcCall(alcCloseDevice, closed, this->device, this->device)) {
+    if (!alcCall(alcCloseDevice, closed, this->device, this->device))
         Logger::log(LogType::ERROR, "OpenAL", TR("error.openal.close_device_failure"));
-    }
 }
 
 void ALSoundManager::init() {
@@ -27,37 +24,33 @@ void ALSoundManager::init() {
         if (devices.empty()) {
             Logger::log(LogType::ERROR, "OpenAL", TR("error.openal.no_devices_available"));
         } else {
-            Logger::log(LogType::ERROR, "OpenAL", TRF("error.openal.using_nondefault_device", devices[0]));
+            Logger::log(LogType::WARNING, "OpenAL", TRF("error.openal.using_nondefault_device", devices[0]));
             this->device = alcOpenDevice(devices[0].c_str());
         }
     }
-    if (!alcCall(alcCreateContext, this->context, this->device, this->device, nullptr) || !this->context) {
+    if (!alcCall(alcCreateContext, this->context, this->device, this->device, nullptr) || !this->context)
         Logger::log(LogType::ERROR, "OpenAL", TR("error.openal.create_context_failure"));
-    }
-    if (!alcCall(alcMakeContextCurrent, this->contextCurrent, this->device, this->context) || this->contextCurrent != ALC_TRUE) {
+    if (!alcCall(alcMakeContextCurrent, this->contextCurrent, this->device, this->context) || this->contextCurrent != ALC_TRUE)
         Logger::log(LogType::ERROR, "OpenAL", TR("error.openal.make_context_current"));
-    }
 }
 
 void ALSoundManager::update() {
-    if (this->context) {
-        for (const auto& sound : this->sounds) {
-            sound.second->update();
-        }
-    }
+    if (!this->context)
+        return;
+    for (const auto& [name, sound] : this->sounds)
+        sound->update();
 }
 
 void ALSoundManager::stop() {
-    for (const auto& sound : this->sounds) {
-        sound.second->stop();
-        sound.second->discard();
+    for (const auto& [name, sound] : this->sounds) {
+        sound->stop();
+        sound->discard();
     }
 }
 
 void ALSoundManager::setListenerPosition(const glm::vec3& newPosition) {
-    if (this->context) {
+    if (this->context)
         alListener3f(AL_POSITION, newPosition.x, newPosition.y, newPosition.z);
-    }
 }
 
 void ALSoundManager::setListenerRotation(const glm::vec3& newRotation, const glm::vec3& up) {

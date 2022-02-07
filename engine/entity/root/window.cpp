@@ -1,5 +1,8 @@
 #include "window.h"
 
+#include <backends/imgui_impl_opengl3.h>
+#include <backends/imgui_impl_glfw.h>
+
 #include <core/engine.h>
 #include <config/glVersion.h>
 #include <event/events.h>
@@ -7,37 +10,33 @@
 #include <input/inputManager.h>
 #include <loader/image/image.h>
 #include <resource/provider/filesystemResourceProvider.h>
+#include <resource/fontResource.h>
 #include <render/material/materialFramebuffer.h>
 
 using namespace chira;
 
-bool Window::createGLFWWindow() {
-    int windowWidth = 1600;
-    Engine::getSettingsLoader()->getValue("graphics", "windowWidth", &windowWidth);
-    int windowHeight = 900;
-    Engine::getSettingsLoader()->getValue("graphics", "windowHeight", &windowHeight);
-    bool fullscreen = false;
-    Engine::getSettingsLoader()->getValue("graphics", "fullscreen", &fullscreen);
-
+bool Window::createGLFWWindow(const std::string& title) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef DEBUG
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 #endif
-    this->window = glfwCreateWindow(windowWidth, windowHeight, TRC("ui.window.title"), nullptr, nullptr);
-    if (!this->window) {
-        Logger::log(LogType::ERROR, "GLFW", TR("error.glfw.window"));
-        return false;
-    }
-    if (fullscreen) {
-        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    if (this->fullscreen) {
         glfwWindowHint(GLFW_RED_BITS, mode->redBits);
         glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
         glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
         glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+    }
+    this->window = glfwCreateWindow(this->width, this->height, title.c_str(), nullptr, nullptr);
+    if (!this->window) {
+        Logger::log(LogType::ERROR, "GLFW", TR("error.glfw.window"));
+        return false;
+    }
+    if (this->fullscreen)
         glfwSetWindowMonitor(this->window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
-    } else {
+    else {
         bool startMaximized = true;
         Engine::getSettingsLoader()->getValue("graphics", "startMaximized", &startMaximized);
         if (startMaximized)
@@ -47,17 +46,12 @@ bool Window::createGLFWWindow() {
     glfwSetWindowUserPointer(this->window, this);
     glfwMakeContextCurrent(this->window);
     if (!gladLoadGL(glfwGetProcAddress)) {
-        Logger::log(LogType::ERROR, "OpenGL", fmt::format("error.opengl.version", GL_VERSION_STRING_PRETTY));
+        Logger::log(LogType::ERROR, "OpenGL", TRF("error.opengl.version", GL_VERSION_STRING_PRETTY));
         return false;
     }
     glfwSwapInterval(1);
 
     this->setIcon("file://textures/ui/icon.png");
-
-    glfwSetFramebufferSizeCallback(this->window, [](GLFWwindow* w, int width, int height) {
-        if (auto window_ = static_cast<Window*>(glfwGetWindowUserPointer(w)))
-            window_->setFrameSize({width, height});
-    });
 
     glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GLFW_TRUE);
     glfwSetInputMode(this->window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
@@ -66,6 +60,10 @@ bool Window::createGLFWWindow() {
     if (glfwRawMouseMotionSupported() && rawMouseMotion)
         glfwSetInputMode(this->window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 
+    glfwSetFramebufferSizeCallback(this->window, [](GLFWwindow* w, int width, int height) {
+        if (auto window_ = static_cast<Window*>(glfwGetWindowUserPointer(w)))
+            window_->setFrameSize({width, height});
+    });
     glfwSetKeyCallback(this->window, [](GLFWwindow* w, int key, int scancode, int action, int mods) {
         if (action == GLFW_REPEAT) return;
         for (auto& keybind : InputManager::getKeyButtonCallbacks()) {
@@ -118,37 +116,73 @@ bool Window::createGLFWWindow() {
         Events::createEvent("chira::engine::files_dropped", files);
     });
 
+    this->guiContext = ImGui::CreateContext(Window::getFontAtlasInstance());
+    ImGui::SetCurrentContext(this->guiContext);
+    ImGui_ImplGlfw_InitForOpenGL(this->window,
+#ifdef CHIRA_BUILD_WITH_MULTIWINDOW
+        false); //todo(multiview): register ImGui callbacks manually (this will be painful)
+#else
+        true); // register input callbacks
+#endif
+    ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
+
+    auto defaultFont = Resource::getResource<FontResource>("file://fonts/default.json");
+    ImGui::GetIO().FontDefault = defaultFont->getFont();
+
+    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
     return true;
 }
 
 static void makeSurface(Window* window, MeshDataBuilder* surface) {
-    surface->enableBackfaceCulling(false);
     surface->addSquare({}, {2, -2}, SignedAxis::ZN, 0);
     surface->setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/window.json", window).castAssert<MaterialBase>());
 }
 
-Window::Window(const std::string& name_, const std::string& title_, int width_, int height_, ColorRGB backgroundColor_, bool smoothResize)
-    : Frame(name_, width_, height_, backgroundColor_, smoothResize, false) {
-    this->createGLFWWindow();
-    this->createFramebuffer();
-    makeSurface(this, &this->surface);
+Window::Window(const std::string& name_, const std::string& title, int width_, int height_, bool fullscreen_, ColorRGB backgroundColor_, bool smoothResize)
+    : Frame(name_, width_, height_, backgroundColor_, smoothResize, false)
+    , fullscreen(fullscreen_) {
+    if (this->createGLFWWindow(title)) {
+        Resource::cleanup();
+        this->createFramebuffer();
+        makeSurface(this, &this->surface);
+    }
 }
 
-Window::Window(const std::string& title_, int width_, int height_, ColorRGB backgroundColor_, bool smoothResize)
-    : Frame(width_, height_, backgroundColor_, smoothResize, false) {
-    this->createGLFWWindow();
-    this->createFramebuffer();
-    makeSurface(this, &this->surface);
+Window::Window(const std::string& title, int width_, int height_, bool fullscreen_, ColorRGB backgroundColor_, bool smoothResize)
+    : Frame(width_, height_, backgroundColor_, smoothResize, false)
+    , fullscreen(fullscreen_) {
+    if (this->createGLFWWindow(title)) {
+        Resource::cleanup();
+        this->createFramebuffer();
+        makeSurface(this, &this->surface);
+    }
 }
 
 void Window::render(glm::mat4 parentTransform) {
-    Frame::render(std::forward<glm::mat4>(parentTransform), 0, this->width, this->height);
+    glfwMakeContextCurrent(this->window);
+    ImGui::SetCurrentContext(this->guiContext);
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
+
+    Frame::render(std::forward<glm::mat4>(parentTransform), this->fboHandle, this->width, this->height);
+
     glDisable(GL_DEPTH_TEST);
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     this->surface.render(glm::identity<glm::mat4>());
+    glfwSwapBuffers(this->window);
 }
 
 Window::~Window() {
-    //todo(viewport): de-init GLFW and ImGUI
+    ImGui::SetCurrentContext(this->guiContext);
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext(this->guiContext);
     glfwDestroyWindow(this->window);
 }
 
@@ -206,9 +240,19 @@ void Window::shouldStopAfterThisFrame(bool yes) const {
 }
 
 void Window::displaySplashScreen() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glBindFramebuffer(GL_FRAMEBUFFER, this->fboHandle);
+    glClear(GL_COLOR_BUFFER_BIT);
     MeshDataBuilder plane;
     plane.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
     plane.setMaterial(Resource::getResource<MaterialTextured>("file://materials/splashscreen.json").castAssert<MaterialBase>());
     plane.render(glm::identity<glm::mat4>());
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDisable(GL_DEPTH_TEST);
+    this->surface.render(glm::identity<glm::mat4>());
+    glfwSwapBuffers(this->window);
+}
+
+ImFontAtlas* Window::getFontAtlasInstance() {
+    static ImFontAtlas fontAtlas{};
+    return &fontAtlas;
 }
