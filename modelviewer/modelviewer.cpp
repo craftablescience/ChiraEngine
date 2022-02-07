@@ -10,6 +10,14 @@
 #include <entity/gui/panel.h>
 #include <utility/dialogs.h>
 
+#define CHIRA_FRAME_TESTING 0
+
+#if CHIRA_FRAME_TESTING
+#include "entity/model/meshFrame.h"
+#include "entity/logic/customEntity.h"
+#include "entity/physics/bulletRigidBody.h"
+#endif
+
 using namespace chira;
 
 static inline void addResourceFolderSelected() {
@@ -135,12 +143,39 @@ private:
 
 int main() {
     Engine::preInit("settings_modelviewer.json");
+
+#if CHIRA_FRAME_TESTING
+    Resource::addResourceProvider(new FilesystemResourceProvider{"editor"});
+#endif
+
     Resource::addResourceProvider(new FilesystemResourceProvider{"modelviewer"});
     TranslationManager::addTranslationFile("file://i18n/modelviewer");
 
     Engine::init([]{
         Engine::getWindow()->addChild(ModelViewer::get());
+#if CHIRA_FRAME_TESTING
+        auto test = new MeshFrame{"lol", 512, 512};
+        test->setSkybox("file://materials/skybox/shanghai.json");
+        test->getMeshDynamic()->getMesh()->enableBackfaceCulling(false);
+        test->getMeshDynamic()->getMesh()->addSquare({}, {-10, 10}, SignedAxis::XN);
 
+        auto staticTeapot = new BulletRigidBody{"file://physics/ground_static.json"};
+        staticTeapot->translate(glm::vec3{3,0,-13});
+        staticTeapot->addChild(new Mesh{"file://meshes/teapot.json"});
+        test->addChild(staticTeapot);
+
+        auto fallingTeapot = new BulletRigidBody{"file://physics/cube_dynamic.json"};
+        fallingTeapot->translate(glm::vec3{0,15,-10});
+        fallingTeapot->addChild(new Mesh{"file://meshes/teapot.json"});
+        test->addChild(fallingTeapot);
+
+        auto camera_ = new EditorCamera{CameraProjectionMode::PERSPECTIVE};
+        test->addChild(camera_);
+        test->setCamera(camera_);
+        camera_->translate(glm::vec3{0,0,15});
+
+        Engine::getWindow()->addChild(test);
+#endif
         Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
 
         auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};
@@ -160,8 +195,16 @@ int main() {
         }
         gridMesh->addCube({{2.5f, 0, 0}, {0, 0, 0}, {1, 0, 0}}, {5.f + 0.026f, 0.03f, 0.03f});
         gridMesh->addCube({{0, 0, 2.5f}, {0, 0, 0}, {0, 0, 1}}, {0.03f, 0.03f, 5.f + 0.026f});
-        gridMesh->addCube({{0, 0, 0},    {0, 0, 0}, {0, 1, 0}}, glm::vec3{0.05f});
+        gridMesh->addCube({{0, 0,    0}, {0, 0, 0}, {0, 1, 0}}, glm::vec3{0.05f});
         Engine::getWindow()->addChild(grid);
+
+        auto teapotMesh = Resource::getResource<MeshDataResource>("file://meshes/teapot.json");
+        const auto teapotShader = teapotMesh->getMaterial()->getShader();
+        teapotShader->use();
+        teapotShader->setUniform("light.ambient", 0.1f, 0.1f, 0.1f);
+        teapotShader->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);
+        teapotShader->setUniform("light.specular", 1.0f, 1.0f, 1.0f);
+        teapotShader->setUniform("light.position", 0.0f, 5.0f, 0.0f);
     });
     Engine::run();
 }

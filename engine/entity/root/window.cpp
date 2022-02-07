@@ -161,6 +161,7 @@ Window::Window(const std::string& title, int width_, int height_, bool fullscree
 
 void Window::render(glm::mat4 parentTransform) {
     glfwMakeContextCurrent(this->window);
+
     ImGui::SetCurrentContext(this->guiContext);
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();

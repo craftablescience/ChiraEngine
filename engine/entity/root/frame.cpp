@@ -67,7 +67,16 @@ void Frame::render(glm::mat4 parentTransform, unsigned int parentFBOHandle, int 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
-    Root::render(std::forward<glm::mat4>(parentTransform));
+    auto tempPos = this->position;
+    this->position = {};
+    auto tempRot = this->rotation;
+    this->rotation = {};
+
+    Root::render(glm::identity<glm::mat4>());
+
+    // (Hopefully) preserve any transformations from children
+    this->translate(tempPos);
+    this->rotate(tempRot);
 
     glBindFramebuffer(GL_FRAMEBUFFER, parentFBOHandle);
     glViewport(0, 0, parentWidth, parentHeight);

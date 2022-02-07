@@ -10,7 +10,7 @@ namespace chira {
         MeshDynamic() : Entity() {}
         void render(glm::mat4 parentTransform) override;
         [[nodiscard]] MeshDataBuilder* getMesh();
-    private:
+    protected:
         MeshDataBuilder mesh;
     };
 }

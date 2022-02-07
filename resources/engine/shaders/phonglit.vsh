@@ -23,6 +23,7 @@ out VS_OUT {
 
 uniform Light light;
 
+
 void main() {
     gl_Position = pv * m * vec4(iPos, 1.0);
     o.Color = iColor;

@@ -21,6 +21,9 @@ void Root::render(glm::mat4 parentTransform) {
         glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
         this->skybox.render(glm::identity<glm::mat4>());
     }
+
+    if (this->mainCamera && Entity::getParent() && Entity::getRoot()->getCamera())
+        UBO_PerspectiveView::get()->update(Entity::getRoot()->getCamera()->getProjection(), Entity::getRoot()->getCamera()->getView());
 }
 
 glm::vec3 Root::getGlobalPosition() {

@@ -9,6 +9,7 @@ out VS_OUT {
    vec2 TexCoord;
 } o;
 
+
 void main() {
    gl_Position = vec4(iPos, 1.0);
    o.Color = iColor;

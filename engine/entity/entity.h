@@ -37,11 +37,11 @@ namespace chira {
             return assert_cast<EntityType*>(this->getChild(name_));
         }
         [[nodiscard]] bool hasChild(const std::string& name_) const;
-        std::string addChild(Entity* child);
-        void removeChild(const std::string& name_);
+        virtual std::string addChild(Entity* child);
+        virtual void removeChild(const std::string& name_);
         void removeAllChildren();
         [[nodiscard]] bool isVisible() const;
-        void setVisible(bool visibility);
+        virtual void setVisible(bool visibility);
         virtual void setPosition(glm::vec3 newPos);
         virtual void setRotation(glm::quat newRot);
         virtual glm::vec3 getPosition();
