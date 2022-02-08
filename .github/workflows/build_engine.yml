@@ -39,6 +39,17 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: ctest -C ${{matrix.build_type}}
 
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ChiraEngine-linux-${{matrix.compiler}}-${{matrix.build_type}}
+          path: |
+            ${{github.workspace}}/build/resources/
+            ${{github.workspace}}/build/ChiraEngineGui
+            ${{github.workspace}}/build/ChiraModelViewer
+            ${{github.workspace}}/build/*.so*
+          retention-days: 1
+
   build-mingw:
     strategy:
       fail-fast: false
@@ -81,6 +92,26 @@ jobs:
     - name: Test
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{matrix.build_type}}
+
+    - name: Copy Clang DLLs
+      if: ${{ matrix.sys == 'clang64' }}
+      run: |
+        cp /clang64/bin/libc++.dll build/libc++.dll
+        cp /clang64/bin/libcrypto-1_1-x64.dll build/libcrypto-1_1-x64.dll
+        cp /clang64/bin/libssh2-1.dll build/libssh2-1.dll
+        cp /clang64/bin/libunwind.dll build/libunwind.dll
+        cp /clang64/bin/zlib1.dll build/zlib1.dll
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ChiraEngine-windows-${{matrix.sys}}-${{matrix.build_type}}
+        path: |
+          ${{github.workspace}}\build\resources\
+          ${{github.workspace}}\build\ChiraEngineGui.exe
+          ${{github.workspace}}\build\ChiraModelViewer.exe
+          ${{github.workspace}}\build\*.dll
+        retention-days: 1
 
   build-msvc:
     strategy:
