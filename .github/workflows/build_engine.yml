@@ -56,7 +56,7 @@ jobs:
       matrix:
         build_type: [Debug, Release]
         sys: [mingw64, clang64]
-    runs-on: windows-latest
+    runs-on: windows-2019
     defaults:
       run:
         shell: msys2 {0}
@@ -117,7 +117,7 @@ jobs:
     strategy:
       matrix:
         build_type: [Debug, Release]
-    runs-on: windows-latest
+    runs-on: windows-2019
     defaults:
       run:
         shell: cmd
