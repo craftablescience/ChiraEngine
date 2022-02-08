@@ -160,14 +160,6 @@ int main() {
         gridMesh->addCube({{0, 0, 2.5f}, {0, 0, 0}, {0, 0, 1}}, {0.03f, 0.03f, 5.f + 0.026f});
         gridMesh->addCube({{0, 0,    0}, {0, 0, 0}, {0, 1, 0}}, glm::vec3{0.05f});
         Engine::getWindow()->addChild(grid);
-
-        auto teapotMesh = Resource::getResource<MeshDataResource>("file://meshes/teapot.json");
-        const auto teapotShader = teapotMesh->getMaterial()->getShader();
-        teapotShader->use();
-        teapotShader->setUniform("light.ambient", 0.1f, 0.1f, 0.1f);
-        teapotShader->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);
-        teapotShader->setUniform("light.specular", 1.0f, 1.0f, 1.0f);
-        teapotShader->setUniform("light.position", 0.0f, 5.0f, 0.0f);
     });
     Engine::run();
 }
