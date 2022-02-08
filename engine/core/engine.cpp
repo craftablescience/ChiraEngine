@@ -132,7 +132,6 @@ void Engine::init(const std::function<void()>& callbackOnInit) {
 #endif
 
     Engine::windows[0]->displaySplashScreen();
-    Resource::cleanup();
 
     AbstractMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     AbstractMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
@@ -220,8 +219,6 @@ void Engine::run(const std::function<void()>& callbackOnStop) {
             else
                 windowIterator++;
         }
-
-        Resource::cleanup();
     } while (!Engine::windows.empty() && !glfwWindowShouldClose(Engine::getWindow()->window));
 
     Logger::log(LogType::INFO_IMPORTANT, "Engine", TR("debug.engine.exit"));

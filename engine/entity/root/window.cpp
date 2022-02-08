@@ -143,7 +143,6 @@ Window::Window(const std::string& name_, const std::string& title, int width_, i
     : Frame(name_, width_, height_, backgroundColor_, smoothResize, false)
     , fullscreen(fullscreen_) {
     if (this->createGLFWWindow(title)) {
-        Resource::cleanup();
         this->createFramebuffer();
         makeSurface(this, &this->surface);
     }
@@ -153,7 +152,6 @@ Window::Window(const std::string& title, int width_, int height_, bool fullscree
     : Frame(width_, height_, backgroundColor_, smoothResize, false)
     , fullscreen(fullscreen_) {
     if (this->createGLFWWindow(title)) {
-        Resource::cleanup();
         this->createFramebuffer();
         makeSurface(this, &this->surface);
     }

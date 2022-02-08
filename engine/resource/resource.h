@@ -38,6 +38,7 @@ namespace chira {
 
         template<typename ResourceType, typename... Params>
         static SharedPointer<ResourceType> getResource(const std::string& identifier, Params... params) {
+            Resource::cleanup();
             auto id = Resource::splitResourceIdentifier(identifier);
             const std::string& provider = id.first, name = id.second;
             if (Resource::resources[provider].count(name) > 0) {
@@ -48,6 +49,7 @@ namespace chira {
 
         template<typename ResourceType, typename... Params>
         static void precacheResource(const std::string& identifier, Params... params) {
+            Resource::cleanup();
             auto id = Resource::splitResourceIdentifier(identifier);
             const std::string& provider = id.first, name = id.second;
             if (Resource::resources[provider].count(name) > 0) {
@@ -58,6 +60,7 @@ namespace chira {
 
         template<typename ResourceType>
         static SharedPointer<ResourceType> getCachedResource(const std::string& identifier) {
+            Resource::cleanup();
             auto id = Resource::splitResourceIdentifier(identifier);
             const std::string& provider = id.first, name = id.second;
             if (Resource::resources[provider].count(name) > 0) {

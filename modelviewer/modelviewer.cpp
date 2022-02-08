@@ -10,14 +10,6 @@
 #include <entity/gui/panel.h>
 #include <utility/dialogs.h>
 
-#define CHIRA_FRAME_TESTING 0
-
-#if CHIRA_FRAME_TESTING
-#include "entity/model/meshFrame.h"
-#include "entity/logic/customEntity.h"
-#include "entity/physics/bulletRigidBody.h"
-#endif
-
 using namespace chira;
 
 static inline void addResourceFolderSelected() {
@@ -127,7 +119,6 @@ public:
         }
         if (Engine::getWindow()->hasChild(this->meshId))
             Engine::getWindow()->removeChild(this->meshId);
-        Resource::cleanup();
         this->meshId = Engine::getWindow()->addChild(new Mesh{meshName});
         ModelViewer::loadedFile = meshName;
     }
@@ -143,39 +134,11 @@ private:
 
 int main() {
     Engine::preInit("settings_modelviewer.json");
-
-#if CHIRA_FRAME_TESTING
-    Resource::addResourceProvider(new FilesystemResourceProvider{"editor"});
-#endif
-
     Resource::addResourceProvider(new FilesystemResourceProvider{"modelviewer"});
     TranslationManager::addTranslationFile("file://i18n/modelviewer");
 
     Engine::init([]{
         Engine::getWindow()->addChild(ModelViewer::get());
-#if CHIRA_FRAME_TESTING
-        auto test = new MeshFrame{"lol", 512, 512};
-        test->setSkybox("file://materials/skybox/shanghai.json");
-        test->getMeshDynamic()->getMesh()->enableBackfaceCulling(false);
-        test->getMeshDynamic()->getMesh()->addSquare({}, {-10, 10}, SignedAxis::XN);
-
-        auto staticTeapot = new BulletRigidBody{"file://physics/ground_static.json"};
-        staticTeapot->translate(glm::vec3{3,0,-13});
-        staticTeapot->addChild(new Mesh{"file://meshes/teapot.json"});
-        test->addChild(staticTeapot);
-
-        auto fallingTeapot = new BulletRigidBody{"file://physics/cube_dynamic.json"};
-        fallingTeapot->translate(glm::vec3{0,15,-10});
-        fallingTeapot->addChild(new Mesh{"file://meshes/teapot.json"});
-        test->addChild(fallingTeapot);
-
-        auto camera_ = new EditorCamera{CameraProjectionMode::PERSPECTIVE};
-        test->addChild(camera_);
-        test->setCamera(camera_);
-        camera_->translate(glm::vec3{0,0,15});
-
-        Engine::getWindow()->addChild(test);
-#endif
         Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
 
         auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};
