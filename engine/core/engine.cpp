@@ -212,14 +212,21 @@ void Engine::run(const std::function<void()>& callbackOnStop) {
 #endif
         Events::update();
 
-        auto windowIterator = Engine::windows.begin();
-        while (windowIterator != Engine::windows.end()) {
-            if (glfwWindowShouldClose(windowIterator->get()->window))
-                Engine::windows.erase(windowIterator);
-            else
-                windowIterator++;
+        if (!Engine::windows.empty()) {
+#ifdef CHIRA_BUILD_WITH_MULTIWINDOW
+            auto windowIterator = Engine::windows.begin();
+            while (windowIterator != Engine::windows.end()) {
+                if (glfwWindowShouldClose(windowIterator->get()->window))
+                    Engine::windows.erase(windowIterator);
+                else
+                    windowIterator++;
+            }
+#else
+            if (glfwWindowShouldClose(Engine::windows[0]->window))
+                Engine::windows.clear();
+#endif
         }
-    } while (!Engine::windows.empty() && !glfwWindowShouldClose(Engine::getWindow()->window));
+    } while (!Engine::windows.empty());
 
     Logger::log(LogType::INFO_IMPORTANT, "Engine", TR("debug.engine.exit"));
 
