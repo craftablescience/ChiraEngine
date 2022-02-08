@@ -93,14 +93,24 @@ jobs:
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{matrix.build_type}}
 
-    - name: Copy Clang DLLs
+    - name: Copy Necessary DLLs (mingw64)
+      if: ${{ matrix.sys == 'mingw64' }}
+      run: |
+        cp /mingw64/bin/libgcc_s_seh-1.dll    build/libgcc_s_seh-1.dll
+        cp /mingw64/bin/libstdc++-6.dll       build/libstdc++-6.dll
+        cp /mingw64/bin/libcrypto-1_1-x64.dll build/libcrypto-1_1-x64.dll
+        cp /mingw64/bin/libssh2-1.dll         build/libssh2-1.dll
+        cp /mingw64/bin/libwinpthread-1.dll   build/libwinpthread-1.dll
+        cp /mingw64/bin/zlib1.dll             build/zlib1.dll
+
+    - name: Copy Necessary DLLs (clang64)
       if: ${{ matrix.sys == 'clang64' }}
       run: |
-        cp /clang64/bin/libc++.dll build/libc++.dll
+        cp /clang64/bin/libc++.dll            build/libc++.dll
         cp /clang64/bin/libcrypto-1_1-x64.dll build/libcrypto-1_1-x64.dll
-        cp /clang64/bin/libssh2-1.dll build/libssh2-1.dll
-        cp /clang64/bin/libunwind.dll build/libunwind.dll
-        cp /clang64/bin/zlib1.dll build/zlib1.dll
+        cp /clang64/bin/libssh2-1.dll         build/libssh2-1.dll
+        cp /clang64/bin/libunwind.dll         build/libunwind.dll
+        cp /clang64/bin/zlib1.dll             build/zlib1.dll
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
