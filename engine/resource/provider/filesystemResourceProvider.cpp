@@ -79,6 +79,8 @@ std::string FilesystemResourceProvider::getResourceFolderPath(const std::string&
 
     // Remove everything before the root folder, the root folder, and the forward slash
     auto index = path.rfind(FILESYSTEM_ROOT_FOLDER) + FILESYSTEM_ROOT_FOLDER.size() + 1;
+    if (index > path.length())
+        return "";
     path = path.substr(index);
 
     // Remove the namespace
