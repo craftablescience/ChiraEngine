@@ -21,6 +21,7 @@ namespace chira {
         void captureMouse(bool capture);
         [[nodiscard]] bool isMouseCaptured() const;
         [[nodiscard]] bool isIconified() const;
+        void setVisible(bool visibility) override;
         /// Note: Images must have a bit depth of 8
         void setIcon(const std::string& identifier) const;
         void shouldStopAfterThisFrame(bool yes = true) const;
@@ -32,8 +33,8 @@ namespace chira {
         ImGuiContext* guiContext = nullptr;
         bool mouseCaptured = false, iconified = false, fullscreen;
         double lastMouseX = -1.0, lastMouseY = -1.0;
-        Window(const std::string& name_, const std::string& title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true);
-        Window(const std::string& title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true);
+        Window(const std::string& name_, const std::string& title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = true);
+        Window(const std::string& title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = true);
     private:
         static ImFontAtlas* getFontAtlasInstance();
         bool createGLFWWindow(const std::string& title);

@@ -22,6 +22,7 @@ bool Window::createGLFWWindow(const std::string& title) {
 #ifdef DEBUG
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 #endif
+    glfwWindowHint(GLFW_VISIBLE, this->visible ? GLFW_TRUE : GLFW_FALSE);
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
     if (this->fullscreen) {
         glfwWindowHint(GLFW_RED_BITS, mode->redBits);
@@ -139,18 +140,20 @@ static void makeSurface(Window* window, MeshDataBuilder* surface) {
     surface->setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/window.json", window).castAssert<MaterialBase>());
 }
 
-Window::Window(const std::string& name_, const std::string& title, int width_, int height_, bool fullscreen_, ColorRGB backgroundColor_, bool smoothResize)
+Window::Window(const std::string& name_, const std::string& title, int width_, int height_, bool fullscreen_, ColorRGB backgroundColor_, bool smoothResize, bool startVisible)
     : Frame(name_, width_, height_, backgroundColor_, smoothResize, false)
     , fullscreen(fullscreen_) {
+    this->visible = startVisible;
     if (this->createGLFWWindow(title)) {
         this->createFramebuffer();
         makeSurface(this, &this->surface);
     }
 }
 
-Window::Window(const std::string& title, int width_, int height_, bool fullscreen_, ColorRGB backgroundColor_, bool smoothResize)
+Window::Window(const std::string& title, int width_, int height_, bool fullscreen_, ColorRGB backgroundColor_, bool smoothResize, bool startVisible)
     : Frame(width_, height_, backgroundColor_, smoothResize, false)
     , fullscreen(fullscreen_) {
+    this->visible = startVisible;
     if (this->createGLFWWindow(title)) {
         this->createFramebuffer();
         makeSurface(this, &this->surface);
@@ -221,6 +224,14 @@ bool Window::isMouseCaptured() const {
 
 bool Window::isIconified() const {
     return this->iconified;
+}
+
+void Window::setVisible(bool visibility) {
+    if (visibility)
+        glfwShowWindow(this->window);
+    else
+        glfwHideWindow(this->window);
+    Frame::setVisible(visibility);
 }
 
 void Window::setIcon(const std::string& identifier) const {

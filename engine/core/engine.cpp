@@ -50,7 +50,7 @@ void Engine::preInit(const std::string& configPath) {
     TranslationManager::addTranslationFile("file://i18n/engine");
 }
 
-void Engine::init(const std::function<void()>& callbackOnInit) {
+void Engine::init(const std::function<void()>& callbackOnInit, bool windowStartsVisible) {
     Engine::started = true;
 
     if (!glfwInit()) {
@@ -70,10 +70,11 @@ void Engine::init(const std::function<void()>& callbackOnInit) {
 
     Window::getFontAtlasInstance()->AddFontDefault();
 #ifdef CHIRA_BUILD_WITH_MULTIWINDOW
-    Engine::addWindow(TR("ui.window.title"), windowWidth, windowHeight, fullscreen);
+    Engine::addWindow(TR("ui.window.title"), windowWidth, windowHeight, fullscreen, {}, true, false);
 #else
-    Engine::windows.emplace_back(new Window{TR("ui.window.title"), windowWidth, windowHeight, fullscreen});
+    Engine::windows.emplace_back(new Window{TR("ui.window.title"), windowWidth, windowHeight, fullscreen, {}, true, false});
 #endif
+    Engine::getWindow()->setVisible(windowStartsVisible);
 
 #ifdef DEBUG
     int flags;
@@ -323,8 +324,8 @@ Window* Engine::getWindow(const std::string& name) {
     return Engine::windows[0].get();
 }
 
-std::string Engine::addWindow(const std::string& title, int width, int height, bool fullscreen, ColorRGB backgroundColor, bool smoothResize) {
-    Engine::windows.emplace_back(new Window{title, width, height, fullscreen, backgroundColor, smoothResize});
+std::string Engine::addWindow(const std::string& title, int width, int height, bool fullscreen, ColorRGB backgroundColor, bool smoothResize, bool startVisible) {
+    Engine::windows.emplace_back(new Window{title, width, height, fullscreen, backgroundColor, smoothResize, startVisible});
     return Engine::windows[Engine::windows.size() - 1]->getName();
 }
 

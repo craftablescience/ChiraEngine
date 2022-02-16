@@ -18,7 +18,7 @@ namespace chira {
     public:
         /// Ran at the very start of your program. Readies the engine for you to add features before init().
         static void preInit(const std::string& configPath = "settings.json");
-        static void init(const std::function<void()>& callbackOnInit = []{});
+        static void init(const std::function<void()>& callbackOnInit = []{}, bool windowStartsVisible = true);
         static void run(const std::function<void()>& callbackOnStop = []{});
         [[nodiscard]] static AngelscriptProvider* getAngelscriptProvider();
         [[nodiscard]] static AbstractSoundManager* getSoundManager();
@@ -29,7 +29,7 @@ namespace chira {
         [[nodiscard]] static Window* getWindow();
 #ifdef CHIRA_BUILD_WITH_MULTIWINDOW
         [[nodiscard]] static Window* getWindow(const std::string& name);
-        static std::string addWindow(const std::string& title, int width, int height, bool fullscreen = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true);
+        static std::string addWindow(const std::string& title, int width, int height, bool fullscreen = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = true);
         static void removeWindow(const std::string& name);
 #endif
         [[nodiscard]] static bool isStarted();
