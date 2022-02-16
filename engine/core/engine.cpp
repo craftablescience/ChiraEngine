@@ -15,7 +15,9 @@
 #include <loader/settings/jsonSettingsLoader.h>
 #include <physics/bulletPhysicsProvider.h>
 #include <resource/provider/filesystemResourceProvider.h>
+#ifdef CHIRA_BUILD_WITH_NETWORKING
 #include <resource/provider/internetResourceProvider.h>
+#endif
 #include <resource/shaderResource.h>
 #include <render/ubo.h>
 #include <sound/alSoundManager.h>
@@ -37,8 +39,10 @@ void Engine::preInit(const std::string& configPath) {
 #endif
 #endif
     Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
+#ifdef CHIRA_BUILD_WITH_NETWORKING
     Resource::addResourceProvider(new InternetResourceProvider{"http", 80});
     Resource::addResourceProvider(new InternetResourceProvider{"https", 443});
+#endif
     Engine::setSettingsLoader(new JSONSettingsLoader{configPath});
     std::string defaultLang;
     Engine::getSettingsLoader()->getValue("ui", "language", &defaultLang);
