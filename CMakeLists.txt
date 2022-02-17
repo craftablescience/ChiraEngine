@@ -64,8 +64,11 @@ if(WIN32 AND ((NOT CHIRA_BUILD_WITH_MSVC_COMPAT) AND CHIRA_COMPILER_CLANG))
 endif()
 
 # ANGELSCRIPT
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript)
-list(APPEND ENGINE_LINK_LIBRARIES angelscript)
+option(CHIRA_BUILD_WITH_ANGELSCRIPT "Build Chira Engine with AngelScript support" ON)
+if(CHIRA_BUILD_WITH_ANGELSCRIPT)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript)
+    list(APPEND ENGINE_LINK_LIBRARIES angelscript)
+endif()
 
 # BULLET
 cmake_policy(SET CMP0077 NEW)
@@ -200,8 +203,14 @@ option(CHIRA_BUILD_WITH_MULTIWINDOW "Build Chira Engine with the ability to crea
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/CMakeLists.txt)
 add_library(${PROJECT_NAME} STATIC ${ENGINE_SOURCES})
 
+if(CHIRA_BUILD_WITH_ANGELSCRIPT)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_BUILD_WITH_ANGELSCRIPT)
+    target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/include)
+    target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/addons)
+endif()
 if(CHIRA_BUILD_WITH_NETWORKING)
     target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_BUILD_WITH_NETWORKING)
+    target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp/include)
 endif()
 if(CHIRA_BUILD_WITH_STEAMWORKS)
     target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_BUILD_WITH_STEAMWORKS)
@@ -245,9 +254,6 @@ if(CHIRA_BUILD_WITH_WARNINGS)
     endif()
 endif()
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/include)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/angelscript/addons)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/curlpp/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/discord/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/fmt/include)
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glad/include)

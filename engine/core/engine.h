@@ -5,7 +5,9 @@
 #include <memory>
 
 #include <loader/settings/abstractSettingsLoader.h>
+#ifdef CHIRA_BUILD_WITH_ANGELSCRIPT
 #include <script/angelscriptProvider.h>
+#endif
 #include <sound/abstractSoundManager.h>
 #include <physics/abstractPhysicsProvider.h>
 #include <entity/root/window.h>
@@ -20,7 +22,9 @@ namespace chira {
         static void preInit(const std::string& configPath = "settings.json");
         static void init(const std::function<void()>& callbackOnInit = []{}, bool windowStartsVisible = true);
         static void run(const std::function<void()>& callbackOnStop = []{});
+#ifdef CHIRA_BUILD_WITH_ANGELSCRIPT
         [[nodiscard]] static AngelscriptProvider* getAngelscriptProvider();
+#endif
         [[nodiscard]] static AbstractSoundManager* getSoundManager();
         static void setSoundManager(AbstractSoundManager* newSoundManager);
         [[nodiscard]] static AbstractSettingsLoader* getSettingsLoader();
@@ -36,7 +40,9 @@ namespace chira {
         /// Note: only guaranteed to work after run() in a render method
         [[nodiscard]] static double getDeltaTime();
     private:
+#ifdef CHIRA_BUILD_WITH_ANGELSCRIPT
         static inline std::unique_ptr<AngelscriptProvider> angelscript;
+#endif
         static inline std::unique_ptr<AbstractSoundManager> soundManager;
         static inline std::unique_ptr<AbstractSettingsLoader> settingsLoader;
         static inline std::vector<std::unique_ptr<Window>> windows;

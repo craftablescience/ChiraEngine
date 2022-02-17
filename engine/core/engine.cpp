@@ -170,13 +170,17 @@ void Engine::init(const std::function<void()>& callbackOnInit, bool windowStarts
         Logger::log(LogType::ERROR, "Steam", TR("error.steam.initialization_failure"));
 #endif
 
+#ifdef CHIRA_BUILD_WITH_ANGELSCRIPT
     Engine::angelscript = std::make_unique<AngelscriptProvider>();
     // Static function:
     //Engine::angelscript->registerGlobalFunction(Engine::setBackgroundColor, "setBackgroundColor");
     // Method:
     //Engine::angelscript->asEngine->RegisterGlobalFunction("void showConsole(bool)", asMETHOD(Engine, showConsole), asCALL_THISCALL_ASGLOBAL, this);
+#endif
     callbackOnInit();
+#ifdef CHIRA_BUILD_WITH_ANGELSCRIPT
     Engine::angelscript->init();
+#endif
 
     Window::getFontAtlasInstance()->Build();
 }
@@ -188,7 +192,9 @@ void Engine::run(const std::function<void()>& callbackOnStop) {
 
         AbstractPhysicsProvider::getPhysicsProvider()->updatePhysics(Engine::getDeltaTime());
 
+#ifdef CHIRA_BUILD_WITH_ANGELSCRIPT
         Engine::angelscript->render();
+#endif
         for (auto& window : Engine::windows)
             window->render(glm::identity<glm::mat4>());
 
@@ -236,7 +242,9 @@ void Engine::run(const std::function<void()>& callbackOnStop) {
     Logger::log(LogType::INFO_IMPORTANT, "Engine", TR("debug.engine.exit"));
 
     callbackOnStop();
+#ifdef CHIRA_BUILD_WITH_ANGELSCRIPT
     Engine::angelscript->stop();
+#endif
 
     if (DiscordRPC::initialized())
         DiscordRPC::shutdown();
@@ -254,11 +262,13 @@ void Engine::run(const std::function<void()>& callbackOnStop) {
     exit(EXIT_SUCCESS);
 }
 
+#ifdef CHIRA_BUILD_WITH_ANGELSCRIPT
 AngelscriptProvider* Engine::getAngelscriptProvider() {
     if (!Engine::angelscript)
         Logger::log(LogType::ERROR, "Engine::getAngelscriptProvider", TRF("error.engine.script_provider_missing", "AngelScript"));
     return Engine::angelscript.get();
 }
+#endif
 
 AbstractSoundManager* Engine::getSoundManager() {
     if (!Engine::soundManager)

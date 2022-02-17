@@ -71,7 +71,9 @@ int main() {
         EditorCamera::setupKeybinds();
         camera->translate(glm::vec3{0,0,15});
 
+#ifdef CHIRA_BUILD_WITH_ANGELSCRIPT
         Engine::getAngelscriptProvider()->addScript("file://scripts/testScript.as");
+#endif
 
         auto sound = new OGGFileSound();
         sound->init("file://sounds/helloWorldCutMono.ogg");
