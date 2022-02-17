@@ -14,7 +14,7 @@ namespace chira {
             : Entity()
             , callback(std::move(callback_)) {}
         void render(glm::mat4 parentTransform) override {
-            this->callback(std::forward<glm::mat4>(parentTransform));
+            this->callback(parentTransform);
         }
     protected:
         std::function<void(glm::mat4)> callback;

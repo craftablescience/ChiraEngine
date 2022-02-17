@@ -14,7 +14,7 @@ namespace chira {
         static bool registerTypeFactory(const std::string& name, factoryFunction createFunc) {
             if (AbstractFactory::getFactoryMethods().count(name) > 0)
                 return false;
-            AbstractFactory::getFactoryMethods()[name] = std::forward<factoryFunction>(createFunc);
+            AbstractFactory::getFactoryMethods()[name] = createFunc;
             return true;
         }
         static const factoryFunction& getTypeFactory(const std::string& name) {

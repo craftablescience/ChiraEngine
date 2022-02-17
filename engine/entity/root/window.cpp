@@ -169,7 +169,7 @@ void Window::render(glm::mat4 parentTransform) {
     ImGui::NewFrame();
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
 
-    Frame::render(std::forward<glm::mat4>(parentTransform), this->fboHandle, this->width, this->height);
+    Frame::render(parentTransform, this->fboHandle, this->width, this->height);
 
     glDisable(GL_DEPTH_TEST);
     ImGui::Render();
