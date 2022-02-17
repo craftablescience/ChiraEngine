@@ -23,6 +23,11 @@ int main() {
     Engine::getSettingsLoader()->setValue("engineGui", "discordIntegration", true, false, true);
     bool discordEnabled;
     Engine::getSettingsLoader()->getValue("engineGui", "discordIntegration", &discordEnabled);
+    if (discordEnabled) {
+        DiscordRPC::init(TR("editor.discord.application_id"));
+        DiscordRPC::setLargeImage("main_logo");
+        DiscordRPC::setState("https://discord.gg/ASgHFkX");
+    }
 
 #ifdef CHIRA_BUILD_WITH_STEAMWORKS
     Engine::getSettingsLoader()->setValue("engine", "steamworks", true, true, true);
@@ -43,13 +48,7 @@ int main() {
         Engine::getSoundManager()->getSound("helloWorld")->play();
     }});
 
-    Engine::init([&discordEnabled]{
-        if (discordEnabled) {
-            DiscordRPC::init(TR("editor.discord.application_id"));
-            DiscordRPC::setLargeImage("main_logo");
-            DiscordRPC::setState("https://discord.gg/ASgHFkX");
-        }
-
+    Engine::init([]{
         auto staticTeapot = new BulletRigidBody{"file://physics/ground_static.json"};
         staticTeapot->translate(glm::vec3{3,0,-13});
         staticTeapot->addChild(new Mesh{"file://meshes/teapot.json"});
