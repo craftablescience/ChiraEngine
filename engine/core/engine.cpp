@@ -50,16 +50,7 @@ void Engine::preInit(const std::string& configPath) {
     TranslationManager::addTranslationFile("file://i18n/engine");
 }
 
-void Engine::init(const std::function<void()>& callbackOnInit, bool windowStartsVisible) {
-    Engine::started = true;
-
-    if (!glfwInit()) {
-        Logger::log(LogType::ERROR, "GLFW", TR("error.glfw.undefined"));
-        exit(EXIT_FAILURE);
-    }
-    glfwSetErrorCallback([](int error, const char* description) {
-        Logger::log(LogType::ERROR, "GLFW", TRF("error.glfw.generic", error, description));
-    });
+void Engine::init(const std::function<void()>& callbackOnInitStart, const std::function<void()>& callbackOnInitFinish, bool windowStartsVisible) {
 
     int windowWidth = 1600;
     Engine::getSettingsLoader()->getValue("graphics", "windowWidth", &windowWidth);
@@ -136,7 +127,7 @@ void Engine::init(const std::function<void()>& callbackOnInit, bool windowStarts
     IMGUI_CHECKVERSION();
 #endif
 
-    Engine::windows[0]->displaySplashScreen();
+    callbackOnInitStart();
 
     AbstractMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     AbstractMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
@@ -177,18 +168,19 @@ void Engine::init(const std::function<void()>& callbackOnInit, bool windowStarts
     // Method:
     //Engine::angelscript->asEngine->RegisterGlobalFunction("void showConsole(bool)", asMETHOD(Engine, showConsole), asCALL_THISCALL_ASGLOBAL, this);
 #endif
-    callbackOnInit();
+    callbackOnInitFinish();
 #ifdef CHIRA_BUILD_WITH_ANGELSCRIPT
     Engine::angelscript->init();
 #endif
 
     Window::getFontAtlasInstance()->Build();
+    Engine::started = true;
 }
 
-void Engine::run(const std::function<void()>& callbackOnStop) {
+void Engine::run(const std::function<void()>& callbackOnLoop,const std::function<void()>& callbackOnStop) {
     do {
         Engine::lastTime = Engine::currentTime;
-        Engine::currentTime = glfwGetTime();
+        Engine::currentTime = SystemTimer();
 
         AbstractPhysicsProvider::getPhysicsProvider()->updatePhysics(Engine::getDeltaTime());
 
@@ -198,17 +190,7 @@ void Engine::run(const std::function<void()>& callbackOnStop) {
         for (auto& window : Engine::windows)
             window->render(glm::identity<glm::mat4>());
 
-        glfwPollEvents();
-        for (auto& window : Engine::windows) {
-            for (auto &keybind: InputManager::getKeyButtonCallbacks()) {
-                if (glfwGetKey(window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
-                    keybind();
-            }
-            for (auto &keybind: InputManager::getMouseButtonCallbacks()) {
-                if (glfwGetMouseButton(window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
-                    keybind();
-            }
-        }
+        callbackOnLoop();
 
         //todo(multiview): figure out sound
         Engine::soundManager->setListenerPosition(Engine::getWindow()->getAudioListeningPosition());
@@ -227,13 +209,13 @@ void Engine::run(const std::function<void()>& callbackOnStop) {
 #ifdef CHIRA_BUILD_WITH_MULTIWINDOW
             auto windowIterator = Engine::windows.begin();
             while (windowIterator != Engine::windows.end()) {
-                if (glfwWindowShouldClose(windowIterator->get()->window))
+                if (windowIterator->get()->shouldClose())
                     Engine::windows.erase(windowIterator);
                 else
                     windowIterator++;
             }
 #else
-            if (glfwWindowShouldClose(Engine::windows[0]->window))
+            if (Engine::windows[0]->shouldClose())
                 Engine::windows.clear();
 #endif
         }
@@ -241,7 +223,6 @@ void Engine::run(const std::function<void()>& callbackOnStop) {
 
     Logger::log(LogType::INFO_IMPORTANT, "Engine", TR("debug.engine.exit"));
 
-    callbackOnStop();
 #ifdef CHIRA_BUILD_WITH_ANGELSCRIPT
     Engine::angelscript->stop();
 #endif
@@ -258,7 +239,8 @@ void Engine::run(const std::function<void()>& callbackOnStop) {
     AbstractPhysicsProvider::getPhysicsProvider()->stop();
     Resource::discardAll();
 
-    glfwTerminate();
+
+    callbackOnStop();
     exit(EXIT_SUCCESS);
 }
 
@@ -317,14 +299,14 @@ void Engine::setSettingsLoaderDefaults() {
     Engine::settingsLoader->save();
 }
 
-Window* Engine::getWindow() {
+Frame* Engine::getWindow() {
     if (Engine::windows.empty())
         return nullptr;
     return Engine::windows[0].get();
 }
 
 #ifdef CHIRA_BUILD_WITH_MULTIWINDOW
-Window* Engine::getWindow(const std::string& name) {
+Frame* Engine::getWindow(const std::string& name) {
     for (auto& window : Engine::windows) {
         if (window->getName() == name) {
             return window.get();

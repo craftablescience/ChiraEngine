@@ -20,6 +20,7 @@ namespace chira {
         virtual void setFrameSize(glm::vec<2, int> newSize);
         [[nodiscard]] ColorRGB getBackgroundColor() const;
         void setBackgroundColor(ColorRGB color);
+        virtual bool shouldClose();
     protected:
         unsigned int fboHandle = 0, colorTexHandle = 0, rboHandle = 0;
         ColorRGB backgroundColor{};

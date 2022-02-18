@@ -123,3 +123,7 @@ ColorRGB Frame::getBackgroundColor() const {
 void Frame::setBackgroundColor(ColorRGB color) {
     this->backgroundColor = color;
 }
+
+bool Frame::shouldClose(){
+    return true;
+}

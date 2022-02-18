@@ -36,7 +36,8 @@ int main() {
 #endif
 
     InputManager::addCallback(InputKeyButton{Key::ESCAPE, InputKeyEventType::PRESSED, []{
-        Engine::getWindow()->shouldStopAfterThisFrame();
+        if(auto window = dynamic_cast<Window*>(Engine::getWindow()))
+        window->shouldStopAfterThisFrame();
     }});
     InputManager::addCallback(InputKeyButton{Key::ONE, InputKeyEventType::PRESSED, []{
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -48,7 +49,21 @@ int main() {
         Engine::getSoundManager()->getSound("helloWorld")->play();
     }});
 
+    if (!glfwInit()) {
+        Logger::log(LogType::ERROR, "GLFW", TR("error.glfw.undefined"));
+        exit(EXIT_FAILURE);
+    }
+    glfwSetErrorCallback([](int error, const char* description) {
+        Logger::log(LogType::ERROR, "GLFW", TRF("error.glfw.generic", error, description));
+    });
+
+    Engine::SystemTimer = glfwGetTime;
+
     Engine::init([]{
+        if(auto window = dynamic_cast<Window*>(Engine::getWindow()))
+        window->displaySplashScreen();
+        },[]{
+
         auto staticTeapot = new BulletRigidBody{"file://physics/ground_static.json"};
         staticTeapot->translate(glm::vec3{3,0,-13});
         staticTeapot->addChild(new Mesh{"file://meshes/teapot.json"});
@@ -88,6 +103,22 @@ int main() {
         teapotShader->setUniform("light.position", 0.0f, 5.0f, 0.0f);
 
         Engine::getWindow()->setSkybox("file://materials/skybox/shanghai.json");
+    },true);
+    Engine::run([]{
+            glfwPollEvents();
+            for (auto& frame : Engine::windows) {
+                if(auto window = dynamic_cast<Window*>(frame.get())){
+                    for (auto &keybind: InputManager::getKeyButtonCallbacks()) {
+                        if (glfwGetKey(window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
+                            keybind();
+                    }
+                    for (auto &keybind: InputManager::getMouseButtonCallbacks()) {
+                        if (glfwGetMouseButton(window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
+                            keybind();
+                    }
+                }
+            }
+        },[]{
+        glfwTerminate();
     });
-    Engine::run();
 }

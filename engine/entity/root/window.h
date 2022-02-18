@@ -25,11 +25,12 @@ namespace chira {
         /// Note: Images must have a bit depth of 8
         void setIcon(const std::string& identifier) const;
         void shouldStopAfterThisFrame(bool yes = true) const;
+        bool shouldClose() override;
         /// Renders the splashscreen to all window's default framebuffer
         void displaySplashScreen();
+        GLFWwindow* window = nullptr;
     protected:
         MeshDataBuilder surface;
-        GLFWwindow* window = nullptr;
         ImGuiContext* guiContext = nullptr;
         bool mouseCaptured = false, iconified = false, fullscreen;
         double lastMouseX = -1.0, lastMouseY = -1.0;

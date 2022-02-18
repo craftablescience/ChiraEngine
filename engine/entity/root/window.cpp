@@ -266,3 +266,7 @@ ImFontAtlas* Window::getFontAtlasInstance() {
     static ImFontAtlas fontAtlas{};
     return &fontAtlas;
 }
+
+bool Window::shouldClose(){
+    return glfwWindowShouldClose(this->window);
+}
