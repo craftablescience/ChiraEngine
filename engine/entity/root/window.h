@@ -8,8 +8,6 @@
 
 namespace chira {
     class Window : public Frame {
-        // We don't want people making windows and adding them to the entity tree
-        // Only the Engine can make windows!
         friend class Engine;
     public:
         void render(glm::mat4 parentTransform) override;
@@ -28,16 +26,16 @@ namespace chira {
         bool shouldClose() override;
         /// Renders the splashscreen to all window's default framebuffer
         void displaySplashScreen();
+        static ImFontAtlas* getFontAtlasInstance();
         GLFWwindow* window = nullptr;
+        Window(const std::string& name_, const std::string& title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = true);
+        Window(const std::string& title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = true);
     protected:
         MeshDataBuilder surface;
         ImGuiContext* guiContext = nullptr;
         bool mouseCaptured = false, iconified = false, fullscreen;
         double lastMouseX = -1.0, lastMouseY = -1.0;
-        Window(const std::string& name_, const std::string& title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = true);
-        Window(const std::string& title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = true);
     private:
-        static ImFontAtlas* getFontAtlasInstance();
         bool createGLFWWindow(const std::string& title);
     };
 }

@@ -50,7 +50,7 @@ void Engine::preInit(const std::string& configPath) {
     TranslationManager::addTranslationFile("file://i18n/engine");
 }
 
-void Engine::init(const std::function<void()>& callbackOnInitStart, const std::function<void()>& callbackOnInitFinish, bool windowStartsVisible) {
+void Engine::init(const std::function<void(int windowWidth,int windowHeight,bool fullscreen)>& callbackOnInitStart, const std::function<void()>& callbackOnInitFinish, bool windowStartsVisible) {
 
     int windowWidth = 1600;
     Engine::getSettingsLoader()->getValue("graphics", "windowWidth", &windowWidth);
@@ -59,12 +59,8 @@ void Engine::init(const std::function<void()>& callbackOnInitStart, const std::f
     bool fullscreen = false;
     Engine::getSettingsLoader()->getValue("graphics", "fullscreen", &fullscreen);
 
-    Window::getFontAtlasInstance()->AddFontDefault();
-#ifdef CHIRA_BUILD_WITH_MULTIWINDOW
-    Engine::addWindow(TR("ui.window.title"), windowWidth, windowHeight, fullscreen, {}, true, false);
-#else
-    Engine::windows.emplace_back(new Window{TR("ui.window.title"), windowWidth, windowHeight, fullscreen, {}, true, false});
-#endif
+    callbackOnInitStart(windowWidth,windowHeight,fullscreen);
+
     Engine::getWindow()->setVisible(windowStartsVisible);
 
 #ifdef DEBUG
@@ -126,8 +122,6 @@ void Engine::init(const std::function<void()>& callbackOnInitStart, const std::f
 
     IMGUI_CHECKVERSION();
 #endif
-
-    callbackOnInitStart();
 
     AbstractMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     AbstractMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});

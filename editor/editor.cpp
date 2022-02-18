@@ -59,7 +59,15 @@ int main() {
 
     Engine::SystemTimer = glfwGetTime;
 
-    Engine::init([]{
+    Engine::init([](int windowWidth,int windowHeight,bool fullscreen){
+
+        Window::getFontAtlasInstance()->AddFontDefault();
+        #ifdef CHIRA_BUILD_WITH_MULTIWINDOW
+                Engine::addWindow(TR("ui.window.title"), windowWidth, windowHeight, fullscreen, {}, true, false);
+        #else
+                Engine::windows.emplace_back(new Window{TR("ui.window.title"), windowWidth, windowHeight, fullscreen, {}, true, false});
+        #endif
+
         if(auto window = dynamic_cast<Window*>(Engine::getWindow()))
         window->displaySplashScreen();
         },[]{

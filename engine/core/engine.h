@@ -20,7 +20,7 @@ namespace chira {
     public:
         /// Ran at the very start of your program. Readies the engine for you to add features before init().
         static void preInit(const std::string& configPath = "settings.json");
-        static void init(const std::function<void()>& callbackOnInitStart = []{}, const std::function<void()>& callbackOnInitFinish = []{}, bool windowStartsVisible = true);
+        static void init(const std::function<void(int windowWidth,int windowHeight,bool fullscreen)>& callbackOnInitStart = [](int windowWidth,int windowHeight,bool fullscreen){}, const std::function<void()>& callbackOnInitFinish = []{}, bool windowStartsVisible = true);
         static void run(const std::function<void()>& callbackOnLoop = []{}, const std::function<void()>& callbackOnStop = []{});
         inline static std::function<double(void)> SystemTimer;
 #ifdef CHIRA_BUILD_WITH_ANGELSCRIPT
