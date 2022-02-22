@@ -4,10 +4,6 @@
 
 #include <config/glVersion.h>
 #include <event/events.h>
-#include <hook/discordRPC.h>
-#ifdef CHIRA_BUILD_WITH_STEAMWORKS
-#include <hook/steamAPI.h>
-#endif
 #include <i18n/translationManager.h>
 #include <input/inputManager.h>
 #include <loader/mesh/objMeshLoader.h>
@@ -15,13 +11,20 @@
 #include <loader/settings/jsonSettingsLoader.h>
 #include <physics/bulletPhysicsProvider.h>
 #include <resource/provider/filesystemResourceProvider.h>
-#ifdef CHIRA_BUILD_WITH_NETWORKING
-#include <resource/provider/internetResourceProvider.h>
-#endif
 #include <resource/shaderResource.h>
 #include <render/ubo.h>
 #include <sound/alSoundManager.h>
 #include <utility/debug/assertions.h>
+
+#ifdef CHIRA_BUILD_WITH_DISCORD
+#include <hook/discordRPC.h>
+#endif
+#ifdef CHIRA_BUILD_WITH_STEAMWORKS
+#include <hook/steamAPI.h>
+#endif
+#ifdef CHIRA_BUILD_WITH_NETWORKING
+#include <resource/provider/internetResourceProvider.h>
+#endif
 
 #if __has_include(<windows.h>) && !defined(DEBUG)
 #include <windows.h>
@@ -215,8 +218,10 @@ void Engine::run(const std::function<void()>& callbackOnStop) {
         Engine::soundManager->setListenerRotation(Engine::getWindow()->getAudioListeningRotation(), Engine::getWindow()->getAudioListeningUpVector());
         Engine::soundManager->update();
 
+#ifdef CHIRA_BUILD_WITH_DISCORD
         if (DiscordRPC::initialized())
             DiscordRPC::updatePresence();
+#endif
 #ifdef CHIRA_BUILD_WITH_STEAMWORKS
         if (SteamAPI::Client::initialized())
             SteamAPI::Client::runCallbacks();
@@ -246,8 +251,10 @@ void Engine::run(const std::function<void()>& callbackOnStop) {
     Engine::angelscript->stop();
 #endif
 
+#ifdef CHIRA_BUILD_WITH_DISCORD
     if (DiscordRPC::initialized())
         DiscordRPC::shutdown();
+#endif
 #ifdef CHIRA_BUILD_WITH_STEAMWORKS
     if (SteamAPI::Client::initialized())
         SteamAPI::Client::shutdown();

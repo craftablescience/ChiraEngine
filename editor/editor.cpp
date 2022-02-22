@@ -1,16 +1,19 @@
 #include <core/engine.h>
 #include <input/inputManager.h>
 #include <sound/oggFileSound.h>
-#include <hook/discordRPC.h>
-#ifdef CHIRA_BUILD_WITH_STEAMWORKS
-#include <hook/steamAPI.h>
-#endif
 #include <resource/provider/filesystemResourceProvider.h>
 #include <i18n/translationManager.h>
 #include <entity/model/mesh.h>
 #include <entity/physics/bulletRigidBody.h>
 #include <entity/camera/editorCamera.h>
 #include <entity/gui/settings.h>
+
+#ifdef CHIRA_BUILD_WITH_DISCORD
+#include <hook/discordRPC.h>
+#endif
+#ifdef CHIRA_BUILD_WITH_STEAMWORKS
+#include <hook/steamAPI.h>
+#endif
 
 using namespace chira;
 
@@ -20,6 +23,7 @@ int main() {
     TranslationManager::addTranslationFile("file://i18n/editor");
     TranslationManager::addUniversalFile("file://i18n/editor");
 
+#ifdef CHIRA_BUILD_WITH_DISCORD
     Engine::getSettingsLoader()->setValue("engineGui", "discordIntegration", true, false, true);
     bool discordEnabled;
     Engine::getSettingsLoader()->getValue("engineGui", "discordIntegration", &discordEnabled);
@@ -28,6 +32,7 @@ int main() {
         DiscordRPC::setLargeImage("main_logo");
         DiscordRPC::setState("https://discord.gg/ASgHFkX");
     }
+#endif
 
 #ifdef CHIRA_BUILD_WITH_STEAMWORKS
     Engine::getSettingsLoader()->setValue("engine", "steamworks", true, true, true);
