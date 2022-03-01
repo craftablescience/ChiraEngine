@@ -93,25 +93,16 @@ void OBJMeshLoader::addVertex(Vertex v, unsigned int* currentIndex, std::vector<
 }
 
 std::vector<byte> OBJMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) const {
-    std::vector<glm::vec3> positions;
-    std::vector<ColorRG> uvs;
-    std::vector<ColorRGB> normals;
-    positions.reserve(indices.size());
-    uvs.reserve(indices.size());
-    normals.reserve(indices.size());
-
-    for (const auto index : indices) {
-        positions.push_back(vertices[index].position);
-        uvs.push_back(vertices[index].uv);
-        normals.push_back(vertices[index].normal);
-    }
     std::stringstream meshDataStream;
+    meshDataStream.setf(std::stringstream::fixed);
     // The following could be modified to actually use indices and save file space...
     // But it doesn't have to be right now :P
-    for (const auto position : positions) meshDataStream << "v " << position.x << ' ' << position.y << ' ' << position.z << '\n';
-    for (const auto uv       : uvs)       meshDataStream << "vt " << uv.r << ' ' << uv.g << '\n';
-    for (const auto normal   : normals)   meshDataStream << "vn " << normal.r << ' ' << normal.g << ' ' << normal.b << '\n';
-    for (unsigned int i = 0; i < vertices.size(); i += 3) {
+    for (const auto index : indices) {
+        meshDataStream << "v " << std::setprecision(6) << vertices[index].position.x << ' ' << vertices[index].position.y << ' ' << vertices[index].position.z << '\n';
+        meshDataStream << "vt " << std::setprecision(6) << vertices[index].uv.r << ' ' << vertices[index].uv.g << '\n';
+        meshDataStream << "vn " << std::setprecision(6) << vertices[index].normal.r << ' ' << vertices[index].normal.g << ' ' << vertices[index].normal.b << '\n';
+    }
+    for (unsigned int i = 1; i < indices.size() + 1; i += 3) {
         meshDataStream << "f " << i   << '/' << i   << '/' << i   << ' '
                                << i+1 << '/' << i+1 << '/' << i+1 << ' '
                                << i+2 << '/' << i+2 << '/' << i+2 << '\n';
