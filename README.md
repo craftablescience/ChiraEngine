@@ -40,7 +40,8 @@ Again, the goal of the engine is to have as much customization as possible, whil
 | Clang-CL | Untested                   | N/A              |
 
 *MSVC cannot compile the engine's dependencies as
-shared libraries, and can only compile for x86.
+shared libraries, and can only compile for x86
+with AngelScript integration enabled.
 
 ## Bundled Dependencies
 - AngelScript v2.34.0
@@ -65,10 +66,10 @@ shared libraries, and can only compile for x86.
 ## Development (Windows)
 - **CLion (recommended)**: The project will compile without any prior configuration, but you will most likely need to install the Windows SDK (see below).
 
-- Visual Studio 2019: You will need to install (most of) the following components. Some are not required, like the AddressSanitizer and Just-In-Time debugger.
+- Visual Studio 2022: You will need to install (most of) the following components. Some are not required, like the AddressSanitizer and Just-In-Time debugger. This is an old screenshot, make any upgrades to the versions of these components that you see fit.
   ![image](https://user-images.githubusercontent.com/26600014/128105644-cfa92f30-dc96-4476-a4c9-8d8b5f3ce129.png)
   
-  Compiling with MSVC will produce an error for x64 targets, due to a bug with AngelScript (see [the AngelScript docs](https://www.angelcode.com/angelscript/sdk/docs/manual/doc_compile_lib.html#doc_compile_win64) for more information).
+  Compiling with MSVC with AngelScript integration enabled will produce an error for x64 targets (see [the AngelScript docs](https://www.angelcode.com/angelscript/sdk/docs/manual/doc_compile_lib.html#doc_compile_win64) for more information).
   It will also build the engine and its dependencies statically.
   I strongly recommend compiling with MinGW, but if you can't, target x86.
 
