@@ -25,7 +25,6 @@ namespace chira {
     protected:
         std::string identifier;
 
-
     //
     // Static caching functions
     //
@@ -140,9 +139,9 @@ namespace chira {
         static void discardAll();
 
     protected:
-        static std::unordered_map<std::string, std::vector<std::unique_ptr<AbstractResourceProvider>>> providers;
-        static std::unordered_map<std::string, std::unordered_map<std::string, SharedPointer<Resource>>> resources;
-        static std::vector<std::string> garbageResources;
+        static inline std::unordered_map<std::string, std::vector<std::unique_ptr<AbstractResourceProvider>>> providers;
+        static inline std::unordered_map<std::string, std::unordered_map<std::string, SharedPointer<Resource>>> resources;
+        static inline std::vector<std::string> garbageResources;
 
         /// We do a few predeclaration workarounds
         static void logResourceError(const std::string& identifier, const std::string& resourceName);

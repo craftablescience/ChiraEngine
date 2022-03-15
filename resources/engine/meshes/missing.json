@@ -5,9 +5,6 @@
     "materialType": "MaterialTextured"
   },
   "properties": {
-    "loader": "cmdl",
-    "depthFunction": "LESS",
-    "backfaceCulling": true,
-    "cullType": "BACK"
+    "loader": "cmdl"
   }
 }

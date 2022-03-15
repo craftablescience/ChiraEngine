@@ -9,14 +9,9 @@ Resource::~Resource() {
     Resource::removeResource(this->identifier);
 }
 
-
 //
 // Static caching functions
 //
-
-std::unordered_map<std::string, std::vector<std::unique_ptr<AbstractResourceProvider>>> Resource::providers{};
-std::unordered_map<std::string, std::unordered_map<std::string, SharedPointer<Resource>>> Resource::resources{};
-std::vector<std::string> Resource::garbageResources{};
 
 void Resource::addResourceProvider(AbstractResourceProvider* provider) {
     if (Resource::providers.find(provider->getName()) == Resource::providers.end()) {
@@ -89,8 +84,8 @@ void Resource::discardAll() {
         for (const auto& [name, resource] : resourceMap) {
             // This really shouldn't happen, but it should work out if it does, hence the warning
             Logger::log(LogType::WARNING, "Resource", TRF("warn.resource.deleting_resource_at_exit",
-                                                      Resource::resources[providerName].at(name)->getIdentifier(),
-                                                      Resource::resources[providerName].at(name).useCount()));
+                                                          Resource::resources[providerName].at(name)->getIdentifier(),
+                                                          Resource::resources[providerName].at(name).useCount()));
         }
     }
     Resource::resources.clear();

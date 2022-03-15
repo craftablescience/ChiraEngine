@@ -20,8 +20,8 @@ void MeshDataResource::compile(const nlohmann::json& properties) {
                 getProperty<std::string>(properties["properties"], "loader", "cmdl", true),
                 properties["dependencies"]["model"]);
     } else {
-        // use getProperty to print an error message
-        this->appendMeshData("cmdl", getProperty<std::string>(properties["properties"], "model", "file://meshes/missing.cmdl", true));
+        PropertiesResource::logMissingProperty(this->identifier, "model");
+        this->appendMeshData("cmdl", "file://meshes/missing.cmdl");
     }
     this->setupForRendering();
 }

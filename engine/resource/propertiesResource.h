@@ -41,7 +41,7 @@ namespace chira {
             }
             return defaultValue;
         }
-    private:
+    protected:
         static void logMissingProperty(const std::string& identifier, const std::string& key);
     };
 }
