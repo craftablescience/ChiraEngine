@@ -7,5 +7,12 @@
     "image_rt": "file://textures/skyboxShanghai/px.png",
     "image_lt": "file://textures/skyboxShanghai/nx.png"
   },
-  "properties": {}
+  "properties": {
+    "format_fd": "RGBA",
+    "format_bk": "RGBA",
+    "format_up": "RGBA",
+    "format_dn": "RGBA",
+    "format_lt": "RGBA",
+    "format_rt": "RGBA"
+  }
 }

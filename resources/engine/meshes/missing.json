@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "model": "file://meshes/missing.cmdl",
+    "material": "file://materials/unlitTextured.json",
+    "materialType": "MaterialTextured"
+  },
+  "properties": {
+    "loader": "cmdl",
+    "depthFunction": "LESS",
+    "backfaceCulling": true,
+    "cullType": "BACK"
+  }
+}

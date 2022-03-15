@@ -4,6 +4,8 @@
 // If you are making your own material, you'll need to add it here so it works in the model viewer, but if you
 // don't care about that then you can ignore this file.
 
+// Also DON'T include MaterialFramebuffer as it is not a material registered within the factory!
+
 #include <render/material/materialFactory.h>
 #include <render/material/materialUntextured.h>
 #include <render/material/materialTextured.h>

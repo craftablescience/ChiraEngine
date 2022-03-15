@@ -26,17 +26,22 @@ namespace chira {
     class PropertiesResource : public Resource {
     public:
         explicit PropertiesResource(const std::string& identifier_) : Resource(identifier_) {}
-        void compile(const unsigned char buffer[], std::size_t bufferLength) final {
-            this->compile(nlohmann::json::parse(std::string{reinterpret_cast<const char*>(buffer), bufferLength}));
-        }
+        void compile(const unsigned char buffer[], std::size_t bufferLength) final;
         virtual void compile(const nlohmann::json& properties) = 0;
 
-        template<typename T>
-        T getPropertyOrDefault(const nlohmann::json& dictionary, const std::string& key, T defaultValue) const {
-            if (dictionary.contains(key))
-                return dictionary.at(key);
-            else
-                return defaultValue;
+        [[nodiscard]] static bool hasProperty(const nlohmann::json& dictionary, const std::string& key) {
+            return dictionary.contains(key);
         }
+        template<typename T>
+        [[nodiscard]] T getProperty(const nlohmann::json& dictionary, const std::string& key, T defaultValue, bool logError = false) const {
+            if (hasProperty(dictionary, key)) {
+                return dictionary.at(key);
+            } else if (logError) {
+                logMissingProperty(this->identifier, key);
+            }
+            return defaultValue;
+        }
+    private:
+        static void logMissingProperty(const std::string& identifier, const std::string& key);
     };
 }

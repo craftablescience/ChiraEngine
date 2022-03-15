@@ -5,6 +5,7 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/binaryResource.h
         ${CMAKE_CURRENT_LIST_DIR}/fontResource.cpp
         ${CMAKE_CURRENT_LIST_DIR}/fontResource.h
+        ${CMAKE_CURRENT_LIST_DIR}/propertiesResource.cpp
         ${CMAKE_CURRENT_LIST_DIR}/propertiesResource.h
         ${CMAKE_CURRENT_LIST_DIR}/resource.cpp
         ${CMAKE_CURRENT_LIST_DIR}/resource.h

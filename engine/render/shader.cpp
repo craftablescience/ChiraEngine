@@ -15,17 +15,17 @@ Shader::Shader(const std::string& identifier_)
 
 void Shader::compile(const nlohmann::json& properties) {
     this->handle = glCreateProgram();
-    auto vert = Resource::getResource<ShaderResource>(properties["dependencies"]["vertex"], GL_VERTEX_SHADER);
+    auto vert = Resource::getResource<ShaderResource>(getProperty<std::string>(properties["dependencies"], "vertex", "file://shaders/unlitTextured.vsh", true), GL_VERTEX_SHADER);
     glAttachShader(this->handle, vert->getHandle());
-    auto frag = Resource::getResource<ShaderResource>(properties["dependencies"]["fragment"], GL_FRAGMENT_SHADER);
+    auto frag = Resource::getResource<ShaderResource>(getProperty<std::string>(properties["dependencies"], "fragment", "file://shaders/unlitTextured.fsh", true), GL_FRAGMENT_SHADER);
     glAttachShader(this->handle, frag->getHandle());
     glLinkProgram(this->handle);
 #if DEBUG
     this->checkForCompilationErrors();
 #endif
-    if (getPropertyOrDefault(properties["properties"], "usesPV", true))
+    if (getProperty(properties["properties"], "usesPV", true))
         UBO_PerspectiveView::get()->bindToShader(this);
-    this->usesModel = getPropertyOrDefault(properties["properties"], "usesM", true);
+    this->usesModel = getProperty(properties["properties"], "usesM", true);
 }
 
 Shader::~Shader() {
@@ -47,7 +47,7 @@ void Shader::checkForCompilationErrors() const {
 }
 
 void Shader::setUniform(const std::string& name, bool value) const {
-    glUniform1i(glGetUniformLocation(this->handle, name.c_str()), (int) value);
+    glUniform1i(glGetUniformLocation(this->handle, name.c_str()), static_cast<int>(value));
 }
 
 void Shader::setUniform(const std::string& name, int value) const {
@@ -63,7 +63,7 @@ void Shader::setUniform(const std::string& name, float value) const {
 }
 
 void Shader::setUniform(const std::string& name, bool value1, bool value2) const {
-    glUniform2i(glGetUniformLocation(this->handle, name.c_str()), (int) value1, (int) value2);
+    glUniform2i(glGetUniformLocation(this->handle, name.c_str()), static_cast<int>(value1), static_cast<int>(value2));
 }
 
 void Shader::setUniform(const std::string& name, int value1, int value2) const {
@@ -79,7 +79,7 @@ void Shader::setUniform(const std::string& name, float value1, float value2) con
 }
 
 void Shader::setUniform(const std::string& name, bool value1, bool value2, bool value3) const {
-    glUniform3i(glGetUniformLocation(this->handle, name.c_str()), (int) value1, (int) value2, (int) value3);
+    glUniform3i(glGetUniformLocation(this->handle, name.c_str()), static_cast<int>(value1), static_cast<int>(value2), static_cast<int>(value3));
 }
 
 void Shader::setUniform(const std::string& name, int value1, int value2, int value3) const {
@@ -95,7 +95,7 @@ void Shader::setUniform(const std::string& name, float value1, float value2, flo
 }
 
 void Shader::setUniform(const std::string& name, bool value1, bool value2, bool value3, bool value4) const {
-    glUniform4i(glGetUniformLocation(this->handle, name.c_str()), (int) value1, (int) value2, (int) value3, (int) value4);
+    glUniform4i(glGetUniformLocation(this->handle, name.c_str()), static_cast<int>(value1), static_cast<int>(value2), static_cast<int>(value3), static_cast<int>(value4));
 }
 
 void Shader::setUniform(const std::string& name, int value1, int value2, int value3, int value4) const {

@@ -7,17 +7,11 @@
 using namespace chira;
 
 void BulletColliderResource::compile(const nlohmann::json& properties) {
-    this->mass = properties["properties"]["mass"];
-    if (properties["properties"].contains("originX")) {
-        this->originX = properties["properties"]["originX"];
-    }
-    if (properties["properties"].contains("originY")) {
-        this->originY = properties["properties"]["originY"];
-    }
-    if (properties["properties"].contains("originZ")) {
-        this->originZ = properties["properties"]["originZ"];
-    }
-    this->colliderType = BulletColliderResource::getBulletColliderTypeFromString(properties["properties"]["colliderType"]);
+    this->mass = getProperty<btScalar>(properties["properties"], "mass", 0.f);
+    this->originX = getProperty<btScalar>(properties["properties"], "originX", 0.f);
+    this->originY = getProperty<btScalar>(properties["properties"], "originY", 0.f);
+    this->originZ = getProperty<btScalar>(properties["properties"], "originZ", 0.f);
+    this->colliderType = BulletColliderResource::getBulletColliderTypeFromString(getProperty<std::string>(properties["properties"], "colliderType", "BULLET_INVALID", true));
     switch(this->colliderType) {
         case BulletColliderType::BULLET_INVALID:
             // Can't really do much here, we've already logged a warning about it
@@ -25,9 +19,9 @@ void BulletColliderResource::compile(const nlohmann::json& properties) {
 
         case BulletColliderType::BULLET_BOX:
             this->collider = std::make_unique<btBoxShape>(btVector3(
-                    properties["properties"]["boundX"],
-                    properties["properties"]["boundY"],
-                    properties["properties"]["boundZ"]));
+                    getProperty<btScalar>(properties["properties"], "boundX", 1.f, true),
+                    getProperty<btScalar>(properties["properties"], "boundY", 1.f, true),
+                    getProperty<btScalar>(properties["properties"], "boundZ", 1.f, true)));
             break;
 
         case BulletColliderType::BULLET_BVH_TRIANGLE_MESH:
@@ -36,21 +30,21 @@ void BulletColliderResource::compile(const nlohmann::json& properties) {
             break;
 
         case BulletColliderType::BULLET_CAPSULE:
-            switch (getAxisFromString(properties["properties"]["axis"])) {
+            switch (getAxisFromString(getProperty<std::string>(properties["properties"], "axis", "X", true))) {
                 case Axis::X:
                     this->collider = std::make_unique<btCapsuleShapeX>(
-                            properties["properties"]["radius"],
-                            properties["properties"]["height"]);
+                            getProperty<btScalar>(properties["properties"], "radius", 1.f, true),
+                            getProperty<btScalar>(properties["properties"], "height", 1.f, true));
                     break;
                 case Axis::Y:
                     this->collider = std::make_unique<btCapsuleShape>(
-                            properties["properties"]["radius"],
-                            properties["properties"]["height"]);
+                            getProperty<btScalar>(properties["properties"], "radius", 1.f, true),
+                            getProperty<btScalar>(properties["properties"], "height", 1.f, true));
                     break;
                 case Axis::Z:
                     this->collider = std::make_unique<btCapsuleShapeZ>(
-                            properties["properties"]["radius"],
-                            properties["properties"]["height"]);
+                            getProperty<btScalar>(properties["properties"], "radius", 1.f, true),
+                            getProperty<btScalar>(properties["properties"], "height", 1.f, true));
                     break;
                 default:
                     // Just don't make the collider, a warning has already been sent
@@ -64,21 +58,21 @@ void BulletColliderResource::compile(const nlohmann::json& properties) {
             break;
 
         case BulletColliderType::BULLET_CONE:
-            switch (getAxisFromString(properties["properties"]["axis"])) {
+            switch (getAxisFromString(getProperty<std::string>(properties["properties"], "axis", "X", true))) {
                 case Axis::X:
                     this->collider = std::make_unique<btConeShapeX>(
-                            properties["properties"]["radius"],
-                            properties["properties"]["height"]);
+                            getProperty<btScalar>(properties["properties"], "radius", 1.f, true),
+                            getProperty<btScalar>(properties["properties"], "height", 1.f, true));
                     break;
                 case Axis::Y:
                     this->collider = std::make_unique<btConeShape>(
-                            properties["properties"]["radius"],
-                            properties["properties"]["height"]);
+                            getProperty<btScalar>(properties["properties"], "radius", 1.f, true),
+                            getProperty<btScalar>(properties["properties"], "height", 1.f, true));
                     break;
                 case Axis::Z:
                     this->collider = std::make_unique<btConeShapeZ>(
-                            properties["properties"]["radius"],
-                            properties["properties"]["height"]);
+                            getProperty<btScalar>(properties["properties"], "radius", 1.f, true),
+                            getProperty<btScalar>(properties["properties"], "height", 1.f, true));
                     break;
                 default:
                     // Just don't make the collider, a warning has already been sent
@@ -94,24 +88,24 @@ void BulletColliderResource::compile(const nlohmann::json& properties) {
             break;
 
         case BulletColliderType::BULLET_CYLINDER:
-            switch (getAxisFromString(properties["properties"]["axis"])) {
+            switch (getAxisFromString(getProperty<std::string>(properties["properties"], "axis", "X", true))) {
                 case Axis::X:
                     this->collider = std::make_unique<btCylinderShapeX>(btVector3(
-                            properties["properties"]["height"],
-                            properties["properties"]["radius"],
-                            1)); // Z-value not used
+                            getProperty<btScalar>(properties["properties"], "height", 1.f, true),
+                            getProperty<btScalar>(properties["properties"], "radius", 1.f, true),
+                            1.f)); // Z-value not used
                     break;
                 case Axis::Y:
                     this->collider = std::make_unique<btCylinderShape>(btVector3(
-                            properties["properties"]["radius"],
-                            properties["properties"]["height"],
-                            1)); // Z-value not used
+                            getProperty<btScalar>(properties["properties"], "radius", 1.f, true),
+                            getProperty<btScalar>(properties["properties"], "height", 1.f, true),
+                            1.f)); // Z-value not used
                     break;
                 case Axis::Z:
                     this->collider = std::make_unique<btCylinderShapeZ>(btVector3(
-                            properties["properties"]["radius"],
-                            1,
-                            properties["properties"]["height"])); // Y-value not used
+                            getProperty<btScalar>(properties["properties"], "radius", 1.f, true),
+                            1.f,
+                            getProperty<btScalar>(properties["properties"], "height", 1.f, true))); // Y-value not used
                     break;
                 default:
                     // Just don't make the collider, a warning has already been sent
@@ -127,15 +121,16 @@ void BulletColliderResource::compile(const nlohmann::json& properties) {
             break;
 
         case BulletColliderType::BULLET_SPHERE:
-            this->collider = std::make_unique<btSphereShape>(properties["properties"]["radius"]);
+            this->collider = std::make_unique<btSphereShape>(getProperty<btScalar>(properties["properties"], "radius", 1.f, true));
             break;
 
         case BulletColliderType::BULLET_STATIC_PLANE:
-            this->collider = std::make_unique<btStaticPlaneShape>(btVector3(
-                    properties["properties"]["normalX"],
-                    properties["properties"]["normalY"],
-                    properties["properties"]["normalZ"]),
-                       properties["properties"]["planeConstant"]);
+            this->collider = std::make_unique<btStaticPlaneShape>(
+                    btVector3(
+                            getProperty<btScalar>(properties["properties"], "normalX", 0.f, true),
+                            getProperty<btScalar>(properties["properties"], "normalY", 0.f, true),
+                            getProperty<btScalar>(properties["properties"], "normalZ", 0.f, true)),
+                    getProperty<btScalar>(properties["properties"], "planeConstant", 0.f, true));
             break;
     }
 

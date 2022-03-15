@@ -12,6 +12,8 @@ namespace chira {
             , language(std::move(language_)) {}
         void compile(const nlohmann::json& translations) override {
             this->strings = translations;
+            this->strings.erase("properties");
+            this->strings.erase("dependencies");
         }
         [[nodiscard]] const std::string& getLanguage() const;
         [[nodiscard]] bool hasTranslation(const std::string& key) const;

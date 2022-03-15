@@ -12,15 +12,18 @@ Texture::Texture(const std::string& identifier_, bool cacheTexture)
     , cache(cacheTexture) {}
 
 void Texture::compile(const nlohmann::json& properties) {
-    this->format = getFormatFromString(getPropertyOrDefault<std::string>(properties["properties"], "format", std::string("RGBA")));
-    this->wrapModeS = getWrapModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "wrap_mode_s", "REPEAT"));
-    this->wrapModeT = getWrapModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "wrap_mode_t", "REPEAT"));
-    this->filterMode = getFilterModeFromString(getPropertyOrDefault<std::string>(properties["properties"], "filter_mode", "LINEAR"));
-    this->mipmaps = getPropertyOrDefault<bool>(properties["properties"], "mipmaps", true);
-    auto texData = Resource::getResource<TextureResource>(properties["dependencies"]["image"], getPropertyOrDefault<bool>(properties["properties"], "vertical_flip", true));
+    if (hasProperty(properties["dependencies"], "image"))
+        this->format = getFormatFromString(getProperty<std::string>(properties["properties"], "format", "RGB", true));
+    else
+        this->format = GL_RGB;
+    this->wrapModeS = getWrapModeFromString(getProperty<std::string>(properties["properties"], "wrap_mode_s", "REPEAT"));
+    this->wrapModeT = getWrapModeFromString(getProperty<std::string>(properties["properties"], "wrap_mode_t", "REPEAT"));
+    this->filterMode = getFilterModeFromString(getProperty<std::string>(properties["properties"], "filter_mode", "LINEAR"));
+    this->mipmaps = getProperty(properties["properties"], "mipmaps", true);
+    auto texData = Resource::getResource<TextureResource>(
+            getProperty<std::string>(properties["dependencies"], "image", "file://textures/missing.png", true),
+            getProperty(properties["properties"], "vertical_flip", true));
 
-    if (this->handle != 0)
-        return;
     glGenTextures(1, &this->handle);
 
     if (this->activeTextureUnit == -1)

@@ -6,16 +6,23 @@
 using namespace chira;
 
 void MeshDataResource::compile(const nlohmann::json& properties) {
-    if (!getPropertyOrDefault(properties["properties"], "materialSetInCode", false))
-        this->material = CHIRA_GET_MATERIAL(properties["dependencies"]["materialType"], properties["dependencies"]["material"]);
-    if (properties["properties"].contains("depthFunction"))
-        this->depthFunction = MeshDataResource::getDepthFuncFromString(properties["properties"]["depthFunction"]);
-    if (properties["properties"].contains("backfaceCulling"))
-        this->backfaceCulling = properties["properties"]["backfaceCulling"];
-    if (properties["properties"].contains("cullType"))
-        this->cullType = MeshDataResource::getCullTypeFromString(properties["properties"]["cullType"]);
+    if (!getProperty(properties["properties"], "materialSetInCode", false)) {
+        this->material = CHIRA_GET_MATERIAL(
+                getProperty<std::string>(properties["dependencies"], "materialType", "MaterialTextured", true),
+                getProperty<std::string>(properties["dependencies"], "material", "file://materials/unlitTextured.json", true));
+    }
+    this->depthFunction = MeshDataResource::getDepthFuncFromString(getProperty<std::string>(properties["properties"], "depthFunction", "LEQUAL"));
+    this->backfaceCulling = getProperty(properties["properties"], "backfaceCulling", true);
+    this->cullType = MeshDataResource::getCullTypeFromString(getProperty<std::string>(properties["properties"], "cullType", "BACK"));
 
-    this->appendMeshData(properties["properties"]["loader"], properties["dependencies"]["model"]);
+    if (hasProperty(properties["dependencies"], "model") && Resource::hasResource(properties["dependencies"]["model"])) {
+        this->appendMeshData(
+                getProperty<std::string>(properties["properties"], "loader", "cmdl", true),
+                properties["dependencies"]["model"]);
+    } else {
+        // use getProperty to print an error message
+        this->appendMeshData("cmdl", getProperty<std::string>(properties["properties"], "model", "file://meshes/missing.cmdl", true));
+    }
     this->setupForRendering();
 }
 
