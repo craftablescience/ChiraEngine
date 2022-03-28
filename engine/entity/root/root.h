@@ -24,12 +24,18 @@ namespace chira {
         void setSkybox(const std::string& cubemapId);
         [[nodiscard]] SharedPointer<MaterialCubemap> getSkybox() const;
         [[nodiscard]] glm::vec3 getAudioListeningPosition() const {
+            if (!this->mainCamera)
+                return {};
             return this->mainCamera->getPosition();
         }
         [[nodiscard]] glm::vec3 getAudioListeningRotation() const {
+            if (!this->mainCamera)
+                return {};
             return glm::eulerAngles(this->mainCamera->getRotation());
         }
         [[nodiscard]] glm::vec3 getAudioListeningUpVector() const {
+            if (!this->mainCamera)
+                return {0,1,0};
             return this->mainCamera->getUpVector();
         }
     protected:

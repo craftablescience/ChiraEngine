@@ -44,6 +44,8 @@ namespace chira {
 // Outside the chira namespace so it can be replaced with static_cast in release
 template<typename T, typename U>
 inline T assert_cast(U obj) {
+    if (!obj)
+        return nullptr;
     auto cast = dynamic_cast<T>(obj);
     chira_assert(cast, "Object could not be cast");
     return cast;
