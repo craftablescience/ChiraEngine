@@ -108,7 +108,7 @@ glm::vec<2, int> Frame::getFrameSize() const {
     return {this->width, this->height};
 }
 
-void Frame::setFrameSize(glm::vec<2, int> newSize) {
+void Frame::setFrameSize(glm::vec2i newSize) {
     this->width = newSize.x;
     this->height = newSize.y;
     this->createFramebuffer();

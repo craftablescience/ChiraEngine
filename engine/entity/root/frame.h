@@ -2,6 +2,8 @@
 
 #include "root.h"
 
+#include <utility/math/types.h>
+
 //todo: add/remove postprocessing effects
 
 namespace chira {
@@ -16,8 +18,8 @@ namespace chira {
         Frame* getFrame() override;
         [[nodiscard]] unsigned int getFramebufferHandle() const;
         [[nodiscard]] unsigned int getColorTextureHandle() const;
-        glm::vec<2, int> getFrameSize() const;
-        virtual void setFrameSize(glm::vec<2, int> newSize);
+        glm::vec2i getFrameSize() const;
+        virtual void setFrameSize(glm::vec2i newSize);
         [[nodiscard]] ColorRGB getBackgroundColor() const;
         void setBackgroundColor(ColorRGB color);
     protected:

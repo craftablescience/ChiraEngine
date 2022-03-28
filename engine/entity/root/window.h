@@ -16,8 +16,8 @@ namespace chira {
         ~Window() override;
         const Window* getWindow() const override;
         Window* getWindow() override;
-        void setFrameSize(glm::vec<2, int> newSize) override;
-        glm::vec<2, double> getMousePosition() const;
+        void setFrameSize(glm::vec2i newSize) override;
+        glm::vec2d getMousePosition() const;
         void captureMouse(bool capture);
         [[nodiscard]] bool isMouseCaptured() const;
         [[nodiscard]] bool isIconified() const;

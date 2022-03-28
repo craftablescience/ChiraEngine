@@ -196,12 +196,12 @@ Window* Window::getWindow() {
     return this;
 }
 
-void Window::setFrameSize(glm::vec<2, int> newSize) {
+void Window::setFrameSize(glm::vec2i newSize) {
     Frame::setFrameSize(newSize);
     glfwSetWindowSize(this->window, this->width, this->height);
 }
 
-glm::vec<2, double> Window::getMousePosition() const {
+glm::vec2d Window::getMousePosition() const {
     double x = -1.0, y = -1.0;
     glfwGetCursorPos(this->window, &x, &y);
     return {x, y};
