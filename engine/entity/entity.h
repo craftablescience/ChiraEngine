@@ -56,6 +56,7 @@ namespace chira {
         Entity* parent = nullptr;
         std::string name;
         std::unordered_map<std::string, Entity*> children;
+        std::vector<std::string> childrenOrder;
         bool visible = true;
 
         // The following are in local space and are relative to the parent.

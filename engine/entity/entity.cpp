@@ -1,5 +1,8 @@
 #include "entity.h"
 
+#include <algorithm>
+#include <i18n/translationManager.h>
+#include <utility/logger.h>
 #include <utility/uuidGenerator.h>
 
 using namespace chira;
@@ -14,8 +17,8 @@ Entity::~Entity() {
 
 void Entity::render(glm::mat4 parentTransform) { // NOLINT(misc-no-recursion)
     glm::mat4 transform = transformToMatrix(parentTransform, this->position, this->rotation);
-    for (auto& [key, entity] : this->children)
-        entity->render(transform);
+    for (const auto& key : this->childrenOrder)
+        this->children[key]->render(transform);
 }
 
 const Window* Entity::getWindow() const { // NOLINT(misc-no-recursion)
@@ -55,12 +58,18 @@ Entity* Entity::getChild(const std::string& name_) const {
 }
 
 bool Entity::hasChild(const std::string& name_) const {
-    return this->children.count(name_) > 0;
+    return static_cast<bool>(this->children.count(name_));
 }
 
 std::string Entity::addChild(Entity* child) {
+    // Do not let two children have the same name!
+    if (this->hasChild(child->getName())) {
+        Logger::log(LogType::ERROR, "Entity::addChild", TRF("error.entity.duplicate_child_name", child->getName()));
+        return child->getName();
+    }
     child->setParent(this);
     this->children[child->getName()] = child;
+    this->childrenOrder.push_back(child->getName());
     return child->getName();
 }
 
@@ -68,6 +77,7 @@ void Entity::removeChild(const std::string& name_) {
     this->children[name_]->removeAllChildren();
     delete this->children[name_];
     this->children.erase(name_);
+    std::ignore = std::remove(this->childrenOrder.begin(), this->childrenOrder.end(), name_);
 }
 
 void Entity::removeAllChildren() { // NOLINT(misc-no-recursion)
@@ -76,6 +86,7 @@ void Entity::removeAllChildren() { // NOLINT(misc-no-recursion)
         delete ent_;
     }
     this->children.clear();
+    this->childrenOrder.clear();
 }
 
 bool Entity::isVisible() const {
