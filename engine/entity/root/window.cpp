@@ -246,10 +246,11 @@ void Window::setIcon(const std::string& identifier) const {
 }
 
 void Window::shouldStopAfterThisFrame(bool yes) const {
-    glfwSetWindowShouldClose(this->window, yes ? GLFW_TRUE : GLFW_FALSE);
+    glfwSetWindowShouldClose(this->window, yes);
 }
 
 void Window::displaySplashScreen() {
+    glfwMakeContextCurrent(this->window);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fboHandle);
     glClear(GL_COLOR_BUFFER_BIT);
     MeshDataBuilder plane;

@@ -202,7 +202,6 @@ list(APPEND ENGINE_LINK_LIBRARIES tinyfiledialogs)
 
 # CHIRAENGINE
 option(CHIRA_BUILD_WITH_STEAMWORKS "Build Chira Engine with Steamworks API features" ON)
-option(CHIRA_BUILD_WITH_MULTIWINDOW "Build Chira Engine with the ability to create multiple GLFW windows (currently broken)" OFF)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/CMakeLists.txt)
 add_library(${PROJECT_NAME} STATIC ${ENGINE_SOURCES})
 
@@ -221,9 +220,6 @@ if(CHIRA_BUILD_WITH_DISCORD)
 endif()
 if(CHIRA_BUILD_WITH_STEAMWORKS)
     target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_BUILD_WITH_STEAMWORKS)
-endif()
-if(CHIRA_BUILD_WITH_MULTIWINDOW)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_BUILD_WITH_MULTIWINDOW)
 endif()
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD2)

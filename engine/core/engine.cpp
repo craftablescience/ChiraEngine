@@ -26,7 +26,7 @@
 #include <resource/provider/internetResourceProvider.h>
 #endif
 
-#if __has_include(<windows.h>) && !defined(DEBUG)
+#if defined(_WIN32) && !defined(DEBUG)
 #include <windows.h>
 #undef ERROR
 #endif
@@ -74,13 +74,8 @@ void Engine::init(const std::function<void()>& callbackOnInit, bool windowStarts
     bool fullscreen = false;
     Engine::getSettingsLoader()->getValue("graphics", "fullscreen", &fullscreen);
 
-    Window::getFontAtlasInstance()->AddFontDefault();
-#ifdef CHIRA_BUILD_WITH_MULTIWINDOW
-    Engine::addWindow(TR("ui.window.title"), windowWidth, windowHeight, fullscreen, {}, true, false);
-#else
-    Engine::windows.emplace_back(new Window{TR("ui.window.title"), windowWidth, windowHeight, fullscreen, {}, true, false});
-#endif
-    Engine::getWindow()->setVisible(windowStartsVisible);
+    Engine::window.reset(new Window{TR("ui.window.title"), windowWidth, windowHeight, fullscreen, {}, true, false});
+    Engine::window->setVisible(windowStartsVisible);
 
 #ifdef DEBUG
     int flags;
@@ -142,7 +137,7 @@ void Engine::init(const std::function<void()>& callbackOnInit, bool windowStarts
     IMGUI_CHECKVERSION();
 #endif
 
-    Engine::windows[0]->displaySplashScreen();
+    Engine::window->displaySplashScreen();
 
     AbstractMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     AbstractMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
@@ -201,24 +196,20 @@ void Engine::run(const std::function<void()>& callbackOnStop) {
 #ifdef CHIRA_BUILD_WITH_ANGELSCRIPT
         Engine::angelscript->render();
 #endif
-        for (auto& window : Engine::windows)
-            window->render(glm::identity<glm::mat4>());
+        Engine::window->render(glm::identity<glm::mat4>());
 
         glfwPollEvents();
-        for (auto& window : Engine::windows) {
-            for (auto &keybind: InputManager::getKeyButtonCallbacks()) {
-                if (glfwGetKey(window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
-                    keybind();
-            }
-            for (auto &keybind: InputManager::getMouseButtonCallbacks()) {
-                if (glfwGetMouseButton(window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
-                    keybind();
-            }
+        for (auto& keybind: InputManager::getKeyButtonCallbacks()) {
+            if (glfwGetKey(Engine::window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
+                keybind();
+        }
+        for (auto& keybind: InputManager::getMouseButtonCallbacks()) {
+            if (glfwGetMouseButton(Engine::window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
+                keybind();
         }
 
-        //todo(multiview): figure out sound
-        Engine::soundManager->setListenerPosition(Engine::getWindow()->getAudioListeningPosition());
-        Engine::soundManager->setListenerRotation(Engine::getWindow()->getAudioListeningRotation(), Engine::getWindow()->getAudioListeningUpVector());
+        Engine::soundManager->setListenerPosition(Engine::window->getAudioListeningPosition());
+        Engine::soundManager->setListenerRotation(Engine::window->getAudioListeningRotation(), Engine::window->getAudioListeningUpVector());
         Engine::soundManager->update();
 
 #ifdef CHIRA_BUILD_WITH_DISCORD
@@ -230,22 +221,7 @@ void Engine::run(const std::function<void()>& callbackOnStop) {
             SteamAPI::Client::runCallbacks();
 #endif
         Events::update();
-
-        if (!Engine::windows.empty()) {
-#ifdef CHIRA_BUILD_WITH_MULTIWINDOW
-            auto windowIterator = Engine::windows.begin();
-            while (windowIterator != Engine::windows.end()) {
-                if (glfwWindowShouldClose(windowIterator->get()->window))
-                    Engine::windows.erase(windowIterator);
-                else
-                    windowIterator++;
-            }
-#else
-            if (glfwWindowShouldClose(Engine::windows[0]->window))
-                Engine::windows.clear();
-#endif
-        }
-    } while (!Engine::windows.empty());
+    } while (!glfwWindowShouldClose(Engine::window->window));
 
     Logger::log(LogType::INFO_IMPORTANT, "Engine", TR("debug.engine.exit"));
 
@@ -264,7 +240,7 @@ void Engine::run(const std::function<void()>& callbackOnStop) {
 #endif
 
     Engine::soundManager->stop();
-    Engine::windows.clear();
+    Engine::window.reset();
     AbstractPhysicsProvider::getPhysicsProvider()->stop();
     Resource::discardAll();
 
@@ -328,36 +304,8 @@ void Engine::setSettingsLoaderDefaults() {
 }
 
 Window* Engine::getWindow() {
-    if (Engine::windows.empty())
-        return nullptr;
-    return Engine::windows[0].get();
+    return Engine::window.get();
 }
-
-#ifdef CHIRA_BUILD_WITH_MULTIWINDOW
-Window* Engine::getWindow(const std::string& name) {
-    for (auto& window : Engine::windows) {
-        if (window->getName() == name) {
-            return window.get();
-        }
-    }
-    Logger::log(LogType::ERROR, "Engine", TRF("error.engine.cannot_find_window", name));
-    return Engine::windows[0].get();
-}
-
-std::string Engine::addWindow(const std::string& title, int width, int height, bool fullscreen, ColorRGB backgroundColor, bool smoothResize, bool startVisible) {
-    Engine::windows.emplace_back(new Window{title, width, height, fullscreen, backgroundColor, smoothResize, startVisible});
-    return Engine::windows[Engine::windows.size() - 1]->getName();
-}
-
-void Engine::removeWindow(const std::string& name) {
-    for (std::size_t i = 0; i < Engine::windows.size(); i++) {
-        if (Engine::windows[i]->getName() == name) {
-            Engine::windows.erase(Engine::windows.begin() + static_cast<long long int>(i));
-            return;
-        }
-    }
-}
-#endif
 
 bool Engine::isStarted() {
     return Engine::started;

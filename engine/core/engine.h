@@ -31,11 +31,6 @@ namespace chira {
         static void setSettingsLoader(AbstractSettingsLoader* newSettingsLoader);
         /// Returns a pointer to the main window of the application.
         [[nodiscard]] static Window* getWindow();
-#ifdef CHIRA_BUILD_WITH_MULTIWINDOW
-        [[nodiscard]] static Window* getWindow(const std::string& name);
-        static std::string addWindow(const std::string& title, int width, int height, bool fullscreen = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = true);
-        static void removeWindow(const std::string& name);
-#endif
         [[nodiscard]] static bool isStarted();
         /// Note: only guaranteed to work after run() in a render method
         [[nodiscard]] static double getDeltaTime();
@@ -45,7 +40,7 @@ namespace chira {
 #endif
         static inline std::unique_ptr<AbstractSoundManager> soundManager;
         static inline std::unique_ptr<AbstractSettingsLoader> settingsLoader;
-        static inline std::vector<std::unique_ptr<Window>> windows;
+        static inline std::unique_ptr<Window> window;
         static inline bool started = false;
         static inline double lastTime = 0.0, currentTime = 0.0;
         static void setSettingsLoaderDefaults();
