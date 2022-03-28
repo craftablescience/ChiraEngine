@@ -1,8 +1,5 @@
 {
   "dependencies": {
     "image": "file://textures/container_specular.png"
-  },
-  "properties": {
-    "format": "RGBA"
   }
 }

@@ -4,8 +4,10 @@
 #include <unordered_map>
 #include <vector>
 #include <nlohmann/json.hpp>
+#include <event/events.h>
 #include <utility/memory/sharedPointer.h>
 #include <utility/logger.h>
+#include <utility/types.h>
 #include "provider/abstractResourceProvider.h"
 
 namespace chira {
@@ -54,7 +56,15 @@ namespace chira {
             if (Resource::resources[provider].count(name) > 0) {
                 return; // Already in cache
             }
-            Resource::precacheUniqueResource<ResourceType>(identifier, std::forward<Params>(params)...);
+
+            for (auto i = Resource::providers[provider].rbegin(); i != Resource::providers[provider].rend(); i++) {
+                if ((*i)->hasResource(name)) {
+                    Resource::resources[provider][name] = SharedPointer<Resource>(new ResourceType{identifier, std::forward<Params>(params)...});
+                    (*i)->compileResource(name, Resource::resources[provider][name].get());
+                    return; // Precached!
+                }
+            }
+            Resource::logResourceError("error.resource.resource_not_found", identifier);
         }
 
         template<typename ResourceType>
@@ -66,6 +76,8 @@ namespace chira {
                 return Resource::resources[provider][name].castAssert<ResourceType>();
             }
             Resource::logResourceError("error.resource.cached_resource_not_found", identifier);
+            if (Resource::hasDefaultResource<ResourceType>())
+                return Resource::getDefaultResource<ResourceType>();
             return SharedPointer<ResourceType>{};
         }
 
@@ -74,28 +86,16 @@ namespace chira {
             auto id = Resource::splitResourceIdentifier(identifier);
             const std::string& provider = id.first, name = id.second;
             for (auto i = Resource::providers[provider].rbegin(); i != Resource::providers[provider].rend(); i++) {
-                if (i->get()->hasResource(name)) {
+                if ((*i)->hasResource(name)) {
                     Resource::resources[provider][name] = SharedPointer<Resource>(new ResourceType{identifier, std::forward<Params>(params)...});
-                    i->get()->compileResource(name, Resource::resources[provider][name].get());
+                    (*i)->compileResource(name, Resource::resources[provider][name].get());
                     return Resource::resources[provider][name].castAssert<ResourceType>();
                 }
             }
             Resource::logResourceError("error.resource.resource_not_found", identifier);
+            if (Resource::hasDefaultResource<ResourceType>())
+                return Resource::getDefaultResource<ResourceType>();
             return SharedPointer<ResourceType>{};
-        }
-
-        template<typename ResourceType, typename... Params>
-        static void precacheUniqueResource(const std::string& identifier, Params... params) {
-            auto id = Resource::splitResourceIdentifier(identifier);
-            const std::string& provider = id.first, name = id.second;
-            for (auto i = Resource::providers[provider].rbegin(); i != Resource::providers[provider].rend(); i++) {
-                if (i->get()->hasResource(name)) {
-                    Resource::resources[provider][name] = SharedPointer<Resource>(new ResourceType{identifier, std::forward<Params>(params)...});
-                    i->get()->compileResource(name, Resource::resources[provider][name].get());
-                    return; // Precached!
-                }
-            }
-            Resource::logResourceError("error.resource.resource_not_found", identifier);
         }
 
         /// You might want to use this sparingly as it defeats the entire point of a cached, shared resource system.
@@ -104,9 +104,9 @@ namespace chira {
             auto id = Resource::splitResourceIdentifier(identifier);
             const std::string& provider = id.first, name = id.second;
             for (auto i = Resource::providers[provider].rbegin(); i != Resource::providers[provider].rend(); i++) {
-                if (i->get()->hasResource(name)) {
+                if ((*i)->hasResource(name)) {
                     auto resource = std::make_unique<ResourceType>(identifier, std::forward<Params>(params)...);
-                    i->get()->compileResource(name, resource.get());
+                    (*i)->compileResource(name, resource.get());
                     return resource;
                 }
             }
@@ -138,12 +138,34 @@ namespace chira {
         /// Deletes ALL resources and providers. Should only ever be called once, when the program closes.
         static void discardAll();
 
+        template<typename ResourceType>
+        static uuids::uuid registerDefaultResource(const std::string& identifier) {
+            return Events::addListener("chira::engine::create_default_resources", [identifier](const std::any&) {
+                Resource::defaultResources[getHashOfType<ResourceType>()] = Resource::getUniqueResource<ResourceType>(identifier).template castAssert<Resource>();
+            });
+        }
+
+        template<typename ResourceType>
+        static bool hasDefaultResource() {
+            return Resource::defaultResources.count(getHashOfType<ResourceType>()) > 0;
+        }
+
+        template<typename ResourceType>
+        static SharedPointer<ResourceType> getDefaultResource() {
+            return Resource::defaultResources[getHashOfType<ResourceType>()].template castAssert<ResourceType>();
+        }
+
     protected:
         static inline std::unordered_map<std::string, std::vector<std::unique_ptr<AbstractResourceProvider>>> providers;
         static inline std::unordered_map<std::string, std::unordered_map<std::string, SharedPointer<Resource>>> resources;
+        static inline std::unordered_map<std::size_t, SharedPointer<Resource>> defaultResources;
         static inline std::vector<std::string> garbageResources;
 
         /// We do a few predeclaration workarounds
         static void logResourceError(const std::string& identifier, const std::string& resourceName);
     };
 }
+
+#define CHIRA_REGISTER_DEFAULT_RESOURCE(type, identifier) \
+    static inline const uuids::uuid type##DefaultResourceRegistryHelper = \
+        chira::Resource::registerDefaultResource<type>(identifier)

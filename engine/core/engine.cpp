@@ -56,6 +56,9 @@ void Engine::preInit(const std::string& configPath) {
 void Engine::init(const std::function<void()>& callbackOnInit, bool windowStartsVisible) {
     Engine::started = true;
 
+    // Create default resources
+    Events::createEvent("chira::engine::create_default_resources");
+
     if (!glfwInit()) {
         Logger::log(LogType::ERROR, "GLFW", TR("error.glfw.undefined"));
         exit(EXIT_FAILURE);

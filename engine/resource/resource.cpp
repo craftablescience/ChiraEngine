@@ -79,6 +79,7 @@ void Resource::cleanup() {
 }
 
 void Resource::discardAll() {
+    Resource::defaultResources.clear();
     Resource::cleanup();
     for (const auto& [providerName, resourceMap] : Resource::resources) {
         for (const auto& [name, resource] : resourceMap) {

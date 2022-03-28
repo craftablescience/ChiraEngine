@@ -1,8 +1,5 @@
 {
   "dependencies": {
     "image": "file://textures/missing.png"
-  },
-  "properties": {
-	  "format": "RGB"
   }
 }

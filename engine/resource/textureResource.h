@@ -32,5 +32,7 @@ namespace chira {
         int height = -1;
         int bitDepth = -1;
         bool vFlip = true;
+    private:
+        CHIRA_REGISTER_DEFAULT_RESOURCE(TextureResource, "file://textures/missing.png"); // NOLINT(cert-err58-cpp)
     };
 }

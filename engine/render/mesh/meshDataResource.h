@@ -12,5 +12,7 @@ namespace chira {
     private:
         static int getDepthFuncFromString(const std::string& depthFunc);
         static int getCullTypeFromString(const std::string& cullType);
+
+        CHIRA_REGISTER_DEFAULT_RESOURCE(MeshDataResource, "file://meshes/missing.json"); // NOLINT(cert-err58-cpp)
     };
 }

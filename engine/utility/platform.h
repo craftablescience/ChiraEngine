@@ -33,7 +33,7 @@ namespace chira {
 
     /// Changes the endianness of a type. Should really only be used with numbers.
     template<typename T>
-    static inline T swapEndian(T t) {
+    inline T swapEndian(T t) {
         union {
             T t;
             byte u8[sizeof(T)];

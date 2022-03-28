@@ -12,17 +12,21 @@ Texture::Texture(const std::string& identifier_, bool cacheTexture)
     , cache(cacheTexture) {}
 
 void Texture::compile(const nlohmann::json& properties) {
-    if (hasProperty(properties["dependencies"], "image"))
-        this->format = getFormatFromString(getProperty<std::string>(properties["properties"], "format", "RGB", true));
-    else
-        this->format = GL_RGB;
     this->wrapModeS = getWrapModeFromString(getProperty<std::string>(properties["properties"], "wrap_mode_s", "REPEAT"));
     this->wrapModeT = getWrapModeFromString(getProperty<std::string>(properties["properties"], "wrap_mode_t", "REPEAT"));
     this->filterMode = getFilterModeFromString(getProperty<std::string>(properties["properties"], "filter_mode", "LINEAR"));
     this->mipmaps = getProperty(properties["properties"], "mipmaps", true);
+
     auto texData = Resource::getResource<TextureResource>(
             getProperty<std::string>(properties["dependencies"], "image", "file://textures/missing.png", true),
             getProperty(properties["properties"], "vertical_flip", true));
+
+    if (hasProperty(properties["properties"], "format_override"))
+        this->format = getFormatFromString(properties["properties"]["format_override"]);
+    else if (texData->getBitDepth() > 0)
+        this->format = getFormatFromBitDepth(texData->getBitDepth());
+    else
+        this->format = GL_RGB;
 
     glGenTextures(1, &this->handle);
 
@@ -99,6 +103,19 @@ int Texture::getFormatFromString(const std::string& formatName) {
 
     Logger::log(LogType::WARNING, "Texture", TRF("warn.material.invalid_gl_format", formatName));
     return GL_RGBA;
+}
+
+int Texture::getFormatFromBitDepth(int bd) {
+    switch (bd) {
+        case 1:
+            return GL_RED;
+        case 2:
+            return GL_RG;
+        case 3:
+            return GL_RGB;
+        default: // covers bit depth of 4
+            return GL_RGBA;
+    }
 }
 
 int Texture::getWrapModeFromString(const std::string& wrapName) {

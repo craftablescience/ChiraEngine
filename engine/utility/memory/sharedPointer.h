@@ -39,7 +39,7 @@ namespace chira {
         }
         SharedPointer<T>& operator=(const SharedPointer<T>& other) noexcept {
             if (this != &other) {
-                if ((this->data) && (this->data->refCount <= 1)) {
+                if ((this->data) && (this->data->refCount <= this->data->holderAmountForDelete)) {
                     delete this->ptr;
                     delete this->data;
                 }
@@ -53,7 +53,7 @@ namespace chira {
         }
         SharedPointer(const SharedPointer<T>& other) noexcept {
             if (this != &other) {
-                if ((this->data) && (this->data->refCount <= 1)) {
+                if ((this->data) && (this->data->refCount <= this->data->holderAmountForDelete)) {
                     delete this->ptr;
                     delete this->data;
                 }
@@ -65,7 +65,7 @@ namespace chira {
             }
         }
         SharedPointer<T>& operator=(SharedPointer<T>&& other) noexcept {
-            if ((this->data) && (this->data->refCount <= 1)) {
+            if ((this->data) && (this->data->refCount <= this->data->holderAmountForDelete)) {
                 delete this->ptr;
                 delete this->data;
             }

@@ -7,6 +7,17 @@ using namespace chira;
 
 TextureCubemap::TextureCubemap(const std::string& identifier_) : Texture(identifier_, false) {}
 
+// Macros suck, name this one funky so there are no possible conflicts in this compilation unit
+// Also not using proper conventions because it's used in 6 places
+#define CHIRA_TEXTURECUBEMAP_FORMAT_SETTER_SHORTENER(DIR, FMT)                                         \
+    if (hasProperty(properties["properties"], "format_" #DIR "_override")) {                           \
+        this->format##FMT = getFormatFromString(properties["properties"]["format_" #DIR "_override"]); \
+    } else if (file_##DIR->getBitDepth() > 0) {                                                        \
+        this->format##FMT = getFormatFromBitDepth(file_##DIR->getBitDepth());                          \
+    } else {                                                                                           \
+        this->format##FMT = GL_RGB;                                                                    \
+    }
+
 void TextureCubemap::compile(const nlohmann::json& properties) {
     this->wrapModeS = getWrapModeFromString(getProperty<std::string>(properties["properties"], "wrap_mode_s", "REPEAT"));
     this->wrapModeT = getWrapModeFromString(getProperty<std::string>(properties["properties"], "wrap_mode_t", "REPEAT"));
@@ -32,30 +43,14 @@ void TextureCubemap::compile(const nlohmann::json& properties) {
             getProperty<std::string>(properties["dependencies"], "image_rt", "file://textures/missing.png", true),
             getProperty(properties["properties"], "vertical_flip", false));
 
-    if (hasProperty(properties["dependencies"], "image_fd"))
-        this->format = getFormatFromString(getProperty<std::string>(properties["properties"], "format_fd", "RGB", true));
-    else
-        this->format = GL_RGB;
-    if (hasProperty(properties["dependencies"], "image_bk"))
-        this->format_bk = getFormatFromString(getProperty<std::string>(properties["properties"], "format_bk", "RGB", true));
-    else
-        this->format_bk = GL_RGB;
-    if (hasProperty(properties["dependencies"], "image_up"))
-        this->format_up = getFormatFromString(getProperty<std::string>(properties["properties"], "format_up", "RGB", true));
-    else
-        this->format_up = GL_RGB;
-    if (hasProperty(properties["dependencies"], "image_dn"))
-        this->format_dn = getFormatFromString(getProperty<std::string>(properties["properties"], "format_dn", "RGB", true));
-    else
-        this->format_dn = GL_RGB;
-    if (hasProperty(properties["dependencies"], "image_lt"))
-        this->format_lt = getFormatFromString(getProperty<std::string>(properties["properties"], "format_lt", "RGB", true));
-    else
-        this->format_lt = GL_RGB;
-    if (hasProperty(properties["dependencies"], "image_rt"))
-        this->format_rt = getFormatFromString(getProperty<std::string>(properties["properties"], "format_rt", "RGB", true));
-    else
-        this->format_rt = GL_RGB;
+    // See top of file for macro definition, this would have been absurdly long without one
+    CHIRA_TEXTURECUBEMAP_FORMAT_SETTER_SHORTENER(fd, ) // uses this->format, not this->format_fd
+    CHIRA_TEXTURECUBEMAP_FORMAT_SETTER_SHORTENER(bk, _bk)
+    CHIRA_TEXTURECUBEMAP_FORMAT_SETTER_SHORTENER(up, _up)
+    CHIRA_TEXTURECUBEMAP_FORMAT_SETTER_SHORTENER(dn, _dn)
+    CHIRA_TEXTURECUBEMAP_FORMAT_SETTER_SHORTENER(lt, _lt)
+    CHIRA_TEXTURECUBEMAP_FORMAT_SETTER_SHORTENER(rt, _rt)
+
     this->mipmaps = getProperty(properties["properties"], "mipmaps", false);
 
     glGenTextures(1, &this->handle);

@@ -13,5 +13,6 @@ list(APPEND ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/logger.cpp
         ${CMAKE_CURRENT_LIST_DIR}/logger.h
         ${CMAKE_CURRENT_LIST_DIR}/platform.h
+        ${CMAKE_CURRENT_LIST_DIR}/types.h
         ${CMAKE_CURRENT_LIST_DIR}/uuidGenerator.cpp
         ${CMAKE_CURRENT_LIST_DIR}/uuidGenerator.h)

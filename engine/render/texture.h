@@ -23,6 +23,7 @@ namespace chira {
         bool mipmaps = true;
         bool cache;
         static int getFormatFromString(const std::string& formatName);
+        static int getFormatFromBitDepth(int bd);
         static int getWrapModeFromString(const std::string& wrapName);
         static int getFilterModeFromString(const std::string& filterName);
     };

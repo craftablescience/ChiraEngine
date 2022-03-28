@@ -2,13 +2,6 @@
 
 using namespace chira;
 
-std::vector<std::string> Events::broadcastsLastFrame;
-std::vector<std::string> Events::broadcastsThisFrame;
-bool Events::isRunningCallbacks = false;
-std::unordered_map<std::string, std::vector<std::any>> Events::calledEvents;
-std::unordered_map<std::string, std::vector<std::any>> Events::calledEventsFallback;
-std::unordered_map<std::string, std::vector<std::pair<uuids::uuid, std::function<void(const std::any&)>>>> Events::listeners;
-
 void Events::broadcast(const std::string& name) {
     if (std::count(Events::broadcastsThisFrame.begin(), Events::broadcastsThisFrame.end(), name) == 0)
         Events::broadcastsThisFrame.push_back(name);

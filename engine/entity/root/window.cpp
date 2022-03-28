@@ -114,7 +114,7 @@ bool Window::createGLFWWindow(const std::string& title) {
         files.reserve(count);
         for (int i = 0; i < count; i++)
             files.emplace_back(paths[i]);
-        Events::createEvent("chira::engine::files_dropped", files);
+        Events::createEvent("chira::window::files_dropped", files);
     });
 
     this->guiContext = ImGui::CreateContext(Window::getFontAtlasInstance());
