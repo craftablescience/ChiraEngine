@@ -2,6 +2,5 @@
   "dependencies": {
     "vertex": "file://shaders/unlit.vsh",
     "fragment": "file://shaders/unlit.fsh"
-  },
-  "properties": {}
+  }
 }

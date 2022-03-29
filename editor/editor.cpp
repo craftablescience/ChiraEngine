@@ -87,10 +87,10 @@ int main() {
         auto teapotMesh = Resource::getResource<MeshDataResource>("file://meshes/teapot.json");
         const auto teapotShader = teapotMesh->getMaterial()->getShader();
         teapotShader->use();
-        teapotShader->setUniform("light.ambient", 0.1f, 0.1f, 0.1f);
-        teapotShader->setUniform("light.diffuse", 1.0f, 1.0f, 1.0f);
-        teapotShader->setUniform("light.specular", 1.0f, 1.0f, 1.0f);
-        teapotShader->setUniform("light.position", 0.0f, 5.0f, 0.0f);
+        teapotShader->setUniform("light.ambient", glm::vec3f{0.1f, 0.1f, 0.1f});
+        teapotShader->setUniform("light.diffuse", glm::vec3f{1.0f, 1.0f, 1.0f});
+        teapotShader->setUniform("light.specular", glm::vec3f{1.0f, 1.0f, 1.0f});
+        teapotShader->setUniform("light.position", glm::vec3f{0.0f, 5.0f, 0.0f});
 
         Engine::getWindow()->setSkybox("file://materials/skybox/shanghai.json");
     });

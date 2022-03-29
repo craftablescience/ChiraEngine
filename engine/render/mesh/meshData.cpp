@@ -8,9 +8,9 @@
 using namespace chira;
 
 void MeshData::setupForRendering() {
-    glGenVertexArrays(1, &(this->vaoHandle));
-    glGenBuffers(1, &(this->vboHandle));
-    glGenBuffers(1, &(this->eboHandle));
+    glGenVertexArrays(1, &this->vaoHandle);
+    glGenBuffers(1, &this->vboHandle);
+    glGenBuffers(1, &this->eboHandle);
 
     glBindVertexArray(this->vaoHandle);
 
