@@ -25,7 +25,7 @@ The goal of the engine is to have as much customization as possible, while still
 | Compiler (Latest) | Windows            | Linux     |
 |-------------------|--------------------|-----------|
 | GCC               | Supported (MinGW)* | Supported |
-| Clang             | Supported (MinGW)* | Supported |
+| Clang             | Unsupported        | Supported |
 | MSVC              | Supported          | N/A       |
 | Clang-CL          | Supported          | N/A       |
 

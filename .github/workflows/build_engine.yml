@@ -43,7 +43,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ChiraEngine-linux-${{matrix.compiler}}-${{matrix.build_type}}
+          name: ChiraEngine-Linux-${{matrix.compiler}}-${{matrix.build_type}}
           path: |
             ${{github.workspace}}/build/resources/
             ${{github.workspace}}/build/ChiraEditor
@@ -55,7 +55,6 @@ jobs:
       fail-fast: false
       matrix:
         build_type: [Debug, Release]
-        compiler: [mingw64, clang64]
     runs-on: windows-2019
     defaults:
       run:
@@ -69,7 +68,7 @@ jobs:
     - name: Install MSYS2
       uses: msys2/setup-msys2@v2
       with:
-        msystem: ${{matrix.compiler}}
+        msystem: mingw64
         update: true
         install: >-
           git
@@ -77,13 +76,8 @@ jobs:
         pacboy: >-
           toolchain:p
           cmake:p
-    - name: Configure CMake (mingw64)
-      if: ${{ matrix.compiler == 'mingw64' }}
+    - name: Configure CMake
       run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
-
-    - name: Configure CMake (clang64)
-      if: ${{ matrix.compiler == 'clang64' }}
-      run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_C_COMPILER="/clang64/bin/clang.exe" -DCMAKE_CXX_COMPILER="/clang64/bin/clang++.exe"
 
     - name: Build
       run: cmake --build build --config ${{matrix.build_type}}
@@ -92,20 +86,15 @@ jobs:
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{matrix.build_type}}
 
-    - name: Copy Necessary DLLs (mingw64)
-      if: ${{ matrix.compiler == 'mingw64' }}
+    - name: Copy Necessary DLLs
       run: |
         cp /mingw64/bin/libgcc_s_seh-1.dll    build/libgcc_s_seh-1.dll
         cp /mingw64/bin/libstdc++-6.dll       build/libstdc++-6.dll
-    - name: Copy Necessary DLLs (clang64)
-      if: ${{ matrix.compiler == 'clang64' }}
-      run: |
-        cp /clang64/bin/libc++.dll            build/libc++.dll
-        cp /clang64/bin/libunwind.dll         build/libunwind.dll
+
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: ChiraEngine-windows-${{matrix.compiler}}-${{matrix.build_type}}
+        name: ChiraEngine-Windows-mingw64-${{matrix.build_type}}
         path: |
             ${{github.workspace}}/build/resources/
             ${{github.workspace}}/build/ChiraEditor.exe
@@ -116,7 +105,7 @@ jobs:
     strategy:
       matrix:
         build_type: [Debug, Release]
-    runs-on: windows-2019
+    runs-on: windows-latest
     defaults:
       run:
         shell: cmd
@@ -145,7 +134,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ChiraEngine-msvc-${{matrix.build_type}}
+          name: ChiraEngine-Windows-msvc-${{matrix.build_type}}
           path: |
             ${{github.workspace}}/build/resources/
             ${{github.workspace}}/build/ChiraEditor.exe
