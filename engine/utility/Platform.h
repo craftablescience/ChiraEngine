@@ -12,8 +12,18 @@
     #error "Environment is not 32-bit or 64-bit! What kind of machine are you even using?"
 #endif
 
-// Define __cdecl in a portable way
-#if !defined(_WIN32) && (!defined(__clang__) && (defined(__GNUC__) || defined(__GNUG__)))
+#if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
+    #define CHIRA_COMPILER_MSVC
+#endif
+#if defined(__GNUC__) && !defined(__clang__)
+    #define CHIRA_COMPILER_GNU
+#endif
+#if defined(__clang__)
+    #define CHIRA_COMPILER_CLANG
+#endif
+
+// Define __cdecl in a portable way (not that it matters much)
+#ifndef CHIRA_COMPILER_MSVC
     #define CHIRA_CDECL __attribute__((__cdecl__))
 #else
     #define CHIRA_CDECL __cdecl

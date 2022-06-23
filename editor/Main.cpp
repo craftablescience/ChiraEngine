@@ -1,10 +1,10 @@
-// Disable console window on Windows
-#if defined(_WIN32) && !defined(DEBUG)
-#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+// Disable console window on Windows (MSVC)
+#include <utility/Platform.h>
+#if defined(_WIN32) && !defined(DEBUG) && defined(CHIRA_COMPILER_MSVC)
+    #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #endif
 
 #include <fstream>
-
 #include <core/Engine.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <i18n/TranslationManager.h>
