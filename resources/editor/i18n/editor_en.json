@@ -1,14 +1,3 @@
 {
-  "ui.settings.title": "Settings",
-  "ui.settings.window_width": "Window Width",
-  "ui.settings.window_height": "Window Height",
-  "ui.settings.start_maximized": "Start Maximized",
-  "ui.settings.fullscreen": "Fullscreen",
-  "ui.settings.raw_mouse_motion": "Raw Mouse Motion",
-  "ui.settings.invert_y_axis": "Invert Y Axis",
-  "ui.settings.language": "Language",
-  "ui.settings.discord_integration": "Discord Rich Presence",
-  "ui.settings.apply": "Apply",
-
-  "debug.imgui.texture_test": "ImGui Texture Test"
+  "ui.window.title": "Chira Editor"
 }

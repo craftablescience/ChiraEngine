@@ -1,18 +1,19 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/debug/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/gui/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/math/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/memory/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/string/CMakeLists.txt)
+list(APPEND CHIRA_ENGINE_HEADERS
+        ${CMAKE_CURRENT_LIST_DIR}/Assertions.h
+        ${CMAKE_CURRENT_LIST_DIR}/Dialogs.h
+        ${CMAKE_CURRENT_LIST_DIR}/FileInputStream.h
+        ${CMAKE_CURRENT_LIST_DIR}/HandleObject.h
+        ${CMAKE_CURRENT_LIST_DIR}/IFactory.h
+        ${CMAKE_CURRENT_LIST_DIR}/Logger.h
+        ${CMAKE_CURRENT_LIST_DIR}/Platform.h
+        ${CMAKE_CURRENT_LIST_DIR}/SharedPointer.h
+        ${CMAKE_CURRENT_LIST_DIR}/String.h
+        ${CMAKE_CURRENT_LIST_DIR}/Types.h
+        ${CMAKE_CURRENT_LIST_DIR}/UUIDGenerator.h)
 
-list(APPEND ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/aabbObject.h
-        ${CMAKE_CURRENT_LIST_DIR}/abstractFactory.h
-        ${CMAKE_CURRENT_LIST_DIR}/dialogs.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/dialogs.h
-        ${CMAKE_CURRENT_LIST_DIR}/handleObject.h
-        ${CMAKE_CURRENT_LIST_DIR}/logger.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/logger.h
-        ${CMAKE_CURRENT_LIST_DIR}/platform.h
-        ${CMAKE_CURRENT_LIST_DIR}/types.h
-        ${CMAKE_CURRENT_LIST_DIR}/uuidGenerator.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/uuidGenerator.h)
+list(APPEND CHIRA_ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/Dialogs.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/FileInputStream.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/Logger.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/String.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/UUIDGenerator.cpp)

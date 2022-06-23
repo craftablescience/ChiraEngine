@@ -1,13 +1,14 @@
-list(APPEND ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/materialCubemap.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/materialCubemap.h
-        ${CMAKE_CURRENT_LIST_DIR}/materialFactory.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/materialFactory.h
-        ${CMAKE_CURRENT_LIST_DIR}/materialFramebuffer.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/materialFramebuffer.h
-        ${CMAKE_CURRENT_LIST_DIR}/materialPhong.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/materialPhong.h
-        ${CMAKE_CURRENT_LIST_DIR}/materialTextured.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/materialTextured.h
-        ${CMAKE_CURRENT_LIST_DIR}/materialTypes.h
-        ${CMAKE_CURRENT_LIST_DIR}/materialUntextured.h)
+list(APPEND CHIRA_ENGINE_HEADERS
+        ${CMAKE_CURRENT_LIST_DIR}/MaterialCubemap.h
+        ${CMAKE_CURRENT_LIST_DIR}/MaterialFactory.h
+        ${CMAKE_CURRENT_LIST_DIR}/MaterialFramebuffer.h
+        ${CMAKE_CURRENT_LIST_DIR}/MaterialPhong.h
+        ${CMAKE_CURRENT_LIST_DIR}/MaterialTextured.h
+        ${CMAKE_CURRENT_LIST_DIR}/MaterialUntextured.h)
+
+list(APPEND CHIRA_ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/MaterialCubemap.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/MaterialFactory.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/MaterialFramebuffer.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/MaterialPhong.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/MaterialTextured.cpp)

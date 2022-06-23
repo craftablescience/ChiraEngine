@@ -1,17 +1,17 @@
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/resource/provider/CMakeLists.txt)
 
-list(APPEND ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/binaryResource.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/binaryResource.h
-        ${CMAKE_CURRENT_LIST_DIR}/fontResource.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/fontResource.h
-        ${CMAKE_CURRENT_LIST_DIR}/propertiesResource.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/propertiesResource.h
-        ${CMAKE_CURRENT_LIST_DIR}/resource.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/resource.h
-        ${CMAKE_CURRENT_LIST_DIR}/shaderResource.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/shaderResource.h
-        ${CMAKE_CURRENT_LIST_DIR}/stringResource.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/stringResource.h
-        ${CMAKE_CURRENT_LIST_DIR}/textureResource.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/textureResource.h)
+list(APPEND CHIRA_ENGINE_HEADERS
+        ${CMAKE_CURRENT_LIST_DIR}/BinaryResource.h
+        ${CMAKE_CURRENT_LIST_DIR}/PropertiesResource.h
+        ${CMAKE_CURRENT_LIST_DIR}/Resource.h
+        ${CMAKE_CURRENT_LIST_DIR}/ShaderResource.h
+        ${CMAKE_CURRENT_LIST_DIR}/StringResource.h
+        ${CMAKE_CURRENT_LIST_DIR}/TextureResource.h)
+
+list(APPEND CHIRA_ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/BinaryResource.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/PropertiesResource.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/Resource.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/ShaderResource.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/StringResource.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/TextureResource.cpp)

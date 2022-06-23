@@ -1,17 +1,18 @@
 name: Build Engine
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
-  workflow_dispatch: # nothing here
+    branches: [main]
+  workflow_dispatch:
+    # nothing here
 jobs:
   build-linux:
     strategy:
       fail-fast: false
       matrix:
-        build_type: [ Debug, Release ]
-        compiler: [ gcc, clang ]
+        build_type: [Debug, Release]
+        compiler: [gcc, clang]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -20,7 +21,7 @@ jobs:
           submodules: recursive
 
       - name: Install Necessary Packages
-        run: sudo apt update && sudo apt install -y cmake build-essential xorg-dev mesa-common-dev mesa-utils libssl-dev libasound2-dev libpulse-dev libjack-dev
+        run: sudo apt update && sudo apt install -y cmake build-essential xorg-dev mesa-common-dev mesa-utils
 
       - name: Install Clang
         if: ${{matrix.compiler == 'clang'}}
@@ -45,8 +46,7 @@ jobs:
           name: ChiraEngine-linux-${{matrix.compiler}}-${{matrix.build_type}}
           path: |
             ${{github.workspace}}/build/resources/
-            ${{github.workspace}}/build/ChiraEngineGui
-            ${{github.workspace}}/build/ChiraModelViewer
+            ${{github.workspace}}/build/ChiraEditor
             ${{github.workspace}}/build/*.so*
           retention-days: 1
 
@@ -55,7 +55,7 @@ jobs:
       fail-fast: false
       matrix:
         build_type: [Debug, Release]
-        sys: [mingw64, clang64]
+        compiler: [mingw64, clang64]
     runs-on: windows-2019
     defaults:
       run:
@@ -69,7 +69,7 @@ jobs:
     - name: Install MSYS2
       uses: msys2/setup-msys2@v2
       with:
-        msystem: ${{matrix.sys}}
+        msystem: ${{matrix.compiler}}
         update: true
         install: >-
           git
@@ -77,13 +77,12 @@ jobs:
         pacboy: >-
           toolchain:p
           cmake:p
-
     - name: Configure CMake (mingw64)
-      if: ${{ matrix.sys == 'mingw64' }}
+      if: ${{ matrix.compiler == 'mingw64' }}
       run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
 
     - name: Configure CMake (clang64)
-      if: ${{ matrix.sys == 'clang64' }}
+      if: ${{ matrix.compiler == 'clang64' }}
       run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_C_COMPILER="/clang64/bin/clang.exe" -DCMAKE_CXX_COMPILER="/clang64/bin/clang++.exe"
 
     - name: Build
@@ -94,33 +93,23 @@ jobs:
       run: ctest -C ${{matrix.build_type}}
 
     - name: Copy Necessary DLLs (mingw64)
-      if: ${{ matrix.sys == 'mingw64' }}
+      if: ${{ matrix.compiler == 'mingw64' }}
       run: |
         cp /mingw64/bin/libgcc_s_seh-1.dll    build/libgcc_s_seh-1.dll
         cp /mingw64/bin/libstdc++-6.dll       build/libstdc++-6.dll
-        cp /mingw64/bin/libcrypto-1_1-x64.dll build/libcrypto-1_1-x64.dll
-        cp /mingw64/bin/libssh2-1.dll         build/libssh2-1.dll
-        cp /mingw64/bin/libwinpthread-1.dll   build/libwinpthread-1.dll
-        cp /mingw64/bin/zlib1.dll             build/zlib1.dll
-
     - name: Copy Necessary DLLs (clang64)
-      if: ${{ matrix.sys == 'clang64' }}
+      if: ${{ matrix.compiler == 'clang64' }}
       run: |
         cp /clang64/bin/libc++.dll            build/libc++.dll
-        cp /clang64/bin/libcrypto-1_1-x64.dll build/libcrypto-1_1-x64.dll
-        cp /clang64/bin/libssh2-1.dll         build/libssh2-1.dll
         cp /clang64/bin/libunwind.dll         build/libunwind.dll
-        cp /clang64/bin/zlib1.dll             build/zlib1.dll
-
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: ChiraEngine-windows-${{matrix.sys}}-${{matrix.build_type}}
+        name: ChiraEngine-windows-${{matrix.compiler}}-${{matrix.build_type}}
         path: |
-          ${{github.workspace}}\build\resources\
-          ${{github.workspace}}\build\ChiraEngineGui.exe
-          ${{github.workspace}}\build\ChiraModelViewer.exe
-          ${{github.workspace}}\build\*.dll
+            ${{github.workspace}}/build/resources/
+            ${{github.workspace}}/build/ChiraEditor.exe
+            ${{github.workspace}}/build/*.dll
         retention-days: 1
 
   build-msvc:
@@ -140,8 +129,8 @@ jobs:
       - name: Set up MSVC
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: x86
-          spectre: false
+          arch: x64
+          spectre: true
 
       - name: Configure CMake
         run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
@@ -152,3 +141,13 @@ jobs:
       - name: Test
         working-directory: ${{github.workspace}}/build
         run: ctest -C ${{matrix.build_type}}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ChiraEngine-msvc-${{matrix.build_type}}
+          path: |
+            ${{github.workspace}}/build/resources/
+            ${{github.workspace}}/build/ChiraEditor.exe
+            ${{github.workspace}}/build/*.dll
+          retention-days: 1

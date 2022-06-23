@@ -1,7 +1,9 @@
-list(APPEND ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/meshData.h
-        ${CMAKE_CURRENT_LIST_DIR}/meshData.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/meshDataBuilder.h
-        ${CMAKE_CURRENT_LIST_DIR}/meshDataBuilder.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/meshDataResource.h
-        ${CMAKE_CURRENT_LIST_DIR}/meshDataResource.cpp)
+list(APPEND CHIRA_ENGINE_HEADERS
+        ${CMAKE_CURRENT_LIST_DIR}/MeshData.h
+        ${CMAKE_CURRENT_LIST_DIR}/MeshDataBuilder.h
+        ${CMAKE_CURRENT_LIST_DIR}/MeshDataResource.h)
+
+list(APPEND CHIRA_ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/MeshData.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/MeshDataBuilder.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/MeshDataResource.cpp)
