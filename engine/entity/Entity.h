@@ -24,17 +24,17 @@ public:
     virtual ~Entity();
     /// Renders all this entity's children.
     virtual void render(glm::mat4 parentTransform);
-    virtual const Window* getWindow() const;
-    virtual Window* getWindow();
-    virtual const Frame* getFrame() const;
-    virtual Frame* getFrame();
-    virtual const Root* getRoot() const;
-    virtual Root* getRoot();
+    [[nodiscard]] virtual const Window* getWindow() const;
+    [[nodiscard]] virtual Window* getWindow();
+    [[nodiscard]] virtual const Frame* getFrame() const;
+    [[nodiscard]] virtual Frame* getFrame();
+    [[nodiscard]] virtual const Root* getRoot() const;
+    [[nodiscard]] virtual Root* getRoot();
     [[nodiscard]] Entity* getParent() const;
     [[nodiscard]] std::string getName() const;
-    Entity* getChild(const std::string& name_) const;
+    [[nodiscard]] Entity* getChild(const std::string& name_) const;
     template<typename EntityType>
-    EntityType* getChild(const std::string& name_) const {
+    [[nodiscard]] EntityType* getChild(const std::string& name_) const {
         return assert_cast<EntityType*>(this->getChild(name_));
     }
     [[nodiscard]] bool hasChild(const std::string& name_) const;

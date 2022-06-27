@@ -31,6 +31,53 @@ if(CHIRA_COMPILER_ID MATCHES "clang")
     endif()
 endif()
 
+# Macro to apply optimization flags to multiple targets
+option(CHIRA_BUILD_WITH_WARNINGS "Build Chira Engine with warnings enabled" ON)
+option(CHIRA_TREAT_WARNINGS_AS_ERRORS "Build Chira Engine with warnings treated as errors" OFF) # Currently catches warnings from libraries
+macro(apply_optimizations target)
+    if(CMAKE_BUILD_TYPE MATCHES Debug)
+        target_compile_definitions(${target} PRIVATE DEBUG)
+
+        if(CHIRA_COMPILER_CLANG)
+            target_compile_options(${target} PRIVATE -fno-limit-debug-info)
+        endif()
+
+        # On UNIX, build with debug friendly optimizations and debug symbols
+        # On Windows, disable optimizations entirely
+        if(UNIX OR MINGW)
+            target_compile_options(${target} PRIVATE -Og -g)
+        elseif(CHIRA_COMPILER_MSVC)
+            target_compile_options(${target} PRIVATE /Od)
+        endif()
+
+    elseif(CMAKE_BUILD_TYPE MATCHES Release)
+        target_compile_definitions(${target} PRIVATE RELEASE)
+
+        # Build with optimizations and don't omit stack pointer for debugging
+        if(UNIX OR MINGW)
+            target_compile_options(${target} PRIVATE -O2 -fno-omit-frame-pointer)
+        elseif(CHIRA_COMPILER_MSVC)
+            target_compile_options(${target} PRIVATE /O2)
+        endif()
+    endif()
+
+    if(CHIRA_BUILD_WITH_WARNINGS)
+        if(UNIX OR MINGW)
+            target_compile_options(${target} PRIVATE -Wall -Wno-unused-parameter -Wno-sign-compare)
+        elseif(CHIRA_COMPILER_MSVC)
+            target_compile_options(${target} PRIVATE /W4) # not all, because MSVC has loads of idiotic errors
+        endif()
+    endif()
+
+    if(CHIRA_TREAT_WARNINGS_AS_ERRORS)
+        if(UNIX OR MINGW)
+            target_compile_options(${target} PRIVATE -Werror)
+        elseif(CHIRA_COMPILER_MSVC)
+            target_compile_options(${target} PRIVATE /WX)
+        endif()
+    endif()
+endmacro()
+
 # GOOGLETEST
 option(CHIRA_BUILD_TESTS "Run Chira Engine's built-in tests" ON)
 if(CHIRA_BUILD_TESTS)
@@ -106,42 +153,12 @@ option(CHIRA_BUILD_WITH_STEAMWORKS "Build Chira Engine with Steamworks API featu
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/CMakeLists.txt)
 list(APPEND CHIRA_ENGINE_SOURCES ${CHIRA_ENGINE_HEADERS})
 add_library(${PROJECT_NAME} STATIC ${CHIRA_ENGINE_SOURCES})
+apply_optimizations(${PROJECT_NAME})
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${CHIRA_ENGINE_HEADERS})
 
 if(CHIRA_BUILD_WITH_STEAMWORKS)
     target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_BUILD_WITH_STEAMWORKS)
-endif()
-
-if(CMAKE_BUILD_TYPE MATCHES Debug)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC DEBUG)
-    if(CHIRA_COMPILER_CLANG)
-        target_compile_options(${PROJECT_NAME} PUBLIC -fno-limit-debug-info)
-    endif()
-    if(UNIX OR MINGW)
-        # On UNIX, build with debug friendly optimizations and debug symbols
-        # On Windows, just disable optimizations entirely
-        target_compile_options(${PROJECT_NAME} PUBLIC -Og -g)
-    elseif(CHIRA_COMPILER_MSVC)
-        target_compile_options(${PROJECT_NAME} PUBLIC /Od)
-    endif()
-elseif(CMAKE_BUILD_TYPE MATCHES Release)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC RELEASE)
-    # Build with max optimizations and don't omit stack ptr for debugging reasons
-    if(UNIX OR MINGW)
-        target_compile_options(${PROJECT_NAME} PUBLIC -O3 -fno-omit-frame-pointer)
-    elseif(CHIRA_COMPILER_MSVC)
-        target_compile_options(${PROJECT_NAME} PUBLIC /O2)
-    endif()
-endif()
-
-option(CHIRA_BUILD_WITH_WARNINGS "Build Chira Engine with warnings enabled" ON)
-if(CHIRA_BUILD_WITH_WARNINGS)
-    if(UNIX OR MINGW)
-        target_compile_options(${PROJECT_NAME} PUBLIC -Wall)
-    elseif(CHIRA_COMPILER_MSVC)
-        target_compile_options(${PROJECT_NAME} PUBLIC /W4) # not all, because MSVC has loads of idiotic errors
-    endif()
 endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -165,6 +182,7 @@ if(CHIRA_BUILD_EDITOR)
         list(APPEND CHIRA_EDITOR_SOURCES ${CMAKE_CURRENT_LIST_DIR}/resources/editor/icon/icon.rc)
     endif()
     add_executable(ChiraEditor ${CHIRA_EDITOR_SOURCES})
+    apply_optimizations(ChiraEditor)
     if(WIN32)
         add_custom_target(CopyEditorIcon ALL COMMAND ${CMAKE_COMMAND} -E copy
                 ${CMAKE_SOURCE_DIR}/resources/editor/icon/icon.ico ${CMAKE_BINARY_DIR}/resources/editor/icon/icon.ico)
