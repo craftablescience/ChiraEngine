@@ -34,8 +34,8 @@ int main() {
     auto gridMesh = grid->getMesh();
     gridMesh->setMaterial(CHIRA_GET_MATERIAL("MaterialUntextured", "file://materials/unlit.json"));
     for (int i = -5; i <= 5; i++) {
-        gridMesh->addCube(Vertex{{i, 0, 0}}, {0.025f, 0.025f, 10.f});
-        gridMesh->addCube(Vertex{{0, 0, i}}, {10.f, 0.025f, 0.025f});
+        gridMesh->addCube(Vertex{{i, 0, 0}}, {0.025f, 0.025f, 10.025f});
+        gridMesh->addCube(Vertex{{0, 0, i}}, {10.025f, 0.025f, 0.025f});
     }
     gridMesh->addCube({{2.5f, 0, 0}, {0, 0, 0}, {1, 0, 0}}, {5.f + 0.026f, 0.03f, 0.03f});
     gridMesh->addCube({{0, 0, 2.5f}, {0, 0, 0}, {0, 0, 1}}, {0.03f, 0.03f, 5.f + 0.026f});
