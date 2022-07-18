@@ -148,7 +148,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES tinyfiledialogs)
 
 # CHIRAENGINE
-option(CHIRA_BUILD_WITH_STEAMWORKS "Build Chira Engine with Steamworks API features" ON)
+option(CHIRA_USE_STEAMWORKS "Build Chira Engine with Steamworks API features" ON)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/CMakeLists.txt)
 list(APPEND CHIRA_ENGINE_SOURCES ${CHIRA_ENGINE_HEADERS})
@@ -157,8 +157,8 @@ apply_optimizations(${PROJECT_NAME})
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${CHIRA_ENGINE_HEADERS})
 
-if(CHIRA_BUILD_WITH_STEAMWORKS)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_BUILD_WITH_STEAMWORKS)
+if(CHIRA_USE_STEAMWORKS)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_USE_STEAMWORKS)
 endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -183,6 +183,9 @@ if(CHIRA_BUILD_EDITOR)
     endif()
     add_executable(ChiraEditor ${CHIRA_EDITOR_SOURCES})
     apply_optimizations(ChiraEditor)
+    set_target_properties(ChiraEditor PROPERTIES
+            WIN32_EXECUTABLE ON
+            MACOSX_BUNDLE ON)
     if(WIN32)
         add_custom_target(CopyEditorIcon ALL COMMAND ${CMAKE_COMMAND} -E copy
                 ${CMAKE_SOURCE_DIR}/resources/editor/icon/icon.ico ${CMAKE_BINARY_DIR}/resources/editor/icon/icon.ico)

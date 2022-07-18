@@ -12,7 +12,7 @@
 #include <resource/ShaderResource.h>
 #include <render/UBO.h>
 
-#ifdef CHIRA_BUILD_WITH_STEAMWORKS
+#ifdef CHIRA_USE_STEAMWORKS
 #include <hook/SteamAPI.h>
 #endif
 
@@ -139,7 +139,7 @@ void Engine::init(bool windowStartsVisible) {
         ShaderResource::addPreprocessorSymbol("MAX_SPOT_LIGHTS", std::to_string(maxLights));
     }
 
-#ifdef CHIRA_BUILD_WITH_STEAMWORKS
+#ifdef CHIRA_USE_STEAMWORKS
     bool steamEnabled = false;
     Engine::getSettings()->getValue("engine", "steamworks", &steamEnabled);
     if (steamEnabled && (!SteamAPI::Client::initialized() && !SteamAPI::Client::initSteam()))
@@ -152,21 +152,22 @@ void Engine::run() {
         Engine::lastTime = Engine::currentTime;
         Engine::currentTime = glfwGetTime();
 
-        Engine::window->render(glm::identity<glm::mat4>());
+        static constexpr auto identityMatrix = glm::identity<glm::mat4>();
+        Engine::window->render(identityMatrix);
 
         glfwPollEvents();
-        for (auto &keybind: InputManager::getKeyButtonCallbacks()) {
+        for (auto& keybind: InputManager::getKeyButtonCallbacks()) {
             if (glfwGetKey(Engine::window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
                 keybind();
         }
-        for (auto &keybind: InputManager::getMouseButtonCallbacks()) {
+        for (auto& keybind: InputManager::getMouseButtonCallbacks()) {
             if (glfwGetMouseButton(Engine::window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
                 keybind();
         }
 
         if (DiscordRPC::initialized())
             DiscordRPC::updatePresence();
-#ifdef CHIRA_BUILD_WITH_STEAMWORKS
+#ifdef CHIRA_USE_STEAMWORKS
         if (SteamAPI::Client::initialized())
             SteamAPI::Client::runCallbacks();
 #endif
@@ -177,7 +178,7 @@ void Engine::run() {
 
     if (DiscordRPC::initialized())
         DiscordRPC::shutdown();
-#ifdef CHIRA_BUILD_WITH_STEAMWORKS
+#ifdef CHIRA_USE_STEAMWORKS
     if (SteamAPI::Client::initialized())
         SteamAPI::Client::shutdown();
 #endif
@@ -200,7 +201,7 @@ void Engine::setSettingsDefaults() {
     Engine::settingsLoader->setValue("engine", "maxPointLights", 64, false, false);
     Engine::settingsLoader->setValue("engine", "maxDirectionalLights", 4, false, false);
     Engine::settingsLoader->setValue("engine", "maxSpotLights", 4, false, false);
-#ifdef CHIRA_BUILD_WITH_STEAMWORKS
+#ifdef CHIRA_USE_STEAMWORKS
     Engine::settingsLoader->setValue("engine", "steamworks", false, false, false);
 #endif
     Engine::settingsLoader->addCategory("graphics");
