@@ -9,12 +9,8 @@
 
 using namespace chira;
 
-std::string ShaderResource::preprocessorPrefix = std::string{SHADER_PREPROCESSOR_DEFAULT_PREFIX}; // NOLINT(cert-err58-cpp)
-std::string ShaderResource::preprocessorSuffix = std::string{SHADER_PREPROCESSOR_DEFAULT_SUFFIX}; // NOLINT(cert-err58-cpp)
-std::unordered_map<std::string, std::string> ShaderResource::preprocessorSymbols{};
-
-ShaderResource::ShaderResource(const std::string& identifier_, int type_)
-    : StringResource(identifier_)
+ShaderResource::ShaderResource(std::string identifier_, int type_)
+    : StringResource(std::move(identifier_))
     , HandleObject<int>()
     , type(type_) {}
 

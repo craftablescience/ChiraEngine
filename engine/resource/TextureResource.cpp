@@ -4,7 +4,7 @@
 
 using namespace chira;
 
-TextureResource::TextureResource(const std::string& identifier_, bool vFlip_) : Resource(identifier_) {
+TextureResource::TextureResource(std::string identifier_, bool vFlip_) : Resource(std::move(identifier_)) {
     this->vFlip = vFlip_;
 }
 

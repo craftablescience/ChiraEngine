@@ -2,7 +2,7 @@
 
 #include <i18n/TranslationManager.h>
 
-chira::Axis chira::getAxisFromString(const std::string& str) {
+chira::Axis chira::getAxisFromString(std::string_view str) {
     if (str == "X")
         return Axis::X;
     else if (str == "Y")
@@ -15,7 +15,7 @@ chira::Axis chira::getAxisFromString(const std::string& str) {
     }
 }
 
-chira::SignedAxis chira::getSignedAxisFromString(const std::string& str) {
+chira::SignedAxis chira::getSignedAxisFromString(std::string_view str) {
     if (str == "XP")
         return SignedAxis::XP;
     else if (str == "XN")

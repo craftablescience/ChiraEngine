@@ -14,10 +14,11 @@ Resource::~Resource() {
 //
 
 void Resource::addResourceProvider(IResourceProvider* provider) {
-    if (Resource::providers.find(provider->getName()) == Resource::providers.end()) {
-        Resource::providers[provider->getName()] = std::vector<std::unique_ptr<IResourceProvider>>{};
+    std::string providerName{provider->getName().data()};
+    if (Resource::providers.find(providerName) == Resource::providers.end()) {
+        Resource::providers[providerName] = std::vector<std::unique_ptr<IResourceProvider>>{};
     }
-    Resource::providers[provider->getName()].emplace_back(provider);
+    Resource::providers[providerName].emplace_back(provider);
 }
 
 IResourceProvider* Resource::getLatestResourceProvider(const std::string& provider) {

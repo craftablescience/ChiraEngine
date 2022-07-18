@@ -3,6 +3,7 @@
 #include <functional>
 #include <vector>
 #include <memory>
+#include <string_view>
 
 #include <loader/settings/JSONSettingsLoader.h>
 #include <entity/root/Window.h>
@@ -15,7 +16,7 @@ const std::string ENGINE_FILESYSTEM_PATH = "engine"; // NOLINT(cert-err58-cpp)
 class Engine {
 public:
     /// Ran at the very start of your program. Readies the engine for you to add features before init().
-    static void preInit(const std::string& configPath = "config.json");
+    static void preInit(std::string_view configPath = "config.json");
     static void init(bool windowStartsVisible = true);
     static void run();
     [[nodiscard]] static JSONSettingsLoader* getSettings();

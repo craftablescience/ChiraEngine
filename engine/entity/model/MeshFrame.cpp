@@ -4,8 +4,8 @@
 
 using namespace chira;
 
-MeshFrame::MeshFrame(const std::string& name_, int width_, int height_, ColorRGB backgroundColor_, bool smoothResize)
-    : Frame(name_, width_, height_, backgroundColor_, smoothResize) {
+MeshFrame::MeshFrame(std::string name_, int width_, int height_, ColorRGB backgroundColor_, bool smoothResize)
+    : Frame(std::move(name_), width_, height_, backgroundColor_, smoothResize) {
     this->mesh.getMesh()->setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/unlitTextured.json", this).castAssert<MaterialBase>());
 }
 

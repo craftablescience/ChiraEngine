@@ -48,11 +48,11 @@ Entity* Entity::getParent() const {
     return this->parent;
 }
 
-std::string Entity::getName() const {
+std::string_view Entity::getName() const {
     return this->name;
 }
 
-Entity* Entity::getChild(const std::string& name_) const {
+Entity* Entity::getChild(std::string_view name_) const {
     for (auto* entity : this->children) {
         if (entity->getName() == name_) {
             return entity;
@@ -61,11 +61,11 @@ Entity* Entity::getChild(const std::string& name_) const {
     return nullptr;
 }
 
-bool Entity::hasChild(const std::string& name_) const {
+bool Entity::hasChild(std::string_view name_) const {
     return static_cast<bool>(this->getChild(name_));
 }
 
-std::string Entity::addChild(Entity* child) {
+std::string_view Entity::addChild(Entity* child) {
     // Do not let two children have the same name!
     if (this->hasChild(child->getName())) {
         Logger::log(LOG_ERROR, "Entity::addChild", TRF("error.entity.duplicate_child_name", child->getName()));
@@ -76,7 +76,7 @@ std::string Entity::addChild(Entity* child) {
     return child->getName();
 }
 
-void Entity::removeChild(const std::string& name_) {
+void Entity::removeChild(std::string_view name_) {
     std::ignore = std::remove_if(this->children.begin(), this->children.end(), [&name_](Entity* entity) {
         if (entity->getName() == name_) {
             entity->removeAllChildren();

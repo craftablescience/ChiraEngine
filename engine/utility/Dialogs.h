@@ -1,40 +1,41 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 
 namespace chira::Dialogs {
 
 /// Returns an absolute path to the file selected, or an empty string if none selected.
-std::string openFile(const std::string& pattern, const std::string& description = "");
+std::string openFile(std::string_view pattern, std::string_view description = "");
 /// Returns an absolute path to the folder selected, or an empty string if none selected.
 std::string openFolder();
 /// Returns a relative path to the resource selected, or an empty string if none selected.
-std::string openResource(const std::string& pattern, const std::string& description = "");
+std::string openResource(std::string_view pattern, std::string_view description = "");
 /// Return an absolute path to the file to create, or an empty string if Cancel pressed.
-std::string saveFile(const std::string& pattern, const std::string& defaultName = "", const std::string& description = "");
+std::string saveFile(std::string_view pattern, std::string_view defaultName = "", std::string_view description = "");
 
 /// Display a popup window with an input box.
-std::string input(const std::string& message = "", const std::string& title = "Input", const std::string& placeholder = "");
+std::string input(std::string_view message = "", std::string_view title = "Input", std::string_view placeholder = "");
 /// Display a popup window with a password box.
-std::string password(const std::string& message = "", const std::string& title = "Password");
+std::string password(std::string_view message = "", std::string_view title = "Password");
 
 /// Display a popup info window with the specified message.
-void popupInfo(const std::string& message, const std::string& title = "Info");
+void popupInfo(std::string_view message, std::string_view title = "Info");
 /// Display a popup warning window with the specified message.
-void popupWarning(const std::string& message, const std::string& title = "Warning");
+void popupWarning(std::string_view message, std::string_view title = "Warning");
 /// Display a popup error window with the specified message.
-void popupError(const std::string& message, const std::string& title = "Error");
+void popupError(std::string_view message, std::string_view title = "Error");
 /// Display a popup info window with the specified message, as well as Ok/Yes and Cancel/No buttons.
 /// Returns true if Ok/Yes pressed, false if Cancel/No pressed.
-bool popupInfoChoice(const std::string& message, bool useYesNo = false, const std::string& title = "Info");
+bool popupInfoChoice(std::string_view message, bool useYesNo = false, std::string_view title = "Info");
 /// Display a popup warning window with the specified message, as well as Ok/Yes and Cancel/No buttons.
 /// Returns true if Ok/Yes pressed, false if Cancel/No pressed.
-bool popupWarningChoice(const std::string& message, bool useYesNo = false, const std::string& title = "Warning");
+bool popupWarningChoice(std::string_view message, bool useYesNo = false, std::string_view title = "Warning");
 /// Display a popup error window with the specified message, as well as Ok/Yes and Cancel/No buttons.
 /// Returns true if Ok/Yes pressed, false if Cancel/No pressed.
-bool popupErrorChoice(const std::string& message, bool useYesNo = false, const std::string& title = "Error");
+bool popupErrorChoice(std::string_view message, bool useYesNo = false, std::string_view title = "Error");
 /// Display a popup question window with the specified question.
 /// Returns true if Ok/Yes pressed, false if Cancel/No pressed.
-bool popupQuestion(const std::string& question, bool useYesNo = false, const std::string& title = "Choice");
+bool popupQuestion(std::string_view question, bool useYesNo = false, std::string_view title = "Choice");
 
 } // namespace chira::Dialogs

@@ -6,7 +6,7 @@ namespace chira {
 
 class BinaryResource : public Resource {
 public:
-    explicit BinaryResource(const std::string& identifier_) : Resource(identifier_) {}
+    explicit BinaryResource(std::string identifier_) : Resource(std::move(identifier_)) {}
     void compile(const unsigned char buffer[], std::size_t bufferLength) override;
     ~BinaryResource() override;
     [[nodiscard]] const unsigned char* getBuffer() const;

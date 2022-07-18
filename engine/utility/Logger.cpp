@@ -12,7 +12,7 @@ using namespace chira;
     #define CHIRA_LOGGER_SUFFIX '\n'
 #endif
 
-void Logger::log(LogType type, const std::string& source, const std::string& message) {
+void Logger::log(LogType type, std::string_view source, std::string_view message) {
     switch (type) {
         case LOG_INFO:
             std::cout << Logger::INFO_PREFIX << "[" << source << "] " << message << CHIRA_LOGGER_SUFFIX;
@@ -39,7 +39,7 @@ uuids::uuid Logger::addCallback(const loggingCallback& callback) {
     return id;
 }
 
-void Logger::runLogHooks(LogType type, const std::string& source, const std::string& message) {
+void Logger::runLogHooks(LogType type, std::string_view source, std::string_view message) {
     for (const auto& [id, callback] : Logger::callbacks) {
         callback(type, source, message);
     }

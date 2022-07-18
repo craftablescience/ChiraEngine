@@ -19,6 +19,6 @@ void PropertiesResource::compile(const unsigned char buffer[], std::size_t buffe
     this->compile(props);
 }
 
-void PropertiesResource::logMissingProperty(const std::string& identifier, const std::string& key) {
+void PropertiesResource::logMissingProperty(std::string_view identifier, std::string_view key) {
     Logger::log(LOG_ERROR, "Properties Resource", TRF("warn.properties_resource.missing_property", identifier, key));
 }

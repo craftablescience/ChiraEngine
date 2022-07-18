@@ -17,11 +17,11 @@ enum LogType {
 };
 
 class Logger {
-    using loggingCallback = std::function<void(LogType,const std::string&,const std::string&)>;
+    using loggingCallback = std::function<void(LogType,std::string_view,std::string_view)>;
 public:
-    static void log(LogType type, const std::string& source, const std::string& message);
+    static void log(LogType type, std::string_view source, std::string_view message);
     static uuids::uuid addCallback(const loggingCallback& callback);
-    static void runLogHooks(LogType type, const std::string& source, const std::string& message);
+    static void runLogHooks(LogType type, std::string_view source, std::string_view message);
     static void removeCallback(const uuids::uuid& id);
 
     static inline constexpr std::string_view INFO_PREFIX = "[*]";

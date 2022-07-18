@@ -17,8 +17,10 @@ std::string DiscordRPC::smallImageText;
 std::int64_t DiscordRPC::startTimestamp = -1;
 std::int64_t DiscordRPC::endTimestamp = -1;
 
-void DiscordRPC::init(const std::string& appId) {
-    if (DiscordRPC::isInitialized) return;
+void DiscordRPC::init(std::string_view appId) {
+    if (DiscordRPC::isInitialized)
+        return;
+
     DiscordEventHandlers handlers;
     memset(&handlers, 0, sizeof(handlers));
 #if DEBUG
@@ -32,7 +34,7 @@ void DiscordRPC::init(const std::string& appId) {
         Logger::log(LOG_ERROR, "Discord", TRF("debug.discord.generic_error", errcode, message));
     };
 #endif
-    Discord_Initialize(appId.c_str(), &handlers, 1, nullptr);
+    Discord_Initialize(appId.data(), &handlers, 1, nullptr);
     DiscordRPC::isInitialized = true;
 }
 

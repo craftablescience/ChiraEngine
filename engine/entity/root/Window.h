@@ -31,10 +31,10 @@ protected:
     GLFWwindow* window = nullptr;
     bool mouseCaptured = false, iconified = false, fullscreen;
     double lastMouseX = -1.0, lastMouseY = -1.0;
-    Window(const std::string& name_, const std::string& title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = true);
-    Window(const std::string& title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = true);
+    Window(std::string name_, std::string_view title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = true);
+    Window(std::string_view title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = true);
 private:
-    bool createGLFWWindow(const std::string& title);
+    bool createGLFWWindow(std::string_view title);
 };
 
 }

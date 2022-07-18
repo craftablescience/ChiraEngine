@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <utility/Logger.h>
 
 #ifndef _WIN32
@@ -34,7 +35,7 @@ inline void breakInDebugger() {
 // Leave outside the Chira namespace so it can be conditionally replaced with a macro
 // (why did modern compilers not implement this??)
 #ifdef CHIRA_USE_SOURCE_LOCATION
-inline void runtime_assert(bool shouldAssert, const std::string& message, const std::source_location location = std::source_location::current()) {
+inline void runtime_assert(bool shouldAssert, std::string_view message, const std::source_location location = std::source_location::current()) {
     // Assertions fail when false
     if (shouldAssert)
         return;
@@ -43,7 +44,7 @@ inline void runtime_assert(bool shouldAssert, const std::string& message, const 
             "In file: " + location.file_name() + '\n' +
             "In function: " + location.function_name() + '\n' +
             "At line: " + std::to_string(location.line()) + "\n\n" +
-            message;
+            message.data();
     chira::Logger::log(chira::LOG_ERROR, "Assert", assertMsg);
 
 #ifdef DEBUG
@@ -53,7 +54,7 @@ inline void runtime_assert(bool shouldAssert, const std::string& message, const 
 }
 #else
 #define runtime_assert(shouldAssert, message) runtime_assert_internal(shouldAssert, message, __FILE__, __LINE__, __FUNCTION__)
-inline void runtime_assert_internal(bool shouldAssert, const std::string& message, const char* file, int line, const char* function) {
+inline void runtime_assert_internal(bool shouldAssert, std::string_view message, const char* file, int line, const char* function) {
     // Assertions fail when false
     if (shouldAssert)
         return;
@@ -62,7 +63,7 @@ inline void runtime_assert_internal(bool shouldAssert, const std::string& messag
                      "In file: " + file + '\n' +
                      "In function: " + function + '\n' +
                      "At line: " + std::to_string(line) + "\n\n" +
-                     message;
+                     message.data();
     chira::Logger::log(chira::LOG_ERROR, "Assert", assertMsg);
 
 #ifdef DEBUG

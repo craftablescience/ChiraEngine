@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 
 namespace chira {
 
@@ -10,11 +11,11 @@ class IResourceProvider {
 public:
     explicit IResourceProvider(std::string name) : providerName(std::move(name)) {}
     virtual ~IResourceProvider() = default;
-    [[nodiscard]] const std::string& getName() const {
+    [[nodiscard]] std::string_view getName() const {
         return this->providerName;
     }
-    [[nodiscard]] virtual bool hasResource(const std::string& name) const = 0;
-    virtual void compileResource(const std::string& name, Resource* resource) const = 0;
+    [[nodiscard]] virtual bool hasResource(std::string_view name) const = 0;
+    virtual void compileResource(std::string_view name, Resource* resource) const = 0;
 protected:
     std::string providerName;
 };

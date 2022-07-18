@@ -8,9 +8,9 @@ namespace chira {
 class TranslationManager {
 public:
     static void setLanguage(const std::string& languageCode);
-    static const std::string& getLanguage();
+    static std::string_view getLanguage();
     static const std::unordered_map<std::string,std::string>& getCodeAndNamePairs();
-    static const std::string& getLanguageNameFromCode(const std::string& code);
+    static std::string_view getLanguageNameFromCode(const std::string& code);
     static bool isValidCode(const std::string& code);
     static void addTranslationFile(const std::string& identifier);
     static void addUniversalFile(const std::string& identifier);

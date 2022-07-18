@@ -5,8 +5,8 @@
 
 using namespace chira;
 
-JSONSettingsLoader::JSONSettingsLoader(const std::string& path)
-    : ISettingsLoader(path)
+JSONSettingsLoader::JSONSettingsLoader(std::string_view path)
+    : ISettingsLoader(std::move(path))
     , settings() {}
 
 void JSONSettingsLoader::addCategory(const std::string& category) {
@@ -100,14 +100,14 @@ bool JSONSettingsLoader::hasValue(const std::string& category, const std::string
 }
 
 void JSONSettingsLoader::load() {
-    std::ifstream fileCheck(this->getFilePath());
+    std::ifstream fileCheck{this->getFilePath().data()};
     if (!fileCheck.good()) {
         // Make new file if it doesn't exist
-        std::fstream fs(this->getFilePath(), std::fstream::out);
+        std::fstream fs{this->getFilePath().data(), std::fstream::out};
         fs << "{}\n";
         fs.close();
     }
-    std::ifstream inputFile(this->getFilePath());
+    std::ifstream inputFile{this->getFilePath().data()};
     nlohmann::json input;
     inputFile >> input;
     inputFile.close();
@@ -123,6 +123,6 @@ void JSONSettingsLoader::load() {
 }
 
 void JSONSettingsLoader::save() {
-    std::ofstream output(this->getFilePath());
+    std::ofstream output{this->getFilePath().data()};
     output << std::setw(4) << this->settings << std::endl;
 }

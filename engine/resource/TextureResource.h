@@ -7,7 +7,7 @@ namespace chira {
 
 class TextureResource : public Resource {
 public:
-    explicit TextureResource(const std::string& identifier_, bool vFlip_ = true);
+    explicit TextureResource(std::string identifier_, bool vFlip_ = true);
     void compile(const unsigned char buffer[], std::size_t bufferLen) override;
     [[nodiscard]] Image* getFile() const {
         return this->file.get();

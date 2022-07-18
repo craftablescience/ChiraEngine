@@ -26,7 +26,7 @@ void MeshDataResource::compile(const nlohmann::json& properties) {
     this->setupForRendering();
 }
 
-int MeshDataResource::getDepthFuncFromString(const std::string& depthFunc) {
+int MeshDataResource::getDepthFuncFromString(std::string_view depthFunc) {
     if (depthFunc == "NEVER")
         return GL_NEVER;
     else if (depthFunc == "ALWAYS")
@@ -48,7 +48,7 @@ int MeshDataResource::getDepthFuncFromString(const std::string& depthFunc) {
     return GL_LEQUAL;
 }
 
-int MeshDataResource::getCullTypeFromString(const std::string& cullType) {
+int MeshDataResource::getCullTypeFromString(std::string_view cullType) {
     if (cullType == "BACK")
         return GL_BACK;
     else if (cullType == "FRONT")

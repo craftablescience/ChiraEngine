@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 
 struct DiscordUser;
 
@@ -10,7 +11,7 @@ namespace chira {
 /// After that, any setter functions will change the status after update().
 class DiscordRPC {
 public:
-    static void init(const std::string& appId);
+    static void init(std::string_view appId);
     static bool initialized();
     static void setState(const std::string& state_);
     static void setDetails(const std::string& details_);

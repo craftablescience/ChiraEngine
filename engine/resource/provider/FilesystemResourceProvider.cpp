@@ -17,7 +17,7 @@ FilesystemResourceProvider::FilesystemResourceProvider(std::string path_, bool i
         this->path = FILESYSTEM_ROOT_FOLDER + '/' + this->path;
 }
 
-bool FilesystemResourceProvider::hasResource(const std::string& name) const {
+bool FilesystemResourceProvider::hasResource(std::string_view name) const {
     // Update your compiler if compilation fails because of std::filesystem
     if (this->absolute)
         return std::filesystem::exists(std::filesystem::path{this->path}.append(name));
@@ -25,7 +25,7 @@ bool FilesystemResourceProvider::hasResource(const std::string& name) const {
         return std::filesystem::exists(std::filesystem::current_path().append(this->path).append(name));
 }
 
-void FilesystemResourceProvider::compileResource(const std::string& name, Resource* resource) const {
+void FilesystemResourceProvider::compileResource(std::string_view name, Resource* resource) const {
     std::filesystem::path resourcePath;
     if (this->absolute)
         resourcePath = std::filesystem::path{this->path}.append(name);
@@ -42,7 +42,7 @@ void FilesystemResourceProvider::compileResource(const std::string& name, Resour
 }
 
 std::string FilesystemResourceProvider::getFolder() const {
-    return String::stripLeft(this->getPath(), FILESYSTEM_ROOT_FOLDER + '/');
+    return String::stripLeft(std::string{this->getPath().data()}, FILESYSTEM_ROOT_FOLDER + '/');
 }
 
 std::string FilesystemResourceProvider::getLocalResourceAbsolutePath(const std::string& identifier) const {
@@ -60,19 +60,19 @@ void FilesystemResourceProvider::nixifyPath(std::string& path) {
     std::replace(path.begin(), path.end(), '\\', '/');
 }
 
-std::string FilesystemResourceProvider::getResourceIdentifier(const std::string& absolutePath) {
+std::string FilesystemResourceProvider::getResourceIdentifier(std::string_view absolutePath) {
     // Add the resource provider prefix
     if (auto path = FilesystemResourceProvider::getResourceFolderPath(absolutePath); !path.empty())
         return FILESYSTEM_PROVIDER_NAME + RESOURCE_ID_SEPARATOR.data() + path;
     return "";
 }
 
-std::string FilesystemResourceProvider::getResourceFolderPath(const std::string& absolutePath) {
+std::string FilesystemResourceProvider::getResourceFolderPath(std::string_view absolutePath) {
     // Make sure we've been passed a valid resource path
-    if (absolutePath.find(FILESYSTEM_ROOT_FOLDER) == std::string::npos)
+    if (absolutePath.find(FILESYSTEM_ROOT_FOLDER) == std::string_view::npos)
         return "";
 
-    std::string path = absolutePath;
+    std::string path{absolutePath.data()};
 
     // Replace cringe Windows-style backslashes
     FilesystemResourceProvider::nixifyPath(path);

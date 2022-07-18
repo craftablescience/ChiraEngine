@@ -6,7 +6,7 @@ namespace chira {
 
 class StringResource : public Resource {
 public:
-    explicit StringResource(const std::string& identifier_) : Resource(identifier_) {}
+    explicit StringResource(std::string identifier_) : Resource(std::move(identifier_)) {}
     void compile(const unsigned char buffer[], std::size_t bufferLength) override;
     [[nodiscard]] const std::string& getString() const;
 protected:

@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cstdio>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include <utility/Platform.h>
@@ -11,7 +12,7 @@ namespace chira {
 
 class FileInputStream {
 public:
-    explicit FileInputStream(const std::string& filepath, bool binary = true);
+    explicit FileInputStream(std::string_view filepath, bool binary = true);
     ~FileInputStream();
     FileInputStream(const FileInputStream& other) = delete;
     FileInputStream& operator=(const FileInputStream& other) = delete;

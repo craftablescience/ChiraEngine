@@ -14,7 +14,7 @@ class Camera;
 class Group : public Entity {
     friend class Engine;
 public:
-    explicit Group(const std::string& name_);
+    explicit Group(std::string name_);
     Group();
     void update(glm::mat4 parentTransform) override;
     [[nodiscard]] glm::vec3 getGlobalPosition() override;

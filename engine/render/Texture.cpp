@@ -6,8 +6,8 @@
 
 using namespace chira;
 
-Texture::Texture(const std::string& identifier_, bool cacheTexture)
-    : PropertiesResource(identifier_)
+Texture::Texture(std::string identifier_, bool cacheTexture)
+    : PropertiesResource(std::move(identifier_))
     , HandleObject<unsigned int>(0)
     , cache(cacheTexture) {}
 
@@ -69,7 +69,7 @@ int Texture::getTextureUnit() const {
     return this->activeTextureUnit;
 }
 
-int Texture::getFormatFromString(const std::string& formatName) {
+int Texture::getFormatFromString(std::string_view formatName) {
     if (formatName == "RED")
         return GL_RED;
     else if (formatName == "RG")
@@ -118,7 +118,7 @@ int Texture::getFormatFromBitDepth(int bd) {
     }
 }
 
-int Texture::getWrapModeFromString(const std::string& wrapName) {
+int Texture::getWrapModeFromString(std::string_view wrapName) {
     if (wrapName == "REPEAT")
         return GL_REPEAT;
     else if (wrapName == "MIRRORED_REPEAT")
@@ -132,7 +132,7 @@ int Texture::getWrapModeFromString(const std::string& wrapName) {
     return GL_REPEAT;
 }
 
-int Texture::getFilterModeFromString(const std::string& filterName) {
+int Texture::getFilterModeFromString(std::string_view filterName) {
     if (filterName == "NEAREST")
         return GL_NEAREST;
     else if (filterName == "LINEAR")

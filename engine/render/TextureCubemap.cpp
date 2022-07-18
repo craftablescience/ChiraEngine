@@ -5,9 +5,9 @@
 
 using namespace chira;
 
-TextureCubemap::TextureCubemap(const std::string& identifier_) : Texture(identifier_, false) {}
+TextureCubemap::TextureCubemap(std::string identifier_) : Texture(std::move(identifier_), false) {}
 
-// Macros suck, name this one funky so there are no possible conflicts in this compilation unit
+// Macros suck
 // Also not using proper conventions because it's used in 6 places
 #define CHIRA_TEXTURECUBEMAP_FORMAT_SETTER_SHORTENER(DIR, FMT)                                         \
     if (hasProperty(properties["properties"], "format_" #DIR "_override")) {                           \

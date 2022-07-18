@@ -9,8 +9,8 @@
 
 using namespace chira;
 
-Shader::Shader(const std::string& identifier_)
-    : PropertiesResource(identifier_)
+Shader::Shader(std::string identifier_)
+    : PropertiesResource(std::move(identifier_))
     , HandleObject<int>() {}
 
 void Shader::compile(const nlohmann::json& properties) {
@@ -46,70 +46,70 @@ void Shader::checkForCompilationErrors() const {
     }
 }
 
-void Shader::setUniform(const std::string& name, bool value) const {
-    glUniform1i(glGetUniformLocation(this->handle, name.c_str()), static_cast<int>(value));
+void Shader::setUniform(std::string_view name, bool value) const {
+    glUniform1i(glGetUniformLocation(this->handle, name.data()), static_cast<int>(value));
 }
 
-void Shader::setUniform(const std::string& name, int value) const {
-    glUniform1i(glGetUniformLocation(this->handle, name.c_str()), value);
+void Shader::setUniform(std::string_view name, int value) const {
+    glUniform1i(glGetUniformLocation(this->handle, name.data()), value);
 }
 
-void Shader::setUniform(const std::string& name, unsigned int value) const {
-    glUniform1ui(glGetUniformLocation(this->handle, name.c_str()), value);
+void Shader::setUniform(std::string_view name, unsigned int value) const {
+    glUniform1ui(glGetUniformLocation(this->handle, name.data()), value);
 }
 
-void Shader::setUniform(const std::string& name, float value) const {
-    glUniform1f(glGetUniformLocation(this->handle, name.c_str()), value);
+void Shader::setUniform(std::string_view name, float value) const {
+    glUniform1f(glGetUniformLocation(this->handle, name.data()), value);
 }
 
-void Shader::setUniform(const std::string& name, glm::vec2b value) const {
-    glUniform2i(glGetUniformLocation(this->handle, name.c_str()), static_cast<int>(value.x), static_cast<int>(value.y));
+void Shader::setUniform(std::string_view name, glm::vec2b value) const {
+    glUniform2i(glGetUniformLocation(this->handle, name.data()), static_cast<int>(value.x), static_cast<int>(value.y));
 }
 
-void Shader::setUniform(const std::string& name, glm::vec2ui value) const {
-    glUniform2ui(glGetUniformLocation(this->handle, name.c_str()), value.x, value.y);
+void Shader::setUniform(std::string_view name, glm::vec2ui value) const {
+    glUniform2ui(glGetUniformLocation(this->handle, name.data()), value.x, value.y);
 }
 
-void Shader::setUniform(const std::string& name, glm::vec2i value) const {
-    glUniform2i(glGetUniformLocation(this->handle, name.c_str()), value.x, value.y);
+void Shader::setUniform(std::string_view name, glm::vec2i value) const {
+    glUniform2i(glGetUniformLocation(this->handle, name.data()), value.x, value.y);
 }
 
-void Shader::setUniform(const std::string& name, glm::vec2f value) const {
-    glUniform2f(glGetUniformLocation(this->handle, name.c_str()), value.x, value.y);
+void Shader::setUniform(std::string_view name, glm::vec2f value) const {
+    glUniform2f(glGetUniformLocation(this->handle, name.data()), value.x, value.y);
 }
 
-void Shader::setUniform(const std::string& name, glm::vec3b value) const {
-    glUniform3i(glGetUniformLocation(this->handle, name.c_str()), static_cast<int>(value.x), static_cast<int>(value.y), static_cast<int>(value.z));
+void Shader::setUniform(std::string_view name, glm::vec3b value) const {
+    glUniform3i(glGetUniformLocation(this->handle, name.data()), static_cast<int>(value.x), static_cast<int>(value.y), static_cast<int>(value.z));
 }
 
-void Shader::setUniform(const std::string& name, glm::vec3ui value) const {
-    glUniform3ui(glGetUniformLocation(this->handle, name.c_str()), value.x, value.y, value.z);
+void Shader::setUniform(std::string_view name, glm::vec3ui value) const {
+    glUniform3ui(glGetUniformLocation(this->handle, name.data()), value.x, value.y, value.z);
 }
 
-void Shader::setUniform(const std::string& name, glm::vec3i value) const {
-    glUniform3i(glGetUniformLocation(this->handle, name.c_str()), value.x, value.y, value.z);
+void Shader::setUniform(std::string_view name, glm::vec3i value) const {
+    glUniform3i(glGetUniformLocation(this->handle, name.data()), value.x, value.y, value.z);
 }
 
-void Shader::setUniform(const std::string& name, glm::vec3f value) const {
-    glUniform3f(glGetUniformLocation(this->handle, name.c_str()), value.x, value.y, value.z);
+void Shader::setUniform(std::string_view name, glm::vec3f value) const {
+    glUniform3f(glGetUniformLocation(this->handle, name.data()), value.x, value.y, value.z);
 }
 
-void Shader::setUniform(const std::string& name, glm::vec4b value) const {
-    glUniform4i(glGetUniformLocation(this->handle, name.c_str()), static_cast<int>(value.x), static_cast<int>(value.y), static_cast<int>(value.z), static_cast<int>(value.w));
+void Shader::setUniform(std::string_view name, glm::vec4b value) const {
+    glUniform4i(glGetUniformLocation(this->handle, name.data()), static_cast<int>(value.x), static_cast<int>(value.y), static_cast<int>(value.z), static_cast<int>(value.w));
 }
 
-void Shader::setUniform(const std::string& name, glm::vec4ui value) const {
-    glUniform4ui(glGetUniformLocation(this->handle, name.c_str()), value.x, value.y, value.z, value.w);
+void Shader::setUniform(std::string_view name, glm::vec4ui value) const {
+    glUniform4ui(glGetUniformLocation(this->handle, name.data()), value.x, value.y, value.z, value.w);
 }
 
-void Shader::setUniform(const std::string& name, glm::vec4i value) const {
-    glUniform4i(glGetUniformLocation(this->handle, name.c_str()), value.x, value.y, value.z, value.w);
+void Shader::setUniform(std::string_view name, glm::vec4i value) const {
+    glUniform4i(glGetUniformLocation(this->handle, name.data()), value.x, value.y, value.z, value.w);
 }
 
-void Shader::setUniform(const std::string& name, glm::vec4f value) const {
-    glUniform4f(glGetUniformLocation(this->handle, name.c_str()), value.x, value.y, value.z, value.w);
+void Shader::setUniform(std::string_view name, glm::vec4f value) const {
+    glUniform4f(glGetUniformLocation(this->handle, name.data()), value.x, value.y, value.z, value.w);
 }
 
-void Shader::setUniform(const std::string& name, glm::mat4 value) const {
-    glUniformMatrix4fv(glGetUniformLocation(this->handle, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+void Shader::setUniform(std::string_view name, glm::mat4 value) const {
+    glUniformMatrix4fv(glGetUniformLocation(this->handle, name.data()), 1, GL_FALSE, glm::value_ptr(value));
 }

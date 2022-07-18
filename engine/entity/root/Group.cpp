@@ -6,7 +6,7 @@
 
 using namespace chira;
 
-Group::Group(const std::string& name_) : Entity(name_) {}
+Group::Group(std::string name_) : Entity(std::move(name_)) {}
 
 Group::Group() : Entity() {}
 

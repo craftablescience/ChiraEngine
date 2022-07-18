@@ -2,7 +2,7 @@
 
 using namespace chira;
 
-const std::string& TranslationFileResource::getLanguage() const {
+std::string_view TranslationFileResource::getLanguage() const {
     return this->language;
 }
 

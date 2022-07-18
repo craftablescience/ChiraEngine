@@ -4,8 +4,8 @@
 
 using namespace chira;
 
-Camera::Camera(const std::string& name_, CameraProjectionMode mode, float fov_)
-    : Entity(name_)
+Camera::Camera(std::string name_, CameraProjectionMode mode, float fov_)
+    : Entity(std::move(name_))
     , fov(fov_) {
     this->projectionMode = mode;
 }

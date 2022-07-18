@@ -8,8 +8,7 @@ namespace chira {
 
 class JSONSettingsLoader : public ISettingsLoader {
 public:
-    explicit JSONSettingsLoader(const std::string& path);
-    ~JSONSettingsLoader() override = default;
+    explicit JSONSettingsLoader(std::string_view path);
 
     void addCategory(const std::string& category) override;
 

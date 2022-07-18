@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <vector>
 #include <utility/Platform.h>
 
@@ -222,7 +223,7 @@ struct SteamAPI {
     struct Friends {
         static steam::ISteamFriends* get();
         static std::string   getPersonaName();
-        static std::uint64_t setPersonaName(const std::string& name);
+        static std::uint64_t setPersonaName(std::string_view name);
     };
 
     struct Utils {
@@ -275,10 +276,10 @@ struct SteamAPI {
         static std::string                getAppInstallPath(std::uint32_t appID);
         static bool                       isAppInstalled(std::uint32_t appID);
         static std::uint64_t              getAppOwner();
-        static std::string                getLaunchParameter(const std::string& key);
+        static std::string                getLaunchParameter(std::string_view key);
         static bool                       getDLCDownloadProgress(std::uint32_t appID, std::uint64_t* bytesDownloaded, std::uint64_t* bytesTotal);
         static int                        getAppBuildID();
-        static std::uint64_t              getFileDetails(const std::string& filename);
+        static std::uint64_t              getFileDetails(std::string_view filename);
         static bool                       isSubscribedFromFamilySharing();
         static bool                       isTimedTrial(std::uint32_t* secondsAllowed, std::uint32_t* secondsPlayed);
     };

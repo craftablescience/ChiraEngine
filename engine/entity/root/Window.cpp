@@ -11,7 +11,7 @@
 
 using namespace chira;
 
-bool Window::createGLFWWindow(const std::string& title) {
+bool Window::createGLFWWindow(std::string_view title) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -26,7 +26,7 @@ bool Window::createGLFWWindow(const std::string& title) {
         glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
         glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
     }
-    this->window = glfwCreateWindow(this->width, this->height, title.c_str(), nullptr, nullptr);
+    this->window = glfwCreateWindow(this->width, this->height, title.data(), nullptr, nullptr);
     if (!this->window) {
         Logger::log(LOG_ERROR, "GLFW", TR("error.glfw.window"));
         return false;
@@ -121,8 +121,8 @@ static void makeSurface(Window* window, MeshDataBuilder* surface) {
     surface->setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/window.json", window).castAssert<MaterialBase>());
 }
 
-Window::Window(const std::string& name_, const std::string& title, int width_, int height_, bool fullscreen_, ColorRGB backgroundColor_, bool smoothResize, bool startVisible)
-    : Frame(name_, width_, height_, backgroundColor_, smoothResize, false)
+Window::Window(std::string name_, std::string_view title, int width_, int height_, bool fullscreen_, ColorRGB backgroundColor_, bool smoothResize, bool startVisible)
+    : Frame(std::move(name_), width_, height_, backgroundColor_, smoothResize, false)
     , fullscreen(fullscreen_) {
     this->visible = startVisible;
     if (this->createGLFWWindow(title)) {
@@ -131,7 +131,7 @@ Window::Window(const std::string& name_, const std::string& title, int width_, i
     }
 }
 
-Window::Window(const std::string& title, int width_, int height_, bool fullscreen_, ColorRGB backgroundColor_, bool smoothResize, bool startVisible)
+Window::Window(std::string_view title, int width_, int height_, bool fullscreen_, ColorRGB backgroundColor_, bool smoothResize, bool startVisible)
     : Frame(width_, height_, backgroundColor_, smoothResize, false)
     , fullscreen(fullscreen_) {
     this->visible = startVisible;

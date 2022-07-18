@@ -11,7 +11,7 @@ enum class CameraProjectionMode {
 
 class Camera : public Entity {
 public:
-    Camera(const std::string& name_, CameraProjectionMode mode, float fov_ = 90.f);
+    Camera(std::string name_, CameraProjectionMode mode, float fov_ = 90.f);
     explicit Camera(CameraProjectionMode mode, float fov_ = 90.f);
     void createProjection(glm::vec2 windowSize);
     [[nodiscard]] const glm::mat4& getProjection() const {

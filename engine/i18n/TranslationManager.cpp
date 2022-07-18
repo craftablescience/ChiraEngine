@@ -5,7 +5,7 @@
 
 using namespace chira;
 
-std::unordered_map<std::string,std::string> TranslationManager::languageStrings{};
+std::unordered_map<std::string,std::string> TranslationManager::languageStrings;
 std::string TranslationManager::currentLanguage = "en"; // NOLINT(cert-err58-cpp)
 std::unordered_map<std::string, std::string> TranslationManager::LANGUAGE_DEFINITIONS = { // NOLINT(cert-err58-cpp)
         {"en", "English"},
@@ -16,7 +16,7 @@ void TranslationManager::setLanguage(const std::string& languageCode) {
     TranslationManager::currentLanguage = languageCode;
 }
 
-const std::string& TranslationManager::getLanguage() {
+std::string_view TranslationManager::getLanguage() {
     return TranslationManager::currentLanguage;
 }
 
@@ -24,7 +24,7 @@ const std::unordered_map<std::string,std::string>& TranslationManager::getCodeAn
     return TranslationManager::LANGUAGE_DEFINITIONS;
 }
 
-const std::string& TranslationManager::getLanguageNameFromCode(const std::string& code) {
+std::string_view TranslationManager::getLanguageNameFromCode(const std::string& code) {
     return TranslationManager::LANGUAGE_DEFINITIONS[code];
 }
 

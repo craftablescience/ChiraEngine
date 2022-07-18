@@ -7,7 +7,7 @@ namespace chira {
 
 class MaterialPhong : public MaterialUntextured {
 public:
-    explicit MaterialPhong(const std::string& identifier_) : MaterialUntextured(identifier_) {}
+    explicit MaterialPhong(std::string identifier_) : MaterialUntextured(std::move(identifier_)) {}
     void compile(const nlohmann::json& properties) override;
     void use() const override;
     [[nodiscard]] SharedPointer<Texture> getTextureDiffuse() const;

@@ -1,12 +1,13 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 
 namespace chira {
 
 class ISettingsLoader {
 public:
-    explicit ISettingsLoader(const std::string& path);
+    explicit ISettingsLoader(std::string_view path);
     virtual ~ISettingsLoader() = default;
 
     virtual void addCategory(const std::string& category) = 0;
@@ -26,8 +27,8 @@ public:
     virtual void load() = 0;
     virtual void save() = 0;
 
-    void setFilePath(const std::string& path);
-    [[nodiscard]] std::string getFilePath() const {
+    void setFilePath(std::string_view path);
+    [[nodiscard]] std::string_view getFilePath() const {
         return this->filepath;
     }
 private:

@@ -18,7 +18,7 @@
 
 using namespace chira;
 
-void Engine::preInit(const std::string& configPath) {
+void Engine::preInit(std::string_view configPath) {
 #ifdef _WIN32
     // #define CP_UTF8 65001 in windows.h
     system("chcp 65001 > nul");

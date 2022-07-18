@@ -177,8 +177,8 @@ std::string SteamAPI::Friends::getPersonaName() {
     return steamFunctionStringWrapper("SteamAPI_ISteamFriends_GetPersonaName", "", SteamAPI::Friends::get());
 }
 
-std::uint64_t SteamAPI::Friends::setPersonaName(const std::string& name) {
-    return steamFunctionWrapper<std::uint64_t>("SteamAPI_ISteamFriends_SetPersonaName", 0, SteamAPI::Friends::get(), name.c_str());
+std::uint64_t SteamAPI::Friends::setPersonaName(std::string_view name) {
+    return steamFunctionWrapper<std::uint64_t>("SteamAPI_ISteamFriends_SetPersonaName", 0, SteamAPI::Friends::get(), name.data());
 }
 
 // -------------------------------- UTILS -------------------------------- //
@@ -411,8 +411,8 @@ std::uint64_t SteamAPI::Apps::getAppOwner() {
     return steamFunctionWrapper<std::uint64_t>("SteamAPI_ISteamApps_GetAppOwner", 0, SteamAPI::Apps::get());
 }
 
-std::string SteamAPI::Apps::getLaunchParameter(const std::string& key) {
-    return steamFunctionStringWrapper("SteamAPI_ISteamApps_GetLaunchQueryParam", "", SteamAPI::Apps::get(), key.c_str());
+std::string SteamAPI::Apps::getLaunchParameter(std::string_view key) {
+    return steamFunctionStringWrapper("SteamAPI_ISteamApps_GetLaunchQueryParam", "", SteamAPI::Apps::get(), key.data());
 }
 
 bool SteamAPI::Apps::getDLCDownloadProgress(std::uint32_t appID, std::uint64_t* bytesDownloaded, std::uint64_t* bytesTotal) {
@@ -423,8 +423,8 @@ int SteamAPI::Apps::getAppBuildID() {
     return steamFunctionWrapper<int>("SteamAPI_ISteamApps_GetAppBuildId", 0, SteamAPI::Apps::get());
 }
 
-std::uint64_t SteamAPI::Apps::getFileDetails(const std::string& filename) {
-    return steamFunctionWrapper<std::uint64_t>("SteamAPI_ISteamApps_GetFileDetails", 0, SteamAPI::Apps::get(), filename.c_str());
+std::uint64_t SteamAPI::Apps::getFileDetails(std::string_view filename) {
+    return steamFunctionWrapper<std::uint64_t>("SteamAPI_ISteamApps_GetFileDetails", 0, SteamAPI::Apps::get(), filename.data());
 }
 
 bool SteamAPI::Apps::isSubscribedFromFamilySharing() {

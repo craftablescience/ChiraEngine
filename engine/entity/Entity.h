@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <string>
+#include <string_view>
 #include <glm/glm.hpp>
 #include <math/Matrix.h>
 #include <utility/Assertions.h>
@@ -34,16 +35,16 @@ public:
     [[nodiscard]] virtual Group* getGroup();
 
     [[nodiscard]] Entity* getParent() const;
-    [[nodiscard]] std::string getName() const;
+    [[nodiscard]] std::string_view getName() const;
 
-    [[nodiscard]] Entity* getChild(const std::string& name_) const;
+    [[nodiscard]] Entity* getChild(std::string_view name_) const;
     template<typename EntityType>
-    [[nodiscard]] EntityType* getChild(const std::string& name_) const {
+    [[nodiscard]] EntityType* getChild(std::string_view name_) const {
         return assert_cast<EntityType*>(this->getChild(name_));
     }
-    [[nodiscard]] bool hasChild(const std::string& name_) const;
-    virtual std::string addChild(Entity* child);
-    virtual void removeChild(const std::string& name_);
+    [[nodiscard]] bool hasChild(std::string_view name_) const;
+    virtual std::string_view addChild(Entity* child);
+    virtual void removeChild(std::string_view name_);
     void removeAllChildren();
 
     [[nodiscard]] bool isVisible() const;

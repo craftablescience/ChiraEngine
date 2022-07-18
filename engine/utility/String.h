@@ -1,18 +1,19 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace chira::String {
 
-bool startsWith(const std::string& str, char beginning);
-bool startsWith(const std::string& str, const std::string& beginning);
+bool startsWith(std::string_view str, char beginning);
+bool startsWith(std::string_view str, std::string_view beginning);
 
-bool endsWith(const std::string& str, char end);
-bool endsWith(const std::string& str, const std::string& end);
+bool endsWith(std::string_view str, char end);
+bool endsWith(std::string_view str, std::string_view end);
 
-bool contains(const std::string& str, char sub);
-bool contains(const std::string& str, const std::string& substr);
+bool contains(std::string_view str, char sub);
+bool contains(std::string_view str, std::string_view substr);
 
 void remove(std::string& input, char charToRemove);
 
@@ -22,9 +23,9 @@ std::string stripLeft(const std::string& s);
 std::string stripRight(const std::string& s);
 std::string strip(const std::string& s);
 
-std::string stripLeft(const std::string& s, const std::string& c);
-std::string stripRight(const std::string& s, const std::string& c);
-std::string strip(const std::string& s, const std::string& c);
+std::string stripLeft(const std::string& s, std::string_view c);
+std::string stripRight(const std::string& s, std::string_view c);
+std::string strip(const std::string& s, std::string_view c);
 
 std::string stripLeft(const std::string& s, char c);
 std::string stripRight(const std::string& s, char c);

@@ -4,8 +4,8 @@
 
 using namespace chira;
 
-Frame::Frame(const std::string& name_, int width_, int height_, ColorRGB backgroundColor_, bool smoothResize, bool initNow)
-    : Group(name_)
+Frame::Frame(std::string name_, int width_, int height_, ColorRGB backgroundColor_, bool smoothResize, bool initNow)
+    : Group(std::move(name_))
     , backgroundColor(backgroundColor_)
     , width(width_)
     , height(height_)

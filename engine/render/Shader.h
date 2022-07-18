@@ -9,27 +9,27 @@ namespace chira {
 
 class Shader : public PropertiesResource, public HandleObject<int> {
 public:
-    explicit Shader(const std::string& identifier_);
+    explicit Shader(std::string identifier_);
     void compile(const nlohmann::json& properties) override;
     ~Shader() override;
     void use() const;
-    void setUniform(const std::string& name, bool value) const;
-    void setUniform(const std::string& name, unsigned int value) const;
-    void setUniform(const std::string& name, int value) const;
-    void setUniform(const std::string& name, float value) const;
-    void setUniform(const std::string& name, glm::vec2b value) const;
-    void setUniform(const std::string& name, glm::vec2ui value) const;
-    void setUniform(const std::string& name, glm::vec2i value) const;
-    void setUniform(const std::string& name, glm::vec2f value) const;
-    void setUniform(const std::string& name, glm::vec3b value) const;
-    void setUniform(const std::string& name, glm::vec3ui value) const;
-    void setUniform(const std::string& name, glm::vec3i value) const;
-    void setUniform(const std::string& name, glm::vec3f value) const;
-    void setUniform(const std::string& name, glm::vec4b value) const;
-    void setUniform(const std::string& name, glm::vec4ui value) const;
-    void setUniform(const std::string& name, glm::vec4i value) const;
-    void setUniform(const std::string& name, glm::vec4f value) const;
-    void setUniform(const std::string& name, glm::mat4 value) const;
+    void setUniform(std::string_view name, bool value) const;
+    void setUniform(std::string_view name, unsigned int value) const;
+    void setUniform(std::string_view name, int value) const;
+    void setUniform(std::string_view name, float value) const;
+    void setUniform(std::string_view name, glm::vec2b value) const;
+    void setUniform(std::string_view name, glm::vec2ui value) const;
+    void setUniform(std::string_view name, glm::vec2i value) const;
+    void setUniform(std::string_view name, glm::vec2f value) const;
+    void setUniform(std::string_view name, glm::vec3b value) const;
+    void setUniform(std::string_view name, glm::vec3ui value) const;
+    void setUniform(std::string_view name, glm::vec3i value) const;
+    void setUniform(std::string_view name, glm::vec3f value) const;
+    void setUniform(std::string_view name, glm::vec4b value) const;
+    void setUniform(std::string_view name, glm::vec4ui value) const;
+    void setUniform(std::string_view name, glm::vec4i value) const;
+    void setUniform(std::string_view name, glm::vec4f value) const;
+    void setUniform(std::string_view name, glm::mat4 value) const;
     [[nodiscard]] bool usesModelMatrix() const {
         return this->usesModel;
     }

@@ -5,9 +5,9 @@
 
 using namespace chira;
 
-FileInputStream::FileInputStream(const std::string& filepath, bool binary) {
+FileInputStream::FileInputStream(std::string_view filepath, bool binary) {
     errno = 0;
-    this->stream = fopen(filepath.c_str(), binary ? "rb" : "r");
+    this->stream = fopen(filepath.data(), binary ? "rb" : "r");
     if (!this->stream)
         Logger::log(LOG_ERROR, "FileInputStream", TRF("error.file_input_stream.file_inaccessible", filepath, errno));
 }

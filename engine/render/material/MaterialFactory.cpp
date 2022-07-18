@@ -2,7 +2,7 @@
 
 using namespace chira;
 
-MaterialBase::MaterialBase(const std::string& identifier_) : PropertiesResource(identifier_) {}
+MaterialBase::MaterialBase(std::string identifier_) : PropertiesResource(std::move(identifier_)) {}
 
 void MaterialBase::compile(const nlohmann::json& properties) {
     this->shader = Resource::getResource<Shader>(getProperty<std::string>(properties["dependencies"], "shader", "file://shaders/unlitTextured.json", true));

@@ -26,7 +26,7 @@ namespace chira {
  */
 class PropertiesResource : public Resource {
 public:
-    explicit PropertiesResource(const std::string& identifier_) : Resource(identifier_) {}
+    explicit PropertiesResource(std::string identifier_) : Resource(std::move(identifier_)) {}
     void compile(const unsigned char buffer[], std::size_t bufferLength) final;
     virtual void compile(const nlohmann::json& properties) = 0;
 
@@ -43,7 +43,7 @@ public:
         return defaultValue;
     }
 protected:
-    static void logMissingProperty(const std::string& identifier, const std::string& key);
+    static void logMissingProperty(std::string_view identifier, std::string_view key);
 };
 
 } // namespace chira

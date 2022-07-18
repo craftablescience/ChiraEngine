@@ -6,7 +6,7 @@ namespace chira {
 
 class Freecam : public Camera {
 public:
-    Freecam(const std::string& name_, CameraProjectionMode mode, float fov_ = 90.f) : Camera(name_, mode, fov_) {}
+    Freecam(std::string name_, CameraProjectionMode mode, float fov_ = 90.f) : Camera(std::move(name_), mode, fov_) {}
     explicit Freecam(CameraProjectionMode mode, float fov_ = 90.f) : Camera(mode, fov_) {}
     glm::quat getRotation() override {
         return glm::angleAxis(glm::radians(this->yaw), glm::vec3{0,1,0}) * glm::angleAxis(glm::radians(-this->pitch), glm::vec3{1,0,0});

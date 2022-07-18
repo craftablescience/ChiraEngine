@@ -10,7 +10,7 @@ namespace chira {
 
 class MaterialBase : public PropertiesResource {
 public:
-    explicit MaterialBase(const std::string& identifier_);
+    explicit MaterialBase(std::string identifier_);
     void compile(const nlohmann::json& properties) override;
     virtual void use() const;
     [[nodiscard]] SharedPointer<Shader> getShader() const;

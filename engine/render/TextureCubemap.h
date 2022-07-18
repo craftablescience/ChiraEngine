@@ -6,7 +6,7 @@ namespace chira {
 
 class TextureCubemap : public Texture {
 public:
-    explicit TextureCubemap(const std::string& identifier_);
+    explicit TextureCubemap(std::string identifier_);
     void compile(const nlohmann::json& properties) override;
     void use() const override;
 protected:

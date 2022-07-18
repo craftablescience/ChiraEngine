@@ -11,9 +11,9 @@ const std::string FILESYSTEM_PROVIDER_NAME = "file"; // NOLINT(cert-err58-cpp)
 class FilesystemResourceProvider : public IResourceProvider {
 public:
     explicit FilesystemResourceProvider(std::string path_, bool isPathAbsolute = false, const std::string& name_ = FILESYSTEM_PROVIDER_NAME);
-    [[nodiscard]] bool hasResource(const std::string& name) const override;
-    void compileResource(const std::string& name, Resource* resource) const override;
-    [[nodiscard]] const std::string& getPath() const {
+    [[nodiscard]] bool hasResource(std::string_view name) const override;
+    void compileResource(std::string_view name, Resource* resource) const override;
+    [[nodiscard]] std::string_view getPath() const {
         return this->path;
     }
     [[nodiscard]] bool isAbsolute() const {
@@ -26,15 +26,15 @@ public:
     static void nixifyPath(std::string& path);
     /// Takes an absolute path of a resource file and converts it to a resource identifier.
     /// Does not check if the resource identifier actually points to a valid resource.
-    static std::string getResourceIdentifier(const std::string& absolutePath);
+    static std::string getResourceIdentifier(std::string_view absolutePath);
     /// Takes an absolute path of a resource folder and converts it to a valid input path
     /// for a FilesystemResourceProvider. Does not check if the resource identifier
     /// actually points to a valid resource.
-    static std::string getResourceFolderPath(const std::string& absolutePath);
+    static std::string getResourceFolderPath(std::string_view absolutePath);
     /// Takes a resource identifier and returns the full absolute path, if it exists.
     static std::string getResourceAbsolutePath(const std::string& identifier);
 
-    static inline constexpr short FILEPATH_MAX_LENGTH = 1024;
+    static constexpr inline short FILEPATH_MAX_LENGTH = 1024;
 private:
     std::string path;
     bool absolute;

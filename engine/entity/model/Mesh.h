@@ -7,7 +7,7 @@ namespace chira {
 
 class Mesh : public Entity {
 public:
-    Mesh(const std::string& name_, const std::string& meshId) : Entity(name_) {
+    Mesh(std::string name_, const std::string& meshId) : Entity(std::move(name_)) {
         this->mesh = Resource::getResource<MeshDataResource>(meshId);
     }
     explicit Mesh(const std::string& meshId) : Entity() {

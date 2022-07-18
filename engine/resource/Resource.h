@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <vector>
 #include <nlohmann/json.hpp>
@@ -22,7 +23,7 @@ public:
     explicit Resource(std::string identifier_) : identifier(std::move(identifier_)) {}
     virtual ~Resource();
     virtual void compile(const unsigned char /*buffer*/[], std::size_t /*bufferLength*/) {}
-    [[nodiscard]] const std::string& getIdentifier() const {
+    [[nodiscard]] std::string_view getIdentifier() const {
         return this->identifier;
     }
 protected:

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <string_view>
 
 namespace chira {
 
@@ -19,7 +19,7 @@ enum class SignedAxis {
     ZN
 };
 
-Axis getAxisFromString(const std::string& str);
-SignedAxis getSignedAxisFromString(const std::string& str);
+Axis getAxisFromString(std::string_view str);
+SignedAxis getSignedAxisFromString(std::string_view str);
 
 }
