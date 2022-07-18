@@ -13,8 +13,8 @@ class Frame;
 class Window;
 
 /// The base entity class. Note that the name of an entity stored in the name variable should
-/// match the name assigned to the entity in the parent's entity map.\n
-/// Note the entity tree must have a Window as the root entity, always!\n
+/// match the name assigned to the entity in the parent's entity map.
+/// Note the entity tree must have a Window as the root entity, always!
 /// Window objects are Frame objects, Frame objects are Root objects (the wonders of inheritance)
 class Entity {
 public:
@@ -22,16 +22,20 @@ public:
     /// Initializes name to a random UUID.
     Entity();
     virtual ~Entity();
-    /// Renders all this entity's children.
-    virtual void render(glm::mat4 parentTransform);
+
+    /// Run game logic.
+    virtual void update(glm::mat4 parentTransform);
+
     [[nodiscard]] virtual const Window* getWindow() const;
     [[nodiscard]] virtual Window* getWindow();
     [[nodiscard]] virtual const Frame* getFrame() const;
     [[nodiscard]] virtual Frame* getFrame();
     [[nodiscard]] virtual const Root* getRoot() const;
     [[nodiscard]] virtual Root* getRoot();
+
     [[nodiscard]] Entity* getParent() const;
     [[nodiscard]] std::string getName() const;
+
     [[nodiscard]] Entity* getChild(const std::string& name_) const;
     template<typename EntityType>
     [[nodiscard]] EntityType* getChild(const std::string& name_) const {
@@ -41,8 +45,10 @@ public:
     virtual std::string addChild(Entity* child);
     virtual void removeChild(const std::string& name_);
     void removeAllChildren();
+
     [[nodiscard]] bool isVisible() const;
     virtual void setVisible(bool visibility);
+
     virtual void setPosition(glm::vec3 newPos);
     virtual void setRotation(glm::quat newRot);
     virtual glm::vec3 getPosition();
@@ -56,8 +62,7 @@ public:
 protected:
     Entity* parent = nullptr;
     std::string name;
-    std::unordered_map<std::string, Entity*> children;
-    std::vector<std::string> childrenOrder;
+    std::vector<Entity*> children;
     bool visible = true;
 
     // The following are in local space and are relative to the parent.

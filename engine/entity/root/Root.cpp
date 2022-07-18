@@ -10,11 +10,11 @@ Root::Root(const std::string& name_) : Entity(name_) {}
 
 Root::Root() : Entity() {}
 
-void Root::render(glm::mat4 parentTransform) {
+void Root::update(glm::mat4 parentTransform) {
     if (this->mainCamera)
         UBO_PerspectiveView::get()->update(this->mainCamera->getProjection(), this->mainCamera->getView());
 
-    Entity::render(parentTransform);
+    Entity::update(parentTransform);
 
     if (this->renderSkybox) {
         // Wiki says modern hardware is fine with this and it looks better
@@ -51,12 +51,6 @@ void Root::setSkybox(const std::string& cubemapId) {
 
 SharedPointer<MaterialCubemap> Root::getSkybox() const {
     return this->skybox.getMaterial().castAssert<MaterialCubemap>();
-}
-
-void Root::clearTree() const {
-    for (const auto& [name_, ent] : this->children) {
-        delete ent;
-    }
 }
 
 const Root* Root::getRoot() const {

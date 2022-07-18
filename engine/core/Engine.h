@@ -22,7 +22,7 @@ public:
     /// Returns a pointer to the main window of the application.
     [[nodiscard]] static Window* getWindow();
     [[nodiscard]] static bool isStarted();
-    /// Note: only guaranteed to work after run() in a render method
+    /// Only guaranteed to work after run() in a render method
     [[nodiscard]] static double getDeltaTime();
 private:
     static inline std::unique_ptr<JSONSettingsLoader> settingsLoader;

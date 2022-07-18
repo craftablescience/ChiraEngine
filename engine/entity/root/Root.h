@@ -16,7 +16,7 @@ class Root : public Entity {
 public:
     explicit Root(const std::string& name_);
     Root();
-    void render(glm::mat4 parentTransform) override;
+    void update(glm::mat4 parentTransform) override;
     [[nodiscard]] glm::vec3 getGlobalPosition() override;
     [[nodiscard]] const Root* getRoot() const override;
     [[nodiscard]] Root* getRoot() override;
@@ -29,7 +29,6 @@ protected:
     bool renderSkybox = false;
     bool skyboxMeshCreated = false;
     Camera* mainCamera = nullptr;
-    void clearTree() const;
 };
 
 }

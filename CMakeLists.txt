@@ -183,9 +183,6 @@ if(CHIRA_BUILD_EDITOR)
     endif()
     add_executable(ChiraEditor ${CHIRA_EDITOR_SOURCES})
     apply_optimizations(ChiraEditor)
-    set_target_properties(ChiraEditor PROPERTIES
-            WIN32_EXECUTABLE ON
-            MACOSX_BUNDLE ON)
     if(WIN32)
         add_custom_target(CopyEditorIcon ALL COMMAND ${CMAKE_COMMAND} -E copy
                 ${CMAKE_SOURCE_DIR}/resources/editor/icon/icon.ico ${CMAKE_BINARY_DIR}/resources/editor/icon/icon.ico)

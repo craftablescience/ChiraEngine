@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <i18n/TranslationManager.h>
-#include <utility/Logger.h>
 #include <utility/UUIDGenerator.h>
 
 using namespace chira;
@@ -15,10 +14,10 @@ Entity::~Entity() {
     this->removeAllChildren();
 }
 
-void Entity::render(glm::mat4 parentTransform) { // NOLINT(misc-no-recursion)
+void Entity::update(glm::mat4 parentTransform) { // NOLINT(misc-no-recursion)
     glm::mat4 transform = transformToMatrix(parentTransform, this->position, this->rotation);
-    for (const auto& key : this->childrenOrder)
-        this->children[key]->render(transform);
+    for (auto* entity : this->children)
+        entity->update(transform);
 }
 
 const Window* Entity::getWindow() const { // NOLINT(misc-no-recursion)
@@ -54,11 +53,16 @@ std::string Entity::getName() const {
 }
 
 Entity* Entity::getChild(const std::string& name_) const {
-    return this->children.at(name_);
+    for (auto* entity : this->children) {
+        if (entity->getName() == name_) {
+            return entity;
+        }
+    }
+    return nullptr;
 }
 
 bool Entity::hasChild(const std::string& name_) const {
-    return static_cast<bool>(this->children.count(name_));
+    return static_cast<bool>(this->getChild(name_));
 }
 
 std::string Entity::addChild(Entity* child) {
@@ -68,25 +72,27 @@ std::string Entity::addChild(Entity* child) {
         return child->getName();
     }
     child->setParent(this);
-    this->children[child->getName()] = child;
-    this->childrenOrder.push_back(child->getName());
+    this->children.push_back(child);
     return child->getName();
 }
 
 void Entity::removeChild(const std::string& name_) {
-    this->children[name_]->removeAllChildren();
-    delete this->children[name_];
-    this->children.erase(name_);
-    std::ignore = std::remove(this->childrenOrder.begin(), this->childrenOrder.end(), name_);
+    std::ignore = std::remove_if(this->children.begin(), this->children.end(), [&name_](Entity* entity) {
+        if (entity->getName() == name_) {
+            entity->removeAllChildren();
+            delete entity;
+            return true;
+        }
+        return false;
+    });
 }
 
 void Entity::removeAllChildren() { // NOLINT(misc-no-recursion)
-    for (const auto& [name_, ent_] : this->children) {
-        ent_->removeAllChildren();
-        delete ent_;
+    for (auto* entity : this->children) {
+        entity->removeAllChildren();
+        delete entity;
     }
     this->children.clear();
-    this->childrenOrder.clear();
 }
 
 bool Entity::isVisible() const {

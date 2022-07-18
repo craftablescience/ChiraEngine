@@ -7,7 +7,7 @@ struct DiscordUser;
 namespace chira {
 
 /// Updates are handled by the engine. All you need to do is run the init() method.
-/// After that, any setter functions will change the status after the frame is rendered.
+/// After that, any setter functions will change the status after update().
 class DiscordRPC {
 public:
     static void init(const std::string& appId);

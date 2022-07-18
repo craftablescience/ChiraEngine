@@ -56,11 +56,11 @@ void Frame::createFramebuffer() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Frame::render(glm::mat4 /*parentTransform*/) {
-    this->render(Entity::getFrame()->getFramebufferHandle(), Entity::getFrame()->width, Entity::getFrame()->height);
+void Frame::update(glm::mat4 /*parentTransform*/) {
+    this->update(Entity::getFrame()->getFramebufferHandle(), Entity::getFrame()->width, Entity::getFrame()->height);
 }
 
-void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeight) {
+void Frame::update(unsigned int parentFBOHandle, int parentWidth, int parentHeight) {
     glViewport(0, 0, this->width, this->height);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fboHandle);
     glClearColor(this->backgroundColor.r, this->backgroundColor.g, this->backgroundColor.b, 1.f);
@@ -72,7 +72,7 @@ void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeig
     auto tempRot = this->rotation;
     this->rotation = {};
 
-    Root::render(glm::identity<glm::mat4>());
+    Root::update(glm::identity<glm::mat4>());
 
     // (Hopefully) preserve any transformations from children
     this->translate(tempPos);
