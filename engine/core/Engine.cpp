@@ -3,17 +3,14 @@
 #include <glad/gl.h>
 
 #include <config/Config.h>
-#include <event/Events.h>
 #include <hook/DiscordRPC.h>
 #include <i18n/TranslationManager.h>
 #include <input/InputManager.h>
 #include <loader/mesh/OBJMeshLoader.h>
 #include <loader/mesh/ChiraMeshLoader.h>
-#include <loader/settings/JSONSettingsLoader.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <resource/ShaderResource.h>
 #include <render/UBO.h>
-#include <utility/Assertions.h>
 
 #ifdef CHIRA_BUILD_WITH_STEAMWORKS
 #include <hook/SteamAPI.h>
@@ -22,7 +19,7 @@
 using namespace chira;
 
 void Engine::preInit(const std::string& configPath) {
-#ifdef _WIN32
+#if defined(_WIN32) && defined(DEBUG)
     // #define CP_UTF8 65001 in windows.h
     system(("chcp " + std::to_string(65001) + " > nul").c_str());
 #endif
