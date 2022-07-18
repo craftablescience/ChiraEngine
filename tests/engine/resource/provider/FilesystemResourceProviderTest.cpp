@@ -10,7 +10,7 @@ TEST(FilesystemResourceProvider, getStringResource) {
     auto missing = Resource::getResource<StringResource>("file://string_resource_test.txt");
     EXPECT_EQ(missing.useCount(), 2);
     EXPECT_STREQ(missing->getString().c_str(), "test");
-    Resource::removeResource(missing->getIdentifier());
+    Resource::removeResource(missing->getIdentifier().data());
     Resource::discardAll();
 }
 
