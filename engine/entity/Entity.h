@@ -8,7 +8,7 @@
 
 namespace chira {
 
-class Root;
+class Group;
 class Frame;
 class Window;
 
@@ -30,8 +30,8 @@ public:
     [[nodiscard]] virtual Window* getWindow();
     [[nodiscard]] virtual const Frame* getFrame() const;
     [[nodiscard]] virtual Frame* getFrame();
-    [[nodiscard]] virtual const Root* getRoot() const;
-    [[nodiscard]] virtual Root* getRoot();
+    [[nodiscard]] virtual const Group* getGroup() const;
+    [[nodiscard]] virtual Group* getGroup();
 
     [[nodiscard]] Entity* getParent() const;
     [[nodiscard]] std::string getName() const;

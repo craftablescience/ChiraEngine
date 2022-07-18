@@ -5,7 +5,7 @@
 using namespace chira;
 
 Frame::Frame(const std::string& name_, int width_, int height_, ColorRGB backgroundColor_, bool smoothResize, bool initNow)
-    : Root(name_)
+    : Group(name_)
     , backgroundColor(backgroundColor_)
     , width(width_)
     , height(height_)
@@ -15,7 +15,7 @@ Frame::Frame(const std::string& name_, int width_, int height_, ColorRGB backgro
 }
 
 Frame::Frame(int width_, int height_, ColorRGB backgroundColor_, bool smoothResize, bool initNow)
-    : Root()
+    : Group()
     , backgroundColor(backgroundColor_)
     , width(width_)
     , height(height_)
@@ -72,7 +72,7 @@ void Frame::update(unsigned int parentFBOHandle, int parentWidth, int parentHeig
     auto tempRot = this->rotation;
     this->rotation = {};
 
-    Root::update(glm::identity<glm::mat4>());
+    Group::update(glm::identity<glm::mat4>());
 
     // (Hopefully) preserve any transformations from children
     this->translate(tempPos);

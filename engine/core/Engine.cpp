@@ -13,15 +13,15 @@
 #include <render/UBO.h>
 
 #ifdef CHIRA_USE_STEAMWORKS
-#include <hook/SteamAPI.h>
+    #include <hook/SteamAPI.h>
 #endif
 
 using namespace chira;
 
 void Engine::preInit(const std::string& configPath) {
-#if defined(_WIN32) && defined(DEBUG)
+#ifdef _WIN32
     // #define CP_UTF8 65001 in windows.h
-    system(("chcp " + std::to_string(65001) + " > nul").c_str());
+    system("chcp 65001 > nul");
 #endif
     Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
 

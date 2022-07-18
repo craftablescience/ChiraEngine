@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Root.h"
+#include "Group.h"
 
 #include <math/Types.h>
 
@@ -8,7 +8,7 @@
 
 namespace chira {
 
-class Frame : public Root {
+class Frame : public Group {
 public:
     Frame(const std::string& name_, int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
     Frame(int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);

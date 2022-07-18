@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+using byte = std::uint8_t;
+
 namespace glm {
 
 using vec2b  = vec<2, bool>;

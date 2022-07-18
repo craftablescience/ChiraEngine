@@ -36,12 +36,12 @@ Frame* Entity::getFrame() { // NOLINT(misc-no-recursion)
     return this->parent->getFrame();
 }
 
-const Root* Entity::getRoot() const { // NOLINT(misc-no-recursion)
-    return this->parent->getRoot();
+const Group* Entity::getGroup() const { // NOLINT(misc-no-recursion)
+    return this->parent->getGroup();
 }
 
-Root* Entity::getRoot() { // NOLINT(misc-no-recursion)
-    return this->parent->getRoot();
+Group* Entity::getGroup() { // NOLINT(misc-no-recursion)
+    return this->parent->getGroup();
 }
 
 Entity* Entity::getParent() const {

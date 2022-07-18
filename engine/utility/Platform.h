@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <math/Types.h>
 
 // 64-bit or 32-bit?
 #if INTPTR_MAX == INT32_MAX
@@ -22,16 +23,7 @@
     #define CHIRA_COMPILER_CLANG
 #endif
 
-// Define __cdecl in a portable way (not that it matters much)
-#ifndef CHIRA_COMPILER_MSVC
-    #define CHIRA_CDECL __attribute__((__cdecl__))
-#else
-    #define CHIRA_CDECL __cdecl
-#endif
-
 namespace chira {
-
-using byte = std::uint8_t;
 
 // This makes it a bit easier to use in strings and such
 #if defined(CHIRA_32BIT)

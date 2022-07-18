@@ -1,4 +1,4 @@
-#include "Root.h"
+#include "Group.h"
 
 #include <core/Engine.h>
 #include <render/UBO.h>
@@ -6,11 +6,11 @@
 
 using namespace chira;
 
-Root::Root(const std::string& name_) : Entity(name_) {}
+Group::Group(const std::string& name_) : Entity(name_) {}
 
-Root::Root() : Entity() {}
+Group::Group() : Entity() {}
 
-void Root::update(glm::mat4 parentTransform) {
+void Group::update(glm::mat4 parentTransform) {
     if (this->mainCamera)
         UBO_PerspectiveView::get()->update(this->mainCamera->getProjection(), this->mainCamera->getView());
 
@@ -22,24 +22,24 @@ void Root::update(glm::mat4 parentTransform) {
         this->skybox.render(glm::identity<glm::mat4>());
     }
 
-    if (this->mainCamera && Entity::getParent() && Entity::getRoot()->getCamera())
-        UBO_PerspectiveView::get()->update(Entity::getRoot()->getCamera()->getProjection(), Entity::getRoot()->getCamera()->getView());
+    if (this->mainCamera && Entity::getParent() && Entity::getGroup()->getCamera())
+        UBO_PerspectiveView::get()->update(Entity::getGroup()->getCamera()->getProjection(), Entity::getGroup()->getCamera()->getView());
 }
 
-glm::vec3 Root::getGlobalPosition() {
+glm::vec3 Group::getGlobalPosition() {
     return this->position;
 }
 
-void Root::setCamera(Camera* camera) {
+void Group::setCamera(Camera* camera) {
     this->mainCamera = camera;
     this->mainCamera->createProjection(this->getFrame()->getFrameSize());
 }
 
-Camera* Root::getCamera() const {
+Camera* Group::getCamera() const {
     return this->mainCamera;
 }
 
-void Root::setSkybox(const std::string& cubemapId) {
+void Group::setSkybox(const std::string& cubemapId) {
     if (!this->skyboxMeshCreated) {
         this->skybox.addCube({}, {1, 1, 1}, false);
         this->skybox.update();
@@ -49,14 +49,14 @@ void Root::setSkybox(const std::string& cubemapId) {
     this->renderSkybox = true;
 }
 
-SharedPointer<MaterialCubemap> Root::getSkybox() const {
+SharedPointer<MaterialCubemap> Group::getSkybox() const {
     return this->skybox.getMaterial().castAssert<MaterialCubemap>();
 }
 
-const Root* Root::getRoot() const {
+const Group* Group::getGroup() const {
     return this;
 }
 
-Root* Root::getRoot() {
+Group* Group::getGroup() {
     return this;
 }

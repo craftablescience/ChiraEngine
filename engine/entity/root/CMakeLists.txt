@@ -1,9 +1,9 @@
 list(APPEND CHIRA_ENGINE_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/Frame.h
-        ${CMAKE_CURRENT_LIST_DIR}/Root.h
+        ${CMAKE_CURRENT_LIST_DIR}/Group.h
         ${CMAKE_CURRENT_LIST_DIR}/Window.h)
 
 list(APPEND CHIRA_ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/Frame.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/Root.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/Group.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Window.cpp)
