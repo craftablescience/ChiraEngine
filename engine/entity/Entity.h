@@ -25,7 +25,10 @@ public:
     virtual ~Entity();
 
     /// Run game logic.
-    virtual void update(glm::mat4 parentTransform);
+    virtual void update();
+
+    /// Draw to screen.
+    virtual void render(glm::mat4 parentTransform);
 
     [[nodiscard]] virtual const Window* getWindow() const;
     [[nodiscard]] virtual Window* getWindow();

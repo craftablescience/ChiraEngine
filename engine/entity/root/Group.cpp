@@ -10,11 +10,11 @@ Group::Group(std::string name_) : Entity(std::move(name_)) {}
 
 Group::Group() : Entity() {}
 
-void Group::update(glm::mat4 parentTransform) {
+void Group::render(glm::mat4 parentTransform) {
     if (this->mainCamera)
         UBO_PerspectiveView::get()->update(this->mainCamera->getProjection(), this->mainCamera->getView());
 
-    Entity::update(parentTransform);
+    Entity::render(parentTransform);
 
     if (this->renderSkybox) {
         // Wiki says modern hardware is fine with this and it looks better

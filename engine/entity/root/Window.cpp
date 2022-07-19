@@ -141,10 +141,10 @@ Window::Window(std::string_view title, int width_, int height_, bool fullscreen_
     }
 }
 
-void Window::update(glm::mat4 /*parentTransform*/) {
-    glfwMakeContextCurrent(this->window);
+void Window::render(glm::mat4 /*parentTransform*/) {
+    //glfwMakeContextCurrent(this->window);
 
-    Frame::update(this->fboHandle, this->width, this->height);
+    Frame::render(this->fboHandle, this->width, this->height);
 
     glDisable(GL_DEPTH_TEST);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

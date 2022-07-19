@@ -152,7 +152,8 @@ void Engine::run() {
         Engine::lastTime = Engine::currentTime;
         Engine::currentTime = glfwGetTime();
 
-        Engine::window->update(glm::identity<glm::mat4>());
+        Engine::window->update();
+        Engine::window->render(glm::identity<glm::mat4>());
 
         glfwPollEvents();
         for (auto& keybind: InputManager::getKeyButtonCallbacks()) {

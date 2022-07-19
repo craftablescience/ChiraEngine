@@ -16,7 +16,7 @@ class Group : public Entity {
 public:
     explicit Group(std::string name_);
     Group();
-    void update(glm::mat4 parentTransform) override;
+    void render(glm::mat4 parentTransform) override;
     [[nodiscard]] glm::vec3 getGlobalPosition() override;
     [[nodiscard]] const Group* getGroup() const override;
     [[nodiscard]] Group* getGroup() override;

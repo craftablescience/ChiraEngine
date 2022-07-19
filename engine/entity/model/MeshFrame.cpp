@@ -14,9 +14,9 @@ MeshFrame::MeshFrame(int width_, int height_, ColorRGB backgroundColor_, bool sm
     this->mesh.getMesh()->setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/unlitTextured.json", this).castAssert<MaterialBase>());
 }
 
-void MeshFrame::update(glm::mat4 parentTransform) {
-    Frame::update(parentTransform);
-    this->mesh.update(transformToMatrix(parentTransform, this->position, this->rotation));
+void MeshFrame::render(glm::mat4 parentTransform) {
+    Frame::render(parentTransform);
+    this->mesh.render(transformToMatrix(parentTransform, this->position, this->rotation));
 }
 
 MeshDynamic* MeshFrame::getMeshDynamic() {

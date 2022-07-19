@@ -14,10 +14,19 @@ Entity::~Entity() {
     this->removeAllChildren();
 }
 
-void Entity::update(glm::mat4 parentTransform) { // NOLINT(misc-no-recursion)
+void Entity::update() { // NOLINT(misc-no-recursion)
+    for (auto* entity : this->children) {
+        entity->update();
+    }
+}
+
+void Entity::render(glm::mat4 parentTransform) { // NOLINT(misc-no-recursion)
     glm::mat4 transform = transformToMatrix(parentTransform, this->position, this->rotation);
-    for (auto* entity : this->children)
-        entity->update(transform);
+    for (auto* entity : this->children) {
+        if (entity->isVisible()) {
+            entity->render(transform);
+        }
+    }
 }
 
 const Window* Entity::getWindow() const { // NOLINT(misc-no-recursion)

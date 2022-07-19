@@ -11,7 +11,7 @@ class Window : public Frame {
     // Only the Engine can make windows!
     friend class Engine;
 public:
-    void update(glm::mat4 parentTransform) override;
+    void render(glm::mat4 parentTransform) override;
     ~Window() override;
     [[nodiscard]] const Window* getWindow() const override;
     [[nodiscard]] Window* getWindow() override;

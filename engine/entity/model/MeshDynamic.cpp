@@ -2,10 +2,9 @@
 
 using namespace chira;
 
-void MeshDynamic::update(glm::mat4 parentTransform) {
-    if (this->visible)
-        this->mesh.render(transformToMatrix(parentTransform, this->position, this->rotation));
-    Entity::update(parentTransform);
+void MeshDynamic::render(glm::mat4 parentTransform) {
+    this->mesh.render(transformToMatrix(parentTransform, this->position, this->rotation));
+    Entity::render(parentTransform);
 }
 
 MeshDataBuilder* MeshDynamic::getMesh() {
