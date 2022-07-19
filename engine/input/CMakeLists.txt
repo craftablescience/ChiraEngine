@@ -1,3 +1,5 @@
-list(APPEND ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/inputManager.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/inputManager.h)
+list(APPEND CHIRA_ENGINE_HEADERS
+        ${CMAKE_CURRENT_LIST_DIR}/InputManager.h)
+
+list(APPEND CHIRA_ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/InputManager.cpp)

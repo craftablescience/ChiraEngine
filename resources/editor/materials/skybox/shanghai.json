@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "shader": "file://shaders/skybox.json",
-    "cubemap": "file://textures/skyboxShanghai/shanghai.json"
-  }
-}

@@ -1,1 +1,0 @@
-Used from [https://polyhaven.com/a/shanghai_riverside](https://polyhaven.com/a/shanghai_riverside). Skybox textures are in the public domain.

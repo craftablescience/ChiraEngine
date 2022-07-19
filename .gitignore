@@ -1,13 +1,12 @@
-# Project exclude paths
+# IDE
+.idea/
+.vs/
+
+CMakeSettings.json
+
+# Build
 cmake-build-*/
 build/
+out/
 
 .ccls-cache
-
-!idea/
-.idea/*
-!cmake.xml
-
-# VS
-.vs/
-out/

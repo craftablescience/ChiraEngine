@@ -1,10 +1,6 @@
-list(APPEND ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/abstractResourceProvider.h
-        ${CMAKE_CURRENT_LIST_DIR}/filesystemResourceProvider.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/filesystemResourceProvider.h)
+list(APPEND CHIRA_ENGINE_HEADERS
+        ${CMAKE_CURRENT_LIST_DIR}/FilesystemResourceProvider.h
+        ${CMAKE_CURRENT_LIST_DIR}/IResourceProvider.h)
 
-if(CHIRA_BUILD_WITH_NETWORKING)
-    list(APPEND ENGINE_SOURCES
-            ${CMAKE_CURRENT_LIST_DIR}/internetResourceProvider.cpp
-            ${CMAKE_CURRENT_LIST_DIR}/internetResourceProvider.h)
-endif()
+list(APPEND CHIRA_ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/FilesystemResourceProvider.cpp)
