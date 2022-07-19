@@ -2,10 +2,12 @@
   "resource.font.console_font_path": "file://fonts/console_en.json",
 
   "ui.window.title": "Chira Engine",
+
+  "ui.console.title": "Console",
+  "ui.resource_usage_tracker.title": "Resource Usage",
+
   "ui.window.select_file": "Select File",
   "ui.window.save_file": "Save File",
-  "ui.console.title": "Console",
-  "ui.profiler.title": "Profiler",
 
   "ui.menubar.file": "File",
   "ui.menubar.new": "New",
@@ -36,11 +38,6 @@
   "warn.properties_resource.missing_property": "Resource \"{}\" missing property \"{}\", using fallback...",
   "warn.resource.deleting_resource_at_exit": "Deleting \"{}\" (refcount {}) that was not already deleted!",
 
-  "error.angelscript.unrecoverable_error": "Unrecoverable error while starting a new module at \"{}\"",
-  "error.angelscript.script_not_found": "Unable to load script at \"{}\"",
-  "error.angelscript.compilation_failure": "Script errors in \"{}\" have forced compilation to fail!",
-  "error.angelscript.missing_function": "Script at \"{}\" does not have a \"{}\" function",
-  "error.angelscript.exception": "An exception in \"{}\" occurred:\n{}",
   "error.axis.invalid_value": "String \"{}\" does not map to any value in the {} enum.",
   "error.bullet_collider_resource.unimplemented": "Collider type {} is unimplemented!",
   "error.cmdl_loader.invalid_data": "Mesh at \"{}\" has invalid data!",

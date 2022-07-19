@@ -1,2 +1,2 @@
 list(APPEND CHIRA_EDITOR_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/Main.cpp)
+        ${CMAKE_CURRENT_LIST_DIR}/Editor.cpp)

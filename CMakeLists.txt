@@ -118,6 +118,10 @@ list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glfw)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glm)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glm::glm)
 
+# IMGUI
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES imgui)
+
 # LIBLOADER
 set(LIBLOADER_BUILD_TEST OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/libloader)
@@ -152,10 +156,12 @@ option(CHIRA_USE_STEAMWORKS "Build Chira Engine with Steamworks API features" ON
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/CMakeLists.txt)
 list(APPEND CHIRA_ENGINE_SOURCES ${CHIRA_ENGINE_HEADERS})
+
 add_library(${PROJECT_NAME} STATIC ${CHIRA_ENGINE_SOURCES})
 apply_optimizations(${PROJECT_NAME})
-
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${CHIRA_ENGINE_HEADERS})
+
+target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD2)
 
 if(CHIRA_USE_STEAMWORKS)
     target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_USE_STEAMWORKS)
@@ -165,6 +171,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         ${OPENGL_INCLUDE_DIRS}
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/discord/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/fmt/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/libloader/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stb
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stduuid/include

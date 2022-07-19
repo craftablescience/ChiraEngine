@@ -30,8 +30,6 @@ public:
     /// Draw to screen.
     virtual void render(glm::mat4 parentTransform);
 
-    [[nodiscard]] virtual const Window* getWindow() const;
-    [[nodiscard]] virtual Window* getWindow();
     [[nodiscard]] virtual const Frame* getFrame() const;
     [[nodiscard]] virtual Frame* getFrame();
     [[nodiscard]] virtual const Group* getGroup() const;

@@ -1,5 +1,8 @@
 #include "Window.h"
 
+#include <backends/imgui_impl_opengl3.h>
+#include <backends/imgui_impl_glfw.h>
+
 #include <core/Engine.h>
 #include <config/Config.h>
 #include <event/Events.h>
@@ -7,7 +10,9 @@
 #include <input/InputManager.h>
 #include <loader/image/Image.h>
 #include <resource/provider/FilesystemResourceProvider.h>
+#include <resource/FontResource.h>
 #include <render/material/MaterialFramebuffer.h>
+#include <ui/IPanel.h>
 
 using namespace chira;
 
@@ -114,6 +119,17 @@ bool Window::createGLFWWindow(std::string_view title) {
         Events::createEvent("chira::window::files_dropped", files);
     });
 
+    this->imguiContext = ImGui::CreateContext();
+    ImGui::SetCurrentContext(this->imguiContext);
+    auto& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
+
+    ImGui_ImplGlfw_InitForOpenGL(this->window, true); // register for default input binds
+    ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
+
+    auto defaultFont = Resource::getUniqueResource<FontResource>("file://fonts/default.json");
+    ImGui::GetIO().FontDefault = defaultFont->getFont();
+
     return true;
 }
 
@@ -145,26 +161,61 @@ Window::Window(std::string_view title, int width_, int height_, bool fullscreen_
 }
 
 void Window::render(glm::mat4 /*parentTransform*/) {
-    //glfwMakeContextCurrent(this->window);
+    glfwMakeContextCurrent(this->window);
+    ImGui::SetCurrentContext(this->imguiContext);
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
 
     Frame::render(this->fboHandle, this->width, this->height);
 
+    for (auto& [uuid, panel] : this->panels) {
+        panel->render();
+    }
+
     glDisable(GL_DEPTH_TEST);
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     this->surface.render(glm::identity<glm::mat4>());
     glfwSwapBuffers(this->window);
 }
 
 Window::~Window() {
+    this->removeAllPanels();
+    ImGui::SetCurrentContext(this->imguiContext);
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext(this->imguiContext);
     glfwDestroyWindow(this->window);
 }
 
-const Window* Window::getWindow() const {
-    return this;
+uuids::uuid Window::addPanel(IPanel* panel) {
+    const auto uuid = UUIDGenerator::getNewUUID();
+    this->panels[uuid] = panel;
+    return uuid;
 }
 
-Window* Window::getWindow() {
-    return this;
+IPanel* Window::getPanel(const uuids::uuid& panelID) {
+    if (this->panels.count(panelID) > 0)
+        return this->panels[panelID];
+    return nullptr;
+}
+
+void Window::removePanel(const uuids::uuid& panelID) {
+    if (this->panels.count(panelID) > 0) {
+        delete this->panels[panelID];
+        this->panels.erase(panelID);
+    }
+}
+
+void Window::removeAllPanels() {
+    for (const auto& [panelID, panel] : this->panels) {
+        delete panel;
+    }
+    this->panels.clear();
 }
 
 void Window::setFrameSize(glm::vec2i newSize) {

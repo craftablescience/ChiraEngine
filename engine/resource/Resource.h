@@ -18,7 +18,7 @@ constexpr std::string_view RESOURCE_ID_SEPARATOR = "://";
 /// A chunk of data, usually a file. Is typically cached and shared.
 class Resource {
     // To view resource data
-    friend class Profiler;
+    friend class ResourceUsageTrackerPanel;
 public:
     explicit Resource(std::string identifier_) : identifier(std::move(identifier_)) {}
     virtual ~Resource();

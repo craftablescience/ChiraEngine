@@ -1,6 +1,7 @@
 #include "Engine.h"
 
 #include <glad/gl.h>
+#include <backends/imgui_impl_opengl3.h>
 
 #include <config/Config.h>
 #include <hook/DiscordRPC.h>
@@ -10,7 +11,8 @@
 #include <loader/mesh/ChiraMeshLoader.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <resource/ShaderResource.h>
-#include <render/UBO.h>
+#include <ui/debug/ConsolePanel.h>
+#include <ui/debug/ResourceUsageTrackerPanel.h>
 
 #ifdef CHIRA_USE_STEAMWORKS
     #include <hook/SteamAPI.h>
@@ -37,9 +39,6 @@ void Engine::preInit(std::string_view configPath) {
 
 void Engine::init(bool windowStartsVisible) {
     Engine::started = true;
-
-    // Create default resources
-    Events::createEvent("chira::engine::create_default_resources");
 
     if (!glfwInit()) {
         Logger::log(LOG_ERROR, "GLFW", TR("error.glfw.undefined"));
@@ -117,6 +116,8 @@ void Engine::init(bool windowStartsVisible) {
         }, nullptr);
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
     }
+
+    IMGUI_CHECKVERSION();
 #endif
 
     Engine::window->displaySplashScreen();
@@ -147,9 +148,30 @@ void Engine::init(bool windowStartsVisible) {
     if (steamEnabled && (!SteamAPI::Client::initialized() && !SteamAPI::Client::initSteam()))
         Logger::log(LOG_ERROR, "Steam", TR("error.steam.initialization_failure"));
 #endif
+
+    // Add console UI panel
+    auto consoleID = Engine::getWindow()->addPanel(new ConsolePanel{});
+    InputManager::addCallback(InputKeyButton{Key::GRAVE_ACCENT, InputKeyEventType::PRESSED, [consoleID] {
+        auto console = Engine::getWindow()->getPanel(consoleID);
+        console->setVisible(!console->isVisible());
+    }});
+
+    // Add resource usage tracker UI panel
+    auto resourceUsageTrackerID = Engine::getWindow()->addPanel(new ResourceUsageTrackerPanel{});
+    InputManager::addCallback(InputKeyButton{Key::F1, InputKeyEventType::PRESSED, [resourceUsageTrackerID] {
+        auto resourceUsageTracker = Engine::getWindow()->getPanel(resourceUsageTrackerID);
+        resourceUsageTracker->setVisible(!resourceUsageTracker->isVisible());
+    }});
+
+    // Create default resources
+    Events::createEvent("chira::engine::create_default_resources");
+    Events::update();
 }
 
 void Engine::run() {
+    ImGui::SetCurrentContext(Engine::getWindow()->imguiContext);
+    ImGui::GetIO().Fonts->Build();
+
     do {
         Engine::lastTime = Engine::currentTime;
         Engine::currentTime = glfwGetTime();

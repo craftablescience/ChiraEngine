@@ -29,14 +29,6 @@ void Entity::render(glm::mat4 parentTransform) { // NOLINT(misc-no-recursion)
     }
 }
 
-const Window* Entity::getWindow() const { // NOLINT(misc-no-recursion)
-    return this->parent->getWindow();
-}
-
-Window* Entity::getWindow() { // NOLINT(misc-no-recursion)
-    return this->parent->getWindow();
-}
-
 const Frame* Entity::getFrame() const { // NOLINT(misc-no-recursion)
     return this->parent->getFrame();
 }
@@ -86,14 +78,14 @@ std::string_view Entity::addChild(Entity* child) {
 }
 
 void Entity::removeChild(std::string_view name_) {
-    std::ignore = std::remove_if(this->children.begin(), this->children.end(), [&name_](Entity* entity) {
+    this->children.erase(std::remove_if(this->children.begin(), this->children.end(), [&name_](Entity* entity) {
         if (entity->getName() == name_) {
             entity->removeAllChildren();
             delete entity;
             return true;
         }
         return false;
-    });
+    }));
 }
 
 void Entity::removeAllChildren() { // NOLINT(misc-no-recursion)
