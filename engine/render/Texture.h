@@ -23,10 +23,10 @@ protected:
     int filterMode = GL_LINEAR;
     bool mipmaps = true;
     bool cache;
-    static int getFormatFromString(std::string_view formatName);
+    static int getFormatFromString(const std::string& formatName);
     static int getFormatFromBitDepth(int bd);
-    static int getWrapModeFromString(std::string_view wrapName);
-    static int getFilterModeFromString(std::string_view filterName);
+    static int getWrapModeFromString(const std::string& wrapName);
+    static int getFilterModeFromString(const std::string& filterName);
 };
 
 }

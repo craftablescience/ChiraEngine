@@ -69,7 +69,7 @@ int Texture::getTextureUnit() const {
     return this->activeTextureUnit;
 }
 
-int Texture::getFormatFromString(std::string_view formatName) {
+int Texture::getFormatFromString(const std::string& formatName) {
     if (formatName == "RED")
         return GL_RED;
     else if (formatName == "RG")
@@ -118,7 +118,7 @@ int Texture::getFormatFromBitDepth(int bd) {
     }
 }
 
-int Texture::getWrapModeFromString(std::string_view wrapName) {
+int Texture::getWrapModeFromString(const std::string& wrapName) {
     if (wrapName == "REPEAT")
         return GL_REPEAT;
     else if (wrapName == "MIRRORED_REPEAT")
@@ -132,7 +132,7 @@ int Texture::getWrapModeFromString(std::string_view wrapName) {
     return GL_REPEAT;
 }
 
-int Texture::getFilterModeFromString(std::string_view filterName) {
+int Texture::getFilterModeFromString(const std::string& filterName) {
     if (filterName == "NEAREST")
         return GL_NEAREST;
     else if (filterName == "LINEAR")
