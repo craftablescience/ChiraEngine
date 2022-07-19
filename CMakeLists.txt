@@ -91,6 +91,10 @@ if(CHIRA_BUILD_TESTS)
     include(${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt)
 endif()
 
+# ANGELSCRIPT
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES angelscript)
+
 # DISCORD
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/discord)
@@ -169,6 +173,8 @@ endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         ${OPENGL_INCLUDE_DIRS}
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/addons
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/discord/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/fmt/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui
@@ -203,6 +209,7 @@ endif()
 if(CHIRA_BUILD_TESTS)
     add_executable(ChiraTest ${CHIRA_TEST_SOURCES})
     target_link_libraries(ChiraTest PUBLIC ${PROJECT_NAME} gtest_main)
+    target_include_directories(ChiraTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tests)
     include(GoogleTest)
     gtest_discover_tests(ChiraTest)
 

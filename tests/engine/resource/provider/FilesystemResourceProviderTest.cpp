@@ -1,12 +1,13 @@
 #include <gtest/gtest.h>
 
-#include <resource/provider/FilesystemResourceProvider.h>
+#include <TestHelpers.h>
 #include <resource/StringResource.h>
 
 using namespace chira;
 
 TEST(FilesystemResourceProvider, getStringResource) {
-    Resource::addResourceProvider(new FilesystemResourceProvider{"tests"});
+    SETUP_ENGINE();
+
     auto missing = Resource::getResource<StringResource>("file://string_resource_test.txt");
     EXPECT_EQ(missing.useCount(), 2);
     EXPECT_STREQ(missing->getString().c_str(), "test");

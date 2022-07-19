@@ -11,6 +11,7 @@
 #include <loader/mesh/ChiraMeshLoader.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <resource/ShaderResource.h>
+#include <script/AngelScriptVM.h>
 #include <ui/debug/ConsolePanel.h>
 #include <ui/debug/ResourceUsageTrackerPanel.h>
 
@@ -162,6 +163,9 @@ void Engine::init(bool windowStartsVisible) {
         auto resourceUsageTracker = Engine::getWindow()->getPanel(resourceUsageTrackerID);
         resourceUsageTracker->setVisible(!resourceUsageTracker->isVisible());
     }});
+
+    // Start script VM
+    AngelScriptVM::init();
 
     // Create default resources
     Events::createEvent("chira::engine::create_default_resources");
