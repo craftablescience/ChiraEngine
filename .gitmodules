@@ -19,9 +19,6 @@
 [submodule "engine/thirdparty/json"]
 	path = engine/thirdparty/json
 	url = https://github.com/nlohmann/json
-[submodule "engine/thirdparty/luau"]
-	path = engine/thirdparty/luau
-	url = https://github.com/Roblox/luau
 [submodule "engine/thirdparty/imgui"]
 	path = engine/thirdparty/imgui
 	url = https://github.com/ChiraEngine/imgui

@@ -84,8 +84,8 @@ if(CHIRA_BUILD_TESTS)
     include(FetchContent)
     FetchContent_Declare(
             googletest
-            URL https://github.com/google/googletest/archive/e2239ee6043f73722e7aa812a459f54a28552929.zip
-    )
+            GIT_REPOSITORY https://github.com/google/googletest.git
+            GIT_TAG release-1.12.1)
     FetchContent_MakeAvailable(googletest)
     enable_testing()
     include(${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt)
@@ -130,12 +130,6 @@ list(APPEND CHIRA_ENGINE_LINK_LIBRARIES imgui)
 set(LIBLOADER_BUILD_TEST OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/libloader)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES LibLoader)
-
-# LUAU
-#set(LUAU_BUILD_CLI   OFF CACHE BOOL "" FORCE)
-#set(LUAU_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/luau)
-#list(APPEND CHIRA_ENGINE_LINK_LIBRARIES Luau.Compiler Luau.VM)
 
 # NLOHMANN_JSON
 set(JSON_BuildTests OFF CACHE INTERNAL "")
@@ -197,8 +191,10 @@ if(CHIRA_BUILD_EDITOR)
     add_executable(ChiraEditor ${CHIRA_EDITOR_SOURCES})
     apply_optimizations(ChiraEditor)
     if(WIN32)
-        add_custom_target(CopyEditorIcon ALL COMMAND ${CMAKE_COMMAND} -E copy
-                ${CMAKE_SOURCE_DIR}/resources/editor/icon/icon.ico ${CMAKE_BINARY_DIR}/resources/editor/icon/icon.ico)
+        add_custom_target(
+                CopyEditorIcon
+                ALL
+                COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/resources/editor/icon/icon.ico ${CMAKE_BINARY_DIR}/resources/editor/icon/icon.ico)
         add_dependencies(ChiraEditor CopyEditorIcon)
     endif()
     target_link_libraries(ChiraEditor PRIVATE ${PROJECT_NAME})
@@ -214,10 +210,14 @@ if(CHIRA_BUILD_TESTS)
     gtest_discover_tests(ChiraTest)
 
     # Copy gtest binaries next to the executable
-    add_custom_command(TARGET ChiraTest PRE_BUILD COMMAND ${CMAKE_COMMAND}
-            -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/bin ${CMAKE_BINARY_DIR})
+    add_custom_command(
+            TARGET ChiraTest
+            PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/bin ${CMAKE_BINARY_DIR})
 endif()
 
 # Copy resources
-add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/resources)
+add_custom_command(
+        TARGET ${PROJECT_NAME}
+        PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/resources)

@@ -33,7 +33,8 @@ The goal of the engine is to have as much customization as possible, while still
 next to the executable. Check the GitHub Actions script to see which DLLs need copied from the MinGW bin directory.
 
 ## Bundled Dependencies
-- Dear ImGui v1.90
+- AngelScript v2.35.1
+- Dear ImGui v1.89
 - Discord RPC
 - {fmt} v9.0.0
 - GLAD (OpenGL 4.5 Core, no extensions)
