@@ -15,8 +15,9 @@ bool Window::createGLFWWindow(std::string_view title) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 #ifdef DEBUG
-    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
     glfwWindowHint(GLFW_VISIBLE, this->visible ? GLFW_TRUE : GLFW_FALSE);
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -35,7 +36,7 @@ bool Window::createGLFWWindow(std::string_view title) {
         glfwSetWindowMonitor(this->window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
     else {
         bool startMaximized = true;
-        Engine::getSettings()->getValue("graphics", "startMaximized", &startMaximized);
+        Engine::getSettings()->getValue("graphics", "start_maximized", &startMaximized);
         if (startMaximized)
             glfwMaximizeWindow(this->window);
     }
@@ -46,14 +47,14 @@ bool Window::createGLFWWindow(std::string_view title) {
         Logger::log(LOG_ERROR, "OpenGL", TRF("error.opengl.version", GL_VERSION_STRING_PRETTY));
         return false;
     }
-    glfwSwapInterval(1);
+    glfwSwapInterval(this->vsync ? 1 : 0);
 
     this->setIcon("file://textures/ui/icon.png");
 
     glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GLFW_TRUE);
     glfwSetInputMode(this->window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
     bool rawMouseMotion = false;
-    Engine::getSettings()->getValue("input", "rawMouseMotion", &rawMouseMotion);
+    Engine::getSettings()->getValue("input", "raw_mouse_motion", &rawMouseMotion);
     if (glfwRawMouseMotionSupported() && rawMouseMotion)
         glfwSetInputMode(this->window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 
@@ -121,9 +122,10 @@ static void makeSurface(Window* window, MeshDataBuilder* surface) {
     surface->setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/window.json", window).castAssert<MaterialBase>());
 }
 
-Window::Window(std::string name_, std::string_view title, int width_, int height_, bool fullscreen_, ColorRGB backgroundColor_, bool smoothResize, bool startVisible)
+Window::Window(std::string name_, std::string_view title, int width_, int height_, bool fullscreen_, bool vsync_, ColorRGB backgroundColor_, bool smoothResize, bool startVisible)
     : Frame(std::move(name_), width_, height_, backgroundColor_, smoothResize, false)
-    , fullscreen(fullscreen_) {
+    , fullscreen(fullscreen_)
+    , vsync(vsync_) {
     this->visible = startVisible;
     if (this->createGLFWWindow(title)) {
         this->createFramebuffer();
@@ -131,9 +133,10 @@ Window::Window(std::string name_, std::string_view title, int width_, int height
     }
 }
 
-Window::Window(std::string_view title, int width_, int height_, bool fullscreen_, ColorRGB backgroundColor_, bool smoothResize, bool startVisible)
+Window::Window(std::string_view title, int width_, int height_, bool fullscreen_, bool vsync_, ColorRGB backgroundColor_, bool smoothResize, bool startVisible)
     : Frame(width_, height_, backgroundColor_, smoothResize, false)
-    , fullscreen(fullscreen_) {
+    , fullscreen(fullscreen_)
+    , vsync(vsync_) {
     this->visible = startVisible;
     if (this->createGLFWWindow(title)) {
         this->createFramebuffer();

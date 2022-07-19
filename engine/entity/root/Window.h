@@ -29,10 +29,10 @@ public:
 protected:
     MeshDataBuilder surface;
     GLFWwindow* window = nullptr;
-    bool mouseCaptured = false, iconified = false, fullscreen;
+    bool mouseCaptured = false, iconified = false, fullscreen, vsync;
     double lastMouseX = -1.0, lastMouseY = -1.0;
-    Window(std::string name_, std::string_view title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = true);
-    Window(std::string_view title, int width_, int height_, bool fullscreen_ = false, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = true);
+    Window(std::string name_, std::string_view title, int width_, int height_, bool fullscreen_ = false, bool vsync_ = true, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = false);
+    Window(std::string_view title, int width_, int height_, bool fullscreen_ = false, bool vsync_ = true, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = false);
 private:
     bool createGLFWWindow(std::string_view title);
 };

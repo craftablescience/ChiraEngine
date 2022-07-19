@@ -47,7 +47,7 @@ void EditorCamera::setupKeybinds() {
             cam->yaw -= static_cast<float>(xOffset);
 
             bool invertYAxis = false;
-            Engine::getSettings()->getValue("input", "invertYAxis", &invertYAxis);
+            Engine::getSettings()->getValue("input", "invert_y_axis", &invertYAxis);
             if (invertYAxis)
                 cam->pitch -= static_cast<float>(yOffset);
             else

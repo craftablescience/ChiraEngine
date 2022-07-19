@@ -50,13 +50,15 @@ void Engine::init(bool windowStartsVisible) {
     });
 
     int windowWidth = 1600;
-    Engine::settingsLoader->getValue("graphics", "windowWidth", &windowWidth);
+    Engine::settingsLoader->getValue("graphics", "window_width", &windowWidth);
     int windowHeight = 900;
-    Engine::settingsLoader->getValue("graphics", "windowHeight", &windowHeight);
+    Engine::settingsLoader->getValue("graphics", "window_height", &windowHeight);
     bool fullscreen = false;
     Engine::settingsLoader->getValue("graphics", "fullscreen", &fullscreen);
+    bool vsync = true;
+    Engine::settingsLoader->getValue("graphics", "vsync", &vsync);
 
-    Engine::window.reset(new Window{TR("ui.window.title"), windowWidth, windowHeight, fullscreen, {}, true, false});
+    Engine::window.reset(new Window{TR("ui.window.title"), windowWidth, windowHeight, fullscreen, vsync});
     Engine::window->setVisible(windowStartsVisible);
 
 #ifdef DEBUG
@@ -123,19 +125,19 @@ void Engine::init(bool windowStartsVisible) {
     IMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
 
     // todo: move this to a general lighting manager
-    if (Engine::getSettings()->hasValue("engine", "maxPointLights")) {
+    if (Engine::getSettings()->hasValue("engine", "max_point_lights")) {
         int maxLights;
-        Engine::getSettings()->getValue("engine", "maxPointLights", &maxLights);
+        Engine::getSettings()->getValue("engine", "max_point_lights", &maxLights);
         ShaderResource::addPreprocessorSymbol("MAX_POINT_LIGHTS", std::to_string(maxLights));
     }
-    if (Engine::getSettings()->hasValue("engine", "maxPointLights")) {
+    if (Engine::getSettings()->hasValue("engine", "max_directional_lights")) {
         int maxLights;
-        Engine::getSettings()->getValue("engine", "maxDirectionalLights", &maxLights);
+        Engine::getSettings()->getValue("engine", "max_directional_lights", &maxLights);
         ShaderResource::addPreprocessorSymbol("MAX_DIRECTIONAL_LIGHTS", std::to_string(maxLights));
     }
-    if (Engine::getSettings()->hasValue("engine", "maxSpotLights")) {
+    if (Engine::getSettings()->hasValue("engine", "max_spot_lights")) {
         int maxLights;
-        Engine::getSettings()->getValue("engine", "maxSpotLights", &maxLights);
+        Engine::getSettings()->getValue("engine", "max_spot_lights", &maxLights);
         ShaderResource::addPreprocessorSymbol("MAX_SPOT_LIGHTS", std::to_string(maxLights));
     }
 
@@ -197,21 +199,21 @@ JSONSettingsLoader* Engine::getSettings() {
 
 void Engine::setSettingsDefaults() {
     Engine::settingsLoader->addCategory("engine");
-    Engine::settingsLoader->setValue("engine", "consoleColoredText", true, false, false);
-    Engine::settingsLoader->setValue("engine", "maxPointLights", 64, false, false);
-    Engine::settingsLoader->setValue("engine", "maxDirectionalLights", 4, false, false);
-    Engine::settingsLoader->setValue("engine", "maxSpotLights", 4, false, false);
+    Engine::settingsLoader->setValue("engine", "max_point_lights", 64, false, false);
+    Engine::settingsLoader->setValue("engine", "max_directional_lights", 4, false, false);
+    Engine::settingsLoader->setValue("engine", "max_spot_lights", 4, false, false);
 #ifdef CHIRA_USE_STEAMWORKS
     Engine::settingsLoader->setValue("engine", "steamworks", false, false, false);
 #endif
     Engine::settingsLoader->addCategory("graphics");
-    Engine::settingsLoader->setValue("graphics", "windowWidth", 1600, false, false);
-    Engine::settingsLoader->setValue("graphics", "windowHeight", 900, false, false);
-    Engine::settingsLoader->setValue("graphics", "startMaximized", false, false, false);
+    Engine::settingsLoader->setValue("graphics", "window_width", 1600, false, false);
+    Engine::settingsLoader->setValue("graphics", "window_height", 900, false, false);
+    Engine::settingsLoader->setValue("graphics", "start_maximized", false, false, false);
     Engine::settingsLoader->setValue("graphics", "fullscreen", false, false, false);
+    Engine::settingsLoader->setValue("graphics", "vsync", true, false, false);
     Engine::settingsLoader->addCategory("input");
-    Engine::settingsLoader->setValue("input", "rawMouseMotion", true, false, false);
-    Engine::settingsLoader->setValue("input", "invertYAxis", false, false, false);
+    Engine::settingsLoader->setValue("input", "raw_mouse_motion", true, false, false);
+    Engine::settingsLoader->setValue("input", "invert_y_axis", false, false, false);
     Engine::settingsLoader->addCategory("ui");
     // todo: use computer language as default
     Engine::settingsLoader->setValue("ui", "language", std::string{"en"}, false, false);
