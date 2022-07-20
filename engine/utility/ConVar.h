@@ -95,6 +95,8 @@ public:
             }
         }
     }
+
+    explicit operator std::string() const;
 private:
     ConVarValue value;
     std::string name;

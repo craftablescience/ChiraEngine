@@ -45,6 +45,23 @@ std::string_view ConVar::getDescription() const {
     return this->description;
 }
 
+ConVar::operator std::string() const {
+    std::string out{this->getName()};
+    out += ": ";
+    switch (this->value.type) {
+        case ConVarType::BOOLEAN:
+            out += "boolean";
+            break;
+        case ConVarType::INTEGER:
+            out += "integer";
+            break;
+        case ConVarType::FLOAT:
+            out += "float";
+            break;
+    }
+    return out;
+}
+
 bool ConVarRegistry::hasConVar(std::string_view name) {
     for (const auto* convar : ConVarRegistry::convars) {
         if (convar->getName() == name) {
