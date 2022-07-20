@@ -52,6 +52,12 @@ TEST(StringSplit, splitString) {
     EXPECT_STREQ(vec2[2].c_str(), "Test String 3");
 }
 
+TEST(String, changeCase) {
+    std::string test = "Howdy, I'm mixEd-CasE!";
+    EXPECT_STREQ(String::toLower(test).c_str(), "howdy, i'm mixed-case!");
+    EXPECT_STREQ(String::toUpper(test).c_str(), "HOWDY, I'M MIXED-CASE!");
+}
+
 TEST(StringStrip, stripWhitespace) {
     EXPECT_STREQ(String::stripLeft("\t\n\r\v\f test").c_str(), "test");
     EXPECT_STREQ(String::stripRight("test \t\n\r\v\f").c_str(), "test");
