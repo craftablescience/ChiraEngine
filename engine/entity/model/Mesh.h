@@ -20,4 +20,4 @@ private:
     SharedPointer<MeshDataResource> mesh;
 };
 
-}
+} // namespace chira

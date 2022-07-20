@@ -10,4 +10,4 @@ public:
     void renderContents() override;
 };
 
-}
+} // namespace chira

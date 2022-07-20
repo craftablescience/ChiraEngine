@@ -13,4 +13,4 @@ protected:
     std::string data;
 };
 
-}
+} // namespace chira

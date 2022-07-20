@@ -20,4 +20,4 @@ protected:
     std::string providerName;
 };
 
-}
+} // namespace chira

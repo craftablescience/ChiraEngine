@@ -31,4 +31,4 @@ private:
     void checkForCompilationErrors() const;
 };
 
-}
+} // namespace chira

@@ -19,4 +19,4 @@ protected:
     int wrapModeR = GL_REPEAT;
 };
 
-}
+} // namespace chira

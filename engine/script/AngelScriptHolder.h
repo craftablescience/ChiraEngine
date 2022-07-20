@@ -21,4 +21,4 @@ private:
     asIScriptModule* module = nullptr;
 };
 
-}
+} // namespace chira

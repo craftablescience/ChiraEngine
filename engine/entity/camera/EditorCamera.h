@@ -23,4 +23,4 @@ private:
     using Freecam::setupKeybinds;
 };
 
-}
+} // namespace chira

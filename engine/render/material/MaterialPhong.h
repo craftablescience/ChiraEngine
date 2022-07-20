@@ -21,4 +21,4 @@ private:
     CHIRA_REGISTER_MATERIAL_TYPE(MaterialPhong); // NOLINT(cert-err58-cpp)
 };
 
-}
+} // namespace chira

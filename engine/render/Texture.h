@@ -29,4 +29,4 @@ protected:
     static int getFilterModeFromString(const std::string& filterName);
 };
 
-}
+} // namespace chira

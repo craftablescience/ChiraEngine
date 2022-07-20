@@ -19,4 +19,4 @@ inline glm::mat4 transformToMatrixScaled(const glm::mat4& startMatrix = glm::ide
     return glm::scale(transformToMatrix(startMatrix, position, rotation), scale);
 }
 
-}
+} // namespace chira

@@ -37,4 +37,4 @@ private:
     static std::int64_t endTimestamp;
 };
 
-}
+} // namespace chira

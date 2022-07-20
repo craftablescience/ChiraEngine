@@ -6,7 +6,8 @@
 
 namespace chira {
 
-template<typename ReturnType> class IFactory {
+template<typename ReturnType>
+class IFactory {
     using factoryFunction = std::function<ReturnType(const std::string&)>;
 public:
     IFactory() = delete;

@@ -17,4 +17,4 @@ protected:
     glm::vec2i currentSize;
 };
 
-}
+} // namespace chira

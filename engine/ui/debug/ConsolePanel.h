@@ -5,6 +5,7 @@
 #include <ui/IPanel.h>
 
 namespace chira {
+
 class ConsolePanel : public IPanel {
 public:
     explicit ConsolePanel(ImVec2 windowSize = ImVec2{800, 600});
@@ -21,4 +22,5 @@ private:
     bool autoScroll;
     uuids::uuid loggingId;
 };
-}
+
+} // namespace chira

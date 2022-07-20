@@ -31,4 +31,4 @@ protected:
     Camera* mainCamera = nullptr;
 };
 
-}
+} // namespace chira

@@ -20,4 +20,4 @@ private:
     static inline std::unordered_map<std::string, std::unique_ptr<IMeshLoader>> meshLoaders;
 };
 
-}
+} // namespace chira

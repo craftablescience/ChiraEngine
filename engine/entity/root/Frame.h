@@ -32,4 +32,4 @@ protected:
     void createFramebuffer();
 };
 
-}
+} // namespace chira

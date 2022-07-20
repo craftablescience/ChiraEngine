@@ -17,4 +17,4 @@ private:
     CHIRA_REGISTER_MATERIAL_TYPE(MaterialTextured); // NOLINT(cert-err58-cpp)
 };
 
-}
+} // namespace chira

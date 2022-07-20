@@ -31,4 +31,4 @@ protected:
     ImGuiWindowFlags flags;
 };
 
-}
+} // namespace chira

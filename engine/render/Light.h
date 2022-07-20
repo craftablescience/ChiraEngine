@@ -32,4 +32,4 @@ struct SpotLight : public DirectionalLight {
     float cutoffDegree;
 };
 
-}
+} // namespace chira

@@ -31,4 +31,4 @@ private:
     static inline std::unordered_map<std::string, std::vector<std::pair<uuids::uuid, std::function<void(const std::any&)>>>> listeners;
 };
 
-}
+} // namespace chira

@@ -53,4 +53,4 @@ protected:
     float fov = 90.0f;
 };
 
-}
+} // namespace chira

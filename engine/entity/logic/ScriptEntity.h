@@ -18,4 +18,4 @@ private:
     std::function<void()> renderFunc;
 };
 
-}
+} // namespace chira

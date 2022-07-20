@@ -6,10 +6,10 @@
 #include <utility/Logger.h>
 
 #define SETUP_ENGINE() \
-    Engine::preInit("config_test.json"); \
-    Resource::addResourceProvider(new FilesystemResourceProvider{"tests"})
+    chira::Engine::preInit("config_test.json"); \
+    chira::Resource::addResourceProvider(new chira::FilesystemResourceProvider{"tests"})
 
-#define SETUP_ANGELSCRIPT() AngelScriptVM::init()
+#define SETUP_ANGELSCRIPT() chira::AngelScriptVM::init()
 
 #define LOGGING_BEGIN() \
     std::vector<chira::LogType> logMessageTypes; \

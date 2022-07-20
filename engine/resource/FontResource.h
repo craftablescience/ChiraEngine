@@ -24,4 +24,4 @@ private:
     static const ImWchar* getRangeFromString(std::string_view input);
 };
 
-}
+} // namespace chira

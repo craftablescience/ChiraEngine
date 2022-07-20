@@ -27,4 +27,4 @@ private:
     nlohmann::json strings;
 };
 
-}
+} // namespace chira

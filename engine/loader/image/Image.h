@@ -18,4 +18,4 @@ private:
     byte* data = nullptr;
 };
 
-}
+} // namespace chira

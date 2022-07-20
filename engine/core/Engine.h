@@ -33,4 +33,4 @@ private:
     static void setSettingsDefaults();
 };
 
-}
+} // namespace chira

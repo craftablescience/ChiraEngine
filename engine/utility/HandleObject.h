@@ -2,7 +2,8 @@
 
 namespace chira {
 
-template<typename T> class HandleObject {
+template<typename T>
+class HandleObject {
 public:
     explicit HandleObject(T defaultValue = -1) : handle(defaultValue) {}
     virtual ~HandleObject() = default;
@@ -13,4 +14,4 @@ protected:
     T handle;
 };
 
-}
+} // namespace chira

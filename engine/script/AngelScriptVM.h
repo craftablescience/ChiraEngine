@@ -29,4 +29,4 @@ private:
     static inline asIScriptEngine* asEngine = nullptr;
 };
 
-}
+} // namespace chira

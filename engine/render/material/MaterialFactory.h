@@ -20,7 +20,7 @@ protected:
 
 class MaterialFactory : public IFactory<SharedPointer<MaterialBase>> {};
 
-}
+} // namespace chira
 
 #define CHIRA_REGISTER_MATERIAL_TYPE(ResourceClassName)                                         \
     static inline const bool ResourceClassName##FactoryRegistryHelper =                         \

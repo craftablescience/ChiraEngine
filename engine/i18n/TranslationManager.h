@@ -25,7 +25,7 @@ private:
     static std::unordered_map<std::string, std::string> LANGUAGE_DEFINITIONS;
 };
 
-}
+} // namespace chira
 
 /// Get translation from identifier
 #define TR(ID) chira::TranslationManager::getTranslation(ID)

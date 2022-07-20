@@ -48,4 +48,4 @@ private:
     bool createGLFWWindow(std::string_view title);
 };
 
-}
+} // namespace chira

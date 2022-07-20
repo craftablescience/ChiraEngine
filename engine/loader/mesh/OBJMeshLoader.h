@@ -12,4 +12,4 @@ private:
     static void addVertex(Vertex v, unsigned int* currentIndex, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
 };
 
-}
+} // namespace chira

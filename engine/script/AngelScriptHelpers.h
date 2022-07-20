@@ -124,4 +124,4 @@ struct asTypeString<R(*)(ArgTypes...)> : asTypeString<R(ArgTypes...)> {
     explicit asTypeString(const std::string& name_) : asTypeString<R(ArgTypes...)>(name_) {}
 };
 
-}
+} // namespace chira

@@ -17,4 +17,4 @@ struct ChiraMeshHeader {
 };
 constexpr unsigned short CHIRA_MESH_HEADER_SIZE = sizeof(ChiraMeshHeader);
 
-}
+} // namespace chira

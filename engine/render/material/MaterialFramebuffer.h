@@ -17,4 +17,4 @@ protected:
     Frame* frame;
 };
 
-}
+} // namespace chira

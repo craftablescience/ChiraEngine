@@ -51,4 +51,4 @@ private:
     using Entity::rotate;
 };
 
-}
+} // namespace chira

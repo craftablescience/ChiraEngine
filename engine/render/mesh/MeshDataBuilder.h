@@ -25,4 +25,4 @@ protected:
     void addVertex(Vertex vertex, bool addDuplicate = false);
 };
 
-}
+} // namespace chira

@@ -15,4 +15,4 @@ protected:
     MeshDynamic mesh{};
 };
 
-}
+} // namespace chira

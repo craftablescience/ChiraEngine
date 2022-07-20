@@ -16,4 +16,4 @@ protected:
     std::size_t bufferLength_ = 0;
 };
 
-}
+} // namespace chira
