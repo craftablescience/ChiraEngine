@@ -5,6 +5,7 @@ using namespace chira;
 IPanel::IPanel(std::string title_, bool startVisible, ImVec2 windowSize, bool enforceSize)
     : title(std::move(title_))
     , visible(startVisible)
+    , activatedThisFrame(startVisible)
     , nextWindowSize(windowSize)
     , windowSizeCondition(enforceSize ? ImGuiCond_Always : ImGuiCond_FirstUseEver)
     , flags(0) {}
@@ -18,6 +19,9 @@ void IPanel::render() {
         }
         ImGui::End();
         this->postRenderContents();
+
+        if (this->activatedThisFrame)
+            this->activatedThisFrame = false;
     }
 }
 
@@ -34,7 +38,13 @@ bool IPanel::isVisible() const {
 }
 
 void IPanel::setVisible(bool visible_) {
+    if (visible_)
+        this->activatedThisFrame = true;
     this->visible = visible_;
+}
+
+bool IPanel::wasActivatedThisFrame() const {
+    return this->activatedThisFrame;
 }
 
 glm::vec2 IPanel::getWindowSize() const {

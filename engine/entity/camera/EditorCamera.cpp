@@ -60,7 +60,7 @@ void EditorCamera::setupKeybinds() {
         }
     }});
     InputManager::addCallback(InputMouseMovement{InputMouseMovementEventType::SCROLL, [](double x, double y) {
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()))
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
             cam->translateWithRotation({
                 x * cam->getMovementSpeed() / 40,
                 0,

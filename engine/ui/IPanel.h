@@ -18,12 +18,14 @@ public:
     void setTitle(const std::string& newTitle);
     [[nodiscard]] bool isVisible() const;
     void setVisible(bool visible_);
+    [[nodiscard]] bool wasActivatedThisFrame() const;
     [[nodiscard]] glm::vec2 getWindowSize() const;
     void setWindowSize(glm::vec2 size);
     ImGuiWindowFlags& getWindowFlags();
 protected:
     std::string title;
     bool visible;
+    bool activatedThisFrame;
     ImVec2 nextWindowSize;
     ImGuiCond_ windowSizeCondition;
     ImGuiWindowFlags flags;
