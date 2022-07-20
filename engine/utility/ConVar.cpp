@@ -5,11 +5,27 @@
 
 using namespace chira;
 
+ConVar::ConVar(std::string name_, bool defaultValue, std::string description_, std::function<void(bool)> onChanged)
+        : name(std::move(name_))
+        , value(defaultValue)
+        , description(std::move(description_))
+        , changedCallbackInt(std::move(onChanged)) {
+    ConVarRegistry::registerConVar(this);
+}
+
+ConVar::ConVar(std::string name_, int defaultValue, std::string description_, std::function<void(int)> onChanged)
+        : name(std::move(name_))
+        , value(defaultValue)
+        , description(std::move(description_))
+        , changedCallbackInt(std::move(onChanged)) {
+    ConVarRegistry::registerConVar(this);
+}
+
 ConVar::ConVar(std::string name_, float defaultValue, std::string description_, std::function<void(float)> onChanged)
-    : name(std::move(name_))
-    , value(defaultValue)
-    , description(std::move(description_))
-    , changedCallback(std::move(onChanged)) {
+        : name(std::move(name_))
+        , value(defaultValue)
+        , description(std::move(description_))
+        , changedCallbackFloat(std::move(onChanged)) {
     ConVarRegistry::registerConVar(this);
 }
 
@@ -17,13 +33,8 @@ ConVar::~ConVar() {
     ConVarRegistry::deregisterConVar(this);
 }
 
-float ConVar::getValue() const {
-    return this->value;
-}
-
-void ConVar::setValue(float newValue) {
-    this->value = newValue;
-    this->changedCallback(newValue);
+ConVarType ConVar::getType() const {
+    return this->value.type;
 }
 
 std::string_view ConVar::getName() const {

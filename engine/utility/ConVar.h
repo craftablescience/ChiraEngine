@@ -3,23 +3,107 @@
 #include <string>
 #include <string_view>
 #include <functional>
+#include <type_traits>
 #include <vector>
 
 namespace chira {
 
+enum class ConVarType {
+    BOOLEAN,
+    INTEGER,
+    FLOAT,
+};
+
 class ConVar {
+    struct ConVarValue {
+        union {
+            bool  valueBool;
+            int   valueInt;
+            float valueFloat;
+        };
+        ConVarType type;
+
+        explicit ConVarValue(bool  value) : valueBool(value),  type(ConVarType::BOOLEAN) {}
+        explicit ConVarValue(int   value) : valueInt(value),   type(ConVarType::INTEGER) {}
+        explicit ConVarValue(float value) : valueFloat(value), type(ConVarType::FLOAT)   {}
+    };
 public:
+    ConVar(std::string name_, bool  defaultValue, std::string description_ = "", std::function<void(bool)>  onChanged = [](bool)  {});
+    ConVar(std::string name_, int   defaultValue, std::string description_ = "", std::function<void(int)>   onChanged = [](int)   {});
     ConVar(std::string name_, float defaultValue, std::string description_ = "", std::function<void(float)> onChanged = [](float) {});
     ~ConVar();
-    [[nodiscard]] float getValue() const;
-    void setValue(float newValue);
+
+    [[nodiscard]] ConVarType getType() const;
     [[nodiscard]] std::string_view getName() const;
     [[nodiscard]] std::string_view getDescription() const;
+
+    template<typename T>
+    requires std::is_same_v<T, bool> || std::is_same_v<T, int> || std::is_same_v<T, float>
+    inline T getValue() const {
+        if constexpr(std::is_same_v<T, bool>) {
+            switch (this->value.type) {
+                case ConVarType::BOOLEAN:
+                    return this->value.valueBool;
+                case ConVarType::INTEGER:
+                    return static_cast<bool>(this->value.valueInt);
+                case ConVarType::FLOAT:
+                    return static_cast<bool>(this->value.valueFloat);
+            }
+        } else if constexpr(std::is_same_v<T, int>) {
+            switch (this->value.type) {
+                case ConVarType::BOOLEAN:
+                    return static_cast<int>(this->value.valueBool);
+                case ConVarType::INTEGER:
+                    return this->value.valueInt;
+                case ConVarType::FLOAT:
+                    return static_cast<int>(this->value.valueFloat);
+            }
+        } else /* if constexpr(std::is_same_v<T, float>) */ {
+            switch (this->value.type) {
+                case ConVarType::BOOLEAN:
+                    return static_cast<float>(this->value.valueBool);
+                case ConVarType::INTEGER:
+                    return static_cast<float>(this->value.valueInt);
+                case ConVarType::FLOAT:
+                    return this->value.valueFloat;
+            }
+        }
+        return static_cast<T>(0);
+    }
+
+    template<typename T>
+    requires std::is_same_v<T, bool> || std::is_same_v<T, int> || std::is_same_v<T, float>
+    void setValue(T newValue) {
+        switch (this->value.type) {
+            case ConVarType::BOOLEAN: {
+                bool convertedValue = static_cast<T>(newValue);
+                this->value.valueBool = convertedValue;
+                this->changedCallbackBool(convertedValue);
+                return;
+            }
+            case ConVarType::INTEGER: {
+                int convertedValue = static_cast<T>(newValue);
+                this->value.valueInt = convertedValue;
+                this->changedCallbackInt(convertedValue);
+                return;
+            }
+            case ConVarType::FLOAT: {
+                float convertedValue = static_cast<T>(newValue);
+                this->value.valueFloat = convertedValue;
+                this->changedCallbackFloat(convertedValue);
+                return;
+            }
+        }
+    }
 private:
-    float value;
+    ConVarValue value;
     std::string name;
     std::string description;
-    std::function<void(float)> changedCallback;
+    union {
+        std::function<void(bool)>  changedCallbackBool;
+        std::function<void(int)>   changedCallbackInt;
+        std::function<void(float)> changedCallbackFloat;
+    };
 };
 
 class ConVarReference {
