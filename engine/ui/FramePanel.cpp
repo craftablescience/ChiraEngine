@@ -21,7 +21,8 @@ void FramePanel::renderContents() {
             this->frame->setFrameSize(size);
             this->currentSize = size;
         }
-        ImGui::Image(reinterpret_cast<ImTextureID>(this->frame->getColorTextureHandle()), guiSize, ImVec2(0, 1), ImVec2(1, 0));
+        // thank you C++ for this whole casting mess
+        ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<unsigned long long>(this->frame->getColorTextureHandle())), guiSize, ImVec2(0, 1), ImVec2(1, 0));
     }
     ImGui::EndChild();
 }
