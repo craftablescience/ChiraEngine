@@ -1,5 +1,6 @@
 list(APPEND CHIRA_ENGINE_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/Assertions.h
+        ${CMAKE_CURRENT_LIST_DIR}/ConVar.h
         ${CMAKE_CURRENT_LIST_DIR}/Dialogs.h
         ${CMAKE_CURRENT_LIST_DIR}/FileInputStream.h
         ${CMAKE_CURRENT_LIST_DIR}/HandleObject.h
@@ -12,6 +13,7 @@ list(APPEND CHIRA_ENGINE_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/UUIDGenerator.h)
 
 list(APPEND CHIRA_ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/ConVar.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Dialogs.cpp
         ${CMAKE_CURRENT_LIST_DIR}/FileInputStream.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Logger.cpp
