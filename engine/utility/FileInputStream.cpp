@@ -48,7 +48,7 @@ long FileInputStream::tell() const {
 std::vector<byte> FileInputStream::readBytes(unsigned int length) const {
     std::vector<byte> out;
     out.resize(length);
-    fread(&out[0], sizeof(byte), length, this->stream);
+    std::ignore = fread(&out[0], sizeof(byte), length, this->stream);
     return out;
 }
 
@@ -66,7 +66,7 @@ std::string FileInputStream::readString() const {
 byte FileInputStream::peek(long offset) const {
     byte out = '\0';
     this->seek(offset, SEEK_CUR);
-    fread(&out, sizeof(byte), 1, this->stream);
+    std::ignore = fread(&out, sizeof(byte), 1, this->stream);
     this->seek(-offset - 1, SEEK_CUR);
     return out;
 }
