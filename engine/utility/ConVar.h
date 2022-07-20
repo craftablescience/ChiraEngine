@@ -99,11 +99,10 @@ private:
     ConVarValue value;
     std::string name;
     std::string description;
-    union {
-        std::function<void(bool)>  changedCallbackBool;
-        std::function<void(int)>   changedCallbackInt;
-        std::function<void(float)> changedCallbackFloat;
-    };
+
+    std::function<void(bool)>  changedCallbackBool  = [](bool)  {};
+    std::function<void(int)>   changedCallbackInt   = [](int)   {};
+    std::function<void(float)> changedCallbackFloat = [](float) {};
 };
 
 class ConVarReference {

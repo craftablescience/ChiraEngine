@@ -9,7 +9,7 @@ ConVar::ConVar(std::string name_, bool defaultValue, std::string description_, s
         : name(std::move(name_))
         , value(defaultValue)
         , description(std::move(description_))
-        , changedCallbackInt(std::move(onChanged)) {
+        , changedCallbackBool(std::move(onChanged)) {
     ConVarRegistry::registerConVar(this);
 }
 
