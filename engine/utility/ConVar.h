@@ -98,8 +98,8 @@ public:
 
     explicit operator std::string() const;
 private:
-    ConVarValue value;
     std::string name;
+    ConVarValue value;
     std::string description;
 
     std::function<void(bool)>  changedCallbackBool  = [](bool)  {};
