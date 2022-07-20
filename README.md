@@ -1,9 +1,12 @@
-# Chira Engine
-![Windows Workflow Status](https://img.shields.io/github/workflow/status/craftablescience/ChiraEngine/Build%20Engine?label=Builds%20and%20Tests)
-![License](https://img.shields.io/github/license/craftablescience/ChiraEngine?label=License)
-![Discord](https://img.shields.io/discord/678074864346857482?label=Discord&logo=Discord&logoColor=%23FFFFFF)
+<div align="center">
+  <img width="400px" src="https://github.com/craftablescience/ChiraEngine/blob/main/branding/github/readme_banner.png?raw=true" alt="Chira Engine"/>
 
-A fully customizable (and heavily work-in-progress) MIT-licensed game engine, written in C++20.
+  ![Windows Workflow Status](https://img.shields.io/github/workflow/status/craftablescience/ChiraEngine/Build%20Engine?label=Builds%20and%20Tests)
+  ![License](https://img.shields.io/github/license/craftablescience/ChiraEngine?label=License)
+  ![Discord](https://img.shields.io/discord/678074864346857482?label=Discord&logo=Discord&logoColor=%23FFFFFF)
+
+  A fully customizable (and heavily work-in-progress) MIT-licensed game engine, written in C++20.
+</div>
 
 ## Features
 To summarize the major features:
