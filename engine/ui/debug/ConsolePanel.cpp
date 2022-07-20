@@ -1,8 +1,7 @@
 #include "ConsolePanel.h"
 
-#include <cstring>
-#include <resource/Resource.h>
 #include <i18n/TranslationManager.h>
+#include <utility/String.h>
 
 using namespace chira;
 
@@ -26,50 +25,48 @@ ConsolePanel::ConsolePanel(ImVec2 windowSize) : IPanel(TR("ui.console.title"), f
                 break;
         }
     });
-    this->clearLog();
     this->autoScroll = true;
     this->font = Resource::getResource<FontResource>(TR("resource.font.console_font_path"));
 }
 
 ConsolePanel::~ConsolePanel() {
-    this->clearLog();
-    for (auto& i : this->history) {
-        free(i);
-    }
     Logger::removeCallback(this->loggingId);
 }
 
 void ConsolePanel::renderContents() {
     this->setTheme();
-    ImGui::Checkbox("Autoscroll", &this->autoScroll);
-    ImGui::Separator();
-    ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 
-    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1));
+    ImGui::Checkbox("Autoscroll", &this->autoScroll);
+
+    ImGui::Separator();
+
+    const float freeSpace = ImGui::GetFrameHeightWithSpacing() + (ImGui::GetStyle().ItemSpacing.y * 2);
+    ImGui::BeginChild("ScrollingRegion", {0, -freeSpace}, false, ImGuiWindowFlags_HorizontalScrollbar);
+
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{4, 1});
     ImGuiListClipper clipper;
-    clipper.Begin(this->items.size());
+    clipper.Begin(static_cast<int>(this->items.size()));
     while (clipper.Step()) {
         for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++) {
-            const char* item = this->items[i];
             ImVec4 color;
             bool has_color = false;
-            if (strstr(item, Logger::INFO_IMPORTANT_PREFIX.data())) {
+            if (String::startsWith(this->items[i], Logger::INFO_IMPORTANT_PREFIX)) {
                 color = ImVec4(0.13f, 0.77f, 0.13f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, Logger::OUTPUT_PREFIX.data())) {
+            } else if (String::startsWith(this->items[i], Logger::OUTPUT_PREFIX)) {
                 color = ImVec4(0.3f, 0.3f, 1.0f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, Logger::WARNING_PREFIX.data())) {
+            } else if (String::startsWith(this->items[i], Logger::WARNING_PREFIX)) {
                 color = ImVec4(1.0f, 0.84f, 0.0f, 1.0f);
                 has_color = true;
-            } else if (strstr(item, Logger::ERROR_PREFIX.data())) {
+            } else if (String::startsWith(this->items[i], Logger::ERROR_PREFIX)) {
                 color = ImVec4(1.0f, 0.2f, 0.2f, 1.0f);
                 has_color = true;
             }
             if (has_color) {
                 ImGui::PushStyleColor(ImGuiCol_Text, color);
             }
-            ImGui::TextUnformatted(item);
+            ImGui::TextUnformatted(this->items[i].c_str());
             if (has_color) {
                 ImGui::PopStyleColor();
             }
@@ -84,18 +81,33 @@ void ConsolePanel::renderContents() {
     }
 
     ImGui::EndChild();
+
+    ImGui::Separator();
+
+    ImGui::PushItemWidth(-1);
+    bool reclaimFocus = false; // only grab keyboard focus on Enter
+    char buf[1024] {0};
+    if (ImGui::InputText("CommandInput", buf, sizeof(buf), ImGuiInputTextFlags_EnterReturnsTrue)) {
+        reclaimFocus = true;
+    }
+    ImGui::PopItemWidth();
+
+    ImGui::SetItemDefaultFocus();
+    if (this->wasActivatedThisFrame() || reclaimFocus)
+        ImGui::SetKeyboardFocusHere(-1);
+
     this->resetTheme();
 }
 
-void ConsolePanel::clearLog() {
-    for (auto& item : this->items) {
-        free(item);
-    }
+void ConsolePanel::clear() {
     this->items.clear();
 }
 
 void ConsolePanel::addLog(const std::string& message) {
-    this->items.push_back(strdup(message.c_str()));
+    if (this->items.size() == ConsolePanel::MAX_ITEM_COUNT) {
+        this->items.pop_front();
+    }
+    this->items.push_back(message);
 }
 
 void ConsolePanel::setTheme() {

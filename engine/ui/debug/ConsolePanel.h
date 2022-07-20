@@ -1,5 +1,6 @@
 #pragma once
 
+#include <deque>
 #include <resource/FontResource.h>
 #include <utility/Logger.h>
 #include <ui/IPanel.h>
@@ -11,14 +12,15 @@ public:
     explicit ConsolePanel(ImVec2 windowSize = ImVec2{800, 600});
     ~ConsolePanel() override;
     void renderContents() override;
-    void clearLog();
+    void clear();
     void addLog(const std::string& message);
     void setTheme();
     void resetTheme() const;
+
+    static constexpr int MAX_ITEM_COUNT = 1024;
 private:
     SharedPointer<FontResource> font;
-    ImVector<char*> items;
-    ImVector<char*> history;
+    std::deque<std::string> items;
     bool autoScroll;
     uuids::uuid loggingId;
 };
