@@ -1,24 +1,24 @@
 [submodule "engine/thirdparty/discord"]
 	path = engine/thirdparty/discord
-	url = https://github.com/ChiraEngine/discord-rpc-clean
-[submodule "engine/thirdparty/glm"]
-	path = engine/thirdparty/glm
-	url = https://github.com/g-truc/glm
+	url = https://github.com/craftablescience/discord-rpc-clean
 [submodule "engine/thirdparty/fmt"]
 	path = engine/thirdparty/fmt
 	url = https://github.com/fmtlib/fmt
+[submodule "engine/thirdparty/glfw"]
+	path = engine/thirdparty/glfw
+	url = https://github.com/glfw/glfw
+[submodule "engine/thirdparty/glm"]
+	path = engine/thirdparty/glm
+	url = https://github.com/g-truc/glm
+[submodule "engine/thirdparty/imgui"]
+	path = engine/thirdparty/imgui
+	url = https://github.com/craftablescience/imgui-cmake
+[submodule "engine/thirdparty/json"]
+	path = engine/thirdparty/json
+	url = https://github.com/nlohmann/json
 [submodule "engine/thirdparty/libloader"]
 	path = engine/thirdparty/libloader
 	url = https://github.com/craftablescience/LibLoader
 [submodule "engine/thirdparty/stduuid"]
 	path = engine/thirdparty/stduuid
 	url = https://github.com/mariusbancila/stduuid
-[submodule "engine/thirdparty/glfw"]
-	path = engine/thirdparty/glfw
-	url = https://github.com/glfw/glfw
-[submodule "engine/thirdparty/json"]
-	path = engine/thirdparty/json
-	url = https://github.com/nlohmann/json
-[submodule "engine/thirdparty/imgui"]
-	path = engine/thirdparty/imgui
-	url = https://github.com/ChiraEngine/imgui
