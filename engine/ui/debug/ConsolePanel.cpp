@@ -1,6 +1,8 @@
 #include "ConsolePanel.h"
 
 #include <i18n/TranslationManager.h>
+#include <utility/ConCommand.h>
+#include <utility/ConVar.h>
 #include <utility/String.h>
 
 using namespace chira;
@@ -89,6 +91,7 @@ void ConsolePanel::renderContents() {
     char buf[1024] {0};
     if (ImGui::InputText("CommandInput", buf, sizeof(buf), ImGuiInputTextFlags_EnterReturnsTrue)) {
         reclaimFocus = true;
+        ConsolePanel::processConsoleMessage(buf);
     }
     ImGui::PopItemWidth();
 
@@ -123,4 +126,63 @@ void ConsolePanel::resetTheme() const {
     ImGui::PopStyleVar(1);
     ImGui::PopStyleColor(1);
     ImGui::PopFont();
+}
+
+void ConsolePanel::processConsoleMessage(std::string_view message) {
+    std::vector<std::string> input = String::split(message.data(), ' ');
+    if (!input.empty()) {
+        ConVarReference convar{input[0]};
+        if (convar.isValid()) {
+            if (input.size() >= 2) {
+                try {
+                    switch (convar->getType()) {
+                        case ConVarType::BOOLEAN:
+                            if (String::toLower(input[1]) == "true") {
+                                convar->setValue<bool>(true);
+                            } else if (String::toLower(input[1]) == "false") {
+                                convar->setValue<bool>(false);
+                            } else {
+                                convar->setValue<bool>(static_cast<bool>(std::stoi(input[1])));
+                            }
+                            break;
+                        case ConVarType::INTEGER:
+                            convar->setValue<int>(std::stoi(input[1]));
+                            break;
+                        case ConVarType::FLOAT:
+                            convar->setValue<float>(static_cast<float>(std::stof(input[1])));
+                            break;
+                    }
+                } catch (const std::invalid_argument &) {
+                    Logger::log(LogType::LOG_ERROR, "Console",
+                                std::string{"Cannot set value of \""} + convar->getName().data() + "\" to \"" +
+                                input[1] + "\"");
+                    return;
+                }
+            }
+            std::string logOutput{*convar};
+            logOutput += " = ";
+            switch (convar->getType()) {
+                case ConVarType::BOOLEAN:
+                    if (convar->getValue<bool>()) {
+                        logOutput += "true";
+                    } else {
+                        logOutput += "false";
+                    }
+                    break;
+                case ConVarType::INTEGER:
+                    logOutput += std::to_string(convar->getValue<int>());
+                    break;
+                case ConVarType::FLOAT:
+                    logOutput += std::to_string(convar->getValue<float>());
+                    break;
+            }
+            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", logOutput);
+        } else if (ConCommandRegistry::hasConCommand(input[0])) {
+            std::string name{input[0]};
+            input.erase(input.begin());
+            ConCommandRegistry::getConCommand(name)->fire(input);
+        } else {
+            Logger::log(LogType::LOG_INFO, "Console", message);
+        }
+    }
 }

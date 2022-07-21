@@ -19,6 +19,7 @@ public:
 
     static constexpr int MAX_ITEM_COUNT = 1024;
 private:
+    static void processConsoleMessage(std::string_view message);
     SharedPointer<FontResource> font;
     std::deque<std::string> items;
     bool autoScroll;
