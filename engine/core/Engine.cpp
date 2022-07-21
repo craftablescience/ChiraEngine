@@ -30,10 +30,11 @@ static ConCommand quit{"quit", "Quits the game or application.", [](const std::v
 [[maybe_unused]]
 static ConCommand crash{"crash", "Force-crashes the game or application (for debugging purposes).", [](const std::vector<std::string>&) { // NOLINT(cert-err58-cpp)
     throw std::runtime_error{"Called crash command!"};
-}};
+}, CONCOMMAND_FLAG_CHEAT};
 
 void Engine::preInit(std::string_view configPath) {
 #ifdef _WIN32
+    // Enable colored text in Windows console by setting encoding to UTF-8
     // #define CP_UTF8 65001 in windows.h
     system("chcp 65001 > nul");
 #endif

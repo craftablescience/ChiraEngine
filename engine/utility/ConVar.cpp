@@ -2,57 +2,75 @@
 
 #include <algorithm>
 #include <utility>
-#include <utility/Assertions.h>
+#include "Assertions.h"
 
 using namespace chira;
+
+// Create cheats convar
+[[maybe_unused]]
+static ConVar cheats{"cheats", false, "Unlocks certain commands that break gameplay."}; // NOLINT(cert-err58-cpp)
+
+namespace chira {
+
+bool areCheatsEnabled() {
+    return cheats.getValue<bool>();
+}
+
+} // namespace chira
 
 static constexpr const char* NO_DESCRIPTION = "No description provided.";
 static constexpr const char* CONVAR_ALREADY_EXISTS = "This convar already exists, use a ConVarReference! This will cause problems...";
 
-ConVar::ConVar(std::string name_, bool defaultValue, std::function<void(bool)> onChanged)
+ConVar::ConVar(std::string name_, bool defaultValue, int flags_, std::function<void(bool)> onChanged)
     : name(std::move(name_))
     , value(defaultValue)
     , description(NO_DESCRIPTION)
+    , flags(flags_)
     , changedCallbackBool(std::move(onChanged)) {
     runtime_assert(ConVarRegistry::registerConVar(this), CONVAR_ALREADY_EXISTS);
 }
 
-ConVar::ConVar(std::string name_, int defaultValue, std::function<void(int)> onChanged)
+ConVar::ConVar(std::string name_, int defaultValue, int flags_, std::function<void(int)> onChanged)
     : name(std::move(name_))
     , value(defaultValue)
     , description(NO_DESCRIPTION)
+    , flags(flags_)
     , changedCallbackInt(std::move(onChanged)) {
     runtime_assert(ConVarRegistry::registerConVar(this), CONVAR_ALREADY_EXISTS);
 }
 
-ConVar::ConVar(std::string name_, float defaultValue, std::function<void(float)> onChanged)
+ConVar::ConVar(std::string name_, float defaultValue, int flags_, std::function<void(float)> onChanged)
     : name(std::move(name_))
     , value(defaultValue)
     , description(NO_DESCRIPTION)
+    , flags(flags_)
     , changedCallbackFloat(std::move(onChanged)) {
     runtime_assert(ConVarRegistry::registerConVar(this), CONVAR_ALREADY_EXISTS);
 }
 
-ConVar::ConVar(std::string name_, bool defaultValue, std::string description_, std::function<void(bool)> onChanged)
+ConVar::ConVar(std::string name_, bool defaultValue, std::string description_, int flags_, std::function<void(bool)> onChanged)
     : name(std::move(name_))
     , value(defaultValue)
     , description(std::move(description_))
+    , flags(flags_)
     , changedCallbackBool(std::move(onChanged)) {
     runtime_assert(ConVarRegistry::registerConVar(this), CONVAR_ALREADY_EXISTS);
 }
 
-ConVar::ConVar(std::string name_, int defaultValue, std::string description_, std::function<void(int)> onChanged)
+ConVar::ConVar(std::string name_, int defaultValue, std::string description_, int flags_, std::function<void(int)> onChanged)
     : name(std::move(name_))
     , value(defaultValue)
     , description(std::move(description_))
+    , flags(flags_)
     , changedCallbackInt(std::move(onChanged)) {
     runtime_assert(ConVarRegistry::registerConVar(this), CONVAR_ALREADY_EXISTS);
 }
 
-ConVar::ConVar(std::string name_, float defaultValue, std::string description_, std::function<void(float)> onChanged)
+ConVar::ConVar(std::string name_, float defaultValue, std::string description_, int flags_, std::function<void(float)> onChanged)
     : name(std::move(name_))
     , value(defaultValue)
     , description(std::move(description_))
+    , flags(flags_)
     , changedCallbackFloat(std::move(onChanged)) {
     runtime_assert(ConVarRegistry::registerConVar(this), CONVAR_ALREADY_EXISTS);
 }
@@ -71,6 +89,10 @@ std::string_view ConVar::getName() const {
 
 std::string_view ConVar::getDescription() const {
     return this->description;
+}
+
+bool ConVar::hasFlag(ConVarFlags flag) const {
+    return (this->flags & static_cast<int>(flag)) == static_cast<int>(flag);
 }
 
 ConVar::operator std::string() const {

@@ -5,8 +5,16 @@
 #include <functional>
 #include <type_traits>
 #include <vector>
+#include "Logger.h"
 
 namespace chira {
+
+[[nodiscard]] bool areCheatsEnabled();
+
+enum ConVarFlags {
+    CONVAR_FLAG_NONE  = 1 << 0,
+    CONVAR_FLAG_CHEAT = 1 << 1,
+};
 
 enum class ConVarType {
     BOOLEAN,
@@ -28,17 +36,18 @@ class ConVar {
         explicit ConVarValue(float value) : valueFloat(value), type(ConVarType::FLOAT)   {}
     };
 public:
-    ConVar(std::string name_, bool  defaultValue, std::function<void(bool)>  onChanged = [](bool)  {});
-    ConVar(std::string name_, int   defaultValue, std::function<void(int)>   onChanged = [](int)   {});
-    ConVar(std::string name_, float defaultValue, std::function<void(float)> onChanged = [](float) {});
-    ConVar(std::string name_, bool  defaultValue, std::string description_, std::function<void(bool)>  onChanged = [](bool)  {});
-    ConVar(std::string name_, int   defaultValue, std::string description_, std::function<void(int)>   onChanged = [](int)   {});
-    ConVar(std::string name_, float defaultValue, std::string description_, std::function<void(float)> onChanged = [](float) {});
+    ConVar(std::string name_, bool  defaultValue, int flags_ = CONVAR_FLAG_NONE, std::function<void(bool)>  onChanged = [](bool)  {});
+    ConVar(std::string name_, int   defaultValue, int flags_ = CONVAR_FLAG_NONE, std::function<void(int)>   onChanged = [](int)   {});
+    ConVar(std::string name_, float defaultValue, int flags_ = CONVAR_FLAG_NONE, std::function<void(float)> onChanged = [](float) {});
+    ConVar(std::string name_, bool  defaultValue, std::string description_, int flags_ = CONVAR_FLAG_NONE, std::function<void(bool)>  onChanged = [](bool)  {});
+    ConVar(std::string name_, int   defaultValue, std::string description_, int flags_ = CONVAR_FLAG_NONE, std::function<void(int)>   onChanged = [](int)   {});
+    ConVar(std::string name_, float defaultValue, std::string description_, int flags_ = CONVAR_FLAG_NONE, std::function<void(float)> onChanged = [](float) {});
     ~ConVar();
 
     [[nodiscard]] ConVarType getType() const;
     [[nodiscard]] std::string_view getName() const;
     [[nodiscard]] std::string_view getDescription() const;
+    [[nodiscard]] bool hasFlag(ConVarFlags flag) const;
 
     template<typename T>
     requires std::is_same_v<T, bool> || std::is_same_v<T, int> || std::is_same_v<T, float>
@@ -77,6 +86,10 @@ public:
     template<typename T>
     requires std::is_same_v<T, bool> || std::is_same_v<T, int> || std::is_same_v<T, float>
     void setValue(T newValue) {
+        if (this->hasFlag(CONVAR_FLAG_CHEAT) && !areCheatsEnabled()) {
+            Logger::log(LogType::LOG_ERROR, "ConVar", "Cannot set value of cheat-protected convar with cheats disabled.");
+            return;
+        }
         switch (this->value.type) {
             case ConVarType::BOOLEAN: {
                 bool convertedValue = static_cast<T>(newValue);
@@ -104,6 +117,7 @@ private:
     std::string name;
     ConVarValue value;
     std::string description;
+    int flags;
 
     std::function<void(bool)>  changedCallbackBool  = [](bool)  {};
     std::function<void(int)>   changedCallbackInt   = [](int)   {};

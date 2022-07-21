@@ -15,21 +15,21 @@ TEST(ConVar, createConVar) {
 TEST(ConVar, useConVarSetValueCallback) {
     bool check_bool = false, check_int = false, check_float = false;
 
-    ConVar my_convar_bool{"my_convar_bool", true, "", [&check_bool](bool newValue) {
+    ConVar my_convar_bool{"my_convar_bool", true, CONVAR_FLAG_NONE, [&check_bool](bool newValue) {
         check_bool = true;
     }};
     my_convar_bool.setValue(false);
     EXPECT_FALSE(my_convar_bool.getValue<bool>());
     EXPECT_TRUE(check_bool);
 
-    ConVar my_convar_int{"my_convar_int", 2, "", [&check_int](int newValue) {
+    ConVar my_convar_int{"my_convar_int", 2, CONVAR_FLAG_NONE, [&check_int](int newValue) {
         check_int = true;
     }};
     my_convar_int.setValue(3);
     EXPECT_EQ(my_convar_int.getValue<int>(), 3);
     EXPECT_TRUE(check_int);
 
-    ConVar my_convar_float{"my_convar_float", 4.5f, "", [&check_float](float newValue) {
+    ConVar my_convar_float{"my_convar_float", 4.5f, CONVAR_FLAG_NONE, [&check_float](float newValue) {
         check_float = true;
     }};
     my_convar_float.setValue(2.5f);
@@ -83,6 +83,19 @@ TEST(ConVar, typeConversionsSetter) {
     EXPECT_FLOAT_EQ(my_convar_float.getValue<float>(), 0.f);
     my_convar_float.setValue(4);
     EXPECT_FLOAT_EQ(my_convar_float.getValue<float>(), 4.f);
+}
+
+TEST(ConVar, cheatConVar) {
+    ConVar my_cheat_convar{"my_cheat_convar", false, CONVAR_FLAG_CHEAT};
+    ASSERT_FALSE(areCheatsEnabled());
+
+    my_cheat_convar.setValue(true);
+    ASSERT_FALSE(my_cheat_convar.getValue<bool>());
+
+    ConVarReference cheats{"cheats"};
+    cheats->setValue(true);
+    my_cheat_convar.setValue(true);
+    ASSERT_TRUE(my_cheat_convar.getValue<bool>());
 }
 
 TEST(ConVarReference, useExistingConVar) {
