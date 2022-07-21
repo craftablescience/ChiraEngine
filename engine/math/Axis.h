@@ -7,7 +7,7 @@ namespace chira {
 enum class Axis {
     X,
     Y,
-    Z
+    Z,
 };
 
 enum class SignedAxis {
@@ -16,7 +16,7 @@ enum class SignedAxis {
     YP,
     YN,
     ZP,
-    ZN
+    ZN,
 };
 
 Axis getAxisFromString(std::string_view str);
