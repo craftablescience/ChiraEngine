@@ -1,8 +1,11 @@
 #include "Logger.h"
 
 #include <iostream>
+#include "ConVar.h"
 
 using namespace chira;
+
+static ConVar log_print_source{"log_print_source", true, "Prints the source of a console message."}; // NOLINT(cert-err58-cpp)
 
 // Using std::endl here instead of '\n' in debug
 // sometimes with '\n', the buffer doesn't get flushed until the application exits
@@ -13,21 +16,27 @@ using namespace chira;
 #endif
 
 void Logger::log(LogType type, std::string_view source, std::string_view message) {
+    std::string logSource{};
+    if (log_print_source.getValue<bool>()) {
+        logSource += "[";
+        logSource += source.data();
+        logSource += "]";
+    }
     switch (type) {
         case LOG_INFO:
-            std::cout << Logger::INFO_PREFIX << "[" << source << "] " << message << CHIRA_LOGGER_SUFFIX;
+            std::cout << Logger::INFO_PREFIX << logSource << " " << message << CHIRA_LOGGER_SUFFIX;
             break;
         case LOG_INFO_IMPORTANT:
-            std::cout << "\x1B[32m" << Logger::INFO_IMPORTANT_PREFIX << "[" << source << "] " << message << "\033[0m" << CHIRA_LOGGER_SUFFIX;
+            std::cout << "\x1B[32m" << Logger::INFO_IMPORTANT_PREFIX << logSource << " " << message << "\033[0m" << CHIRA_LOGGER_SUFFIX;
             break;
         case LOG_OUTPUT:
-            std::cout << "\x1B[34m" << Logger::OUTPUT_PREFIX << "[" << source << "] " << message << "\033[0m" << CHIRA_LOGGER_SUFFIX;
+            std::cout << "\x1B[34m" << Logger::OUTPUT_PREFIX << logSource << " " << message << "\033[0m" << CHIRA_LOGGER_SUFFIX;
             break;
         case LOG_WARNING:
-            std::cout << "\x1B[33m" << Logger::WARNING_PREFIX << "[" << source << "] " << message << "\033[0m" << CHIRA_LOGGER_SUFFIX;
+            std::cout << "\x1B[33m" << Logger::WARNING_PREFIX << logSource << " " << message << "\033[0m" << CHIRA_LOGGER_SUFFIX;
             break;
         case LOG_ERROR:
-            std::cout << "\x1B[31m" << Logger::ERROR_PREFIX << "[" << source << "] " << message << "\033[0m" << CHIRA_LOGGER_SUFFIX;
+            std::cout << "\x1B[31m" << Logger::ERROR_PREFIX << logSource << " " << message << "\033[0m" << CHIRA_LOGGER_SUFFIX;
             break;
     }
     Logger::runLogHooks(type, source, message);

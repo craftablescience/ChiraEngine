@@ -7,23 +7,62 @@
 
 using namespace chira;
 
+[[maybe_unused]]
+static ConCommand info{"info", "Prints the description of the given convars or concommands.", [](const std::vector<std::string>& args) { // NOLINT(cert-err58-cpp)
+    for (const auto& name : args) {
+        if (ConVarRegistry::hasConVar(name)) {
+            ConVarReference convar{name};
+            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*convar} + " - " + convar->getDescription().data());
+        } else if (ConCommandRegistry::hasConCommand(name)) {
+            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", name + ": function - " + ConCommandRegistry::getConCommand(name)->getDescription().data());
+        }
+    }
+}};
+
+[[maybe_unused]]
+static ConCommand con_entries{"con_entries", "Prints the description of every convar and concommand currently registered.", [](const std::vector<std::string>&) { // NOLINT(cert-err58-cpp)
+    const auto convarList = ConVarRegistry::getConVarList();
+    const auto concommandList = ConCommandRegistry::getConCommandList();
+
+    std::vector<std::string> fullList;
+    std::move(convarList.begin(), convarList.end(), std::back_inserter(fullList));
+    std::move(concommandList.begin(), concommandList.end(), std::back_inserter(fullList));
+    std::sort(fullList.begin(), fullList.end());
+
+    for (const auto& name : fullList) {
+        if (ConVarRegistry::hasConVar(name)) {
+            ConVarReference convar{name};
+            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*convar} + " - " + convar->getDescription().data());
+        } else if (ConCommandRegistry::hasConCommand(name)) {
+            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", name + ": function - " + ConCommandRegistry::getConCommand(name)->getDescription().data());
+        }
+    }
+}};
+
 ConsolePanel::ConsolePanel(ImVec2 windowSize) : IPanel(TR("ui.console.title"), false, windowSize) {
     this->loggingId = Logger::addCallback([&](LogType type, std::string_view source, std::string_view message) {
+        static ConVarReference log_print_source{"log_print_source"};
+        std::string logSource{};
+        if (log_print_source.isValid() && log_print_source->getValue<bool>()) {
+            logSource += "[";
+            logSource += source.data();
+            logSource += "]";
+        }
         switch (type) {
             case LogType::LOG_INFO:
-                this->addLog(std::string{Logger::INFO_PREFIX} + "[" + source.data() + "] " + message.data());
+                this->addLog(std::string{Logger::INFO_PREFIX} + logSource + " " + message.data());
                 break;
             case LogType::LOG_INFO_IMPORTANT:
-                this->addLog(std::string{Logger::INFO_IMPORTANT_PREFIX} + "[" + source.data() + "] " + message.data());
+                this->addLog(std::string{Logger::INFO_IMPORTANT_PREFIX} + logSource + " " + message.data());
                 break;
             case LogType::LOG_OUTPUT:
-                this->addLog(std::string{Logger::OUTPUT_PREFIX} + "[" + source.data() + "] " + message.data());
+                this->addLog(std::string{Logger::OUTPUT_PREFIX} + logSource + " " + message.data());
                 break;
             case LogType::LOG_WARNING:
-                this->addLog(std::string{Logger::WARNING_PREFIX} + "[" + source.data() + "] " + message.data());
+                this->addLog(std::string{Logger::WARNING_PREFIX} + logSource + " " + message.data());
                 break;
             case LogType::LOG_ERROR:
-                this->addLog(std::string{Logger::ERROR_PREFIX} + "[" + source.data() + "] " + message.data());
+                this->addLog(std::string{Logger::ERROR_PREFIX} + logSource + " " + message.data());
                 break;
         }
     });

@@ -14,12 +14,18 @@
 #include <script/AngelScriptVM.h>
 #include <ui/debug/ConsolePanel.h>
 #include <ui/debug/ResourceUsageTrackerPanel.h>
+#include <utility/ConCommand.h>
 
 #ifdef CHIRA_USE_STEAMWORKS
     #include <hook/SteamAPI.h>
 #endif
 
 using namespace chira;
+
+[[maybe_unused]]
+static ConCommand quit{"quit", "Quits the game or application.", [](const std::vector<std::string>&) { // NOLINT(cert-err58-cpp)
+    Engine::getWindow()->shouldStopAfterThisFrame(true);
+}};
 
 void Engine::preInit(std::string_view configPath) {
 #ifdef _WIN32
