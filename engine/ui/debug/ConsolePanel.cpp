@@ -32,9 +32,13 @@ static ConCommand con_entries{"con_entries", "Prints the description of every co
     for (const auto& name : fullList) {
         if (ConVarRegistry::hasConVar(name)) {
             ConVarReference convar{name};
-            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*convar} + " - " + convar->getDescription().data());
+            if (!convar->hasFlag(CONVAR_FLAG_HIDDEN)) {
+                Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*convar} + " - " + convar->getDescription().data());
+            }
         } else if (ConCommandRegistry::hasConCommand(name)) {
-            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", name + ": function - " + ConCommandRegistry::getConCommand(name)->getDescription().data());
+            if (const auto* concommand = ConCommandRegistry::getConCommand(name); !concommand->hasFlag(CONCOMMAND_FLAG_HIDDEN)) {
+                Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", name + ": function - " + concommand->getDescription().data());
+            }
         }
     }
 }};

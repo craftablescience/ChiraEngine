@@ -9,8 +9,9 @@ namespace chira {
 
 //todo: cache cvars
 enum ConCommandFlags {
-    CONCOMMAND_FLAG_NONE  = 1 << 0,
-    CONCOMMAND_FLAG_CHEAT = 1 << 1,
+    CONCOMMAND_FLAG_NONE   = 1 << 0, // None
+    CONCOMMAND_FLAG_CHEAT  = 1 << 1, // Cheat-protected
+    CONCOMMAND_FLAG_HIDDEN = 1 << 2, // Doesn't show up in search
 };
 
 class ConCommand {

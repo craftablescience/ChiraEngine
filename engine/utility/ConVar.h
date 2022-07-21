@@ -12,8 +12,9 @@ namespace chira {
 [[nodiscard]] bool areCheatsEnabled();
 
 enum ConVarFlags {
-    CONVAR_FLAG_NONE  = 1 << 0,
-    CONVAR_FLAG_CHEAT = 1 << 1,
+    CONVAR_FLAG_NONE   = 1 << 0, // None
+    CONVAR_FLAG_CHEAT  = 1 << 1, // Cheat-protected
+    CONVAR_FLAG_HIDDEN = 1 << 2, // Doesn't show up in search
 };
 
 enum class ConVarType {
