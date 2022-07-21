@@ -5,6 +5,7 @@
 #include <functional>
 #include <type_traits>
 #include <vector>
+#include <loader/settings/JSONSettingsLoader.h>
 #include "Logger.h"
 
 namespace chira {
@@ -15,6 +16,7 @@ enum ConVarFlags {
     CONVAR_FLAG_NONE   = 1 << 0, // None
     CONVAR_FLAG_CHEAT  = 1 << 1, // Cheat-protected
     CONVAR_FLAG_HIDDEN = 1 << 2, // Doesn't show up in search
+    CONVAR_FLAG_CACHE  = 1 << 3, // Value is saved at exit and loaded at next start
 };
 
 enum class ConVarType {
@@ -145,6 +147,7 @@ public:
     [[nodiscard]] static std::vector<std::string> getConVarList();
 private:
     static std::vector<ConVar*>& getConVars();
+    static JSONSettingsLoader& getConVarCache();
     static bool registerConVar(ConVar* convar);
     static void deregisterConVar(ConVar* convar);
     [[nodiscard]] static ConVar* getConVar(std::string_view name);

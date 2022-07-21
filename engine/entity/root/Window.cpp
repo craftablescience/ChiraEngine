@@ -41,7 +41,7 @@ bool Window::createGLFWWindow(std::string_view title) {
         glfwSetWindowMonitor(this->window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
     else {
         bool startMaximized = true;
-        Engine::getSettings()->getValue("graphics", "start_maximized", &startMaximized);
+        Engine::getSettings()->getValue("start_maximized", &startMaximized);
         if (startMaximized)
             glfwMaximizeWindow(this->window);
     }
@@ -59,7 +59,7 @@ bool Window::createGLFWWindow(std::string_view title) {
     glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GLFW_TRUE);
     glfwSetInputMode(this->window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
     bool rawMouseMotion = false;
-    Engine::getSettings()->getValue("input", "raw_mouse_motion", &rawMouseMotion);
+    Engine::getSettings()->getValue("raw_mouse_motion", &rawMouseMotion);
     if (glfwRawMouseMotionSupported() && rawMouseMotion)
         glfwSetInputMode(this->window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 

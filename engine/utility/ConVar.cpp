@@ -152,15 +152,60 @@ std::vector<ConVar*>& ConVarRegistry::getConVars() {
     return convars;
 }
 
+JSONSettingsLoader& ConVarRegistry::getConVarCache() {
+    static JSONSettingsLoader convarCache{"cache.json"};
+    return convarCache;
+}
+
 bool ConVarRegistry::registerConVar(ConVar* convar) {
     if (!ConVarRegistry::hasConVar(convar->getName())) {
         ConVarRegistry::getConVars().push_back(convar);
+        if (convar->hasFlag(CONVAR_FLAG_CACHE) && ConVarRegistry::getConVarCache().hasValue(convar->getName().data())) {
+            // There's an entry for the convar in cache, load it
+            switch (convar->getType()) {
+                case ConVarType::BOOLEAN: {
+                    bool value = convar->getValue<bool>();
+                    ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+                    convar->setValue(value);
+                    break;
+                }
+                case ConVarType::INTEGER: {
+                    int value = convar->getValue<int>();
+                    ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+                    convar->setValue(value);
+                    break;
+                }
+                case ConVarType::FLOAT: {
+                    // json settings loader works in doubles
+                    double value = convar->getValue<float>();
+                    ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+                    convar->setValue(static_cast<float>(value));
+                    break;
+                }
+            }
+        }
         return true;
     }
     return false;
 }
 
 void ConVarRegistry::deregisterConVar(ConVar* convar) {
+    // Cache it!
+    if (convar->hasFlag(CONVAR_FLAG_CACHE)) {
+        switch (convar->getType()) {
+            case ConVarType::BOOLEAN:
+                ConVarRegistry::getConVarCache().setValue(convar->getName().data(), convar->getValue<bool>(), true, true);
+                break;
+            case ConVarType::INTEGER:
+                ConVarRegistry::getConVarCache().setValue(convar->getName().data(), convar->getValue<int>(), true, true);
+                break;
+            case ConVarType::FLOAT:
+                ConVarRegistry::getConVarCache().setValue(convar->getName().data(), convar->getValue<float>(), true, true);
+                break;
+        }
+    }
+
+    // Erase it!
     ConVarRegistry::getConVars().erase(std::remove_if(ConVarRegistry::getConVars().begin(), ConVarRegistry::getConVars().end(), [convar](ConVar* other) {
         return convar->getName() == other->getName();
     }), ConVarRegistry::getConVars().end());
