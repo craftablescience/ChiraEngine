@@ -2,31 +2,59 @@
 
 #include <algorithm>
 #include <utility>
+#include <utility/Assertions.h>
 
 using namespace chira;
 
+static constexpr const char* NO_DESCRIPTION = "No description provided.";
+static constexpr const char* CONVAR_ALREADY_EXISTS = "This convar already exists, use a ConVarReference! This will cause problems...";
+
+ConVar::ConVar(std::string name_, bool defaultValue, std::function<void(bool)> onChanged)
+    : name(std::move(name_))
+    , value(defaultValue)
+    , description(NO_DESCRIPTION)
+    , changedCallbackBool(std::move(onChanged)) {
+    runtime_assert(ConVarRegistry::registerConVar(this), CONVAR_ALREADY_EXISTS);
+}
+
+ConVar::ConVar(std::string name_, int defaultValue, std::function<void(int)> onChanged)
+    : name(std::move(name_))
+    , value(defaultValue)
+    , description(NO_DESCRIPTION)
+    , changedCallbackInt(std::move(onChanged)) {
+    runtime_assert(ConVarRegistry::registerConVar(this), CONVAR_ALREADY_EXISTS);
+}
+
+ConVar::ConVar(std::string name_, float defaultValue, std::function<void(float)> onChanged)
+    : name(std::move(name_))
+    , value(defaultValue)
+    , description(NO_DESCRIPTION)
+    , changedCallbackFloat(std::move(onChanged)) {
+    runtime_assert(ConVarRegistry::registerConVar(this), CONVAR_ALREADY_EXISTS);
+}
+
 ConVar::ConVar(std::string name_, bool defaultValue, std::string description_, std::function<void(bool)> onChanged)
-        : name(std::move(name_))
-        , value(defaultValue)
-        , description(std::move(description_))
-        , changedCallbackBool(std::move(onChanged)) {
-    ConVarRegistry::registerConVar(this);
+    : name(std::move(name_))
+    , value(defaultValue)
+    , description(std::move(description_))
+    , changedCallbackBool(std::move(onChanged)) {
+    runtime_assert(ConVarRegistry::registerConVar(this), CONVAR_ALREADY_EXISTS);
 }
 
 ConVar::ConVar(std::string name_, int defaultValue, std::string description_, std::function<void(int)> onChanged)
-        : name(std::move(name_))
-        , value(defaultValue)
-        , description(std::move(description_))
-        , changedCallbackInt(std::move(onChanged)) {
-    ConVarRegistry::registerConVar(this);
+    : name(std::move(name_))
+    , value(defaultValue)
+    , description(std::move(description_))
+    , changedCallbackInt(std::move(onChanged)) {
+    runtime_assert(ConVarRegistry::registerConVar(this), CONVAR_ALREADY_EXISTS);
 }
 
 ConVar::ConVar(std::string name_, float defaultValue, std::string description_, std::function<void(float)> onChanged)
-        : name(std::move(name_))
-        , value(defaultValue)
-        , description(std::move(description_))
-        , changedCallbackFloat(std::move(onChanged)) {
-    ConVarRegistry::registerConVar(this);
+    : name(std::move(name_))
+    , value(defaultValue)
+    , description(std::move(description_))
+    , changedCallbackFloat(std::move(onChanged)) {
+    runtime_assert(ConVarRegistry::registerConVar(this), CONVAR_ALREADY_EXISTS);
 }
 
 ConVar::~ConVar() {
@@ -62,44 +90,6 @@ ConVar::operator std::string() const {
     return out;
 }
 
-bool ConVarRegistry::hasConVar(std::string_view name) {
-    for (const auto* convar : ConVarRegistry::convars) {
-        if (convar->getName() == name) {
-            return true;
-        }
-    }
-    return false;
-}
-
-std::vector<std::string> ConVarRegistry::getConVarList() {
-    std::vector<std::string> out;
-    for (const auto* convar : ConVarRegistry::convars) {
-        out.emplace_back(convar->getName().data());
-    }
-    return out;
-}
-
-void ConVarRegistry::registerConVar(ConVar* convar) {
-    if (!ConVarRegistry::hasConVar(convar->getName())) {
-        ConVarRegistry::convars.push_back(convar);
-    }
-}
-
-void ConVarRegistry::deregisterConVar(ConVar* convar) {
-    ConVarRegistry::convars.erase(std::remove_if(ConVarRegistry::convars.begin(), ConVarRegistry::convars.end(), [convar](ConVar* other) {
-        return convar->getName() == other->getName();
-    }), ConVarRegistry::convars.end());
-}
-
-ConVar* ConVarRegistry::getConVar(std::string_view name) {
-    for (auto* convar : ConVarRegistry::convars) {
-        if (convar->getName() == name) {
-            return convar;
-        }
-    }
-    return nullptr;
-}
-
 ConVarReference::ConVarReference(std::string name_) : name(std::move(name_)) {}
 
 ConVar& ConVarReference::operator*() const {
@@ -112,4 +102,53 @@ ConVar* ConVarReference::operator->() const {
 
 ConVar* ConVarReference::get() const {
     return ConVarRegistry::getConVar(this->name);
+}
+
+bool ConVarReference::isValid() const {
+    return ConVarRegistry::hasConVar(this->name);
+}
+
+bool ConVarRegistry::hasConVar(std::string_view name) {
+    for (const auto* convar : ConVarRegistry::getConVars()) {
+        if (convar->getName() == name) {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::vector<std::string> ConVarRegistry::getConVarList() {
+    std::vector<std::string> out;
+    for (const auto* convar : ConVarRegistry::getConVars()) {
+        out.emplace_back(convar->getName().data());
+    }
+    return out;
+}
+
+std::vector<ConVar*>& ConVarRegistry::getConVars() {
+    static std::vector<ConVar*> convars;
+    return convars;
+}
+
+bool ConVarRegistry::registerConVar(ConVar* convar) {
+    if (!ConVarRegistry::hasConVar(convar->getName())) {
+        ConVarRegistry::getConVars().push_back(convar);
+        return true;
+    }
+    return false;
+}
+
+void ConVarRegistry::deregisterConVar(ConVar* convar) {
+    ConVarRegistry::getConVars().erase(std::remove_if(ConVarRegistry::getConVars().begin(), ConVarRegistry::getConVars().end(), [convar](ConVar* other) {
+        return convar->getName() == other->getName();
+    }), ConVarRegistry::getConVars().end());
+}
+
+ConVar* ConVarRegistry::getConVar(std::string_view name) {
+    for (auto* convar : ConVarRegistry::getConVars()) {
+        if (convar->getName() == name) {
+            return convar;
+        }
+    }
+    return nullptr;
 }

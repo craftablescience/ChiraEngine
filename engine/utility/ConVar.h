@@ -28,9 +28,12 @@ class ConVar {
         explicit ConVarValue(float value) : valueFloat(value), type(ConVarType::FLOAT)   {}
     };
 public:
-    ConVar(std::string name_, bool  defaultValue, std::string description_ = "", std::function<void(bool)>  onChanged = [](bool)  {});
-    ConVar(std::string name_, int   defaultValue, std::string description_ = "", std::function<void(int)>   onChanged = [](int)   {});
-    ConVar(std::string name_, float defaultValue, std::string description_ = "", std::function<void(float)> onChanged = [](float) {});
+    ConVar(std::string name_, bool  defaultValue, std::function<void(bool)>  onChanged = [](bool)  {});
+    ConVar(std::string name_, int   defaultValue, std::function<void(int)>   onChanged = [](int)   {});
+    ConVar(std::string name_, float defaultValue, std::function<void(float)> onChanged = [](float) {});
+    ConVar(std::string name_, bool  defaultValue, std::string description_, std::function<void(bool)>  onChanged = [](bool)  {});
+    ConVar(std::string name_, int   defaultValue, std::string description_, std::function<void(int)>   onChanged = [](int)   {});
+    ConVar(std::string name_, float defaultValue, std::string description_, std::function<void(float)> onChanged = [](float) {});
     ~ConVar();
 
     [[nodiscard]] ConVarType getType() const;
@@ -113,6 +116,7 @@ public:
     ConVar& operator*() const;
     ConVar* operator->() const;
     [[nodiscard]] ConVar* get() const;
+    [[nodiscard]] bool isValid() const;
 private:
     std::string name;
 };
@@ -125,8 +129,8 @@ public:
     [[nodiscard]] static bool hasConVar(std::string_view name);
     [[nodiscard]] static std::vector<std::string> getConVarList();
 private:
-    static inline std::vector<ConVar*> convars;
-    static void registerConVar(ConVar* convar);
+    static std::vector<ConVar*>& getConVars();
+    static bool registerConVar(ConVar* convar);
     static void deregisterConVar(ConVar* convar);
     [[nodiscard]] static ConVar* getConVar(std::string_view name);
 };
