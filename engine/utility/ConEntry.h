@@ -13,10 +13,11 @@
 namespace chira {
 
 enum ConFlags {
-    CON_FLAG_NONE   = 1 << 0, // None
-    CON_FLAG_CHEAT  = 1 << 1, // Cheat-protected
-    CON_FLAG_HIDDEN = 1 << 2, // Doesn't show up in search
-    CON_FLAG_CACHE  = 1 << 3, // Value is saved at exit and loaded at start (useless for commands)
+    CON_FLAG_NONE     = 1 << 0, // None
+    CON_FLAG_CHEAT    = 1 << 1, // Cheat-protected
+    CON_FLAG_HIDDEN   = 1 << 2, // Doesn't show up in search
+    CON_FLAG_CACHE    = 1 << 3, // Value is saved at exit and loaded at start (useless for concommands)
+    CON_FLAG_READONLY = 1 << 4, // ConVar cannot be changed in the CONSOLE. Still modifiable in code (useless for concommands)
 };
 
 class ConCommand {

@@ -178,6 +178,10 @@ void ConsolePanel::processConsoleMessage(std::string_view message) {
         } else if (ConVarRegistry::hasConVar(input[0])) {
             auto* convar = ConVarRegistry::getConVar(input[0]);
             if (input.size() >= 2) {
+                if (convar->hasFlag(CON_FLAG_READONLY)) {
+                    Logger::log(LogType::LOG_ERROR, "Console", std::string{"Cannot set value of readonly convar \""} + convar->getName().data() + "\"!");
+                    return;
+                }
                 try {
                     switch (convar->getType()) {
                         case ConVarType::BOOLEAN:
