@@ -132,7 +132,7 @@ private:
 };
 
 int main() {
-    Engine::preInit("editor_config.json");
+    Engine::preInit();
     Resource::addResourceProvider(new FilesystemResourceProvider{"editor"});
     TranslationManager::addTranslationFile("file://i18n/editor");
     Engine::init();

@@ -6,6 +6,40 @@
 
 using namespace chira;
 
+[[maybe_unused]]
+static ConCommand info{"info", "Prints the description of the given convar(s) or concommand(s).", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
+    for (const auto& name : args) {
+        if (ConCommandRegistry::hasConCommand(name)) {
+            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*ConCommandRegistry::getConCommand(name)});
+        } else if (ConVarRegistry::hasConVar(name)) {
+            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*ConVarRegistry::getConVar(name)});
+        }
+    }
+}};
+
+[[maybe_unused]]
+static ConCommand con_entries{"con_entries", "Prints the description of every convar and concommand currently registered.", [] { // NOLINT(cert-err58-cpp)
+    const auto concommandList = ConCommandRegistry::getConCommandList();
+    const auto convarList = ConVarRegistry::getConVarList();
+
+    std::vector<std::string> fullList;
+    std::move(concommandList.begin(), concommandList.end(), std::back_inserter(fullList));
+    std::move(convarList.begin(), convarList.end(), std::back_inserter(fullList));
+    std::sort(fullList.begin(), fullList.end());
+
+    for (const auto& name : fullList) {
+        if (ConCommandRegistry::hasConCommand(name)) {
+            if (const auto* concommand = ConCommandRegistry::getConCommand(name); !concommand->hasFlag(CON_FLAG_HIDDEN)) {
+                Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*concommand});
+            }
+        } else if (ConVarRegistry::hasConVar(name)) {
+            if (const auto* convar = ConVarRegistry::getConVar(name); !convar->hasFlag(CON_FLAG_HIDDEN)) {
+                Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*convar});
+            }
+        }
+    }
+}};
+
 ConCommand::ConCommand(std::string name_, const std::function<void()>& callback_, int flags_)
     : ConCommand(std::move(name_), "No description provided.", callback_, flags_) {}
 

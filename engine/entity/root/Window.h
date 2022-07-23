@@ -30,6 +30,7 @@ public:
     [[nodiscard]] bool isMouseCaptured() const;
     [[nodiscard]] bool isIconified() const;
     void setVisible(bool visibility) override;
+    void setFullscreen(bool goFullscreen) const;
     /// Note: Images must have a bit depth of 8
     void setIcon(const std::string& identifier) const;
     void shouldStopAfterThisFrame(bool yes = true) const;
@@ -39,12 +40,12 @@ private:
     MeshDataBuilder surface;
     GLFWwindow* window = nullptr;
     ImGuiContext* imguiContext = nullptr;
-    bool mouseCaptured = false, iconified = false, fullscreen, vsync;
+    bool mouseCaptured = false, iconified = false;
     double lastMouseX = -1.0, lastMouseY = -1.0;
     std::unordered_map<uuids::uuid, IPanel*> panels{};
 
-    Window(std::string name_, std::string_view title, int width_, int height_, bool fullscreen_ = false, bool vsync_ = true, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = false);
-    Window(std::string_view title, int width_, int height_, bool fullscreen_ = false, bool vsync_ = true, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool startVisible = false);
+    Window(std::string name_, std::string_view title);
+    explicit Window(std::string_view title);
     bool createGLFWWindow(std::string_view title);
 };
 

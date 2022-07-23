@@ -4,12 +4,16 @@
 #include <libloader.hpp>
 #include <event/Events.h>
 #include <resource/provider/FilesystemResourceProvider.h>
+#include <utility/ConEntry.h>
 #include <utility/Logger.h>
 #include <utility/String.h>
 
 using namespace chira;
 using namespace steam;
 using namespace libloader;
+
+[[maybe_unused]]
+static ConVar steam_enable{"steam_enable", true, "Initialize Steam API functions.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
 
 /// Helper function to stop repeating stuff
 template<typename T, typename U, typename... Params>

@@ -9,6 +9,7 @@
 #include <input/InputManager.h>
 #include <loader/mesh/OBJMeshLoader.h>
 #include <loader/mesh/ChiraMeshLoader.h>
+#include <render/Light.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <resource/ShaderResource.h>
 #include <script/AngelScriptVM.h>
@@ -32,21 +33,8 @@ static ConCommand crash{"crash", "Force-crashes the game or application (for deb
     throw std::runtime_error{"Called crash command!"};
 }, CON_FLAG_CHEAT};
 
-void Engine::preInit(std::string_view configPath) {
-#ifdef _WIN32
-    // Enable colored text in Windows console by setting encoding to UTF-8
-    // #define CP_UTF8 65001 in windows.h
-    system("chcp 65001 > nul");
-#endif
+void Engine::preInit() {
     Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
-
-    Engine::settingsLoader = std::make_unique<JSONSettingsLoader>(configPath);
-    Engine::settingsLoader->load();
-    Engine::setSettingsDefaults();
-
-    std::string defaultLang;
-    Engine::settingsLoader->getValue("language", &defaultLang);
-    TranslationManager::setLanguage(defaultLang);
     TranslationManager::addTranslationFile("file://i18n/engine");
 }
 
@@ -61,16 +49,7 @@ void Engine::init(bool windowStartsVisible) {
         Logger::log(LOG_ERROR, "GLFW", TRF("error.glfw.generic", error, description));
     });
 
-    int windowWidth = 1600;
-    Engine::settingsLoader->getValue("window_width", &windowWidth);
-    int windowHeight = 900;
-    Engine::settingsLoader->getValue("window_height", &windowHeight);
-    bool fullscreen = false;
-    Engine::settingsLoader->getValue("fullscreen", &fullscreen);
-    bool vsync = true;
-    Engine::settingsLoader->getValue("vsync", &vsync);
-
-    Engine::window.reset(new Window{TR("ui.window.title"), windowWidth, windowHeight, fullscreen, vsync});
+    Engine::window.reset(new Window{TR("ui.window.title")});
     Engine::window->setVisible(windowStartsVisible);
 
 #ifdef DEBUG
@@ -139,26 +118,19 @@ void Engine::init(bool windowStartsVisible) {
     IMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
 
     // todo: move this to a general lighting manager
-    if (Engine::getSettings()->hasValue("max_point_lights")) {
-        int maxLights;
-        Engine::getSettings()->getValue("max_point_lights", &maxLights);
-        ShaderResource::addPreprocessorSymbol("MAX_POINT_LIGHTS", std::to_string(maxLights));
+    if (ConVarRegistry::hasConVar("max_point_lights")) {
+        ShaderResource::addPreprocessorSymbol("MAX_POINT_LIGHTS", ConVarRegistry::getConVar("max_point_lights")->getValue<std::string>());
     }
-    if (Engine::getSettings()->hasValue("max_directional_lights")) {
-        int maxLights;
-        Engine::getSettings()->getValue("max_directional_lights", &maxLights);
-        ShaderResource::addPreprocessorSymbol("MAX_DIRECTIONAL_LIGHTS", std::to_string(maxLights));
+    if (ConVarRegistry::hasConVar("max_directional_lights")) {
+        ShaderResource::addPreprocessorSymbol("MAX_DIRECTIONAL_LIGHTS", ConVarRegistry::getConVar("max_directional_lights")->getValue<std::string>());
     }
-    if (Engine::getSettings()->hasValue("max_spot_lights")) {
-        int maxLights;
-        Engine::getSettings()->getValue("max_spot_lights", &maxLights);
-        ShaderResource::addPreprocessorSymbol("MAX_SPOT_LIGHTS", std::to_string(maxLights));
+    if (ConVarRegistry::hasConVar("max_spot_lights")) {
+        ShaderResource::addPreprocessorSymbol("MAX_SPOT_LIGHTS", ConVarRegistry::getConVar("max_spot_lights")->getValue<std::string>());
     }
 
 #ifdef CHIRA_USE_STEAMWORKS
-    bool steamEnabled = false;
-    Engine::getSettings()->getValue("steamworks", &steamEnabled);
-    if (steamEnabled && (!SteamAPI::Client::initialized() && !SteamAPI::Client::initSteam()))
+    bool steamEnable = ConVarRegistry::hasConVar("steam_enable") && ConVarRegistry::getConVar("steam_enable")->getValue<bool>();
+    if (steamEnable && (!SteamAPI::Client::initialized() && !SteamAPI::Client::initSteam()))
         Logger::log(LOG_ERROR, "Steam", TR("error.steam.initialization_failure"));
 #endif
 
@@ -229,29 +201,6 @@ void Engine::run() {
 
     glfwTerminate();
     exit(EXIT_SUCCESS);
-}
-
-JSONSettingsLoader* Engine::getSettings() {
-    return Engine::settingsLoader.get();
-}
-
-void Engine::setSettingsDefaults() {
-    Engine::settingsLoader->setValue("max_point_lights", 64, false, false);
-    Engine::settingsLoader->setValue("max_directional_lights", 4, false, false);
-    Engine::settingsLoader->setValue("max_spot_lights", 4, false, false);
-#ifdef CHIRA_USE_STEAMWORKS
-    Engine::settingsLoader->setValue("steamworks", false, false, false);
-#endif
-    Engine::settingsLoader->setValue("window_width", 1600, false, false);
-    Engine::settingsLoader->setValue("window_height", 900, false, false);
-    Engine::settingsLoader->setValue("start_maximized", false, false, false);
-    Engine::settingsLoader->setValue("fullscreen", false, false, false);
-    Engine::settingsLoader->setValue("vsync", true, false, false);
-    Engine::settingsLoader->setValue("raw_mouse_motion", true, false, false);
-    Engine::settingsLoader->setValue("invert_y_axis", false, false, false);
-    // todo: use computer language as default
-    Engine::settingsLoader->setValue("language", std::string{"en"}, false, false);
-    Engine::settingsLoader->save();
 }
 
 Window* Engine::getWindow() {

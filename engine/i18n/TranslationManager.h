@@ -7,8 +7,6 @@ namespace chira {
 
 class TranslationManager {
 public:
-    static void setLanguage(const std::string& languageCode);
-    static std::string_view getLanguage();
     static const std::unordered_map<std::string,std::string>& getCodeAndNamePairs();
     static std::string_view getLanguageNameFromCode(const std::string& code);
     static bool isValidCode(const std::string& code);
@@ -18,11 +16,8 @@ public:
     template<typename... Params> static std::string getTranslation(const std::string& identifier, Params... params) {
         return fmt::format(fmt::runtime(TranslationManager::getTranslation(identifier)), params...);
     }
-
 private:
-    static std::unordered_map<std::string,std::string> languageStrings;
-    static std::string currentLanguage;
-    static std::unordered_map<std::string, std::string> LANGUAGE_DEFINITIONS;
+    static inline std::unordered_map<std::string,std::string> languageStrings; // NOLINT(cert-err58-cpp)
 };
 
 } // namespace chira

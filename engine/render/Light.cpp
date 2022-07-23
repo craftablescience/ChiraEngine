@@ -2,6 +2,13 @@
 
 using namespace chira;
 
+[[maybe_unused]]
+static ConVar max_point_lights{"max_point_lights", 64, CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+[[maybe_unused]]
+static ConVar max_directional_lights{"max_directional_lights", 1, CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+[[maybe_unused]]
+static ConVar max_spot_lights{"max_spot_lights", 8, CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+
 AbstractLight::AbstractLight(glm::vec3 position_, glm::vec3 ambient_, glm::vec3 diffuse_, glm::vec3 specular_):
     position(position_), ambient(ambient_), diffuse(diffuse_), specular(specular_) {}
 

@@ -16,6 +16,16 @@ static ConVar log_print_source{"log_print_source", true, "Prints the source of a
 #endif
 
 void Logger::log(LogType type, std::string_view source, std::string_view message) {
+#ifdef _WIN32
+    static bool enabledWindowsColoredText = false;
+    if (!enabledWindowsColoredText) {
+        // Enable colored text in Windows console by setting encoding to UTF-8
+        // #define CP_UTF8 65001 in windows.h
+        system("chcp 65001 > nul");
+        enabledWindowsColoredText = false;
+    }
+#endif
+
     std::string logSource{};
     if (log_print_source.getValue<bool>()) {
         logSource += "[";
