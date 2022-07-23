@@ -1,0 +1,30 @@
+name: Bug Report
+description: Report a bug
+title: Bug Title Here
+labels: [bug]
+body:
+- type: textarea
+  attributes:
+    label: Describe the Bug
+    description: A clear description of what the bug is. Feel free to add pictures or videos.
+    placeholder: |
+      When I do X then Y happens.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: To Reproduce
+    description: Steps to reproduce the bug.
+    placeholder: |
+      1. Launch ...
+      2. Open ...
+      3. Do ...
+      4. See error ...
+  validations:
+    required: true
+- type: input
+  attributes:
+    label: Operating System
+    placeholder: Windows, Linux, etc.
+  validations:
+    required: true
