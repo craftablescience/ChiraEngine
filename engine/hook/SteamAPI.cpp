@@ -2,10 +2,10 @@
 
 #include <fstream>
 #include <libloader.hpp>
+#include <config/ConEntry.h>
+#include <core/Logger.h>
 #include <event/Events.h>
 #include <resource/provider/FilesystemResourceProvider.h>
-#include <utility/ConEntry.h>
-#include <utility/Logger.h>
 #include <utility/String.h>
 
 using namespace chira;

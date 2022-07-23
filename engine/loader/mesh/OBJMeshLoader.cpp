@@ -1,9 +1,9 @@
 #include "OBJMeshLoader.h"
 
 #include <algorithm>
+#include <core/Logger.h>
 #include <resource/StringResource.h>
 #include <i18n/TranslationManager.h>
-#include <utility/Logger.h>
 #include <sstream>
 
 using namespace chira;

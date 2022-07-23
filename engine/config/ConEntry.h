@@ -6,9 +6,9 @@
 #include <type_traits>
 #include <vector>
 
+#include <core/Assertions.h>
+#include <core/Logger.h>
 #include <loader/settings/JSONSettingsLoader.h>
-#include "Assertions.h"
-#include "Logger.h"
 
 namespace chira {
 
@@ -34,7 +34,7 @@ public:
     [[nodiscard]] bool hasFlag(ConFlags flag) const;
     void fire(CallbackArgs args);
     [[nodiscard]] virtual explicit operator std::string() const {
-        return std::string{this->getName()} + ": function - " + this->getDescription().data();
+        return std::string{this->getName()} + " - " + this->getDescription().data();
     }
 private:
     std::string name;

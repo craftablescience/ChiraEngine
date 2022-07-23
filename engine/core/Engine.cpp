@@ -4,6 +4,7 @@
 #include <backends/imgui_impl_opengl3.h>
 
 #include <config/Config.h>
+#include <config/ConEntry.h>
 #include <hook/DiscordRPC.h>
 #include <i18n/TranslationManager.h>
 #include <input/InputManager.h>
@@ -15,7 +16,6 @@
 #include <script/AngelScriptVM.h>
 #include <ui/debug/ConsolePanel.h>
 #include <ui/debug/ResourceUsageTrackerPanel.h>
-#include <utility/ConEntry.h>
 
 #ifdef CHIRA_USE_STEAMWORKS
     #include <hook/SteamAPI.h>

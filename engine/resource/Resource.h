@@ -5,8 +5,8 @@
 #include <unordered_map>
 #include <vector>
 #include <nlohmann/json.hpp>
+#include <core/Logger.h>
 #include <event/Events.h>
-#include <utility/Logger.h>
 #include <utility/SharedPointer.h>
 #include <utility/Types.h>
 #include "provider/IResourceProvider.h"

@@ -3,6 +3,7 @@
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_glfw.h>
 
+#include <config/ConEntry.h>
 #include <core/Engine.h>
 #include <config/Config.h>
 #include <event/Events.h>
@@ -13,7 +14,6 @@
 #include <resource/FontResource.h>
 #include <render/material/MaterialFramebuffer.h>
 #include <ui/IPanel.h>
-#include <utility/ConEntry.h>
 
 using namespace chira;
 

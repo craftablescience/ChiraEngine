@@ -2,9 +2,9 @@
 
 #include <cstring>
 #include <algorithm>
+#include <core/Logger.h>
 #include <resource/BinaryResource.h>
 #include <i18n/TranslationManager.h>
-#include <utility/Logger.h>
 
 using namespace chira;
 

@@ -1,7 +1,7 @@
 #include "TranslationManager.h"
 
+#include <core/Logger.h>
 #include <resource/Resource.h>
-#include <utility/Logger.h>
 
 using namespace chira;
 

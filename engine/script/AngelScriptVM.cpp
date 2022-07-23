@@ -11,7 +11,7 @@
 #include <scriptstdstring/scriptstdstring.h>
 #include <weakref/weakref.h>
 
-#include <utility/Logger.h>
+#include <core/Logger.h>
 
 using namespace chira;
 

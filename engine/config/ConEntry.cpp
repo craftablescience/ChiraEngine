@@ -1,8 +1,8 @@
 #include "ConEntry.h"
 
 #include <algorithm>
+#include <ranges>
 #include <utility>
-#include "Assertions.h"
 
 using namespace chira;
 
@@ -19,23 +19,21 @@ static ConCommand info{"info", "Prints the description of the given convar(s) or
 
 [[maybe_unused]]
 static ConCommand con_entries{"con_entries", "Prints the description of every convar and concommand currently registered.", [] { // NOLINT(cert-err58-cpp)
-    const auto concommandList = ConCommandRegistry::getConCommandList();
-    const auto convarList = ConVarRegistry::getConVarList();
+    Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", "-- Commands --");
+    auto concommandList = ConCommandRegistry::getConCommandList();
+    std::ranges::sort(concommandList);
+    for (const auto& name : concommandList) {
+        if (const auto* concommand = ConCommandRegistry::getConCommand(name); !concommand->hasFlag(CON_FLAG_HIDDEN)) {
+            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*concommand});
+        }
+    }
 
-    std::vector<std::string> fullList;
-    std::move(concommandList.begin(), concommandList.end(), std::back_inserter(fullList));
-    std::move(convarList.begin(), convarList.end(), std::back_inserter(fullList));
-    std::sort(fullList.begin(), fullList.end());
-
-    for (const auto& name : fullList) {
-        if (ConCommandRegistry::hasConCommand(name)) {
-            if (const auto* concommand = ConCommandRegistry::getConCommand(name); !concommand->hasFlag(CON_FLAG_HIDDEN)) {
-                Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*concommand});
-            }
-        } else if (ConVarRegistry::hasConVar(name)) {
-            if (const auto* convar = ConVarRegistry::getConVar(name); !convar->hasFlag(CON_FLAG_HIDDEN)) {
-                Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*convar});
-            }
+    Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", "-- Variables --");
+    auto convarList = ConVarRegistry::getConVarList();
+    std::ranges::sort(convarList);
+    for (const auto& name : convarList) {
+        if (const auto* convar = ConVarRegistry::getConVar(name); !convar->hasFlag(CON_FLAG_HIDDEN)) {
+            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*convar});
         }
     }
 }};

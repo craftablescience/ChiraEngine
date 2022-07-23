@@ -1,7 +1,7 @@
 #include "Logger.h"
 
 #include <iostream>
-#include "ConEntry.h"
+#include <config/ConEntry.h>
 
 using namespace chira;
 

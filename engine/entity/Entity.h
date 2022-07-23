@@ -4,8 +4,8 @@
 #include <string>
 #include <string_view>
 #include <glm/glm.hpp>
+#include <core/Assertions.h>
 #include <math/Matrix.h>
-#include <utility/Assertions.h>
 
 namespace chira {
 

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <TestHelpers.h>
 
-#include <utility/ConEntry.h>
+#include <config/ConEntry.h>
 
 using namespace chira;
 
@@ -14,7 +14,7 @@ TEST(ConsolePanel, printConEntry) {
     ASSERT_TRUE(ConCommandRegistry::hasConCommand("con_entries"));
     ConCommandRegistry::getConCommand("con_entries")->fire({});
 
-    ASSERT_TRUE(LOG_HAS_MESSAGE("my_concommand: function - hi"));
+    ASSERT_TRUE(LOG_HAS_MESSAGE("my_concommand - hi"));
 
     LOG_END();
 }
@@ -28,7 +28,7 @@ TEST(ConsolePanel, hiddenConEntry) {
     ASSERT_TRUE(ConCommandRegistry::hasConCommand("con_entries"));
     ConCommandRegistry::getConCommand("con_entries")->fire({});
 
-    ASSERT_FALSE(LOG_HAS_MESSAGE("my_hidden_concommand: function - hi"));
+    ASSERT_FALSE(LOG_HAS_MESSAGE("my_hidden_concommand - hi"));
 
     LOG_END();
 }

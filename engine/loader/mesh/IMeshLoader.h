@@ -4,8 +4,8 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+#include <core/Platform.h>
 #include <math/Vertex.h>
-#include <utility/Platform.h>
 
 namespace chira {
 

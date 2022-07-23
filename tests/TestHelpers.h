@@ -1,9 +1,9 @@
 #pragma once
 
 #include <core/Engine.h>
+#include <core/Logger.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <script/AngelScriptVM.h>
-#include <utility/Logger.h>
 
 #define PREINIT_ENGINE() \
     chira::Engine::preInit(); \

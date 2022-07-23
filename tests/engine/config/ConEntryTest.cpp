@@ -3,7 +3,7 @@
 
 #include <filesystem>
 
-#include <utility/ConEntry.h>
+#include <config/ConEntry.h>
 
 using namespace chira;
 

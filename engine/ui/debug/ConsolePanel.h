@@ -1,8 +1,8 @@
 #pragma once
 
 #include <deque>
+#include <core/Logger.h>
 #include <resource/FontResource.h>
-#include <utility/Logger.h>
 #include <ui/IPanel.h>
 
 namespace chira {

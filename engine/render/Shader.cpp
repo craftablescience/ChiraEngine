@@ -1,11 +1,10 @@
 #include "Shader.h"
 
 #include <glm/gtc/type_ptr.hpp>
-#include <utility/Logger.h>
-#include <resource/Resource.h>
+#include <core/Logger.h>
 #include <i18n/TranslationManager.h>
-#include <resource/ShaderResource.h>
 #include <render/UBO.h>
+#include <resource/ShaderResource.h>
 
 using namespace chira;
 

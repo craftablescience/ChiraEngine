@@ -1,7 +1,7 @@
 #include "ConsolePanel.h"
 
+#include <config/ConEntry.h>
 #include <i18n/TranslationManager.h>
-#include <utility/ConEntry.h>
 #include <utility/String.h>
 
 using namespace chira;
@@ -196,7 +196,7 @@ void ConsolePanel::processConsoleMessage(std::string_view message) {
             }
             Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", logOutput);
         } else {
-            Logger::log(LogType::LOG_ERROR, "Console", "Could not find concommand or convar \"" + input[0] + "\"");
+            Logger::log(LogType::LOG_ERROR, "Console", "Could not find command or variable \"" + input[0] + R"("! Run "con_entries" to view valid entries.)");
         }
     }
 }

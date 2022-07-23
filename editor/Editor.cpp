@@ -1,10 +1,11 @@
 // Disable console window on Windows (MSVC)
-#include <utility/Platform.h>
+#include <core/Platform.h>
 #if defined(_WIN32) && !defined(DEBUG) && defined(CHIRA_COMPILER_MSVC)
     #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #endif
 
 #include <fstream>
+#include <config/ConEntry.h>
 #include <core/Engine.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <hook/DiscordRPC.h>
@@ -13,7 +14,6 @@
 #include <entity/model/MeshDynamic.h>
 #include <entity/camera/EditorCamera.h>
 #include <ui/IPanel.h>
-#include <utility/ConEntry.h>
 #include <utility/Dialogs.h>
 
 #ifdef CHIRA_USE_STEAMWORKS

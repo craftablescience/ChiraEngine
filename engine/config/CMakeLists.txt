@@ -1,2 +1,6 @@
 list(APPEND CHIRA_ENGINE_HEADERS
-        ${CMAKE_CURRENT_LIST_DIR}/Config.h)
+        ${CMAKE_CURRENT_LIST_DIR}/Config.h
+        ${CMAKE_CURRENT_LIST_DIR}/ConEntry.h)
+
+list(APPEND CHIRA_ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/ConEntry.cpp)

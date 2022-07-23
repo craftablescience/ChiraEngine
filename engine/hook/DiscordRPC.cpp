@@ -1,8 +1,8 @@
 #include "DiscordRPC.h"
 
 #include <discord_rpc.h>
-#include <utility/ConEntry.h>
-#include <utility/Logger.h>
+#include <config/ConEntry.h>
+#include <core/Logger.h>
 #include <i18n/TranslationManager.h>
 
 using namespace chira;

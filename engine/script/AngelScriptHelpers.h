@@ -2,7 +2,7 @@
 
 #include <string>
 #include <sstream>
-#include <utility/Platform.h>
+#include <core/Platform.h>
 #include <utility/String.h>
 
 #if defined(CHIRA_COMPILER_GNU) || defined(CHIRA_COMPILER_CLANG)

@@ -4,7 +4,7 @@
 #include <functional>
 #include <unordered_map>
 
-#include "UUIDGenerator.h"
+#include <utility/UUIDGenerator.h>
 
 namespace chira {
 

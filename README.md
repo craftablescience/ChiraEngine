@@ -18,7 +18,8 @@ To summarize the major features:
 - Hassle-free Discord Rich Presence and Steamworks API wrappers
 - Inline text localization
 - Event queue to communicate between entities (or other parts of the engine)
-- Settings manager, which saves to and loads from a JSON file (with smart overwriting) for modifiable settings without recompiling
+- Console commands to run actions on the fly, with the ability to pass arguments
+- Variables modifiable from the console, with support for caching between sessions
 - Logger built-in with colored text and hooks
 
 The goal of the engine is to have as much customization as possible, while still maintaining ease of use.

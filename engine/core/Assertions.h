@@ -2,7 +2,8 @@
 
 #include <string>
 #include <string_view>
-#include <utility/Logger.h>
+
+#include "Logger.h"
 
 #ifndef _WIN32
     #include <csignal>

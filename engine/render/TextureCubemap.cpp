@@ -1,7 +1,7 @@
 #include "TextureCubemap.h"
 
+#include <core/Logger.h>
 #include <i18n/TranslationManager.h>
-#include <utility/Logger.h>
 
 using namespace chira;
 

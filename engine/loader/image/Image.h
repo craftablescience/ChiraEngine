@@ -2,7 +2,7 @@
 
 #include <string_view>
 
-#include <utility/Platform.h>
+#include <core/Platform.h>
 
 namespace chira {
 

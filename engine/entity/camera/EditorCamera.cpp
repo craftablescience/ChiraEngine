@@ -1,8 +1,8 @@
 #include "EditorCamera.h"
 
+#include <core/Assertions.h>
 #include <core/Engine.h>
 #include <input/InputManager.h>
-#include <utility/Assertions.h>
 
 using namespace chira;
 
