@@ -1,11 +1,11 @@
 #include "Logger.h"
 
 #include <iostream>
-#include "ConVar.h"
+#include "ConEntry.h"
 
 using namespace chira;
 
-static ConVar log_print_source{"log_print_source", true, "Prints the source of a console message.", CONVAR_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+static ConVar log_print_source{"log_print_source", true, "Prints the source of a console message.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
 
 // Using std::endl here instead of '\n' in debug
 // sometimes with '\n', the buffer doesn't get flushed until the application exits

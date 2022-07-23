@@ -17,7 +17,7 @@ public:
     void setTheme();
     void resetTheme() const;
 
-    static constexpr int MAX_ITEM_COUNT = 1024;
+    static constexpr int MAX_ITEM_COUNT = 512;
 private:
     static void processConsoleMessage(std::string_view message);
     SharedPointer<FontResource> font;

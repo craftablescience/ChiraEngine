@@ -14,7 +14,7 @@
 #include <script/AngelScriptVM.h>
 #include <ui/debug/ConsolePanel.h>
 #include <ui/debug/ResourceUsageTrackerPanel.h>
-#include <utility/ConCommand.h>
+#include <utility/ConEntry.h>
 
 #ifdef CHIRA_USE_STEAMWORKS
     #include <hook/SteamAPI.h>
@@ -23,14 +23,14 @@
 using namespace chira;
 
 [[maybe_unused]]
-static ConCommand quit{"quit", "Quits the game or application.", [](const std::vector<std::string>&) { // NOLINT(cert-err58-cpp)
+static ConCommand quit{"quit", "Quits the game or application.", [] { // NOLINT(cert-err58-cpp)
     Engine::getWindow()->shouldStopAfterThisFrame(true);
 }};
 
 [[maybe_unused]]
-static ConCommand crash{"crash", "Force-crashes the game or application (for debugging purposes).", [](const std::vector<std::string>&) { // NOLINT(cert-err58-cpp)
+static ConCommand crash{"crash", "Force-crashes the game or application (for debugging purposes).", [] { // NOLINT(cert-err58-cpp)
     throw std::runtime_error{"Called crash command!"};
-}, CONCOMMAND_FLAG_CHEAT};
+}, CON_FLAG_CHEAT};
 
 void Engine::preInit(std::string_view configPath) {
 #ifdef _WIN32

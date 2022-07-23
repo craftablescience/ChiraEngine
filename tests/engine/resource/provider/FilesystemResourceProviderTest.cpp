@@ -6,7 +6,7 @@
 using namespace chira;
 
 TEST(FilesystemResourceProvider, getStringResource) {
-    SETUP_ENGINE();
+    PREINIT_ENGINE();
 
     auto missing = Resource::getResource<StringResource>("file://string_resource_test.txt");
     EXPECT_EQ(missing.useCount(), 2);

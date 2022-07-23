@@ -1,43 +1,40 @@
 #include "ConsolePanel.h"
 
 #include <i18n/TranslationManager.h>
-#include <utility/ConCommand.h>
-#include <utility/ConVar.h>
+#include <utility/ConEntry.h>
 #include <utility/String.h>
 
 using namespace chira;
 
 [[maybe_unused]]
-static ConCommand info{"info", "Prints the description of the given convars or concommands.", [](const std::vector<std::string>& args) { // NOLINT(cert-err58-cpp)
+static ConCommand info{"info", "Prints the description of the given convars or concommands.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
     for (const auto& name : args) {
-        if (ConVarRegistry::hasConVar(name)) {
-            ConVarReference convar{name};
-            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*convar} + " - " + convar->getDescription().data());
-        } else if (ConCommandRegistry::hasConCommand(name)) {
-            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", name + ": function - " + ConCommandRegistry::getConCommand(name)->getDescription().data());
+        if (ConCommandRegistry::hasConCommand(name)) {
+            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*ConCommandRegistry::getConCommand(name)});
+        } else if (ConVarRegistry::hasConVar(name)) {
+            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*ConVarRegistry::getConVar(name)});
         }
     }
 }};
 
 [[maybe_unused]]
-static ConCommand con_entries{"con_entries", "Prints the description of every convar and concommand currently registered.", [](const std::vector<std::string>&) { // NOLINT(cert-err58-cpp)
-    const auto convarList = ConVarRegistry::getConVarList();
+static ConCommand con_entries{"con_entries", "Prints the description of every convar and concommand currently registered.", [] { // NOLINT(cert-err58-cpp)
     const auto concommandList = ConCommandRegistry::getConCommandList();
+    const auto convarList = ConVarRegistry::getConVarList();
 
     std::vector<std::string> fullList;
-    std::move(convarList.begin(), convarList.end(), std::back_inserter(fullList));
     std::move(concommandList.begin(), concommandList.end(), std::back_inserter(fullList));
+    std::move(convarList.begin(), convarList.end(), std::back_inserter(fullList));
     std::sort(fullList.begin(), fullList.end());
 
     for (const auto& name : fullList) {
-        if (ConVarRegistry::hasConVar(name)) {
-            ConVarReference convar{name};
-            if (!convar->hasFlag(CONVAR_FLAG_HIDDEN)) {
-                Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*convar} + " - " + convar->getDescription().data());
+        if (ConCommandRegistry::hasConCommand(name)) {
+            if (const auto* concommand = ConCommandRegistry::getConCommand(name); !concommand->hasFlag(CON_FLAG_HIDDEN)) {
+                Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*concommand});
             }
-        } else if (ConCommandRegistry::hasConCommand(name)) {
-            if (const auto* concommand = ConCommandRegistry::getConCommand(name); !concommand->hasFlag(CONCOMMAND_FLAG_HIDDEN)) {
-                Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", name + ": function - " + concommand->getDescription().data());
+        } else if (ConVarRegistry::hasConVar(name)) {
+            if (const auto* convar = ConVarRegistry::getConVar(name); !convar->hasFlag(CON_FLAG_HIDDEN)) {
+                Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*convar});
             }
         }
     }
@@ -45,9 +42,9 @@ static ConCommand con_entries{"con_entries", "Prints the description of every co
 
 ConsolePanel::ConsolePanel(ImVec2 windowSize) : IPanel(TR("ui.console.title"), false, windowSize) {
     this->loggingId = Logger::addCallback([&](LogType type, std::string_view source, std::string_view message) {
-        static ConVarReference log_print_source{"log_print_source"};
+        static const auto* log_print_source = ConVarRegistry::getConVar("log_print_source");
         std::string logSource{};
-        if (log_print_source.isValid() && log_print_source->getValue<bool>()) {
+        if (log_print_source->getValue<bool>()) {
             logSource += "[";
             logSource += source.data();
             logSource += "]";
@@ -174,35 +171,41 @@ void ConsolePanel::resetTheme() const {
 void ConsolePanel::processConsoleMessage(std::string_view message) {
     std::vector<std::string> input = String::split(message.data(), ' ');
     if (!input.empty()) {
-        ConVarReference convar{input[0]};
-        if (convar.isValid()) {
+        if (ConCommandRegistry::hasConCommand(input[0])) {
+            std::string name{input[0]};
+            input.erase(input.begin());
+            ConCommandRegistry::getConCommand(name)->fire(input);
+        } else if (ConVarRegistry::hasConVar(input[0])) {
+            auto* convar = ConVarRegistry::getConVar(input[0]);
             if (input.size() >= 2) {
                 try {
                     switch (convar->getType()) {
                         case ConVarType::BOOLEAN:
                             if (String::toLower(input[1]) == "true") {
-                                convar->setValue<bool>(true);
+                                convar->setValue(true);
                             } else if (String::toLower(input[1]) == "false") {
-                                convar->setValue<bool>(false);
+                                convar->setValue(false);
                             } else {
-                                convar->setValue<bool>(static_cast<bool>(std::stoi(input[1])));
+                                convar->setValue(static_cast<bool>(std::stoi(input[1])));
                             }
                             break;
                         case ConVarType::INTEGER:
-                            convar->setValue<int>(std::stoi(input[1]));
+                            convar->setValue(std::stoi(input[1]));
                             break;
-                        case ConVarType::FLOAT:
-                            convar->setValue<float>(static_cast<float>(std::stof(input[1])));
+                        case ConVarType::DOUBLE:
+                            convar->setValue(std::stod(input[1]));
                             break;
+                        case ConVarType::STRING:
+                            convar->setValue(input[1]);
                     }
                 } catch (const std::invalid_argument &) {
-                    Logger::log(LogType::LOG_ERROR, "Console",
-                                std::string{"Cannot set value of \""} + convar->getName().data() + "\" to \"" +
-                                input[1] + "\"");
+                    Logger::log(LogType::LOG_ERROR, "Console", std::string{"Cannot set value of \""} + convar->getName().data() + "\" to \"" + input[1] + "\"");
                     return;
                 }
             }
-            std::string logOutput{*convar};
+            std::string logOutput{convar->getName().data()};
+            logOutput += ": ";
+            logOutput += convar->getTypeAsString();
             logOutput += " = ";
             switch (convar->getType()) {
                 case ConVarType::BOOLEAN:
@@ -215,17 +218,15 @@ void ConsolePanel::processConsoleMessage(std::string_view message) {
                 case ConVarType::INTEGER:
                     logOutput += std::to_string(convar->getValue<int>());
                     break;
-                case ConVarType::FLOAT:
-                    logOutput += std::to_string(convar->getValue<float>());
+                case ConVarType::DOUBLE:
+                    logOutput += std::to_string(convar->getValue<double>());
                     break;
+                case ConVarType::STRING:
+                    logOutput += convar->getValue<std::string>();
             }
             Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", logOutput);
-        } else if (ConCommandRegistry::hasConCommand(input[0])) {
-            std::string name{input[0]};
-            input.erase(input.begin());
-            ConCommandRegistry::getConCommand(name)->fire(input);
         } else {
-            Logger::log(LogType::LOG_INFO, "Console", message);
+            Logger::log(LogType::LOG_ERROR, "Console", "Could not find concommand or convar \"" + input[0] + "\"");
         }
     }
 }
