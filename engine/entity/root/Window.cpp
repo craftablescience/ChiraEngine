@@ -81,7 +81,7 @@ bool Window::createGLFWWindow(std::string_view title) {
 
     this->window = glfwCreateWindow(this->width, this->height, title.data(), nullptr, nullptr);
     if (!this->window) {
-        Logger::log(LOG_ERROR, "GLFW", TR("error.glfw.window"));
+        Logger::log(LogType::LOG_ERROR, "GLFW", TR("error.glfw.window"));
         return false;
     }
     if (win_start_fullscreen.getValue<bool>())
@@ -93,7 +93,7 @@ bool Window::createGLFWWindow(std::string_view title) {
     glfwSetWindowUserPointer(this->window, this);
     glfwMakeContextCurrent(this->window);
     if (!gladLoadGL(glfwGetProcAddress)) {
-        Logger::log(LOG_ERROR, "OpenGL", TRF("error.opengl.version", GL_VERSION_STRING_PRETTY));
+        Logger::log(LogType::LOG_ERROR, "OpenGL", TRF("error.opengl.version", GL_VERSION_STRING_PRETTY));
         return false;
     }
     glfwSwapInterval(win_vsync.getValue<int>());
@@ -312,7 +312,7 @@ void Window::setIcon(const std::string& identifier) const {
     GLFWimage images[1];
     int iconWidth, iconHeight, bitsPerPixel;
     Image icon(FilesystemResourceProvider::getResourceAbsolutePath(identifier), &iconWidth, &iconHeight, &bitsPerPixel, 4, false);
-    runtime_assert(icon.getData(), TR("error.engine.icon_has_no_data"));
+    runtime_assert(icon.getData(), "Window icon has no data");
     images[0].width = iconWidth;
     images[0].height = iconHeight;
     images[0].pixels = icon.getData();

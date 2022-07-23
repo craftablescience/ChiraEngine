@@ -42,10 +42,10 @@ std::string TranslationManager::getTranslation(const std::string& identifier) { 
     if (TranslationManager::languageStrings.count(identifier) > 0)
         return TranslationManager::languageStrings[identifier];
     else if (TranslationManager::languageStrings.count("error.translation_manager.missing_translation") > 0)
-        Logger::log(LOG_ERROR, "I18N", TRF("error.translation_manager.missing_translation", TranslationManager::getLanguageNameFromCode(ui_language.getValue<std::string>()), identifier));
+        Logger::log(LogType::LOG_ERROR, "I18N", TRF("error.translation_manager.missing_translation", TranslationManager::getLanguageNameFromCode(ui_language.getValue<std::string>()), identifier));
     else
         // Turns out if we're missing one string, we could be missing all of them! Just default to English
-        Logger::log(LOG_ERROR, "I18N", fmt::format("Missing {} translation of \"{}\"", TranslationManager::getLanguageNameFromCode(ui_language.getValue<std::string>()), identifier));
+        Logger::log(LogType::LOG_ERROR, "I18N", fmt::format("Missing {} translation of \"{}\"", TranslationManager::getLanguageNameFromCode(ui_language.getValue<std::string>()), identifier));
     // Fallback
     return identifier + "#" + ui_language.getValue<std::string>();
 }

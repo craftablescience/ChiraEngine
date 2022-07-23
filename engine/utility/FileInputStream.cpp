@@ -9,7 +9,7 @@ FileInputStream::FileInputStream(std::string_view filepath, bool binary) {
     errno = 0;
     this->stream = fopen(filepath.data(), binary ? "rb" : "r");
     if (!this->stream)
-        Logger::log(LOG_ERROR, "FileInputStream", TRF("error.file_input_stream.file_inaccessible", filepath, errno));
+        Logger::log(LogType::LOG_ERROR, "FileInputStream", TRF("error.file_input_stream.file_inaccessible", filepath, errno));
 }
 
 FileInputStream::~FileInputStream() {

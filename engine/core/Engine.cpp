@@ -42,11 +42,11 @@ void Engine::init(bool windowStartsVisible) {
     Engine::started = true;
 
     if (!glfwInit()) {
-        Logger::log(LOG_ERROR, "GLFW", TR("error.glfw.undefined"));
+        Logger::log(LogType::LOG_ERROR, "GLFW", "GLFW failed to initialize!");
         exit(EXIT_FAILURE);
     }
     glfwSetErrorCallback([](int error, const char* description) {
-        Logger::log(LOG_ERROR, "GLFW", TRF("error.glfw.generic", error, description));
+        Logger::log(LogType::LOG_ERROR, "GLFW", fmt::format("GLFW Error {}: {}\n", error, description));
     });
 
     Engine::window.reset(new Window{TR("ui.window.title")});
@@ -99,12 +99,12 @@ void Engine::init(bool windowStartsVisible) {
             }
 
             if (type == GL_DEBUG_TYPE_ERROR)
-                Logger::log(LOG_ERROR, "OpenGL", output);
+                Logger::log(LogType::LOG_ERROR, "OpenGL", output);
             else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
-                Logger::log(LOG_INFO, "OpenGL", output);
+                Logger::log(LogType::LOG_INFO, "OpenGL", output);
             else
                 // Logging as a warning because most of the time the program runs perfectly fine
-                Logger::log(LOG_WARNING, "OpenGL", output);
+                Logger::log(LogType::LOG_WARNING, "OpenGL", output);
         }, nullptr);
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
     }
@@ -131,7 +131,7 @@ void Engine::init(bool windowStartsVisible) {
 #ifdef CHIRA_USE_STEAMWORKS
     bool steamEnable = ConVarRegistry::hasConVar("steam_enable") && ConVarRegistry::getConVar("steam_enable")->getValue<bool>();
     if (steamEnable && (!SteamAPI::Client::initialized() && !SteamAPI::Client::initSteam()))
-        Logger::log(LOG_ERROR, "Steam", TR("error.steam.initialization_failure"));
+        Logger::log(LogType::LOG_ERROR, "Steam", TR("error.steam.initialization_failure"));
 #endif
 
     // Add console UI panel
@@ -186,7 +186,7 @@ void Engine::run() {
         Events::update();
     } while (!glfwWindowShouldClose(Engine::window->window));
 
-    Logger::log(LOG_INFO_IMPORTANT, "Engine", TR("debug.engine.exit"));
+    Logger::log(LogType::LOG_INFO, "Engine", "Exiting...");
 
     if (DiscordRPC::initialized())
         DiscordRPC::shutdown();

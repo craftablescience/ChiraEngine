@@ -45,7 +45,7 @@ void Texture::compile(const nlohmann::json& properties) {
         if (this->mipmaps)
             glGenerateMipmap(GL_TEXTURE_2D);
     } else {
-        Logger::log(LOG_ERROR, "Texture", TR("error.opengl.texture_compile"));
+        Logger::log(LogType::LOG_ERROR, "Texture", TR("error.opengl.texture_compile"));
     }
 
     if (this->cache)
@@ -101,7 +101,7 @@ int Texture::getFormatFromString(const std::string& formatName) {
     else if (formatName == "DEPTH_STENCIL")
         return GL_DEPTH_STENCIL;
 
-    Logger::log(LOG_WARNING, "Texture", TRF("warn.material.invalid_gl_format", formatName));
+    Logger::log(LogType::LOG_WARNING, "Texture", TRF("warn.material.invalid_gl_format", formatName));
     return GL_RGBA;
 }
 
@@ -128,7 +128,7 @@ int Texture::getWrapModeFromString(const std::string& wrapName) {
     else if (wrapName == "CLAMP_TO_BORDER")
         return GL_CLAMP_TO_BORDER;
 
-    Logger::log(LOG_WARNING, "Texture", TRF("warn.material.invalid_gl_wrap_type", wrapName));
+    Logger::log(LogType::LOG_WARNING, "Texture", TRF("warn.material.invalid_gl_wrap_type", wrapName));
     return GL_REPEAT;
 }
 
@@ -139,6 +139,6 @@ int Texture::getFilterModeFromString(const std::string& filterName) {
         return GL_LINEAR;
     // There are other filter types, but they only work on GL_TEXTURE_MIN_FILTER, so a refactor would be needed
 
-    Logger::log(LOG_WARNING, "Texture", TRF("warn.material.invalid_gl_filter_type", filterName));
+    Logger::log(LogType::LOG_WARNING, "Texture", TRF("warn.material.invalid_gl_filter_type", filterName));
     return GL_LINEAR;
 }

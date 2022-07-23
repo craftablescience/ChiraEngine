@@ -69,7 +69,7 @@ bool Entity::hasChild(std::string_view name_) const {
 std::string_view Entity::addChild(Entity* child) {
     // Do not let two children have the same name!
     if (this->hasChild(child->getName())) {
-        Logger::log(LOG_ERROR, "Entity::addChild", TRF("error.entity.duplicate_child_name", child->getName()));
+        Logger::log(LogType::LOG_ERROR, "Entity::addChild", TRF("error.entity.duplicate_child_name", child->getName()));
         return child->getName();
     }
     child->setParent(this);

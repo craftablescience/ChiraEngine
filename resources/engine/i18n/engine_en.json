@@ -21,11 +21,9 @@
 
   "generic.operation.cancelled": "Operation cancelled",
 
-  "debug.glfw.version": "Using GLFW v{}.{}.{}",
   "debug.discord.user_connected": "Discord user {}:{} connected",
   "debug.discord.user_disconnected": "Discord user disconnected, code {}: {}",
-  "debug.discord.generic_error": "Error {}: {}",
-  "debug.engine.exit": "Exiting...",
+  "debug.discord.generic_error": "Discord error {}: {}",
 
   "warn.obj_loader.not_triangulated": "OBJ file at {} is not triangulated, this will cause problems",
   "warn.material.invalid_gl_format": "Invalid GL format: {}",
@@ -34,7 +32,6 @@
   "warn.mesh.invalid_depth_function": "Invalid depth function value {}",
   "warn.mesh.invalid_cull_type": "Invalid cull type value {}",
   "warn.bullet_collider_resource.invalid_collider_type": "Invalid collider type {}",
-  "warn.ogg.3d_stereo_audio": "Stereo audio will not sound like it is playing from a 3D source",
   "warn.properties_resource.missing_property": "Resource \"{}\" missing property \"{}\", using fallback...",
   "warn.resource.deleting_resource_at_exit": "Deleting \"{}\" (refcount {}) that was not already deleted!",
 
@@ -49,21 +46,14 @@
   "error.opengl.texture_compile": "Texture failed to compile: missing image data",
   "error.opengl.texture_cubemap_compile": "Texture {} in cubemap failed to compile: missing image data",
   "error.opengl.shader_linking": "Shader linking failed\n{}",
-  "error.glfw.generic": "GLFW Error {}: {}\n",
-  "error.glfw.undefined": "GLFW not defined",
   "error.glfw.window": "Window creation failed",
   "error.opengl.version": "OpenGL {} must be available to run this program",
   "error.entity.duplicate_child_name": "Attempted to add child \"{}\", but a child with this name already exists!",
-  "error.engine.icon_has_no_data": "Window icon has no data",
   "error.engine.not_initialized": "Engine is not started: have you called Engine::preInit() and Engine::init()?",
-  "error.engine.missing_translation_manager": "Huh? The translation manager is missing! This should never happen, ever!",
   "error.translation_manager.missing_translation": "Could not find {} translation of \"{}\"",
   "error.resource.resource_not_found": "Resource {} was not found",
   "error.resource.cached_resource_not_found": "Supposedly cached resource {} was not found",
   "error.resource.cannot_split_identifier": "Cannot split resource identifier \"{}\"",
   "error.properties_resource.invalid_json": "Invalid JSON read for resource at \"{}\", resource will have no properties!",
-  "error.shader_resource.compilation_failure": "Shader compilation failed. Type: {}\n{}",
-  "error.primitive_loader.invalid_identifier": "Identifier must be a valid name (e.g. \"cube\")",
-  "error.primitive_loader.invalid_method": "It should be impossible to ever call this method!",
-  "error.steam.initialization_failure": "Could not initialize Steam API!"
+  "error.shader_resource.compilation_failure": "Shader compilation failed. Type: {}\n{}"
 }

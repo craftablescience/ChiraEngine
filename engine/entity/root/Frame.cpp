@@ -51,8 +51,9 @@ void Frame::createFramebuffer() {
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, this->rboHandle);
 
-    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        Logger::log(LOG_ERROR, "Frame", "Framebuffer is not complete!"); // todo(i18n)
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        Logger::log(LogType::LOG_ERROR, "Frame", "Framebuffer is not complete!");
+    }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

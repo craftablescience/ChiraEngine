@@ -12,7 +12,7 @@ void ChiraMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex
     auto meshData = Resource::getResource<BinaryResource>(identifier);
     if (meshData->getBufferLength() < CHIRA_MESH_HEADER_SIZE) {
         // die
-        Logger::log(LOG_ERROR, "CMDL", TRF("error.cmdl_loader.invalid_data", identifier));
+        Logger::log(LogType::LOG_ERROR, "CMDL", TRF("error.cmdl_loader.invalid_data", identifier));
         return;
     }
     ChiraMeshHeader header;

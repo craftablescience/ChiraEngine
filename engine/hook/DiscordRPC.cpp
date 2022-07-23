@@ -18,13 +18,13 @@ void DiscordRPC::init(std::string_view appId) {
     memset(&handlers, 0, sizeof(handlers));
 #if DEBUG
     handlers.ready = [](const DiscordUser* connectedUser) {
-        Logger::log(LOG_INFO_IMPORTANT, "Discord", TRF("debug.discord.user_connected", connectedUser->username, connectedUser->discriminator));
+        Logger::log(LogType::LOG_INFO, "Discord", TRF("debug.discord.user_connected", connectedUser->username, connectedUser->discriminator));
     };
     handlers.disconnected = [](int errcode, const char* message) {
-        Logger::log(LOG_WARNING, "Discord", TRF("debug.discord.user_disconnected", errcode, message));
+        Logger::log(LogType::LOG_WARNING, "Discord", TRF("debug.discord.user_disconnected", errcode, message));
     };
     handlers.errored = [](int errcode, const char* message) {
-        Logger::log(LOG_ERROR, "Discord", TRF("debug.discord.generic_error", errcode, message));
+        Logger::log(LogType::LOG_ERROR, "Discord", TRF("debug.discord.generic_error", errcode, message));
     };
 #endif
     Discord_Initialize(appId.data(), &handlers, 1, nullptr);
