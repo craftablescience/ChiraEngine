@@ -6,20 +6,21 @@
 
 namespace chira {
 
+// check render/material/MaterialFactory.h L21 for example usage
+
 template<typename ReturnType>
-class IFactory {
+class AbstractFactory {
     using factoryFunction = std::function<ReturnType(const std::string&)>;
 public:
-    IFactory() = delete;
-    virtual ~IFactory() = default;
+    AbstractFactory() = delete;
     static bool registerTypeFactory(const std::string& name, factoryFunction createFunc) {
-        if (IFactory::getFactoryMethods().count(name) > 0)
+        if (AbstractFactory::getFactoryMethods().count(name) > 0)
             return false;
-        IFactory::getFactoryMethods()[name] = createFunc;
+        AbstractFactory::getFactoryMethods()[name] = createFunc;
         return true;
     }
     static const factoryFunction& getTypeFactory(const std::string& name) {
-        return IFactory::getFactoryMethods()[name];
+        return AbstractFactory::getFactoryMethods()[name];
     }
 protected:
     static std::unordered_map<std::string, factoryFunction>& getFactoryMethods() {

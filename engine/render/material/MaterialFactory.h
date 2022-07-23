@@ -4,7 +4,7 @@
 #include <string>
 #include <resource/PropertiesResource.h>
 #include <render/Shader.h>
-#include <utility/IFactory.h>
+#include <utility/AbstractFactory.h>
 
 namespace chira {
 
@@ -18,7 +18,7 @@ protected:
     SharedPointer<Shader> shader;
 };
 
-class MaterialFactory : public IFactory<SharedPointer<MaterialBase>> {};
+using MaterialFactory = AbstractFactory<SharedPointer<MaterialBase>>;
 
 } // namespace chira
 
