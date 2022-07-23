@@ -43,6 +43,8 @@ private:
     std::function<void(CallbackArgs)> callback;
 };
 
+class ConVar;
+
 class ConCommandRegistry {
     friend ConCommand;
     friend class ConVar;

@@ -6,7 +6,7 @@
 #include <utility/Logger.h>
 
 #define PREINIT_ENGINE() \
-    chira::Engine::preInit("config_test.json"); \
+    chira::Engine::preInit(); \
     chira::Resource::addResourceProvider(new chira::FilesystemResourceProvider{"tests"})
 
 #define SETUP_ANGELSCRIPT() chira::AngelScriptVM::init()
