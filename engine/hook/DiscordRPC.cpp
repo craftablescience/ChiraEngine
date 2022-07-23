@@ -1,24 +1,17 @@
 #include "DiscordRPC.h"
 
 #include <discord_rpc.h>
+#include <utility/ConEntry.h>
 #include <utility/Logger.h>
 #include <i18n/TranslationManager.h>
 
 using namespace chira;
 
-bool DiscordRPC::isInitialized = false;
-bool DiscordRPC::isModifiedSinceLastUpdate = false;
-std::string DiscordRPC::state;
-std::string DiscordRPC::details;
-std::string DiscordRPC::largeImage;
-std::string DiscordRPC::largeImageText;
-std::string DiscordRPC::smallImage;
-std::string DiscordRPC::smallImageText;
-std::int64_t DiscordRPC::startTimestamp = -1;
-std::int64_t DiscordRPC::endTimestamp = -1;
+[[maybe_unused]]
+static ConVar discord_enable{"discord_enable", true, "Allows applications to use Discord rich presence.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
 
 void DiscordRPC::init(std::string_view appId) {
-    if (DiscordRPC::isInitialized)
+    if (DiscordRPC::isInitialized || !discord_enable.getValue<bool>())
         return;
 
     DiscordEventHandlers handlers;
@@ -82,7 +75,7 @@ void DiscordRPC::setEndTimestamp(std::int64_t time) {
 }
 
 void DiscordRPC::updatePresence() {
-    if (DiscordRPC::isModifiedSinceLastUpdate) {
+    if (DiscordRPC::isModifiedSinceLastUpdate && discord_enable.getValue<bool>()) {
         DiscordRichPresence discordPresence;
         memset(&discordPresence, 0, sizeof(discordPresence));
         if (!DiscordRPC::state.empty())

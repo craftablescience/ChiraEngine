@@ -25,16 +25,16 @@ public:
     static void resetPresence();
     static void shutdown();
 private:
-    static bool isInitialized;
-    static bool isModifiedSinceLastUpdate;
-    static std::string state;
-    static std::string details;
-    static std::string largeImage;
-    static std::string largeImageText;
-    static std::string smallImage;
-    static std::string smallImageText;
-    static std::int64_t startTimestamp;
-    static std::int64_t endTimestamp;
+    static inline bool isInitialized = false;
+    static inline bool isModifiedSinceLastUpdate = false;
+    static inline std::string state;
+    static inline std::string details;
+    static inline std::string largeImage;
+    static inline std::string largeImageText;
+    static inline std::string smallImage;
+    static inline std::string smallImageText;
+    static inline std::int64_t startTimestamp = -1;
+    static inline std::int64_t endTimestamp = -1;
 };
 
 } // namespace chira

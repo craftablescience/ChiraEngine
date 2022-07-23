@@ -7,12 +7,18 @@
 #include <fstream>
 #include <core/Engine.h>
 #include <resource/provider/FilesystemResourceProvider.h>
+#include <hook/DiscordRPC.h>
 #include <i18n/TranslationManager.h>
 #include <entity/model/Mesh.h>
 #include <entity/model/MeshDynamic.h>
 #include <entity/camera/EditorCamera.h>
-#include <utility/Dialogs.h>
 #include <ui/IPanel.h>
+#include <utility/ConEntry.h>
+#include <utility/Dialogs.h>
+
+#ifdef CHIRA_USE_STEAMWORKS
+    #include <hook/SteamAPI.h>
+#endif
 
 using namespace chira;
 
@@ -135,6 +141,19 @@ int main() {
     Engine::preInit();
     Resource::addResourceProvider(new FilesystemResourceProvider{"editor"});
     TranslationManager::addTranslationFile("file://i18n/editor");
+    TranslationManager::addUniversalFile("file://i18n/editor");
+
+    DiscordRPC::init(TR("editor.discord.application_id"));
+    DiscordRPC::setLargeImage("main_logo");
+    DiscordRPC::setState("https://discord.gg/ASgHFkX");
+
+#if defined(CHIRA_USE_STEAMWORKS) && defined(DEBUG)
+    if (ConVarRegistry::hasConVar("steam_enable") && ConVarRegistry::getConVar("steam_enable")->getValue<bool>()) {
+        // Steam API docs say this is bad practice, I say I don't care
+        SteamAPI::generateAppIDFile(1728950);
+    }
+#endif
+
     Engine::init();
 
     Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
