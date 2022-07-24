@@ -32,7 +32,3 @@ Image::~Image() {
         stbi_image_free(this->data);
     }
 }
-
-byte* Image::getData() const {
-    return this->data;
-}
