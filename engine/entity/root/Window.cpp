@@ -18,49 +18,34 @@
 using namespace chira;
 
 [[maybe_unused]]
+static ConCommand win_setpos{"win_setpos", "Set the X and Y position of the engine window, (0,0) being at the top left. If no arguments are given, places it in the center of the screen.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
+    if (args.empty()) {
+        Engine::getWindow()->moveToCenter();
+    } else if (args.size() >= 2) {
+        Engine::getWindow()->moveToPosition({static_cast<int>(std::stoi(args[0])), static_cast<int>(std::stoi(args[1]))});
+    }
+}};
+
 static ConVar win_width{"win_width", 1280, "The width of the engine window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
-    // ConVar is set in registry since it's cached, but that's before the window is created!
-    static bool isSetAtAPlaceWhereThisWillErrorOut = true;
-    if (!isSetAtAPlaceWhereThisWillErrorOut) {
-        try {
-            Engine::getWindow()->setFrameSize({static_cast<int>(std::stoi(newValue.data())), Engine::getWindow()->getFrameSize().y});
-        } catch (const std::invalid_argument &) {}
-        isSetAtAPlaceWhereThisWillErrorOut = false;
-    }
+    Engine::getWindow()->setFrameSize({static_cast<int>(std::stoi(newValue.data())), Engine::getWindow()->getFrameSize().y});
 }};
 
-[[maybe_unused]]
 static ConVar win_height{"win_height", 720, "The height of the engine window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
-    // ConVar is set in registry since it's cached, but that's before the window is created!
-    static bool isSetAtAPlaceWhereThisWillErrorOut = true;
-    if (!isSetAtAPlaceWhereThisWillErrorOut) {
-        try {
-            Engine::getWindow()->setFrameSize({Engine::getWindow()->getFrameSize().x, static_cast<int>(std::stoi(newValue.data()))});
-        } catch (const std::invalid_argument &) {}
-        isSetAtAPlaceWhereThisWillErrorOut = false;
-    }
+    Engine::getWindow()->setFrameSize({Engine::getWindow()->getFrameSize().x, static_cast<int>(std::stoi(newValue.data()))});
 }};
 
-[[maybe_unused]]
-static ConVar win_start_maximized{"win_start_maximized", true, "Start the window maximized. Ignored if \"win_start_fullscreen\" is set to true.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+static ConVar win_maximized{"win_maximized", true, "If the window is maximized. Ignored if \"win_fullscreen\" is true.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
+    Engine::getWindow()->setMaximized(static_cast<bool>(std::stoi(newValue.data())));
+}};
 
-//todo: doesn't let you switch fullscreen and back at runtime because of some weird bugs
-[[maybe_unused]]
-static ConVar win_start_fullscreen{"win_start_fullscreen", false, "Start the window in fullscreen. Overrides \"win_start_maximized\".", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+static ConVar win_fullscreen{"win_fullscreen", false, "If the window is in fullscreen. Overrides \"win_start_maximized\" if true at startup.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
+    Engine::getWindow()->setFullscreen(static_cast<bool>(std::stoi(newValue.data())));
+}};
 
-[[maybe_unused]]
 static ConVar win_vsync{"win_vsync", true, "Limit the FPS to your monitor's resolution.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
-    // ConVar is set in registry since it's cached, but that's before the window is created!
-    static bool isSetAtAPlaceWhereThisWillErrorOut = true;
-    if (!isSetAtAPlaceWhereThisWillErrorOut) {
-        try {
-            glfwSwapInterval(static_cast<bool>(std::stoi(newValue.data())));
-        } catch (const std::invalid_argument &) {}
-        isSetAtAPlaceWhereThisWillErrorOut = false;
-    }
+    glfwSwapInterval(static_cast<bool>(std::stoi(newValue.data())));
 }};
 
-[[maybe_unused]]
 static ConVar input_raw_mouse_motion{"input_raw_mouse_motion", true, "Get more accurate mouse motion.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
 
 bool Window::createGLFWWindow(std::string_view title) {
@@ -84,14 +69,9 @@ bool Window::createGLFWWindow(std::string_view title) {
         Logger::log(LogType::LOG_ERROR, "GLFW", TR("error.glfw.window"));
         return false;
     }
-    if (win_start_fullscreen.getValue<bool>())
-        this->setFullscreen(true);
-    else if (win_start_maximized.getValue<bool>()) {
-        glfwMaximizeWindow(this->window);
-    }
-
     glfwSetWindowUserPointer(this->window, this);
     glfwMakeContextCurrent(this->window);
+
     if (!gladLoadGL(glfwGetProcAddress)) {
         Logger::log(LogType::LOG_ERROR, "OpenGL", TRF("error.opengl.version", GL_VERSION_STRING_PRETTY));
         return false;
@@ -100,14 +80,20 @@ bool Window::createGLFWWindow(std::string_view title) {
 
     this->setIcon("file://textures/ui/icon.png");
 
+    if (win_fullscreen.getValue<bool>()) {
+        this->setFullscreen(true);
+    } else if (win_maximized.getValue<bool>()) {
+        this->setMaximized(true);
+    }
+
     glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GLFW_TRUE);
     glfwSetInputMode(this->window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
-    if (glfwRawMouseMotionSupported() && input_raw_mouse_motion.getValue<bool>())
+    if (glfwRawMouseMotionSupported() && input_raw_mouse_motion.getValue<bool>()) {
         glfwSetInputMode(this->window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+    }
 
     glfwSetFramebufferSizeCallback(this->window, [](GLFWwindow* /*w*/, int width_, int height_) {
-        win_width.setValue(width_);
-        win_height.setValue(height_);
+        Engine::getWindow()->setFrameSize({width_, height_});
     });
     glfwSetKeyCallback(this->window, [](GLFWwindow* /*w*/, int key, int /*scancode*/, int action, int /*mods*/) {
         if (action == GLFW_REPEAT) return;
@@ -154,7 +140,7 @@ bool Window::createGLFWWindow(std::string_view title) {
         static_cast<Window*>(glfwGetWindowUserPointer(w))->iconified = (isIconified == GLFW_TRUE);
     });
     glfwSetWindowMaximizeCallback(this->window, [](GLFWwindow* /*w*/, int isMaximized) {
-        win_start_maximized.setValue(static_cast<bool>(isMaximized));
+        win_maximized.setValue(isMaximized, false);
     });
     glfwSetDropCallback(this->window, [](GLFWwindow* /*w*/, int count, const char** paths) {
         std::vector<std::string> files;
@@ -262,12 +248,8 @@ void Window::removeAllPanels() {
 void Window::setFrameSize(glm::vec2i newSize) {
     Frame::setFrameSize(newSize);
     glfwSetWindowSize(this->window, this->width, this->height);
-    if (win_width.getValue<int>() != this->width) {
-        win_width.setValue(this->width);
-    }
-    if (win_height.getValue<int>() != this->height) {
-        win_height.setValue(this->height);
-    }
+    win_width.setValue(this->width, false);
+    win_height.setValue(this->height, false);
 }
 
 glm::vec2d Window::getMousePosition() const {
@@ -296,16 +278,56 @@ bool Window::isIconified() const {
 }
 
 void Window::setVisible(bool visibility) {
-    if (visibility)
+    if (visibility) {
         glfwShowWindow(this->window);
-    else
+    } else {
         glfwHideWindow(this->window);
+    }
     Frame::setVisible(visibility);
 }
 
 void Window::setFullscreen(bool goFullscreen) const {
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
     glfwSetWindowMonitor(this->window, goFullscreen ? glfwGetPrimaryMonitor() : nullptr, 0, 0, mode->width, mode->height, mode->refreshRate);
+    if (!goFullscreen) {
+        this->moveToCenter();
+    }
+    win_fullscreen.setValue(goFullscreen, false);
+}
+
+bool Window::isFullscreen() const {
+    return static_cast<bool>(glfwGetWindowMonitor(this->window));
+}
+
+void Window::setMaximized(bool maximize) {
+    if (!this->isFullscreen()) {
+        if (maximize) {
+            glfwMaximizeWindow(this->window);
+        } else {
+            glfwRestoreWindow(this->window);
+        }
+        int width_, height_;
+        glfwGetWindowSize(this->window, &width_, &height_);
+        Frame::setFrameSize({width, height});
+        win_maximized.setValue(maximize, false);
+    }
+}
+
+bool Window::isMaximized() const {
+    return static_cast<bool>(glfwGetWindowAttrib(this->window, GLFW_MAXIMIZED));
+}
+
+void Window::moveToPosition(glm::vec2i pos) const {
+    if (this->isFullscreen())
+        return;
+    glfwSetWindowPos(this->window, pos.x, pos.y);
+}
+
+void Window::moveToCenter() const {
+    if (this->isFullscreen())
+        return;
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    glfwSetWindowPos(this->window, (mode->width - this->width) / 2, (mode->height - this->height) / 2);
 }
 
 void Window::setIcon(const std::string& identifier) const {

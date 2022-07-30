@@ -31,6 +31,11 @@ public:
     [[nodiscard]] bool isIconified() const;
     void setVisible(bool visibility) override;
     void setFullscreen(bool goFullscreen) const;
+    [[nodiscard]] bool isFullscreen() const;
+    void setMaximized(bool maximize);
+    [[nodiscard]] bool isMaximized() const;
+    void moveToPosition(glm::vec2i pos) const;
+    void moveToCenter() const;
     /// Note: Images must have a bit depth of 8
     void setIcon(const std::string& identifier) const;
     void shouldStopAfterThisFrame(bool yes = true) const;
