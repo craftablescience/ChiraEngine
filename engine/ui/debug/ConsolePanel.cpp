@@ -97,7 +97,7 @@ void ConsolePanel::renderContents() {
     char buf[1024] {0};
     if (ImGui::InputText("CommandInput", buf, sizeof(buf), ImGuiInputTextFlags_EnterReturnsTrue)) {
         reclaimFocus = true;
-        ConsolePanel::processConsoleMessage(buf);
+        this->processConsoleMessage(buf);
     }
     ImGui::PopItemWidth();
 
@@ -137,7 +137,10 @@ void ConsolePanel::resetTheme() const {
 void ConsolePanel::processConsoleMessage(std::string_view message) {
     std::vector<std::string> input = String::split(message.data(), ' ');
     if (!input.empty()) {
-        if (ConCommandRegistry::hasConCommand(input[0])) {
+        // Special case
+        if (input[0] == "clear") {
+            this->clear();
+        } else if (ConCommandRegistry::hasConCommand(input[0])) {
             std::string name{input[0]};
             input.erase(input.begin());
             ConCommandRegistry::getConCommand(name)->fire(input);
