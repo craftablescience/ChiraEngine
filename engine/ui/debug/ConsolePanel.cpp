@@ -135,71 +135,74 @@ void ConsolePanel::resetTheme() const {
 }
 
 void ConsolePanel::processConsoleMessage(std::string_view message) {
-    std::vector<std::string> input = String::split(message.data(), ' ');
-    if (!input.empty()) {
-        // Special case
-        if (input[0] == "clear") {
-            this->clear();
-        } else if (ConCommandRegistry::hasConCommand(input[0])) {
-            std::string name{input[0]};
-            input.erase(input.begin());
-            ConCommandRegistry::getConCommand(name)->fire(input);
-        } else if (ConVarRegistry::hasConVar(input[0])) {
-            auto* convar = ConVarRegistry::getConVar(input[0]);
-            if (input.size() >= 2) {
-                if (convar->hasFlag(CON_FLAG_READONLY)) {
-                    Logger::log(LogType::LOG_ERROR, "Console", std::string{"Cannot set value of readonly convar \""} + convar->getName().data() + "\"!");
-                    return;
-                }
-                try {
-                    switch (convar->getType()) {
-                        case ConVarType::BOOLEAN:
-                            if (String::toLower(input[1]) == "true") {
-                                convar->setValue(true);
-                            } else if (String::toLower(input[1]) == "false") {
-                                convar->setValue(false);
-                            } else {
-                                convar->setValue(static_cast<bool>(std::stoi(input[1])));
-                            }
-                            break;
-                        case ConVarType::INTEGER:
-                            convar->setValue(std::stoi(input[1]));
-                            break;
-                        case ConVarType::DOUBLE:
-                            convar->setValue(std::stod(input[1]));
-                            break;
-                        case ConVarType::STRING:
-                            convar->setValue(input[1]);
+    auto entryList = String::split(message.data(), ';');
+    for (const auto& entry : entryList) {
+        std::vector<std::string> input = String::split(String::strip(entry), ' ');
+        if (!input.empty()) {
+            // Special case
+            if (input[0] == "clear") {
+                this->clear();
+            } else if (ConCommandRegistry::hasConCommand(input[0])) {
+                std::string name{input[0]};
+                input.erase(input.begin());
+                ConCommandRegistry::getConCommand(name)->fire(input);
+            } else if (ConVarRegistry::hasConVar(input[0])) {
+                auto* convar = ConVarRegistry::getConVar(input[0]);
+                if (input.size() >= 2) {
+                    if (convar->hasFlag(CON_FLAG_READONLY)) {
+                        Logger::log(LogType::LOG_ERROR, "Console", std::string{"Cannot set value of readonly convar \""} + convar->getName().data() + "\"!");
+                        return;
                     }
-                } catch (const std::invalid_argument &) {
-                    Logger::log(LogType::LOG_ERROR, "Console", std::string{"Cannot set value of \""} + convar->getName().data() + "\" to \"" + input[1] + "\"");
-                    return;
-                }
-            }
-            std::string logOutput{convar->getName().data()};
-            logOutput += ": ";
-            logOutput += convar->getTypeAsString();
-            logOutput += " = ";
-            switch (convar->getType()) {
-                case ConVarType::BOOLEAN:
-                    if (convar->getValue<bool>()) {
-                        logOutput += "true";
-                    } else {
-                        logOutput += "false";
+                    try {
+                        switch (convar->getType()) {
+                            case ConVarType::BOOLEAN:
+                                if (String::toLower(input[1]) == "true") {
+                                    convar->setValue(true);
+                                } else if (String::toLower(input[1]) == "false") {
+                                    convar->setValue(false);
+                                } else {
+                                    convar->setValue(static_cast<bool>(std::stoi(input[1])));
+                                }
+                                break;
+                            case ConVarType::INTEGER:
+                                convar->setValue(std::stoi(input[1]));
+                                break;
+                            case ConVarType::DOUBLE:
+                                convar->setValue(std::stod(input[1]));
+                                break;
+                            case ConVarType::STRING:
+                                convar->setValue(input[1]);
+                        }
+                    } catch (const std::invalid_argument &) {
+                        Logger::log(LogType::LOG_ERROR, "Console", std::string{"Cannot set value of \""} + convar->getName().data() + "\" to \"" + input[1] + "\"");
+                        return;
                     }
-                    break;
-                case ConVarType::INTEGER:
-                    logOutput += std::to_string(convar->getValue<int>());
-                    break;
-                case ConVarType::DOUBLE:
-                    logOutput += std::to_string(convar->getValue<double>());
-                    break;
-                case ConVarType::STRING:
-                    logOutput += convar->getValue<std::string>();
+                }
+                std::string logOutput{convar->getName().data()};
+                logOutput += ": ";
+                logOutput += convar->getTypeAsString();
+                logOutput += " = ";
+                switch (convar->getType()) {
+                    case ConVarType::BOOLEAN:
+                        if (convar->getValue<bool>()) {
+                            logOutput += "true";
+                        } else {
+                            logOutput += "false";
+                        }
+                        break;
+                    case ConVarType::INTEGER:
+                        logOutput += std::to_string(convar->getValue<int>());
+                        break;
+                    case ConVarType::DOUBLE:
+                        logOutput += std::to_string(convar->getValue<double>());
+                        break;
+                    case ConVarType::STRING:
+                        logOutput += convar->getValue<std::string>();
+                }
+                Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", logOutput);
+            } else {
+                Logger::log(LogType::LOG_ERROR, "Console", "Could not find command or variable \"" + input[0] + R"("! Run "con_entries" to view valid entries.)");
             }
-            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", logOutput);
-        } else {
-            Logger::log(LogType::LOG_ERROR, "Console", "Could not find command or variable \"" + input[0] + R"("! Run "con_entries" to view valid entries.)");
         }
     }
 }
