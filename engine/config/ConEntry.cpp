@@ -168,25 +168,25 @@ bool ConVarRegistry::registerConVar(ConVar* convar) {
                 case ConVarType::BOOLEAN: {
                     auto value = convar->getValue<bool>();
                     ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
-                    convar->setValue(value);
+                    convar->setValue(value, false);
                     break;
                 }
                 case ConVarType::INTEGER: {
                     auto value = convar->getValue<int>();
                     ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
-                    convar->setValue(value);
+                    convar->setValue(value, false);
                     break;
                 }
                 case ConVarType::DOUBLE: {
                     auto value = convar->getValue<double>();
                     ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
-                    convar->setValue(value);
+                    convar->setValue(value, false);
                     break;
                 }
                 case ConVarType::STRING: {
                     auto value = convar->getValue<std::string>();
                     ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
-                    convar->setValue(value);
+                    convar->setValue(value, false);
                     break;
                 }
             }

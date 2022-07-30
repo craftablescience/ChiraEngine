@@ -1,5 +1,6 @@
 #pragma once
 
+#include <exception>
 #include <string>
 #include <string_view>
 #include <functional>
@@ -175,11 +176,12 @@ public:
         }
     }
 
-    void setValue(ConVarValidType auto newValue) {
+    void setValue(ConVarValidType auto newValue, bool runCallback = true) {
         if (this->hasFlag(CON_FLAG_CHEAT) && !ConVar::areCheatsEnabled()) {
             Logger::log(LogType::LOG_ERROR, "ConVar", "Cannot set value of cheat-protected convar with cheats disabled.");
             return;
         }
+
         if constexpr (std::is_same_v<decltype(newValue), std::string>) {
             switch (this->type) {
                 case ConVarType::BOOLEAN:
@@ -219,7 +221,14 @@ public:
                     break;
             }
         }
-        this->changedCallback(this->value);
+
+        if (runCallback) {
+            try {
+                this->changedCallback(this->value);
+            } catch (const std::exception& e) {
+                Logger::log(LogType::LOG_ERROR, "ConVar", std::string{"Encountered error executing convar callback: "} + e.what());
+            }
+        }
     }
 
     [[nodiscard]] explicit operator std::string() const override {
