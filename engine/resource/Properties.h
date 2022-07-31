@@ -51,6 +51,13 @@ void fromJSON(C* obj, const nlohmann::json& data) {
 }
 
 template<class C>
+C fromJSON(const nlohmann::json& data) {
+    C obj{};
+    fromJSON(&obj, data);
+    return obj;
+}
+
+template<class C>
 nlohmann::json toJSON(C& obj) {
     nlohmann::json out;
 

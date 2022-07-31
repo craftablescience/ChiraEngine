@@ -22,14 +22,13 @@ struct SimpleStructWithProps {
 };
 
 TEST(Properties, simpleDeserialize) {
-    SimpleStructWithProps test{};
-    Serialize::fromJSON(&test, nlohmann::json::parse(R"({
-      "x": -45,
-      "y": 0,
-      "z": "no",
-      "third_number": 23,
-      "name": "world",
-      "b": false
+    auto test = Serialize::fromJSON<SimpleStructWithProps>(nlohmann::json::parse(R"({
+        "x": -45,
+        "y": 0,
+        "z": "no",
+        "third_number": 23,
+        "name": "world",
+        "b": false
     })"));
 
     EXPECT_EQ(test.x, -45);
@@ -64,10 +63,9 @@ struct ComplexStructWithProps {
 };
 
 TEST(Properties, complexDeserialize) {
-    ComplexStructWithProps test{};
-    Serialize::fromJSON(&test, nlohmann::json::parse(R"({
-      "list": [18, 34, -89],
-      "dict": {"first": false, "third": true}
+    auto test = Serialize::fromJSON<ComplexStructWithProps>(nlohmann::json::parse(R"({
+        "list": [18, 34, -89],
+        "dict": {"first": false, "third": true}
     })"));
 
     ASSERT_EQ(test.list.size(), 3);
@@ -142,8 +140,7 @@ TEST(Properties, gettersAndSetters) {
     EXPECT_TRUE(test1.cWasGot);
     EXPECT_STREQ(testJson["c"].get<std::string>().c_str(), "hello getter");
 
-    StructWithGettersAndSettersForProps test2{};
-    Serialize::fromJSON(&test2, nlohmann::json::parse(R"({
+    auto test2 = Serialize::fromJSON<StructWithGettersAndSettersForProps>(nlohmann::json::parse(R"({
         "a": 2,
         "b": true,
         "c": "inside"
