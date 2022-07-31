@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <tuple>
 #include <utility>
 #include <nlohmann/json.hpp>
@@ -11,19 +12,19 @@ namespace chira::Serialize {
 
 template<class Class, typename T>
 struct Property {
-    constexpr Property(T Class::*member_, std::string name_)
+    constexpr Property(T Class::*member_, std::string_view name_)
             : member(member_)
-            , name(std::move(name_)) {}
+            , name(name_) {}
 
     using Type = T;
 
     T Class::*member;
-    std::string name;
+    std::string_view name;
 };
 
 template<class Class, typename T>
-constexpr auto createProperty(T Class::*member, std::string name) {
-    return Property<Class,T>{member, std::move(name)};
+constexpr auto createProperty(T Class::*member, std::string_view name) {
+    return Property<Class, T>{member, name};
 }
 
 template<class C>
