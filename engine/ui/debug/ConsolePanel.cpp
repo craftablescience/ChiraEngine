@@ -95,7 +95,7 @@ void ConsolePanel::renderContents() {
     ImGui::PushItemWidth(-1);
     bool reclaimFocus = false; // only grab keyboard focus on Enter
     char buf[1024] {0};
-    if (ImGui::InputText("CommandInput", buf, sizeof(buf), ImGuiInputTextFlags_EnterReturnsTrue)) {
+    if (ImGui::InputText("CommandInput", buf, sizeof(buf) - 1, ImGuiInputTextFlags_EnterReturnsTrue)) {
         reclaimFocus = true;
         this->processConsoleMessage(buf);
     }
