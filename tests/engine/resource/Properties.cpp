@@ -21,19 +21,6 @@ struct SimpleStructWithProps {
     );
 };
 
-struct ComplexStructWithProps {
-    std::vector<int> list{1, 2, 5, 6};
-    std::unordered_map<std::string,bool> dict{ // python 👍
-            {"first", true},
-            {"second", false}
-    };
-
-    CHIRA_PROPS (
-            CHIRA_PROP(ComplexStructWithProps, list),
-            CHIRA_PROP(ComplexStructWithProps, dict)
-    );
-};
-
 TEST(Properties, simpleDeserialize) {
     SimpleStructWithProps test{};
     Serialize::fromJSON(&test, nlohmann::json::parse(R"({
@@ -62,6 +49,19 @@ TEST(Properties, simpleSerialize) {
     EXPECT_STREQ(testJson["name"].get<std::string>().c_str(), "hello");
     EXPECT_TRUE(testJson["b"]);
 }
+
+struct ComplexStructWithProps {
+    std::vector<int> list{1, 2, 5, 6};
+    std::unordered_map<std::string,bool> dict{ // python 👍
+            {"first", true},
+            {"second", false}
+    };
+
+    CHIRA_PROPS (
+            CHIRA_PROP(ComplexStructWithProps, list),
+            CHIRA_PROP(ComplexStructWithProps, dict)
+    );
+};
 
 TEST(Properties, complexDeserialize) {
     ComplexStructWithProps test{};
@@ -96,4 +96,61 @@ TEST(Properties, complexSerialize) {
     ASSERT_EQ(testJson["dict"].size(), 2);
     EXPECT_TRUE(testJson["dict"]["first"]);
     EXPECT_FALSE(testJson["dict"]["second"]);
+}
+
+struct StructWithGettersAndSettersForProps {
+    int a = 4;
+    bool b = true;
+    std::string c{"hello"};
+
+    bool aWasGot = false;
+    int getA() {
+        this->aWasGot = true;
+        return this->a + 1;
+    }
+
+    bool bWasSet = false;
+    void setB(bool b_) {
+        this->b = !b_;
+        this->bWasSet = true;
+    }
+
+    bool cWasGot = false, cWasSet = false;
+    std::string getC() {
+        this->cWasGot = true;
+        return this->c + " getter";
+    }
+    void setC(std::string c_) {
+        this->c = std::move(c_);
+        this->c += " setter";
+        this->cWasSet = true;
+    }
+
+    CHIRA_PROPS (
+            CHIRA_PROP_GET(StructWithGettersAndSettersForProps, a, getA),
+            CHIRA_PROP_SET(StructWithGettersAndSettersForProps, b, setB),
+            CHIRA_PROP_GET_SET(StructWithGettersAndSettersForProps, c, getC, setC)
+    );
+};
+
+TEST(Properties, gettersAndSetters) {
+    StructWithGettersAndSettersForProps test1{};
+    nlohmann::json testJson = Serialize::toJSON(test1);
+    EXPECT_TRUE(test1.aWasGot);
+    EXPECT_EQ(testJson["a"], 5);
+    EXPECT_TRUE(testJson["b"]);
+    EXPECT_TRUE(test1.cWasGot);
+    EXPECT_STREQ(testJson["c"].get<std::string>().c_str(), "hello getter");
+
+    StructWithGettersAndSettersForProps test2{};
+    Serialize::fromJSON(&test2, nlohmann::json::parse(R"({
+        "a": 2,
+        "b": true,
+        "c": "inside"
+    })"));
+    EXPECT_EQ(test2.a, 2);
+    EXPECT_TRUE(test2.bWasSet);
+    EXPECT_FALSE(test2.b);
+    EXPECT_TRUE(test2.cWasSet);
+    EXPECT_STREQ(test2.c.c_str(), "inside setter");
 }
