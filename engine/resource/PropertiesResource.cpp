@@ -12,9 +12,9 @@ void PropertiesResource::compile(const unsigned char buffer[], std::size_t buffe
     } catch (const nlohmann::json::exception&) {
         Logger::log(LogType::LOG_ERROR, "Properties Resource", TRF("error.properties_resource.invalid_json", this->identifier));
     }
-    if (!hasProperty(props, "dependencies"))
+    if (!props.contains("dependencies"))
         props["dependencies"] = nlohmann::json::parse("{}");
-    if (!hasProperty(props, "properties"))
+    if (!props.contains("properties"))
         props["properties"] = nlohmann::json::parse("{}");
     this->compile(props);
 }
