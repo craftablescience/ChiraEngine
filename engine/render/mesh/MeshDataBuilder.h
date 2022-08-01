@@ -20,7 +20,7 @@ public:
     void clear();
 protected:
     unsigned int currentIndex = 0;
-    /// Pass true to quickAddDuplicate if you don't want to scan the entire vertex vector to calculate the index.
+    /// Pass true to addDuplicate if you don't want to scan the entire vertex vector to calculate the index.
     /// This will make a duplicate vertex if one already exists.
     void addVertex(Vertex vertex, bool addDuplicate = false);
 };

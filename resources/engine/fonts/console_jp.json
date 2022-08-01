@@ -1,8 +1,6 @@
 {
-  "properties": {
-    "name": "Noto Sans Mono CJK JP",
-    "font": "file://fonts/noto_sans_mono/NotoSansMonoCJKjp-Regular.otf",
-    "size": 24.0,
-    "range": "japanese"
-  }
+  "name": "Noto Sans Mono CJK JP",
+  "size": 24.0,
+  "range": "japanese",
+  "font": "file://fonts/noto_sans_mono/NotoSansMonoCJKjp-Regular.otf"
 }

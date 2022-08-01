@@ -1,5 +1,3 @@
 {
-  "dependencies": {
-    "image": "file://textures/missing.png"
-  }
+  "image": "file://textures/missing.png"
 }

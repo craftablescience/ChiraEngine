@@ -15,6 +15,8 @@ public:
     virtual ~MeshData();
     [[nodiscard]] SharedPointer<MaterialBase> getMaterial() const;
     void setMaterial(SharedPointer<MaterialBase> newMaterial);
+    [[nodiscard]] int getDepthFunction() const;
+    [[nodiscard]] int getCullType() const;
     [[nodiscard]] std::vector<byte> getMeshData(const std::string& meshLoader) const;
     void appendMeshData(const std::string& loader, const std::string& identifier);
 protected:

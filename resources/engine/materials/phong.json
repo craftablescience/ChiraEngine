@@ -1,7 +1,5 @@
 {
-  "dependencies": {
-    "shader": "file://shaders/phonglit.json",
-    "diffuse": "file://textures/missing.json",
-    "specular": "file://textures/missing.json"
-  }
+  "shader": "file://shaders/phonglit.json",
+  "diffuse": "file://textures/missing.json",
+  "specular": "file://textures/missing.json"
 }

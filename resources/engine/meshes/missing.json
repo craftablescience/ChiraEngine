@@ -1,10 +1,6 @@
 {
-  "dependencies": {
-    "model": "file://meshes/missing.cmdl",
-    "material": "file://materials/unlitTextured.json",
-    "materialType": "MaterialTextured"
-  },
-  "properties": {
-    "loader": "cmdl"
-  }
+  "materialType": "MaterialTextured",
+  "material": "file://materials/unlitTextured.json",
+  "model": "file://meshes/missing.cmdl",
+  "loader": "cmdl"
 }

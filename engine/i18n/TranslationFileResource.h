@@ -13,8 +13,6 @@ public:
         , language(std::move(language_)) {}
     void compile(const nlohmann::json& translations) override {
         this->strings = translations;
-        this->strings.erase("properties");
-        this->strings.erase("dependencies");
     }
     [[nodiscard]] std::string_view getLanguage() const;
     [[nodiscard]] bool hasTranslation(const std::string& key) const;

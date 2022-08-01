@@ -14,17 +14,13 @@ Shader::Shader(std::string identifier_)
 
 void Shader::compile(const nlohmann::json& properties) {
     this->handle = glCreateProgram();
-    auto vert = Resource::getResource<ShaderResource>(getProperty<std::string>(properties["dependencies"], "vertex", "file://shaders/unlitTextured.vsh", true), GL_VERTEX_SHADER);
-    glAttachShader(this->handle, vert->getHandle());
-    auto frag = Resource::getResource<ShaderResource>(getProperty<std::string>(properties["dependencies"], "fragment", "file://shaders/unlitTextured.fsh", true), GL_FRAGMENT_SHADER);
-    glAttachShader(this->handle, frag->getHandle());
+    Serialize::fromJSON(this, properties);
     glLinkProgram(this->handle);
 #if DEBUG
     this->checkForCompilationErrors();
 #endif
-    if (getProperty(properties["properties"], "usesPV", true))
+    if (this->usesPV)
         UBO_PerspectiveView::get()->bindToShader(this);
-    this->usesModel = getProperty(properties["properties"], "usesM", true);
 }
 
 Shader::~Shader() {
@@ -111,4 +107,16 @@ void Shader::setUniform(std::string_view name, glm::vec4f value) const {
 
 void Shader::setUniform(std::string_view name, glm::mat4 value) const {
     glUniformMatrix4fv(glGetUniformLocation(this->handle, name.data()), 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void Shader::setVertexShader(std::string path) {
+    this->vertexPath = std::move(path);
+    auto vert = Resource::getUniqueUncachedResource<ShaderResource>(this->vertexPath, GL_VERTEX_SHADER);
+    glAttachShader(this->handle, vert->getHandle());
+}
+
+void Shader::setFragmentShader(std::string path) {
+    this->vertexPath = std::move(path);
+    auto frag = Resource::getUniqueUncachedResource<ShaderResource>(this->vertexPath, GL_FRAGMENT_SHADER);
+    glAttachShader(this->handle, frag->getHandle());
 }

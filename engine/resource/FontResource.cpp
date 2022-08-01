@@ -5,11 +5,10 @@
 using namespace chira;
 
 void FontResource::compile(const nlohmann::json& properties) {
+    Serialize::fromJSON(this, properties);
     ImGuiIO& io = ImGui::GetIO();
-    std::string path = FilesystemResourceProvider::getResourceAbsolutePath(getProperty<std::string>(properties["properties"], "font", "file://fonts/noto_sans_jp/NotoSansJP-Regular.otf", true));
-    this->name = getProperty<std::string>(properties["properties"], "name", "Noto Sans JP", true);
-    this->size = getProperty(properties["properties"], "size", 22.f, true);
-    this->range = FontResource::getRangeFromString(getProperty<std::string>(properties["properties"], "range", "english"));
+    this->range = FontResource::getRangeFromString(this->rangeStr);
+    std::string path = FilesystemResourceProvider::getResourceAbsolutePath(this->fontPath);
     this->font = io.Fonts->AddFontFromFileTTF(path.c_str(), this->size, nullptr, this->range);
 }
 

@@ -14,8 +14,14 @@ public:
     void compile(const nlohmann::json& properties) override;
     virtual void use() const;
     [[nodiscard]] SharedPointer<Shader> getShader() const;
+    void setShader(std::string path);
 protected:
     SharedPointer<Shader> shader;
+    std::string shaderPath{"file://shaders/unlitTextured.json"};
+public:
+    CHIRA_PROPS (
+            CHIRA_PROP_NAMED_SET(MaterialBase, shaderPath, shader, setShader)
+    );
 };
 
 using MaterialFactory = AbstractFactory<SharedPointer<MaterialBase>>;

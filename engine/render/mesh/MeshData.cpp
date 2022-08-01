@@ -79,6 +79,14 @@ void MeshData::setMaterial(SharedPointer<MaterialBase> newMaterial) {
     this->material = std::move(newMaterial);
 }
 
+int MeshData::getDepthFunction() const {
+    return this->depthFunction;
+}
+
+int MeshData::getCullType() const {
+    return this->cullType;
+}
+
 std::vector<byte> MeshData::getMeshData(const std::string& meshLoader) const {
     return IMeshLoader::getMeshLoader(meshLoader)->createMesh(this->vertices, this->indices);
 }

@@ -1,5 +1,3 @@
 {
-  "dependencies": {
-    "image": "file://textures/container_specular.png"
-  }
+  "image": "file://textures/container_specular.png"
 }

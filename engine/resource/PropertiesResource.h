@@ -11,20 +11,13 @@ public:
     void compile(const unsigned char buffer[], std::size_t bufferLength) final;
     virtual void compile(const nlohmann::json& properties) = 0;
 
-    [[nodiscard]] static bool hasProperty(const nlohmann::json& dictionary, const std::string& key) {
-        return dictionary.contains(key);
-    }
     template<typename T>
-    [[nodiscard]] T getProperty(const nlohmann::json& dictionary, const std::string& key, T defaultValue, bool logError = false) const {
-        if (hasProperty(dictionary, key)) {
-            return dictionary.at(key);
-        } else if (logError) {
-            logMissingProperty(this->identifier, key);
+    [[nodiscard]] static inline T getProperty(const nlohmann::json& properties, const std::string& key, T defaultValue) {
+        if (properties.contains(key)) {
+            return properties.at(key);
         }
         return defaultValue;
     }
-protected:
-    static void logMissingProperty(std::string_view identifier, std::string_view key);
 };
 
 } // namespace chira

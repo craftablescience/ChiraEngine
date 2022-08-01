@@ -1,5 +1,3 @@
 {
-  "dependencies": {
-    "shader": "file://shaders/ui.json"
-  }
+  "shader": "file://shaders/ui.json"
 }

@@ -1,5 +1,3 @@
 {
-  "dependencies": {
-    "image": "file://textures/ui/splashscreen.png"
-  }
+  "image": "file://textures/ui/splashscreen.png"
 }

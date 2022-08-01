@@ -1,7 +1,5 @@
 {
-  "properties": {
-    "name": "DejaVu Sans Mono",
-    "font": "file://fonts/dejavu_sans_mono/DejaVuSansMono.ttf",
-    "size": 18.0
-  }
+  "name": "DejaVu Sans Mono",
+  "size": 18.0,
+  "font": "file://fonts/dejavu_sans_mono/DejaVuSansMono.ttf"
 }

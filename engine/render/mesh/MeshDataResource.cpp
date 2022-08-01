@@ -3,30 +3,38 @@
 #include <core/Logger.h>
 #include <i18n/TranslationManager.h>
 
+#include <utility>
+
 using namespace chira;
 
 void MeshDataResource::compile(const nlohmann::json& properties) {
-    if (!getProperty(properties["properties"], "materialSetInCode", false)) {
-        this->material = CHIRA_GET_MATERIAL(
-                getProperty<std::string>(properties["dependencies"], "materialType", "MaterialTextured", true),
-                getProperty<std::string>(properties["dependencies"], "material", "file://materials/unlitTextured.json", true));
+    Serialize::fromJSON(this, properties);
+    if (!this->materialSetInCode) {
+        this->material = CHIRA_GET_MATERIAL(this->materialType, this->materialPath);
     }
-    this->depthFunction = MeshDataResource::getDepthFuncFromString(getProperty<std::string>(properties["properties"], "depthFunction", "LEQUAL"));
-    this->backfaceCulling = getProperty(properties["properties"], "backfaceCulling", true);
-    this->cullType = MeshDataResource::getCullTypeFromString(getProperty<std::string>(properties["properties"], "cullType", "BACK"));
-
-    if (hasProperty(properties["dependencies"], "model") && Resource::hasResource(properties["dependencies"]["model"])) {
-        this->appendMeshData(
-                getProperty<std::string>(properties["properties"], "loader", "cmdl", true),
-                properties["dependencies"]["model"]);
-    } else {
-        PropertiesResource::logMissingProperty(this->identifier, "model");
-        this->appendMeshData("cmdl", "file://meshes/missing.cmdl");
-    }
+    this->appendMeshData(this->modelLoader, this->modelPath);
     this->setupForRendering();
 }
 
-int MeshDataResource::getDepthFuncFromString(const std::string& depthFunc) {
+std::string MeshDataResource::getDepthFunctionString() const {
+    return this->depthFuncStr;
+}
+
+std::string MeshDataResource::getCullTypeString() const {
+    return this->cullTypeStr;
+}
+
+void MeshDataResource::setDepthFunction(std::string depthFuncStr_) {
+    this->depthFuncStr = std::move(depthFuncStr_);
+    this->depthFunction = MeshDataResource::getDepthFunctionFromString(this->depthFuncStr);
+}
+
+void MeshDataResource::setCullType(std::string cullTypeStr_) {
+    this->cullTypeStr = std::move(cullTypeStr_);
+    this->cullType = MeshDataResource::getCullTypeFromString(this->cullTypeStr);
+}
+
+int MeshDataResource::getDepthFunctionFromString(const std::string& depthFunc) {
     if (depthFunc == "NEVER")
         return GL_NEVER;
     else if (depthFunc == "ALWAYS")

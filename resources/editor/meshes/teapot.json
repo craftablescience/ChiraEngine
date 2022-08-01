@@ -1,13 +1,6 @@
 {
-  "dependencies": {
-    "model": "file://meshes/teapot.cmdl",
-    "material": "file://materials/teapot.json",
-    "materialType": "MaterialPhong"
-  },
-  "properties": {
-    "loader": "cmdl",
-    "depthFunction": "LESS",
-    "backfaceCulling": true,
-    "cullType": "BACK"
-  }
+  "materialType": "MaterialPhong",
+  "material": "file://materials/teapot.json",
+  "model": "file://meshes/teapot.cmdl",
+  "loader": "cmdl"
 }

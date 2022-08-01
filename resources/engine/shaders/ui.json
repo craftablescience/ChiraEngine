@@ -1,10 +1,6 @@
 {
-  "dependencies": {
-    "vertex": "file://shaders/ui.vsh",
-    "fragment": "file://shaders/ui.fsh"
-  },
-  "properties": {
-    "usesPV": false,
-    "usesM": false
-  }
+  "vertex": "file://shaders/ui.vsh",
+  "fragment": "file://shaders/ui.fsh",
+  "usesPV": false,
+  "usesM": false
 }

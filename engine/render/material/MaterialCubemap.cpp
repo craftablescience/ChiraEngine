@@ -6,10 +6,7 @@ using namespace chira;
 
 void MaterialCubemap::compile(const nlohmann::json& properties) {
     MaterialUntextured::compile(properties);
-    this->cubemap = Resource::getResource<TextureCubemap>(getProperty<std::string>(properties["dependencies"], "cubemap", "file://textures/missing.json", true));
-    this->cubemap->setTextureUnit(GL_TEXTURE0);
-    this->shader->use();
-    this->shader->setUniform("cubemap", 0);
+    Serialize::fromJSON(this, properties);
 }
 
 void MaterialCubemap::use() const {
@@ -19,4 +16,12 @@ void MaterialCubemap::use() const {
 
 SharedPointer<TextureCubemap> MaterialCubemap::getTextureCubemap() const {
     return this->cubemap;
+}
+
+void MaterialCubemap::setTextureCubemap(std::string path) {
+    this->cubemapPath = std::move(path);
+    this->cubemap = Resource::getResource<TextureCubemap>(this->cubemapPath);
+    this->cubemap->setTextureUnit(GL_TEXTURE0);
+    this->shader->use();
+    this->shader->setUniform("cubemap", 0);
 }

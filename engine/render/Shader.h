@@ -30,13 +30,30 @@ public:
     void setUniform(std::string_view name, glm::vec4i value) const;
     void setUniform(std::string_view name, glm::vec4f value) const;
     void setUniform(std::string_view name, glm::mat4 value) const;
+    [[nodiscard]] bool usesPVMatrices() const {
+        return this->usesPV;
+    }
     [[nodiscard]] bool usesModelMatrix() const {
-        return this->usesModel;
+        return this->usesM;
     }
 private:
-    /// Set when compiling
-    bool usesModel = true;
     void checkForCompilationErrors() const;
+
+    bool usesPV = true;
+    bool usesM = true;
+    std::string vertexPath{"file://shaders/unlitTextured.vsh"};
+    std::string fragmentPath{"file://shaders/unlitTextured.fsh"};
+    /// Should only be called in Shader::compile() !!!
+    void setVertexShader(std::string path);
+    /// Should only be called in Shader::compile() !!!
+    void setFragmentShader(std::string path);
+public:
+    CHIRA_PROPS(
+            CHIRA_PROP(Shader, usesPV),
+            CHIRA_PROP(Shader, usesM),
+            CHIRA_PROP_NAMED_SET(Shader, vertexPath, vertex, setVertexShader),
+            CHIRA_PROP_NAMED_SET(Shader, fragmentPath, fragment, setFragmentShader)
+    );
 };
 
 } // namespace chira

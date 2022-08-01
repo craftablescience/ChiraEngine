@@ -12,21 +12,15 @@ Texture::Texture(std::string identifier_, bool cacheTexture)
     , cache(cacheTexture) {}
 
 void Texture::compile(const nlohmann::json& properties) {
-    this->wrapModeS = getWrapModeFromString(getProperty<std::string>(properties["properties"], "wrap_mode_s", "REPEAT"));
-    this->wrapModeT = getWrapModeFromString(getProperty<std::string>(properties["properties"], "wrap_mode_t", "REPEAT"));
-    this->filterMode = getFilterModeFromString(getProperty<std::string>(properties["properties"], "filter_mode", "LINEAR"));
-    this->mipmaps = getProperty(properties["properties"], "mipmaps", true);
+    Serialize::fromJSON(this, properties);
 
-    auto texData = Resource::getResource<TextureResource>(
-            getProperty<std::string>(properties["dependencies"], "image", "file://textures/missing.png", true),
-            getProperty(properties["properties"], "vertical_flip", true));
+    auto texData = Resource::getResource<TextureResource>(this->filePath, this->verticalFlip);
 
-    if (hasProperty(properties["properties"], "format_override"))
-        this->format = getFormatFromString(properties["properties"]["format_override"]);
-    else if (texData->getBitDepth() > 0)
+    if (this->formatOverride != "NONE") {
+        this->format = getFormatFromString(this->formatOverride);
+    } else if (texData->getBitDepth() > 0) {
         this->format = getFormatFromBitDepth(texData->getBitDepth());
-    else
-        this->format = GL_RGB;
+    }
 
     glGenTextures(1, &this->handle);
 
@@ -141,4 +135,23 @@ int Texture::getFilterModeFromString(const std::string& filterName) {
 
     Logger::log(LogType::LOG_WARNING, "Texture", TRF("warn.material.invalid_gl_filter_type", filterName));
     return GL_LINEAR;
+}
+
+void Texture::setFilePath(std::string path) {
+    this->filePath = std::move(path);
+}
+
+void Texture::setWrapModeS(std::string wrapModeSStr_) {
+    this->wrapModeSStr = std::move(wrapModeSStr_);
+    this->wrapModeS = Texture::getWrapModeFromString(this->wrapModeSStr);
+}
+
+void Texture::setWrapModeT(std::string wrapModeTStr_) {
+    this->wrapModeTStr = std::move(wrapModeTStr_);
+    this->wrapModeT = Texture::getWrapModeFromString(this->wrapModeTStr);
+}
+
+void Texture::setFilterMode(std::string filterModeStr_) {
+    this->filterModeStr = std::move(filterModeStr_);
+    this->filterMode = Texture::getFilterModeFromString(this->filterModeStr);
 }

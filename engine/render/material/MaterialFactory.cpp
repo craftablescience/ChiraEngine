@@ -5,7 +5,7 @@ using namespace chira;
 MaterialBase::MaterialBase(std::string identifier_) : PropertiesResource(std::move(identifier_)) {}
 
 void MaterialBase::compile(const nlohmann::json& properties) {
-    this->shader = Resource::getResource<Shader>(getProperty<std::string>(properties["dependencies"], "shader", "file://shaders/unlitTextured.json", true));
+    Serialize::fromJSON(this, properties);
 }
 
 void MaterialBase::use() const {
@@ -14,4 +14,9 @@ void MaterialBase::use() const {
 
 SharedPointer<Shader> MaterialBase::getShader() const {
     return this->shader;
+}
+
+void MaterialBase::setShader(std::string path) {
+    this->shaderPath = std::move(path);
+    this->shader = Resource::getResource<Shader>(this->shaderPath);
 }

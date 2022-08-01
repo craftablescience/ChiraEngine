@@ -4,10 +4,7 @@ using namespace chira;
 
 void MaterialTextured::compile(const nlohmann::json& properties) {
     MaterialUntextured::compile(properties);
-    this->texture = Resource::getResource<Texture>(getProperty<std::string>(properties["dependencies"], "texture", "file://textures/missing.json", true));
-    this->texture->setTextureUnit(GL_TEXTURE0);
-    this->shader->use();
-    this->shader->setUniform("texture0", 0);
+    Serialize::fromJSON(this, properties);
 }
 
 void MaterialTextured::use() const {
@@ -17,4 +14,12 @@ void MaterialTextured::use() const {
 
 SharedPointer<Texture> MaterialTextured::getTexture() const {
     return this->texture;
+}
+
+void MaterialTextured::setTexture(std::string path) {
+    this->texturePath = std::move(path);
+    this->texture = Resource::getResource<Texture>(this->texturePath);
+    this->texture->setTextureUnit(GL_TEXTURE0);
+    this->shader->use();
+    this->shader->setUniform("texture0", 0);
 }
