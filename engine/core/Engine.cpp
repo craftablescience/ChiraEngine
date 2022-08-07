@@ -33,7 +33,8 @@ static ConCommand crash{"crash", "Force-crashes the game or application (for deb
     throw std::runtime_error{"Called crash command!"};
 }, CON_FLAG_CHEAT};
 
-void Engine::preInit() {
+void Engine::preInit(int argc, const char* const argv[]) {
+    CommandLine::initialize(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
     TranslationManager::addTranslationFile("file://i18n/engine");
 }

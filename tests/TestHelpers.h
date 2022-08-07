@@ -6,7 +6,12 @@
 #include <script/AngelScriptVM.h>
 
 #define PREINIT_ENGINE() \
-    chira::Engine::preInit(); \
+    const char* const argv[] = {"ChiraTest"}; \
+    chira::Engine::preInit(1, argv); \
+    chira::Resource::addResourceProvider(new chira::FilesystemResourceProvider{"tests"})
+
+#define PREINIT_ENGINE_WITH_ARGS(argc, argv) \
+    chira::Engine::preInit(argc, argv); \
     chira::Resource::addResourceProvider(new chira::FilesystemResourceProvider{"tests"})
 
 #define SETUP_ANGELSCRIPT() chira::AngelScriptVM::init()
