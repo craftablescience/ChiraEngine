@@ -34,7 +34,7 @@ void FilesystemResourceProvider::compileResource(std::string_view name, Resource
     std::uintmax_t fileSize = std::filesystem::file_size(resourcePath);
     std::ifstream ifs(resourcePath.string().c_str(), std::ios::in | std::ios::binary);
     ifs.seekg(0, std::ios::beg);
-    auto* bytes = new unsigned char[(std::size_t) fileSize + 1];
+    auto* bytes = new byte[(std::size_t) fileSize + 1];
     ifs.read(reinterpret_cast<char*>(bytes), static_cast<std::streamsize>(fileSize));
     bytes[fileSize] = '\0';
     resource->compile(bytes, (std::size_t) fileSize + 1);

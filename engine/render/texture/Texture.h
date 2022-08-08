@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glad/gl.h>
-#include <resource/TextureResource.h>
+#include "Image.h"
 #include "ITexture.h"
 
 namespace chira {
@@ -12,7 +12,7 @@ public:
     void compile(const nlohmann::json& properties) override;
     void use() override;
 protected:
-    SharedPointer<TextureResource> file;
+    SharedPointer<Image> file;
     std::string filePath{"file://textures/missing.png"};
     int format = GL_RGBA;
     std::string formatOverride{"NONE"};

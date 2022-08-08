@@ -8,7 +8,7 @@ namespace chira {
 class PropertiesResource : public Resource {
 public:
     explicit PropertiesResource(std::string identifier_) : Resource(std::move(identifier_)) {}
-    void compile(const unsigned char buffer[], std::size_t bufferLength) final;
+    void compile(const byte buffer[], std::size_t bufferLength) final;
     virtual void compile(const nlohmann::json& properties) = 0;
 
     template<typename T>

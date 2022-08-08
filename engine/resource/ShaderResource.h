@@ -15,7 +15,7 @@ constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_SUFFIX = "#";
 class ShaderResource : public StringResource, public HandleObject<int> {
 public:
     ShaderResource(std::string identifier_, int type_);
-    void compile(const unsigned char buffer[], std::size_t bufferLength) override;
+    void compile(const byte buffer[], std::size_t bufferLength) override;
     ~ShaderResource() override;
     [[nodiscard]] unsigned int getType() const;
     static void addPreprocessorSymbol(const std::string& name, const std::string& value);

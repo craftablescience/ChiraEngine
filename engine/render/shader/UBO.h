@@ -14,7 +14,7 @@ class UniformBufferObject : public HandleObject<unsigned int> {
 public:
     explicit UniformBufferObject(std::string name_, unsigned int size);
     [[nodiscard]] unsigned int getBindingPoint() const;
-    void update(const unsigned char buffer[], GLsizeiptr length) const;
+    void update(const byte buffer[], GLsizeiptr length) const;
     void bindToShader(Shader* shader_) const;
 protected:
     unsigned int bindingPoint = 0;

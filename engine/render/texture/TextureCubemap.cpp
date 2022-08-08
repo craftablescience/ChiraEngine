@@ -3,6 +3,7 @@
 #include <array>
 #include <core/Logger.h>
 #include <i18n/TranslationManager.h>
+#include "Image.h"
 
 using namespace chira;
 
@@ -12,12 +13,12 @@ TextureCubemap::TextureCubemap(std::string identifier_)
 void TextureCubemap::compile(const nlohmann::json& properties) {
     Serialize::fromJSON(this, properties);
 
-    auto fileFD = Resource::getResource<TextureResource>(this->imageFD, this->verticalFlipFD);
-    auto fileBK = Resource::getResource<TextureResource>(this->imageBK, this->verticalFlipBK);
-    auto fileUP = Resource::getResource<TextureResource>(this->imageUP, this->verticalFlipUP);
-    auto fileDN = Resource::getResource<TextureResource>(this->imageDN, this->verticalFlipDN);
-    auto fileLT = Resource::getResource<TextureResource>(this->imageLT, this->verticalFlipLT);
-    auto fileRT = Resource::getResource<TextureResource>(this->imageRT, this->verticalFlipRT);
+    auto fileFD = Resource::getResource<Image>(this->imageFD, this->verticalFlipFD);
+    auto fileBK = Resource::getResource<Image>(this->imageBK, this->verticalFlipBK);
+    auto fileUP = Resource::getResource<Image>(this->imageUP, this->verticalFlipUP);
+    auto fileDN = Resource::getResource<Image>(this->imageDN, this->verticalFlipDN);
+    auto fileLT = Resource::getResource<Image>(this->imageLT, this->verticalFlipLT);
+    auto fileRT = Resource::getResource<Image>(this->imageRT, this->verticalFlipRT);
 
     if (this->formatOverrideFD != "NONE") {
         this->formatFD = getFormatFromString(this->formatOverrideFD);
@@ -64,10 +65,10 @@ void TextureCubemap::compile(const nlohmann::json& properties) {
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, this->filterMode);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, this->filterMode);
 
-    std::array<TextureResource*, 6> files{fileRT.get(), fileLT.get(), fileUP.get(), fileDN.get(), fileFD.get(), fileBK.get()};
+    std::array<Image*, 6> files{fileRT.get(), fileLT.get(), fileUP.get(), fileDN.get(), fileFD.get(), fileBK.get()};
     std::array<int, 6> formats{this->formatRT, this->formatLT, this->formatUP, this->formatDN, this->formatFD, this->formatBK};
     for (int i = 0; i < 6; i++) {
-        if (files[i]->getFile() && files[i]->getFile()->getData()) {
+        if (files[i]->getData()) {
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, formats[i], files[i]->getWidth(), files[i]->getHeight(), 0, formats[i], GL_UNSIGNED_BYTE, files[i]->getData());
         } else {
             Logger::log(LogType::LOG_ERROR, "TextureCubemap", TRF("error.opengl.texture_cubemap_compile", i));

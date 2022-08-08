@@ -5,7 +5,7 @@
 
 using namespace chira;
 
-void PropertiesResource::compile(const unsigned char buffer[], std::size_t bufferLength) {
+void PropertiesResource::compile(const byte buffer[], std::size_t bufferLength) {
     nlohmann::json props;
     try {
         props = nlohmann::json::parse(std::string{reinterpret_cast<const char*>(buffer), bufferLength});

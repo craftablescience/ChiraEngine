@@ -1,7 +1,6 @@
 #include "Texture.h"
 
 #include <core/Logger.h>
-#include <loader/image/Image.h>
 #include <i18n/TranslationManager.h>
 
 using namespace chira;
@@ -13,7 +12,7 @@ Texture::Texture(std::string identifier_, bool cacheTexture)
 void Texture::compile(const nlohmann::json& properties) {
     Serialize::fromJSON(this, properties);
 
-    auto texData = Resource::getResource<TextureResource>(this->filePath, this->verticalFlip);
+    auto texData = Resource::getResource<Image>(this->filePath, this->verticalFlip);
 
     if (this->formatOverride != "NONE") {
         this->format = getFormatFromString(this->formatOverride);
@@ -34,7 +33,7 @@ void Texture::compile(const nlohmann::json& properties) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->filterMode);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->filterMode);
 
-    if (texData->getFile() && texData->getFile()->getData()) {
+    if (texData->getData()) {
         glTexImage2D(GL_TEXTURE_2D, 0, this->format, texData->getWidth(), texData->getHeight(), 0, this->format, GL_UNSIGNED_BYTE, texData->getData());
         if (this->mipmaps) {
             glGenerateMipmap(GL_TEXTURE_2D);

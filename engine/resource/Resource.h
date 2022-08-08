@@ -7,6 +7,7 @@
 #include <nlohmann/json.hpp>
 #include <core/Logger.h>
 #include <event/Events.h>
+#include <math/Types.h>
 #include <utility/SharedPointer.h>
 #include <utility/Types.h>
 #include "provider/IResourceProvider.h"
@@ -22,7 +23,7 @@ class Resource {
 public:
     explicit Resource(std::string identifier_) : identifier(std::move(identifier_)) {}
     virtual ~Resource();
-    virtual void compile(const unsigned char /*buffer*/[], std::size_t /*bufferLength*/) {}
+    virtual void compile(const byte /*buffer*/[], std::size_t /*bufferLength*/) {}
     [[nodiscard]] std::string_view getIdentifier() const {
         return this->identifier;
     }

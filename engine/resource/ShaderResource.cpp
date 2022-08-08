@@ -14,7 +14,7 @@ ShaderResource::ShaderResource(std::string identifier_, int type_)
     , HandleObject<int>()
     , type(type_) {}
 
-void ShaderResource::compile(const unsigned char buffer[], std::size_t bufferLength) {
+void ShaderResource::compile(const byte buffer[], std::size_t bufferLength) {
     if (this->handle != -1)
         return;
     this->handle = glCreateShader(this->type);
