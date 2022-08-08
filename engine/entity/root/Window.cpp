@@ -12,7 +12,7 @@
 #include <render/texture/Image.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <render/material/MaterialFramebuffer.h>
-#include <ui/FontResource.h>
+#include <ui/Font.h>
 #include <ui/IPanel.h>
 
 using namespace chira;
@@ -158,7 +158,7 @@ bool Window::createGLFWWindow(std::string_view title) {
     ImGui_ImplGlfw_InitForOpenGL(this->window, true); // register for default input binds
     ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
 
-    auto defaultFont = Resource::getUniqueResource<FontResource>("file://fonts/default.json");
+    auto defaultFont = Resource::getUniqueResource<Font>("file://fonts/default.json");
     ImGui::GetIO().FontDefault = defaultFont->getFont();
 
     return true;
@@ -334,12 +334,11 @@ void Window::setIcon(const std::string& identifier) const {
     GLFWimage images[1];
     int iconWidth, iconHeight, bitsPerPixel;
     auto icon = Image::getUncompressedImage(FilesystemResourceProvider::getResourceAbsolutePath(identifier), &iconWidth, &iconHeight, &bitsPerPixel, 4, false);
-    runtime_assert(icon, "Window icon has no data");
+    runtime_assert(icon.data, "Window icon has no data");
     images[0].width = iconWidth;
     images[0].height = iconHeight;
-    images[0].pixels = icon;
+    images[0].pixels = icon.data;
     glfwSetWindowIcon(this->window, 1, images);
-    Image::freeUncompressedImage(icon);
 }
 
 void Window::shouldStopAfterThisFrame(bool yes) const {

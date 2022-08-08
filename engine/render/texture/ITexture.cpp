@@ -50,7 +50,8 @@ int ITexture::getFormatFromBitDepth(int bd) {
             return GL_RG;
         case 3:
             return GL_RGB;
-        default: // covers bit depth of 4
+        default:
+        case 4:
             return GL_RGBA;
     }
 }

@@ -1,30 +1,30 @@
-#include "FontResource.h"
+#include "Font.h"
 
 #include <resource/provider/FilesystemResourceProvider.h>
 
 using namespace chira;
 
-void FontResource::compile(const nlohmann::json& properties) {
+void Font::compile(const nlohmann::json& properties) {
     Serialize::fromJSON(this, properties);
     ImGuiIO& io = ImGui::GetIO();
-    this->range = FontResource::getRangeFromString(this->rangeStr);
+    this->range = Font::getRangeFromString(this->rangeStr);
     std::string path = FilesystemResourceProvider::getResourceAbsolutePath(this->fontPath);
     this->font = io.Fonts->AddFontFromFileTTF(path.c_str(), this->size, nullptr, this->range);
 }
 
-ImFont* FontResource::getFont() const {
+ImFont* Font::getFont() const {
     return this->font;
 }
 
-const std::string& FontResource::getName() const {
+const std::string& Font::getName() const {
     return this->name;
 }
 
-float FontResource::getSize() const {
+float Font::getSize() const {
     return this->size;
 }
 
-const ImWchar* FontResource::getRangeFromString(std::string_view input) {
+const ImWchar* Font::getRangeFromString(std::string_view input) {
     ImGuiIO &io = ImGui::GetIO();
     if (input == "chinese")
         return io.Fonts->GetGlyphRangesChineseFull();

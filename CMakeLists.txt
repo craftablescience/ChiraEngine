@@ -120,7 +120,7 @@ list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glfw)
 
 # GLM
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glm)
-list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glm::glm)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glm)
 
 # IMGUI
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui)

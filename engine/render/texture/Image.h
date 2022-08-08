@@ -5,13 +5,29 @@
 
 namespace chira {
 
+struct ImageData {
+    explicit ImageData(byte* data_) : data(data_) {}
+    ~ImageData();
+    ImageData(const ImageData& other) = delete;
+    ImageData& operator=(const ImageData& other) = delete;
+    ImageData(ImageData&& other) noexcept {
+        this->data = other.data;
+        other.data = nullptr;
+    }
+    ImageData& operator=(ImageData&& other) noexcept {
+        this->data = other.data;
+        other.data = nullptr;
+        return *this;
+    }
+    byte* data = nullptr;
+};
+
 class Image : public Resource {
 public:
     explicit Image(std::string identifier_, bool vFlip_ = true);
-    ~Image() override;
     void compile(const byte buffer[], std::size_t bufferLen) override;
     [[nodiscard]] byte* getData() const {
-        return this->data;
+        return this->image.data;
     }
     [[nodiscard]] int getWidth() const {
         return this->width;
@@ -26,13 +42,12 @@ public:
         return this->vFlip;
     }
 
-    [[nodiscard]] static byte* getUncompressedImage(const byte buffer[], int bufferLen, int* width, int* height, int* fileChannels, int desiredChannels, bool vflip);
-    [[nodiscard]] static byte* getUncompressedImage(const byte buffer[], int bufferLen, int desiredChannels, bool vflip);
-    [[nodiscard]] static byte* getUncompressedImage(std::string_view filepath, int* width, int* height, int* fileChannels, int desiredChannels, bool vflip);
-    [[nodiscard]] static byte* getUncompressedImage(std::string_view filepath, int desiredChannels, bool vflip);
-    static void freeUncompressedImage(byte* image);
+    [[nodiscard]] static ImageData getUncompressedImage(const byte buffer[], int bufferLen, int* width, int* height, int* fileChannels, int desiredChannels, bool vflip);
+    [[nodiscard]] static ImageData getUncompressedImage(const byte buffer[], int bufferLen, int desiredChannels, bool vflip);
+    [[nodiscard]] static ImageData getUncompressedImage(std::string_view filepath, int* width, int* height, int* fileChannels, int desiredChannels, bool vflip);
+    [[nodiscard]] static ImageData getUncompressedImage(std::string_view filepath, int desiredChannels, bool vflip);
 protected:
-    byte* data = nullptr;
+    ImageData image{nullptr};
     int width = -1;
     int height = -1;
     int bitDepth = -1;

@@ -3,7 +3,7 @@
 #include <deque>
 
 #include <core/Logger.h>
-#include "../FontResource.h"
+#include "../Font.h"
 #include "../IPanel.h"
 
 namespace chira {
@@ -21,7 +21,7 @@ public:
     static constexpr int MAX_ITEM_COUNT = 512;
 private:
     void processConsoleMessage(std::string_view message);
-    SharedPointer<FontResource> font;
+    SharedPointer<Font> font;
     std::deque<std::string> items;
     bool autoScroll;
     uuids::uuid loggingId;

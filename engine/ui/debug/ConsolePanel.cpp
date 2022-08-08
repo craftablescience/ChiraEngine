@@ -34,7 +34,7 @@ ConsolePanel::ConsolePanel(ImVec2 windowSize) : IPanel(TR("ui.console.title"), f
         }
     });
     this->autoScroll = true;
-    this->font = Resource::getResource<FontResource>(TR("resource.font.console_font_path"));
+    this->font = Resource::getResource<Font>(TR("resource.font.console_font_path"));
 }
 
 ConsolePanel::~ConsolePanel() {
@@ -121,7 +121,7 @@ void ConsolePanel::addLog(const std::string& message) {
 
 void ConsolePanel::setTheme() {
     if (!this->font) {
-        this->font = Resource::getResource<FontResource>(TR("resource.font.console_font_path"));
+        this->font = Resource::getResource<Font>(TR("resource.font.console_font_path"));
     }
     ImGui::PushFont(this->font->getFont());
     ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
