@@ -34,10 +34,6 @@ static ConVar win_height{"win_height", 720, "The height of the engine window.", 
     Engine::getWindow()->setFrameSize({Engine::getWindow()->getFrameSize().x, static_cast<int>(std::stoi(newValue.data()))});
 }};
 
-static ConVar win_maximized{"win_maximized", true, "If the window is maximized. Ignored if \"win_fullscreen\" is true.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
-    Engine::getWindow()->setMaximized(static_cast<bool>(std::stoi(newValue.data())));
-}};
-
 static ConVar win_fullscreen{"win_fullscreen", false, "If the window is in fullscreen. Overrides \"win_start_maximized\" if true at startup.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
     Engine::getWindow()->setFullscreen(static_cast<bool>(std::stoi(newValue.data())));
 }};
@@ -82,8 +78,6 @@ bool Window::createGLFWWindow(std::string_view title) {
 
     if (win_fullscreen.getValue<bool>()) {
         this->setFullscreen(true);
-    } else if (win_maximized.getValue<bool>()) {
-        this->setMaximized(true);
     }
 
     glfwSetInputMode(this->window, GLFW_STICKY_KEYS, GLFW_TRUE);
@@ -138,9 +132,6 @@ bool Window::createGLFWWindow(std::string_view title) {
     });
     glfwSetWindowIconifyCallback(this->window, [](GLFWwindow* w, int isIconified) {
         static_cast<Window*>(glfwGetWindowUserPointer(w))->iconified = (isIconified == GLFW_TRUE);
-    });
-    glfwSetWindowMaximizeCallback(this->window, [](GLFWwindow* /*w*/, int isMaximized) {
-        win_maximized.setValue(isMaximized, false);
     });
     glfwSetDropCallback(this->window, [](GLFWwindow* /*w*/, int count, const char** paths) {
         std::vector<std::string> files;
@@ -309,7 +300,6 @@ void Window::setMaximized(bool maximize) {
         int width_, height_;
         glfwGetWindowSize(this->window, &width_, &height_);
         Frame::setFrameSize({width, height});
-        win_maximized.setValue(maximize, false);
     }
 }
 
