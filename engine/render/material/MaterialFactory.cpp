@@ -2,21 +2,21 @@
 
 using namespace chira;
 
-MaterialBase::MaterialBase(std::string identifier_) : PropertiesResource(std::move(identifier_)) {}
+IMaterial::IMaterial(std::string identifier_) : PropertiesResource(std::move(identifier_)) {}
 
-void MaterialBase::compile(const nlohmann::json& properties) {
+void IMaterial::compile(const nlohmann::json& properties) {
     Serialize::fromJSON(this, properties);
 }
 
-void MaterialBase::use() const {
+void IMaterial::use() const {
     this->shader->use();
 }
 
-SharedPointer<Shader> MaterialBase::getShader() const {
+SharedPointer<Shader> IMaterial::getShader() const {
     return this->shader;
 }
 
-void MaterialBase::setShader(std::string path) {
+void IMaterial::setShader(std::string path) {
     this->shaderPath = std::move(path);
     this->shader = Resource::getResource<Shader>(this->shaderPath);
 }

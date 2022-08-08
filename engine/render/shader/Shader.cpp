@@ -3,8 +3,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <core/Logger.h>
 #include <i18n/TranslationManager.h>
-#include <render/UBO.h>
 #include <resource/ShaderResource.h>
+#include "UBO.h"
 
 using namespace chira;
 

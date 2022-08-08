@@ -1,7 +1,7 @@
 #include "Group.h"
 
 #include <core/Engine.h>
-#include <render/UBO.h>
+#include <render/shader/UBO.h>
 #include "Frame.h"
 
 using namespace chira;
@@ -45,7 +45,7 @@ void Group::setSkybox(const std::string& cubemapId) {
         this->skybox.update();
         this->skyboxMeshCreated = true;
     }
-    this->skybox.setMaterial(Resource::getResource<MaterialCubemap>(cubemapId).castAssert<MaterialBase>());
+    this->skybox.setMaterial(Resource::getResource<MaterialCubemap>(cubemapId).castAssert<IMaterial>());
     this->renderSkybox = true;
 }
 

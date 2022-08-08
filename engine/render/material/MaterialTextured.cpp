@@ -3,12 +3,12 @@
 using namespace chira;
 
 void MaterialTextured::compile(const nlohmann::json& properties) {
-    MaterialUntextured::compile(properties);
+    IMaterial::compile(properties);
     Serialize::fromJSON(this, properties);
 }
 
 void MaterialTextured::use() const {
-    MaterialUntextured::use();
+    IMaterial::use();
     this->texture->use();
 }
 

@@ -4,9 +4,9 @@
 
 namespace chira {
 
-class MaterialUntextured : public MaterialBase {
+class MaterialUntextured final : public IMaterial {
 public:
-    explicit MaterialUntextured(std::string identifier_) : MaterialBase(std::move(identifier_)) {}
+    explicit MaterialUntextured(std::string identifier_) : IMaterial(std::move(identifier_)) {}
 private:
     CHIRA_REGISTER_MATERIAL_TYPE(MaterialUntextured); // NOLINT(cert-err58-cpp)
 };

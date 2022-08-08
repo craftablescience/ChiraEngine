@@ -13,8 +13,8 @@ public:
     MeshData() = default;
     void render(glm::mat4 model);
     virtual ~MeshData();
-    [[nodiscard]] SharedPointer<MaterialBase> getMaterial() const;
-    void setMaterial(SharedPointer<MaterialBase> newMaterial);
+    [[nodiscard]] SharedPointer<IMaterial> getMaterial() const;
+    void setMaterial(SharedPointer<IMaterial> newMaterial);
     [[nodiscard]] int getDepthFunction() const;
     [[nodiscard]] int getCullType() const;
     [[nodiscard]] std::vector<byte> getMeshData(const std::string& meshLoader) const;
@@ -25,7 +25,7 @@ protected:
     int depthFunction = GL_LEQUAL;
     bool backfaceCulling = true;
     int cullType = GL_BACK;
-    SharedPointer<MaterialBase> material;
+    SharedPointer<IMaterial> material;
     unsigned int vboHandle = 0, vaoHandle = 0, eboHandle = 0;
     std::vector<Vertex> vertices{};
     std::vector<unsigned int> indices{};

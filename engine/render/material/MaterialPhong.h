@@ -1,13 +1,13 @@
 #pragma once
 
+#include <render/texture/Texture.h>
 #include "MaterialUntextured.h"
-#include "../Texture.h"
 
 namespace chira {
 
-class MaterialPhong : public MaterialUntextured {
+class MaterialPhong final : public IMaterial {
 public:
-    explicit MaterialPhong(std::string identifier_) : MaterialUntextured(std::move(identifier_)) {}
+    explicit MaterialPhong(std::string identifier_) : IMaterial(std::move(identifier_)) {}
     void compile(const nlohmann::json& properties) override;
     void use() const override;
     [[nodiscard]] SharedPointer<Texture> getTextureDiffuse() const;

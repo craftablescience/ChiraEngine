@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Texture.h"
+#include "ITexture.h"
 
 namespace chira {
 
-class TextureCubemap : public Texture {
+class TextureCubemap final : public ITexture {
 public:
     explicit TextureCubemap(std::string identifier_);
     void compile(const nlohmann::json& properties) override;
-    void use() const override;
+    void use() override;
 protected:
     std::string imageFD{"file://textures/missing.png"};
     std::string imageBK{"file://textures/missing.png"};
@@ -34,9 +34,19 @@ protected:
     std::string formatOverrideDN{"NONE"};
     std::string formatOverrideLT{"NONE"};
     std::string formatOverrideRT{"NONE"};
+    bool mipmaps = true;
+    int filterMode = GL_LINEAR;
+    std::string filterModeStr{"LINEAR"};
+    int wrapModeS = GL_REPEAT;
+    std::string wrapModeSStr{"REPEAT"};
+    int wrapModeT = GL_REPEAT;
+    std::string wrapModeTStr{"REPEAT"};
     int wrapModeR = GL_REPEAT;
     std::string wrapModeRStr{"REPEAT"};
 private:
+    void setFilterMode(std::string filterModeStr_);
+    void setWrapModeS(std::string wrapModeSStr_);
+    void setWrapModeT(std::string wrapModeTStr_);
     void setWrapModeR(std::string wrapModeRStr_);
 public:
     CHIRA_PROPS(
@@ -58,6 +68,10 @@ public:
             CHIRA_PROP(TextureCubemap, formatOverrideDN),
             CHIRA_PROP(TextureCubemap, formatOverrideLT),
             CHIRA_PROP(TextureCubemap, formatOverrideRT),
+            CHIRA_PROP(TextureCubemap, mipmaps),
+            CHIRA_PROP_NAMED_SET(TextureCubemap, filterModeStr, filterMode, setFilterMode),
+            CHIRA_PROP_NAMED_SET(TextureCubemap, wrapModeSStr, wrapModeS, setWrapModeS),
+            CHIRA_PROP_NAMED_SET(TextureCubemap, wrapModeTStr, wrapModeT, setWrapModeT),
             CHIRA_PROP_NAMED_SET(TextureCubemap, wrapModeRStr, wrapModeR, setWrapModeR)
     );
 };

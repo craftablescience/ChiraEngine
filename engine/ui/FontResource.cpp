@@ -1,6 +1,6 @@
 #include "FontResource.h"
 
-#include "provider/FilesystemResourceProvider.h"
+#include <resource/provider/FilesystemResourceProvider.h>
 
 using namespace chira;
 

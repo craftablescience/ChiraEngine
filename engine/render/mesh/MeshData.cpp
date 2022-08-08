@@ -71,11 +71,11 @@ MeshData::~MeshData() {
     }
 }
 
-SharedPointer<MaterialBase> MeshData::getMaterial() const {
+SharedPointer<IMaterial> MeshData::getMaterial() const {
     return this->material;
 }
 
-void MeshData::setMaterial(SharedPointer<MaterialBase> newMaterial) {
+void MeshData::setMaterial(SharedPointer<IMaterial> newMaterial) {
     this->material = std::move(newMaterial);
 }
 

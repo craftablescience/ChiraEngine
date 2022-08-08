@@ -10,7 +10,6 @@
 #include <input/InputManager.h>
 #include <loader/mesh/OBJMeshLoader.h>
 #include <loader/mesh/ChiraMeshLoader.h>
-#include <render/Light.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <resource/ShaderResource.h>
 #include <script/AngelScriptVM.h>

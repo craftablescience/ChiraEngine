@@ -1,9 +1,10 @@
 #pragma once
 
 #include <deque>
+
 #include <core/Logger.h>
-#include <resource/FontResource.h>
-#include <ui/IPanel.h>
+#include "../FontResource.h"
+#include "../IPanel.h"
 
 namespace chira {
 

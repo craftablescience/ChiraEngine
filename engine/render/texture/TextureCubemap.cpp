@@ -6,12 +6,10 @@
 
 using namespace chira;
 
-TextureCubemap::TextureCubemap(std::string identifier_) : Texture(std::move(identifier_), false) {}
+TextureCubemap::TextureCubemap(std::string identifier_)
+    : ITexture(std::move(identifier_)) {}
 
 void TextureCubemap::compile(const nlohmann::json& properties) {
-    // hack: we can't run Texture::compile() here
-    //       please get rid of inheritance for textures and materials
-    Serialize::fromJSON(assert_cast<Texture*>(this), properties);
     Serialize::fromJSON(this, properties);
 
     auto fileFD = Resource::getResource<TextureResource>(this->imageFD, this->verticalFlipFD);
@@ -80,7 +78,7 @@ void TextureCubemap::compile(const nlohmann::json& properties) {
     }
 }
 
-void TextureCubemap::use() const {
+void TextureCubemap::use() {
     if (this->handle == 0)
         return;
     if (this->activeTextureUnit == -1) {
@@ -91,7 +89,22 @@ void TextureCubemap::use() const {
     glBindTexture(GL_TEXTURE_CUBE_MAP, this->handle);
 }
 
+void TextureCubemap::setFilterMode(std::string filterModeStr_) {
+    this->filterModeStr = std::move(filterModeStr_);
+    this->filterMode = ITexture::getFilterModeFromString(this->filterModeStr);
+}
+
+void TextureCubemap::setWrapModeS(std::string wrapModeSStr_) {
+    this->wrapModeSStr = std::move(wrapModeSStr_);
+    this->wrapModeS = ITexture::getWrapModeFromString(this->wrapModeSStr);
+}
+
+void TextureCubemap::setWrapModeT(std::string wrapModeTStr_) {
+    this->wrapModeTStr = std::move(wrapModeTStr_);
+    this->wrapModeT = ITexture::getWrapModeFromString(this->wrapModeTStr);
+}
+
 void TextureCubemap::setWrapModeR(std::string wrapModeRStr_) {
     this->wrapModeRStr = std::move(wrapModeRStr_);
-    this->wrapModeR = Texture::getWrapModeFromString(this->wrapModeRStr);
+    this->wrapModeR = ITexture::getWrapModeFromString(this->wrapModeRStr);
 }

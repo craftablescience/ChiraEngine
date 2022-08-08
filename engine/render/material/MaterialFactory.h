@@ -3,14 +3,14 @@
 #include <functional>
 #include <string>
 #include <resource/PropertiesResource.h>
-#include <render/Shader.h>
+#include <render/shader/Shader.h>
 #include <utility/AbstractFactory.h>
 
 namespace chira {
 
-class MaterialBase : public PropertiesResource {
+class IMaterial : public PropertiesResource {
 public:
-    explicit MaterialBase(std::string identifier_);
+    explicit IMaterial(std::string identifier_);
     void compile(const nlohmann::json& properties) override;
     virtual void use() const;
     [[nodiscard]] SharedPointer<Shader> getShader() const;
@@ -20,11 +20,11 @@ protected:
     std::string shaderPath{"file://shaders/unlitTextured.json"};
 public:
     CHIRA_PROPS (
-            CHIRA_PROP_NAMED_SET(MaterialBase, shaderPath, shader, setShader)
+            CHIRA_PROP_NAMED_SET(IMaterial, shaderPath, shader, setShader)
     );
 };
 
-using MaterialFactory = AbstractFactory<SharedPointer<MaterialBase>>;
+using MaterialFactory = AbstractFactory<SharedPointer<IMaterial>>;
 
 } // namespace chira
 
@@ -32,11 +32,11 @@ using MaterialFactory = AbstractFactory<SharedPointer<MaterialBase>>;
     static inline const bool ResourceClassName##FactoryRegistryHelper =                         \
         chira::MaterialFactory::registerTypeFactory(                                            \
             #ResourceClassName,                                                                 \
-            [](const std::string& materialId) -> chira::SharedPointer<chira::MaterialBase> {    \
+            [](const std::string& materialId) -> chira::SharedPointer<chira::IMaterial> {       \
                 return chira::Resource::getResource<ResourceClassName>(materialId)              \
-                       .castAssert<chira::MaterialBase>();                                      \
+                       .castAssert<chira::IMaterial>();                                         \
             }                                                                                   \
         )
 
 #define CHIRA_GET_MATERIAL(type, identifier) \
-    chira::MaterialFactory::getTypeFactory(type)(identifier).castAssert<chira::MaterialBase>()
+    chira::MaterialFactory::getTypeFactory(type)(identifier).castAssert<chira::IMaterial>()

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <imgui.h>
-#include "PropertiesResource.h"
+#include <resource/PropertiesResource.h>
 
 namespace chira {
 

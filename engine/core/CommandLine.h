@@ -20,4 +20,4 @@ private:
     static inline std::vector<std::string> arguments;
 };
 
-}
+} // namespace chira

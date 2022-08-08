@@ -11,8 +11,8 @@
 #include <input/InputManager.h>
 #include <loader/image/Image.h>
 #include <resource/provider/FilesystemResourceProvider.h>
-#include <resource/FontResource.h>
 #include <render/material/MaterialFramebuffer.h>
+#include <ui/FontResource.h>
 #include <ui/IPanel.h>
 
 using namespace chira;
@@ -166,7 +166,7 @@ bool Window::createGLFWWindow(std::string_view title) {
 
 static void makeSurface(Window* window, MeshDataBuilder* surface) {
     surface->addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-    surface->setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/window.json", window).castAssert<MaterialBase>());
+    surface->setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/window.json", window).castAssert<IMaterial>());
 }
 
 Window::Window(std::string name_, std::string_view title)
@@ -351,7 +351,7 @@ void Window::displaySplashScreen() {
     glClear(GL_COLOR_BUFFER_BIT);
     MeshDataBuilder plane;
     plane.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-    plane.setMaterial(Resource::getResource<MaterialTextured>("file://materials/splashscreen.json").castAssert<MaterialBase>());
+    plane.setMaterial(Resource::getResource<MaterialTextured>("file://materials/splashscreen.json").castAssert<IMaterial>());
     plane.render(glm::identity<glm::mat4>());
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDisable(GL_DEPTH_TEST);

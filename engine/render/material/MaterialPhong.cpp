@@ -5,12 +5,12 @@
 using namespace chira;
 
 void MaterialPhong::compile(const nlohmann::json& properties) {
-    MaterialUntextured::compile(properties);
+    IMaterial::compile(properties);
     Serialize::fromJSON(this, properties);
 }
 
 void MaterialPhong::use() const {
-    MaterialUntextured::use();
+    IMaterial::use();
     this->diffuse->use();
     this->specular->use();
 }

@@ -5,12 +5,12 @@
 using namespace chira;
 
 void MaterialCubemap::compile(const nlohmann::json& properties) {
-    MaterialUntextured::compile(properties);
+    IMaterial::compile(properties);
     Serialize::fromJSON(this, properties);
 }
 
 void MaterialCubemap::use() const {
-    MaterialUntextured::use();
+    IMaterial::use();
     this->cubemap->use();
 }
 
