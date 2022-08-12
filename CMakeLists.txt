@@ -158,6 +158,10 @@ list(APPEND CHIRA_ENGINE_LINK_LIBRARIES stduuid)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES tinyfiledialogs)
 
+# Imgui based file dialog
+#list(APPEND CHIRA_ENGINE_HEADERS
+        #${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser/imfilebrowser.h)
+
 # CHIRAENGINE
 option(CHIRA_USE_STEAMWORKS "Build Chira Engine with Steamworks API features" ON)
 
@@ -187,7 +191,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/libloader/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stb
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stduuid/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs)
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser)
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/engine)
 

@@ -22,3 +22,9 @@
 [submodule "engine/thirdparty/stduuid"]
 	path = engine/thirdparty/stduuid
 	url = https://github.com/mariusbancila/stduuid
+[submodule "engine/thirdparty/ImGuiFileDialog"]
+	path = engine/thirdparty/ImGuiFileDialog
+	url = https://github.com/aiekick/ImGuiFileDialog.git
+[submodule "engine/thirdparty/imgui-filebrowser"]
+	path = engine/thirdparty/imgui-filebrowser
+	url = https://github.com/AirGuanZ/imgui-filebrowser

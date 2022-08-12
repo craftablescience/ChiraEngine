@@ -14,6 +14,8 @@
 #include <entity/camera/EditorCamera.h>
 #include <ui/IPanel.h>
 #include <utility/Dialogs.h>
+// Used because file dialogs are broken on macos
+#include <imfilebrowser.h>
 
 #ifdef CHIRA_USE_DISCORD
     #include <hook/DiscordRPC.h>
@@ -56,8 +58,9 @@ public:
                 ImGuiWindowFlags_NoBackground ;
     }
 
+    // Opens a file dialog used to select a model definition
     void addModelSelected() {
-        std::string path = Dialogs::openResource("*.json");
+        std::string path = FilesystemResourceProvider::getResourceIdentifier(modeldialog.GetSelected().string());
         if (path.empty())
             return Dialogs::popupError(TR("error.modelviewer.file_is_not_resource"));
         this->setLoadedFile(path);
@@ -86,10 +89,13 @@ public:
     }
 
     void preRenderContents() override {
+        modeldialog.SetTitle("Open Resource");
+        modeldialog.SetTypeFilters({".json"});
         if (ImGui::BeginMainMenuBar()) {
             if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
-                if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) // Open Model...
-                    this->addModelSelected();
+                if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) { // Open Model...
+                    modeldialog.Open();
+                }
                 if (ImGui::MenuItem(TRC("ui.menubar.add_resource_folder"))) // Add Resource Folder...
                     addResourceFolderSelected();
                 ImGui::Separator();
@@ -105,6 +111,13 @@ public:
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
+        }
+        
+        // Model Dialog specific logic
+        modeldialog.Display();
+        if (modeldialog.HasSelected()) {
+            this->addModelSelected();
+            modeldialog.ClearSelected();
         }
 
         ImGui::SetNextWindowPos(ImVec2{0, ImGui::GetFrameHeight()});
@@ -137,6 +150,7 @@ private:
     std::string loadedFile;
     std::string meshId;
     bool showGrid = true;
+    ImGui::FileBrowser modeldialog;
 };
 
 int main(int argc, const char* const argv[]) {
