@@ -85,7 +85,7 @@ void Entity::removeChild(std::string_view name_) {
             return true;
         }
         return false;
-    }));
+    }), this->children.end());
 }
 
 void Entity::removeAllChildren() { // NOLINT(misc-no-recursion)

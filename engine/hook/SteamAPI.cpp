@@ -81,11 +81,11 @@ void SteamAPI::Client::runCallbacks() {
     CallbackMessage callback{};
     while (steamFunctionWrapper<bool>("SteamAPI_ManualDispatch_GetNextCallback", false, steamPipe, &callback)) {
         switch (static_cast<CallbackMessageType>(callback.callbackType)) {
-            case CallbackMessageType::GAME_OVERLAY_ACTIVATED:
+            using enum CallbackMessageType;
+            case GAME_OVERLAY_ACTIVATED:
                 Events::createEvent("chira::steam::game_overlay_activated", static_cast<bool>(reinterpret_cast<Callbacks::GameOverlayActivated*>(callback.callback)->active));
                 break;
-            case CallbackMessageType::COMPLETED:
-            {
+            case COMPLETED: {
                 void* callbackResult = malloc(callback.callbackSize);
                 if (bool failed = false; steamFunctionWrapper<bool>(
                         "SteamAPI_ManualDispatch_GetAPICallResult",
@@ -104,10 +104,10 @@ void SteamAPI::Client::runCallbacks() {
                 free(callbackResult);
                 break;
             }
-            case CallbackMessageType::DLC_INSTALLED:
+            case DLC_INSTALLED:
                 Events::createEvent("chira::steam::dlc_installed", static_cast<std::uint32_t>(reinterpret_cast<Callbacks::DLCInstalled*>(callback.callback)->appID));
                 break;
-            case CallbackMessageType::FILE_DETAILS_RESULT:
+            case FILE_DETAILS_RESULT:
                 Events::createEvent("chira::steam::file_details_result", *reinterpret_cast<Callbacks::FileDetailsResult*>(callback.callback));
                 break;
         }

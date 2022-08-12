@@ -1,5 +1,5 @@
 {
-  "resource.font.console_font_path": "file://fonts/console_en.json",
+  "resource.font.console": "file://fonts/console_en.json",
 
   "ui.window.title": "Chira Engine",
 

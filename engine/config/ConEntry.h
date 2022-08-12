@@ -60,7 +60,7 @@ private:
     static void deregisterConCommand(ConCommand* concommand);
 };
 
-// Must be delared before ConVar
+// Must be declared before ConVar
 class ConVarRegistry {
     friend class ConVar;
 public:
@@ -95,31 +95,8 @@ public:
     using CallbackArg = std::string_view;
 
     ConVar(std::string name_, ConVarValidType auto defaultValue, int flags_ = CON_FLAG_NONE, std::function<void(CallbackArg)> onChanged = [](CallbackArg) {})
-        : ConCommand(std::move(name_), [](ConCommand::CallbackArgs) {}, flags_)
-        , changedCallback(std::move(onChanged)) {
-        if constexpr (std::is_same_v<decltype(defaultValue), std::string>) {
-            this->value = std::move(defaultValue);
-            this->type = ConVarType::STRING;
-        } else {
-            this->value = std::to_string(defaultValue);
-            if constexpr (std::is_same_v<decltype(defaultValue), bool>) {
-                this->type = ConVarType::BOOLEAN;
-            }
-            else if constexpr (std::is_same_v<decltype(defaultValue), int>) {
-                this->type = ConVarType::INTEGER;
-            }
-            else /* if constexpr (std::is_same_v<decltype(defaultValue), double>) */ {
-                this->type = ConVarType::DOUBLE;
-            }
-        }
-        // undo parent class ctor
-        ConCommandRegistry::deregisterConCommand(this);
-        runtime_assert(ConVarRegistry::registerConVar(this), "This convar already exists! This will cause problems...");
-    }
-
-    ConVar(std::string name_, ConVarValidType auto defaultValue, std::string description_, int flags_ = CON_FLAG_NONE, std::function<void(CallbackArg)> onChanged = [](CallbackArg) {})
-        : ConCommand(std::move(name_), std::move(description_), [](ConCommand::CallbackArgs) {}, flags_)
-        , changedCallback(std::move(onChanged)) {
+            : ConCommand(std::move(name_), [](ConCommand::CallbackArgs) {}, flags_)
+            , changedCallback(std::move(onChanged)) {
         if constexpr (std::is_same_v<decltype(defaultValue), std::string>) {
             this->value = std::move(defaultValue);
             this->type = ConVarType::STRING;
@@ -138,27 +115,30 @@ public:
         runtime_assert(ConVarRegistry::registerConVar(this), "This convar already exists! This will cause problems...");
     }
 
-    ~ConVar() {
-        ConVarRegistry::deregisterConVar(this);
-    }
-
-    [[nodiscard]] ConVarType getType() const {
-        return this->type;
-    }
-
-    [[nodiscard]] std::string_view getTypeAsString() const {
-        switch (this->type) {
-            case ConVarType::BOOLEAN:
-                return "boolean";
-            case ConVarType::INTEGER:
-                return "integer";
-            case ConVarType::DOUBLE:
-                return "double";
-            case ConVarType::STRING:
-                return "string";
+    ConVar(std::string name_, ConVarValidType auto defaultValue, std::string description_, int flags_ = CON_FLAG_NONE, std::function<void(CallbackArg)> onChanged = [](CallbackArg) {})
+            : ConCommand(std::move(name_), std::move(description_), [](ConCommand::CallbackArgs) {}, flags_)
+            , changedCallback(std::move(onChanged)) {
+        if constexpr (std::is_same_v<decltype(defaultValue), std::string>) {
+            this->value = std::move(defaultValue);
+            this->type = ConVarType::STRING;
+        } else {
+            this->value = std::to_string(defaultValue);
+            if constexpr (std::is_same_v<decltype(defaultValue), bool>) {
+                this->type = ConVarType::BOOLEAN;
+            } else if constexpr (std::is_same_v<decltype(defaultValue), int>) {
+                this->type = ConVarType::INTEGER;
+            } else /* if constexpr (std::is_same_v<decltype(defaultValue), double>) */ {
+                this->type = ConVarType::DOUBLE;
+            }
         }
-        return "";
+        // undo parent class ctor
+        ConCommandRegistry::deregisterConCommand(this);
+        runtime_assert(ConVarRegistry::registerConVar(this), "This convar already exists! This will cause problems...");
     }
+
+    ~ConVar();
+    [[nodiscard]] ConVarType getType() const;
+    [[nodiscard]] std::string_view getTypeAsString() const;
 
     template<typename T>
     requires ConVarValidType<T>
@@ -184,15 +164,16 @@ public:
 
         if constexpr (std::is_same_v<decltype(newValue), std::string>) {
             switch (this->type) {
-                case ConVarType::BOOLEAN:
-                case ConVarType::INTEGER:
+                using enum ConVarType;
+                case BOOLEAN:
+                case INTEGER:
                     try {
                         this->value = std::to_string(std::stoi(newValue));
                     } catch (const std::invalid_argument&) {
                         this->value = std::to_string(newValue.size());
                     }
                     break;
-                case ConVarType::DOUBLE:
+                case DOUBLE:
                     try {
                         this->value = std::to_string(std::stod(newValue));
                     } catch (const std::invalid_argument&) {
@@ -200,23 +181,24 @@ public:
                     }
                     break;
                 default:
-                case ConVarType::STRING:
+                case STRING:
                     this->value = newValue;
                     break;
             }
         } else {
             switch (this->type) {
-                case ConVarType::BOOLEAN:
+                using enum ConVarType;
+                case BOOLEAN:
                     this->value = std::to_string(static_cast<bool>(newValue));
                     break;
-                case ConVarType::INTEGER:
+                case INTEGER:
                     this->value = std::to_string(static_cast<int>(newValue));
                     break;
-                case ConVarType::DOUBLE:
+                case DOUBLE:
                     this->value = std::to_string(static_cast<double>(newValue));
                     break;
                 default:
-                case ConVarType::STRING:
+                case STRING:
                     this->value = std::to_string(newValue);
                     break;
             }

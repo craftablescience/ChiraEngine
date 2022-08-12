@@ -40,7 +40,8 @@ void MeshDataBuilder::addSquare(Vertex center, glm::vec2 size, SignedAxis normal
     const glm::vec3 col{center.color.r,    center.color.g,    center.color.b};
 
     switch (normal) {
-        case SignedAxis::YP:
+        using enum SignedAxis;
+        case YP:
             this->addSquare(
                     {{mid.x - s1, mid.y + offset, mid.z + s2}, {0, 0, 0}, {col.x, col.y, col.z}, {0, 0}},
                     {{mid.x + s1, mid.y + offset, mid.z + s2}, {0, 0, 0}, {col.x, col.y, col.z}, {1, 0}},
@@ -49,7 +50,7 @@ void MeshDataBuilder::addSquare(Vertex center, glm::vec2 size, SignedAxis normal
                     addDuplicate
             );
             break;
-        case SignedAxis::YN:
+        case YN:
             this->addSquare(
                     {{mid.x - s1, mid.y - offset, mid.z - s2}, {0, 0, 0}, {col.x, col.y, col.z}, {1, 0}},
                     {{mid.x + s1, mid.y - offset, mid.z - s2}, {0, 0, 0}, {col.x, col.y, col.z}, {0, 0}},
@@ -58,7 +59,7 @@ void MeshDataBuilder::addSquare(Vertex center, glm::vec2 size, SignedAxis normal
                     addDuplicate
             );
             break;
-        case SignedAxis::ZP:
+        case ZP:
             this->addSquare(
                     {{mid.x - s1, mid.y + s2, mid.z + offset}, {0, 0, 0}, {col.x, col.y, col.z}, {0, 0}},
                     {{mid.x - s1, mid.y - s2, mid.z + offset}, {0, 0, 0}, {col.x, col.y, col.z}, {0, 1}},
@@ -67,7 +68,7 @@ void MeshDataBuilder::addSquare(Vertex center, glm::vec2 size, SignedAxis normal
                     addDuplicate
             );
             break;
-        case SignedAxis::ZN:
+        case ZN:
             this->addSquare(
                     {{mid.x + s1, mid.y + s2, mid.z - offset}, {0, 0, 0}, {col.x, col.y, col.z}, {1, 0}},
                     {{mid.x + s1, mid.y - s2, mid.z - offset}, {0, 0, 0}, {col.x, col.y, col.z}, {1, 1}},
@@ -76,7 +77,7 @@ void MeshDataBuilder::addSquare(Vertex center, glm::vec2 size, SignedAxis normal
                     addDuplicate
             );
             break;
-        case SignedAxis::XP:
+        case XP:
             this->addSquare(
                     {{mid.x + offset, mid.y + s1, mid.z + s2}, {0, 0, 0}, {col.x, col.y, col.z}, {1, 0}},
                     {{mid.x + offset, mid.y - s1, mid.z + s2}, {0, 0, 0}, {col.x, col.y, col.z}, {1, 1}},
@@ -85,7 +86,7 @@ void MeshDataBuilder::addSquare(Vertex center, glm::vec2 size, SignedAxis normal
                     addDuplicate
             );
             break;
-        case SignedAxis::XN:
+        case XN:
             this->addSquare(
                     {{mid.x - offset, mid.y - s1, mid.z - s2}, {0, 0, 0}, {col.x, col.y, col.z}, {0, 1}},
                     {{mid.x - offset, mid.y - s1, mid.z + s2}, {0, 0, 0}, {col.x, col.y, col.z}, {1, 1}},

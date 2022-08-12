@@ -143,15 +143,16 @@ public:
     template<typename U>
     SharedPointer<U> cast(CastType type) const {
         switch (type) {
-            case CastType::STATIC_CAST:
+            using enum CastType;
+            case STATIC_CAST:
                 return this->castStatic<U>();
-            case CastType::DYNAMIC_CAST:
+            case DYNAMIC_CAST:
                 return this->castDynamic<U>();
-            case CastType::REINTERPRET_CAST:
+            case REINTERPRET_CAST:
                 return this->castReinterpret<U>();
-            case CastType::ASSERT_CAST:
+            case ASSERT_CAST:
                 return this->castAssert<U>();
-            case CastType::C_CAST:
+            case C_CAST:
                 return SharedPointer<U>((U*)(this->ptr), this->data);
         }
     }

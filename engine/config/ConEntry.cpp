@@ -124,14 +124,6 @@ void ConCommandRegistry::deregisterConCommand(ConCommand* concommand) {
     }), ConCommandRegistry::getConCommands().end());
 }
 
-// Create cheats convar
-[[maybe_unused]]
-static ConVar cheats{"cheats", false, "Unlocks certain commands that break gameplay."}; // NOLINT(cert-err58-cpp)
-
-bool ConVar::areCheatsEnabled() {
-    return cheats.getValue<bool>();
-}
-
 bool ConVarRegistry::hasConVar(std::string_view name) {
     for (const auto* convar : ConVarRegistry::getConVars()) {
         if (convar->getName() == name) {
@@ -165,25 +157,26 @@ bool ConVarRegistry::registerConVar(ConVar* convar) {
         if (convar->hasFlag(CON_FLAG_CACHE) && ConVarRegistry::getConVarCache().hasValue(convar->getName().data())) {
             // There's an entry for the convar in cache, load it
             switch (convar->getType()) {
-                case ConVarType::BOOLEAN: {
+                using enum ConVarType;
+                case BOOLEAN: {
                     auto value = convar->getValue<bool>();
                     ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
                     convar->setValue(value, false);
                     break;
                 }
-                case ConVarType::INTEGER: {
+                case INTEGER: {
                     auto value = convar->getValue<int>();
                     ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
                     convar->setValue(value, false);
                     break;
                 }
-                case ConVarType::DOUBLE: {
+                case DOUBLE: {
                     auto value = convar->getValue<double>();
                     ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
                     convar->setValue(value, false);
                     break;
                 }
-                case ConVarType::STRING: {
+                case STRING: {
                     auto value = convar->getValue<std::string>();
                     ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
                     convar->setValue(value, false);
@@ -200,16 +193,17 @@ void ConVarRegistry::deregisterConVar(ConVar* convar) {
     // Cache it!
     if (convar->hasFlag(CON_FLAG_CACHE)) {
         switch (convar->getType()) {
-            case ConVarType::BOOLEAN:
+            using enum ConVarType;
+            case BOOLEAN:
                 ConVarRegistry::getConVarCache().setValue(convar->getName().data(), convar->getValue<bool>(), true, true);
                 break;
-            case ConVarType::INTEGER:
+            case INTEGER:
                 ConVarRegistry::getConVarCache().setValue(convar->getName().data(), convar->getValue<int>(), true, true);
                 break;
-            case ConVarType::DOUBLE:
+            case DOUBLE:
                 ConVarRegistry::getConVarCache().setValue(convar->getName().data(), convar->getValue<double>(), true, true);
                 break;
-            case ConVarType::STRING:
+            case STRING:
                 ConVarRegistry::getConVarCache().setValue(convar->getName().data(), convar->getValue<std::string>(), true, true);
         }
     }
@@ -227,4 +221,35 @@ ConVar* ConVarRegistry::getConVar(std::string_view name) {
         }
     }
     return nullptr;
+}
+
+ConVar::~ConVar() {
+    ConVarRegistry::deregisterConVar(this);
+}
+
+ConVarType ConVar::getType() const {
+    return this->type;
+}
+
+std::string_view ConVar::getTypeAsString() const {
+    switch (this->type) {
+        using enum ConVarType;
+        case BOOLEAN:
+            return "boolean";
+        case INTEGER:
+            return "integer";
+        case DOUBLE:
+            return "double";
+        case STRING:
+            return "string";
+    }
+    return "";
+}
+
+// Create cheats convar
+[[maybe_unused]]
+static ConVar cheats{"cheats", false, "Unlocks certain commands that break gameplay."}; // NOLINT(cert-err58-cpp)
+
+bool ConVar::areCheatsEnabled() {
+    return cheats.getValue<bool>();
 }

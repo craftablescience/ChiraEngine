@@ -16,25 +16,26 @@ ConsolePanel::ConsolePanel(ImVec2 windowSize) : IPanel(TR("ui.console.title"), f
             logSource += "]";
         }
         switch (type) {
-            case LogType::LOG_INFO:
+            using enum LogType;
+            case LOG_INFO:
                 this->addLog(std::string{Logger::INFO_PREFIX} + logSource + " " + message.data());
                 break;
-            case LogType::LOG_INFO_IMPORTANT:
+            case LOG_INFO_IMPORTANT:
                 this->addLog(std::string{Logger::INFO_IMPORTANT_PREFIX} + logSource + " " + message.data());
                 break;
-            case LogType::LOG_OUTPUT:
+            case LOG_OUTPUT:
                 this->addLog(std::string{Logger::OUTPUT_PREFIX} + logSource + " " + message.data());
                 break;
-            case LogType::LOG_WARNING:
+            case LOG_WARNING:
                 this->addLog(std::string{Logger::WARNING_PREFIX} + logSource + " " + message.data());
                 break;
-            case LogType::LOG_ERROR:
+            case LOG_ERROR:
                 this->addLog(std::string{Logger::ERROR_PREFIX} + logSource + " " + message.data());
                 break;
         }
     });
     this->autoScroll = true;
-    this->font = Resource::getResource<Font>(TR("resource.font.console_font_path"));
+    this->font = Resource::getResource<Font>(TR("resource.font.console"));
 }
 
 ConsolePanel::~ConsolePanel() {
@@ -120,9 +121,6 @@ void ConsolePanel::addLog(const std::string& message) {
 }
 
 void ConsolePanel::setTheme() {
-    if (!this->font) {
-        this->font = Resource::getResource<Font>(TR("resource.font.console_font_path"));
-    }
     ImGui::PushFont(this->font->getFont());
     ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 4.0f);
@@ -155,7 +153,8 @@ void ConsolePanel::processConsoleMessage(std::string_view message) {
                     }
                     try {
                         switch (convar->getType()) {
-                            case ConVarType::BOOLEAN:
+                            using enum ConVarType;
+                            case BOOLEAN:
                                 if (String::toLower(input[1]) == "true") {
                                     convar->setValue(true);
                                 } else if (String::toLower(input[1]) == "false") {
@@ -164,13 +163,13 @@ void ConsolePanel::processConsoleMessage(std::string_view message) {
                                     convar->setValue(static_cast<bool>(std::stoi(input[1])));
                                 }
                                 break;
-                            case ConVarType::INTEGER:
+                            case INTEGER:
                                 convar->setValue(std::stoi(input[1]));
                                 break;
-                            case ConVarType::DOUBLE:
+                            case DOUBLE:
                                 convar->setValue(std::stod(input[1]));
                                 break;
-                            case ConVarType::STRING:
+                            case STRING:
                                 convar->setValue(input[1]);
                         }
                     } catch (const std::invalid_argument &) {
@@ -183,20 +182,21 @@ void ConsolePanel::processConsoleMessage(std::string_view message) {
                 logOutput += convar->getTypeAsString();
                 logOutput += " = ";
                 switch (convar->getType()) {
-                    case ConVarType::BOOLEAN:
+                    using enum ConVarType;
+                    case BOOLEAN:
                         if (convar->getValue<bool>()) {
                             logOutput += "true";
                         } else {
                             logOutput += "false";
                         }
                         break;
-                    case ConVarType::INTEGER:
+                    case INTEGER:
                         logOutput += std::to_string(convar->getValue<int>());
                         break;
-                    case ConVarType::DOUBLE:
+                    case DOUBLE:
                         logOutput += std::to_string(convar->getValue<double>());
                         break;
-                    case ConVarType::STRING:
+                    case STRING:
                         logOutput += convar->getValue<std::string>();
                 }
                 Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", logOutput);
