@@ -10,7 +10,7 @@
 
 ## Features
 To summarize the major features:
-- Native Windows and Linux support (OpenGL 4.5 Core)
+- Native Windows and Linux support (OpenGL 4.1)
 - As extensible as possible: register custom logging hooks, resource types and providers, etc.
 - Custom preprocessing of GLSL shaders, with macros and #include directives
 - Robust resource loading and management to facilitate sharing of congruent data
@@ -41,7 +41,7 @@ next to the executable. Check the GitHub Actions script to see which DLLs need c
 - Dear ImGui v1.89
 - Discord RPC
 - {fmt} v9.0.0
-- GLAD (OpenGL 4.5 Core, no extensions)
+- GLAD (OpenGL 4.1 Core, GL_KHR_debug extension)
 - GLFW v3.3.9
 - GLM v0.9.9.9
 - nlohmann_json v3.10.5
