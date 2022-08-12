@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string_view>
-#include <vector>
 #include <functional>
 #include <unordered_map>
 
@@ -50,33 +49,31 @@ class LogChannel {
         std::string_view source;
     };
 public:
-    constexpr explicit LogChannel(std::string_view name_) : name(name_) {
-        this->loggers.emplace_back(LogType::LOG_INFO,           this->name);
-        this->loggers.emplace_back(LogType::LOG_INFO_IMPORTANT, this->name);
-        this->loggers.emplace_back(LogType::LOG_OUTPUT,         this->name);
-        this->loggers.emplace_back(LogType::LOG_WARNING,        this->name);
-        this->loggers.emplace_back(LogType::LOG_ERROR,          this->name);
-    }
+    /// Assumes the std::string_view passed will never lose sight of the data it is viewing
+    constexpr explicit LogChannel(std::string_view name_)
+            : name(name_)
+            , infoLogger(LogType::LOG_INFO, name_)
+            , infoImportantLogger(LogType::LOG_INFO_IMPORTANT, name_)
+            , outputLogger(LogType::LOG_OUTPUT, name_)
+            , warningLogger(LogType::LOG_WARNING, name_)
+            , errorLogger(LogType::LOG_ERROR, name_) {}
     [[nodiscard]] constexpr std::string_view getName() const {
         return this->name;
     }
-    [[nodiscard]] inline constexpr const LogChannelLogger& get(LogType type) const {
-        return this->loggers.at(static_cast<int>(type));
-    }
     [[nodiscard]] inline constexpr const LogChannelLogger& info() const {
-        return this->loggers.at(static_cast<int>(LogType::LOG_INFO));
+        return this->infoLogger;
     }
     [[nodiscard]] inline constexpr const LogChannelLogger& infoImportant() const {
-        return this->loggers.at(static_cast<int>(LogType::LOG_INFO_IMPORTANT));
+        return this->infoImportantLogger;
     }
     [[nodiscard]] inline constexpr const LogChannelLogger& output() const {
-        return this->loggers.at(static_cast<int>(LogType::LOG_OUTPUT));
+        return this->outputLogger;
     }
     [[nodiscard]] inline constexpr const LogChannelLogger& warning() const {
-        return this->loggers.at(static_cast<int>(LogType::LOG_WARNING));
+        return this->warningLogger;
     }
     [[nodiscard]] inline constexpr const LogChannelLogger& error() const {
-        return this->loggers.at(static_cast<int>(LogType::LOG_ERROR));
+        return this->errorLogger;
     }
     inline void info(std::string_view message) const {
         this->info() << message;
@@ -94,8 +91,12 @@ public:
         this->error() << message;
     }
 private:
-    std::string name;
-    std::vector<LogChannelLogger> loggers;
+    std::string_view name;
+    LogChannelLogger infoLogger;
+    LogChannelLogger infoImportantLogger;
+    LogChannelLogger outputLogger;
+    LogChannelLogger warningLogger;
+    LogChannelLogger errorLogger;
 };
 
 } // namespace chira

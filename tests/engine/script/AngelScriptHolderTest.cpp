@@ -14,7 +14,7 @@ TEST(AngelScriptHolder, helloWorld) {
     script.getFunction("main")();
     ASSERT_TRUE(LOG_IS_NOT_EMPTY);
     EXPECT_EQ(LOG_LAST_TYPE, LogType::LOG_OUTPUT);
-    EXPECT_STREQ(LOG_LAST_SOURCE, "AngelScript");
+    EXPECT_STREQ(LOG_LAST_SOURCE, "ANGELSCRIPTVM");
     EXPECT_STREQ(LOG_LAST_MESSAGE, "hello world");
     LOG_END();
 }
