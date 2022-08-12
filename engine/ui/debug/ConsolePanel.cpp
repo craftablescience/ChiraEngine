@@ -10,9 +10,9 @@ CHIRA_CREATE_LOG(CONSOLE);
 
 ConsolePanel::ConsolePanel(ImVec2 windowSize) : IPanel(TR("ui.console.title"), false, windowSize) {
     this->loggingId = Logger::addCallback([&](LogType type, std::string_view source, std::string_view message) {
-        static const auto* log_print_source = ConVarRegistry::getConVar("log_print_source");
-        std::string logSource{};
-        if (log_print_source->getValue<bool>()) {
+        static const auto* log_source = ConVarRegistry::getConVar("log_source");
+        std::string logSource;
+        if (log_source->getValue<bool>()) {
             logSource += "[";
             logSource += source.data();
             logSource += "]";
