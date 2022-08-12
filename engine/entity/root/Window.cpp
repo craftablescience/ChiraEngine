@@ -2,12 +2,12 @@
 
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_glfw.h>
+#include <fmt/core.h>
 
+#include <config/Config.h>
 #include <config/ConEntry.h>
 #include <core/Engine.h>
-#include <config/Config.h>
 #include <event/Events.h>
-#include <i18n/TranslationManager.h>
 #include <input/InputManager.h>
 #include <render/texture/Image.h>
 #include <resource/provider/FilesystemResourceProvider.h>
@@ -16,6 +16,8 @@
 #include <ui/IPanel.h>
 
 using namespace chira;
+
+CHIRA_CREATE_LOG(WINDOW);
 
 [[maybe_unused]]
 static ConCommand win_setpos{"win_setpos", "Set the X and Y position of the engine window, (0,0) being at the top left. If no arguments are given, places it in the center of the screen.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
@@ -62,14 +64,14 @@ bool Window::createGLFWWindow(std::string_view title) {
 
     this->window = glfwCreateWindow(this->width, this->height, title.data(), nullptr, nullptr);
     if (!this->window) {
-        Logger::log(LogType::LOG_ERROR, "GLFW", TR("error.glfw.window"));
+        LOG_WINDOW.error("Window creation failed!");
         return false;
     }
     glfwSetWindowUserPointer(this->window, this);
     glfwMakeContextCurrent(this->window);
 
     if (!gladLoadGL(glfwGetProcAddress)) {
-        Logger::log(LogType::LOG_ERROR, "OpenGL", TRF("error.opengl.version", GL_VERSION_STRING_PRETTY));
+        LOG_WINDOW.error(fmt::format("OpenGL {} must be available to run this program", GL_VERSION_STRING_PRETTY));
         return false;
     }
     glfwSwapInterval(win_vsync.getValue<int>());

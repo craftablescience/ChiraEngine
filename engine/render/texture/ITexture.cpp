@@ -6,6 +6,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(ITEXTURE);
+
 int ITexture::getFormatFromString(const std::string& formatName) {
     if (formatName == "RED")
         return GL_RED;
@@ -38,7 +40,7 @@ int ITexture::getFormatFromString(const std::string& formatName) {
     else if (formatName == "DEPTH_STENCIL")
         return GL_DEPTH_STENCIL;
 
-    Logger::log(LogType::LOG_WARNING, "Texture", TRF("warn.material.invalid_gl_format", formatName));
+    LOG_ITEXTURE.warning(TRF("warn.material.invalid_gl_format", formatName));
     return GL_RGBA;
 }
 
@@ -66,7 +68,7 @@ int ITexture::getWrapModeFromString(const std::string& wrapName) {
     else if (wrapName == "CLAMP_TO_BORDER")
         return GL_CLAMP_TO_BORDER;
 
-    Logger::log(LogType::LOG_WARNING, "Texture", TRF("warn.material.invalid_gl_wrap_type", wrapName));
+    LOG_ITEXTURE.warning(TRF("warn.material.invalid_gl_wrap_type", wrapName));
     return GL_REPEAT;
 }
 
@@ -77,6 +79,6 @@ int ITexture::getFilterModeFromString(const std::string& filterName) {
         return GL_LINEAR;
     // There are other filter types, but they only work on GL_TEXTURE_MIN_FILTER, so a refactor would be needed
 
-    Logger::log(LogType::LOG_WARNING, "Texture", TRF("warn.material.invalid_gl_filter_type", filterName));
+    LOG_ITEXTURE.warning(TRF("warn.material.invalid_gl_filter_type", filterName));
     return GL_LINEAR;
 }

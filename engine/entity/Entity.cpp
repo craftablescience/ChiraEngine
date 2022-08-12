@@ -6,6 +6,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(ENTITY);
+
 Entity::Entity(std::string name_) : name(std::move(name_)) {}
 
 Entity::Entity() : Entity(UUIDGenerator::getNewUUIDString()) {}
@@ -69,7 +71,7 @@ bool Entity::hasChild(std::string_view name_) const {
 std::string_view Entity::addChild(Entity* child) {
     // Do not let two children have the same name!
     if (this->hasChild(child->getName())) {
-        Logger::log(LogType::LOG_ERROR, "Entity::addChild", TRF("error.entity.duplicate_child_name", child->getName()));
+        LOG_ENTITY.error(TRF("error.entity.duplicate_child_name", child->getName()));
         return child->getName();
     }
     child->setParent(this);

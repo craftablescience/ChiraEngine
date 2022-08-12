@@ -22,6 +22,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(ENGINE);
+
 [[maybe_unused]]
 static ConCommand quit{"quit", "Quits the game or application.", [] { // NOLINT(cert-err58-cpp)
     Engine::getWindow()->shouldStopAfterThisFrame(true);
@@ -47,11 +49,11 @@ void Engine::init(bool windowStartsVisible) {
     Engine::started = true;
 
     if (!glfwInit()) {
-        Logger::log(LogType::LOG_ERROR, "GLFW", "GLFW failed to initialize!");
+        LOG_ENGINE.error("GLFW failed to initialize!");
         exit(EXIT_FAILURE);
     }
     glfwSetErrorCallback([](int error, const char* description) {
-        Logger::log(LogType::LOG_ERROR, "GLFW", fmt::format("GLFW Error {}: {}\n", error, description));
+        LOG_ENGINE.error(fmt::format("GLFW Error {}: {}\n", error, description));
     });
 
     Engine::window.reset(new Window{TR("ui.window.title")});
@@ -105,12 +107,12 @@ void Engine::init(bool windowStartsVisible) {
                 }
 
                 if (type == GL_DEBUG_TYPE_ERROR)
-                    Logger::log(LogType::LOG_ERROR, "OpenGL", output);
+                    LOG_ENGINE.error(output);
                 else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
-                    Logger::log(LogType::LOG_INFO, "OpenGL", output);
+                    LOG_ENGINE.info(output);
                 else
                     // Logging as a warning because most of the time the program runs perfectly fine
-                    Logger::log(LogType::LOG_WARNING, "OpenGL", output);
+                    LOG_ENGINE.warning(output);
             }, nullptr);
             glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
@@ -138,7 +140,7 @@ void Engine::init(bool windowStartsVisible) {
 #ifdef CHIRA_USE_STEAMWORKS
     bool steamEnable = ConVarRegistry::hasConVar("steam_enable") && ConVarRegistry::getConVar("steam_enable")->getValue<bool>();
     if (steamEnable && (!SteamAPI::Client::initialized() && !SteamAPI::Client::initSteam()))
-        Logger::log(LogType::LOG_ERROR, "Steam", TR("error.steam.initialization_failure"));
+        LOG_ENGINE.warning("Steam failed to initialize");
 #endif
 
     // Add console UI panel
@@ -193,7 +195,7 @@ void Engine::run() {
         Events::update();
     } while (!glfwWindowShouldClose(Engine::window->window));
 
-    Logger::log(LogType::LOG_INFO, "Engine", "Exiting...");
+    LOG_ENGINE.info("Exiting...");
 
     if (DiscordRPC::initialized())
         DiscordRPC::shutdown();

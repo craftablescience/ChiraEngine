@@ -9,6 +9,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(SHADERRESOURCE);
+
 ShaderResource::ShaderResource(std::string identifier_, int type_)
     : StringResource(std::move(identifier_))
     , HandleObject<int>()
@@ -69,7 +71,7 @@ void ShaderResource::checkForCompilationErrors() const {
     glGetShaderiv(this->handle, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(this->handle, 512, nullptr, infoLog);
-        Logger::log(LogType::LOG_ERROR, "Shader Resource", TRF("error.shader_resource.compilation_failure", this->type, infoLog));
+        LOG_SHADERRESOURCE.error(TRF("error.shader_resource.compilation_failure", this->type, infoLog));
     }
 }
 

@@ -157,8 +157,10 @@ public:
     }
 
     void setValue(ConVarValidType auto newValue, bool runCallback = true) {
+        CHIRA_CREATE_LOG(CONVAR);
+
         if (this->hasFlag(CON_FLAG_CHEAT) && !ConVar::areCheatsEnabled()) {
-            Logger::log(LogType::LOG_ERROR, "ConVar", "Cannot set value of cheat-protected convar with cheats disabled.");
+            LOG_CONVAR.error("Cannot set value of cheat-protected convar with cheats disabled.");
             return;
         }
 
@@ -208,7 +210,7 @@ public:
             try {
                 this->changedCallback(this->value);
             } catch (const std::exception& e) {
-                Logger::log(LogType::LOG_ERROR, "ConVar", std::string{"Encountered error executing convar callback: "} + e.what());
+                LOG_CONVAR.error(std::string{"Encountered error executing convar callback: "} + e.what());
             }
         }
     }

@@ -5,6 +5,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(I18N);
+
 [[maybe_unused]] // todo: set language based on system language
 static ConVar ui_language{"ui_language", std::string{"en"}, "The language code used to get translated strings.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
 
@@ -42,10 +44,10 @@ std::string TranslationManager::getTranslation(const std::string& identifier) { 
     if (TranslationManager::languageStrings.count(identifier) > 0)
         return TranslationManager::languageStrings[identifier];
     else if (TranslationManager::languageStrings.count("error.translation_manager.missing_translation") > 0)
-        Logger::log(LogType::LOG_ERROR, "I18N", TRF("error.translation_manager.missing_translation", TranslationManager::getLanguageNameFromCode(ui_language.getValue<std::string>()), identifier));
+        LOG_I18N.error(TRF("error.translation_manager.missing_translation", TranslationManager::getLanguageNameFromCode(ui_language.getValue<std::string>()), identifier));
     else
         // Turns out if we're missing one string, we could be missing all of them! Just default to English
-        Logger::log(LogType::LOG_ERROR, "I18N", fmt::format("Missing {} translation of \"{}\"", TranslationManager::getLanguageNameFromCode(ui_language.getValue<std::string>()), identifier));
+        LOG_I18N.error(fmt::format("Missing {} translation of \"{}\"", TranslationManager::getLanguageNameFromCode(ui_language.getValue<std::string>()), identifier));
     // Fallback
     return identifier + "#" + ui_language.getValue<std::string>();
 }

@@ -7,6 +7,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(DISCORD);
+
 [[maybe_unused]]
 static ConVar discord_enable{"discord_enable", true, "Allows applications to use Discord rich presence.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
 
@@ -18,13 +20,13 @@ void DiscordRPC::init(std::string_view appId) {
     memset(&handlers, 0, sizeof(handlers));
 #if DEBUG
     handlers.ready = [](const DiscordUser* connectedUser) {
-        Logger::log(LogType::LOG_INFO, "Discord", TRF("debug.discord.user_connected", connectedUser->username, connectedUser->discriminator));
+        LOG_DISCORD.info(TRF("debug.discord.user_connected", connectedUser->username, connectedUser->discriminator));
     };
     handlers.disconnected = [](int errcode, const char* message) {
-        Logger::log(LogType::LOG_WARNING, "Discord", TRF("debug.discord.user_disconnected", errcode, message));
+        LOG_DISCORD.warning(TRF("debug.discord.user_disconnected", errcode, message));
     };
     handlers.errored = [](int errcode, const char* message) {
-        Logger::log(LogType::LOG_ERROR, "Discord", TRF("debug.discord.generic_error", errcode, message));
+        LOG_DISCORD.error(TRF("debug.discord.generic_error", errcode, message));
     };
 #endif
     Discord_Initialize(appId.data(), &handlers, 1, nullptr);

@@ -7,6 +7,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(TEXTURECUBEMAP);
+
 TextureCubemap::TextureCubemap(std::string identifier_)
     : ITexture(std::move(identifier_)) {}
 
@@ -71,7 +73,7 @@ void TextureCubemap::compile(const nlohmann::json& properties) {
         if (files[i]->getData()) {
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, formats[i], files[i]->getWidth(), files[i]->getHeight(), 0, formats[i], GL_UNSIGNED_BYTE, files[i]->getData());
         } else {
-            Logger::log(LogType::LOG_ERROR, "TextureCubemap", TRF("error.opengl.texture_cubemap_compile", i));
+            LOG_TEXTURECUBEMAP.error(TRF("error.opengl.texture_cubemap_compile", i));
         }
     }
     if (this->mipmaps) {

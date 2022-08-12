@@ -4,6 +4,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(FRAME);
+
 Frame::Frame(std::string name_, int width_, int height_, ColorRGB backgroundColor_, bool smoothResize, bool initNow)
     : Group(std::move(name_))
     , backgroundColor(backgroundColor_)
@@ -52,7 +54,7 @@ void Frame::createFramebuffer() {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, this->rboHandle);
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        Logger::log(LogType::LOG_ERROR, "Frame", "Framebuffer is not complete!");
+        LOG_FRAME.error("Framebuffer is not complete!");
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

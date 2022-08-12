@@ -8,6 +8,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(OBJ);
+
 void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<Index>& indices) const {
     std::vector<glm::vec3> vertexBuffer;
     std::vector<ColorRG> uvBuffer;
@@ -45,7 +47,7 @@ void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>&
             while (iss >> objIndices[counter]) {
                 objIndices[counter] -= 1;
                 if (counter >= 9) {
-                    Logger::log(LogType::LOG_WARNING, "OBJ", TRF("warn.obj_loader.not_triangulated", identifier));
+                    LOG_OBJ.warning(TRF("warn.obj_loader.not_triangulated", identifier));
                     break;
                 } else if (counter >= 6) {
                     includeUVs = true;

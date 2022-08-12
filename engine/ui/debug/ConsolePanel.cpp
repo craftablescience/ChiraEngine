@@ -6,6 +6,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(CONSOLE);
+
 ConsolePanel::ConsolePanel(ImVec2 windowSize) : IPanel(TR("ui.console.title"), false, windowSize) {
     this->loggingId = Logger::addCallback([&](LogType type, std::string_view source, std::string_view message) {
         static const auto* log_print_source = ConVarRegistry::getConVar("log_print_source");
@@ -148,7 +150,7 @@ void ConsolePanel::processConsoleMessage(std::string_view message) {
                 auto* convar = ConVarRegistry::getConVar(input[0]);
                 if (input.size() >= 2) {
                     if (convar->hasFlag(CON_FLAG_READONLY)) {
-                        Logger::log(LogType::LOG_ERROR, "Console", std::string{"Cannot set value of readonly convar \""} + convar->getName().data() + "\"!");
+                        LOG_CONSOLE.error(std::string{"Cannot set value of readonly convar \""} + convar->getName().data() + "\"!");
                         return;
                     }
                     try {
@@ -172,8 +174,8 @@ void ConsolePanel::processConsoleMessage(std::string_view message) {
                             case STRING:
                                 convar->setValue(input[1]);
                         }
-                    } catch (const std::invalid_argument &) {
-                        Logger::log(LogType::LOG_ERROR, "Console", std::string{"Cannot set value of \""} + convar->getName().data() + "\" to \"" + input[1] + "\"");
+                    } catch (const std::invalid_argument&) {
+                        LOG_CONSOLE.error(std::string{"Cannot set value of \""} + convar->getName().data() + "\" to \"" + input[1] + "\"");
                         return;
                     }
                 }
@@ -199,9 +201,9 @@ void ConsolePanel::processConsoleMessage(std::string_view message) {
                     case STRING:
                         logOutput += convar->getValue<std::string>();
                 }
-                Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", logOutput);
+                LOG_CONSOLE.infoImportant(logOutput);
             } else {
-                Logger::log(LogType::LOG_ERROR, "Console", "Could not find command or variable \"" + input[0] + R"("! Run "con_entries" to view valid entries.)");
+                LOG_CONSOLE.error(std::string{"Could not find command or variable \""} + input[0] + R"("! Run "con_entries" to view valid entries.)");
             }
         }
     }

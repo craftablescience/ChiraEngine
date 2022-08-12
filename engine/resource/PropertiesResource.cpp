@@ -5,12 +5,14 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(PROPERTIESRESOURCE);
+
 void PropertiesResource::compile(const byte buffer[], std::size_t bufferLength) {
     nlohmann::json props;
     try {
         props = nlohmann::json::parse(std::string{reinterpret_cast<const char*>(buffer), bufferLength});
     } catch (const nlohmann::json::exception&) {
-        Logger::log(LogType::LOG_ERROR, "Properties Resource", TRF("error.properties_resource.invalid_json", this->identifier));
+        LOG_PROPERTIESRESOURCE.error(TRF("error.properties_resource.invalid_json", this->identifier));
     }
     this->compile(props);
 }

@@ -5,6 +5,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(TEXTURE);
+
 Texture::Texture(std::string identifier_, bool cacheTexture)
     : ITexture(std::move(identifier_))
     , cache(cacheTexture) {}
@@ -39,7 +41,7 @@ void Texture::compile(const nlohmann::json& properties) {
             glGenerateMipmap(GL_TEXTURE_2D);
         }
     } else {
-        Logger::log(LogType::LOG_ERROR, "Texture", TR("error.opengl.texture_compile"));
+        LOG_TEXTURE.error("Texture failed to compile: missing image data");
     }
 
     if (this->cache) {

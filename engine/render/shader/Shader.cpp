@@ -8,6 +8,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(SHADER);
+
 Shader::Shader(std::string identifier_)
     : PropertiesResource(std::move(identifier_))
     , HandleObject<int>() {}
@@ -37,7 +39,7 @@ void Shader::checkForCompilationErrors() const {
     glGetProgramiv(this->handle, GL_LINK_STATUS, &success);
     if(!success) {
         glGetProgramInfoLog(this->handle, 512, nullptr, infoLog);
-        Logger::log(LogType::LOG_ERROR, "Shader", TRF("error.opengl.shader_linking", infoLog));
+        LOG_SHADER.error(TRF("error.opengl.shader_linking", infoLog));
     }
 }
 

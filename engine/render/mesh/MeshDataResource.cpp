@@ -7,6 +7,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(MESHDATARESOURCE);
+
 void MeshDataResource::compile(const nlohmann::json& properties) {
     Serialize::fromJSON(this, properties);
     if (!this->materialSetInCode) {
@@ -52,7 +54,7 @@ int MeshDataResource::getDepthFunctionFromString(const std::string& depthFunc) {
     else if (depthFunc == "NOTEQUAL")
         return GL_NOTEQUAL;
 
-    Logger::log(LogType::LOG_WARNING, "Mesh", TRF("warn.mesh.invalid_depth_function", depthFunc));
+    LOG_MESHDATARESOURCE.warning(TRF("warn.mesh.invalid_depth_function", depthFunc));
     return GL_LEQUAL;
 }
 
@@ -64,6 +66,6 @@ int MeshDataResource::getCullTypeFromString(const std::string& cullType) {
     else if (cullType == "FRONT_AND_BACK" || cullType == "BACK_AND_FRONT")
         return GL_FRONT_AND_BACK;
 
-    Logger::log(LogType::LOG_WARNING, "Mesh", TRF("warn.mesh.invalid_cull_type", cullType));
+    LOG_MESHDATARESOURCE.warning(TRF("warn.mesh.invalid_cull_type", cullType));
     return GL_BACK;
 }

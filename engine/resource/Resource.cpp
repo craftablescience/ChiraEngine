@@ -5,6 +5,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(RESOURCE);
+
 Resource::~Resource() {
     Resource::removeResource(this->identifier);
 }
@@ -32,7 +34,7 @@ IResourceProvider* Resource::getResourceProviderWithResource(const std::string& 
         if (i->get()->hasResource(name))
             return i->get();
     }
-    Logger::log(LogType::LOG_ERROR, "Resource", TRF("error.resource.resource_not_found", identifier));
+    LOG_RESOURCE.error(TRF("error.resource.resource_not_found", identifier));
     return nullptr;
 }
 
@@ -43,7 +45,7 @@ std::pair<std::string, std::string> Resource::splitResourceIdentifier(const std:
         out.first = identifier.substr(0, pos);
         out.second = identifier.substr(pos + RESOURCE_ID_SEPARATOR.length());
     } else {
-        Logger::log(LogType::LOG_ERROR, "Resource", TRF("error.resource.cannot_split_identifier", identifier));
+        LOG_RESOURCE.error(TRF("error.resource.cannot_split_identifier", identifier));
     }
     return out;
 }
@@ -85,9 +87,9 @@ void Resource::discardAll() {
     for (const auto& [providerName, resourceMap] : Resource::resources) {
         for (const auto& [name, resource] : resourceMap) {
             // This really shouldn't happen, but it should work out if it does, hence the warning
-            Logger::log(LogType::LOG_WARNING, "Resource", TRF("warn.resource.deleting_resource_at_exit",
-                                                              Resource::resources[providerName].at(name)->getIdentifier(),
-                                                              Resource::resources[providerName].at(name).useCount()));
+            LOG_RESOURCE.warning() << TRF("warn.resource.deleting_resource_at_exit",
+                                          Resource::resources[providerName].at(name)->getIdentifier(),
+                                          Resource::resources[providerName].at(name).useCount());
         }
     }
     Resource::resources.clear();
@@ -95,5 +97,5 @@ void Resource::discardAll() {
 }
 
 void Resource::logResourceError(const std::string& identifier, const std::string& resourceName) {
-    Logger::log(LogType::LOG_ERROR, "Resource", TRF(identifier, resourceName));
+    LOG_RESOURCE.error(TRF(identifier, resourceName));
 }

@@ -6,34 +6,36 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(CONENTRY);
+
 [[maybe_unused]]
 static ConCommand info{"info", "Prints the description of the given convar(s) or concommand(s).", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
     for (const auto& name : args) {
         if (ConCommandRegistry::hasConCommand(name)) {
-            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*ConCommandRegistry::getConCommand(name)});
+            LOG_CONENTRY.infoImportant(std::string{*ConCommandRegistry::getConCommand(name)});
         } else if (ConVarRegistry::hasConVar(name)) {
-            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*ConVarRegistry::getConVar(name)});
+            LOG_CONENTRY.infoImportant(std::string{*ConVarRegistry::getConVar(name)});
         }
     }
 }};
 
 [[maybe_unused]]
 static ConCommand con_entries{"con_entries", "Prints the description of every convar and concommand currently registered.", [] { // NOLINT(cert-err58-cpp)
-    Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", "-- Commands --");
+    LOG_CONENTRY.infoImportant("-- Commands --");
     auto concommandList = ConCommandRegistry::getConCommandList();
     std::ranges::sort(concommandList);
     for (const auto& name : concommandList) {
         if (const auto* concommand = ConCommandRegistry::getConCommand(name); !concommand->hasFlag(CON_FLAG_HIDDEN)) {
-            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*concommand});
+            LOG_CONENTRY.infoImportant(std::string{*concommand});
         }
     }
 
-    Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", "-- Variables --");
+    LOG_CONENTRY.infoImportant("-- Variables --");
     auto convarList = ConVarRegistry::getConVarList();
     std::ranges::sort(convarList);
     for (const auto& name : convarList) {
         if (const auto* convar = ConVarRegistry::getConVar(name); !convar->hasFlag(CON_FLAG_HIDDEN)) {
-            Logger::log(LogType::LOG_INFO_IMPORTANT, "Console", std::string{*convar});
+            LOG_CONENTRY.infoImportant(std::string{*convar});
         }
     }
 }};
@@ -73,7 +75,7 @@ bool ConCommand::hasFlag(ConFlags flag) const {
 
 void ConCommand::fire(ConCommand::CallbackArgs args) {
     if (this->hasFlag(CON_FLAG_CHEAT) && !ConVar::areCheatsEnabled()) {
-        Logger::log(LogType::LOG_ERROR, "ConCommand", "Cannot fire cheat-protected concommand with cheats disabled.");
+        LOG_CONENTRY.error("Cannot fire cheat-protected concommand with cheats disabled.");
         return;
     }
     this->callback(args);

@@ -15,6 +15,8 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(ANGELSCRIPTVM);
+
 static void messageCallback(const asSMessageInfo* msg, void*);
 static void print(const std::string& message);
 
@@ -40,26 +42,26 @@ void AngelScriptVM::init() {
 static void messageCallback(const asSMessageInfo* msg, void*) {
     switch (msg->type) {
         case asMSGTYPE_INFORMATION:
-            Logger::log(LogType::LOG_OUTPUT, "AngelScript",
-                        std::string(msg->section) + " (" +
-                        std::to_string(msg->row) + ", " +
-                        std::to_string(msg->col) + "): " + msg->message);
+            LOG_ANGELSCRIPTVM.output() <<
+                    std::string(msg->section) + " (" +
+                    std::to_string(msg->row) + ", " +
+                    std::to_string(msg->col) + "): " + msg->message;
             break;
         case asMSGTYPE_WARNING:
-            Logger::log(LogType::LOG_WARNING, "AngelScript",
-                        std::string(msg->section) + " (" +
-                        std::to_string(msg->row) + ", " +
-                        std::to_string(msg->col) + "): " + msg->message);
+            LOG_ANGELSCRIPTVM.warning() <<
+                    std::string(msg->section) + " (" +
+                    std::to_string(msg->row) + ", " +
+                    std::to_string(msg->col) + "): " + msg->message;
             break;
         case asMSGTYPE_ERROR:
-            Logger::log(LogType::LOG_ERROR, "AngelScript",
-                        std::string(msg->section) + " (" +
-                        std::to_string(msg->row) + ", " +
-                        std::to_string(msg->col) + "): " + msg->message);
+            LOG_ANGELSCRIPTVM.error() <<
+                    std::string(msg->section) + " (" +
+                    std::to_string(msg->row) + ", " +
+                    std::to_string(msg->col) + "): " + msg->message;
             break;
     }
 }
 
 static void print(const std::string& message) {
-    Logger::log(LogType::LOG_OUTPUT, "AngelScript", message);
+    LOG_ANGELSCRIPTVM.output(message);
 }
