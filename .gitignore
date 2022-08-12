@@ -10,3 +10,7 @@ build/
 out/
 
 .ccls-cache
+
+# macOS specific
+.DS_Store
+*/.DS_Store
