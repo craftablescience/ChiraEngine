@@ -96,9 +96,12 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES angelscript)
 
 # DISCORD
-set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/discord)
-list(APPEND CHIRA_ENGINE_LINK_LIBRARIES discord-rpc)
+option(CHIRA_USE_DISCORD "Build Chira Engine with Discord rich presence features" ON)
+if(CHIRA_USE_DISCORD)
+    set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/discord)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES discord-rpc)
+endif()
 
 # FMT
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/fmt)
@@ -161,6 +164,10 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE ${CHIRA_ENGINE_HEADERS})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD2)
 
+if(CHIRA_USE_DISCORD)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_USE_DISCORD)
+    target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/discord/include)
+endif()
 if(CHIRA_USE_STEAMWORKS)
     target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_USE_STEAMWORKS)
 endif()
@@ -169,7 +176,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         ${OPENGL_INCLUDE_DIRS}
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/addons
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/discord/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/fmt/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/libloader/include

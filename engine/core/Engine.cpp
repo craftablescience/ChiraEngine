@@ -5,7 +5,6 @@
 
 #include <config/Config.h>
 #include <config/ConEntry.h>
-#include <hook/DiscordRPC.h>
 #include <i18n/TranslationManager.h>
 #include <input/InputManager.h>
 #include <loader/mesh/OBJMeshLoader.h>
@@ -16,6 +15,9 @@
 #include <ui/debug/ConsolePanel.h>
 #include <ui/debug/ResourceUsageTrackerPanel.h>
 
+#ifdef CHIRA_USE_DISCORD
+    #include <hook/DiscordRPC.h>
+#endif
 #ifdef CHIRA_USE_STEAMWORKS
     #include <hook/SteamAPI.h>
 #endif
@@ -186,8 +188,10 @@ void Engine::run() {
                 keybind();
         }
 
+#ifdef CHIRA_USE_DISCORD
         if (DiscordRPC::initialized())
             DiscordRPC::updatePresence();
+#endif
 #ifdef CHIRA_USE_STEAMWORKS
         if (SteamAPI::Client::initialized())
             SteamAPI::Client::runCallbacks();
@@ -197,8 +201,10 @@ void Engine::run() {
 
     LOG_ENGINE.info("Exiting...");
 
+#ifdef CHIRA_USE_DISCORD
     if (DiscordRPC::initialized())
         DiscordRPC::shutdown();
+#endif
 #ifdef CHIRA_USE_STEAMWORKS
     if (SteamAPI::Client::initialized())
         SteamAPI::Client::shutdown();

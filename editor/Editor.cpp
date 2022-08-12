@@ -8,7 +8,6 @@
 #include <config/ConEntry.h>
 #include <core/Engine.h>
 #include <resource/provider/FilesystemResourceProvider.h>
-#include <hook/DiscordRPC.h>
 #include <i18n/TranslationManager.h>
 #include <entity/model/Mesh.h>
 #include <entity/model/MeshDynamic.h>
@@ -16,6 +15,9 @@
 #include <ui/IPanel.h>
 #include <utility/Dialogs.h>
 
+#ifdef CHIRA_USE_DISCORD
+    #include <hook/DiscordRPC.h>
+#endif
 #ifdef CHIRA_USE_STEAMWORKS
     #include <hook/SteamAPI.h>
 #endif
@@ -143,9 +145,11 @@ int main(int argc, const char* const argv[]) {
     TranslationManager::addTranslationFile("file://i18n/editor");
     TranslationManager::addUniversalFile("file://i18n/editor");
 
+#ifdef CHIRA_USE_DISCORD
     DiscordRPC::init(TR("editor.discord.application_id"));
     DiscordRPC::setLargeImage("main_logo");
     DiscordRPC::setState("https://discord.gg/ASgHFkX");
+#endif
 
 #if defined(CHIRA_USE_STEAMWORKS) && defined(DEBUG)
     if (ConVarRegistry::hasConVar("steam_enable") && ConVarRegistry::getConVar("steam_enable")->getValue<bool>()) {
