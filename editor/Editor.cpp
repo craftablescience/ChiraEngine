@@ -29,7 +29,7 @@ using namespace chira;
 static inline void addResourceFolderSelected() {
     auto folder = Dialogs::openFolder();
     if (folder.empty())
-        return Dialogs::popupError(TR("error.modelviewer.resource_folder_not_selected"));
+        return; // cancelled
 
     auto resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(folder);
     if (resourceFolderPath.empty())
@@ -160,13 +160,15 @@ int main(int argc, const char* const argv[]) {
     TranslationManager::addUniversalFile("file://i18n/editor");
 
 #ifdef CHIRA_USE_DISCORD
-    DiscordRPC::init(TR("editor.discord.application_id"));
-    DiscordRPC::setLargeImage("main_logo");
-    DiscordRPC::setState("https://discord.gg/ASgHFkX");
+    if (auto* discord_enable = ConVarRegistry::getConVar("discord_enable"); discord_enable && discord_enable->getValue<bool>()) {
+        DiscordRPC::init(TR("editor.discord.application_id"));
+        DiscordRPC::setLargeImage("main_logo");
+        DiscordRPC::setState("https://discord.gg/ASgHFkX");
+    }
 #endif
 
 #if defined(CHIRA_USE_STEAMWORKS) && defined(DEBUG)
-    if (ConVarRegistry::hasConVar("steam_enable") && ConVarRegistry::getConVar("steam_enable")->getValue<bool>()) {
+    if (auto* steam_enable = ConVarRegistry::getConVar("steam_enable"); steam_enable && steam_enable->getValue<bool>()) {
         // Steam API docs say this is bad practice, I say I don't care
         SteamAPI::generateAppIDFile(1728950);
     }
