@@ -64,11 +64,11 @@ next to the executable. Check the GitHub Actions script to see which DLLs need c
     - `sudo apt update && sudo apt install cmake build-essential xorg-dev mesa-common-dev mesa-utils`
     
 ## Development (macOS)
-- **To Setup CMake**: You must install llvm from homebrew as the default Apple Clang does not work properly. use the command `brew install llvm` and then run `cmake_config_macos.sh` to create the build folder
+- **Required**: You must install llvm from homebrew as the default Apple Clang does not work properly. use the command `brew install llvm`.
     
-        To compile using cmake in the terminal run `cmake --build build --config Debug`
+- **Using Cmake/Terminal**: Run `cmake_configure_macos.sh Makefiles` to configure cmake to use Unix Makefiles. To build ChiraEngine run `cmake --build build --config Debug`
         
-- **XCode**: coming soon!
+- **XCode**: Run `cmake_configure_macos.sh Xcode` to configure cmake to use Xcode Projects. You will find the ChiraEngine project under `build`. ***Building under Xcode is currently unsupported due to issues with trying to use a custom compiler.***
 
 ## Usage
 I recommend adding this repository as a submodule to your project.

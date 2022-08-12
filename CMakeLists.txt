@@ -76,6 +76,12 @@ macro(apply_optimizations target)
             target_compile_options(${target} PRIVATE /WX)
         endif()
     endif()
+    
+    # psst! didn't know where else to put this so here. We need this for xcode
+    if(CMAKE_GENERATOR STREQUAL Xcode)
+        set_target_properties(${target} PROPERTIES XCODE_ATTRIBUTE_CC "/usr/local/opt/llvm/bin/clang")
+        set_target_properties(${target} PROPERTIES XCODE_ATTRIBUTE_CXX "/usr/local/opt/llvm/bin/clang++")
+    endif()
 endmacro()
 
 # GOOGLETEST
