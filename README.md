@@ -26,15 +26,17 @@ The goal of the engine is to have as much customization as possible, while still
 
 ## Supported Compilers
 
-| Compiler (Latest) | Windows            | Linux     |
-|-------------------|--------------------|-----------|
-| GCC               | Supported (MinGW)* | Supported |
-| Clang             | Unsupported        | Supported |
-| MSVC              | Supported          | N/A       |
-| Clang-CL          | Supported          | N/A       |
+| Compiler (Latest) | Windows            | Linux     | macOS                      |
+|-------------------|--------------------|-----------|----------------------------|
+| GCC               | Supported (MinGW)\* | Supported | Unsupported                |
+| Clang             | Unsupported        | Supported | Supported (Homebrew LLVM)\*\*|
+| MSVC              | Supported          | N/A       | N/A                        |
+| Clang-CL          | Supported          | N/A       | N/A                        |
 
-(*) MinGW builds on Windows will work, but running the application outside your IDE will require you to copy some DLLs
+(\*) MinGW builds on Windows will work, but running the application outside your IDE will require you to copy some DLLs
 next to the executable. Check the GitHub Actions script to see which DLLs need copied from the MinGW bin directory.
+
+(\*\*) Homebrew LLVM is required because Apple Clang as of this time does not support certain C++ features that are used inside ChiraEngine
 
 ## Bundled Dependencies
 - AngelScript v2.35.1
@@ -60,6 +62,13 @@ next to the executable. Check the GitHub Actions script to see which DLLs need c
 
   On Debian-based distros, run:
     - `sudo apt update && sudo apt install cmake build-essential xorg-dev mesa-common-dev mesa-utils`
+    
+## Development (macOS)
+- **To Setup CMake**: You must install llvm from homebrew as the default Apple Clang does not work properly. use the command `brew install llvm` and then run `cmake_config_macos.sh` to create the build folder
+    
+        To compile using cmake in the terminal run `cmake --build build --config Debug`
+        
+- **XCode**: coming soon!
 
 ## Usage
 I recommend adding this repository as a submodule to your project.
