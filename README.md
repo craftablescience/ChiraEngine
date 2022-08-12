@@ -66,7 +66,7 @@ next to the executable. Check the GitHub Actions script to see which DLLs need c
 ## Development (macOS)
 - **To Setup CMake**: You must install llvm from homebrew as the default Apple Clang does not work properly. use the command `brew install llvm` and then run `cmake_config_macos.sh` to create the build folder
     
-        To compile using cmake in the terminal run `cmake --build build --config Debug`
+    To compile using cmake in the terminal run `cmake --build build --config Debug`
         
 - **XCode**: coming soon!
 
