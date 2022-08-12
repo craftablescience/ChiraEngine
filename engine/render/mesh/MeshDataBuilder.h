@@ -19,7 +19,7 @@ public:
     /// Does not call update().
     void clear();
 protected:
-    unsigned int currentIndex = 0;
+    Index currentIndex = 0;
     /// Pass true to addDuplicate if you don't want to scan the entire vertex vector to calculate the index.
     /// This will make a duplicate vertex if one already exists.
     void addVertex(Vertex vertex, bool addDuplicate = false);

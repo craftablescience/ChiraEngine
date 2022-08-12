@@ -28,4 +28,6 @@ struct Vertex {
     }
 };
 
+using Index = unsigned int;
+
 } // namespace chira

@@ -8,7 +8,7 @@
 
 using namespace chira;
 
-void ChiraMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) const {
+void ChiraMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<Index>& indices) const {
     auto meshData = Resource::getResource<BinaryResource>(identifier);
     if (meshData->getBufferLength() < CHIRA_MESH_HEADER_SIZE) {
         // die
@@ -23,18 +23,18 @@ void ChiraMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex
         vertices.resize(header.vertexCount);
         std::memcpy(&vertices[0], meshData->getBuffer() + CHIRA_MESH_HEADER_SIZE, header.vertexCount * sizeof(Vertex));
         indices.resize(header.indexCount);
-        std::memcpy(&indices[0], meshData->getBuffer() + CHIRA_MESH_HEADER_SIZE + (header.vertexCount * sizeof(Vertex)), header.indexCount * sizeof(unsigned int));
+        std::memcpy(&indices[0], meshData->getBuffer() + CHIRA_MESH_HEADER_SIZE + (header.vertexCount * sizeof(Vertex)), header.indexCount * sizeof(Index));
     }
 }
 
-std::vector<byte> ChiraMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) const {
+std::vector<byte> ChiraMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices) const {
     std::vector<byte> bytebuffer;
     ChiraMeshHeader header;
     header.version = 1;
-    header.vertexCount = static_cast<unsigned int>(vertices.size());
-    header.indexCount = static_cast<unsigned int>(indices.size());
+    header.vertexCount = static_cast<Index>(vertices.size());
+    header.indexCount = static_cast<Index>(indices.size());
     const unsigned int VERTEX_SIZE = (sizeof(Vertex) * header.vertexCount);
-    const unsigned int INDEX_SIZE = (sizeof(unsigned int) * header.indexCount);
+    const unsigned int INDEX_SIZE = (sizeof(Index) * header.indexCount);
 
     // Since each element in bytebuffer is one byte wide, this works
     bytebuffer.resize(CHIRA_MESH_HEADER_SIZE + VERTEX_SIZE + INDEX_SIZE);

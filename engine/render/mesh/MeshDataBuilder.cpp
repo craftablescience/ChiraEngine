@@ -16,7 +16,7 @@ void MeshDataBuilder::addVertex(Vertex vertex, bool addDuplicate) { // NOLINT(mi
         return;
     }
     if (auto position = std::find(this->vertices.begin(), this->vertices.end(), vertex); position != this->vertices.end()) {
-        this->indices.push_back(static_cast<unsigned int>(position - this->vertices.begin()));
+        this->indices.push_back(static_cast<Index>(position - this->vertices.begin()));
     } else {
         this->addVertex(vertex, true);
     }

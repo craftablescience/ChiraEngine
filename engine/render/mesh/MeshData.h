@@ -27,8 +27,8 @@ protected:
     int cullType = GL_BACK;
     SharedPointer<IMaterial> material;
     unsigned int vboHandle = 0, vaoHandle = 0, eboHandle = 0;
-    std::vector<Vertex> vertices{};
-    std::vector<unsigned int> indices{};
+    std::vector<Vertex> vertices;
+    std::vector<Index> indices;
     /// Establishes the OpenGL buffers and copies the current mesh data into them.
     void setupForRendering();
     /// Updates the OpenGL buffers with the current mesh data.

@@ -8,7 +8,7 @@
 
 using namespace chira;
 
-void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) const {
+void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<Index>& indices) const {
     std::vector<glm::vec3> vertexBuffer;
     std::vector<ColorRG> uvBuffer;
     std::vector<ColorRGB> normalBuffer;
@@ -17,7 +17,7 @@ void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>&
     std::istringstream meshDataStream{meshData->getString()};
 
     std::string line;
-    unsigned int currentIndex = 0;
+    Index currentIndex = 0;
     while (std::getline(meshDataStream, line)) {
         if (line.substr(0,2) == "v ") {
             glm::vec3 pos;
@@ -80,10 +80,10 @@ void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>&
     }
 }
 
-void OBJMeshLoader::addVertex(Vertex v, unsigned int* currentIndex, std::vector<Vertex>& vertices, std::vector<unsigned int>& indices) {
+void OBJMeshLoader::addVertex(Vertex v, Index* currentIndex, std::vector<Vertex>& vertices, std::vector<Index>& indices) {
     auto position = std::find(vertices.begin(), vertices.end(), v);
     if (position != vertices.end()) {
-        indices.push_back(static_cast<unsigned int>(position - vertices.begin()));
+        indices.push_back(static_cast<Index>(position - vertices.begin()));
     } else {
         vertices.push_back(v);
         indices.push_back(*currentIndex);
@@ -91,7 +91,7 @@ void OBJMeshLoader::addVertex(Vertex v, unsigned int* currentIndex, std::vector<
     }
 }
 
-std::vector<byte> OBJMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) const {
+std::vector<byte> OBJMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices) const {
     std::stringstream meshDataStream;
     meshDataStream.setf(std::stringstream::fixed);
     // The following could be modified to actually use indices and save file space...
@@ -101,7 +101,7 @@ std::vector<byte> OBJMeshLoader::createMesh(const std::vector<Vertex>& vertices,
         meshDataStream << "vt " << std::setprecision(6) << vertices[index].uv.r << ' ' << vertices[index].uv.g << '\n';
         meshDataStream << "vn " << std::setprecision(6) << vertices[index].normal.r << ' ' << vertices[index].normal.g << ' ' << vertices[index].normal.b << '\n';
     }
-    for (unsigned int i = 1; i < indices.size() + 1; i += 3) {
+    for (Index i = 1; i < indices.size() + 1; i += 3) {
         meshDataStream << "f " << i   << '/' << i   << '/' << i   << ' '
                                << i+1 << '/' << i+1 << '/' << i+1 << ' '
                                << i+2 << '/' << i+2 << '/' << i+2 << '\n';
