@@ -33,6 +33,11 @@ static ConCommand crash{"crash", "Force-crashes the game or application (for deb
 }, CON_FLAG_CHEAT};
 
 void Engine::preInit(int argc, const char* const argv[]) {
+#ifdef _WIN32
+    // Enable colored text in Windows console by setting encoding to UTF-8
+    // #define CP_UTF8 65001 in windows.h
+    system("chcp 65001 > nul");
+#endif
     CommandLine::initialize(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
     TranslationManager::addTranslationFile("file://i18n/engine");

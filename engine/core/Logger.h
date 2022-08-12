@@ -8,7 +8,7 @@
 
 namespace chira {
 
-enum LogType {
+enum class LogType {
     LOG_INFO,           // white
     LOG_INFO_IMPORTANT, // green
     LOG_OUTPUT,         // blue
