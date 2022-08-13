@@ -50,12 +50,10 @@ static inline void addResourceFolderSelected() {
 
 class ModelViewerPanel : public IPanel {
 public:
-    ModelViewerPanel() : IPanel(TR("ui.window.title"), true) {
+    ModelViewerPanel() : IPanel(TR("ui.engineview"), true) {
         this->flags |=
-                ImGuiWindowFlags_NoTitleBar   |
-                ImGuiWindowFlags_NoDecoration |
-                ImGuiWindowFlags_NoResize     |
-                ImGuiWindowFlags_NoBackground ;
+                ImGuiWindowFlags_NoBackground |
+                ImGuiWindowFlags_DockNodeHost;
     }
 
     // Opens a file dialog used to select a model definition
@@ -113,6 +111,14 @@ public:
             ImGui::EndMainMenuBar();
         }
         
+        // All of those dialog boxes
+        bool show = true;
+        if (ImGui::Begin(TRC("ui.entities"), &show, ImGuiWindowFlags_None)) {
+            ImGui::Text("Testing");
+        }
+        
+        ImGui::End();
+        
         // Model Dialog specific logic
         modeldialog.Display();
         if (modeldialog.HasSelected()) {
@@ -120,14 +126,16 @@ public:
             modeldialog.ClearSelected();
         }
 
-        ImGui::SetNextWindowPos(ImVec2{0, ImGui::GetFrameHeight()});
-        ImGui::SetNextWindowSize(ImVec2{ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y - ImGui::GetFrameHeight()});
+    }
+    
+    void testingdialog() {
+        
     }
 
     void renderContents() override {
-        ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
-        Engine::getWindow()->getChild("grid")->setVisible(this->showGrid);
-        ImGui::Text("%s", this->loadedFile.c_str());
+        //ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
+        //Engine::getWindow()->getChild("grid")->setVisible(this->showGrid);
+        //ImGui::Text("%s", this->loadedFile.c_str());
     }
 
     void setLoadedFile(const std::string& meshName) {
