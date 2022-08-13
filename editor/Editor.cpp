@@ -52,8 +52,7 @@ class ModelViewerPanel : public IPanel {
 public:
     ModelViewerPanel() : IPanel(TR("ui.engineview"), true) {
         this->flags |=
-                ImGuiWindowFlags_NoBackground |
-                ImGuiWindowFlags_DockNodeHost;
+                ImGuiWindowFlags_NoBackground;
     }
 
     // Opens a file dialog used to select a model definition
@@ -116,7 +115,6 @@ public:
         if (ImGui::Begin(TRC("ui.entities"), &show, ImGuiWindowFlags_None)) {
             ImGui::Text("Testing");
         }
-        
         ImGui::End();
         
         // Model Dialog specific logic
