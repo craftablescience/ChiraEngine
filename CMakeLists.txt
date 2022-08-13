@@ -158,10 +158,6 @@ list(APPEND CHIRA_ENGINE_LINK_LIBRARIES stduuid)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES tinyfiledialogs)
 
-# Imgui based file dialog
-#list(APPEND CHIRA_ENGINE_HEADERS
-        #${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser/imfilebrowser.h)
-
 # CHIRAENGINE
 option(CHIRA_USE_STEAMWORKS "Build Chira Engine with Steamworks API features" ON)
 
