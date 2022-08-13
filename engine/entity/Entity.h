@@ -11,7 +11,6 @@ namespace chira {
 
 class Group;
 class Frame;
-class Window;
 
 /// The base entity class. Note that the name of an entity stored in the name variable should
 /// match the name assigned to the entity in the parent's entity map.

@@ -3,6 +3,7 @@
 #include <string>
 #include <string_view>
 #include <imgui.h>
+#include <math/Types.h>
 
 namespace chira {
 

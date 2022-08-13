@@ -1,5 +1,6 @@
 #include "TranslationManager.h"
 
+#include <config/ConEntry.h>
 #include <core/Logger.h>
 #include <resource/Resource.h>
 

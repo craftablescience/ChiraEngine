@@ -12,6 +12,7 @@
 #include <render/texture/Image.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <render/material/MaterialFramebuffer.h>
+#include <render/material/MaterialTextured.h>
 #include <ui/Font.h>
 #include <ui/IPanel.h>
 

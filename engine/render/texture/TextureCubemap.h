@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glad/gl.h>
 #include "ITexture.h"
 
 namespace chira {

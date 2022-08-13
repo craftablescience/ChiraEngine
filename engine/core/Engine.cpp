@@ -14,6 +14,7 @@
 #include <script/AngelScriptVM.h>
 #include <ui/debug/ConsolePanel.h>
 #include <ui/debug/ResourceUsageTrackerPanel.h>
+#include "CommandLine.h"
 
 #ifdef CHIRA_USE_DISCORD
     #include <hook/DiscordRPC.h>

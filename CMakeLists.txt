@@ -160,7 +160,16 @@ list(APPEND CHIRA_ENGINE_SOURCES ${CHIRA_ENGINE_HEADERS})
 
 add_library(${PROJECT_NAME} STATIC ${CHIRA_ENGINE_SOURCES})
 apply_optimizations(${PROJECT_NAME})
-target_precompile_headers(${PROJECT_NAME} PRIVATE ${CHIRA_ENGINE_HEADERS})
+
+# Precompiled headers seem to make compilation slower when not using MSVC
+if(MSVC)
+    option(CHIRA_USE_PCH "Use precompiled headers when building Chira Engine" ON)
+else()
+    option(CHIRA_USE_PCH "Use precompiled headers when building Chira Engine" OFF)
+endif()
+if(CHIRA_USE_PCH)
+    target_precompile_headers(${PROJECT_NAME} PRIVATE ${CHIRA_ENGINE_HEADERS})
+endif()
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD2)
 

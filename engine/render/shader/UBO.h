@@ -4,6 +4,7 @@
 #include <memory>
 #include <glm/glm.hpp>
 #include <glad/gl.h>
+#include <math/Types.h>
 #include <utility/HandleObject.h>
 
 namespace chira {
