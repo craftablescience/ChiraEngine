@@ -76,6 +76,12 @@ macro(apply_optimizations target)
             target_compile_options(${target} PRIVATE /WX)
         endif()
     endif()
+    
+    # psst! didn't know where else to put this so here. We need this for xcode
+    if(CMAKE_GENERATOR STREQUAL Xcode)
+        set_target_properties(${target} PROPERTIES XCODE_ATTRIBUTE_CC "/usr/local/opt/llvm/bin/clang")
+        set_target_properties(${target} PROPERTIES XCODE_ATTRIBUTE_CXX "/usr/local/opt/llvm/bin/clang++")
+    endif()
 endmacro()
 
 # GOOGLETEST
@@ -190,7 +196,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/libloader/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stb
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stduuid/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs)
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser)
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/engine)
 

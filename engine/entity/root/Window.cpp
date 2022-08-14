@@ -147,7 +147,7 @@ bool Window::createGLFWWindow(std::string_view title) {
     this->imguiContext = ImGui::CreateContext();
     ImGui::SetCurrentContext(this->imguiContext);
     auto& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_DockingEnable;
 
     ImGui_ImplGlfw_InitForOpenGL(this->window, true); // register for default input binds
     ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
@@ -188,6 +188,7 @@ void Window::render(glm::mat4 /*parentTransform*/) {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
 
     Frame::render(this->fboHandle, this->width, this->height);
 

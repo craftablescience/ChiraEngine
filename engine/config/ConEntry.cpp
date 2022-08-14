@@ -1,7 +1,6 @@
 #include "ConEntry.h"
 
 #include <algorithm>
-#include <ranges>
 #include <utility>
 
 using namespace chira;
@@ -23,7 +22,7 @@ static ConCommand info{"info", "Prints the description of the given convar(s) or
 static ConCommand con_entries{"con_entries", "Prints the description of every convar and concommand currently registered.", [] { // NOLINT(cert-err58-cpp)
     LOG_CONENTRY.infoImportant("-- Commands --");
     auto concommandList = ConCommandRegistry::getConCommandList();
-    std::ranges::sort(concommandList);
+    std::sort(concommandList.begin(), concommandList.end());
     for (const auto& name : concommandList) {
         if (const auto* concommand = ConCommandRegistry::getConCommand(name); !concommand->hasFlag(CON_FLAG_HIDDEN)) {
             LOG_CONENTRY.infoImportant(std::string{*concommand});
@@ -32,7 +31,7 @@ static ConCommand con_entries{"con_entries", "Prints the description of every co
 
     LOG_CONENTRY.infoImportant("-- Variables --");
     auto convarList = ConVarRegistry::getConVarList();
-    std::ranges::sort(convarList);
+    std::sort(convarList.begin(), convarList.end());
     for (const auto& name : convarList) {
         if (const auto* convar = ConVarRegistry::getConVar(name); !convar->hasFlag(CON_FLAG_HIDDEN)) {
             LOG_CONENTRY.infoImportant(std::string{*convar});
