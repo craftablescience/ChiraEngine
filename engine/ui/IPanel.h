@@ -4,6 +4,8 @@
 #include <string_view>
 #include <imgui.h>
 #include <math/Types.h>
+#include <entity/Entity.h>
+#include <entity/camera/EditorCamera.h>
 
 namespace chira {
 
@@ -27,6 +29,7 @@ public:
     void removeChild(std::string_view name_);
     bool hasChild(std::string_view name_);
     Entity* getChild(std::string_view name_);
+    void setCamera(Camera* camera);
 protected:
     std::string title;
     bool visible;

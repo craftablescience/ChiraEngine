@@ -48,3 +48,7 @@ bool FramePanel::hasChild(std::string_view name_) {
 Entity* FramePanel::getChild(std::string_view name_) {
     return this->frame->getChild(name_);
 }
+
+void FramePanel::setCamera(Camera* camera) {
+    this->frame->setCamera(camera);
+}

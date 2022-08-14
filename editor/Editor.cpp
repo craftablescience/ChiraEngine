@@ -115,7 +115,7 @@ public:
         }
         
         // All of those dialog boxes
-        entitiesdock()
+        entitiesdock();
         
         // Model Dialog specific logic
         modeldialog.Display();
@@ -141,8 +141,8 @@ public:
     }
 
     void setLoadedFile(const std::string& meshName) {
-        if (Engine::getWindow()->getPanel(engineviewUUID)->hasChild(this->meshId) && meshName == Engine::getWindow()->getPanel(engineviewUUID)->getChild<Mesh>(this->meshId)->getMeshResource()->getIdentifier())
-            return;
+       // if (Engine::getWindow()->getPanel(engineviewUUID)->hasChild(this->meshId) && meshName == Engine::getWindow()->getPanel(engineviewUUID)->getChild<Mesh>(this->meshId)->getMeshResource()->getIdentifier())
+            //return;
         if (!Resource::hasResource(meshName)) {
             Dialogs::popupError(TRF("error.modelviewer.resource_is_invalid", meshName));
             return;
@@ -190,7 +190,7 @@ int main(int argc, const char* const argv[]) {
 
     Engine::getWindow()->addPanel(new ModelViewerPanel{});
     engineviewUUID = Engine::getWindow()->addPanel(new FramePanel("Engine View", true, ImVec2(2.0F, 2.0F)));
-    Engine::getWindow()->getPanel(engineviewUUID)->setBackgroundColor(ColorRGB{0.15f});
+    //Engine::getWindow()->getPanel(engineviewUUID)->setBackgroundColor(ColorRGB{0.15f});
 
     auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};
     camera->translate({-6.f * sqrtf(3.f), 6, 0});
