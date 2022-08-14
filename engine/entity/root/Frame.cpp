@@ -60,10 +60,13 @@ void Frame::createFramebuffer() {
 }
 
 void Frame::render(glm::mat4 /*parentTransform*/) {
-    this->render(Entity::getFrame()->getFramebufferHandle(), Entity::getFrame()->width, Entity::getFrame()->height);
+    this->render(Entity::getFrame()->getFramebufferHandle(),
+                 Entity::getFrame()->width,
+                 Entity::getFrame()->height,
+                 Entity::getFrame()->mainCamera);
 }
 
-void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeight) {
+void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeight, Camera* camera) {
     glViewport(0, 0, this->width, this->height);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fboHandle);
     glClearColor(this->backgroundColor.r, this->backgroundColor.g, this->backgroundColor.b, 1.f);
@@ -75,7 +78,18 @@ void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeig
     auto tempRot = this->rotation;
     this->rotation = {};
 
+    if (this->mainCamera) {
+        UBO_PerspectiveView::get()->update(this->mainCamera->getProjection(), this->mainCamera->getView());
+    }
     Group::render(glm::identity<glm::mat4>());
+    if (this->renderSkybox) {
+        // Wiki says modern hardware is fine with this and it looks better
+        glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+        this->skybox.render(glm::identity<glm::mat4>());
+    }
+    if (this->mainCamera && camera) {
+        UBO_PerspectiveView::get()->update(camera->getProjection(), camera->getView());
+    }
 
     // (Hopefully) preserve any transformations from children
     this->translate(tempPos);
@@ -99,6 +113,15 @@ Frame* Frame::getFrame() {
     return this;
 }
 
+Camera* Frame::getCamera() const {
+    return this->mainCamera;
+}
+
+void Frame::setCamera(Camera* camera) {
+    this->mainCamera = camera;
+    this->mainCamera->createProjection(this->getFrame()->getFrameSize());
+}
+
 unsigned int Frame::getFramebufferHandle() const {
     return this->fboHandle;
 }
@@ -115,8 +138,9 @@ void Frame::setFrameSize(glm::vec2i newSize) {
     this->width = newSize.x;
     this->height = newSize.y;
     this->createFramebuffer();
-    if (this->getCamera())
+    if (this->getCamera()) {
         this->getCamera()->createProjection(newSize);
+    }
 }
 
 ColorRGB Frame::getBackgroundColor() const {
@@ -125,4 +149,18 @@ ColorRGB Frame::getBackgroundColor() const {
 
 void Frame::setBackgroundColor(ColorRGB color) {
     this->backgroundColor = color;
+}
+
+SharedPointer<MaterialCubemap> Frame::getSkybox() const {
+    return this->skybox.getMaterial().castAssert<MaterialCubemap>();
+}
+
+void Frame::setSkybox(const std::string& cubemapId) {
+    if (!this->skyboxMeshCreated) {
+        this->skybox.addCube({}, {1, 1, 1}, false);
+        this->skybox.update();
+        this->skyboxMeshCreated = true;
+    }
+    this->skybox.setMaterial(Resource::getResource<MaterialCubemap>(cubemapId).castAssert<IMaterial>());
+    this->renderSkybox = true;
 }

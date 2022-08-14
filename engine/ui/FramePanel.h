@@ -14,7 +14,7 @@ public:
     FramePanel(const std::string& title_, bool startVisible, ImVec2 windowSize, bool enforceSize = false);
     ~FramePanel() override;
     void renderContents() override;
-    std::string_view addChild(chira::Entity *child);
+    std::string_view addChild(Entity* child);
     void removeChild(std::string_view name_);
     bool hasChild(std::string_view name_);
     Entity* getChild(std::string_view name_);

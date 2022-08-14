@@ -52,10 +52,10 @@ public:
 
     virtual void setPosition(glm::vec3 newPos);
     virtual void setRotation(glm::quat newRot);
-    virtual glm::vec3 getPosition();
-    virtual glm::vec3 getGlobalPosition();
+    virtual glm::vec3 getPosition() const;
+    virtual glm::vec3 getGlobalPosition() const;
     /// Note: the global rotation is inaccessible.
-    virtual glm::quat getRotation();
+    virtual glm::quat getRotation() const;
     virtual void translate(glm::vec3 translateByAmount);
     virtual void translateWithRotation(glm::vec3 translateByAmount);
     virtual void rotate(glm::quat rotateByAmount);

@@ -1,12 +1,11 @@
 #pragma once
 
-#include <unordered_map>
+#include <vector>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 
-#include <utility/UUIDGenerator.h>
 #include "Frame.h"
 
 namespace chira {
@@ -20,9 +19,9 @@ class Window : public Frame {
 public:
     void render(glm::mat4 parentTransform) override;
     ~Window() override;
-    uuids::uuid addPanel(IPanel* panel);
-    [[nodiscard]] IPanel* getPanel(const uuids::uuid& panelID);
-    void removePanel(const uuids::uuid& panelID);
+    unsigned int addPanel(IPanel* panel);
+    [[nodiscard]] IPanel* getPanel(unsigned int panelID) const;
+    void removePanel(unsigned int panelID);
     void removeAllPanels();
     void setFrameSize(glm::vec2i newSize) override;
     [[nodiscard]] glm::vec2d getMousePosition() const;
@@ -47,7 +46,7 @@ private:
     ImGuiContext* imguiContext = nullptr;
     bool mouseCaptured = false, iconified = false;
     double lastMouseX = -1.0, lastMouseY = -1.0;
-    std::unordered_map<uuids::uuid, IPanel*> panels{};
+    std::vector<IPanel*> panels;
 
     Window(std::string name_, std::string_view title);
     explicit Window(std::string_view title);

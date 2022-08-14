@@ -114,15 +114,15 @@ void Entity::setRotation(glm::quat newRot) {
     this->rotation = newRot;
 }
 
-glm::vec3 Entity::getPosition() {
+glm::vec3 Entity::getPosition() const {
     return this->position;
 }
 
-glm::vec3 Entity::getGlobalPosition() { // NOLINT(misc-no-recursion)
+glm::vec3 Entity::getGlobalPosition() const { // NOLINT(misc-no-recursion)
     return this->getPosition() + this->parent->getGlobalPosition();
 }
 
-glm::quat Entity::getRotation() {
+glm::quat Entity::getRotation() const {
     return this->rotation;
 }
 

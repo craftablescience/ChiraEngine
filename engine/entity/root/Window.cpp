@@ -190,9 +190,9 @@ void Window::render(glm::mat4 /*parentTransform*/) {
     ImGui::NewFrame();
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
 
-    Frame::render(this->fboHandle, this->width, this->height);
+    Frame::render(this->fboHandle, this->width, this->height, this->mainCamera);
 
-    for (auto& [uuid, panel] : this->panels) {
+    for (auto* panel : this->panels) {
         panel->render();
     }
 
@@ -214,27 +214,32 @@ Window::~Window() {
     glfwDestroyWindow(this->window);
 }
 
-uuids::uuid Window::addPanel(IPanel* panel) {
-    const auto uuid = UUIDGenerator::getNewUUID();
-    this->panels[uuid] = panel;
-    return uuid;
+unsigned int Window::addPanel(IPanel* panel) {
+    for (unsigned int i = 0; i < this->panels.size(); i++) {
+        if (!this->panels.at(i)) {
+            this->panels[i] = panel;
+            return i;
+        }
+    }
+    this->panels.push_back(panel);
+    return this->panels.size() - 1;
 }
 
-IPanel* Window::getPanel(const uuids::uuid& panelID) {
-    if (this->panels.count(panelID) > 0)
-        return this->panels[panelID];
+IPanel* Window::getPanel(unsigned int panelID) const {
+    if (this->panels.size() > panelID)
+        return this->panels.at(panelID);
     return nullptr;
 }
 
-void Window::removePanel(const uuids::uuid& panelID) {
-    if (this->panels.count(panelID) > 0) {
-        delete this->panels[panelID];
-        this->panels.erase(panelID);
+void Window::removePanel(unsigned int panelID) {
+    if (this->panels.size() > panelID) {
+        delete this->panels.at(panelID);
+        this->panels[panelID] = nullptr;
     }
 }
 
 void Window::removeAllPanels() {
-    for (const auto& [panelID, panel] : this->panels) {
+    for (const auto* panel : this->panels) {
         delete panel;
     }
     this->panels.clear();
