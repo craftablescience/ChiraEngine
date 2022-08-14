@@ -5,7 +5,7 @@
 #include <utility>
 #include <resource/Resource.h>
 
-#ifdef MACOSX
+#if defined(__APPLE__) && defined(__MACH__)
     #include "CoreFoundation/CoreFoundation.h"
 #endif
 
@@ -22,8 +22,9 @@ FilesystemResourceProvider::FilesystemResourceProvider(std::string path_, bool i
     if (!this->absolute) {
     // MacOS is a lot more complex. There's more than 1 place our resources could be at
     // One requires a bit of work to access though.
-#ifdef MACOSX
+#if defined(__APPLE__) && defined(__MACH__)
         // Finding the bundle and it's resources directory
+        std::string status = "";
         CFBundleRef mainbundle =  CFBundleGetMainBundle();
         if (mainbundle) {
             CFURLRef appUrlRef = CFBundleCopyBundleURL(mainbundle);
@@ -48,26 +49,27 @@ FilesystemResourceProvider::FilesystemResourceProvider(std::string path_, bool i
                 this->path = rawpath + append + FILESYSTEM_ROOT_FOLDER + '/' + this->path;
             }
             else {
-                this->path = "NOBUNDLE";
+                status = "NOBUNDLE";
             }
         }
         else {
-            this->path = "NOBUNDLE";
+            status = "NOBUNDLE";
         }
-        if (this->path == "NOBUNDLE") {
+        if (status == "NOBUNDLE") {
             LOG_FILESYSTEM.warning("Could not find resources in our app bundle! Falling back to working directory...");
             if (std::filesystem::exists(std::filesystem::path{FILESYSTEM_ROOT_FOLDER + '/' + this->path})) {
                 LOG_FILESYSTEM.info("Found resources in working directory!");
                 this->path = FILESYSTEM_ROOT_FOLDER + '/' + this->path;
             }
             else {
-                this->path = "FATALERROR";
+                status = "FATALERROR";
             }
         }
-        else if (this->path == "FATALERROR") {
+        else if (status == "FATALERROR") {
             throw std::runtime_error{"[FILESYSTEM] FATAL ERROR: No known search path contains our requires resources! Did you mistype something?"};
         }
 #else
+        // Other platforms can just look in the working directory
         this->path = FILESYSTEM_ROOT_FOLDER + '/' + this->path;
 #endif
     }
