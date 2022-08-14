@@ -1,5 +1,5 @@
 list(APPEND CHIRA_ENGINE_HEADERS
-        ${CMAKE_CURRENT_LIST_DIR}/ScriptEntity.h)
+        ${CMAKE_CURRENT_LIST_DIR}/Script.h)
 
 list(APPEND CHIRA_ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/ScriptEntity.cpp)
+        ${CMAKE_CURRENT_LIST_DIR}/Script.cpp)
