@@ -40,7 +40,7 @@ jobs:
           path: |
             ${{github.workspace}}/build/resources/
             ${{github.workspace}}/build/ChiraEditor
-            ${{github.workspace}}/build/*.a*
+            ${{github.workspace}}/build/*.dylib*
           retention-days: 1
 
   build-linux:
