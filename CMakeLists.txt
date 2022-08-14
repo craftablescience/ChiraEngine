@@ -31,6 +31,16 @@ if(CHIRA_COMPILER_ID MATCHES "clang")
     endif()
 endif()
 
+# Detect macOS so we can make needed changes
+if(${CMAKE_SYSTEM} MATCHES "Darwin")
+	add_definitions(-DMACOSX)
+    # Steamworks doesn't have mac binaries right now so always disable it
+    set(CHIRA_USE_STEAMWORKS OFF)
+    # Include CoreFoundation Library as we absolutely need this
+    find_library(CORE_LIB CoreFoundation)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES ${CORE_LIB})
+endif()
+
 # Macro to apply optimization flags to multiple targets
 option(CHIRA_BUILD_WITH_WARNINGS "Build Chira Engine with warnings enabled" ON)
 option(CHIRA_TREAT_WARNINGS_AS_ERRORS "Build Chira Engine with warnings treated as errors" OFF) # Currently catches warnings from libraries
@@ -210,7 +220,12 @@ if(CHIRA_BUILD_EDITOR)
     if(WIN32)
         list(APPEND CHIRA_EDITOR_SOURCES ${CMAKE_CURRENT_LIST_DIR}/resources/editor/icon/icon.rc)
     endif()
-    add_executable(ChiraEditor ${CHIRA_EDITOR_SOURCES})
+    # macos bundle for editor
+    if(${CMAKE_SYSTEM} MATCHES "Darwin")
+        add_executable(ChiraEditor MACOSX_BUNDLE ${CHIRA_EDITOR_SOURCES})
+    else()
+        add_executable(ChiraEditor ${CHIRA_EDITOR_SOURCES})
+    endif()
     apply_optimizations(ChiraEditor)
     if(WIN32)
         add_custom_target(
@@ -221,6 +236,7 @@ if(CHIRA_BUILD_EDITOR)
     endif()
     target_link_libraries(ChiraEditor PRIVATE ${PROJECT_NAME})
     target_include_directories(ChiraEditor PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/editor)
+
 endif()
 
 # CHIRATEST
@@ -243,3 +259,11 @@ add_custom_command(
         TARGET ${PROJECT_NAME}
         PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/resources)
+
+# MacOS Bundle info
+set(CPACK_GENERATOR "TGZ")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "ChiraEngine" CACHE STRING "Program name for display purposes")
+set(CPACK_PACKAGE_VENDOR "ChiraEngine Developers" CACHE STRING "Vendor name for display purposes")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "Bundle")
+SET(CPACK_OUTPUT_FILE_PREFIX package)
+include(CPack)
