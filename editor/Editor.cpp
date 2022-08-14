@@ -13,6 +13,7 @@
 #include <entity/model/MeshDynamic.h>
 #include <entity/camera/EditorCamera.h>
 #include <ui/IPanel.h>
+#include <ui/FramePanel.h>
 #include <utility/Dialogs.h>
 // Used because file dialogs are broken on macos
 #include <imfilebrowser.h>
@@ -26,6 +27,8 @@
 #endif
 
 using namespace chira;
+
+uuids::uuid engineviewUUID;
 
 static inline void addResourceFolderSelected() {
     auto folder = Dialogs::openFolder();
@@ -112,11 +115,7 @@ public:
         }
         
         // All of those dialog boxes
-        bool show = true;
-        if (ImGui::Begin(TRC("ui.entities"), &show, ImGuiWindowFlags_None)) {
-            ImGui::Text("Testing");
-        }
-        ImGui::End();
+        entitiesdock()
         
         // Model Dialog specific logic
         modeldialog.Display();
@@ -127,26 +126,30 @@ public:
 
     }
     
-    void testingdialog() {
-        
+    void entitiesdock() {
+        bool* show = NULL;
+        if (ImGui::Begin(TRC("ui.entities"), show, ImGuiWindowFlags_None)) {
+            ImGui::Text("Testing");
+        }
+        ImGui::End();
     }
 
     void renderContents() override {
-        //ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
-        //Engine::getWindow()->getChild("grid")->setVisible(this->showGrid);
-        //ImGui::Text("%s", this->loadedFile.c_str());
+        ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
+        Engine::getWindow()->getPanel(engineviewUUID)->getChild("grid")->setVisible(this->showGrid);
+        ImGui::Text("%s", this->loadedFile.c_str());
     }
 
     void setLoadedFile(const std::string& meshName) {
-        if (Engine::getWindow()->hasChild(this->meshId) && meshName == Engine::getWindow()->getChild<Mesh>(this->meshId)->getMeshResource()->getIdentifier())
+        if (Engine::getWindow()->getPanel(engineviewUUID)->hasChild(this->meshId) && meshName == Engine::getWindow()->getPanel(engineviewUUID)->getChild<Mesh>(this->meshId)->getMeshResource()->getIdentifier())
             return;
         if (!Resource::hasResource(meshName)) {
             Dialogs::popupError(TRF("error.modelviewer.resource_is_invalid", meshName));
             return;
         }
-        if (Engine::getWindow()->hasChild(this->meshId))
-            Engine::getWindow()->removeChild(this->meshId);
-        this->meshId = Engine::getWindow()->addChild(new Mesh{meshName});
+        if (Engine::getWindow()->getPanel(engineviewUUID)->hasChild(this->meshId))
+            Engine::getWindow()->getPanel(engineviewUUID)->removeChild(this->meshId);
+        this->meshId = Engine::getWindow()->getPanel(engineviewUUID)->addChild(new Mesh{meshName});
         this->loadedFile = meshName;
     }
 
@@ -186,13 +189,15 @@ int main(int argc, const char* const argv[]) {
     Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
 
     Engine::getWindow()->addPanel(new ModelViewerPanel{});
+    engineviewUUID = Engine::getWindow()->addPanel(new FramePanel("Engine View", true, ImVec2(2.0F, 2.0F)));
+    Engine::getWindow()->getPanel(engineviewUUID)->setBackgroundColor(ColorRGB{0.15f});
 
     auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};
     camera->translate({-6.f * sqrtf(3.f), 6, 0});
     camera->setPitch(30.f);
     camera->setYaw(270.f);
-    Engine::getWindow()->addChild(camera);
-    Engine::getWindow()->setCamera(camera);
+    Engine::getWindow()->getPanel(engineviewUUID)->addChild(camera);
+    Engine::getWindow()->getPanel(engineviewUUID)->setCamera(camera);
     EditorCamera::setupKeybinds();
 
     auto grid = new MeshDynamic{"grid"};
@@ -205,7 +210,7 @@ int main(int argc, const char* const argv[]) {
     gridMesh->addCube({{2.5f, 0, 0}, {0, 0, 0}, {1, 0, 0}}, {5.f + 0.026f, 0.03f, 0.03f});
     gridMesh->addCube({{0, 0, 2.5f}, {0, 0, 0}, {0, 0, 1}}, {0.03f, 0.03f, 5.f + 0.026f});
     gridMesh->addCube({{0, 0,    0}, {0, 0, 0}, {0, 1, 0}}, glm::vec3{0.05f});
-    Engine::getWindow()->addChild(grid);
+    Engine::getWindow()->getPanel(engineviewUUID)->addChild(grid);
 
     Engine::run();
 }

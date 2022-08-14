@@ -23,6 +23,10 @@ public:
     [[nodiscard]] glm::vec2 getWindowSize() const;
     void setWindowSize(glm::vec2 size);
     ImGuiWindowFlags& getWindowFlags();
+    std::string_view addChild(chira::Entity *child);
+    void removeChild(std::string_view name_);
+    bool hasChild(std::string_view name_);
+    Entity* getChild(std::string_view name_);
 protected:
     std::string title;
     bool visible;
