@@ -1,6 +1,7 @@
 #include "FramePanel.h"
 
 #include <entity/root/Frame.h>
+#include <core/Engine.h>
 
 using namespace chira;
 
