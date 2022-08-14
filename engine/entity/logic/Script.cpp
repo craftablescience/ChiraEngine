@@ -1,8 +1,8 @@
-#include "ScriptEntity.h"
+#include "Script.h"
 
 using namespace chira;
 
-ScriptEntity::ScriptEntity(std::string name_, const std::string& scriptID)
+Script::Script(std::string name_, const std::string& scriptID)
     : Entity(std::move(name_))
     , script(scriptID) {
     this->script.getFunction("init")();
@@ -10,7 +10,7 @@ ScriptEntity::ScriptEntity(std::string name_, const std::string& scriptID)
     this->renderFunc = this->script.getFunction("render");
 }
 
-ScriptEntity::ScriptEntity(const std::string& scriptID)
+Script::Script(const std::string& scriptID)
     : Entity()
     , script(scriptID) {
     this->script.getFunction("init")();
@@ -18,16 +18,16 @@ ScriptEntity::ScriptEntity(const std::string& scriptID)
     this->renderFunc = this->script.getFunction("render");
 }
 
-void ScriptEntity::update() {
+void Script::update() {
     this->updateFunc();
     Entity::update();
 }
 
-void ScriptEntity::render(glm::mat4 parentTransform) {
+void Script::render(glm::mat4 parentTransform) {
     this->renderFunc();
     Entity::render(parentTransform);
 }
 
-ScriptEntity::~ScriptEntity() {
+Script::~Script() {
     this->script.getFunction("stop")();
 }
