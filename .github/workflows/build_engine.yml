@@ -7,6 +7,42 @@ on:
   workflow_dispatch:
     # nothing here
 jobs:
+  build-macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Debug, Release]
+        compiler: [clang]
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      
+      - name: Install LLVM from Homebrew
+        run: brew install llvm
+      
+      - name: Configure CMake
+        run: ${{github.workspace}}/cmake_configure_macos.sh Makefiles
+      
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
+      
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{matrix.build_type}}
+      
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ChiraEngine-macOS-${{matrix.compiler}}-${{matrix.build_type}}
+          path: |
+            ${{github.workspace}}/build/resources/
+            ${{github.workspace}}/build/ChiraEditor
+            ${{github.workspace}}/build/*.a*
+          retention-days: 1
+
   build-linux:
     strategy:
       fail-fast: false
