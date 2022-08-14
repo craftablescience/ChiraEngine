@@ -1,6 +1,7 @@
 #include "Frame.h"
 
 #include <core/Engine.h>
+#include <render/shader/UBO.h>
 
 using namespace chira;
 
