@@ -1,5 +1,6 @@
 #pragma once
 
+#include <concepts>
 #include <unordered_map>
 #include <string>
 #include <string_view>
@@ -38,9 +39,10 @@ public:
     [[nodiscard]] std::string_view getName() const;
 
     [[nodiscard]] Entity* getChild(std::string_view name_) const;
-    template<typename EntityType>
-    [[nodiscard]] EntityType* getChild(std::string_view name_) const {
-        return assert_cast<EntityType*>(this->getChild(name_));
+    template<typename T>
+    requires std::derived_from<T, Entity>
+    [[nodiscard]] T* getChild(std::string_view name_) const {
+        return assert_cast<T*>(this->getChild(name_));
     }
     [[nodiscard]] bool hasChild(std::string_view name_) const;
     virtual std::string_view addChild(Entity* child);

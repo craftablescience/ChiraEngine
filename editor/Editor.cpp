@@ -134,7 +134,9 @@ public:
 
     void renderContents() override {
         ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
-        Engine::getWindow()->getPanel(engineviewID)->getChild("grid")->setVisible(this->showGrid);
+        if (auto* framePanel = Engine::getWindow()->getPanel<FramePanel>(engineviewID)) {
+            framePanel->getFrame()->getChild("grid")->setVisible(this->showGrid);
+        }
         ImGui::Text("%s", this->loadedFile.c_str());
     }
 
@@ -145,9 +147,12 @@ public:
             Dialogs::popupError(TRF("error.modelviewer.resource_is_invalid", meshName));
             return;
         }
-        if (Engine::getWindow()->getPanel(engineviewID)->hasChild(this->meshId))
-            Engine::getWindow()->getPanel(engineviewID)->removeChild(this->meshId);
-        this->meshId = Engine::getWindow()->getPanel(engineviewID)->addChild(new Mesh{meshName});
+        if (auto* framePanel = Engine::getWindow()->getPanel<FramePanel>(engineviewID)) {
+            if (framePanel->getFrame()->hasChild(this->meshId)) {
+                framePanel->getFrame()->removeChild(this->meshId);
+            }
+            framePanel->getFrame()->addChild(new Mesh{meshName});
+        }
         this->loadedFile = meshName;
     }
 
@@ -187,9 +192,10 @@ int main(int argc, const char* const argv[]) {
     Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
 
     Engine::getWindow()->addPanel(new ModelViewerPanel{});
-    auto frame = new FramePanel("Engine View", true, ImVec2(2.0F, 2.0F));
-    engineviewID = Engine::getWindow()->addPanel(frame);
-    //Engine::getWindow()->getPanel(engineviewUUID)->setBackgroundColor(ColorRGB{0.15f});
+    auto framePanel = new FramePanel("Engine View", true, ImVec2(2.0F, 2.0F));
+    auto frame = framePanel->getFrame();
+    frame->setBackgroundColor(ColorRGB{0.15f});
+    engineviewID = Engine::getWindow()->addPanel(framePanel);
 
     auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};
     camera->translate({-6.f * sqrtf(3.f), 6, 0});

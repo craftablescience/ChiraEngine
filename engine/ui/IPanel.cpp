@@ -59,25 +59,3 @@ void IPanel::setWindowSize(glm::vec2 size) {
     this->nextWindowSize.x = size.x;
     this->nextWindowSize.y = size.y;
 }
-
-// Proxy to add a child to the frame
-std::string_view IPanel::addChild(chira::Entity *child) {
-    return "STUB";
-}
-
-// Proxy to remove a child from the frame
-void IPanel::removeChild(std::string_view name_) {
-    // STUB
-}
-
-bool IPanel::hasChild(std::string_view name_) {
-    return false;
-}
-
-Entity* IPanel::getChild(std::string_view name_) {
-    return new Entity();
-}
-
-void IPanel::setCamera(Camera* camera) {
-    // STUB
-}

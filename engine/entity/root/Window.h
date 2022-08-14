@@ -1,5 +1,6 @@
 #pragma once
 
+#include <concepts>
 #include <vector>
 
 #define GLFW_INCLUDE_NONE
@@ -19,10 +20,17 @@ class Window : public Frame {
 public:
     void render(glm::mat4 parentTransform) override;
     ~Window() override;
+
     unsigned int addPanel(IPanel* panel);
     [[nodiscard]] IPanel* getPanel(unsigned int panelID) const;
+    template<typename T>
+    requires std::derived_from<T, IPanel>
+    [[nodiscard]] T* getPanel(unsigned int panelID) const {
+        return assert_cast<T*>(this->getPanel(panelID));
+    }
     void removePanel(unsigned int panelID);
     void removeAllPanels();
+
     void setFrameSize(glm::vec2i newSize) override;
     [[nodiscard]] glm::vec2d getMousePosition() const;
     void captureMouse(bool capture);

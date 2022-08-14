@@ -34,24 +34,6 @@ void FramePanel::renderContents() {
     ImGui::EndChild();
 }
 
-// Proxy to add a child to the frame
-std::string_view FramePanel::addChild(Entity* child) {
-    return this->frame->addChild(child);
-}
-
-// Proxy to remove a child from the frame
-void FramePanel::removeChild(std::string_view name_) {
-    this->frame->removeChild(name_);
-}
-
-bool FramePanel::hasChild(std::string_view name_) {
-    return this->frame->hasChild(name_);
-}
-
-Entity* FramePanel::getChild(std::string_view name_) {
-    return this->frame->getChild(name_);
-}
-
-void FramePanel::setCamera(Camera* camera) {
-    this->frame->setCamera(camera);
+Frame* FramePanel::getFrame() const {
+    return this->frame;
 }
