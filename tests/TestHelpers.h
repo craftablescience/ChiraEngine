@@ -7,11 +7,11 @@
 
 #define PREINIT_ENGINE() \
     const char* const argv[] = {"ChiraTest"}; \
-    chira::Engine::preInit(1, argv); \
+    chira::Engine::preInit(sizeof argv / sizeof(argv[0]), argv); \
     chira::Resource::addResourceProvider(new chira::FilesystemResourceProvider{"tests"})
 
-#define PREINIT_ENGINE_WITH_ARGS(argc, argv) \
-    chira::Engine::preInit(argc, argv); \
+#define PREINIT_ENGINE_WITH_ARGS(argv) \
+    chira::Engine::preInit(sizeof argv / sizeof(argv[0]), argv); \
     chira::Resource::addResourceProvider(new chira::FilesystemResourceProvider{"tests"})
 
 #define SETUP_ANGELSCRIPT() chira::AngelScriptVM::init()
