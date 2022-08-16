@@ -35,7 +35,10 @@
 
 using namespace chira;
 
+CHIRA_CREATE_LOG(EDITOR);
+
 unsigned int engineviewID = 0;
+unsigned int resourcepanelID = 0;
 
 static inline void addResourceFolderSelected() {
     auto folder = Dialogs::openFolder();
@@ -217,7 +220,13 @@ int main(int argc, const char* const argv[]) {
     engineviewID = Engine::getWindow()->addPanel(framePanel);
 
     // Engine tool panels
-    Engine::getWindow()->addPanel(new ResourceBrowser());
+    
+    // Setup resources panel with the editor resources
+    auto resourcePanel = new ResourceBrowser();
+    resourcepanelID = Engine::getWindow()->addPanel(resourcePanel);
+    resourcePanel->loadResourceFolder("editor");
+    
+    
     Engine::getWindow()->addPanel(new EntityPanel());
 
     auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};

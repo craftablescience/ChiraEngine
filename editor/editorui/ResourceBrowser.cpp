@@ -20,20 +20,17 @@ ResourceBrowser::ResourceBrowser()
     : IPanel(TRC("ui.resourcebrowser.title"), true, ImVec2(2.0F, 2.0F), false), currentSize(2.0F, 2.0F) {
 }
 
-void ResourceBrowser::GetMeshList(std::string resourceFolder) {
+void ResourceBrowser::loadResourceFolder(std::string resourceFolder) {
     // Resource related things
-    auto resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(resourceFolder);
+    auto resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(FILESYSTEM_ROOT_FOLDER + "/" + resourceFolder);
     if (resourceFolderPath.empty()) {
         LOG_RESB.error("Attempted to load resource folder " + resourceFolder + " but it doesn't exist!");
         return;
     }
     
-    bool resourceExists = false;
-    for (const auto& fileProvider : Resource::getResourceProviders(FILESYSTEM_PROVIDER_NAME)) {
-        if (resourceFolderPath == assert_cast<FilesystemResourceProvider*>(fileProvider.get())->getFolder()) {
-            
-        }
-    }
+    loadedResources.meshes = FilesystemResourceProvider::getDirectoryContents(FILESYSTEM_ROOT_FOLDER + "/" + resourceFolder + "/meshes", "mdef");
+    
+    LOG_RESB.info("Finished searching for resources in " + resourceFolder);
 }
 
 // Thumbnail file element for resource browser
@@ -57,7 +54,8 @@ bool ResourceBrowser::thumbnailFile(std::string fileName, std::string fileIcon =
 }
 
 void ResourceBrowser::renderContents() {
-    // Thumbnail view
-    this->thumbnailFile("teapot.json");
-    this->thumbnailFile("missing.json");
+    // display every mesh
+    for ( auto const& [key, val] : loadedResources.meshes ) {
+        this->thumbnailFile(loadedResources.meshes[key].fileName);
+    }
 }

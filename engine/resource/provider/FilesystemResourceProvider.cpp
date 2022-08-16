@@ -118,3 +118,55 @@ std::string FilesystemResourceProvider::getResourceAbsolutePath(const std::strin
         return assert_cast<FilesystemResourceProvider*>(provider)->getLocalResourceAbsolutePath(identifier);
     return "";
 }
+
+std::map<std::string, fileInfo> FilesystemResourceProvider::getDirectoryContents(std::string path, std::string extension = "") {
+    // if an error happens AT ANY POINT we still need to pass something over so we can cancel the search
+    // right at the point of failure if need be. so we pass an empty map back to get around that.
+    std::map<std::string, fileInfo> DUMMY;
+    
+    // the actual map we populate with files
+    std::map<std::string, fileInfo> files;
+    
+    // Check if the directory exists first
+    auto resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(path);
+    if (resourceFolderPath.empty()) {
+        LOG_FILESYSTEM.error("Resource directory " + path + " does not exist!");
+        return DUMMY;
+    }
+    
+    // grab the contents of this directory and put the files into a file table
+    for (const auto & entry : std::filesystem::directory_iterator(path)) {
+        if (extension.empty()) {
+            // if type is not specifically defined just give every file in the folder
+            if(entry.path().extension().string() == "mdef") {
+                /// Model definition
+                std::string filename = entry.path().stem().string();
+                fileInfo filedef;
+                filedef.fileName = filename;
+                filedef.fileType = FILE_MESH;
+                filedef.filePath = entry.path().string();
+                files[ filename ] = filedef;
+            }
+            else {
+                /// Unknown/Generic file
+                std::string filename = entry.path().stem().string();
+                fileInfo filedef;
+                filedef.fileName = filename;
+                filedef.fileType = FILE_GENERIC;
+                filedef.filePath = entry.path().string();
+                files[ filename ] = filedef;
+            }
+        }
+        else {
+            if (entry.path().extension().string() == extension) {
+                std::string filename = entry.path().stem().string();
+                fileInfo filedef;
+                filedef.fileName = filename;
+                filedef.fileType = FILE_MESH;
+                filedef.filePath = entry.path().string();
+                files[ filename ] = filedef;
+            }
+        }
+    }
+    return files;
+}
