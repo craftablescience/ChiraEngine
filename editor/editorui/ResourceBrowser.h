@@ -8,6 +8,7 @@ class ResourceBrowser : public IPanel {
 public:
     ResourceBrowser();
     void renderContents() override;
+    void GetMeshList();
 protected:
     glm::vec2i currentSize;
 };
