@@ -4,9 +4,9 @@
 #include <math/Types.h>
 namespace chira {
 
-class ResourceBrowser : public IPanel {
+class EntityPanel : public IPanel {
 public:
-    ResourceBrowser();
+    EntityPanel();
     void renderContents() override;
 protected:
     glm::vec2i currentSize;

@@ -2,7 +2,10 @@
   "ui.window.title": "Chira Editor",
 
   "ui.engineview": "Engine View",
-  "ui.entities": "Entities",
+  
+  "ui.entitypanel.title": "Entities",
+
+  "ui.resourcebrowser.title": "Resource Browser",
 
   "ui.menubar.open_model": "Open Model...",
   "ui.menubar.add_resource_folder": "Add Resource Folder...",

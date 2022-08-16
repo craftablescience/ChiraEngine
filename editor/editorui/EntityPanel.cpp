@@ -1,4 +1,4 @@
-#include "ResourceBrowser.h"
+#include "EntityPanel.h"
 
 #include <fstream>
 #include <core/Engine.h>
@@ -12,10 +12,10 @@
 
 using namespace chira;
 
-ResourceBrowser::ResourceBrowser()
-    : IPanel(TRC("ui.resourcebrowser.title"), true, ImVec2(2.0F, 2.0F), false), currentSize(2.0F, 2.0F) {
+EntityPanel::EntityPanel()
+    : IPanel(TRC("ui.entitypanel.title"), true, ImVec2(2.0F, 2.0F), false), currentSize(2.0F, 2.0F) {
 }
 
-void ResourceBrowser::renderContents() {
+void EntityPanel::renderContents() {
     ImGui::Button("Testing");
 }

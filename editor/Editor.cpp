@@ -21,6 +21,7 @@
 
 // All the UI elements in the editor
 #include <editorui/ResourceBrowser.h>
+#include <editorui/EntityPanel.h>
 
 #ifdef CHIRA_USE_DISCORD
     #include <hook/DiscordRPC.h>
@@ -55,9 +56,9 @@ static inline void addResourceFolderSelected() {
         Dialogs::popupError(TR("error.modelviewer.resource_folder_already_registered"));
 }
 
-class ModelViewerPanel : public IPanel {
+class MainEditorPanel : public IPanel {
 public:
-    ModelViewerPanel() : IPanel(TR("ui.engineview"), true) {
+    MainEditorPanel() : IPanel(TR("ui.MainEditor.title"), true) {
         this->flags |= ImGuiWindowFlags_NoBackground;
     }
 
@@ -115,9 +116,6 @@ public:
             ImGui::EndMainMenuBar();
         }
         
-        // All of those dialog boxes
-        entitiesdock();
-        
         // Model Dialog specific logic
         modeldialog.Display();
         if (modeldialog.HasSelected()) {
@@ -125,13 +123,6 @@ public:
             modeldialog.ClearSelected();
         }
 
-    }
-    
-    void entitiesdock() {
-        if (ImGui::Begin(TRC("ui.entities"), nullptr, ImGuiWindowFlags_None)) {
-            ImGui::Text("Testing");
-        }
-        ImGui::End();
     }
 
     void renderContents() override {
@@ -193,11 +184,15 @@ int main(int argc, const char* const argv[]) {
 
     Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
 
-    Engine::getWindow()->addPanel(new ModelViewerPanel{});
+    Engine::getWindow()->addPanel(new MainEditorPanel{});
     auto framePanel = new FramePanel("Engine View", true, ImVec2(2.0F, 2.0F));
     auto frame = framePanel->getFrame();
     frame->setBackgroundColor(ColorRGB{0.15f});
     engineviewID = Engine::getWindow()->addPanel(framePanel);
+
+    // Engine tool panels
+    Engine::getWindow()->addPanel(new ResourceBrowser());
+    Engine::getWindow()->addPanel(new EntityPanel());
 
     auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};
     camera->translate({-6.f * sqrtf(3.f), 6, 0});
