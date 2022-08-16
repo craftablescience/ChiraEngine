@@ -18,13 +18,8 @@ ResourceBrowser::ResourceBrowser()
     : IPanel(TRC("ui.resourcebrowser.title"), true, ImVec2(2.0F, 2.0F), false), currentSize(2.0F, 2.0F) {
 }
 
-<<<<<<< HEAD
-void ResourceBrowser::GetMeshList() {
-    // STUB
-=======
 void ResourceBrowser::GetMeshList(std::string meshesPath) {
     
->>>>>>> fuck-u-git
 }
 
 void ResourceBrowser::renderContents() {
