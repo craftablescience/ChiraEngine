@@ -25,6 +25,9 @@ public:
     /// Only guaranteed to work after run() in a render method
     [[nodiscard]] static double getDeltaTime();
     [[nodiscard]] static std::string getConfigDir();
+#if defined(__APPLE__) && defined(__MACH__)
+    [[nodiscrad]] static std::string getBundleDir();
+#endif
 private:
     static inline std::unique_ptr<Window> window;
     static inline bool started = false;

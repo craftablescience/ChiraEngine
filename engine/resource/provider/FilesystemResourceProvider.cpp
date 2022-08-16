@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <utility>
 #include <resource/Resource.h>
+#include <core/Engine.h>
 
 #if defined(__APPLE__) && defined(__MACH__)
     #include "CoreFoundation/CoreFoundation.h"
@@ -24,48 +25,17 @@ FilesystemResourceProvider::FilesystemResourceProvider(std::string path_, bool i
     // One requires a bit of work to access though.
 #if defined(__APPLE__) && defined(__MACH__)
         // Finding the bundle and it's resources directory
-        std::string status = "";
-        CFBundleRef mainbundle =  CFBundleGetMainBundle();
-        if (mainbundle) {
-            CFURLRef appUrlRef = CFBundleCopyBundleURL(mainbundle);
-            CFStringRef macPath;
-            if (appUrlRef != NULL)
-                macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
-            else
-                macPath = NULL;
-            
-            const char* rawpath;
-
-            if (macPath != NULL)
-                rawpath = CFStringGetCStringPtr(macPath, kCFStringEncodingASCII);
-            else
-                rawpath = NULL;
-            
-            CFRelease(macPath);
-            CFRelease(appUrlRef);
-            std::string append = "/Contents/Resource";
-            if (std::filesystem::exists(std::filesystem::path{rawpath + append + FILESYSTEM_ROOT_FOLDER + '/' + this->path})) {
-                LOG_FILESYSTEM.info("Found resources in app bundle!");
-                this->path = rawpath + append + FILESYSTEM_ROOT_FOLDER + '/' + this->path;
-            }
-            else {
-                status = "NOBUNDLE";
-            }
+        std::string bundlePath = Engine::getBundlePath();
+        std::string append = "/Contents/Resource";
+        if (std::filesystem::exists(std::filesystem::path{bundlePath + append + FILESYSTEM_ROOT_FOLDER + '/' + this->path})) {
+            LOG_FILESYSTEM.info("Found resources in app bundle!");
+            this->path = bundlePath + append + FILESYSTEM_ROOT_FOLDER + '/' + this->path;
+        }
+        else if (std::filesystem::exists(std::filesystem::path{FILESYSTEM_ROOT_FOLDER + '/' + this->path})) {
+            LOG_FILESYSTEM.info("Found resources in working directory!");
+            this->path = FILESYSTEM_ROOT_FOLDER + '/' + this->path;
         }
         else {
-            status = "NOBUNDLE";
-        }
-        if (status == "NOBUNDLE") {
-            LOG_FILESYSTEM.warning("Could not find resources in our app bundle! Falling back to working directory...");
-            if (std::filesystem::exists(std::filesystem::path{FILESYSTEM_ROOT_FOLDER + '/' + this->path})) {
-                LOG_FILESYSTEM.info("Found resources in working directory!");
-                this->path = FILESYSTEM_ROOT_FOLDER + '/' + this->path;
-            }
-            else {
-                status = "FATALERROR";
-            }
-        }
-        else if (status == "FATALERROR") {
             throw std::runtime_error{"[FILESYSTEM] FATAL ERROR: No known search path contains our requires resources! Did you mistype something?"};
         }
 #else

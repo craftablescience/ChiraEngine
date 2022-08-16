@@ -261,3 +261,36 @@ std::string Engine::getConfigDir() {
 #endif
     return pathString;
 }
+
+#if defined(__APPLE__) && defined(__MACH__)
+// method to get the current bundle directory
+std::string Engine::getBundleDir() {
+    std::string bundlePath;
+    
+    CFBundleRef mainbundle =  CFBundleGetMainBundle();
+    if (mainbundle) {
+        CFURLRef appUrlRef = CFBundleCopyBundleURL(mainbundle);
+        CFStringRef macPath;
+        if (appUrlRef != NULL)
+            macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
+        else
+            macPath = NULL;
+        
+        const char* rawpath;
+
+        if (macPath != NULL)
+            rawpath = CFStringGetCStringPtr(macPath, kCFStringEncodingASCII);
+        else
+            rawpath = NULL;
+        
+        if (rawpath != NULL)
+            bundlePath = rawpath.c_str();
+        else
+            bundlePath = "NOBUNDLE";
+        
+        CFRelease(macPath);
+        CFRelease(appUrlRef);
+    }
+    return bundlePath;
+}
+#endif

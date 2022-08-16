@@ -1,7 +1,7 @@
 {
   "ui.window.title": "Chira Editor",
 
-  "ui.engineview": "Engine View",
+  "ui.engineview.title": "Engine View",
   
   "ui.entitypanel.title": "Entities",
 

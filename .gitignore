@@ -11,6 +11,7 @@ CMakeSettings.json
 cmake-build-*/
 build/
 out/
+build*/
 
 .ccls-cache
 
@@ -18,3 +19,7 @@ out/
 */.DS_Store
 */*/.DS_Store
 .DS_Store
+
+# Xcode
+ChiraEngine.xcodeproj/*/xcuserdata
+ChiraEngine.xcodeproj/xcuserdata
