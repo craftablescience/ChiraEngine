@@ -11,7 +11,9 @@ public:
     ResourceBrowser();
     void renderContents() override;
     void GetMeshList(std::string meshesPath);
-    Group MeshList = MeshList("RB_MeshList");
+    bool thumbnailFile(std::string fileName, std::string fileIcon);
+    
+    //Group MeshList = MeshList("RB_MeshList");
 protected:
     glm::vec2i currentSize;
 };

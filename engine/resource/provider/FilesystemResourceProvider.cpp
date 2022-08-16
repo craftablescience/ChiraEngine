@@ -6,10 +6,6 @@
 #include <resource/Resource.h>
 #include <core/Engine.h>
 
-#if defined(__APPLE__) && defined(__MACH__)
-    #include "CoreFoundation/CoreFoundation.h"
-#endif
-
 using namespace chira;
 
 CHIRA_CREATE_LOG(FILESYSTEM);
@@ -25,7 +21,7 @@ FilesystemResourceProvider::FilesystemResourceProvider(std::string path_, bool i
     // One requires a bit of work to access though.
 #if defined(__APPLE__) && defined(__MACH__)
         // Finding the bundle and it's resources directory
-        std::string bundlePath = Engine::getBundlePath();
+        std::string bundlePath = Engine::getBundleDir();
         std::string append = "/Contents/Resource";
         if (std::filesystem::exists(std::filesystem::path{bundlePath + append + FILESYSTEM_ROOT_FOLDER + '/' + this->path})) {
             LOG_FILESYSTEM.info("Found resources in app bundle!");

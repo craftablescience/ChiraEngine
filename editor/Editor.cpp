@@ -120,6 +120,8 @@ void MainEditorPanel::preRenderContents() {
         ImGui::EndMainMenuBar();
     }
     
+    ImGui::ShowDemoWindow();
+    
     // Model Dialog specific logic
     modeldialog.Display();
     if (modeldialog.HasSelected()) {

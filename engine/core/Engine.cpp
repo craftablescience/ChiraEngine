@@ -29,6 +29,10 @@
     #include <hook/SteamAPI.h>
 #endif
 
+#if defined(__APPLE__) && defined(__MACH__)
+    #include "CoreFoundation/CoreFoundation.h"
+#endif
+
 using namespace chira;
 
 CHIRA_CREATE_LOG(ENGINE);
@@ -283,8 +287,10 @@ std::string Engine::getBundleDir() {
         else
             rawpath = NULL;
         
-        if (rawpath != NULL)
-            bundlePath = rawpath.c_str();
+        if (rawpath != NULL) {
+            std::string rawpathstr(rawpath);
+            bundlePath = rawpathstr;
+        }
         else
             bundlePath = "NOBUNDLE";
         
