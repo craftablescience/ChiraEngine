@@ -10,7 +10,7 @@
 
 ## Features
 To summarize the major features:
-- Native Windows and Linux support (OpenGL 4.1)
+- Native Windows Linux, and macOS support (OpenGL 4.1)
 - As extensible as possible: register custom logging hooks, resource types and providers, etc.
 - Custom preprocessing of GLSL shaders, with macros and #include directives
 - Robust resource loading and management to facilitate sharing of congruent data
