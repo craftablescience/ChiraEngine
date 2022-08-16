@@ -11,6 +11,7 @@ CMakeSettings.json
 cmake-build-*/
 build/
 out/
+build*/
 
 .ccls-cache
 

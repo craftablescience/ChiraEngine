@@ -16,8 +16,12 @@ ResourceBrowser::ResourceBrowser()
     : IPanel(TRC("ui.resourcebrowser.title"), true, ImVec2(2.0F, 2.0F), false), currentSize(2.0F, 2.0F) {
 }
 
-void ResourceBrowser::GetMeshList() {
-    // STUB
+void ResourceBrowser::GetMeshList(std::string meshesPath) {
+    auto resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(folder);
+    for (const auto& fileProvider : Resource::getResourceProviders(FILESYSTEM_PROVIDER_NAME)) {
+        if (resourceFolderPath == assert_cast<FilesystemResourceProvider*>(fileProvider.get())->getFolder()) {
+            resourceExists = true;
+    }
 }
 
 void ResourceBrowser::renderContents() {

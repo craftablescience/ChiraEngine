@@ -1,3 +1,5 @@
+#include "Editor.h"
+
 // Disable console window on Windows (MSVC)
 #include <core/Platform.h>
 #if defined(_WIN32) && !defined(DEBUG) && defined(CHIRA_COMPILER_MSVC)
@@ -57,108 +59,101 @@ static inline void addResourceFolderSelected() {
         Dialogs::popupError(TR("error.modelviewer.resource_folder_already_registered"));
 }
 
-class MainEditorPanel : public IPanel {
-public:
-    MainEditorPanel() : IPanel(TR("ui.MainEditor.title"), true) {
-        this->flags |= ImGuiWindowFlags_NoBackground |
-                        ImGuiWindowFlags_NoInputs   |
-                        ImGuiWindowFlags_NoDecoration;
-    }
 
-    // Opens a file dialog used to select a model definition
-    void addModelSelected() {
-        std::string path = FilesystemResourceProvider::getResourceIdentifier(modeldialog.GetSelected().string());
-        if (!path.empty())
-             this->setLoadedFile(path);
-    }
+MainEditorPanel::MainEditorPanel() : IPanel(TR("ui.MainEditor.title"), true) {
+    this->flags |= ImGuiWindowFlags_NoBackground |
+                    ImGuiWindowFlags_NoInputs   |
+                    ImGuiWindowFlags_NoDecoration;
+}
 
-    void convertToModelTypeSelected(const std::string& extension, const std::string& type) const {
-        std::string filepath = Dialogs::saveFile(extension);
-        if (filepath.empty())
-            return Dialogs::popupError(TR("error.modelviewer.filename_empty"));
+// Opens a file dialog used to select a model definition
+void MainEditorPanel::addModelSelected() {
+    std::string path = FilesystemResourceProvider::getResourceIdentifier(modeldialog.GetSelected().string());
+    if (!path.empty())
+            this->setLoadedFile(path);
+}
 
-        if (!Engine::getWindow()->hasChild(this->meshId))
-            return Dialogs::popupError(TR("error.modelviewer.no_model_present"));
+void MainEditorPanel::convertToModelTypeSelected(const std::string& extension, const std::string& type) const {
+    std::string filepath = Dialogs::saveFile(extension);
+    if (filepath.empty())
+        return Dialogs::popupError(TR("error.modelviewer.filename_empty"));
 
-        std::ofstream file{filepath, std::ios::binary};
-        std::vector<byte> meshData = Engine::getWindow()->getChild<Mesh>(this->meshId)->getMeshData(type);
-        file.write(reinterpret_cast<const char*>(&meshData[0]), static_cast<std::streamsize>(meshData.size()));
-        file.close();
-    }
+    if (!Engine::getWindow()->hasChild(this->meshId))
+        return Dialogs::popupError(TR("error.modelviewer.no_model_present"));
 
-    void convertToOBJSelected() const {
-        this->convertToModelTypeSelected(".obj", "obj");
-    }
+    std::ofstream file{filepath, std::ios::binary};
+    std::vector<byte> meshData = Engine::getWindow()->getChild<Mesh>(this->meshId)->getMeshData(type);
+    file.write(reinterpret_cast<const char*>(&meshData[0]), static_cast<std::streamsize>(meshData.size()));
+    file.close();
+}
 
-    void convertToCMDLSelected() const {
-        this->convertToModelTypeSelected(".cmdl", "cmdl");
-    }
+void MainEditorPanel::convertToOBJSelected() const {
+    this->convertToModelTypeSelected(".obj", "obj");
+}
 
-    void preRenderContents() override {
-        modeldialog.SetTitle("Open Resource");
-        modeldialog.SetTypeFilters({".json"});
-        if (ImGui::BeginMainMenuBar()) {
-            if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
-                if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) { // Open Model...
-                    modeldialog.Open();
-                }
-                if (ImGui::MenuItem(TRC("ui.menubar.add_resource_folder"))) // Add Resource Folder...
-                    addResourceFolderSelected();
-                ImGui::Separator();
-                if (ImGui::MenuItem(TRC("ui.menubar.exit"))) // Exit
-                    Engine::getWindow()->shouldStopAfterThisFrame();
-                ImGui::EndMenu();
+void MainEditorPanel::convertToCMDLSelected() const {
+    this->convertToModelTypeSelected(".cmdl", "cmdl");
+}
+
+void MainEditorPanel::preRenderContents() {
+    modeldialog.SetTitle("Open Resource");
+    modeldialog.SetTypeFilters({".json"});
+    if (ImGui::BeginMainMenuBar()) {
+        if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
+            if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) { // Open Model...
+                modeldialog.Open();
             }
-            if (ImGui::BeginMenu(TRC("ui.menubar.convert"))) { // Convert
-                if (ImGui::MenuItem(TRC("ui.menubar.convert_to_obj"))) // Convert to OBJ...
-                    this->convertToOBJSelected();
-                if (ImGui::MenuItem(TRC("ui.menubar.convert_to_cmdl"))) // Convert to CMDL...
-                    this->convertToCMDLSelected();
-                ImGui::EndMenu();
-            }
-            ImGui::EndMainMenuBar();
+            if (ImGui::MenuItem(TRC("ui.menubar.add_resource_folder"))) // Add Resource Folder...
+                addResourceFolderSelected();
+            ImGui::Separator();
+            if (ImGui::MenuItem(TRC("ui.menubar.exit"))) // Exit
+                Engine::getWindow()->shouldStopAfterThisFrame();
+            ImGui::EndMenu();
         }
-        
-        // Model Dialog specific logic
-        modeldialog.Display();
-        if (modeldialog.HasSelected()) {
-            this->addModelSelected();
-            modeldialog.ClearSelected();
+        if (ImGui::BeginMenu(TRC("ui.menubar.convert"))) { // Convert
+            if (ImGui::MenuItem(TRC("ui.menubar.convert_to_obj"))) // Convert to OBJ...
+                this->convertToOBJSelected();
+            if (ImGui::MenuItem(TRC("ui.menubar.convert_to_cmdl"))) // Convert to CMDL...
+                this->convertToCMDLSelected();
+            ImGui::EndMenu();
         }
-
+        ImGui::EndMainMenuBar();
+    }
+    
+    // Model Dialog specific logic
+    modeldialog.Display();
+    if (modeldialog.HasSelected()) {
+        this->addModelSelected();
+        modeldialog.ClearSelected();
     }
 
-    void renderContents() override {
-        if (auto* framePanel = Engine::getWindow()->getPanel<EngineView>(engineviewID)) {
-            framePanel->loadedFile = this->loadedFile;
-        }
-    }
+}
 
-    void setLoadedFile(const std::string& meshName) {
-       // if (Engine::getWindow()->getPanel(engineviewUUID)->hasChild(this->meshId) && meshName == Engine::getWindow()->getPanel(engineviewUUID)->getChild<Mesh>(this->meshId)->getMeshResource()->getIdentifier())
-            //return;
-        if (!Resource::hasResource(meshName)) {
-            Dialogs::popupError(TRF("error.modelviewer.resource_is_invalid", meshName));
-            return;
-        }
-        if (auto* framePanel = Engine::getWindow()->getPanel<FramePanel>(engineviewID)) {
-            if (framePanel->getFrame()->hasChild(this->meshId)) {
-                framePanel->getFrame()->removeChild(this->meshId);
-            }
-            framePanel->getFrame()->addChild(new Mesh{meshName});
-        }
-        this->loadedFile = meshName;
+void MainEditorPanel::renderContents() {
+    if (auto* framePanel = Engine::getWindow()->getPanel<EngineView>(engineviewID)) {
+        framePanel->loadedFile = this->loadedFile;
     }
+}
 
-    [[nodiscard]] std::string_view getMeshId() const {
-        return this->meshId;
+void MainEditorPanel::setLoadedFile(const std::string& meshName) {
+    // if (Engine::getWindow()->getPanel(engineviewUUID)->hasChild(this->meshId) && meshName == Engine::getWindow()->getPanel(engineviewUUID)->getChild<Mesh>(this->meshId)->getMeshResource()->getIdentifier())
+        //return;
+    if (!Resource::hasResource(meshName)) {
+        Dialogs::popupError(TRF("error.modelviewer.resource_is_invalid", meshName));
+        return;
     }
-private:
-    std::string loadedFile;
-    std::string meshId;
-    bool showGrid = true;
-    ImGui::FileBrowser modeldialog;
-};
+    if (auto* framePanel = Engine::getWindow()->getPanel<FramePanel>(engineviewID)) {
+        if (framePanel->getFrame()->hasChild(this->meshId)) {
+            framePanel->getFrame()->removeChild(this->meshId);
+        }
+        framePanel->getFrame()->addChild(new Mesh{meshName});
+    }
+    this->loadedFile = meshName;
+}
+
+std::string_view MainEditorPanel::getMeshId() const {
+    return this->meshId;
+}
 
 int main(int argc, const char* const argv[]) {
     Engine::preInit(argc, argv);
@@ -213,7 +208,7 @@ int main(int argc, const char* const argv[]) {
 
     Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
 
-    Engine::getWindow()->addPanel(new MainEditorPanel{});
+    Engine::getWindow()->addPanel(new MainEditorPanel());
     auto framePanel = new EngineView();
     auto frame = framePanel->getFrame();
     frame->setBackgroundColor(ColorRGB{0.15f});
