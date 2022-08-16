@@ -34,8 +34,6 @@ endif()
 # Detect macOS so we can make needed changes
 if(${CMAKE_SYSTEM} MATCHES "Darwin")
 	add_definitions(-DMACOSX)
-    # Steamworks doesn't have mac binaries right now so always disable it
-    set(CHIRA_USE_STEAMWORKS OFF)
     # Include CoreFoundation Library as we absolutely need this
     find_library(CORE_LIB CoreFoundation)
     list(APPEND CHIRA_ENGINE_LINK_LIBRARIES ${CORE_LIB})
@@ -240,7 +238,7 @@ if(CHIRA_BUILD_EDITOR)
 endif()
 
 
-CHIRATEST
+# CHIRATEST
 if(CHIRA_BUILD_TESTS)
     add_executable(ChiraTest ${CHIRA_TEST_SOURCES})
     target_link_libraries(ChiraTest PUBLIC ${PROJECT_NAME} gtest_main)
