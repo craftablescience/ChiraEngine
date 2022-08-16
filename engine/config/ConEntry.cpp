@@ -5,10 +5,6 @@
 #include <algorithm>
 #include <utility>
 
-#include <sys/types.h>
-#include <unistd.h>
-#include <pwd.h>
-
 using namespace chira;
 
 CHIRA_CREATE_LOG(CONENTRY);

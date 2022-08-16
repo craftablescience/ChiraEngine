@@ -16,9 +16,9 @@
 #include <ui/debug/ResourceUsageTrackerPanel.h>
 #include "CommandLine.h"
 
-#include <sys/types.h>
-#include <unistd.h>
 #ifndef _WIN32 // This doesn't exist on windows so we don't want to include it there
+    #include <sys/types.h>
+    #include <unistd.h>
     #include <pwd.h>
 #endif
 
