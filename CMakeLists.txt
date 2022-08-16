@@ -240,20 +240,20 @@ if(CHIRA_BUILD_EDITOR)
 endif()
 
 
-# CHIRATEST
-# if(CHIRA_BUILD_TESTS)
-#     add_executable(ChiraTest ${CHIRA_TEST_SOURCES})
-#     target_link_libraries(ChiraTest PUBLIC ${PROJECT_NAME} gtest_main)
-#     target_include_directories(ChiraTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tests)
-#     include(GoogleTest)
-#     gtest_discover_tests(ChiraTest)
+CHIRATEST
+if(CHIRA_BUILD_TESTS)
+    add_executable(ChiraTest ${CHIRA_TEST_SOURCES})
+    target_link_libraries(ChiraTest PUBLIC ${PROJECT_NAME} gtest_main)
+    target_include_directories(ChiraTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tests)
+    include(GoogleTest)
+    gtest_discover_tests(ChiraTest)
 
-#     # Copy gtest binaries next to the executable
-#     add_custom_command(
-#             TARGET ChiraTest
-#             PRE_BUILD
-#             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/bin ${CMAKE_BINARY_DIR})
-# endif()
+    # Copy gtest binaries next to the executable
+    add_custom_command(
+            TARGET ChiraTest
+            PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/bin ${CMAKE_BINARY_DIR})
+endif()
 
 # Copy resources
 add_custom_command(
