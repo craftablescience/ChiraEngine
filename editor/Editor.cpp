@@ -20,6 +20,7 @@
 #include <render/material/MaterialPhong.h>
 
 // All the UI elements in the editor
+#include <editorui/EngineView.h>
 #include <editorui/ResourceBrowser.h>
 #include <editorui/EntityPanel.h>
 
@@ -185,7 +186,7 @@ int main(int argc, const char* const argv[]) {
     Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
 
     Engine::getWindow()->addPanel(new MainEditorPanel{});
-    auto framePanel = new FramePanel("Engine View", true, ImVec2(2.0F, 2.0F));
+    auto framePanel = new EngineView();
     auto frame = framePanel->getFrame();
     frame->setBackgroundColor(ColorRGB{0.15f});
     engineviewID = Engine::getWindow()->addPanel(framePanel);
