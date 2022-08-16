@@ -15,7 +15,7 @@ config_noxcode()
 config_xcode()
 {
     echo "Configuring Cmake for Xcode Projects"
-    cmake -G "Xcode" -B build -DCMAKE_BUILD_TYPE=Debug -DCHIRA_USE_STEAMWORKS=false
+    cmake -G "Xcode" -B build -DCMAKE_BUILD_TYPE=Debug
 }
 
 check_param()
