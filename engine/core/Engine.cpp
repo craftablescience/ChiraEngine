@@ -257,7 +257,7 @@ std::string Engine::getConfigDir() {
 #else // We must be on windows
     // Get the environment vairable for the user on windows
     pathString = getenv("USERPROFILE");
-    pathString.append("\\Application Data\\Roaming\\ChiraEngine\\")
+    pathString.append("\\Application Data\\Roaming\\ChiraEngine\\");
 #endif
     return pathString;
 }
