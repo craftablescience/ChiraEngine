@@ -15,6 +15,9 @@ public:
     ~FramePanel() override;
     void renderContents() override;
     [[nodiscard]] Frame* getFrame() const;
+    virtual void renderOverlayContents();
+    virtual void renderPreFrameContents();
+    virtual void renderPostFrameContents();
 protected:
     Frame* frame = nullptr;
     glm::vec2i currentSize;

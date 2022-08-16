@@ -127,11 +127,9 @@ public:
     }
 
     void renderContents() override {
-        ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
-        if (auto* framePanel = Engine::getWindow()->getPanel<FramePanel>(engineviewID)) {
-            framePanel->getFrame()->getChild("grid")->setVisible(this->showGrid);
+        if (auto* framePanel = Engine::getWindow()->getPanel<EngineView>(engineviewID)) {
+            framePanel->loadedFile = this->loadedFile;
         }
-        ImGui::Text("%s", this->loadedFile.c_str());
     }
 
     void setLoadedFile(const std::string& meshName) {
