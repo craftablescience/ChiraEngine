@@ -1,6 +1,8 @@
 #include "ResourceBrowser.h"
 
 #include <fstream>
+#include <iostream>
+#include <filesystem>
 #include <core/Engine.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <i18n/TranslationManager.h>
@@ -17,11 +19,7 @@ ResourceBrowser::ResourceBrowser()
 }
 
 void ResourceBrowser::GetMeshList(std::string meshesPath) {
-    auto resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(folder);
-    for (const auto& fileProvider : Resource::getResourceProviders(FILESYSTEM_PROVIDER_NAME)) {
-        if (resourceFolderPath == assert_cast<FilesystemResourceProvider*>(fileProvider.get())->getFolder()) {
-            resourceExists = true;
-    }
+    
 }
 
 void ResourceBrowser::renderContents() {
