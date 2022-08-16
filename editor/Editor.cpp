@@ -61,9 +61,8 @@ public:
     // Opens a file dialog used to select a model definition
     void addModelSelected() {
         std::string path = FilesystemResourceProvider::getResourceIdentifier(modeldialog.GetSelected().string());
-        if (path.empty())
-            return Dialogs::popupError(TR("error.modelviewer.file_is_not_resource"));
-        this->setLoadedFile(path);
+        if (!path.empty())
+             this->setLoadedFile(path);
     }
 
     void convertToModelTypeSelected(const std::string& extension, const std::string& type) const {

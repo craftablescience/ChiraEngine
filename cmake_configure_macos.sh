@@ -9,13 +9,13 @@
 config_noxcode()
 {
     echo "Configuring Cmake for Unix Makefiles"
-    cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="/usr/local/opt/llvm/bin/clang" -DCMAKE_CXX_COMPILER="/usr/local/opt/llvm/bin/clang++" -DCHIRA_USE_STEAMWORKS=false
+    cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER="/usr/local/opt/llvm/bin/clang" -DCMAKE_CXX_COMPILER="/usr/local/opt/llvm/bin/clang++"
 }
 
 config_xcode()
 {
     echo "Configuring Cmake for Xcode Projects"
-    cmake -G "Xcode" -B build -DCMAKE_BUILD_TYPE=Debug -DCHIRA_USE_STEAMWORKS=false
+    cmake -G "Xcode" -B build -DCMAKE_BUILD_TYPE=Debug
 }
 
 check_param()

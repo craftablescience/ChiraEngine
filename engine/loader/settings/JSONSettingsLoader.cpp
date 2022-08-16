@@ -5,8 +5,8 @@
 
 using namespace chira;
 
-JSONSettingsLoader::JSONSettingsLoader(std::string_view path)
-    : ISettingsLoader(path)
+JSONSettingsLoader::JSONSettingsLoader(std::string_view path, std::string_view filename)
+    : ISettingsLoader(path, filename)
     , settings() {
     this->load();
 }

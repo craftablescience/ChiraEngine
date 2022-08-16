@@ -1,5 +1,7 @@
 #include "ConEntry.h"
 
+#include <core/Engine.h>
+
 #include <algorithm>
 #include <utility>
 
@@ -148,7 +150,8 @@ std::vector<ConVar*>& ConVarRegistry::getConVars() {
 }
 
 JSONSettingsLoader& ConVarRegistry::getConVarCache() {
-    static JSONSettingsLoader convarCache{"cache.json"};
+    std::string pathString = Engine::getConfigDir();
+    static JSONSettingsLoader convarCache{pathString, "cache.json"};
     return convarCache;
 }
 
