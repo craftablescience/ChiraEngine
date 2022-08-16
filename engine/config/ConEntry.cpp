@@ -1,7 +1,13 @@
 #include "ConEntry.h"
 
+#include <core/Engine.h>
+
 #include <algorithm>
 #include <utility>
+
+#include <sys/types.h>
+#include <unistd.h>
+#include <pwd.h>
 
 using namespace chira;
 
@@ -148,7 +154,8 @@ std::vector<ConVar*>& ConVarRegistry::getConVars() {
 }
 
 JSONSettingsLoader& ConVarRegistry::getConVarCache() {
-    static JSONSettingsLoader convarCache{"cache.json"};
+    std::string pathString = Engine::getConfigDir();
+    static JSONSettingsLoader convarCache{pathString, "cache.json"};
     return convarCache;
 }
 

@@ -88,5 +88,7 @@
         "valarray": "cpp",
         "variant": "cpp",
         "vector": "cpp"
-    }
+    },
+    "cmake.buildBeforeRun": false,
+    "cmake.configureOnEdit": false
 }
