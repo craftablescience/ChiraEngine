@@ -9,7 +9,7 @@ on:
 jobs:
   build-macos:
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         build_type: [Debug, Release]
         compiler: [clang]
