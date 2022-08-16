@@ -19,7 +19,9 @@
 
 #include <sys/types.h>
 #include <unistd.h>
-#include <pwd.h>
+#ifndef _WIN32 // This doesn't exist on windows so we don't want to include it there
+    #include <pwd.h>
+#endif
 
 #ifdef CHIRA_USE_DISCORD
     #include <hook/DiscordRPC.h>
