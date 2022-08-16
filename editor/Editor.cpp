@@ -19,6 +19,9 @@
 #include <imfilebrowser.h>
 #include <render/material/MaterialPhong.h>
 
+// All the UI elements in the editor
+#include <editorui/ResourceBrowser.h>
+
 #ifdef CHIRA_USE_DISCORD
     #include <hook/DiscordRPC.h>
 #endif

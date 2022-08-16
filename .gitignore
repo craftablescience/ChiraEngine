@@ -2,6 +2,9 @@
 .idea/
 .vs/
 
+# VSCode
+.vscode/
+
 CMakeSettings.json
 
 # Build
