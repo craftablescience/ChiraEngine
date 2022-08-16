@@ -6,9 +6,6 @@
   "ui.console.title": "Console",
   "ui.resource_usage_tracker.title": "Resource Usage",
 
-  "ui.engineview": "Engine View",
-  "ui.entities": "Entities",
-
   "ui.window.select_file": "Select File",
   "ui.window.save_file": "Save File",
 
