@@ -148,7 +148,7 @@ int main(int argc, const char* const argv[]) {
     if (auto* discord_enable = ConVarRegistry::getConVar("discord_enable"); discord_enable && discord_enable->getValue<bool>()) {
         DiscordRPC::init(TR("editor.discord.application_id"));
         DiscordRPC::setLargeImage("main_logo");
-        DiscordRPC::setState("https://discord.gg/ASgHFkX");
+        DiscordRPC::setTopButton({"Join Discord", "https://discord.gg/ASgHFkX"});
     }
 #endif
 
