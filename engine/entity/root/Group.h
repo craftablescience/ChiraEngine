@@ -16,19 +16,9 @@ class Group : public Entity {
 public:
     explicit Group(std::string name_);
     Group();
-    void render(glm::mat4 parentTransform) override;
     [[nodiscard]] glm::vec3 getGlobalPosition() override;
     [[nodiscard]] const Group* getGroup() const override;
     [[nodiscard]] Group* getGroup() override;
-    void setCamera(Camera* camera);
-    [[nodiscard]] Camera* getCamera() const;
-    void setSkybox(const std::string& cubemapId);
-    [[nodiscard]] SharedPointer<MaterialCubemap> getSkybox() const;
-protected:
-    MeshDataBuilder skybox;
-    bool renderSkybox = false;
-    bool skyboxMeshCreated = false;
-    Camera* mainCamera = nullptr;
 };
 
 } // namespace chira
