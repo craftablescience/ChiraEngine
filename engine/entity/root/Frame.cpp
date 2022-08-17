@@ -75,7 +75,23 @@ void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeig
     auto tempRot = this->rotation;
     this->rotation = {};
 
+    // Push camera projection/view
+    if (this->mainCamera) {
+        UBO_PerspectiveView::get()->update(this->mainCamera->getProjection(), this->mainCamera->getView());
+    }
+
     Group::render(glm::identity<glm::mat4>());
+
+    if (this->renderSkybox) {
+        // Wiki says modern hardware is fine with this and it looks better
+        glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+        this->skybox.render(glm::identity<glm::mat4>());
+    }
+
+    // Pop camera projection/view
+    if (this->mainCamera && Entity::getFrame() && Entity::getFrame()->getCamera()) {
+        UBO_PerspectiveView::get()->update(Entity::getFrame()->getCamera()->getProjection(), Entity::getFrame()->getCamera()->getView());
+    }
 
     // (Hopefully) preserve any transformations from children
     this->translate(tempPos);
@@ -107,10 +123,6 @@ unsigned int Frame::getColorTextureHandle() const {
     return this->colorTexHandle;
 }
 
-glm::vec2i Frame::getFrameSize() const {
-    return {this->width, this->height};
-}
-
 void Frame::setFrameSize(glm::vec2i newSize) {
     this->width = newSize.x;
     this->height = newSize.y;
@@ -119,10 +131,37 @@ void Frame::setFrameSize(glm::vec2i newSize) {
         this->getCamera()->createProjection(newSize);
 }
 
+glm::vec2i Frame::getFrameSize() const {
+    return {this->width, this->height};
+}
+
 ColorRGB Frame::getBackgroundColor() const {
     return this->backgroundColor;
 }
 
 void Frame::setBackgroundColor(ColorRGB color) {
     this->backgroundColor = color;
+}
+
+void Frame::setCamera(Camera* camera) {
+    this->mainCamera = camera;
+    this->mainCamera->createProjection(this->getFrame()->getFrameSize());
+}
+
+Camera* Frame::getCamera() const {
+    return this->mainCamera;
+}
+
+void Frame::setSkybox(const std::string& cubemapId) {
+    if (!this->skyboxMeshCreated) {
+        this->skybox.addCube({}, {1, 1, 1}, false);
+        this->skybox.update();
+        this->skyboxMeshCreated = true;
+    }
+    this->skybox.setMaterial(Resource::getResource<MaterialCubemap>(cubemapId).castAssert<IMaterial>());
+    this->renderSkybox = true;
+}
+
+SharedPointer<MaterialCubemap> Frame::getSkybox() const {
+    return this->skybox.getMaterial().castAssert<MaterialCubemap>();
 }
