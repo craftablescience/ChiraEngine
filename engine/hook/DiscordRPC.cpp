@@ -76,6 +76,16 @@ void DiscordRPC::setEndTimestamp(std::int64_t time) {
     DiscordRPC::isModifiedSinceLastUpdate = true;
 }
 
+void DiscordRPC::setTopButton(const DiscordButtonData& button) {
+    DiscordRPC::button1 = button;
+    DiscordRPC::isModifiedSinceLastUpdate = true;
+}
+
+void DiscordRPC::setBottomButton(const DiscordButtonData& button) {
+    DiscordRPC::button2 = button;
+    DiscordRPC::isModifiedSinceLastUpdate = true;
+}
+
 void DiscordRPC::updatePresence() {
     if (DiscordRPC::isModifiedSinceLastUpdate && discord_enable.getValue<bool>()) {
         DiscordRichPresence discordPresence;
@@ -96,6 +106,18 @@ void DiscordRPC::updatePresence() {
             discordPresence.smallImageKey = DiscordRPC::smallImage.c_str();
         if (!DiscordRPC::smallImageText.empty())
             discordPresence.smallImageText = DiscordRPC::smallImageText.c_str();
+
+        DiscordButton buttons[2] { nullptr };
+        if (!DiscordRPC::button1.url.empty()) {
+            buttons[0].label = DiscordRPC::button1.name.c_str();
+            buttons[0].url = DiscordRPC::button1.url.c_str();
+        }
+        if (!DiscordRPC::button2.url.empty()) {
+            buttons[1].label = DiscordRPC::button2.name.c_str();
+            buttons[1].url = DiscordRPC::button2.url.c_str();
+        }
+        discordPresence.buttons = buttons;
+
         discordPresence.instance = 0;
         Discord_UpdatePresence(&discordPresence);
         DiscordRPC::isModifiedSinceLastUpdate = false;
@@ -115,6 +137,10 @@ void DiscordRPC::resetPresence() {
     DiscordRPC::smallImageText = "";
     DiscordRPC::startTimestamp = -1;
     DiscordRPC::endTimestamp = -1;
+    DiscordRPC::button1.name = "";
+    DiscordRPC::button1.url = "";
+    DiscordRPC::button2.name = "";
+    DiscordRPC::button2.url = "";
     DiscordRPC::isModifiedSinceLastUpdate = false;
     Discord_ClearPresence();
 }
