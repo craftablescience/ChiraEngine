@@ -70,10 +70,13 @@ protected:
     glm::vec3 position{};
     glm::quat rotation = glm::identity<glm::quat>();
 
-    /// For internal use only.
+    /// For internal use only!
     void setParent(Entity* newParent) {
         this->parent = newParent;
     }
+
+    /// Callback called after parent is set
+    virtual void onAddedToTree() {}
 };
 
 } // namespace chira

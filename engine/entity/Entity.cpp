@@ -31,19 +31,27 @@ void Entity::render(glm::mat4 parentTransform) { // NOLINT(misc-no-recursion)
     }
 }
 
-const Frame* Entity::getFrame() const { // NOLINT(misc-no-recursion)
+const Frame* Entity::getFrame() const {
+    if (!this->parent)
+        return nullptr;
     return this->parent->getFrame();
 }
 
 Frame* Entity::getFrame() { // NOLINT(misc-no-recursion)
+    if (!this->parent)
+        return nullptr;
     return this->parent->getFrame();
 }
 
-const Group* Entity::getGroup() const { // NOLINT(misc-no-recursion)
+const Group* Entity::getGroup() const {
+    if (!this->parent)
+        return nullptr;
     return this->parent->getGroup();
 }
 
 Group* Entity::getGroup() { // NOLINT(misc-no-recursion)
+    if (!this->parent)
+        return nullptr;
     return this->parent->getGroup();
 }
 
@@ -75,6 +83,7 @@ std::string_view Entity::addChild(Entity* child) {
         return child->getName();
     }
     child->setParent(this);
+    child->onAddedToTree();
     this->children.push_back(child);
     return child->getName();
 }
