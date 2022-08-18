@@ -10,15 +10,15 @@ const std::string FILESYSTEM_ROOT_FOLDER = "resources"; // NOLINT(cert-err58-cpp
 const std::string FILESYSTEM_PROVIDER_NAME = "file"; // NOLINT(cert-err58-cpp)
 
 enum FileType {
-    FILE_GENERIC    = 0 << 1, /// Unknown, Unsupported file type
-    FILE_SCRIPT     = 0 << 2, /// AngelScript file
-    FILE_MODEL      = 0 << 3, /// Supported model type
-    FILE_MESH       = 0 << 4, /// Complete mesh definition file
-    FILE_AUDIO      = 0 << 5, /// Supported Audio Format
-    FILE_IMAGE      = 0 << 6, /// Supported Image Format
-    FILE_MATERIAL   = 0 << 7, /// Material Definition
-    FILE_FONT       = 0 << 8, /// Font definition
-    FILE_TEXTURE    = 0 << 9, /// Texture definition
+    FILE_GENERIC    = 1 << 1, /// Unknown, Unsupported file type
+    FILE_SCRIPT     = 1 << 2, /// AngelScript file
+    FILE_MODEL      = 1 << 3, /// Supported model type
+    FILE_MESH       = 1 << 4, /// Complete mesh definition file
+    FILE_AUDIO      = 1 << 5, /// Supported Audio Format
+    FILE_IMAGE      = 1 << 6, /// Supported Image Format
+    FILE_MATERIAL   = 1 << 7, /// Material Definition
+    FILE_FONT       = 1 << 8, /// Font definition
+    FILE_TEXTURE    = 1 << 9, /// Texture definition
 };
 
 struct fileInfo {

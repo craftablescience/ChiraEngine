@@ -1,0 +1,1 @@
+#include "IconResource.h"

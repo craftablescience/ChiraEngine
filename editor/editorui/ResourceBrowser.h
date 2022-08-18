@@ -5,6 +5,7 @@
 #include <entity/root/Group.h>
 #include <map>
 #include <resource/provider/FilesystemResourceProvider.h>
+#include <Editor.h>
 
 namespace chira {
 
@@ -16,18 +17,19 @@ struct resourceList {
 
 class ResourceBrowser : public IPanel {
 public:
-    ResourceBrowser();
+    ResourceBrowser(MainEditorPanel* frame);
     void renderContents() override;
     
     /// Resource list handling methods
     void loadResourceFolder(std::string resourceFolder);
     
     /// Resource Browser specific elements
-    bool thumbnailFile(std::string fileName, std::string fileIcon);
+    bool thumbnailFile(std::string fileName, FileType fileIcon);
     
     resourceList loadedResources;
 protected:
     glm::vec2i currentSize;
+    MainEditorPanel* mainpanel;
 };
 
 } // namespace chira

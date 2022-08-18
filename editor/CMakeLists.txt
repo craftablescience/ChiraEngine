@@ -1,4 +1,6 @@
 list(APPEND CHIRA_HEADER_SOURCES
+        #${CMAKE_CURRENT_LIST_DIR}/resource/IconResource.h
+        
         ${CMAKE_CURRENT_LIST_DIR}/Editor.h
         ${CMAKE_CURRENT_LIST_DIR}/editorui/EngineView.h
         ${CMAKE_CURRENT_LIST_DIR}/editorui/ResourceBrowser.h
@@ -6,6 +8,8 @@ list(APPEND CHIRA_HEADER_SOURCES
 )
 
 list(APPEND CHIRA_EDITOR_SOURCES
+        #${CMAKE_CURRENT_LIST_DIR}/resource/IconResource.cpp
+        
         ${CMAKE_CURRENT_LIST_DIR}/Editor.cpp
         ${CMAKE_CURRENT_LIST_DIR}/editorui/EngineView.cpp
         ${CMAKE_CURRENT_LIST_DIR}/editorui/ResourceBrowser.cpp

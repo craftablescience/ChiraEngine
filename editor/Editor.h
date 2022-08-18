@@ -19,7 +19,6 @@ public:
 private:
     std::string loadedFile;
     std::string meshId;
-    bool showGrid = true;
     ImGui::FileBrowser modeldialog;
 };
 

@@ -138,7 +138,7 @@ std::map<std::string, fileInfo> FilesystemResourceProvider::getDirectoryContents
     for (const auto & entry : std::filesystem::directory_iterator(path)) {
         if (extension.empty()) {
             // if type is not specifically defined just give every file in the folder
-            if(entry.path().extension().string() == "mdef") {
+            if(entry.path().extension().string() == ".mdef") {
                 /// Model definition
                 std::string filename = entry.path().stem().string();
                 fileInfo filedef;
@@ -158,7 +158,7 @@ std::map<std::string, fileInfo> FilesystemResourceProvider::getDirectoryContents
             }
         }
         else {
-            if (entry.path().extension().string() == extension) {
+            if (entry.path().extension().string() == "." + extension) {
                 std::string filename = entry.path().stem().string();
                 fileInfo filedef;
                 filedef.fileName = filename;

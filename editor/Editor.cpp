@@ -17,14 +17,18 @@
 #include <ui/IPanel.h>
 #include <ui/FramePanel.h>
 #include <utility/Dialogs.h>
+#include <render/material/MaterialPhong.h>
+
 // Used because file dialogs are broken on macOS
 #include <imfilebrowser.h>
-#include <render/material/MaterialPhong.h>
 
 // All the UI elements in the editor
 #include <editorui/EngineView.h>
 #include <editorui/ResourceBrowser.h>
 #include <editorui/EntityPanel.h>
+
+// Font glyph range header
+#include <thirdparty/IconFontCppHeaders/IconsFontAwesome4.h>
 
 #ifdef CHIRA_USE_DISCORD
     #include <hook/DiscordRPC.h>
@@ -100,7 +104,7 @@ void MainEditorPanel::convertToCMDLSelected() const {
 
 void MainEditorPanel::preRenderContents() {
     modeldialog.SetTitle("Open Resource");
-    modeldialog.SetTypeFilters({".json"});
+    modeldialog.SetTypeFilters({".mdef"});
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
             if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) { // Open Model...
@@ -211,18 +215,19 @@ int main(int argc, const char* const argv[]) {
     colors[ImGuiCol_TabUnfocusedActive]     = ImVec4(0.30f, 0.14f, 0.42f, 1.00f);
     colors[ImGuiCol_DockingPreview]         = ImVec4(0.62f, 0.42f, 0.65f, 0.70f);
 
+    
     Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
 
-    Engine::getWindow()->addPanel(new MainEditorPanel());
+    auto mainPanel = new MainEditorPanel();
+    Engine::getWindow()->addPanel(mainPanel);
     auto framePanel = new EngineView();
     auto frame = framePanel->getFrame();
     frame->setBackgroundColor(ColorRGB{0.15f});
     engineviewID = Engine::getWindow()->addPanel(framePanel);
 
     // Engine tool panels
-    
-    // Setup resources panel with the editor resources
-    auto resourcePanel = new ResourceBrowser();
+    // Setup resources panel
+    auto resourcePanel = new ResourceBrowser(mainPanel);
     resourcepanelID = Engine::getWindow()->addPanel(resourcePanel);
     resourcePanel->loadResourceFolder("editor");
     
