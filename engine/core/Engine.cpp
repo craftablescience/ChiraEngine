@@ -235,7 +235,7 @@ std::string Engine::getConfigDir() {
 #ifndef _WIN32
     const char *homePath = getenv("HOME");
     if (!homePath) {
-        struct passwd* pwd = getpwuid(getuid());
+        passwd* pwd = getpwuid(getuid());
         if (pwd)
             homePath = pwd->pw_dir;
     }
