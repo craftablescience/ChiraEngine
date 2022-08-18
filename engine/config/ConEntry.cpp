@@ -1,9 +1,9 @@
 #include "ConEntry.h"
 
-#include <core/Engine.h>
-
 #include <algorithm>
 #include <utility>
+
+#include <core/Engine.h>
 
 using namespace chira;
 
