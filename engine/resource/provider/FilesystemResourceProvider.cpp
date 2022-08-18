@@ -38,7 +38,7 @@ FilesystemResourceProvider::FilesystemResourceProvider(std::string path_, bool i
             if (macPath != nullptr)
                 rawpath = CFStringGetCStringPtr(macPath, kCFStringEncodingASCII);
             else
-                rawpath = NULL;
+                rawpath = nullptr;
             
             CFRelease(macPath);
             CFRelease(appUrlRef);
