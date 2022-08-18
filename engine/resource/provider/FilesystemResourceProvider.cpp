@@ -31,7 +31,7 @@ FilesystemResourceProvider::FilesystemResourceProvider(std::string path_, bool i
             if (appUrlRef != NULL)
                 macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
             else
-                macPath = NULL;
+                macPath = nullptr;
             
             const char* rawpath;
 
