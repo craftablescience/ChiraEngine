@@ -28,7 +28,7 @@ FilesystemResourceProvider::FilesystemResourceProvider(std::string path_, bool i
         if (CFBundleRef mainbundle =  CFBundleGetMainBundle()) {
             CFURLRef appUrlRef = CFBundleCopyBundleURL(mainbundle);
             CFStringRef macPath;
-            if (appUrlRef != NULL)
+            if (appUrlRef != nullptr)
                 macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
             else
                 macPath = nullptr;
