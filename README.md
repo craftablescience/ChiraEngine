@@ -36,7 +36,7 @@ The goal of the engine is to have as much customization as possible, while still
 (\*) MinGW builds on Windows will work, but running the application outside your IDE will require you to copy some DLLs
 next to the executable. Check the GitHub Actions script to see which DLLs need copied from the MinGW bin directory.
 
-(\*\*) Homebrew LLVM/Clang is required because Apple Clang as of this time does not support certain C++ features that are used inside ChiraEngine
+(\*\*) Homebrew LLVM/Clang is required because Apple Clang as of this time does not support certain C++ features that are used inside the engine.
 
 ## Bundled Dependencies
 - AngelScript v2.35.1
