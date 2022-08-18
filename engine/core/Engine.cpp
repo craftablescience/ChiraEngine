@@ -233,7 +233,7 @@ std::string Engine::getConfigDir() {
     // Here is my most convoluted ifdef set ever
     std::string pathString;
 #ifndef _WIN32
-    const char *homePath = getenv("HOME");
+    const char* homePath = getenv("HOME");
     if (!homePath) {
         passwd* pwd = getpwuid(getuid());
         if (pwd)
