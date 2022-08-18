@@ -54,7 +54,7 @@ static inline void addResourceFolderSelected() {
 
 class ModelViewerPanel : public IPanel {
 public:
-    ModelViewerPanel() : IPanel(TR("ui.engineview"), true) {
+    ModelViewerPanel() : IPanel(TR("ui.engineview.title"), true) {
         this->flags |=
                 ImGuiWindowFlags_NoBackground;
     }
