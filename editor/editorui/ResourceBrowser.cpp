@@ -32,65 +32,63 @@ void ResourceBrowser::loadResourceFolder(std::string resourceFolder) {
 }
 
 // Thumbnail file element for resource browser
-bool ResourceBrowser::thumbnailFile(std::string fileName, FileType fileIcon = FILE_GENERIC) {
-    auto buttonBool = false;
-    // Return the press result of the button
-    return buttonBool;
+void ResourceBrowser::thumbnailFile(std::string fileName, FileType fileIcon = FILE_GENERIC) {
+    ImVec2 startCurPos = ImGui::GetCursorPos();
+        
+    // Create button
+    std::string fuckyouclang = "##" + val.fileName;
+    ImGui::Button(fuckyouclang.c_str(), ImVec2(90.0F, 99.0F));
+    
+    // Putting the logic here to make sure every button works
+    if (ImGui::IsItemActivated()) {
+        this->mainpanel->setLoadedFile("file://meshes/" + val.fileName + ".mdef");
+    }
+    
+    // Save this for later
+    ImVec2 endCurPos = ImGui::GetCursorPos();
+    // move our cursor position
+    ImGui::SetCursorPos(startCurPos);
+    // Create the rest of the file button
+    switch(val.fileType) {
+        using enum FileType;
+        case FILE_GENERIC: {
+            break;
+        }
+        case FILE_SCRIPT: {
+            break;
+        }
+        case FILE_AUDIO: {
+            break;
+        }
+        case FILE_TEXTURE: {
+            break;
+        }
+        case FILE_MODEL: {
+            break;
+        }
+        case FILE_MATERIAL: {
+            break;
+        }
+        case FILE_IMAGE: {
+            break;
+        }
+        case FILE_FONT: {
+            break;
+        }
+        case FILE_MESH: {
+            auto icon = Resource::getResource<Texture>("file://textures/ui/icons/cube.json");
+            ImGui::Image((void*)icon->getHandle(), ImVec2(64.0F, 64.0F));
+            break;
+        }
+    }
+    ImGui::Text("%s", val.fileName.c_str());
+    // Reset our cursor position back
+    ImGui::SetCursorPos(endCurPos);
 }
 
 void ResourceBrowser::renderContents() {
     // display every mesh
     for ( auto const& [key, val] : loadedResources.meshes ) {
-        ImVec2 startCurPos = ImGui::GetCursorPos();
-            
-        // Create button
-        std::string fuckyouclang = "##" + val.fileName;
-        ImGui::Button(fuckyouclang.c_str(), ImVec2(90.0F, 99.0F));
-        
-        // Putting the logic here to make sure every button works
-        if (ImGui::IsItemActivated()) {
-            this->mainpanel->setLoadedFile("file://meshes/" + val.fileName + ".mdef");
-        }
-        
-        // Save this for later
-        ImVec2 endCurPos = ImGui::GetCursorPos();
-        // move our cursor position
-        ImGui::SetCursorPos(startCurPos);
-        // Create the rest of the file button
-        switch(val.fileType) {
-            using enum FileType;
-            case FILE_GENERIC: {
-                break;
-            }
-            case FILE_SCRIPT: {
-                break;
-            }
-            case FILE_AUDIO: {
-                break;
-            }
-            case FILE_TEXTURE: {
-                break;
-            }
-            case FILE_MODEL: {
-                break;
-            }
-            case FILE_MATERIAL: {
-                break;
-            }
-            case FILE_IMAGE: {
-                break;
-            }
-            case FILE_FONT: {
-                break;
-            }
-            case FILE_MESH: {
-                auto icon = Resource::getResource<Texture>("file://textures/ui/icons/cube.json");
-                ImGui::Image((void*)icon->getHandle(), ImVec2(64.0F, 64.0F));
-                break;
-            }
-        }
-        ImGui::Text("%s", val.fileName.c_str());
-        // Reset our cursor position back
-        ImGui::SetCursorPos(endCurPos);
+        this->thumbnailFile(val.fileName, val.fileType);
     }
 }

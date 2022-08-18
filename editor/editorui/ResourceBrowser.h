@@ -24,7 +24,7 @@ public:
     void loadResourceFolder(std::string resourceFolder);
     
     /// Resource Browser specific elements
-    bool thumbnailFile(std::string fileName, FileType fileIcon);
+    void thumbnailFile(std::string fileName, FileType fileIcon);
     
     resourceList loadedResources;
 protected:
