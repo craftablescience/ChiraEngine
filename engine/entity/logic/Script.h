@@ -5,13 +5,13 @@
 
 namespace chira {
 
-class ScriptEntity : public Entity {
+class Script : public Entity {
 public:
-    ScriptEntity(std::string name_, const std::string& scriptID);
-    explicit ScriptEntity(const std::string& scriptID);
+    Script(std::string name_, const std::string& scriptID);
+    explicit Script(const std::string& scriptID);
     void update() override;
     void render(glm::mat4 parentTransform) override;
-    ~ScriptEntity() override;
+    ~Script() override;
 private:
     AngelScriptHolder script;
     std::function<void()> updateFunc;
