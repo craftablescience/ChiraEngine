@@ -63,7 +63,7 @@ public:
     void addModelSelected() {
         std::string path = FilesystemResourceProvider::getResourceIdentifier(modeldialog.GetSelected().string());
         if (!path.empty())
-             this->setLoadedFile(path);
+            this->setLoadedFile(path);
     }
 
     void convertToModelTypeSelected(const std::string& extension, const std::string& type) const {
