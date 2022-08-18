@@ -64,8 +64,7 @@ FilesystemResourceProvider::FilesystemResourceProvider(std::string path_, bool i
             else {
                 status = "FATALERROR";
             }
-        }
-        else if (status == "FATALERROR") {
+        } else if (status == "FATALERROR") {
             throw std::runtime_error{"[FILESYSTEM] FATAL ERROR: No known search path contains our requires resources! Did you mistype something?"};
         }
 #else
