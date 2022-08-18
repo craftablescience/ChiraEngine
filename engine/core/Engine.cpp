@@ -246,7 +246,7 @@ std::string Engine::getConfigDir() {
     pathString.append("/.local/ChiraEngine");
 #endif // end this linux macos differences def
 #else // We must be on windows
-    // Get the environment vairable for the user on windows
+    // Get the environment variable for the user on windows
     pathString = getenv("USERPROFILE");
     pathString.append("\\Application Data\\Roaming\\ChiraEngine\\");
 #endif
