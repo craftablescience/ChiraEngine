@@ -33,8 +33,7 @@ endif()
 
 # Detect macOS so we can make needed changes
 if(${CMAKE_SYSTEM} MATCHES "Darwin")
-	add_definitions(-DMACOSX)
-    # Include CoreFoundation Library as we absolutely need this
+	# Include CoreFoundation Library as we absolutely need this
     find_library(CORE_LIB CoreFoundation)
     list(APPEND CHIRA_ENGINE_LINK_LIBRARIES ${CORE_LIB})
 endif()
