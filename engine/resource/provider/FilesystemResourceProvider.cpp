@@ -24,7 +24,7 @@ FilesystemResourceProvider::FilesystemResourceProvider(std::string path_, bool i
     // One requires a bit of work to access though.
 #if defined(__APPLE__) && defined(__MACH__)
         // Finding the bundle and it's resources directory
-        std::string status = "";
+        std::string status;
         if (CFBundleRef mainbundle =  CFBundleGetMainBundle()) {
             CFURLRef appUrlRef = CFBundleCopyBundleURL(mainbundle);
             CFStringRef macPath;
