@@ -69,3 +69,15 @@ TEST(StringStrip, stripString) {
     EXPECT_STREQ(String::stripRight("test ", " ").c_str(), "test");
     EXPECT_STREQ(String::strip(" test ", " ").c_str(), "test");
 }
+
+TEST(StringReplace, replaceString) {
+    std::string test{"Mary had a little lamb"};
+    String::replace(test, "little", "ginormous");
+    EXPECT_STREQ(test.c_str(), "Mary had a ginormous lamb");
+}
+
+TEST(StringReplace, replaceStrings) {
+    std::string test{"Mary's little lamb was very little"};
+    String::replace(test, "little", "big");
+    EXPECT_STREQ(test.c_str(), "Mary's big lamb was very big");
+}
