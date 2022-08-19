@@ -83,8 +83,9 @@ jobs:
         pacboy: >-
           toolchain:p
           cmake:p
+          ninja:p
     - name: Configure CMake
-      run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
+      run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
 
     - name: Build
       run: cmake --build build --config ${{matrix.build_type}} -- -j$(nproc)
