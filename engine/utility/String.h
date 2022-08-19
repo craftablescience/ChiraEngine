@@ -34,4 +34,6 @@ std::string stripLeft(const std::string& s, char c);
 std::string stripRight(const std::string& s, char c);
 std::string strip(const std::string& s, char c);
 
+void replace(std::string& s, std::string_view from, std::string_view to);
+
 } // namespace chira::String

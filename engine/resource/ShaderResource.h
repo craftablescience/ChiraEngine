@@ -29,6 +29,7 @@ private:
     static inline std::string preprocessorSuffix = std::string{SHADER_PREPROCESSOR_DEFAULT_SUFFIX}; // NOLINT(cert-err58-cpp)
     static inline std::unordered_map<std::string, std::string> preprocessorSymbols;
     void checkForCompilationErrors() const;
+    static std::string replaceMacros(const std::string&, const std::string&);
 };
 
 } // namespace chira
