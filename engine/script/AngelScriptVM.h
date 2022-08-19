@@ -17,12 +17,10 @@ public:
         return AngelScriptVM::asEngine;
     }
 
-    template<typename F>
-    static int registerGlobalFunction(F f, const std::string& name) {
-        return AngelScriptVM::registerGlobalFunction(f, name, asTypeString<F>(name)());
+    static int registerGlobalFunction(auto f, const std::string& name) {
+        return AngelScriptVM::registerGlobalFunction(f, name, asTypeString<decltype(f)>(name)());
     }
-    template<typename F>
-    static int registerGlobalFunction(F f, const std::string& name, const std::string& decl) {
+    static int registerGlobalFunction(auto f, const std::string& /*name*/, const std::string& decl) {
         return AngelScriptVM::asEngine->RegisterGlobalFunction(decl.c_str(), asFUNCTION(f), asCALL_CDECL);
     }
 private:

@@ -22,6 +22,9 @@
     #include <hook/SteamAPI.h>
 #endif
 
+// Need to register phong material!
+#include <render/material/MaterialPhong.h>
+
 using namespace chira;
 
 static inline void addResourceFolderSelected() {

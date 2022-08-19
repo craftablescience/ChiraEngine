@@ -1,6 +1,7 @@
 #include "Frame.h"
 
 #include <core/Engine.h>
+#include <render/shader/UBO.h>
 
 using namespace chira;
 
@@ -77,8 +78,14 @@ void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeig
 
     // Push camera projection/view
     if (this->mainCamera) {
-        UBO_PerspectiveView::get()->update(this->mainCamera->getProjection(), this->mainCamera->getView());
+        PerspectiveViewUBO::get()->update(
+                this->mainCamera->getProjection(),
+                this->mainCamera->getView(),
+                this->mainCamera->getGlobalPosition(),
+                this->mainCamera->getFrontVector());
     }
+    // Push lighting
+    this->getLightManager()->updateUBOs();
 
     Group::render(glm::identity<glm::mat4>());
 
@@ -90,7 +97,15 @@ void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeig
 
     // Pop camera projection/view
     if (this->mainCamera && Entity::getFrame() && Entity::getFrame()->getCamera()) {
-        UBO_PerspectiveView::get()->update(Entity::getFrame()->getCamera()->getProjection(), Entity::getFrame()->getCamera()->getView());
+        PerspectiveViewUBO::get()->update(
+                Entity::getFrame()->getCamera()->getProjection(),
+                Entity::getFrame()->getCamera()->getView(),
+                Entity::getFrame()->getCamera()->getGlobalPosition(),
+                Entity::getFrame()->getCamera()->getFrontVector());
+    }
+    // Pop lighting
+    if (Entity::getFrame() && Entity::getFrame()->getLightManager()) {
+        Entity::getFrame()->getLightManager()->updateUBOs();
     }
 
     // (Hopefully) preserve any transformations from children
@@ -105,6 +120,10 @@ Frame::~Frame() {
     glDeleteRenderbuffers(1, &this->rboHandle);
     glDeleteTextures(1, &this->colorTexHandle);
     glDeleteFramebuffers(1, &this->fboHandle);
+}
+
+glm::vec3 Frame::getGlobalPosition() {
+    return this->position;
 }
 
 const Frame* Frame::getFrame() const {
@@ -164,4 +183,8 @@ void Frame::setSkybox(const std::string& cubemapId) {
 
 SharedPointer<MaterialCubemap> Frame::getSkybox() const {
     return this->skybox.getMaterial().castAssert<MaterialCubemap>();
+}
+
+LightManager* Frame::getLightManager() {
+    return &this->lightManager;
 }
