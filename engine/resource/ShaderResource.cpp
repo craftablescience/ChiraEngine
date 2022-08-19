@@ -1,11 +1,11 @@
 #include "ShaderResource.h"
 
-#include <sstream>
 #include <regex>
 
 #include <config/Config.h>
 #include <core/Logger.h>
 #include <i18n/TranslationManager.h>
+#include <utility/String.h>
 
 using namespace chira;
 
@@ -22,35 +22,8 @@ void ShaderResource::compile(const byte buffer[], std::size_t bufferLength) {
     this->handle = glCreateShader(this->type);
 
     StringResource::compile(buffer, bufferLength);
+    this->data = replaceMacros(this->identifier, this->data);
     this->data = std::string{GL_VERSION_STRING} + "\n\n" + this->data;
-
-    // WARNING: The following code is HYPER SENSITIVE
-    // If you change ANYTHING it will BREAK HORRIBLY
-    // TEST ALL CHANGES
-
-    // Includes
-    static const std::regex includes{ShaderResource::preprocessorPrefix +
-                                     "(include[ \t]+([a-z:\\/.]+))" +
-                                     ShaderResource::preprocessorSuffix,
-                                     std::regex_constants::icase | std::regex_constants::optimize};
-    // Add the include as a macro to be expanded
-    // This has the positive side effect of caching previously used includes
-    for (std::sregex_iterator it{this->data.begin(), this->data.end(), includes}; it != std::sregex_iterator{}; it++) {
-        if (it->str(2) == this->identifier)
-            continue;
-        if (ShaderResource::preprocessorSymbols.count(it->str(2)) == 0) {
-            auto contents = Resource::getUniqueUncachedResource<StringResource>(it->str(2));
-            ShaderResource::addPreprocessorSymbol(it->str(1), contents->getString());
-        }
-    }
-
-    // Macros
-    for (const auto& [key, value] : ShaderResource::preprocessorSymbols) {
-        std::string fullKey = ShaderResource::preprocessorPrefix;
-        fullKey += key;
-        fullKey += ShaderResource::preprocessorSuffix;
-        this->data = std::regex_replace(this->data.data(), std::regex{fullKey}, value);
-    }
 
     const char* dat = this->data.c_str();
     glShaderSource(this->handle, 1, &dat, nullptr);
@@ -73,6 +46,36 @@ void ShaderResource::checkForCompilationErrors() const {
         glGetShaderInfoLog(this->handle, 512, nullptr, infoLog);
         LOG_SHADERRESOURCE.error(TRF("error.shader_resource.compilation_failure", this->type, infoLog));
     }
+}
+
+std::string ShaderResource::replaceMacros(const std::string& ignoredInclude, const std::string& data) { // NOLINT(misc-no-recursion)
+    // WARNING: The following code is HYPER SENSITIVE
+    // If you change ANYTHING it will BREAK HORRIBLY
+    // TEST ALL CHANGES
+
+    // Includes
+    static const std::regex includes{ShaderResource::preprocessorPrefix +
+                                     "(include[ \t]+([a-z:\\/.]+))" +
+                                     ShaderResource::preprocessorSuffix,
+                                     std::regex_constants::icase | std::regex_constants::optimize};
+    // Add the include as a macro to be expanded
+    // This has the positive side effect of caching previously used includes
+    for (std::sregex_iterator it{data.begin(), data.end(), includes}; it != std::sregex_iterator{}; it++) {
+        if (it->str(2) != ignoredInclude && !ShaderResource::preprocessorSymbols.count(it->str(2))) {
+            auto contents = Resource::getUniqueUncachedResource<StringResource>(it->str(2));
+            ShaderResource::addPreprocessorSymbol(it->str(1), replaceMacros(it->str(2), contents->getString()));
+        }
+    }
+
+    // Macros
+    std::string out = data;
+    for (const auto& [macro, contents] : ShaderResource::preprocessorSymbols) {
+        std::string fullKey = ShaderResource::preprocessorPrefix;
+        fullKey += macro;
+        fullKey += ShaderResource::preprocessorSuffix;
+        String::replace(out, fullKey, contents);
+    }
+    return out;
 }
 
 unsigned int ShaderResource::getType() const {
