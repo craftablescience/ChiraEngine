@@ -21,8 +21,12 @@ void Shader::compile(const nlohmann::json& properties) {
 #if DEBUG
     this->checkForCompilationErrors();
 #endif
-    if (this->usesPV)
-        UBO_PerspectiveView::get()->bindToShader(this);
+    if (this->usesPV) {
+        PerspectiveViewUBO::get()->bindToShader(this);
+    }
+    if (this->lit) {
+        LightsUBO::get()->bindToShader(this);
+    }
 }
 
 Shader::~Shader() {

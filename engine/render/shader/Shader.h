@@ -36,11 +36,15 @@ public:
     [[nodiscard]] bool usesModelMatrix() const {
         return this->usesM;
     }
+    [[nodiscard]] bool isLit() const {
+        return this->lit;
+    }
 private:
     void checkForCompilationErrors() const;
 
     bool usesPV = true;
     bool usesM = true;
+    bool lit = true;
     std::string vertexPath{"file://shaders/unlitTextured.vsh"};
     std::string fragmentPath{"file://shaders/unlitTextured.fsh"};
     /// Should only be called in Shader::compile() !!!
@@ -51,6 +55,7 @@ public:
     CHIRA_PROPS(
             CHIRA_PROP(Shader, usesPV),
             CHIRA_PROP(Shader, usesM),
+            CHIRA_PROP(Shader, lit),
             CHIRA_PROP_NAMED_SET(Shader, vertexPath, vertex, setVertexShader),
             CHIRA_PROP_NAMED_SET(Shader, fragmentPath, fragment, setFragmentShader)
     );

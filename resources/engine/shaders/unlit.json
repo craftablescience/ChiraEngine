@@ -1,4 +1,5 @@
 {
   "vertex": "file://shaders/unlit.vsh",
-  "fragment": "file://shaders/unlit.fsh"
+  "fragment": "file://shaders/unlit.fsh",
+  "lit": false
 }
