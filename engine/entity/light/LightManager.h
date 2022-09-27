@@ -7,9 +7,10 @@
 
 namespace chira {
 
-constexpr const int DIRECTIONAL_LIGHT_COUNT = 2;
-constexpr const int POINT_LIGHT_COUNT = 22;
-constexpr const int SPOT_LIGHT_COUNT = 8;
+// These are arbitrary amounts, be careful not to increase by too much or the GPU will hate you
+constexpr const int DIRECTIONAL_LIGHT_COUNT = 4;
+constexpr const int POINT_LIGHT_COUNT = 32;
+constexpr const int SPOT_LIGHT_COUNT = 16;
 
 class LightManager {
     friend DirectionalLight;
