@@ -2,6 +2,8 @@
   "ui.window.title": "Chira Editor",
 
   "ui.engineview.title": "Engine View",
+
+  "ui.codeview.title": "Script Editor",
   
   "ui.entitypanel.title": "Entities",
 

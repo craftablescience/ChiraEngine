@@ -7,6 +7,7 @@ namespace chira {
 class EngineView : public FramePanel {
 public:    
     EngineView();
+    void render() override;
     void renderOverlayContents() override;
     // variables
     std::string loadedFile;

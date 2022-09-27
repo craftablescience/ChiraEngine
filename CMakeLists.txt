@@ -205,7 +205,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stb
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stduuid/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser)
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/zep/include)
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/engine)
 

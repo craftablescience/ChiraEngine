@@ -6,6 +6,7 @@
 #include <map>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <Editor.h>
+#include <render/texture/Texture.h>
 
 namespace chira {
 
@@ -22,12 +23,20 @@ public:
     
     /// Resource list handling methods
     void loadResourceFolder(std::string resourceFolder);
-    
-    /// Resource Browser specific elements
-    void thumbnailFile(std::string fileName, FileType fileIcon);
+    void changeDirectory(std::string path);
     
     resourceList loadedResources;
 protected:
+    // Paths
+    std::string previousPath;
+    std::string currentPath;
+    // File list
+    std::map<std::string, fileInfo> curdirList;
+    // current resource folder to pull from
+    std::string curResFolder;
+    // List of resource folders we can pull from
+    std::vector<std::string> resFolderList;
+
     glm::vec2i currentSize;
     MainEditorPanel* mainpanel;
 };

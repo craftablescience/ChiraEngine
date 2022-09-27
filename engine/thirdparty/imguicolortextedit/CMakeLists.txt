@@ -1,0 +1,7 @@
+list(APPEND CHIRA_ENGINE_HEADERS
+    ${CMAKE_CURRENT_LIST_DIR}/TextEditor.h
+    )
+
+list(APPEND CHIRA_ENGINE_SOURCES
+    ${CMAKE_CURRENT_LIST_DIR}/TextEditor.cpp
+    )

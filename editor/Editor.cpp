@@ -26,9 +26,7 @@
 #include <editorui/EngineView.h>
 #include <editorui/ResourceBrowser.h>
 #include <editorui/EntityPanel.h>
-
-// Font glyph range header
-#include <thirdparty/IconFontCppHeaders/IconsFontAwesome4.h>
+#include <editorui/CodeView.h>
 
 #ifdef CHIRA_USE_DISCORD
     #include <hook/DiscordRPC.h>
@@ -43,6 +41,7 @@ CHIRA_CREATE_LOG(EDITOR);
 
 unsigned int engineviewID = 0;
 unsigned int resourcepanelID = 0;
+unsigned int codePanelID = 0;
 
 static inline void addResourceFolderSelected() {
     auto folder = Dialogs::openFolder();
@@ -67,7 +66,7 @@ static inline void addResourceFolderSelected() {
 }
 
 
-MainEditorPanel::MainEditorPanel() : IPanel(TR("ui.MainEditor.title"), true) {
+MainEditorPanel::MainEditorPanel() : IPanel(TR("ui.window.title"), true) {
     this->flags |= ImGuiWindowFlags_NoBackground |
                     ImGuiWindowFlags_NoInputs   |
                     ImGuiWindowFlags_NoDecoration;
@@ -126,8 +125,6 @@ void MainEditorPanel::preRenderContents() {
         }
         ImGui::EndMainMenuBar();
     }
-    
-    ImGui::ShowDemoWindow();
     
     // Model Dialog specific logic
     modeldialog.Display();
@@ -230,8 +227,12 @@ int main(int argc, const char* const argv[]) {
     auto resourcePanel = new ResourceBrowser(mainPanel);
     resourcepanelID = Engine::getWindow()->addPanel(resourcePanel);
     resourcePanel->loadResourceFolder("editor");
-    
-    
+
+    // Code View
+    auto codePanel = new CodePanel();
+    codePanelID = Engine::getWindow()->addPanel(codePanel);
+    codePanel->loadFile(FILESYSTEM_ROOT_FOLDER + "/editor/Editor.cpp");
+
     Engine::getWindow()->addPanel(new EntityPanel());
 
     auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};

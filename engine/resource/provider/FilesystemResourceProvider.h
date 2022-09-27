@@ -19,6 +19,7 @@ enum FileType {
     FILE_MATERIAL   = 1 << 7, /// Material Definition
     FILE_FONT       = 1 << 8, /// Font definition
     FILE_TEXTURE    = 1 << 9, /// Texture definition
+    FILE_DIRECTORY  = 1 << 10, /// Directory
 };
 
 struct fileInfo {

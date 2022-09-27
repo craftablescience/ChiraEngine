@@ -14,81 +14,143 @@ using namespace chira;
 CHIRA_CREATE_LOG(RESB);
 
 ResourceBrowser::ResourceBrowser(MainEditorPanel* frame)
-    : IPanel(TRC("ui.resourcebrowser.title"), true, ImVec2(2.0F, 2.0F), false), currentSize(2.0F, 2.0F) {
-        this->mainpanel = frame;
+	: IPanel(TRC("ui.resourcebrowser.title"), true, ImVec2(2.0F, 2.0F), false), currentSize(2.0F, 2.0F) {
+		this->mainpanel = frame;
+		this->flags |= ImGuiWindowFlags_MenuBar;
 }
 
 void ResourceBrowser::loadResourceFolder(std::string resourceFolder) {
-    // Resource related things
-    auto resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(FILESYSTEM_ROOT_FOLDER + "/" + resourceFolder);
-    if (resourceFolderPath.empty()) {
-        LOG_RESB.error("Attempted to load resource folder " + resourceFolder + " but it doesn't exist!");
-        return;
-    }
-    
-    loadedResources.meshes = FilesystemResourceProvider::getDirectoryContents(FILESYSTEM_ROOT_FOLDER + "/" + resourceFolder + "/meshes/", "mdef");
-    
-    LOG_RESB.info("Finished searching for resources in " + resourceFolder);
+	// ready the variables to open a project's resource folder
+
+	// make sure the directory exists first
+	auto resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(FILESYSTEM_ROOT_FOLDER + "/" + resourceFolder);
+	if (resourceFolderPath.empty()) {
+		LOG_RESB.error("Attempted to load resource folder " + resourceFolder + " but it doesn't exist!");
+		return;
+	}
+	// we got here so it does.
+	// set the curResFolder to our loaded resource folder.
+	this->curResFolder = resourceFolder;
+	// load the contents of the root folder
+	this->curdirList = FilesystemResourceProvider::getDirectoryContents(FILESYSTEM_ROOT_FOLDER + "/" + this->curResFolder, "");
+
+	LOG_RESB.info("Loaded resource folder " + resourceFolder);
 }
 
-// Thumbnail file element for resource browser
-void ResourceBrowser::thumbnailFile(std::string fileName, FileType fileIcon = FILE_GENERIC) {
-    ImVec2 startCurPos = ImGui::GetCursorPos();
-        
-    // Create button
-    std::string fuckyouclang = "##" + val.fileName;
-    ImGui::Button(fuckyouclang.c_str(), ImVec2(90.0F, 99.0F));
-    
-    // Putting the logic here to make sure every button works
-    if (ImGui::IsItemActivated()) {
-        this->mainpanel->setLoadedFile("file://meshes/" + val.fileName + ".mdef");
-    }
-    
-    // Save this for later
-    ImVec2 endCurPos = ImGui::GetCursorPos();
-    // move our cursor position
-    ImGui::SetCursorPos(startCurPos);
-    // Create the rest of the file button
-    switch(val.fileType) {
-        using enum FileType;
-        case FILE_GENERIC: {
-            break;
-        }
-        case FILE_SCRIPT: {
-            break;
-        }
-        case FILE_AUDIO: {
-            break;
-        }
-        case FILE_TEXTURE: {
-            break;
-        }
-        case FILE_MODEL: {
-            break;
-        }
-        case FILE_MATERIAL: {
-            break;
-        }
-        case FILE_IMAGE: {
-            break;
-        }
-        case FILE_FONT: {
-            break;
-        }
-        case FILE_MESH: {
-            auto icon = Resource::getResource<Texture>("file://textures/ui/icons/cube.json");
-            ImGui::Image((void*)icon->getHandle(), ImVec2(64.0F, 64.0F));
-            break;
-        }
-    }
-    ImGui::Text("%s", val.fileName.c_str());
-    // Reset our cursor position back
-    ImGui::SetCursorPos(endCurPos);
+void ResourceBrowser::changeDirectory(std::string path) {
+	this->previousPath = this->currentPath;
+	this->currentPath = path;
+    auto dirList = FilesystemResourceProvider::getDirectoryContents(FILESYSTEM_ROOT_FOLDER + "/" + this->curResFolder + "/" + path, "");
+	this->curdirList = dirList;
 }
 
 void ResourceBrowser::renderContents() {
-    // display every mesh
-    for ( auto const& [key, val] : loadedResources.meshes ) {
-        this->thumbnailFile(val.fileName, val.fileType);
-    }
+	static float padding = 16.0f;
+	static float thumbnailSize = 64.0f;
+	float cellSize = thumbnailSize + padding;
+
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("Edit"))
+		{
+			if (ImGui::MenuItem("Copy", "Ctrl-C", nullptr))
+			{
+			}
+			if (ImGui::MenuItem("Cut", "Ctrl-X", nullptr))
+			{
+			}
+			if (ImGui::MenuItem("Delete", "Del", nullptr))
+			{
+			}
+			if (ImGui::MenuItem("Paste", "Ctrl-V", nullptr))
+			{
+			}
+		}
+		if (ImGui::BeginMenu("View"))
+		{
+			ImGui::SliderFloat("Thumbnail Size", &thumbnailSize, 16, 512);
+			ImGui::SliderFloat("Padding", &padding, 0, 32);
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+
+	float panelWidth = ImGui::GetContentRegionAvail().x;
+	int columnCount = (int)(panelWidth / cellSize);
+	if (columnCount < 1)
+		columnCount = 1;
+
+	ImGui::Columns(columnCount, 0, false);
+
+	for ( auto const& [key, val] : this->curdirList ) {
+		ImGui::PushID(val.fileName.c_str());
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+
+		switch(val.fileType) {
+		using enum FileType;
+			case FILE_GENERIC: {
+				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/file.json");
+				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				break;
+			}
+			case FILE_SCRIPT: {
+				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/script.json");
+				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				break;
+			}
+			case FILE_AUDIO: {
+				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/audio.json");
+				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				break;
+			}
+			case FILE_TEXTURE: {
+				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/picture.json");
+				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				break;
+			}
+			case FILE_MODEL: {
+				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/cube.json");
+				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				break;
+			}
+			case FILE_MATERIAL: {
+				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/picture.json");
+				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				break;
+			}
+			case FILE_IMAGE: {
+				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/file.json");
+				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				break;
+			}
+			case FILE_FONT: {
+				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/font.json");
+				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				break;
+			}
+			case FILE_MESH: {
+				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/cube.json");
+				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				break;
+			}
+			case FILE_DIRECTORY: {
+				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/folder.json");
+				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				if (ImGui::IsItemActivated())
+				{
+					this->changeDirectory(this->currentPath + "/" + val.fileName);
+				}
+				break;
+			}
+		}
+		ImGui::PopStyleColor();
+
+		ImGui::TextWrapped(val.fileName.c_str());
+
+		ImGui::NextColumn();
+
+		ImGui::PopID();
+	}
+
+	ImGui::Columns(1);
 }

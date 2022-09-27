@@ -136,35 +136,47 @@ std::map<std::string, fileInfo> FilesystemResourceProvider::getDirectoryContents
     
     // grab the contents of this directory and put the files into a file table
     for (const auto & entry : std::filesystem::directory_iterator(path)) {
-        if (extension.empty()) {
-            // if type is not specifically defined just give every file in the folder
-            if(entry.path().extension().string() == ".mdef") {
-                /// Model definition
-                std::string filename = entry.path().stem().string();
-                fileInfo filedef;
-                filedef.fileName = filename;
-                filedef.fileType = FILE_MESH;
-                filedef.filePath = entry.path().string();
-                files[ filename ] = filedef;
+        if (entry.is_directory()) {
+            /// Directory
+            std::string filename = entry.path().stem().string();
+            fileInfo filedef;
+            filedef.fileName = filename;
+            filedef.fileType = FILE_DIRECTORY;
+            filedef.filePath = entry.path().string();
+            files[ filename ] = filedef;
+        }
+        else
+        {
+            if (extension.empty()) {
+                // if type is not specifically defined just give every file in the folder
+                if(entry.path().extension().string() == ".mdef") {
+                    /// Model definition
+                    std::string filename = entry.path().stem().string();
+                    fileInfo filedef;
+                    filedef.fileName = filename;
+                    filedef.fileType = FILE_MESH;
+                    filedef.filePath = entry.path().string();
+                    files[ filename ] = filedef;
+                }
+                else {
+                    /// Unknown/Generic file
+                    std::string filename = entry.path().stem().string();
+                    fileInfo filedef;
+                    filedef.fileName = filename;
+                    filedef.fileType = FILE_GENERIC;
+                    filedef.filePath = entry.path().string();
+                    files[ filename ] = filedef;
+                }
             }
             else {
-                /// Unknown/Generic file
-                std::string filename = entry.path().stem().string();
-                fileInfo filedef;
-                filedef.fileName = filename;
-                filedef.fileType = FILE_GENERIC;
-                filedef.filePath = entry.path().string();
-                files[ filename ] = filedef;
-            }
-        }
-        else {
-            if (entry.path().extension().string() == "." + extension) {
-                std::string filename = entry.path().stem().string();
-                fileInfo filedef;
-                filedef.fileName = filename;
-                filedef.fileType = FILE_MESH;
-                filedef.filePath = entry.path().string();
-                files[ filename ] = filedef;
+                if (entry.path().extension().string() == "." + extension) {
+                    std::string filename = entry.path().stem().string();
+                    fileInfo filedef;
+                    filedef.fileName = filename;
+                    filedef.fileType = FILE_MESH;
+                    filedef.filePath = entry.path().string();
+                    files[ filename ] = filedef;
+                }
             }
         }
     }

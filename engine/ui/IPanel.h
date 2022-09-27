@@ -13,7 +13,7 @@ class IPanel {
 public:
     IPanel(std::string title_, bool startVisible, ImVec2 windowSize = {}, bool enforceSize = false);
     virtual ~IPanel() = default;
-    void render();
+    virtual void render();
     virtual void preRenderContents() {};
     virtual void renderContents() = 0;
     virtual void postRenderContents() {};
