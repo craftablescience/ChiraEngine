@@ -50,9 +50,13 @@ void PerspectiveViewUBO::update(glm::mat4 proj, glm::mat4 view, glm::vec3 viewPo
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-LightsUBO::LightsUBO() : UniformBufferObject("LIGHTS", (4 * VEC4_SIZE * DIRECTIONAL_LIGHT_COUNT) +
-                                                       (5 * VEC4_SIZE * POINT_LIGHT_COUNT) +
-                                                       (6 * VEC4_SIZE * SPOT_LIGHT_COUNT) +
+static constexpr const std::size_t DIRECTIONAL_SIZE = VEC4_SIZE + sizeof(DirectionalLightData);
+static constexpr const std::size_t POINT_SIZE       = VEC4_SIZE + sizeof(PointLightData);
+static constexpr const std::size_t SPOT_SIZE  = (2 * VEC4_SIZE) + sizeof(SpotLightData);
+
+LightsUBO::LightsUBO() : UniformBufferObject("LIGHTS", (DIRECTIONAL_SIZE * DIRECTIONAL_LIGHT_COUNT) +
+                                                       (POINT_SIZE       * POINT_LIGHT_COUNT) +
+                                                       (SPOT_SIZE        * SPOT_LIGHT_COUNT) +
                                                        VEC4_SIZE) {}
 
 LightsUBO* LightsUBO::get() {
@@ -64,8 +68,9 @@ LightsUBO* LightsUBO::get() {
 void LightsUBO::updateLights(DirectionalLight* directionalLights[], PointLight* pointLights[], SpotLight* spotLights[], glm::vec3 numberOfLights) const {
     glBindBuffer(GL_UNIFORM_BUFFER, this->handle);
     unsigned int position = 0;
-    unsigned short nullLights = 0;
+    int nullLights;
 
+    nullLights = 0;
     for (int i = 0; i < DIRECTIONAL_LIGHT_COUNT; i++) {
         auto* light = directionalLights[i];
         if (!light) {
@@ -73,25 +78,14 @@ void LightsUBO::updateLights(DirectionalLight* directionalLights[], PointLight* 
             continue;
         }
 
-        glm::vec4 dir =  {glm::eulerAngles(light->getRotation()), 0.f};
-        glm::vec4 amb =  {light->getLightData().ambient,          1.f};
-        glm::vec4 diff = {light->getLightData().diffuse,          1.f};
-        glm::vec4 spec = {light->getLightData().specular,         1.f};
-
+        glm::vec4 dir{glm::eulerAngles(light->getRotation()), 0.f};
         glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &dir);
         position += VEC4_SIZE;
-        glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &amb);
-        position += VEC4_SIZE;
-        glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &diff);
-        position += VEC4_SIZE;
-        glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &spec);
-        position += VEC4_SIZE;
+
+        glBufferSubData(GL_UNIFORM_BUFFER, position, sizeof(DirectionalLightData), light->getLightData());
+        position += sizeof(DirectionalLightData);
     }
-    if (nullLights > 0) {
-        std::vector<byte> zeroes(4 * VEC4_SIZE * nullLights, 0);
-        glBufferSubData(GL_UNIFORM_BUFFER, position, 4 * VEC4_SIZE, &zeroes[0]);
-        position += 4 * VEC4_SIZE * nullLights;
-    }
+    position += DIRECTIONAL_SIZE * nullLights;
 
     nullLights = 0;
     for (int i = 0; i < POINT_LIGHT_COUNT; i++) {
@@ -101,28 +95,14 @@ void LightsUBO::updateLights(DirectionalLight* directionalLights[], PointLight* 
             continue;
         }
 
-        glm::vec4 pos =  {light->getGlobalPosition(),     0.f};
-        glm::vec4 amb =  {light->getLightData().ambient,  1.f};
-        glm::vec4 diff = {light->getLightData().diffuse,  1.f};
-        glm::vec4 spec = {light->getLightData().specular, 1.f};
-        glm::vec4 fall = {light->getLightData().constant, light->getLightData().linear, light->getLightData().quadratic, 0.f};
-
+        glm::vec4 pos{light->getGlobalPosition(), 0.f};
         glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &pos);
         position += VEC4_SIZE;
-        glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &amb);
-        position += VEC4_SIZE;
-        glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &diff);
-        position += VEC4_SIZE;
-        glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &spec);
-        position += VEC4_SIZE;
-        glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &fall);
-        position += VEC4_SIZE;
+
+        glBufferSubData(GL_UNIFORM_BUFFER, position, sizeof(PointLightData), light->getLightData());
+        position += sizeof(PointLightData);
     }
-    if (nullLights > 0) {
-        std::vector<byte> zeroes(5 * VEC4_SIZE * nullLights, 0);
-        glBufferSubData(GL_UNIFORM_BUFFER, position, 5 * VEC4_SIZE, &zeroes[0]);
-        position += 5 * VEC4_SIZE * nullLights;
-    }
+    position += POINT_SIZE * nullLights;
 
     nullLights = 0;
     for (int i = 0; i < SPOT_LIGHT_COUNT; i++) {
@@ -132,31 +112,17 @@ void LightsUBO::updateLights(DirectionalLight* directionalLights[], PointLight* 
             continue;
         }
 
-        glm::vec4 pos =  {light->getGlobalPosition(),             0.f};
-        glm::vec4 dir =  {glm::eulerAngles(light->getRotation()), 0.f};
-        glm::vec4 diff = {light->getLightData().diffuse,          1.f};
-        glm::vec4 spec = {light->getLightData().specular,         1.f};
-        glm::vec4 fall = {light->getLightData().constant,  light->getLightData().linear, light->getLightData().quadratic, 0.f};
-        glm::vec4 cut  = {light->getLightData().innerCone, light->getLightData().outerCone, 0.f, 0.f};
-
+        glm::vec4 pos  = {light->getGlobalPosition(), 0.f};
+        glm::vec4 dir  = {glm::eulerAngles(light->getRotation()), 0.f};
         glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &pos);
         position += VEC4_SIZE;
         glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &dir);
         position += VEC4_SIZE;
-        glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &diff);
-        position += VEC4_SIZE;
-        glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &spec);
-        position += VEC4_SIZE;
-        glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &fall);
-        position += VEC4_SIZE;
-        glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &cut);
-        position += VEC4_SIZE;
+
+        glBufferSubData(GL_UNIFORM_BUFFER, position, sizeof(SpotLightData), light->getLightData());
+        position += sizeof(SpotLightData);
     }
-    if (nullLights > 0) {
-        std::vector<byte> zeroes(6 * VEC4_SIZE * nullLights, 0);
-        glBufferSubData(GL_UNIFORM_BUFFER, position, 6 * VEC4_SIZE, &zeroes[0]);
-        position += 6 * VEC4_SIZE * nullLights;
-    }
+    position += SPOT_SIZE * nullLights;
 
     glm::vec4 counts{numberOfLights, 1.f};
     glBufferSubData(GL_UNIFORM_BUFFER, position, VEC4_SIZE, &counts);
