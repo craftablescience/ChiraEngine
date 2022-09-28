@@ -201,7 +201,7 @@ void Window::render(glm::mat4 /*parentTransform*/) {
     ImGui::NewFrame();
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
-    Frame::render(this->fboHandle, this->width, this->height, this->mainCamera);
+    Frame::render(this->fboHandle, this->width, this->height);
 
     for (auto* panel : this->panels) {
         panel->render();
