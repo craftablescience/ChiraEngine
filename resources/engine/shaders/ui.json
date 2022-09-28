@@ -2,5 +2,6 @@
   "vertex": "file://shaders/ui.vsh",
   "fragment": "file://shaders/ui.fsh",
   "usesPV": false,
-  "usesM": false
+  "usesM": false,
+  "lit": false
 }

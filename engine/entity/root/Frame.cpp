@@ -79,17 +79,41 @@ void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeig
     auto tempRot = this->rotation;
     this->rotation = {};
 
+   // Push camera projection/view
     if (this->mainCamera) {
-        UBO_PerspectiveView::get()->update(this->mainCamera->getProjection(), this->mainCamera->getView());
+        PerspectiveViewUBO::get()->update(
+                this->mainCamera->getProjection(),
+                this->mainCamera->getView(),
+                this->mainCamera->getGlobalPosition(),
+                this->mainCamera->getFrontVector());
     }
+    // Push lighting
+    this->getLightManager()->updateUBOs();
+
     Group::render(glm::identity<glm::mat4>());
     if (this->renderSkybox) {
         // Wiki says modern hardware is fine with this and it looks better
         glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
         this->skybox.render(glm::identity<glm::mat4>());
     }
-    if (this->mainCamera && camera) {
-        UBO_PerspectiveView::get()->update(camera->getProjection(), camera->getView());
+
+    if (this->renderSkybox) {
+        // Wiki says modern hardware is fine with this and it looks better
+        glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+        this->skybox.render(glm::identity<glm::mat4>());
+    }
+
+    // Pop camera projection/view
+    if (this->mainCamera && Entity::getFrame() && Entity::getFrame()->getCamera()) {
+        PerspectiveViewUBO::get()->update(
+                Entity::getFrame()->getCamera()->getProjection(),
+                Entity::getFrame()->getCamera()->getView(),
+                Entity::getFrame()->getCamera()->getGlobalPosition(),
+                Entity::getFrame()->getCamera()->getFrontVector());
+    }
+    // Pop lighting
+    if (Entity::getFrame() && Entity::getFrame()->getLightManager()) {
+        Entity::getFrame()->getLightManager()->updateUBOs();
     }
 
     // (Hopefully) preserve any transformations from children
@@ -104,6 +128,10 @@ Frame::~Frame() {
     glDeleteRenderbuffers(1, &this->rboHandle);
     glDeleteTextures(1, &this->colorTexHandle);
     glDeleteFramebuffers(1, &this->fboHandle);
+}
+
+glm::vec3 Frame::getGlobalPosition() {
+    return this->position;
 }
 
 const Frame* Frame::getFrame() const {
@@ -131,10 +159,6 @@ unsigned int Frame::getColorTextureHandle() const {
     return this->colorTexHandle;
 }
 
-glm::vec2i Frame::getFrameSize() const {
-    return {this->width, this->height};
-}
-
 void Frame::setFrameSize(glm::vec2i newSize) {
     this->width = newSize.x;
     this->height = newSize.y;
@@ -142,6 +166,10 @@ void Frame::setFrameSize(glm::vec2i newSize) {
     if (this->getCamera()) {
         this->getCamera()->createProjection(newSize);
     }
+}
+
+glm::vec2i Frame::getFrameSize() const {
+    return {this->width, this->height};
 }
 
 ColorRGB Frame::getBackgroundColor() const {
@@ -152,8 +180,14 @@ void Frame::setBackgroundColor(ColorRGB color) {
     this->backgroundColor = color;
 }
 
-SharedPointer<MaterialCubemap> Frame::getSkybox() const {
-    return this->skybox.getMaterial().castAssert<MaterialCubemap>();
+void Frame::setCamera(Camera* camera) {
+    this->mainCamera = camera;
+    this->mainCamera->createProjection(this->getFrame()->getFrameSize());
+}
+
+Camera* Frame::getCamera() const {
+    return this->mainCamera;
+
 }
 
 void Frame::setSkybox(const std::string& cubemapId) {
@@ -164,4 +198,11 @@ void Frame::setSkybox(const std::string& cubemapId) {
     }
     this->skybox.setMaterial(Resource::getResource<MaterialCubemap>(cubemapId).castAssert<IMaterial>());
     this->renderSkybox = true;
+}
+SharedPointer<MaterialCubemap> Frame::getSkybox() const {
+    return this->skybox.getMaterial().castAssert<MaterialCubemap>();
+}
+
+LightManager* Frame::getLightManager() {
+    return &this->lightManager;
 }

@@ -74,10 +74,10 @@ jobs:
           platform: x64
 
       - name: Configure CMake
-        run: cmake -G "Unix Makefiles" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+        run: cmake -G "Unix Makefiles" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON
 
       - name: Build
-        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
+        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}} -- -j$(nproc)
 
       - name: Test
         working-directory: ${{github.workspace}}/build
@@ -119,11 +119,12 @@ jobs:
         pacboy: >-
           toolchain:p
           cmake:p
+          ninja:p
     - name: Configure CMake
-      run: cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
+      run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
 
     - name: Build
-      run: cmake --build build --config ${{matrix.build_type}}
+      run: cmake --build build --config ${{matrix.build_type}} -- -j$(nproc)
 
     - name: Test
       working-directory: ${{github.workspace}}/build
@@ -165,7 +166,7 @@ jobs:
           spectre: true
 
       - name: Configure CMake
-        run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+        run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON
 
       - name: Build
         run: cmake --build build --config ${{matrix.build_type}}

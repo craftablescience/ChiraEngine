@@ -2,7 +2,8 @@
 
 #include <cstddef>
 #include <algorithm>
-
+#include <string>
+#include <config/ConEntry.h>
 #include <math/Matrix.h>
 
 using namespace chira;

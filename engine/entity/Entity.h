@@ -54,10 +54,17 @@ public:
 
     virtual void setPosition(glm::vec3 newPos);
     virtual void setRotation(glm::quat newRot);
+<<<<<<< HEAD
     virtual glm::vec3 getPosition() const;
     virtual glm::vec3 getGlobalPosition() const;
     /// Note: the global rotation is inaccessible.
     virtual glm::quat getRotation() const;
+=======
+    [[nodiscard]] virtual glm::vec3 getPosition();
+    [[nodiscard]] virtual glm::vec3 getGlobalPosition();
+    /// Note: the global rotation is inaccessible.
+    [[nodiscard]] virtual glm::quat getRotation();
+>>>>>>> 62252fafceb516b22caf577057183d10edc39498
     virtual void translate(glm::vec3 translateByAmount);
     virtual void translateWithRotation(glm::vec3 translateByAmount);
     virtual void rotate(glm::quat rotateByAmount);
@@ -72,10 +79,13 @@ protected:
     glm::vec3 position{};
     glm::quat rotation = glm::identity<glm::quat>();
 
-    /// For internal use only.
+    /// For internal use only!
     void setParent(Entity* newParent) {
         this->parent = newParent;
     }
+
+    /// Callback called after parent is set
+    virtual void onAddedToTree() {}
 };
 
 } // namespace chira

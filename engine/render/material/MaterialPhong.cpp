@@ -13,6 +13,8 @@ void MaterialPhong::use() const {
     IMaterial::use();
     this->diffuse->use();
     this->specular->use();
+    this->shader->setUniform("material.shininess", this->shininess);
+    this->shader->setUniform("material.lambertFactor", this->lambertFactor);
 }
 
 SharedPointer<Texture> MaterialPhong::getTextureDiffuse() const {

@@ -5,6 +5,7 @@
 
 #include <config/Config.h>
 #include <config/ConEntry.h>
+#include <entity/light/LightManager.h>
 #include <i18n/TranslationManager.h>
 #include <input/InputManager.h>
 #include <loader/mesh/OBJMeshLoader.h>
@@ -56,6 +57,7 @@ void Engine::preInit(int argc, const char* const argv[]) {
     CommandLine::initialize(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
     TranslationManager::addTranslationFile("file://i18n/engine");
+    LightManager::setupShaderMacros();
 }
 
 void Engine::init(bool windowStartsVisible) {
@@ -138,17 +140,6 @@ void Engine::init(bool windowStartsVisible) {
 
     IMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     IMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
-
-    // todo: move this to a general lighting manager
-    if (ConVarRegistry::hasConVar("max_point_lights")) {
-        ShaderResource::addPreprocessorSymbol("MAX_POINT_LIGHTS", ConVarRegistry::getConVar("max_point_lights")->getValue<std::string>());
-    }
-    if (ConVarRegistry::hasConVar("max_directional_lights")) {
-        ShaderResource::addPreprocessorSymbol("MAX_DIRECTIONAL_LIGHTS", ConVarRegistry::getConVar("max_directional_lights")->getValue<std::string>());
-    }
-    if (ConVarRegistry::hasConVar("max_spot_lights")) {
-        ShaderResource::addPreprocessorSymbol("MAX_SPOT_LIGHTS", ConVarRegistry::getConVar("max_spot_lights")->getValue<std::string>());
-    }
 
 #ifdef CHIRA_USE_STEAMWORKS
     bool steamEnable = ConVarRegistry::hasConVar("steam_enable") && ConVarRegistry::getConVar("steam_enable")->getValue<bool>();

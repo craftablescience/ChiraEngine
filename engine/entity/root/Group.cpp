@@ -1,7 +1,5 @@
 #include "Group.h"
 
-#include "Frame.h"
-
 using namespace chira;
 
 Group::Group(std::string name_) : Entity(std::move(name_)) {}
@@ -14,9 +12,5 @@ const Group* Group::getGroup() const {
 
 Group* Group::getGroup() {
     return this;
-}
-
-glm::vec3 Group::getGlobalPosition() const {
-    return this->position;
 }
 
