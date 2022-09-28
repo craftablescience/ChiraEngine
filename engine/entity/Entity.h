@@ -43,7 +43,7 @@ public:
         return assert_cast<EntityType*>(this->getChild(name_));
     }
     [[nodiscard]] bool hasChild(std::string_view name_) const;
-    [[nodiscard]] virtual std::string_view addChild(Entity* child);
+    virtual std::string_view addChild(Entity* child);
     virtual void removeChild(std::string_view name_);
     void removeAllChildren();
 
