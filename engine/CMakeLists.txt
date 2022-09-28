@@ -1,3 +1,4 @@
+include(${CMAKE_CURRENT_SOURCE_DIR}/engine/audio/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/config/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/core/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/CMakeLists.txt)
