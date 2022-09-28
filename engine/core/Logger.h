@@ -41,8 +41,9 @@ class LogChannel {
     class LogChannelLogger {
     public:
         constexpr LogChannelLogger(LogType type_, std::string_view source_) : type(type_), source(source_) {}
-        inline void operator<<(std::string_view message) const {
+        inline const LogChannelLogger& operator<<(std::string_view message) const {
             Logger::log(this->type, this->source, message);
+            return *this;
         }
     private:
         LogType type;
