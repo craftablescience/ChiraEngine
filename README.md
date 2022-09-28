@@ -60,6 +60,7 @@ next to the executable. Check the GitHub Actions script to see which DLLs need c
 - magic_enum v0.8.2
 - nlohmann_json v3.11.2
 - SDL v2.26.4
+- SoLoud
 - stb_image v2.27
 - stduuid v1.1
 
