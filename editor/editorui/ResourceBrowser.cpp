@@ -38,11 +38,13 @@ void ResourceBrowser::loadResourceFolder(std::string resourceFolder) {
 }
 
 void ResourceBrowser::changeDirectory(std::string path) {
-	LOG_RESB.info("New Path is " + path);
-	LOG_RESB.info("Current Path is " + this->currentPath);
 	this->previousPath = this->currentPath;
 	this->currentPath = path;
-  auto dirList = FilesystemResourceProvider::getDirectoryContents(FILESYSTEM_ROOT_FOLDER + "/" + this->curResFolder + "/" + path, "");
+	// HACK: we should fix trailing '/' breaking getDirectoryContents' ResFolder check instead of doing this
+	std::string tochange = FILESYSTEM_ROOT_FOLDER + "/" + this->curResFolder;
+	if (!path.empty())
+	 tochange+="/" + path;
+  auto dirList = FilesystemResourceProvider::getDirectoryContents(tochange, "");
 	this->curdirList = dirList;
 }
 
@@ -50,7 +52,6 @@ void ResourceBrowser::renderContents() {
 	static float padding = 16.0f;
 	static float thumbnailSize = 64.0f;
 	float cellSize = thumbnailSize + padding;
-	bool breakout = false;
 
 	if (ImGui::BeginMenuBar())
 	{
@@ -92,14 +93,15 @@ void ResourceBrowser::renderContents() {
 
 	ImGui::Columns(columnCount, 0, false);
 
-
 	// don't attempt to display other files
 	if (this->curdirList.empty())
 		return;
+
 	for ( auto const& [key, val] : this->curdirList ) {
 		ImGui::PushID(val.fileName.c_str());
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 
+		// OPTIMIZE: no. just no.
 		switch(val.fileType) {
 		using enum FileType;
 			case FILE_GENERIC: {
@@ -153,8 +155,6 @@ void ResourceBrowser::renderContents() {
 				if (ImGui::IsItemActivated())
 				{
 					this->changeDirectory(this->currentPath + "/" + val.fileName);
-					breakout = true;
-					goto swapbreak;
 				}
 				break;
 			}
@@ -164,14 +164,7 @@ void ResourceBrowser::renderContents() {
 				break;
 			}
 		}
-		
-swapbreak:
-		ImGui::PopStyleColor();
-		if (breakout == true)
-		{
-			ImGui::PopID();
-			return;
-		}
+		ImGui::PopStyleColor();	
 
 		ImGui::TextWrapped(val.fileName.c_str());
 

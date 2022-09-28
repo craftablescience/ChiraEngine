@@ -1,6 +1,7 @@
 #include "Editor.h"
 
 // Disable console window on Windows (MSVC)
+// EXPLAIN: what is the issue with having a console window?
 #include <core/Platform.h>
 #if defined(_WIN32) && !defined(DEBUG) && defined(CHIRA_COMPILER_MSVC)
     #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
@@ -20,6 +21,7 @@
 #include <render/material/MaterialPhong.h>
 
 // Used because file dialogs are broken on macOS
+// TODO: Make these prettier.
 #include <imfilebrowser.h>
 
 // All the UI elements in the editor
@@ -145,8 +147,6 @@ void MainEditorPanel::renderContents() {
 }
 
 void MainEditorPanel::setLoadedFile(const std::string& meshName) {
-    // if (Engine::getWindow()->getPanel(engineviewUUID)->hasChild(this->meshId) && meshName == Engine::getWindow()->getPanel(engineviewUUID)->getChild<Mesh>(this->meshId)->getMeshResource()->getIdentifier())
-        //return;
     if (!Resource::hasResource(meshName)) {
         Dialogs::popupError(TRF("error.modelviewer.resource_is_invalid", meshName));
         return;
@@ -180,7 +180,7 @@ int main(int argc, const char* const argv[]) {
 
 #if defined(CHIRA_USE_STEAMWORKS) && defined(DEBUG)
     if (auto* steam_enable = ConVarRegistry::getConVar("steam_enable"); steam_enable && steam_enable->getValue<bool>()) {
-        // Steam API docs say this is bad practice, I say I don't care
+        // TODO: look into what this bad practice is and replace it with a good practice instead.
         SteamAPI::generateAppIDFile(1728950);
     }
 #endif
@@ -220,20 +220,24 @@ int main(int argc, const char* const argv[]) {
 
     auto mainPanel = new MainEditorPanel();
     Engine::getWindow()->addPanel(mainPanel);
+
+    // TODO: This should be in focus and visible by default on editor load
     auto framePanel = new EngineView();
     auto frame = framePanel->getFrame();
     frame->setBackgroundColor(ColorRGB{0.15f});
     engineviewID = Engine::getWindow()->addPanel(framePanel);
 
     // Engine tool panels
-    // Setup resources panel
+    // The resource browser
     auto resourcePanel = new ResourceBrowser(mainPanel);
     resourcepanelID = Engine::getWindow()->addPanel(resourcePanel);
+    // IDEA: having a game config system to define folders and whatnot would be cool
     resourcePanel->loadResourceFolder("editor");
 
     // Code View
     auto codePanel = new CodePanel();
     codePanelID = Engine::getWindow()->addPanel(codePanel);
+    // REMOVE: we don't really need a debug file load call anymore do we?
     codePanel->loadFile(FILESYSTEM_ROOT_FOLDER + "/editor/Editor.cpp");
 
     Engine::getWindow()->addPanel(new EntityPanel());
@@ -246,9 +250,12 @@ int main(int argc, const char* const argv[]) {
     frame->setCamera(camera);
 
     //todo: the camera must be set for the window root for keybinds to affect it
+    //EXPLAIN: Todo? what is there todo here? It looks like it's already done from the code?
     Engine::getWindow()->setCamera(camera);
     EditorCamera::setupKeybinds();
 
+    // OPTIMIZE: replace this multi cube mesh grid with a single textured plane grid
+    // IDEA: the grid texture I made for Chisel could be reused here!
     auto grid = new MeshDynamic{"grid"};
     auto gridMesh = grid->getMesh();
     gridMesh->setMaterial(CHIRA_GET_MATERIAL("MaterialUntextured", "file://materials/unlit.json"));

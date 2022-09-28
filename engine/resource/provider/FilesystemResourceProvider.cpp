@@ -128,6 +128,7 @@ std::map<std::string, fileInfo> FilesystemResourceProvider::getDirectoryContents
     std::map<std::string, fileInfo> files;
     
     // Check if the directory exists first
+    // FIXME: this check breaks if the path has a trailing '/'
     auto resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(path);
     if (resourceFolderPath.empty()) {
         LOG_FILESYSTEM.error("Resource directory " + path + " does not exist!");
@@ -143,6 +144,7 @@ std::map<std::string, fileInfo> FilesystemResourceProvider::getDirectoryContents
             filedef.fileType = FILE_DIRECTORY;
         else {
             std::string ext = entry.path().extension().string();
+            // TODO: add other file extensions to this list
             if (ext == ".mdef") // Mesh definition
                 filedef.fileType = FILE_MESH;
             else // Default/Unknown
