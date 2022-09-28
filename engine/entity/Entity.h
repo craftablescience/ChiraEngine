@@ -43,7 +43,7 @@ public:
         return assert_cast<EntityType*>(this->getChild(name_));
     }
     [[nodiscard]] bool hasChild(std::string_view name_) const;
-    virtual std::string_view addChild(Entity* child);
+    [[nodiscard]] virtual std::string_view addChild(Entity* child);
     virtual void removeChild(std::string_view name_);
     void removeAllChildren();
 
@@ -52,10 +52,10 @@ public:
 
     virtual void setPosition(glm::vec3 newPos);
     virtual void setRotation(glm::quat newRot);
-    virtual glm::vec3 getPosition();
-    virtual glm::vec3 getGlobalPosition();
+    [[nodiscard]] virtual glm::vec3 getPosition();
+    [[nodiscard]] virtual glm::vec3 getGlobalPosition();
     /// Note: the global rotation is inaccessible.
-    virtual glm::quat getRotation();
+    [[nodiscard]] virtual glm::quat getRotation();
     virtual void translate(glm::vec3 translateByAmount);
     virtual void translateWithRotation(glm::vec3 translateByAmount);
     virtual void rotate(glm::quat rotateByAmount);

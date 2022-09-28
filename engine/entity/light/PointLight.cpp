@@ -62,7 +62,7 @@ float PointLight::getLinear() const {
 }
 
 void PointLight::setLinear(float newLinear) {
-    this->data.falloff.y;
+    this->data.falloff.y = newLinear;
 }
 
 float PointLight::getQuadratic() const {

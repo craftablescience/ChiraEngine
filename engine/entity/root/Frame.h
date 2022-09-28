@@ -11,7 +11,6 @@
 namespace chira {
 
 class Frame : public Group {
-    friend class PointLight;
 public:
     Frame(std::string name_, int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
     Frame(int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
