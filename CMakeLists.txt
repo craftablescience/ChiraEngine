@@ -298,6 +298,17 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/json)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES nlohmann_json::nlohmann_json)
 
 
+# SOLOUD
+if(BUILD_SHARED_LIBS)
+    set(SOLOUD_LIBMODPLUG_SUPPORT ON CACHE BOOL "" FORCE)
+else()
+    set(SOLOUD_LIBMODPLUG_SUPPORT_STATIC ON CACHE BOOL "" FORCE)
+endif()
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/soloud/contrib)
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/soloud/include)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES soloud)
+
+
 # STB
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stb)
 list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stb)
