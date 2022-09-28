@@ -63,11 +63,10 @@ void Frame::createFramebuffer() {
 void Frame::render(glm::mat4 /*parentTransform*/) {
     this->render(Entity::getFrame()->getFramebufferHandle(),
                  Entity::getFrame()->width,
-                 Entity::getFrame()->height,
-                 Entity::getFrame()->mainCamera);
+                 Entity::getFrame()->height);
 }
 
-void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeight, Camera* camera) {
+void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeight) {
     glViewport(0, 0, this->width, this->height);
     glBindFramebuffer(GL_FRAMEBUFFER, this->fboHandle);
     glClearColor(this->backgroundColor.r, this->backgroundColor.g, this->backgroundColor.b, 1.f);
@@ -142,15 +141,6 @@ Frame* Frame::getFrame() {
     return this;
 }
 
-Camera* Frame::getCamera() const {
-    return this->mainCamera;
-}
-
-void Frame::setCamera(Camera* camera) {
-    this->mainCamera = camera;
-    this->mainCamera->createProjection(this->getFrame()->getFrameSize());
-}
-
 unsigned int Frame::getFramebufferHandle() const {
     return this->fboHandle;
 }
@@ -187,7 +177,6 @@ void Frame::setCamera(Camera* camera) {
 
 Camera* Frame::getCamera() const {
     return this->mainCamera;
-
 }
 
 void Frame::setSkybox(const std::string& cubemapId) {

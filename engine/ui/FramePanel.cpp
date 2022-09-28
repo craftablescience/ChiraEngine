@@ -18,8 +18,7 @@ void FramePanel::renderContents() {
     this->frame->update();
     this->frame->render(Engine::getWindow()->getFramebufferHandle(),
                         Engine::getWindow()->getFrameSize().x,
-                        Engine::getWindow()->getFrameSize().y,
-                        Engine::getWindow()->getCamera());
+                        Engine::getWindow()->getFrameSize().y);
 
     this->renderPreFrameContents();
     if (ImGui::BeginChild("__internal_frame__")) {

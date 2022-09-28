@@ -38,9 +38,11 @@ void ResourceBrowser::loadResourceFolder(std::string resourceFolder) {
 }
 
 void ResourceBrowser::changeDirectory(std::string path) {
+	LOG_RESB.info("New Path is " + path);
+	LOG_RESB.info("Current Path is " + this->currentPath);
 	this->previousPath = this->currentPath;
 	this->currentPath = path;
-    auto dirList = FilesystemResourceProvider::getDirectoryContents(FILESYSTEM_ROOT_FOLDER + "/" + this->curResFolder + "/" + path, "");
+  auto dirList = FilesystemResourceProvider::getDirectoryContents(FILESYSTEM_ROOT_FOLDER + "/" + this->curResFolder + "/" + path, "");
 	this->curdirList = dirList;
 }
 
@@ -48,9 +50,16 @@ void ResourceBrowser::renderContents() {
 	static float padding = 16.0f;
 	static float thumbnailSize = 64.0f;
 	float cellSize = thumbnailSize + padding;
+	bool breakout = false;
 
 	if (ImGui::BeginMenuBar())
 	{
+		// hackjob toolbar in the menubar
+		if (ImGui::Button("Back"))
+		{
+			this->changeDirectory(this->previousPath);
+		}
+
 		if (ImGui::BeginMenu("Edit"))
 		{
 			if (ImGui::MenuItem("Copy", "Ctrl-C", nullptr))
@@ -65,6 +74,7 @@ void ResourceBrowser::renderContents() {
 			if (ImGui::MenuItem("Paste", "Ctrl-V", nullptr))
 			{
 			}
+			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("View"))
 		{
@@ -82,6 +92,10 @@ void ResourceBrowser::renderContents() {
 
 	ImGui::Columns(columnCount, 0, false);
 
+
+	// don't attempt to display other files
+	if (this->curdirList.empty())
+		return;
 	for ( auto const& [key, val] : this->curdirList ) {
 		ImGui::PushID(val.fileName.c_str());
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
@@ -139,11 +153,25 @@ void ResourceBrowser::renderContents() {
 				if (ImGui::IsItemActivated())
 				{
 					this->changeDirectory(this->currentPath + "/" + val.fileName);
+					breakout = true;
+					goto swapbreak;
 				}
 				break;
 			}
+			default: {
+				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/file.json");
+				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				break;
+			}
 		}
+		
+swapbreak:
 		ImGui::PopStyleColor();
+		if (breakout == true)
+		{
+			ImGui::PopID();
+			return;
+		}
 
 		ImGui::TextWrapped(val.fileName.c_str());
 
