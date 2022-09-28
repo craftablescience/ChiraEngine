@@ -126,6 +126,8 @@ list(APPEND CHIRA_ENGINE_LINK_LIBRARIES fmt::fmt)
 find_package(OpenGL REQUIRED)
 
 # GLAD
+option(CHIRA_USE_GL_41 "Use OpenGL 4.1 instead of OpenGL 4.3" OFF)
+set(GLAD_USE_GL_41 ${CHIRA_USE_GL_41} CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glad)
 
@@ -188,6 +190,9 @@ endif()
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD2)
 
+if(NOT CHIRA_USE_GL_41)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_USE_GL_43)
+endif()
 if(CHIRA_USE_DISCORD)
     target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_USE_DISCORD)
     target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/discord/include)

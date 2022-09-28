@@ -1,8 +1,8 @@
 #include "ShaderResource.h"
 
 #include <regex>
+#include <glad/glversion.h>
 
-#include <config/Config.h>
 #include <core/Logger.h>
 #include <i18n/TranslationManager.h>
 #include <utility/String.h>

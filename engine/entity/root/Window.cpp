@@ -3,8 +3,8 @@
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_glfw.h>
 #include <fmt/core.h>
+#include <glad/glversion.h>
 
-#include <config/Config.h>
 #include <config/ConEntry.h>
 #include <core/Engine.h>
 #include <event/Events.h>
@@ -19,6 +19,11 @@
 using namespace chira;
 
 CHIRA_CREATE_LOG(WINDOW);
+
+[[maybe_unused]]
+static ConCommand r_gl_version{"r_gl_version", "Print the current OpenGL version.", [](ConCommand::CallbackArgs /*args*/) { // NOLINT(cert-err58-cpp)
+    LOG_WINDOW.infoImportant(GL_VERSION_STRING_PRETTY);
+}};
 
 [[maybe_unused]]
 static ConCommand win_setpos{"win_setpos", "Set the X and Y position of the engine window, (0,0) being at the top left. If no arguments are given, places it in the center of the screen.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
