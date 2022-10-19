@@ -122,7 +122,7 @@ void Shader::setVertexShader(std::string path) {
 }
 
 void Shader::setFragmentShader(std::string path) {
-    this->vertexPath = std::move(path);
-    auto frag = Resource::getUniqueUncachedResource<ShaderResource>(this->vertexPath, GL_FRAGMENT_SHADER);
+    this->fragmentPath = std::move(path);
+    auto frag = Resource::getUniqueUncachedResource<ShaderResource>(this->fragmentPath, GL_FRAGMENT_SHADER);
     glAttachShader(this->handle, frag->getHandle());
 }
