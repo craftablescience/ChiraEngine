@@ -25,3 +25,6 @@
 [submodule "engine/thirdparty/imgui-filebrowser"]
 	path = engine/thirdparty/imgui-filebrowser
 	url = https://github.com/AirGuanZ/imgui-filebrowser
+[submodule "engine/thirdparty/flecs"]
+	path = engine/thirdparty/flecs
+	url = https://github.com/SanderMertens/flecs

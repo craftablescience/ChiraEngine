@@ -118,6 +118,12 @@ if(CHIRA_USE_DISCORD)
     list(APPEND CHIRA_ENGINE_LINK_LIBRARIES discord-rpc)
 endif()
 
+# FLECS
+set(FLECS_STATIC $<STREQUAL:${BUILD_SHARED_LIBS},OFF> CACHE BOOL "" FORCE)
+set(FLECS_SHARED ${BUILD_SHARED_LIBS} CACHE BOOL "" FORCE)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/flecs)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES $<IF:$<STREQUAL:${BUILD_SHARED_LIBS},"ON">,flecs_shared,flecs_static>)
+
 # FMT
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/fmt)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES fmt::fmt)
@@ -200,6 +206,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         ${OPENGL_INCLUDE_DIRS}
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/addons
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/flecs/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/fmt/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/libloader/include
