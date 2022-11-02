@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
+
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OSX deployment version")
+
 project(ChiraEngine)
 set(CMAKE_CXX_STANDARD 20)
 
@@ -29,13 +32,6 @@ if(CHIRA_COMPILER_ID MATCHES "clang")
     else()
         set(CHIRA_COMPILER_MSVC ON)
     endif()
-endif()
-
-# Detect macOS so we can make needed changes
-if(${CMAKE_SYSTEM} MATCHES "Darwin")
-    # Include CoreFoundation Library as we absolutely need this
-    find_library(CORE_LIB CoreFoundation)
-    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES ${CORE_LIB})
 endif()
 
 # Macro to apply optimization flags to multiple targets
@@ -102,6 +98,12 @@ if(CHIRA_BUILD_TESTS)
     FetchContent_MakeAvailable(googletest)
     enable_testing()
     include(${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt)
+endif()
+
+# COREFOUNDATION
+if(APPLE)
+    find_library(CORE_LIB CoreFoundation)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES ${CORE_LIB})
 endif()
 
 # ANGELSCRIPT
@@ -217,23 +219,29 @@ if(CHIRA_BUILD_EDITOR)
     if(WIN32)
         list(APPEND CHIRA_EDITOR_SOURCES ${CMAKE_CURRENT_LIST_DIR}/resources/editor/icon/icon.rc)
     endif()
-    # macos bundle for editor
-    if(${CMAKE_SYSTEM} MATCHES "Darwin")
-        add_executable(ChiraEditor MACOSX_BUNDLE ${CHIRA_EDITOR_SOURCES})
-    else()
-        add_executable(ChiraEditor ${CHIRA_EDITOR_SOURCES})
+    if(APPLE)
+        list(APPEND CHIRA_APPLE_BUNDLE_FILES
+                ${CMAKE_CURRENT_SOURCE_DIR}/resources/editor/macOS/AppIcon.icns
+                ${CMAKE_CURRENT_SOURCE_DIR}/resources/editor/macOS/Info.plist)
+        list(APPEND CHIRA_EDITOR_SOURCES ${CHIRA_APPLE_BUNDLE_FILES})
     endif()
+    add_executable(ChiraEditor ${CHIRA_EDITOR_SOURCES})
     apply_optimizations(ChiraEditor)
     if(WIN32)
         add_custom_target(
                 CopyEditorIcon
                 ALL
-                COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/resources/editor/icon/icon.ico ${CMAKE_BINARY_DIR}/resources/editor/icon/icon.ico)
+                COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/resources/editor/icon/icon.ico ${CMAKE_BINARY_DIR}/resources/editor/icon/icon.ico)
         add_dependencies(ChiraEditor CopyEditorIcon)
+    endif()
+    if(APPLE)
+        set_target_properties(ChiraEditor PROPERTIES
+                MACOSX_BUNDLE TRUE
+                MACOSX_FRAMEWORK_IDENTIFIER info.craftablescience.ChiraEditor
+                BUNDLE "${CHIRA_APPLE_BUNDLE_FILES}")
     endif()
     target_link_libraries(ChiraEditor PRIVATE ${PROJECT_NAME})
     target_include_directories(ChiraEditor PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/editor)
-
 endif()
 
 # CHIRATEST
