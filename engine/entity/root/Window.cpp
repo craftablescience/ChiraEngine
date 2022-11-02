@@ -148,10 +148,7 @@ bool Window::createGLFWWindow(std::string_view title) {
     ImGui::SetCurrentContext(this->imguiContext);
     auto& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_DockingEnable;
-    // swap ImGui's config dir to prevent bundle crashes
-    std::string configPath{Config::getConfigDirectory().data()};
-    configPath.append("imgui.ini");
-    io.IniFilename = configPath.c_str();
+    this->setImGuiConfigPath();
 
     ImGui_ImplGlfw_InitForOpenGL(this->window, true); // register for default input binds
     ImGui_ImplOpenGL3_Init(Config::GL_VERSION_STRING.data());
@@ -188,6 +185,8 @@ Window::Window(std::string_view title)
 void Window::render(glm::mat4 /*parentTransform*/) {
     glfwMakeContextCurrent(this->window);
     ImGui::SetCurrentContext(this->imguiContext);
+
+    this->setImGuiConfigPath();
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -355,4 +354,9 @@ void Window::displaySplashScreen() {
     glDisable(GL_DEPTH_TEST);
     this->surface.render(glm::identity<glm::mat4>());
     glfwSwapBuffers(this->window);
+}
+
+void Window::setImGuiConfigPath() {
+    static std::string configPath = std::string{Config::getConfigDirectory().data()} + "imgui.ini";
+    ImGui::GetIO().IniFilename = configPath.c_str();
 }

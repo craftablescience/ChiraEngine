@@ -3,9 +3,10 @@
 #include <fstream>
 #include <filesystem>
 #include <utility>
+#include <core/Platform.h>
 #include <resource/Resource.h>
 
-#if defined(__APPLE__) && defined(__MACH__)
+#ifdef CHIRA_PLATFORM_APPLE
     #include "CoreFoundation/CoreFoundation.h"
 #endif
 
@@ -22,59 +23,55 @@ FilesystemResourceProvider::FilesystemResourceProvider(std::string path_, bool i
     if (!this->absolute) {
     // MacOS is a lot more complex. There's more than 1 place our resources could be at
     // One requires a bit of work to access though.
-#if defined(__APPLE__) && defined(__MACH__)
-        // Finding the bundle and it's resources directory
-        std::string status;
-        if (CFBundleRef mainbundle =  CFBundleGetMainBundle()) {
-            CFURLRef appUrlRef = CFBundleCopyBundleURL(mainbundle);
-            CFStringRef macPath;
-            if (appUrlRef != nullptr)
-                macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
-            else
-                macPath = nullptr;
-            
-            const char* rawpath;
+#ifdef CHIRA_PLATFORM_APPLE
+    // Finding the bundle and it's resources directory
+    std::string status;
+    if (CFBundleRef mainbundle =  CFBundleGetMainBundle()) {
+        CFURLRef appUrlRef = CFBundleCopyBundleURL(mainbundle);
+        CFStringRef macPath;
+        if (appUrlRef != nullptr)
+            macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
+        else
+            macPath = nullptr;
 
-            if (macPath != nullptr)
-                rawpath = CFStringGetCStringPtr(macPath, kCFStringEncodingASCII);
-            else
-                rawpath = nullptr;
-            
-            CFRelease(macPath);
-            CFRelease(appUrlRef);
-            std::string append = "/Contents/Resource";
-            if (std::filesystem::exists(std::filesystem::path{rawpath + append + FILESYSTEM_ROOT_FOLDER + '/' + this->path})) {
-                LOG_FILESYSTEM.info("Found resources in app bundle!");
-                this->path = rawpath + append + FILESYSTEM_ROOT_FOLDER + '/' + this->path;
-            }
-            else {
-                status = "NOBUNDLE";
-            }
-        }
-        else {
+        const char* rawpath;
+
+        if (macPath != nullptr)
+            rawpath = CFStringGetCStringPtr(macPath, kCFStringEncodingASCII);
+        else
+            rawpath = nullptr;
+
+        CFRelease(macPath);
+        CFRelease(appUrlRef);
+        std::string append = "/Contents/Resource";
+        if (std::filesystem::exists(std::filesystem::path{rawpath + append + FILESYSTEM_ROOT_FOLDER + '/' + this->path})) {
+            LOG_FILESYSTEM.info("Found resources in app bundle!");
+            this->path = rawpath + append + FILESYSTEM_ROOT_FOLDER + '/' + this->path;
+        } else {
             status = "NOBUNDLE";
         }
-        if (status == "NOBUNDLE") {
-            LOG_FILESYSTEM.warning("Could not find resources in our app bundle! Falling back to working directory...");
-            if (std::filesystem::exists(std::filesystem::path{FILESYSTEM_ROOT_FOLDER + '/' + this->path})) {
-                LOG_FILESYSTEM.info("Found resources in working directory!");
-                this->path = FILESYSTEM_ROOT_FOLDER + '/' + this->path;
-            }
-            else {
-                status = "FATALERROR";
-            }
-        } else if (status == "FATALERROR") {
-            throw std::runtime_error{"[FILESYSTEM] FATAL ERROR: No known search path contains our requires resources! Did you mistype something?"};
+    } else {
+        status = "NOBUNDLE";
+    }
+    if (status == "NOBUNDLE") {
+        LOG_FILESYSTEM.warning("Could not find resources in our app bundle! Falling back to working directory...");
+        if (std::filesystem::exists(std::filesystem::path{FILESYSTEM_ROOT_FOLDER + '/' + this->path})) {
+            LOG_FILESYSTEM.info("Found resources in working directory!");
+            this->path = FILESYSTEM_ROOT_FOLDER + '/' + this->path;
+        } else {
+            status = "FATALERROR";
         }
+    } else if (status == "FATALERROR") {
+        throw std::runtime_error{"[FILESYSTEM] FATAL ERROR: No known search path contains our required resources! Did you mistype something?"};
+    }
 #else
-        // Other platforms can just look in the working directory
-        this->path = FILESYSTEM_ROOT_FOLDER + '/' + this->path;
+    // Other platforms can just look in the working directory
+    this->path = FILESYSTEM_ROOT_FOLDER + '/' + this->path;
 #endif
     }
 }
 
 bool FilesystemResourceProvider::hasResource(std::string_view name) const {
-    // Update your compiler if compilation fails because of std::filesystem
     if (this->absolute)
         return std::filesystem::exists(std::filesystem::path{this->path}.append(name));
     else

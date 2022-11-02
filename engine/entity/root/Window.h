@@ -51,7 +51,9 @@ private:
 
     Window(std::string name_, std::string_view title);
     explicit Window(std::string_view title);
+
     bool createGLFWWindow(std::string_view title);
+    static void setImGuiConfigPath();
 };
 
 } // namespace chira

@@ -6,10 +6,13 @@
 
 #include <core/Platform.h>
 #ifdef CHIRA_PLATFORM_WINDOWS
-    #define _CRT_SECURE_NO_WARNINGS
     #define WIN32_LEAN_AND_MEAN
     #include <Windows.h>
     #include <shellapi.h>
+#else // Should work on any other platform besides Windows? macOS and Linux work at least
+    #include <sys/types.h>
+    #include <unistd.h>
+    #include <pwd.h>
 #endif
 #include <cstdlib>
 
@@ -21,7 +24,7 @@ using namespace chira;
 static ConCommand open_config_dir{"open_config_dir", "Opens the config directory in the OS's graphical file browser.", [] { // NOLINT(cert-err58-cpp)
     std::string dir = Config::getConfigDirectory().data();
 #if defined(CHIRA_PLATFORM_WINDOWS)
-    ShellExecute(nullptr, "open", dir.c_str(), nullptr, nullptr, 1);
+    ShellExecute(nullptr, "open", dir.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 #elif defined(CHIRA_PLATFORM_APPLE)
     dir = "open " + dir;
     system(dir.c_str());
