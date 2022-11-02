@@ -236,21 +236,21 @@ if(CHIRA_BUILD_EDITOR)
 
 endif()
 
-
 # CHIRATEST
-# if(CHIRA_BUILD_TESTS)
-#     add_executable(ChiraTest ${CHIRA_TEST_SOURCES})
-#     target_link_libraries(ChiraTest PUBLIC ${PROJECT_NAME} gtest_main)
-#     target_include_directories(ChiraTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tests)
-#     include(GoogleTest)
-#     gtest_discover_tests(ChiraTest)
+# todo: macOS
+if((NOT APPLE) AND CHIRA_BUILD_TESTS)
+    add_executable(ChiraTest ${CHIRA_TEST_SOURCES})
+    target_link_libraries(ChiraTest PUBLIC ${PROJECT_NAME} gtest_main)
+    target_include_directories(ChiraTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tests)
+    include(GoogleTest)
+    gtest_discover_tests(ChiraTest)
 
-#     # Copy gtest binaries next to the executable
-#     add_custom_command(
-#             TARGET ChiraTest
-#             PRE_BUILD
-#             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/bin ${CMAKE_BINARY_DIR})
-# endif()
+    # Copy gtest binaries next to the executable
+    add_custom_command(
+            TARGET ChiraTest
+            PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/bin ${CMAKE_BINARY_DIR})
+endif()
 
 # Copy resources
 add_custom_command(
@@ -258,10 +258,12 @@ add_custom_command(
         PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/resources)
 
-# MacOS Bundle info
-set(CPACK_GENERATOR "TGZ")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "ChiraEngine" CACHE STRING "Program name for display purposes")
-set(CPACK_PACKAGE_VENDOR "ChiraEngine Developers" CACHE STRING "Vendor name for display purposes")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "Bundle")
-SET(CPACK_OUTPUT_FILE_PREFIX package)
-include(CPack)
+# macOS bundle
+#if(APPLE)
+#    set(CPACK_GENERATOR "TGZ")
+#    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Chira Engine" CACHE STRING "Program name for display purposes")
+#    set(CPACK_PACKAGE_VENDOR "Chira Engine Developers" CACHE STRING "Vendor name for display purposes")
+#    set(CPACK_PACKAGE_INSTALL_DIRECTORY "Bundle")
+#    SET(CPACK_OUTPUT_FILE_PREFIX package)
+#    include(CPack)
+#endif()
