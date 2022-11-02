@@ -1,12 +1,17 @@
 # IDE
 .idea/
 .vs/
+.vscode/
 
 CMakeSettings.json
 
 # Build
 cmake-build-*/
-build/
-out/
+build*/
+out*/
 
 .ccls-cache
+
+# macOS
+*/.DS_Store
+.DS_Store

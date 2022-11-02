@@ -13,7 +13,9 @@
 #include <entity/model/MeshDynamic.h>
 #include <entity/camera/EditorCamera.h>
 #include <ui/IPanel.h>
+#include <imfilebrowser.h>
 #include <utility/Dialogs.h>
+#include <render/material/MaterialPhong.h>
 
 #ifdef CHIRA_USE_DISCORD
     #include <hook/DiscordRPC.h>
@@ -51,16 +53,18 @@ static inline void addResourceFolderSelected() {
 
 class ModelViewerPanel : public IPanel {
 public:
-    ModelViewerPanel() : IPanel(TR("ui.window.title"), true) {
+    ModelViewerPanel() : IPanel(TR("ui.engineview.title"), true) {
         this->flags |=
                 ImGuiWindowFlags_NoTitleBar   |
                 ImGuiWindowFlags_NoDecoration |
                 ImGuiWindowFlags_NoResize     |
+                ImGuiWindowFlags_NoBringToFrontOnFocus |
                 ImGuiWindowFlags_NoBackground ;
     }
 
+    // Opens a file dialog used to select a model definition
     void addModelSelected() {
-        std::string path = Dialogs::openResource("*.json");
+        std::string path = FilesystemResourceProvider::getResourceIdentifier(this->modelDialog.GetSelected().string());
         if (!path.empty())
             this->setLoadedFile(path);
     }
@@ -88,10 +92,13 @@ public:
     }
 
     void preRenderContents() override {
+        this->modelDialog.SetTitle("Open Resource");
+        this->modelDialog.SetTypeFilters({".json"});
         if (ImGui::BeginMainMenuBar()) {
             if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
-                if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) // Open Model...
-                    this->addModelSelected();
+                if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) { // Open Model...
+                    this->modelDialog.Open();
+                }
                 if (ImGui::MenuItem(TRC("ui.menubar.add_resource_folder"))) // Add Resource Folder...
                     addResourceFolderSelected();
                 ImGui::Separator();
@@ -107,6 +114,13 @@ public:
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
+        }
+
+        // Model Dialog specific logic
+        this->modelDialog.Display();
+        if (this->modelDialog.HasSelected()) {
+            this->addModelSelected();
+            this->modelDialog.ClearSelected();
         }
 
         ImGui::SetNextWindowPos(ImVec2{0, ImGui::GetFrameHeight()});
@@ -139,6 +153,7 @@ private:
     std::string loadedFile;
     std::string meshId;
     bool showGrid = true;
+    ImGui::FileBrowser modelDialog;
 };
 
 int main(int argc, const char* const argv[]) {

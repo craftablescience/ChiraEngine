@@ -8,7 +8,8 @@ namespace chira {
 
 class JSONSettingsLoader : public ISettingsLoader {
 public:
-    explicit JSONSettingsLoader(std::string_view path);
+    explicit JSONSettingsLoader(std::string_view filename);
+    JSONSettingsLoader(std::string_view filename, std::string_view path, bool relative = false);
 
     void getValue(const std::string& name, int* value) const override;
     void getValue(const std::string& name, double* value) const override;
@@ -22,10 +23,10 @@ public:
 
     [[nodiscard]] bool hasValue(const std::string& name) const override;
 
-    void load() override;
-    void save() override;
+    void load() final;
+    void save() final;
 private:
-    nlohmann::json settings;
+    nlohmann::json settings{};
 };
 
 } // namespace chira

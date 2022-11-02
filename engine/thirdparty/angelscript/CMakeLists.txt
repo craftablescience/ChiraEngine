@@ -6,10 +6,11 @@ set(CMAKE_CXX_STANDARD 17)
 add_library(${PROJECT_NAME}_msvc_fixup OBJECT IMPORTED)
 if(MSVC AND "${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
     # 64-bit MSVC
-    set(AS_MSVC_ASM_BASE "${CMAKE_CURRENT_SOURCE_DIR}/source/as_callfunc_x64_msvc_asm")
+    set(AS_MSVC_ASM_IN_BASE "${CMAKE_CURRENT_SOURCE_DIR}/source/as_callfunc_x64_msvc_asm")
+    set(AS_MSVC_ASM_OUT_BASE "${CMAKE_BINARY_DIR}/__angelscript_msvc_asm/as_callfunc_x64_msvc_asm")
     set_property(
             TARGET ${PROJECT_NAME}_msvc_fixup
-            PROPERTY IMPORTED_OBJECTS ${AS_MSVC_ASM_BASE}.obj)
+            PROPERTY IMPORTED_OBJECTS ${AS_MSVC_ASM_OUT_BASE}.obj)
 endif()
 
 # Set up library
@@ -120,8 +121,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/a
 # Compile MSVC x64 ASM
 if(MSVC AND "${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
     add_custom_command(
-            TARGET ${PROJECT_NAME}
-            PRE_LINK
-            COMMAND ml64.exe /c /nologo /Fo ${AS_MSVC_ASM_BASE}.obj /W3 /Zi /Ta ${AS_MSVC_ASM_BASE}.asm
+            OUTPUT ${AS_MSVC_ASM_OUT_BASE}.obj
+            COMMAND ml64.exe /c /nologo /Fo ${AS_MSVC_ASM_OUT_BASE}.obj /W3 /Zi /Ta ${AS_MSVC_ASM_IN_BASE}.asm
             VERBATIM)
 endif()

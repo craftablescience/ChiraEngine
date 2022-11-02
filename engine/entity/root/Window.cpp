@@ -48,8 +48,8 @@ static ConVar win_vsync{"win_vsync", true, "Limit the FPS to your monitor's reso
 static ConVar input_raw_mouse_motion{"input_raw_mouse_motion", true, "Get more accurate mouse motion.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
 
 bool Window::createGLFWWindow(std::string_view title) {
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, Config::GL_VERSION_MAJOR);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, Config::GL_VERSION_MINOR);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 #ifdef DEBUG
@@ -72,7 +72,7 @@ bool Window::createGLFWWindow(std::string_view title) {
     glfwMakeContextCurrent(this->window);
 
     if (!gladLoadGL(glfwGetProcAddress)) {
-        LOG_WINDOW.error(fmt::format("OpenGL {} must be available to run this program", GL_VERSION_STRING_PRETTY));
+        LOG_WINDOW.error(fmt::format("OpenGL {} must be available to run this program", Config::GL_VERSION_STRING_PRETTY));
         return false;
     }
     glfwSwapInterval(win_vsync.getValue<int>());
@@ -147,10 +147,11 @@ bool Window::createGLFWWindow(std::string_view title) {
     this->imguiContext = ImGui::CreateContext();
     ImGui::SetCurrentContext(this->imguiContext);
     auto& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_DockingEnable;
+    this->setImGuiConfigPath();
 
     ImGui_ImplGlfw_InitForOpenGL(this->window, true); // register for default input binds
-    ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
+    ImGui_ImplOpenGL3_Init(Config::GL_VERSION_STRING.data());
 
     auto defaultFont = Resource::getUniqueResource<Font>("file://fonts/default.json");
     ImGui::GetIO().FontDefault = defaultFont->getFont();
@@ -185,9 +186,12 @@ void Window::render(glm::mat4 /*parentTransform*/) {
     glfwMakeContextCurrent(this->window);
     ImGui::SetCurrentContext(this->imguiContext);
 
+    this->setImGuiConfigPath();
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
 
     Frame::render(this->fboHandle, this->width, this->height);
 
@@ -350,4 +354,9 @@ void Window::displaySplashScreen() {
     glDisable(GL_DEPTH_TEST);
     this->surface.render(glm::identity<glm::mat4>());
     glfwSwapBuffers(this->window);
+}
+
+void Window::setImGuiConfigPath() {
+    static std::string configPath = std::string{Config::getConfigDirectory().data()} + "imgui.ini";
+    ImGui::GetIO().IniFilename = configPath.c_str();
 }
