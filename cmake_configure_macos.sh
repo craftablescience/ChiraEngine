@@ -22,12 +22,12 @@ check_param()
 {
     TYPE=$1
     
-    if [ $TYPE ];
+    if [ "$TYPE" ];
     then
-        if [ $TYPE == "Xcode" ];
+        if [ "$TYPE" = "Xcode" ];
         then
             config_xcode
-        elif [ $TYPE == "Makefiles" ];
+        elif [ "$TYPE" = "Makefiles" ];
         then
             config_noxcode
         else
@@ -40,4 +40,4 @@ check_param()
     fi
 }
 
-check_param $1
+check_param "$1"
