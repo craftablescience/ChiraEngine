@@ -13,9 +13,8 @@
 #include <entity/model/MeshDynamic.h>
 #include <entity/camera/EditorCamera.h>
 #include <ui/IPanel.h>
-#include <utility/Dialogs.h>
-// Used because file dialogs are broken on macos
 #include <imfilebrowser.h>
+#include <utility/Dialogs.h>
 #include <render/material/MaterialPhong.h>
 
 #ifdef CHIRA_USE_DISCORD
@@ -56,12 +55,16 @@ class ModelViewerPanel : public IPanel {
 public:
     ModelViewerPanel() : IPanel(TR("ui.engineview.title"), true) {
         this->flags |=
-                ImGuiWindowFlags_NoBackground;
+                ImGuiWindowFlags_NoTitleBar   |
+                ImGuiWindowFlags_NoDecoration |
+                ImGuiWindowFlags_NoResize     |
+                ImGuiWindowFlags_NoBringToFrontOnFocus |
+                ImGuiWindowFlags_NoBackground ;
     }
 
     // Opens a file dialog used to select a model definition
     void addModelSelected() {
-        std::string path = FilesystemResourceProvider::getResourceIdentifier(modeldialog.GetSelected().string());
+        std::string path = FilesystemResourceProvider::getResourceIdentifier(this->modelDialog.GetSelected().string());
         if (!path.empty())
             this->setLoadedFile(path);
     }
@@ -89,12 +92,12 @@ public:
     }
 
     void preRenderContents() override {
-        modeldialog.SetTitle("Open Resource");
-        modeldialog.SetTypeFilters({".json"});
+        this->modelDialog.SetTitle("Open Resource");
+        this->modelDialog.SetTypeFilters({".json"});
         if (ImGui::BeginMainMenuBar()) {
             if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
                 if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) { // Open Model...
-                    modeldialog.Open();
+                    this->modelDialog.Open();
                 }
                 if (ImGui::MenuItem(TRC("ui.menubar.add_resource_folder"))) // Add Resource Folder...
                     addResourceFolderSelected();
@@ -112,31 +115,22 @@ public:
             }
             ImGui::EndMainMenuBar();
         }
-        
-        // All of those dialog boxes
-        bool show = true;
-        if (ImGui::Begin(TRC("ui.entities"), &show, ImGuiWindowFlags_None)) {
-            ImGui::Text("Testing");
-        }
-        ImGui::End();
-        
+
         // Model Dialog specific logic
-        modeldialog.Display();
-        if (modeldialog.HasSelected()) {
+        this->modelDialog.Display();
+        if (this->modelDialog.HasSelected()) {
             this->addModelSelected();
-            modeldialog.ClearSelected();
+            this->modelDialog.ClearSelected();
         }
 
-    }
-    
-    void testingdialog() {
-        
+        ImGui::SetNextWindowPos(ImVec2{0, ImGui::GetFrameHeight()});
+        ImGui::SetNextWindowSize(ImVec2{ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y - ImGui::GetFrameHeight()});
     }
 
     void renderContents() override {
-        //ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
-        //Engine::getWindow()->getChild("grid")->setVisible(this->showGrid);
-        //ImGui::Text("%s", this->loadedFile.c_str());
+        ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
+        Engine::getWindow()->getChild("grid")->setVisible(this->showGrid);
+        ImGui::Text("%s", this->loadedFile.c_str());
     }
 
     void setLoadedFile(const std::string& meshName) {
@@ -159,7 +153,7 @@ private:
     std::string loadedFile;
     std::string meshId;
     bool showGrid = true;
-    ImGui::FileBrowser modeldialog;
+    ImGui::FileBrowser modelDialog;
 };
 
 int main(int argc, const char* const argv[]) {

@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <utility>
 
-#include <core/Engine.h>
+#include <config/Config.h>
 
 using namespace chira;
 
@@ -150,8 +150,7 @@ std::vector<ConVar*>& ConVarRegistry::getConVars() {
 }
 
 JSONSettingsLoader& ConVarRegistry::getConVarCache() {
-    std::string pathString = Engine::getConfigDir();
-    static JSONSettingsLoader convarCache{pathString, "cache.json"};
+    static JSONSettingsLoader convarCache{"convars.json"};
     return convarCache;
 }
 

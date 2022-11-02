@@ -15,12 +15,28 @@
 
 #if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
     #define CHIRA_COMPILER_MSVC
+#else
+    #define CHIRA_COMPILER_INTEL
 #endif
 #if defined(__GNUC__) && !defined(__clang__)
     #define CHIRA_COMPILER_GNU
 #endif
 #if defined(__clang__)
     #define CHIRA_COMPILER_CLANG
+#endif
+
+#if defined(_WIN32)
+    #define CHIRA_PLATFORM_WINDOWS
+#elif defined(__APPLE__) && defined(__MACH__)
+    #define CHIRA_PLATFORM_APPLE
+#elif defined(__linux__)
+    #define CHIRA_PLATFORM_LINUX
+#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+    #define CHIRA_PLATFORM_XBSD
+#elif defined(__sun)
+    #define CHIRA_PLATFORM_SOLARIS
+#else
+    #error "Unknown platform! Please make a bug report on our GitHub"
 #endif
 
 namespace chira {

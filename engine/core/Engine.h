@@ -24,7 +24,6 @@ public:
     [[nodiscard]] static bool isStarted();
     /// Only guaranteed to work after run() in a render method
     [[nodiscard]] static double getDeltaTime();
-    [[nodiscard]] static std::string getConfigDir();
 private:
     static inline std::unique_ptr<Window> window;
     static inline bool started = false;

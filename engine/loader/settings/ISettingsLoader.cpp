@@ -4,17 +4,18 @@
 
 using namespace chira;
 
-ISettingsLoader::ISettingsLoader(std::string_view path, std::string_view filename) {
-    this->setFilePath(path, filename);
-}
-
-void ISettingsLoader::setFilePath(std::string_view path, std::string_view filename) {
-    // Test for the paths existence first and create it if it doesn't exist
-    // I have no idea where else to put this so uh yeah
-    
-    if (!std::filesystem::exists(std::filesystem::current_path().append(path).string())) {
-        std::filesystem::create_directory(std::filesystem::current_path().append(path).string());
+ISettingsLoader::ISettingsLoader(std::string_view filename, std::string_view path, bool relative /*= false*/) {
+    std::string pathStr;
+    if (relative) {
+        pathStr = std::filesystem::current_path().append(path).string();
+    } else {
+        pathStr = path;
     }
-    this->filepath = std::filesystem::current_path().append(path).string();
+
+    // Test for the path's existence and create it if it doesn't exist
+    if (!std::filesystem::exists(pathStr)) {
+        std::filesystem::create_directory(pathStr);
+    }
+    this->filepath = pathStr;
     this->filepath.append(filename);
 }

@@ -227,28 +227,3 @@ bool Engine::isStarted() {
 double Engine::getDeltaTime() {
     return Engine::currentTime - Engine::lastTime;
 }
-
-std::string Engine::getConfigDir() {
-    // get the home directory and load the cache from there
-    // Here is my most convoluted ifdef set ever
-    std::string pathString;
-#ifndef _WIN32
-    const char* homePath = getenv("HOME");
-    if (!homePath) {
-        passwd* pwd = getpwuid(getuid());
-        if (pwd)
-            homePath = pwd->pw_dir;
-    }
-    pathString.append(homePath);
-#if defined(__APPLE__) && defined(__MACH__) // Assume macOS
-    pathString.append("/Library/Application Support/ChiraEngine/");
-#else // Assume Linux
-    pathString.append("/.local/ChiraEngine");
-#endif // end this linux macos differences def
-#else // We must be on windows
-    // Get the environment variable for the user on windows
-    pathString = getenv("USERPROFILE");
-    pathString.append("\\Application Data\\Roaming\\ChiraEngine\\");
-#endif
-    return pathString;
-}
