@@ -127,7 +127,7 @@ jobs:
 
     - name: Configure CMake (clang64)
       if: ${{ matrix.sys == 'clang64' }}
-      run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON -DCMAKE_C_COMPILER="/clang64/bin/clang.exe" -DCMAKE_CXX_COMPILER="/clang64/bin/clang++.exe"
+      run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON -DCMAKE_C_COMPILER="/mingw64/bin/clang.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/clang++.exe"
 
     - name: Build
       run: cmake --build build --config ${{matrix.build_type}} -- -j$(nproc)
@@ -182,7 +182,7 @@ jobs:
         run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON
 
       - name: Build
-        run: cmake --build build --config ${{matrix.build_type}} -- -j$(nproc)
+        run: cmake --build build --config ${{matrix.build_type}} -- -m:%NUMBER_OF_PROCESSORS%
 
       - name: Test
         working-directory: ${{github.workspace}}/build
