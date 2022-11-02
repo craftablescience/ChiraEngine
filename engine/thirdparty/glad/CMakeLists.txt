@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(glad)
 set(CMAKE_CXX_STANDARD 20)
 
-option(GLAD_USE_GL_41 "Use OpenGL 4.1 instead of OpenGL 4.3" OFF)
+option(GLAD_USE_GL_41 "Use OpenGL 4.1 instead of OpenGL 4.3" ON)
 if(APPLE OR GLAD_USE_GL_41)
     set(GLAD_GL_VERSION "41")
 else()
