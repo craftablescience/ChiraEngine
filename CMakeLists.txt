@@ -270,8 +270,7 @@ if(CHIRA_BUILD_EDITOR)
 endif()
 
 # CHIRATEST
-# todo: macOS
-if((NOT APPLE) AND CHIRA_BUILD_TESTS)
+if(CHIRA_BUILD_TESTS)
     add_executable(ChiraTest ${CHIRA_TEST_SOURCES})
     target_link_libraries(ChiraTest PUBLIC ${PROJECT_NAME} gtest_main)
     target_include_directories(ChiraTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tests)

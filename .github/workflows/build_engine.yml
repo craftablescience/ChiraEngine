@@ -9,10 +9,10 @@ on:
 jobs:
   build-macos:
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         build_type: [Debug, Release]
-        compiler: [clang]
+        generator: [Makefiles, Xcode]
     runs-on: macos-latest
     steps:
       - name: Checkout Repository
@@ -24,19 +24,19 @@ jobs:
         run: brew install llvm
 
       - name: Configure CMake
-        run: ${{github.workspace}}/cmake_configure_macos.sh Makefiles
+        run: ${{github.workspace}}/cmake_configure_macos.sh ${{matrix.generator}}
 
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
 
-#      - name: Test
-#        working-directory: ${{github.workspace}}/build
-#        run: ctest -C ${{matrix.build_type}}
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{matrix.build_type}}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ChiraEngine-macOS-${{matrix.compiler}}-${{matrix.build_type}}
+          name: ChiraEngine-macOS-${{matrix.generator}}-${{matrix.build_type}}
           path: |
             ${{github.workspace}}/build/resources/
             ${{github.workspace}}/build/ChiraEditor.app
