@@ -9,7 +9,7 @@ namespace chira {
 class JSONSettingsLoader : public ISettingsLoader {
 public:
     explicit JSONSettingsLoader(std::string_view filename);
-    JSONSettingsLoader(std::string_view filename, std::string_view path, bool relative);
+    JSONSettingsLoader(std::string_view filename, std::string_view path, bool relative = false);
 
     void getValue(const std::string& name, int* value) const override;
     void getValue(const std::string& name, double* value) const override;
