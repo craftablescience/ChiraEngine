@@ -34,7 +34,7 @@ jobs:
 #        run: ctest -C ${{matrix.build_type}}
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ChiraEngine-macOS-${{matrix.compiler}}-${{matrix.build_type}}
           path: |
@@ -84,7 +84,7 @@ jobs:
         run: ctest -C ${{matrix.build_type}}
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ChiraEngine-Linux-${{matrix.compiler}}-${{matrix.build_type}}
           path: |
@@ -136,7 +136,7 @@ jobs:
         cp /mingw64/bin/libstdc++-6.dll    build/libstdc++-6.dll
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ChiraEngine-Windows-mingw64-${{matrix.build_type}}
         path: |
@@ -176,7 +176,7 @@ jobs:
         run: ctest -C ${{matrix.build_type}}
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ChiraEngine-Windows-msvc-${{matrix.build_type}}
           path: |

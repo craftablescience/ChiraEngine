@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OSX deployment version")
 
-project(ChiraEngine)
+project(ChiraEngine HOMEPAGE_URL "https://github.com/craftablescience/ChiraEngine")
 set(CMAKE_CXX_STANDARD 20)
 
 # You should add this to your own CMake to load Chira Engine's dependencies
@@ -242,6 +242,31 @@ if(CHIRA_BUILD_EDITOR)
     endif()
     target_link_libraries(ChiraEditor PRIVATE ${PROJECT_NAME})
     target_include_directories(ChiraEditor PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/editor)
+
+    option(CHIRA_EDITOR_BUILD_INSTALLER "Build an installer for the editor binaries" OFF)
+    if(CHIRA_EDITOR_BUILD_INSTALLER)
+        set(CPACK_PACKAGE_VENDOR "Chira Engine Developers" CACHE STRING "" FORCE)
+        set(CPACK_GENERATOR "TGZ" CACHE STRING "" FORCE)
+        set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An open source game engine for Windows, Linux, and macOS." CACHE STRING "" FORCE)
+        set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/branding/steam/avatars/spider.png" CACHE STRING "" FORCE)
+        set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt" CACHE STRING "" FORCE)
+        set(CPACK_MONOLITHIC_INSTALL TRUE CACHE BOOL "" FORCE)
+        if(WIN32)
+            #todo: NSIS or WIX
+            #set(CPACK_GENERATOR "WIX" CACHE STRING "" FORCE)
+            message(FATAL_ERROR "Sorry, no Windows installer is supported yet.")
+        elseif(APPLE)
+            set(CPACK_GENERATOR "Bundle" CACHE STRING "" FORCE)
+            set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_CURRENT_SOURCE_DIR}/branding/github/readme_banner.png" CACHE STRING "" FORCE)
+            set(CPACK_DMG_SLA_USE_RESOURCE_FILE_LICENSE TRUE CACHE BOOL "" FORCE)
+            set(CPACK_BUNDLE_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/resources/editor/macOS/Info.plist CACHE STRING "" FORCE)
+            set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/resources/editor/macOS/AppIcon.icns CACHE STRING "" FORCE)
+        elseif(UNIX)
+            #todo: DEB and/or RPM
+            message(FATAL_ERROR "Sorry, no Linux installer is supported yet.")
+        endif()
+        include(CPack)
+    endif()
 endif()
 
 # CHIRATEST
@@ -265,13 +290,3 @@ add_custom_command(
         TARGET ${PROJECT_NAME}
         PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/resources)
-
-# macOS bundle
-#if(APPLE)
-#    set(CPACK_GENERATOR "TGZ")
-#    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Chira Engine" CACHE STRING "Program name for display purposes")
-#    set(CPACK_PACKAGE_VENDOR "Chira Engine Developers" CACHE STRING "Vendor name for display purposes")
-#    set(CPACK_PACKAGE_INSTALL_DIRECTORY "Bundle")
-#    SET(CPACK_OUTPUT_FILE_PREFIX package)
-#    include(CPack)
-#endif()
