@@ -213,8 +213,6 @@ TEST(ConVarRegistry, cacheConVar) {
         ConVar my_cached_convar_int{"my_cached_convar_int", 14, CON_FLAG_CACHE};
         ConVar my_cached_convar_double{"my_cached_convar_double", 5.5, CON_FLAG_CACHE};
         ConVar my_cached_convar_string{"my_cached_convar_string", std::string{"hello"}, CON_FLAG_CACHE};
-        for (const auto& convar : ConVarRegistry::getConVarList())
-            LOG_ASSERT.info() << convar;
     }
     {
         JSONSettingsLoader cache{"convars.json"};
