@@ -182,7 +182,7 @@ jobs:
         run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON
 
       - name: Build
-        run: cmake --build build --config ${{matrix.build_type}} -- -m:%NUMBER_OF_PROCESSORS%
+        run: cmake --build build --config ${{matrix.build_type}} -- -j %NUMBER_OF_PROCESSORS%
 
       - name: Test
         working-directory: ${{github.workspace}}/build
