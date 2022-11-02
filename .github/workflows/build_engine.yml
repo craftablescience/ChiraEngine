@@ -112,7 +112,7 @@ jobs:
     - name: Install MSYS2
       uses: msys2/setup-msys2@v2
       with:
-        msystem: mingw64
+        msystem: ${{matrix.sys}}
         update: true
         install: >-
           git
@@ -182,7 +182,7 @@ jobs:
         run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON
 
       - name: Build
-        run: cmake --build build --config ${{matrix.build_type}} -- -j %NUMBER_OF_PROCESSORS%
+        run: cmake --build build --config ${{matrix.build_type}} -- -j%NUMBER_OF_PROCESSORS%
 
       - name: Test
         working-directory: ${{github.workspace}}/build
