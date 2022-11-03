@@ -31,6 +31,9 @@ public:
     void setSkybox(const std::string& cubemapId);
     [[nodiscard]] SharedPointer<MaterialCubemap> getSkybox() const;
     [[nodiscard]] LightManager* getLightManager();
+    
+    // hahahahaha I need this
+    std::vector<Entity*>* getChildren();
 protected:
     unsigned int fboHandle = 0, colorTexHandle = 0, rboHandle = 0;
     ColorRGB backgroundColor{};

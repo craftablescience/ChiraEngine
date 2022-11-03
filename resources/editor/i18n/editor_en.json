@@ -1,19 +1,33 @@
 {
   "ui.window.title": "Chira Editor",
+  
+  "ui.copy": "Copy",
+  "ui.paste": "Paste",
+  "ui.cut": "Cut",
+  "ui.delete": "Delete",
+  
+  "ui.back": "Back",
 
   "ui.engineview.title": "Engine View",
+  "ui.engineview.options": "Engine View Options",
 
   "ui.codeview.title": "Script Editor",
   
   "ui.entitypanel.title": "Entities",
 
   "ui.resourcebrowser.title": "Resource Browser",
+  "ui.resourcebrowser.padding": "Padding",
+  "ui.resourcebrowser.thumbsize": "Thumbnail Size",
 
   "ui.menubar.open_model": "Open Model...",
   "ui.menubar.add_resource_folder": "Add Resource Folder...",
   "ui.menubar.convert": "Convert",
   "ui.menubar.convert_to_obj": "Convert to OBJ...",
   "ui.menubar.convert_to_cmdl": "Convert to CMDL...",
+  "ui.menubar.edit": "Edit",
+  "ui.menubar.file": "File",
+  "ui.menubar.view": "View",
+  "ui.menubar.window": "Window",
 
   "ui.editor.show_grid": "Show Grid",
 

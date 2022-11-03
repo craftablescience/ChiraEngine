@@ -44,7 +44,7 @@ void ResourceBrowser::changeDirectory(std::string path) {
 	std::string tochange = FILESYSTEM_ROOT_FOLDER + "/" + this->curResFolder;
 	if (!path.empty())
 	 tochange+="/" + path;
-  auto dirList = FilesystemResourceProvider::getDirectoryContents(tochange, "");
+	auto dirList = FilesystemResourceProvider::getDirectoryContents(tochange, "");
 	this->curdirList = dirList;
 }
 
@@ -56,31 +56,31 @@ void ResourceBrowser::renderContents() {
 	if (ImGui::BeginMenuBar())
 	{
 		// hackjob toolbar in the menubar
-		if (ImGui::Button("Back"))
+		if (ImGui::Button(TRC("ui.back")))
 		{
 			this->changeDirectory(this->previousPath);
 		}
 
-		if (ImGui::BeginMenu("Edit"))
+		if (ImGui::BeginMenu(TRC("ui.menubar.edit")))
 		{
-			if (ImGui::MenuItem("Copy", "Ctrl-C", nullptr))
+			if (ImGui::MenuItem(TRC("ui.copy"), "Ctrl-C", nullptr))
 			{
 			}
-			if (ImGui::MenuItem("Cut", "Ctrl-X", nullptr))
+			if (ImGui::MenuItem(TRC("ui.cut"), "Ctrl-X", nullptr))
 			{
 			}
-			if (ImGui::MenuItem("Delete", "Del", nullptr))
+			if (ImGui::MenuItem(TRC("ui.delete"), "Del", nullptr))
 			{
 			}
-			if (ImGui::MenuItem("Paste", "Ctrl-V", nullptr))
+			if (ImGui::MenuItem(TRC("ui.paste"), "Ctrl-V", nullptr))
 			{
 			}
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("View"))
+		if (ImGui::BeginMenu(TRC("ui.menubar.view")))
 		{
-			ImGui::SliderFloat("Thumbnail Size", &thumbnailSize, 16, 512);
-			ImGui::SliderFloat("Padding", &padding, 0, 32);
+			ImGui::SliderFloat(TRC("ui.resourcebrowser.thumbsize"), &thumbnailSize, 16, 512);
+			ImGui::SliderFloat(TRC("ui.resourcebrowser.padding"), &padding, 0, 32);
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
@@ -98,79 +98,80 @@ void ResourceBrowser::renderContents() {
 		return;
 
 	for ( auto const& [key, val] : this->curdirList ) {
+		bool dirchanged = false;
 		ImGui::PushID(val.fileName.c_str());
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 
-		// OPTIMIZE: no. just no.
+		// better setup for file icons
+		auto icon = Resource::getResource<Texture>("file://textures/ui/icons/file.json");
 		switch(val.fileType) {
 		using enum FileType;
-			case FILE_GENERIC: {
-				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/file.json");
-				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
-				break;
-			}
 			case FILE_SCRIPT: {
-				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/script.json");
-				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				icon = Resource::getResource<Texture>("file://textures/ui/icons/script.json");
 				break;
 			}
 			case FILE_AUDIO: {
-				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/audio.json");
-				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				icon = Resource::getResource<Texture>("file://textures/ui/icons/audio.json");
 				break;
 			}
 			case FILE_TEXTURE: {
-				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/picture.json");
-				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				icon = Resource::getResource<Texture>("file://textures/ui/icons/picture.json");
 				break;
 			}
 			case FILE_MODEL: {
-				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/cube.json");
-				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				icon = Resource::getResource<Texture>("file://textures/ui/icons/cube.json");
 				break;
 			}
 			case FILE_MATERIAL: {
-				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/picture.json");
-				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				icon = Resource::getResource<Texture>("file://textures/ui/icons/picture.json");
 				break;
 			}
-			case FILE_IMAGE: {
-				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/file.json");
-				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+			/*case FILE_IMAGE: {
+				icon = Resource::getResource<Texture>("file://textures/ui/icons/file.json");
 				break;
-			}
+			}*/
 			case FILE_FONT: {
-				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/font.json");
-				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				icon = Resource::getResource<Texture>("file://textures/ui/icons/font.json");
 				break;
 			}
 			case FILE_MESH: {
-				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/cube.json");
-				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+				icon = Resource::getResource<Texture>("file://textures/ui/icons/cube.json");
 				break;
 			}
 			case FILE_DIRECTORY: {
-				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/folder.json");
-				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
-				if (ImGui::IsItemActivated())
-				{
-					this->changeDirectory(this->currentPath + "/" + val.fileName);
-				}
+				icon = Resource::getResource<Texture>("file://textures/ui/icons/folder.json");
 				break;
 			}
-			default: {
-				auto icon = Resource::getResource<Texture>("file://textures/ui/icons/file.json");
-				ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
-				break;
+			
+		}
+		ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+		
+		if (ImGui::IsItemActivated())
+		{
+			switch(val.fileType) {
+			using enum FileType;
+				case FILE_DIRECTORY: {
+					this->changeDirectory(this->currentPath + "/" + val.fileName);
+					dirchanged = true;
+					break;
+				}
+				case FILE_MESH: {
+					this->mainpanel->setLoadedFile("file:/" + this->currentPath + "/" + val.fileName);
+					break;
+				}
 			}
 		}
+		
 		ImGui::PopStyleColor();	
 
-		ImGui::TextWrapped(val.fileName.c_str());
+		ImGui::TextWrapped("%s", val.fileName.c_str());
 
 		ImGui::NextColumn();
 
 		ImGui::PopID();
+		
+		if (dirchanged)
+			break;
 	}
 
 	ImGui::Columns(1);

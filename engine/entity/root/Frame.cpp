@@ -195,3 +195,8 @@ SharedPointer<MaterialCubemap> Frame::getSkybox() const {
 LightManager* Frame::getLightManager() {
     return &this->lightManager;
 }
+
+// this is probably a horrible idea but...
+std::vector<Entity*>* Frame::getChildren() {
+    return &this->children;
+}

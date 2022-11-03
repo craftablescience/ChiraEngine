@@ -128,6 +128,10 @@ void MainEditorPanel::preRenderContents() {
                 this->convertToCMDLSelected();
             ImGui::EndMenu();
         }
+        if (ImGui::BeginMenu(TRC("ui.menubar.window"))) {
+            
+            ImGui::EndMenu();
+        }
         ImGui::EndMainMenuBar();
     }
     
@@ -240,7 +244,7 @@ int main(int argc, const char* const argv[]) {
     // REMOVE: we don't really need a debug file load call anymore do we?
     codePanel->loadFile(FILESYSTEM_ROOT_FOLDER + "/editor/Editor.cpp");
 
-    Engine::getWindow()->addPanel(new EntityPanel());
+    Engine::getWindow()->addPanel(new EntityPanel(frame));
 
     auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};
     camera->translate({-6.f * sqrtf(3.f), 6, 0});

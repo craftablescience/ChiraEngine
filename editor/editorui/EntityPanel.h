@@ -6,10 +6,11 @@ namespace chira {
 
 class EntityPanel : public IPanel {
 public:
-    EntityPanel();
+    EntityPanel(Frame* frame);
     void renderContents() override;
 protected:
     glm::vec2i currentSize;
+    Frame* curframe;
 };
 
 } // namespace chira

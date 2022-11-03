@@ -27,7 +27,13 @@ void EngineView::render() {
 }
 
 void EngineView::renderOverlayContents() {
-    ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
-    this->frame->getChild("grid")->setVisible(this->showGrid);
-    ImGui::Text("%s", this->loadedFile.c_str());
+    // a very nice little collapsable view for our info!
+    if (ImGui::BeginChild("evopt_holder", ImVec2(200, ImGui::GetWindowHeight()))) {
+        if (ImGui::CollapsingHeader(TRC("ui.engineview.options"))) {
+            ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
+            this->frame->getChild("grid")->setVisible(this->showGrid);
+            ImGui::Text("Current file: %s", this->loadedFile.c_str());
+        }
+        ImGui::EndChild();
+    }
 }
