@@ -23,3 +23,7 @@ build*/
 # Xcode
 ChiraEngine.xcodeproj/*/xcuserdata
 ChiraEngine.xcodeproj/xcuserdata
+
+# KDevelop
+*.kdev4
+.kdev4/
