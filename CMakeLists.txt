@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
-project(ChiraEngine)
+
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OSX deployment version")
+
+project(ChiraEngine HOMEPAGE_URL "https://github.com/craftablescience/ChiraEngine")
 set(CMAKE_CXX_STANDARD 20)
 
 # You should add this to your own CMake to load Chira Engine's dependencies
@@ -105,6 +108,12 @@ if(CHIRA_BUILD_TESTS)
     include(${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt)
 endif()
 
+# COREFOUNDATION
+if(APPLE)
+    find_library(CORE_LIB CoreFoundation)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES ${CORE_LIB})
+endif()
+
 # ANGELSCRIPT
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES angelscript)
@@ -206,7 +215,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stduuid/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/zep/include)
+)
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/engine)
 
@@ -217,7 +226,13 @@ option(CHIRA_BUILD_EDITOR "Build the editor GUI application" ON)
 if(CHIRA_BUILD_EDITOR)
     include(${CMAKE_CURRENT_SOURCE_DIR}/editor/CMakeLists.txt)
     if(WIN32)
-        list(APPEND CHIRA_EDITOR_SOURCES ${CMAKE_CURRENT_LIST_DIR}/resources/editor/icon/icon.rc)
+        list(APPEND CHIRA_EDITOR_SOURCES ${CMAKE_CURRENT_LIST_DIR}/resources/platform/windows/icon.rc)
+    endif()
+    if(APPLE)
+        list(APPEND CHIRA_APPLE_BUNDLE_FILES
+                ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/macOS/AppIcon.icns
+                ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/macOS/Info.plist)
+        list(APPEND CHIRA_EDITOR_SOURCES ${CHIRA_APPLE_BUNDLE_FILES})
     endif()
     # macos bundle for editor
     # if(${CMAKE_SYSTEM} MATCHES "Darwin")
@@ -230,12 +245,42 @@ if(CHIRA_BUILD_EDITOR)
         add_custom_target(
                 CopyEditorIcon
                 ALL
-                COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/resources/editor/icon/icon.ico ${CMAKE_BINARY_DIR}/resources/editor/icon/icon.ico)
+                COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/windows/icon.ico ${CMAKE_BINARY_DIR}/resources/platform/windows/icon.ico)
         add_dependencies(ChiraEditor CopyEditorIcon)
+    endif()
+    if(APPLE)
+        set_target_properties(ChiraEditor PROPERTIES
+                MACOSX_BUNDLE TRUE
+                MACOSX_FRAMEWORK_IDENTIFIER info.craftablescience.ChiraEditor
+                BUNDLE "${CHIRA_APPLE_BUNDLE_FILES}")
     endif()
     target_link_libraries(ChiraEditor PRIVATE ${PROJECT_NAME})
     target_include_directories(ChiraEditor PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/editor)
-
+    
+    option(CHIRA_EDITOR_BUILD_INSTALLER "Build an installer for the editor binaries" OFF)
+    if(CHIRA_EDITOR_BUILD_INSTALLER)
+        set(CPACK_PACKAGE_VENDOR "Chira Engine Developers" CACHE STRING "" FORCE)
+        set(CPACK_GENERATOR "TGZ" CACHE STRING "" FORCE)
+        set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An open source game engine for Windows, Linux, and macOS." CACHE STRING "" FORCE)
+        set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/branding/steam/avatars/spider.png" CACHE STRING "" FORCE)
+        set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt" CACHE STRING "" FORCE)
+        set(CPACK_MONOLITHIC_INSTALL TRUE CACHE BOOL "" FORCE)
+        if(WIN32)
+            #todo: NSIS or WIX
+            #set(CPACK_GENERATOR "WIX" CACHE STRING "" FORCE)
+            message(FATAL_ERROR "Sorry, no Windows installer is supported yet.")
+        elseif(APPLE)
+            set(CPACK_GENERATOR "Bundle" CACHE STRING "" FORCE)
+            set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_CURRENT_SOURCE_DIR}/branding/github/readme_banner.png" CACHE STRING "" FORCE)
+            set(CPACK_DMG_SLA_USE_RESOURCE_FILE_LICENSE TRUE CACHE BOOL "" FORCE)
+            set(CPACK_BUNDLE_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/macOS/Info.plist CACHE STRING "" FORCE)
+            set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/macOS/AppIcon.icns CACHE STRING "" FORCE)
+        elseif(UNIX)
+            #todo: DEB and/or RPM
+            message(FATAL_ERROR "Sorry, no Linux installer is supported yet.")
+        endif()
+        include(CPack)
+    endif()
 endif()
 
 

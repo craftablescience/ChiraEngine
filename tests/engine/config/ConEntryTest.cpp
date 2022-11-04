@@ -4,6 +4,7 @@
 #include <filesystem>
 
 #include <config/ConEntry.h>
+#include <config/Config.h>
 
 using namespace chira;
 
@@ -198,10 +199,10 @@ TEST(ConVarRegistry, hasConVar) {
 }
 
 TEST(ConVarRegistry, cacheConVar) {
-    // Don't let past runs affect us
-    std::filesystem::remove("cache.json");
+    // Just in case!
+    std::filesystem::remove(std::string{Config::getConfigDirectory().data()} + "/convars.json");
     {
-        JSONSettingsLoader cache{"cache.json"};
+        JSONSettingsLoader cache{"convars.json"};
         EXPECT_FALSE(cache.hasValue("my_cached_convar_bool"));
         EXPECT_FALSE(cache.hasValue("my_cached_convar_int"));
         EXPECT_FALSE(cache.hasValue("my_cached_convar_double"));
@@ -214,7 +215,7 @@ TEST(ConVarRegistry, cacheConVar) {
         ConVar my_cached_convar_string{"my_cached_convar_string", std::string{"hello"}, CON_FLAG_CACHE};
     }
     {
-        JSONSettingsLoader cache{"cache.json"};
+        JSONSettingsLoader cache{"convars.json"};
         EXPECT_TRUE(cache.hasValue("my_cached_convar_bool"));
         EXPECT_TRUE(cache.hasValue("my_cached_convar_int"));
         EXPECT_TRUE(cache.hasValue("my_cached_convar_double"));
@@ -232,5 +233,5 @@ TEST(ConVarRegistry, cacheConVar) {
         EXPECT_STREQ(my_cached_convar_string.getValue<std::string>().c_str(), "hello");
     }
     // Clean up after ourselves
-    std::filesystem::remove("cache.json");
+    std::filesystem::remove(std::string{Config::getConfigDirectory().data()} + "/convars.json");
 }

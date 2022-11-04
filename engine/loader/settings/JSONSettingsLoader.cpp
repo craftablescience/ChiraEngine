@@ -3,11 +3,17 @@
 #include <fstream>
 #include <iomanip>
 
+#include <config/Config.h>
+
 using namespace chira;
 
-JSONSettingsLoader::JSONSettingsLoader(std::string_view path, std::string_view filename)
-    : ISettingsLoader(path, filename)
-    , settings() {
+JSONSettingsLoader::JSONSettingsLoader(std::string_view filename)
+    : ISettingsLoader(filename, Config::getConfigDirectory(), false) {
+    this->load();
+}
+
+JSONSettingsLoader::JSONSettingsLoader(std::string_view filename, std::string_view path, bool relative /*= false*/)
+    : ISettingsLoader(filename, path, relative) {
     this->load();
 }
 

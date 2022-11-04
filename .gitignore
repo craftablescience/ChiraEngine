@@ -1,6 +1,7 @@
 # IDE
 .idea/
 .vs/
+.vscode/
 
 # VSCode
 .vscode/

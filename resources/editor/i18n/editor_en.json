@@ -19,6 +19,9 @@
   "ui.resourcebrowser.padding": "Padding",
   "ui.resourcebrowser.thumbsize": "Thumbnail Size",
 
+  "ui.engineview.title": "Engine View",
+  "ui.entities": "Entities",
+
   "ui.menubar.open_model": "Open Model...",
   "ui.menubar.add_resource_folder": "Add Resource Folder...",
   "ui.menubar.convert": "Convert",

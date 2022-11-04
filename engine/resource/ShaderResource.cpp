@@ -23,7 +23,7 @@ void ShaderResource::compile(const byte buffer[], std::size_t bufferLength) {
 
     StringResource::compile(buffer, bufferLength);
     this->data = replaceMacros(this->identifier, this->data);
-    this->data = std::string{GL_VERSION_STRING} + "\n\n" + this->data;
+    this->data = std::string{Config::GL_VERSION_STRING.data()} + "\n\n" + this->data;
 
     const char* dat = this->data.c_str();
     glShaderSource(this->handle, 1, &dat, nullptr);

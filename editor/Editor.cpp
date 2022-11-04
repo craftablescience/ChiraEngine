@@ -70,7 +70,6 @@ static inline void addResourceFolderSelected() {
         Dialogs::popupError(TR("error.modelviewer.resource_folder_already_registered"));
 }
 
-
 MainEditorPanel::MainEditorPanel() : IPanel(TR("ui.window.title"), true) {
     this->flags |= ImGuiWindowFlags_NoBackground |
                     ImGuiWindowFlags_NoInputs   |

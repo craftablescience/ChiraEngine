@@ -23,9 +23,9 @@ void ChiraMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex
     // read mesh data
     if (header.version == 1) {
         vertices.resize(header.vertexCount);
-        std::memcpy(&vertices[0], meshData->getBuffer() + CHIRA_MESH_HEADER_SIZE, header.vertexCount * sizeof(Vertex));
+        std::memcpy(vertices.data(), meshData->getBuffer() + CHIRA_MESH_HEADER_SIZE, header.vertexCount * sizeof(Vertex));
         indices.resize(header.indexCount);
-        std::memcpy(&indices[0], meshData->getBuffer() + CHIRA_MESH_HEADER_SIZE + (header.vertexCount * sizeof(Vertex)), header.indexCount * sizeof(Index));
+        std::memcpy(indices.data(), meshData->getBuffer() + CHIRA_MESH_HEADER_SIZE + (header.vertexCount * sizeof(Vertex)), header.indexCount * sizeof(Index));
     }
 }
 
@@ -40,9 +40,9 @@ std::vector<byte> ChiraMeshLoader::createMesh(const std::vector<Vertex>& vertice
 
     // Since each element in bytebuffer is one byte wide, this works
     bytebuffer.resize(CHIRA_MESH_HEADER_SIZE + VERTEX_SIZE + INDEX_SIZE);
-    std::memcpy(&bytebuffer[0], &header, CHIRA_MESH_HEADER_SIZE);
-    std::memcpy(&bytebuffer[CHIRA_MESH_HEADER_SIZE], &vertices[0], VERTEX_SIZE);
-    std::memcpy(&bytebuffer[CHIRA_MESH_HEADER_SIZE + VERTEX_SIZE], &indices[0], INDEX_SIZE);
+    std::memcpy(bytebuffer.data(), &header, CHIRA_MESH_HEADER_SIZE);
+    std::memcpy(&bytebuffer[CHIRA_MESH_HEADER_SIZE], vertices.data(), VERTEX_SIZE);
+    std::memcpy(&bytebuffer[CHIRA_MESH_HEADER_SIZE + VERTEX_SIZE], indices.data(), INDEX_SIZE);
 
     return bytebuffer;
 }

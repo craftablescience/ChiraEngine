@@ -7,7 +7,7 @@ namespace chira {
 
 class ISettingsLoader {
 public:
-    explicit ISettingsLoader(std::string_view path, std::string_view filename);
+    explicit ISettingsLoader(std::string_view filename, std::string_view path, bool relative = false);
     virtual ~ISettingsLoader() = default;
 
     virtual void getValue(const std::string& name, int* value) const = 0;
@@ -25,7 +25,6 @@ public:
     virtual void load() = 0;
     virtual void save() = 0;
 
-    void setFilePath(std::string_view path, std::string_view filename);
     [[nodiscard]] std::string_view getFilePath() const {
         return this->filepath;
     }

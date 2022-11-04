@@ -16,9 +16,9 @@ void MeshData::setupForRendering() {
     glBindVertexArray(this->vaoHandle);
 
     glBindBuffer(GL_ARRAY_BUFFER, this->vboHandle);
-    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->vertices.size() * sizeof(Vertex)), &this->vertices[0], this->drawMode);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->vertices.size() * sizeof(Vertex)), this->vertices.data(), this->drawMode);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->eboHandle);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->indices.size() * sizeof(Index)), &this->indices[0], this->drawMode);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->indices.size() * sizeof(Index)), this->indices.data(), this->drawMode);
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position)));
@@ -43,9 +43,9 @@ void MeshData::updateMeshData() {
         return;
 
     glBindBuffer(GL_ARRAY_BUFFER, this->vboHandle);
-    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->vertices.size() * sizeof(Vertex)), &this->vertices[0], this->drawMode);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->vertices.size() * sizeof(Vertex)), this->vertices.data(), this->drawMode);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->eboHandle);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->indices.size() * sizeof(Index)), &this->indices[0], this->drawMode);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->indices.size() * sizeof(Index)), this->indices.data(), this->drawMode);
 }
 
 void MeshData::render(glm::mat4 model) {
