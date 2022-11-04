@@ -42,9 +42,8 @@ void EntityPanel::renderContents() {
 
             if (ImGui::BeginPopupContextItem()) {
                 if (ImGui::Selectable("Delete")) {
-                    // properly destroy the entity instead please
-                    //auto it = std::find(this->entList.begin(), this->entList.end(), entity);
-                    //this->entList.erase(it);
+                    // properly destroy the entity
+                    this->curframe.removeChild(entity->getName());
                 }
                 if (ImGui::Selectable("Rename")) {
                     op = true;
