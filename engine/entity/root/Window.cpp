@@ -148,15 +148,7 @@ bool Window::createGLFWWindow(std::string_view title) {
     ImGui::SetCurrentContext(this->imguiContext);
     auto& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_DockingEnable;
-<<<<<<< HEAD
-    // swap ImGui's config dir to prevent bundle crashes
-    std::string ConfigPath;
-    ConfigPath.append(Engine::getConfigDir());
-    ConfigPath.append("imgui.ini");
-    io.IniFilename = ConfigPath.c_str();
-=======
     this->setImGuiConfigPath();
->>>>>>> f642c7d392fbeaf247f83d1b30a964d55ca86039
 
     ImGui_ImplGlfw_InitForOpenGL(this->window, true); // register for default input binds
     ImGui_ImplOpenGL3_Init(Config::GL_VERSION_STRING.data());
@@ -194,24 +186,12 @@ void Window::render(glm::mat4 /*parentTransform*/) {
     glfwMakeContextCurrent(this->window);
     ImGui::SetCurrentContext(this->imguiContext);
 
-<<<<<<< HEAD
-    // swap ImGui's config dir to prevent bundle crashes
-    std::string ConfigPath;
-    ConfigPath.append(Engine::getConfigDir());
-    ConfigPath.append("imgui.ini");
-    ImGui::GetIO().IniFilename = ConfigPath.c_str();
-=======
     this->setImGuiConfigPath();
->>>>>>> f642c7d392fbeaf247f83d1b30a964d55ca86039
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-<<<<<<< HEAD
-    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
-=======
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
->>>>>>> f642c7d392fbeaf247f83d1b30a964d55ca86039
 
     Frame::render(this->fboHandle, this->width, this->height);
 
