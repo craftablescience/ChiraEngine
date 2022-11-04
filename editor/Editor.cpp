@@ -225,6 +225,7 @@ int main(int argc, const char* const argv[]) {
     Engine::getWindow()->addPanel(mainPanel);
 
     // TODO: This should be in focus and visible by default on editor load
+    // TODO: I have no idea how to do the above actually
     auto framePanel = new EngineView();
     auto frame = framePanel->getFrame();
     frame->setBackgroundColor(ColorRGB{0.15f});
@@ -240,8 +241,6 @@ int main(int argc, const char* const argv[]) {
     // Code View
     auto codePanel = new CodePanel();
     codePanelID = Engine::getWindow()->addPanel(codePanel);
-    // REMOVE: we don't really need a debug file load call anymore do we?
-    codePanel->loadFile(FILESYSTEM_ROOT_FOLDER + "/editor/Editor.cpp");
 
     Engine::getWindow()->addPanel(new EntityPanel(frame));
 

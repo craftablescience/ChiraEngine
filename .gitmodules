@@ -25,3 +25,6 @@
 [submodule "engine/thirdparty/imgui-filebrowser"]
 	path = engine/thirdparty/imgui-filebrowser
 	url = https://github.com/AirGuanZ/imgui-filebrowser
+[submodule "editor/thirdparty/imguizmo"]
+	path = editor/thirdparty/imguizmo
+	url = https://github.com/ashifolfi/ImGuizmo-cmake
