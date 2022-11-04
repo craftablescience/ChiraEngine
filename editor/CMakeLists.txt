@@ -17,3 +17,5 @@ list(APPEND CHIRA_EDITOR_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/editorui/ResourceBrowser.cpp
         ${CMAKE_CURRENT_LIST_DIR}/editorui/EntityPanel.cpp
 )
+
+include(${CMAKE_CURRENT_LIST_DIR}/camera/CMakeLists.txt)

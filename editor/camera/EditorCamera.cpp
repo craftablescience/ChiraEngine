@@ -32,14 +32,6 @@ void EditorCamera::setupKeybinds() {
         if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
             cam->translateWithRotation({0, -cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
     }});
-    InputManager::addCallback(InputMouseButton{Key::MOUSE_RIGHT, InputKeyEventType::PRESSED, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()))
-            cam->setActive(true);
-    }});
-    InputManager::addCallback(InputMouseButton{Key::MOUSE_RIGHT, InputKeyEventType::RELEASED, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()))
-            cam->setActive(false);
-    }});
     InputManager::addCallback(InputMouseMovement{InputMouseMovementEventType::MOVE, [](double xOffset, double yOffset) {
         if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive()) {
             xOffset *= cam->getMouseSensitivity() * Engine::getDeltaTime();

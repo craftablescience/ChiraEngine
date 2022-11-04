@@ -3,7 +3,6 @@
 #include <math/Types.h>
 #include "IPanel.h"
 #include <entity/Entity.h>
-#include <entity/camera/EditorCamera.h>
 
 namespace chira {
 

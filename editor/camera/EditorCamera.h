@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Freecam.h"
+#include <entity/camera/Freecam.h>
 
 namespace chira {
 

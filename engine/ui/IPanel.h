@@ -5,7 +5,6 @@
 #include <imgui.h>
 #include <math/Types.h>
 #include <entity/Entity.h>
-#include <entity/camera/EditorCamera.h>
 
 namespace chira {
 
