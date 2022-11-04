@@ -36,6 +36,9 @@ public:
     [[nodiscard]] virtual Group* getGroup();
 
     [[nodiscard]] Entity* getParent() const;
+
+    // added for scene management lol
+    [[nodiscard]] void setName(std::string_view newn) const;
     [[nodiscard]] std::string_view getName() const;
 
     [[nodiscard]] Entity* getChild(std::string_view name_) const;

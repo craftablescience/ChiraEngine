@@ -63,6 +63,10 @@ std::string_view Entity::getName() const {
     return this->name;
 }
 
+void Entity::setName(std::string newn) const {
+    this->name = newn;
+}
+
 Entity* Entity::getChild(std::string_view name_) const {
     for (auto* entity : this->children) {
         if (entity->getName() == name_) {
