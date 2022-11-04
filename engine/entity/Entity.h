@@ -38,7 +38,7 @@ public:
     [[nodiscard]] Entity* getParent() const;
 
     // added for scene management lol
-    void setName(std::string_view newn) const;
+    void setName(std::string newn) const;
     [[nodiscard]] std::string_view getName() const;
 
     [[nodiscard]] Entity* getChild(std::string_view name_) const;
