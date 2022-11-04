@@ -19,6 +19,7 @@ EntityPanel::EntityPanel(Frame* frame)
 
 void EntityPanel::renderContents() {
     ImGui::Text(TRC("ui.entitypanel.scenetree"));
+    bool op = false;
     
     //#region entity table
     if (ImGui::BeginTable("scene_entity_list", 2,
@@ -37,7 +38,46 @@ void EntityPanel::renderContents() {
             ImGui::TableNextColumn();
             ImGui::TreeNodeEx("", ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanFullWidth);
             ImGui::TableNextColumn();
-            ImGui::Selectable(std::string(entity->getName()).c_str(), is_selected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap);
+            ImGui::TreeNodeEx(std::string(entity->getName()).c_str(), ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanFullWidth);
+
+            if (ImGui::BeginPopupContextItem()) {
+                if (ImGui::Selectable("Delete")) {
+                    // properly destroy the entity instead please
+                    //auto it = std::find(this->entList.begin(), this->entList.end(), entity);
+                    //this->entList.erase(it);
+                }
+                if (ImGui::Selectable("Rename")) {
+                    op = true;
+                }
+
+                ImGui::EndPopup();
+            }
+            if (op)
+                ImGui::OpenPopup(std::string("Rename###"+entity->name).c_str());
+
+            // Always center this window when appearing
+            ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+            // Popup window for renaming
+            if (ImGui::BeginPopupModal(std::string("Rename###"+entity->name).c_str(), NULL, 0)) {
+            ImGui::Text("New Name:");
+            
+            static char buf1[64] = ""; ImGui::InputText("",     buf1, 64);
+            ImGui::Text(buf1);
+
+            if (ImGui::Button("Ok")) {
+                entity->setName(std::string(buf1))
+                memset(buf1, 0, sizeof(buf1));
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel")) {
+                memset(buf1, 0, sizeof(buf1));
+                ImGui::CloseCurrentPopup();
+            }
+
+            ImGui::EndPopup();
         }
         
         ImGui::EndTable();
