@@ -14,7 +14,7 @@
 #include <i18n/TranslationManager.h>
 #include <entity/model/Mesh.h>
 #include <entity/model/MeshDynamic.h>
-#include <camera/EditorCamera.h>
+#include "camera/EditorCamera.h"
 #include <ui/IPanel.h>
 #include <ui/FramePanel.h>
 #include <utility/Dialogs.h>

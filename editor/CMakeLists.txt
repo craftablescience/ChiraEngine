@@ -6,6 +6,7 @@ list(APPEND CHIRA_HEADER_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/editorui/CodeView.h
         ${CMAKE_CURRENT_LIST_DIR}/editorui/ResourceBrowser.h
         ${CMAKE_CURRENT_LIST_DIR}/editorui/EntityPanel.h
+        ${CMAKE_CURRENT_LIST_DIR}/camera/EditorCamera.h
 )
 
 list(APPEND CHIRA_EDITOR_SOURCES
@@ -16,6 +17,5 @@ list(APPEND CHIRA_EDITOR_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/editorui/CodeView.cpp
         ${CMAKE_CURRENT_LIST_DIR}/editorui/ResourceBrowser.cpp
         ${CMAKE_CURRENT_LIST_DIR}/editorui/EntityPanel.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/camera/EditorCamera.cpp
 )
-
-include(${CMAKE_CURRENT_LIST_DIR}/camera/CMakeLists.txt)
