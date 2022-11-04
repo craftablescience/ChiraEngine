@@ -63,7 +63,7 @@ std::string_view Entity::getName() const {
     return this->name;
 }
 
-void Entity::setName(std::string newn) const {
+void Entity::setName(std::string newn) {
     this->name = newn;
 }
 

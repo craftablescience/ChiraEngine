@@ -43,7 +43,7 @@ void EntityPanel::renderContents() {
             if (ImGui::BeginPopupContextItem()) {
                 if (ImGui::Selectable("Delete")) {
                     // properly destroy the entity
-                    this->curframe.removeChild(entity->getName());
+                    this->curframe->removeChild(entity->getName());
                 }
                 if (ImGui::Selectable("Rename")) {
                     op = true;
@@ -52,33 +52,35 @@ void EntityPanel::renderContents() {
                 ImGui::EndPopup();
             }
             if (op)
-                ImGui::OpenPopup(std::string("Rename###"+entity->name).c_str());
+                ImGui::OpenPopup(std::string("Rename###"+std::string(entity->getName())).c_str());
 
             // Always center this window when appearing
             ImVec2 center = ImGui::GetMainViewport()->GetCenter();
             ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
             // Popup window for renaming
-            if (ImGui::BeginPopupModal(std::string("Rename###"+entity->name).c_str(), NULL, 0)) {
-            ImGui::Text("New Name:");
-            
-            static char buf1[64] = ""; ImGui::InputText("",     buf1, 64);
-            ImGui::Text(buf1);
+            if (ImGui::BeginPopupModal(std::string("Rename###"+std::string(entity->getName())).c_str(), NULL, 0)) {
+                ImGui::Text("New Name:");
+                
+                static char buf1[64] = ""; ImGui::InputText("",     buf1, 64);
+                ImGui::Text(buf1);
 
-            if (ImGui::Button("Ok")) {
-                entity->setName(std::string(buf1))
-                memset(buf1, 0, sizeof(buf1));
-                ImGui::CloseCurrentPopup();
-            }
-            ImGui::SameLine();
-            if (ImGui::Button("Cancel")) {
-                memset(buf1, 0, sizeof(buf1));
-                ImGui::CloseCurrentPopup();
-            }
+                if (ImGui::Button("Ok")) {
+                    entity->setName(std::string(buf1));
+                    memset(buf1, 0, sizeof(buf1));
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("Cancel")) {
+                    memset(buf1, 0, sizeof(buf1));
+                    ImGui::CloseCurrentPopup();
+                }
 
-            ImGui::EndPopup();
+                ImGui::EndPopup();
+            }
         }
         
         ImGui::EndTable();
     }
 }
+
