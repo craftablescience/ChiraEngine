@@ -19,7 +19,6 @@ EntityPanel::EntityPanel(Frame* frame)
 
 void EntityPanel::renderContents() {
     ImGui::Text(TRC("ui.entitypanel.scenetree"));
-    bool op = false;
     
     //#region entity table
     if (ImGui::BeginTable("scene_entity_list", 2,
@@ -33,6 +32,7 @@ void EntityPanel::renderContents() {
         
         for (auto const& entity : *this->curframe->getChildren())
         {
+            bool op = false;
             bool is_selected = false;
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
@@ -52,17 +52,17 @@ void EntityPanel::renderContents() {
                 ImGui::EndPopup();
             }
             if (op)
-                ImGui::OpenPopup(std::string("Rename###"+std::string(entity->getName())).c_str());
+                ImGui::OpenPopup(std::string("Rename##" + std::string(entity->getName())).c_str());
 
             // Always center this window when appearing
             ImVec2 center = ImGui::GetMainViewport()->GetCenter();
             ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
             // Popup window for renaming
-            if (ImGui::BeginPopupModal(std::string("Rename###"+std::string(entity->getName())).c_str(), NULL, 0)) {
+            if (ImGui::BeginPopupModal(std::string("Rename##" + std::string(entity->getName())).c_str(), NULL, 0)) {
                 ImGui::Text("New Name:");
                 
-                static char buf1[64] = ""; ImGui::InputText("",     buf1, 64);
+                static char buf1[64] = ""; ImGui::InputText(std::string("##" + std::string(entity->getName())).c_str(),     buf1, 64);
                 ImGui::Text(buf1);
 
                 if (ImGui::Button("Ok")) {
