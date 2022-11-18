@@ -8,10 +8,6 @@ PointLight::PointLight(std::string name_, glm::vec3 ambient, glm::vec3 diffuse, 
     : Entity(std::move(name_))
     , data({{ambient, 1.f}, {diffuse, 1.f}, {specular, 1.f}, {falloff, 0.f}}) {}
 
-PointLight::PointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 falloff)
-    : Entity()
-    , data({{ambient, 1.f}, {diffuse, 1.f}, {specular, 1.f}, {falloff, 0.f}}) {}
-
 void PointLight::onAddedToTree() {
     this->getFrame()->getLightManager()->addLight(this);
 }

@@ -13,7 +13,6 @@ struct DirectionalLightData {
 class DirectionalLight : public Entity {
 public:
     DirectionalLight(std::string name_, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular);
-    DirectionalLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular);
     void onAddedToTree() override;
     ~DirectionalLight() override;
     [[nodiscard]] const DirectionalLightData* getLightData() const;

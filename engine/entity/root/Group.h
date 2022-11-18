@@ -8,7 +8,6 @@ namespace chira {
 class Group : public Entity {
 public:
     explicit Group(std::string name_);
-    Group();
     [[nodiscard]] const Group* getGroup() const override;
     [[nodiscard]] Group* getGroup() override;
 };

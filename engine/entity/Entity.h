@@ -19,8 +19,6 @@ class Frame;
 class Entity {
 public:
     explicit Entity(std::string name_);
-    /// Initializes name to a random UUID.
-    Entity();
     virtual ~Entity();
 
     /// Run game logic.

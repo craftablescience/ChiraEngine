@@ -61,7 +61,7 @@ void Engine::init(bool windowStartsVisible) {
         LOG_ENGINE.error(fmt::format("GLFW Error {}: {}\n", error, description));
     });
 
-    Engine::window.reset(new Window{TR("ui.window.title")});
+    Engine::window.reset(new Window{"Window", TR("ui.window.title")});
     Engine::window->setVisible(windowStartsVisible);
 
 #ifdef DEBUG

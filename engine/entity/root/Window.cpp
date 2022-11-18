@@ -159,26 +159,13 @@ bool Window::createGLFWWindow(std::string_view title) {
     return true;
 }
 
-static void makeSurface(Window* window, MeshDataBuilder* surface) {
-    surface->addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-    surface->setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/window.json", window).castAssert<IMaterial>());
-}
-
 Window::Window(std::string name_, std::string_view title)
     : Frame(std::move(name_), win_width.getValue<int>(), win_height.getValue<int>(), {}, true, false) {
     this->visible = false;
     if (this->createGLFWWindow(title)) {
         this->createFramebuffer();
-        makeSurface(this, &this->surface);
-    }
-}
-
-Window::Window(std::string_view title)
-    : Frame(win_width.getValue<int>(), win_height.getValue<int>(), {}, true, false) {
-    this->visible = false;
-    if (this->createGLFWWindow(title)) {
-        this->createFramebuffer();
-        makeSurface(this, &this->surface);
+        this->surface.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
+        this->surface.setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/window.json", this).castAssert<IMaterial>());
     }
 }
 

@@ -8,10 +8,6 @@ DirectionalLight::DirectionalLight(std::string name_, glm::vec3 ambient, glm::ve
     : Entity(std::move(name_))
     , data({{ambient, 1.f}, {diffuse, 1.f}, {specular, 1.f}}) {}
 
-DirectionalLight::DirectionalLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
-    : Entity()
-    , data({{ambient, 1.f}, {diffuse, 1.f}, {specular, 1.f}}) {}
-
 void DirectionalLight::onAddedToTree() {
     this->getFrame()->getLightManager()->addLight(this);
 }

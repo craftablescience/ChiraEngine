@@ -14,7 +14,6 @@ struct PointLightData {
 class PointLight : public Entity {
 public:
     PointLight(std::string name_, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 falloff);
-    PointLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 falloff);
     void onAddedToTree() override;
     ~PointLight() override;
     [[nodiscard]] const PointLightData* getLightData() const;

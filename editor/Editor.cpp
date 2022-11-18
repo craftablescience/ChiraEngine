@@ -142,7 +142,7 @@ public:
         }
         if (Engine::getWindow()->hasChild(this->meshId))
             Engine::getWindow()->removeChild(this->meshId);
-        this->meshId = Engine::getWindow()->addChild(new Mesh{meshName});
+        this->meshId = Engine::getWindow()->addChild(new Mesh{"LoadedMesh", meshName});
         this->loadedFile = meshName;
     }
 
@@ -183,7 +183,7 @@ int main(int argc, const char* const argv[]) {
 
     Engine::getWindow()->addPanel(new ModelViewerPanel{});
 
-    auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};
+    auto camera = new EditorCamera{"Camera", CameraProjectionMode::PERSPECTIVE, 120.f};
     camera->translate({-6.f * sqrtf(3.f), 6, 0});
     camera->setPitch(30.f);
     camera->setYaw(270.f);

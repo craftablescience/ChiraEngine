@@ -8,10 +8,6 @@ SpotLight::SpotLight(std::string name_, glm::vec3 diffuse, glm::vec3 specular, g
     : Entity(std::move(name_))
     , data({{diffuse, 1.f}, {specular, 1.f}, {falloff, 0.f}, {cutoff, 0.f, 0.f}}) {}
 
-SpotLight::SpotLight(glm::vec3 diffuse, glm::vec3 specular, glm::vec3 falloff, glm::vec2 cutoff)
-    : Entity()
-    , data({{diffuse, 1.f}, {specular, 1.f}, {falloff, 0.f}, {cutoff, 0.f, 0.f}}) {}
-
 void SpotLight::onAddedToTree() {
     this->getFrame()->getLightManager()->addLight(this);
 }

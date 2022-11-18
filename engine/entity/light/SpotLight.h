@@ -14,7 +14,6 @@ struct SpotLightData {
 class SpotLight : public Entity {
 public:
     SpotLight(std::string name_, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 falloff, glm::vec2 cutoff);
-    SpotLight(glm::vec3 diffuse, glm::vec3 specular, glm::vec3 falloff, glm::vec2 cutoff);
     void onAddedToTree() override;
     ~SpotLight() override;
     [[nodiscard]] const SpotLightData* getLightData() const;

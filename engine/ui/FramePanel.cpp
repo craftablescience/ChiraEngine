@@ -6,7 +6,7 @@ using namespace chira;
 
 FramePanel::FramePanel(const std::string& title_, bool startVisible, ImVec2 windowSize, bool enforceSize)
     : IPanel(title_, startVisible, windowSize, enforceSize), currentSize(windowSize.x, windowSize.y) {
-    this->frame = new Frame{static_cast<int>(windowSize.x), static_cast<int>(windowSize.y)};
+    this->frame = new Frame{title_ + "_Frame", static_cast<int>(windowSize.x), static_cast<int>(windowSize.y)};
 }
 
 FramePanel::~FramePanel() {

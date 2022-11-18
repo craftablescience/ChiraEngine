@@ -10,8 +10,6 @@ CHIRA_CREATE_LOG(ENTITY);
 
 Entity::Entity(std::string name_) : name(std::move(name_)) {}
 
-Entity::Entity() : Entity(UUIDGenerator::getNewUUIDString()) {}
-
 Entity::~Entity() {
     this->removeAllChildren();
 }

@@ -17,16 +17,6 @@ Frame::Frame(std::string name_, int width_, int height_, ColorRGB backgroundColo
         this->createFramebuffer();
 }
 
-Frame::Frame(int width_, int height_, ColorRGB backgroundColor_, bool smoothResize, bool initNow)
-    : Group()
-    , backgroundColor(backgroundColor_)
-    , width(width_)
-    , height(height_)
-    , linearFiltering(smoothResize) {
-    if (initNow)
-        this->createFramebuffer();
-}
-
 void Frame::createFramebuffer() {
     if (this->fboHandle != 0) {
         glDeleteRenderbuffers(1, &this->rboHandle);

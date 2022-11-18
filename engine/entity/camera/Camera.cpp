@@ -10,12 +10,6 @@ Camera::Camera(std::string name_, CameraProjectionMode mode, float fov_)
     this->projectionMode = mode;
 }
 
-Camera::Camera(CameraProjectionMode mode, float fov_)
-    : Entity()
-    , fov(fov_) {
-    this->projectionMode = mode;
-}
-
 void Camera::createProjection(glm::vec2 windowSize) {
     if (windowSize.x <= 0 || windowSize.y <= 0)
         return;

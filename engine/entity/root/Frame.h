@@ -13,7 +13,6 @@ namespace chira {
 class Frame : public Group {
 public:
     Frame(std::string name_, int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
-    Frame(int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
     void render(glm::mat4 parentTransform) override;
     void render(unsigned int parentFBOHandle, int parentWidth, int parentHeight);
     ~Frame() override;
