@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include <utility>
-
+#include <fmt/core.h>
 #include <config/Config.h>
 
 using namespace chira;
