@@ -1,5 +1,7 @@
 #include "MaterialPhong.h"
 
+// todo(render): move to render backend
+#include <glad/gl.h>
 #include <resource/Resource.h>
 
 using namespace chira;

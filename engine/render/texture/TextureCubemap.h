@@ -1,6 +1,8 @@
 #pragma once
 
+// todo(render): move to render backend
 #include <glad/gl.h>
+#include <render/backend/RendererTypes.h>
 #include "ITexture.h"
 
 namespace chira {
@@ -23,12 +25,12 @@ protected:
     bool verticalFlipDN = false;
     bool verticalFlipLT = false;
     bool verticalFlipRT = false;
-    int formatFD = GL_RGBA;
-    int formatBK = GL_RGBA;
-    int formatUP = GL_RGBA;
-    int formatDN = GL_RGBA;
-    int formatLT = GL_RGBA;
-    int formatRT = GL_RGBA;
+    TextureFormat formatFD = TextureFormat::RGBA;
+    TextureFormat formatBK = TextureFormat::RGBA;
+    TextureFormat formatUP = TextureFormat::RGBA;
+    TextureFormat formatDN = TextureFormat::RGBA;
+    TextureFormat formatLT = TextureFormat::RGBA;
+    TextureFormat formatRT = TextureFormat::RGBA;
     std::string formatOverrideFD{"NONE"};
     std::string formatOverrideBK{"NONE"};
     std::string formatOverrideUP{"NONE"};
@@ -36,13 +38,13 @@ protected:
     std::string formatOverrideLT{"NONE"};
     std::string formatOverrideRT{"NONE"};
     bool mipmaps = true;
-    int filterMode = GL_LINEAR;
+    FilterMode filterMode = FilterMode::LINEAR;
     std::string filterModeStr{"LINEAR"};
-    int wrapModeS = GL_REPEAT;
+    WrapMode wrapModeS = WrapMode::REPEAT;
     std::string wrapModeSStr{"REPEAT"};
-    int wrapModeT = GL_REPEAT;
+    WrapMode wrapModeT = WrapMode::REPEAT;
     std::string wrapModeTStr{"REPEAT"};
-    int wrapModeR = GL_REPEAT;
+    WrapMode wrapModeR = WrapMode::REPEAT;
     std::string wrapModeRStr{"REPEAT"};
 private:
     void setFilterMode(std::string filterModeStr_);

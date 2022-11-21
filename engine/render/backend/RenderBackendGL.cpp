@@ -1,0 +1,197 @@
+#include "RenderBackendGL.h"
+
+#include <glad/gl.h>
+#include <glad/glversion.h>
+#include <backends/imgui_impl_opengl3.h>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
+#include <core/Assertions.h>
+#include <core/Logger.h>
+
+using namespace chira;
+
+CHIRA_CREATE_LOG(GL);
+
+std::string_view RenderBackendGL::getHumanName() {
+    return GL_VERSION_STRING_PRETTY;
+}
+
+bool RenderBackendGL::setupForDebugging() {
+#ifdef CHIRA_USE_GL_41
+    if (!glfwExtensionSupported("GL_KHR_debug"))
+        return false;
+#endif
+
+    int flags;
+    glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+    if (!(flags & GL_CONTEXT_FLAG_DEBUG_BIT))
+        return false;
+
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glDebugMessageCallback([](GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei /*length*/, const char* message, const void* /*userParam*/) {
+        // Leaving OpenGL error reports unlocalized is probably best
+
+        if (id == 8 || id == 131169 || id == 131185 || id == 131218 || id == 131204) {
+            // Ignore 8 because the Steam overlay tries to bind to an already bound framebuffer, very low overhead, don't worry about it
+            // Others are ignored because learnopengl.com said they were duplicates
+            return;
+        }
+        std::string output = "---------------\nDebug message (" + std::to_string(id) + "): " +  message;
+
+        output += "\nSource: ";
+        switch (source) {
+            case GL_DEBUG_SOURCE_API:             output += "API"; break;
+            case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   output += "Window System"; break;
+            case GL_DEBUG_SOURCE_SHADER_COMPILER: output += "Shader Compiler"; break;
+            case GL_DEBUG_SOURCE_THIRD_PARTY:     output += "Third Party"; break;
+            case GL_DEBUG_SOURCE_APPLICATION:     output += "Application"; break;
+            default:                              output += "Other";
+        }
+        output += "\nType: ";
+        switch (type) {
+            case GL_DEBUG_TYPE_ERROR:               output += "Error"; break;
+            case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: output += "Deprecated Behaviour"; break;
+            case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  output += "Undefined Behaviour"; break;
+            case GL_DEBUG_TYPE_PORTABILITY:         output += "Portability"; break;
+            case GL_DEBUG_TYPE_PERFORMANCE:         output += "Performance"; break;
+            case GL_DEBUG_TYPE_MARKER:              output += "Marker"; break;
+            case GL_DEBUG_TYPE_PUSH_GROUP:          output += "Push Group"; break;
+            case GL_DEBUG_TYPE_POP_GROUP:           output += "Pop Group"; break;
+            default:                                output += "Other";
+        }
+        output += "\nSeverity: ";
+        switch (severity) {
+            case GL_DEBUG_SEVERITY_HIGH:         output += "High"; break;
+            case GL_DEBUG_SEVERITY_MEDIUM:       output += "Medium"; break;
+            case GL_DEBUG_SEVERITY_LOW:          output += "Low"; break;
+            case GL_DEBUG_SEVERITY_NOTIFICATION: output += "Notification"; break;
+            default:                             output += "Other";
+        }
+
+        if (type == GL_DEBUG_TYPE_ERROR) {
+            LOG_GL.error(output);
+        } else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) {
+            LOG_GL.info(output);
+        } else {
+            // Logging as a warning because most of the time the program runs perfectly fine
+            LOG_GL.warning(output);
+        }
+    }, nullptr);
+    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+
+    return IMGUI_CHECKVERSION();
+}
+
+int RenderBackendGL::getTextureFormat(TextureFormat format) {
+    switch (format) {
+        case TextureFormat::RED:
+            return GL_RED;
+        case TextureFormat::RG:
+            return GL_RG;
+        case TextureFormat::RGB:
+            return GL_RGB;
+        default:
+        case TextureFormat::RGBA:
+            return GL_RGBA;
+        case TextureFormat::BGR:
+            return GL_BGR;
+        case TextureFormat::BGRA:
+            return GL_BGRA;
+        case TextureFormat::RED_INT:
+            return GL_RED_INTEGER;
+        case TextureFormat::RG_INT:
+            return GL_RG_INTEGER;
+        case TextureFormat::RGB_INT:
+            return GL_RGB_INTEGER;
+        case TextureFormat::RGBA_INT:
+            return GL_RGBA_INTEGER;
+        case TextureFormat::BGR_INT:
+            return GL_BGR_INTEGER;
+        case TextureFormat::BGRA_INT:
+            return GL_BGRA_INTEGER;
+        case TextureFormat::STENCIL:
+            return GL_STENCIL_INDEX;
+        case TextureFormat::DEPTH:
+            return GL_DEPTH_COMPONENT;
+        case TextureFormat::DEPTH_STENCIL:
+            return GL_DEPTH_STENCIL;
+    }
+}
+
+int RenderBackendGL::getTextureFormatFromBitDepth(int bd) {
+    switch (bd) {
+        case 1:
+            return GL_RED;
+        case 2:
+            return GL_RG;
+        case 3:
+            return GL_RGB;
+        default:
+        case 4:
+            return GL_RGBA;
+    }
+}
+
+int RenderBackendGL::getWrapMode(WrapMode mode) {
+    switch (mode) {
+        default:
+        case WrapMode::REPEAT:
+            return GL_REPEAT;
+        case WrapMode::MIRRORED_REPEAT:
+            return GL_MIRRORED_REPEAT;
+        case WrapMode::CLAMP_TO_EDGE:
+            return GL_CLAMP_TO_EDGE;
+        case WrapMode::CLAMP_TO_BORDER:
+            return GL_CLAMP_TO_BORDER;
+    }
+}
+
+int RenderBackendGL::getFilterMode(FilterMode mode) {
+    switch (mode) {
+        case FilterMode::NEAREST:
+            return GL_NEAREST;
+        default:
+        case FilterMode::LINEAR:
+            return GL_LINEAR;
+    }
+}
+
+unsigned int RenderBackendGL::createTexture(TextureFormat format, WrapMode wrapS, WrapMode wrapT, FilterMode filter, int width, int height, byte data[], bool genMipmaps /*= true*/, int activeTextureUnit /*= -1*/) {
+    unsigned int handle;
+    glGenTextures(1, &handle);
+
+    const auto glFilter = getFilterMode(filter);
+    const auto glFormat = getTextureFormat(format);
+
+    if (activeTextureUnit == -1) {
+        glActiveTexture(GL_TEXTURE0);
+    } else {
+        glActiveTexture(activeTextureUnit);
+    }
+    glBindTexture(GL_TEXTURE_2D, handle);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, getWrapMode(wrapS));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, getWrapMode(wrapT));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glFilter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glFilter);
+
+    runtime_assert(data, "Texture failed to compile: missing image data");
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, glFormat, width, height, 0, glFormat, GL_UNSIGNED_BYTE, data);
+        if (genMipmaps) {
+            glGenerateMipmap(GL_TEXTURE_2D);
+        }
+    }
+    return handle;
+}
+
+void RenderBackendGL::useTexture(unsigned int handle, int activeTextureUnit /*= -1*/) {
+    if (handle == 0) return;
+    if (activeTextureUnit == -1) {
+        glActiveTexture(GL_TEXTURE0);
+    } else {
+        glActiveTexture(activeTextureUnit);
+    }
+    glBindTexture(GL_TEXTURE_2D, handle);
+}

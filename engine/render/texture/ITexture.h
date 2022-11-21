@@ -22,11 +22,6 @@ public:
     [[nodiscard]] int getTextureUnit() const {
         return this->activeTextureUnit;
     }
-
-    static int getFormatFromString(const std::string& formatName);
-    static int getFormatFromBitDepth(int bd);
-    static int getWrapModeFromString(const std::string& wrapName);
-    static int getFilterModeFromString(const std::string& filterName);
 protected:
     int activeTextureUnit = -1;
 };

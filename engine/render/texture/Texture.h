@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glad/gl.h>
+#include <render/backend/RendererTypes.h>
 #include "Image.h"
 #include "ITexture.h"
 
@@ -14,13 +14,13 @@ public:
 protected:
     SharedPointer<Image> file;
     std::string filePath{"file://textures/missing.png"};
-    int format = GL_RGBA;
+    TextureFormat format = TextureFormat::RGBA;
     std::string formatOverride{"NONE"};
-    int wrapModeS = GL_REPEAT;
+    WrapMode wrapModeS = WrapMode::REPEAT;
     std::string wrapModeSStr{"REPEAT"};
-    int wrapModeT = GL_REPEAT;
+    WrapMode wrapModeT = WrapMode::REPEAT;
     std::string wrapModeTStr{"REPEAT"};
-    int filterMode = GL_LINEAR;
+    FilterMode filterMode = FilterMode::LINEAR;
     std::string filterModeStr{"LINEAR"};
     bool mipmaps = true;
     bool verticalFlip = true;

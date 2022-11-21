@@ -1,5 +1,8 @@
 #include "MaterialTextured.h"
 
+// todo(render): move to render backend
+#include <glad/gl.h>
+
 using namespace chira;
 
 void MaterialTextured::compile(const nlohmann::json& properties) {
