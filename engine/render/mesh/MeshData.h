@@ -30,9 +30,9 @@ protected:
     unsigned int vboHandle = 0, vaoHandle = 0, eboHandle = 0;
     std::vector<Vertex> vertices;
     std::vector<Index> indices;
-    /// Establishes the OpenGL buffers and copies the current mesh data into them.
+    /// Establishes the vertex buffers and copies the current mesh data into them.
     void setupForRendering();
-    /// Updates the OpenGL buffers with the current mesh data.
+    /// Updates the vertex buffers with the current mesh data.
     void updateMeshData();
     /// Does not call updateMeshData().
     void clearMeshData();

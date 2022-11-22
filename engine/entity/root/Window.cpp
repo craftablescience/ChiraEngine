@@ -365,6 +365,6 @@ void Window::displaySplashScreen() {
 }
 
 void Window::setImGuiConfigPath() {
-    static std::string configPath = std::string{Config::getConfigDirectory().data()} + "imgui.ini";
+    static std::string configPath = Config::getConfigFile("imgui.ini");
     ImGui::GetIO().IniFilename = configPath.c_str();
 }

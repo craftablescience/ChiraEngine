@@ -64,3 +64,7 @@ std::string_view Config::getConfigDirectory() {
 #endif
     return pathString;
 }
+
+std::string Config::getConfigFile(std::string_view file) {
+    return std::string{Config::getConfigDirectory()} + file.data();
+}

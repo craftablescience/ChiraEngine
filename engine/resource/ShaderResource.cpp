@@ -2,6 +2,7 @@
 
 #include <regex>
 // todo(render): move to render backend
+#include <glad/gl.h>
 #include <glad/glversion.h>
 
 #include <core/Logger.h>
