@@ -1,6 +1,7 @@
 list(APPEND CHIRA_ENGINE_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/RenderBackendGL.h
-        ${CMAKE_CURRENT_LIST_DIR}/RenderBackendNull.h
+# todo(render): make a null backend for testing
+#       ${CMAKE_CURRENT_LIST_DIR}/RenderBackendNull.h
         ${CMAKE_CURRENT_LIST_DIR}/Renderer.h
         ${CMAKE_CURRENT_LIST_DIR}/RendererTypes.h)
 

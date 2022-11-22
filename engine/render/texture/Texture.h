@@ -1,7 +1,7 @@
 #pragma once
 
+#include <loader/image/Image.h>
 #include <render/backend/RendererTypes.h>
-#include "Image.h"
 #include "ITexture.h"
 
 namespace chira {
@@ -14,8 +14,6 @@ public:
 protected:
     SharedPointer<Image> file;
     std::string filePath{"file://textures/missing.png"};
-    TextureFormat format = TextureFormat::RGBA;
-    std::string formatOverride{"NONE"};
     WrapMode wrapModeS = WrapMode::REPEAT;
     std::string wrapModeSStr{"REPEAT"};
     WrapMode wrapModeT = WrapMode::REPEAT;
@@ -31,7 +29,6 @@ private:
     void setWrapModeT(std::string wrapModeTStr_);
 public:
     CHIRA_PROPS (
-            CHIRA_PROP(Texture, formatOverride),
             CHIRA_PROP(Texture, verticalFlip),
             CHIRA_PROP(Texture, mipmaps),
             CHIRA_PROP_NAMED(Texture, filePath, image),

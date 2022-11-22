@@ -10,9 +10,9 @@
 
 namespace chira::Serialize {
 
-template<class Class, typename T>
+template<class C, typename T>
 struct Property {
-    constexpr Property(T Class::*member_, std::string_view name_, T(Class::*memberFuncGetter_)(), void(Class::*memberFuncSetter_)(T))
+    constexpr Property(T C::*member_, std::string_view name_, T(C::*memberFuncGetter_)(), void(C::*memberFuncSetter_)(T))
             : member(member_)
             , name(name_)
             , memberFuncGetter(memberFuncGetter_)
@@ -20,17 +20,17 @@ struct Property {
 
     using Type = T;
 
-    T Class::*member;
+    T C::*member;
     std::string_view name;
-    T(Class::*memberFuncGetter)();
-    void(Class::*memberFuncSetter)(T);
+    T(C::*memberFuncGetter)();
+    void(C::*memberFuncSetter)(T);
 };
 
 // https://stackoverflow.com/questions/20405569/in-function-call-why-doesnt-nullptr-match-a-pointer-to-a-template-object
 // what the fuck C++
-template<class Class, typename T>
-constexpr auto createProperty(T Class::*member, std::string_view name, T(Class::*memberFuncGetter)() = static_cast<T(Class::*)()>(nullptr), void(Class::*memberFuncSetter)(T) = static_cast<void(Class::*)(T)>(nullptr)) {
-    return Property<Class, T>{member, name, memberFuncGetter, memberFuncSetter};
+template<class C, typename T>
+constexpr auto createProperty(T C::*member, std::string_view name, T(C::*memberFuncGetter)() = static_cast<T(C::*)()>(nullptr), void(C::*memberFuncSetter)(T) = static_cast<void(C::*)(T)>(nullptr)) {
+    return Property<C, T>{member, name, memberFuncGetter, memberFuncSetter};
 }
 
 template<class C>

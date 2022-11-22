@@ -1,7 +1,5 @@
 #pragma once
 
-// todo(render): move to render backend
-#include <glad/gl.h>
 #include <render/backend/RendererTypes.h>
 #include "ITexture.h"
 
@@ -25,18 +23,6 @@ protected:
     bool verticalFlipDN = false;
     bool verticalFlipLT = false;
     bool verticalFlipRT = false;
-    TextureFormat formatFD = TextureFormat::RGBA;
-    TextureFormat formatBK = TextureFormat::RGBA;
-    TextureFormat formatUP = TextureFormat::RGBA;
-    TextureFormat formatDN = TextureFormat::RGBA;
-    TextureFormat formatLT = TextureFormat::RGBA;
-    TextureFormat formatRT = TextureFormat::RGBA;
-    std::string formatOverrideFD{"NONE"};
-    std::string formatOverrideBK{"NONE"};
-    std::string formatOverrideUP{"NONE"};
-    std::string formatOverrideDN{"NONE"};
-    std::string formatOverrideLT{"NONE"};
-    std::string formatOverrideRT{"NONE"};
     bool mipmaps = true;
     FilterMode filterMode = FilterMode::LINEAR;
     std::string filterModeStr{"LINEAR"};
@@ -65,12 +51,6 @@ public:
             CHIRA_PROP(TextureCubemap, verticalFlipDN),
             CHIRA_PROP(TextureCubemap, verticalFlipLT),
             CHIRA_PROP(TextureCubemap, verticalFlipRT),
-            CHIRA_PROP(TextureCubemap, formatOverrideFD),
-            CHIRA_PROP(TextureCubemap, formatOverrideBK),
-            CHIRA_PROP(TextureCubemap, formatOverrideUP),
-            CHIRA_PROP(TextureCubemap, formatOverrideDN),
-            CHIRA_PROP(TextureCubemap, formatOverrideLT),
-            CHIRA_PROP(TextureCubemap, formatOverrideRT),
             CHIRA_PROP(TextureCubemap, mipmaps),
             CHIRA_PROP_NAMED_SET(TextureCubemap, filterModeStr, filterMode, setFilterMode),
             CHIRA_PROP_NAMED_SET(TextureCubemap, wrapModeSStr, wrapModeS, setWrapModeS),

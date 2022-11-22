@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string_view>
+#include <loader/image/Image.h>
 #include <math/Types.h>
 #include "RendererTypes.h"
 
@@ -17,8 +18,13 @@ struct RenderBackendGL {
     [[nodiscard]] static int getWrapMode(WrapMode mode);
     [[nodiscard]] static int getFilterMode(FilterMode mode);
 
-    [[nodiscard]] static unsigned int createTexture(TextureFormat format, WrapMode wrapS, WrapMode wrapT, FilterMode filter, int width, int height, byte data[], bool genMipmaps = true, int activeTextureUnit = -1);
-    static void useTexture(unsigned int handle, int activeTextureUnit = -1);
+    [[nodiscard]] static unsigned int createTexture2D(const Image& image, WrapMode wrapS, WrapMode wrapT, FilterMode filter,
+                                                      bool genMipmaps = true, int activeTextureUnit = -1);
+    [[nodiscard]] static unsigned int createTextureCubemap(const Image& imageRT, const Image& imageLT, const Image& imageUP,
+                                                           const Image& imageDN, const Image& imageFD, const Image& imageBK,
+                                                           WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, FilterMode filter,
+                                                           bool genMipmaps = true, int activeTextureUnit = -1);
+    static void useTexture(TextureType type, unsigned int handle, int activeTextureUnit = -1);
 };
 
 } // namespace chira

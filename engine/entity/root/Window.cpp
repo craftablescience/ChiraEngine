@@ -11,7 +11,7 @@
 #include <core/Engine.h>
 #include <event/Events.h>
 #include <input/InputManager.h>
-#include <render/texture/Image.h>
+#include <loader/image/Image.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <render/material/MaterialFramebuffer.h>
 #include <render/material/MaterialTextured.h>
@@ -337,12 +337,13 @@ void Window::moveToCenter() const {
 void Window::setIcon(const std::string& identifier) const {
     GLFWimage images[1];
     int iconWidth, iconHeight, bitsPerPixel;
-    auto icon = Image::getUncompressedImage(FilesystemResourceProvider::getResourceAbsolutePath(identifier), &iconWidth, &iconHeight, &bitsPerPixel, 4, false);
-    runtime_assert(icon.data, "Window icon has no data");
+    auto* icon = Image::getUncompressedImage(FilesystemResourceProvider::getResourceAbsolutePath(identifier), &iconWidth, &iconHeight, &bitsPerPixel, 4, false);
+    runtime_assert(icon, "Window icon has no data");
     images[0].width = iconWidth;
     images[0].height = iconHeight;
-    images[0].pixels = icon.data;
+    images[0].pixels = icon;
     glfwSetWindowIcon(this->window, 1, images);
+    Image::deleteUncompressedImage(icon);
 }
 
 void Window::shouldStopAfterThisFrame(bool yes) const {

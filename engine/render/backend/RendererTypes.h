@@ -4,6 +4,11 @@
 
 namespace chira {
 
+enum class TextureType {
+    TWO_DIMENSIONAL,
+    CUBEMAP,
+};
+
 enum class TextureFormat {
     RED,
     RG,

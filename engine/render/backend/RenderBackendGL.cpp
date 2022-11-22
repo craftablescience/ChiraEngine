@@ -158,12 +158,13 @@ int RenderBackendGL::getFilterMode(FilterMode mode) {
     }
 }
 
-unsigned int RenderBackendGL::createTexture(TextureFormat format, WrapMode wrapS, WrapMode wrapT, FilterMode filter, int width, int height, byte data[], bool genMipmaps /*= true*/, int activeTextureUnit /*= -1*/) {
+unsigned int RenderBackendGL::createTexture2D(const Image& image, WrapMode wrapS, WrapMode wrapT, FilterMode filter,
+                                              bool genMipmaps /*= true*/, int activeTextureUnit /*= -1*/) {
     unsigned int handle;
     glGenTextures(1, &handle);
 
     const auto glFilter = getFilterMode(filter);
-    const auto glFormat = getTextureFormat(format);
+    const auto glFormat = getTextureFormatFromBitDepth(image.getBitDepth());
 
     if (activeTextureUnit == -1) {
         glActiveTexture(GL_TEXTURE0);
@@ -176,9 +177,9 @@ unsigned int RenderBackendGL::createTexture(TextureFormat format, WrapMode wrapS
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glFilter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glFilter);
 
-    runtime_assert(data, "Texture failed to compile: missing image data");
-    if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, glFormat, width, height, 0, glFormat, GL_UNSIGNED_BYTE, data);
+    runtime_assert(image.getData(), "Texture failed to compile: missing image data");
+    if (image.getData()) {
+        glTexImage2D(GL_TEXTURE_2D, 0, glFormat, image.getWidth(), image.getHeight(), 0, glFormat, GL_UNSIGNED_BYTE, image.getData());
         if (genMipmaps) {
             glGenerateMipmap(GL_TEXTURE_2D);
         }
@@ -186,12 +187,52 @@ unsigned int RenderBackendGL::createTexture(TextureFormat format, WrapMode wrapS
     return handle;
 }
 
-void RenderBackendGL::useTexture(unsigned int handle, int activeTextureUnit /*= -1*/) {
+unsigned int RenderBackendGL::createTextureCubemap(const Image& imageRT, const Image& imageLT, const Image& imageUP,
+                                                   const Image& imageDN, const Image& imageFD, const Image& imageBK,
+                                                   WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, FilterMode filter,
+                                                   bool genMipmaps /*= true*/, int activeTextureUnit /*= -1*/) {
+    unsigned int handle;
+    glGenTextures(1, &handle);
+
+    const auto glFilter = getFilterMode(filter);
+
+    if (activeTextureUnit == -1) {
+        glActiveTexture(GL_TEXTURE0);
+    } else {
+        glActiveTexture(activeTextureUnit);
+    }
+    glBindTexture(GL_TEXTURE_CUBE_MAP, handle);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, getWrapMode(wrapS));
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, getWrapMode(wrapT));
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, getWrapMode(wrapR));
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, glFilter);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, glFilter);
+
+    std::array<const Image*, 6> images{&imageRT, &imageLT, &imageUP, &imageDN, &imageFD, &imageBK};
+    for (int i = 0; i < 6; i++) {
+        runtime_assert(images[i]->getData(), "Texture failed to compile: missing image data");
+        const auto glFormat = getTextureFormatFromBitDepth(images[i]->getBitDepth());
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glFormat, images[i]->getWidth(), images[i]->getHeight(), 0, glFormat, GL_UNSIGNED_BYTE, images[i]->getData());
+    }
+    if (genMipmaps) {
+        glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+    }
+    return handle;
+}
+
+void RenderBackendGL::useTexture(TextureType type, unsigned int handle, int activeTextureUnit /*= -1*/) {
     if (handle == 0) return;
     if (activeTextureUnit == -1) {
         glActiveTexture(GL_TEXTURE0);
     } else {
         glActiveTexture(activeTextureUnit);
     }
-    glBindTexture(GL_TEXTURE_2D, handle);
+    switch (type) {
+        case TextureType::TWO_DIMENSIONAL:
+            glBindTexture(GL_TEXTURE_2D, handle);
+            break;
+        case TextureType::CUBEMAP:
+            glBindTexture(GL_TEXTURE_CUBE_MAP, handle);
+            break;
+    }
 }

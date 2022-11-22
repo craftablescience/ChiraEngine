@@ -8,30 +8,24 @@ using namespace chira;
 
 CHIRA_CREATE_LOG(TEXTURE);
 
-Texture::Texture(std::string identifier_, bool cacheTexture)
+Texture::Texture(std::string identifier_, bool cacheTexture /*= true*/)
     : ITexture(std::move(identifier_))
     , cache(cacheTexture) {}
 
 void Texture::compile(const nlohmann::json& properties) {
     Serialize::fromJSON(this, properties);
 
-    auto texData = Resource::getResource<Image>(this->filePath, this->verticalFlip);
+    auto imageFile = Resource::getResource<Image>(this->filePath, this->verticalFlip);
 
-    if (this->formatOverride != "NONE") {
-        this->format = getTextureFormatFromString(this->formatOverride);
-    } else if (texData->getBitDepth() > 0) {
-        this->format = getTextureFormatFromBitDepth(texData->getBitDepth());
-    }
-
-    this->handle = Renderer::createTexture(this->format, this->wrapModeS, this->wrapModeT, this->filterMode, texData->getWidth(), texData->getHeight(), texData->getData(), true, this->activeTextureUnit);
-
+    this->handle = Renderer::createTexture2D(*imageFile, this->wrapModeS, this->wrapModeT, this->filterMode,
+                                             this->mipmaps, this->activeTextureUnit);
     if (this->cache) {
-        this->file = texData;
+        this->file = imageFile;
     }
 }
 
 void Texture::use() {
-    Renderer::useTexture(this->handle, this->activeTextureUnit);
+    Renderer::useTexture(TextureType::TWO_DIMENSIONAL, this->handle, this->activeTextureUnit);
 }
 
 void Texture::setFilterMode(std::string filterModeStr_) {
