@@ -18,14 +18,18 @@ void Texture::compile(const nlohmann::json& properties) {
     auto imageFile = Resource::getResource<Image>(this->filePath, this->verticalFlip);
 
     this->handle = Renderer::createTexture2D(*imageFile, this->wrapModeS, this->wrapModeT, this->filterMode,
-                                             this->mipmaps, this->activeTextureUnit);
+                                             this->mipmaps);
     if (this->cache) {
         this->file = imageFile;
     }
 }
 
-void Texture::use() {
-    Renderer::useTexture(TextureType::TWO_DIMENSIONAL, this->handle, this->activeTextureUnit);
+void Texture::use() const {
+    Renderer::useTexture(TextureType::TWO_DIMENSIONAL, this->handle);
+}
+
+void Texture::use(TextureUnit activeTextureUnit) const {
+    Renderer::useTexture(TextureType::TWO_DIMENSIONAL, this->handle, activeTextureUnit);
 }
 
 void Texture::setFilterMode(std::string filterModeStr_) {

@@ -9,7 +9,8 @@ class TextureCubemap final : public ITexture {
 public:
     explicit TextureCubemap(std::string identifier_);
     void compile(const nlohmann::json& properties) override;
-    void use() override;
+    void use() const override;
+    void use(TextureUnit activeTextureUnit) const override;
 protected:
     std::string imageFD{"file://textures/missing.png"};
     std::string imageBK{"file://textures/missing.png"};

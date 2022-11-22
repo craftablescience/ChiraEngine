@@ -1,7 +1,5 @@
 #include "MaterialCubemap.h"
 
-// todo(render): move to render backend
-#include <glad/gl.h>
 #include <resource/Resource.h>
 
 using namespace chira;
@@ -23,7 +21,6 @@ SharedPointer<TextureCubemap> MaterialCubemap::getTextureCubemap() const {
 void MaterialCubemap::setTextureCubemap(std::string path) {
     this->cubemapPath = std::move(path);
     this->cubemap = Resource::getResource<TextureCubemap>(this->cubemapPath);
-    this->cubemap->setTextureUnit(GL_TEXTURE0);
     this->shader->use();
     this->shader->setUniform("cubemap", 0);
 }

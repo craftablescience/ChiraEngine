@@ -19,12 +19,12 @@ struct RenderBackendGL {
     [[nodiscard]] static int getFilterMode(FilterMode mode);
 
     [[nodiscard]] static unsigned int createTexture2D(const Image& image, WrapMode wrapS, WrapMode wrapT, FilterMode filter,
-                                                      bool genMipmaps = true, int activeTextureUnit = -1);
+                                                      bool genMipmaps = true, TextureUnit activeTextureUnit = TextureUnit::G0);
     [[nodiscard]] static unsigned int createTextureCubemap(const Image& imageRT, const Image& imageLT, const Image& imageUP,
                                                            const Image& imageDN, const Image& imageFD, const Image& imageBK,
                                                            WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, FilterMode filter,
-                                                           bool genMipmaps = true, int activeTextureUnit = -1);
-    static void useTexture(TextureType type, unsigned int handle, int activeTextureUnit = -1);
+                                                           bool genMipmaps = true, TextureUnit activeTextureUnit = TextureUnit::G0);
+    static void useTexture(TextureType type, unsigned int handle, TextureUnit activeTextureUnit = TextureUnit::G0);
 };
 
 } // namespace chira

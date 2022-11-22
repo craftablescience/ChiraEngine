@@ -1,7 +1,6 @@
 #pragma once
 
 #include <loader/image/Image.h>
-#include <render/backend/RendererTypes.h>
 #include "ITexture.h"
 
 namespace chira {
@@ -10,7 +9,8 @@ class Texture final : public ITexture {
 public:
     explicit Texture(std::string identifier_, bool cacheTexture = true);
     void compile(const nlohmann::json& properties) override;
-    void use() override;
+    void use() const override;
+    void use(TextureUnit activeTextureUnit) const override;
 protected:
     SharedPointer<Image> file;
     std::string filePath{"file://textures/missing.png"};

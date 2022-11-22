@@ -159,18 +159,14 @@ int RenderBackendGL::getFilterMode(FilterMode mode) {
 }
 
 unsigned int RenderBackendGL::createTexture2D(const Image& image, WrapMode wrapS, WrapMode wrapT, FilterMode filter,
-                                              bool genMipmaps /*= true*/, int activeTextureUnit /*= -1*/) {
+                                              bool genMipmaps /*= true*/, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
     unsigned int handle;
     glGenTextures(1, &handle);
 
     const auto glFilter = getFilterMode(filter);
     const auto glFormat = getTextureFormatFromBitDepth(image.getBitDepth());
 
-    if (activeTextureUnit == -1) {
-        glActiveTexture(GL_TEXTURE0);
-    } else {
-        glActiveTexture(activeTextureUnit);
-    }
+    glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
     glBindTexture(GL_TEXTURE_2D, handle);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, getWrapMode(wrapS));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, getWrapMode(wrapT));
@@ -190,17 +186,13 @@ unsigned int RenderBackendGL::createTexture2D(const Image& image, WrapMode wrapS
 unsigned int RenderBackendGL::createTextureCubemap(const Image& imageRT, const Image& imageLT, const Image& imageUP,
                                                    const Image& imageDN, const Image& imageFD, const Image& imageBK,
                                                    WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, FilterMode filter,
-                                                   bool genMipmaps /*= true*/, int activeTextureUnit /*= -1*/) {
+                                                   bool genMipmaps /*= true*/, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
     unsigned int handle;
     glGenTextures(1, &handle);
 
     const auto glFilter = getFilterMode(filter);
 
-    if (activeTextureUnit == -1) {
-        glActiveTexture(GL_TEXTURE0);
-    } else {
-        glActiveTexture(activeTextureUnit);
-    }
+    glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
     glBindTexture(GL_TEXTURE_CUBE_MAP, handle);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, getWrapMode(wrapS));
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, getWrapMode(wrapT));
@@ -220,13 +212,9 @@ unsigned int RenderBackendGL::createTextureCubemap(const Image& imageRT, const I
     return handle;
 }
 
-void RenderBackendGL::useTexture(TextureType type, unsigned int handle, int activeTextureUnit /*= -1*/) {
+void RenderBackendGL::useTexture(TextureType type, unsigned int handle, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
     if (handle == 0) return;
-    if (activeTextureUnit == -1) {
-        glActiveTexture(GL_TEXTURE0);
-    } else {
-        glActiveTexture(activeTextureUnit);
-    }
+    glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
     switch (type) {
         case TextureType::TWO_DIMENSIONAL:
             glBindTexture(GL_TEXTURE_2D, handle);

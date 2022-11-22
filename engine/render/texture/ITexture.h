@@ -3,6 +3,7 @@
 #include <string>
 
 #include <resource/PropertiesResource.h>
+#include <render/backend/RendererTypes.h>
 #include <utility/HandleObject.h>
 
 namespace chira {
@@ -13,17 +14,8 @@ public:
             : PropertiesResource(std::move(identifier_))
             , HandleObject<unsigned int>(0) {}
 
-    virtual void use() = 0;
-
-    void setTextureUnit(int textureUnit) {
-        this->activeTextureUnit = textureUnit;
-    }
-
-    [[nodiscard]] int getTextureUnit() const {
-        return this->activeTextureUnit;
-    }
-protected:
-    int activeTextureUnit = -1;
+    virtual void use() const = 0;
+    virtual void use(TextureUnit activeTextureUnit) const = 0;
 };
 
 } // namespace chira
