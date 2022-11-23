@@ -226,21 +226,21 @@ void RenderBackendGL::useTexture(TextureType type, unsigned int handle, TextureU
     }
 }
 
-int RenderBackendGL::getShaderType(ShaderType type) {
+int RenderBackendGL::getShaderModuleType(ShaderModuleType type) {
     switch (type) {
-        case ShaderType::VERTEX:
+        case ShaderModuleType::VERTEX:
             return GL_VERTEX_SHADER;
-        case ShaderType::FRAGMENT:
+        case ShaderModuleType::FRAGMENT:
             return GL_FRAGMENT_SHADER;
     }
     return -1;
 }
 
-int RenderBackendGL::createShader(const std::string& shader, ShaderType type) {
+int RenderBackendGL::createShaderModule(const std::string& shader, ShaderModuleType type) {
     auto data = std::string{GL_VERSION_STRING.data()} + "\n\n" + shader;
     const char* dat = data.c_str();
 
-    int glType = getShaderType(type);
+    int glType = getShaderModuleType(type);
     int handle = glCreateShader(glType);
     glShaderSource(handle, 1, &dat, nullptr);
     glCompileShader(handle);
@@ -256,6 +256,6 @@ int RenderBackendGL::createShader(const std::string& shader, ShaderType type) {
     return handle;
 }
 
-void RenderBackendGL::destroyShader(int handle) {
+void RenderBackendGL::destroyShaderModule(int handle) {
     glDeleteShader(handle);
 }

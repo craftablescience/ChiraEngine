@@ -25,9 +25,9 @@ struct RenderBackendGL {
                                                            bool genMipmaps = true, TextureUnit activeTextureUnit = TextureUnit::G0);
     static void useTexture(TextureType type, unsigned int handle, TextureUnit activeTextureUnit = TextureUnit::G0);
 
-    [[nodiscard]] static int getShaderType(ShaderType type);
-    [[nodiscard]] static int createShader(const std::string& shader, ShaderType type);
-    static void destroyShader(int handle);
+    [[nodiscard]] static int getShaderModuleType(ShaderModuleType type);
+    [[nodiscard]] static int createShaderModule(const std::string& shader, ShaderModuleType type);
+    static void destroyShaderModule(int handle);
 };
 
 } // namespace chira

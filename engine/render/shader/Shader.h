@@ -56,7 +56,7 @@ private:
 
     static std::string replaceMacros(const std::string&, const std::string&);
 
-    int shaderHandles[2] { -1, -1 };
+    int shaderModuleHandles[2] { -1, -1 };
     bool usesPV = true;
     bool usesM = true;
     bool lit = true;
@@ -64,7 +64,7 @@ private:
     std::string fragmentPath{"file://shaders/unlitTextured.fsh"};
 
     /// Should only be called in Shader::compile() !!!
-    void addShader(const std::string& path, ShaderType type);
+    void addShaderModule(const std::string& path, ShaderModuleType type);
     /// Should only be called in Shader::compile() !!!
     void setVertexShader(std::string path);
     /// Should only be called in Shader::compile() !!!

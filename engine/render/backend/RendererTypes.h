@@ -48,7 +48,7 @@ TextureFormat getTextureFormatFromBitDepth(int bd, bool flipRB = false, bool use
 WrapMode getWrapModeFromString(std::string_view mode);
 FilterMode getFilterModeFromString(std::string_view mode);
 
-enum class ShaderType {
+enum class ShaderModuleType {
     VERTEX,
     FRAGMENT,
 };

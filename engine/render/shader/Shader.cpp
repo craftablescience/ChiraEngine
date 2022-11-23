@@ -42,9 +42,9 @@ void Shader::use() const {
 }
 
 Shader::~Shader() {
-    for (const auto shaderHandle : this->shaderHandles) {
-        if (shaderHandle != -1)
-            Renderer::destroyShader(shaderHandle);
+    for (const auto shaderModuleHandle : this->shaderModuleHandles) {
+        if (shaderModuleHandle != -1)
+            Renderer::destroyShaderModule(shaderModuleHandle);
     }
     glDeleteProgram(this->handle);
 }
@@ -161,20 +161,20 @@ std::string Shader::replaceMacros(const std::string& ignoredInclude, const std::
     return out;
 }
 
-void Shader::addShader(const std::string& path, ShaderType type) {
-    auto shaderString = Resource::getUniqueUncachedResource<StringResource>(path);
-    auto shaderData = replaceMacros(shaderString->getIdentifier().data(), shaderString->getString());
-    int shaderHandle = Renderer::createShader(shaderData, type);
-    glAttachShader(this->handle, shaderHandle);
-    this->shaderHandles[static_cast<int>(type)] = shaderHandle;
+void Shader::addShaderModule(const std::string& path, ShaderModuleType type) {
+    auto shaderModuleString = Resource::getUniqueUncachedResource<StringResource>(path);
+    auto shaderModuleData = replaceMacros(shaderModuleString->getIdentifier().data(), shaderModuleString->getString());
+    int shaderModuleHandle = Renderer::createShaderModule(shaderModuleData, type);
+    glAttachShader(this->handle, shaderModuleHandle);
+    this->shaderModuleHandles[static_cast<int>(type)] = shaderModuleHandle;
 }
 
 void Shader::setVertexShader(std::string path) {
     this->vertexPath = std::move(path);
-    this->addShader(this->vertexPath, ShaderType::VERTEX);
+    this->addShaderModule(this->vertexPath, ShaderModuleType::VERTEX);
 }
 
 void Shader::setFragmentShader(std::string path) {
     this->fragmentPath = std::move(path);
-    this->addShader(this->fragmentPath, ShaderType::FRAGMENT);
+    this->addShaderModule(this->fragmentPath, ShaderModuleType::FRAGMENT);
 }
