@@ -4,8 +4,9 @@
 #include <string_view>
 
 #include "Logger.h"
+#include "Platform.h"
 
-#ifndef _WIN32
+#ifndef CHIRA_PLATFORM_WINDOWS
     #include <csignal>
 #endif
 
@@ -24,7 +25,7 @@
 namespace chira {
 
 inline void breakInDebugger() {
-#ifdef _WIN32
+#ifdef CHIRA_PLATFORM_WINDOWS
     __debugbreak();
 #else
     std::raise(SIGINT);
@@ -33,12 +34,12 @@ inline void breakInDebugger() {
 
 } // namespace chira
 
-extern chira::LogChannel LOG_ASSERT;
+CHIRA_GET_LOG_SHARED(ASSERT);
 
 // Leave outside the Chira namespace so it can be conditionally replaced with a macro
 // (why did modern compilers not implement this??)
 #ifdef CHIRA_USE_SOURCE_LOCATION
-inline void runtime_assert(bool shouldAssert, std::string_view message, const std::source_location location = std::source_location::current()) {
+inline void runtime_assert(bool shouldAssert, std::string_view message, const std::source_location& location = std::source_location::current()) {
     // Assertions fail when false
     if (shouldAssert)
         return;
