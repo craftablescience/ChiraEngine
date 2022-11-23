@@ -1,11 +1,19 @@
 #pragma once
 
 #include <string_view>
+#include <vector>
 #include <loader/image/Image.h>
 #include <math/Types.h>
+#include <math/Vertex.h>
 #include "RendererTypes.h"
 
 namespace chira {
+
+struct MeshHandle {
+    unsigned int vaoHandle;
+    unsigned int vboHandle;
+    unsigned int eboHandle;
+};
 
 struct RenderBackendGL {
     RenderBackendGL() = delete;
@@ -32,6 +40,10 @@ struct RenderBackendGL {
     [[nodiscard]] static int getMeshDrawMode(MeshDrawMode mode);
     [[nodiscard]] static int getMeshDepthFunction(MeshDepthFunction function);
     [[nodiscard]] static int getMeshCullType(MeshCullType type);
+    [[nodiscard]] static MeshHandle createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode);
+    static void updateMesh(MeshHandle handle, const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode);
+    static void drawMesh(MeshHandle handle, const std::vector<Index>& indices, MeshDepthFunction depthFunction, MeshCullType cullType);
+    static void destroyMesh(MeshHandle handle);
 };
 
 } // namespace chira

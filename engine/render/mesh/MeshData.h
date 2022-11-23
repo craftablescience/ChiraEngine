@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
 #include <loader/mesh/IMeshLoader.h>
 #include <render/backend/RendererTypes.h>
 #include <render/material/MaterialFactory.h>
@@ -27,7 +27,7 @@ protected:
     MeshDepthFunction depthFunction = MeshDepthFunction::LEQUAL;
     MeshCullType cullType = MeshCullType::BACK;
     SharedPointer<IMaterial> material;
-    unsigned int vboHandle = 0, vaoHandle = 0, eboHandle = 0;
+    MeshHandle handle{};
     std::vector<Vertex> vertices;
     std::vector<Index> indices;
     /// Establishes the vertex buffers and copies the current mesh data into them.

@@ -1,5 +1,7 @@
 #include "RenderBackendGL.h"
 
+#include <cstddef>
+
 #include <glad/gl.h>
 #include <glad/glversion.h>
 #include <backends/imgui_impl_opengl3.h>
@@ -302,4 +304,61 @@ int RenderBackendGL::getMeshCullType(MeshCullType type) {
             return GL_FRONT_AND_BACK;
     }
     return GL_BACK;
+}
+
+MeshHandle RenderBackendGL::createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode) {
+    MeshHandle handle{};
+    glGenVertexArrays(1, &handle.vaoHandle);
+    glGenBuffers(1, &handle.vboHandle);
+    glGenBuffers(1, &handle.eboHandle);
+
+    glBindVertexArray(handle.vaoHandle);
+
+    const auto glDrawMode = getMeshDrawMode(drawMode);
+
+    glBindBuffer(GL_ARRAY_BUFFER, handle.vboHandle);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertices.size() * sizeof(Vertex)), vertices.data(), glDrawMode);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle.eboHandle);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(indices.size() * sizeof(Index)), indices.data(), glDrawMode);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position)));
+    glEnableVertexAttribArray(0);
+    // normal attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, normal)));
+    glEnableVertexAttribArray(1);
+    // color attribute
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, color)));
+    glEnableVertexAttribArray(2);
+    // texture coord attribute
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, uv)));
+    glEnableVertexAttribArray(3);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    return handle;
+}
+
+void RenderBackendGL::updateMesh(MeshHandle handle, const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode) {
+    const auto glDrawMode = getMeshDrawMode(drawMode);
+
+    glBindBuffer(GL_ARRAY_BUFFER, handle.vboHandle);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertices.size() * sizeof(Vertex)), vertices.data(), glDrawMode);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle.eboHandle);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(indices.size() * sizeof(Index)), indices.data(), glDrawMode);
+}
+
+void RenderBackendGL::drawMesh(MeshHandle handle, const std::vector<Index>& indices, MeshDepthFunction depthFunction, MeshCullType cullType) {
+    glDepthFunc(getMeshDepthFunction(depthFunction));
+    glEnable(GL_CULL_FACE);
+    glCullFace(getMeshCullType(cullType));
+    glBindVertexArray(handle.vaoHandle);
+    glDrawElements(GL_TRIANGLES, static_cast<GLint>(indices.size()), GL_UNSIGNED_INT, nullptr);
+    glDisable(GL_CULL_FACE);
+}
+
+void RenderBackendGL::destroyMesh(MeshHandle handle) {
+    glDeleteVertexArrays(1, &handle.vaoHandle);
+    glDeleteBuffers(1, &handle.vboHandle);
+    glDeleteBuffers(1, &handle.eboHandle);
 }

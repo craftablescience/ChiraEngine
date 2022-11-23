@@ -1,57 +1,21 @@
 #include "MeshData.h"
 
-#include <cstddef>
 #include <algorithm>
 #include <string>
-// todo(render): move to render backend
-#include <glad/gl.h>
 #include <config/ConEntry.h>
 #include <math/Matrix.h>
 
 using namespace chira;
 
 void MeshData::setupForRendering() {
-    glGenVertexArrays(1, &this->vaoHandle);
-    glGenBuffers(1, &this->vboHandle);
-    glGenBuffers(1, &this->eboHandle);
-
-    glBindVertexArray(this->vaoHandle);
-
-    const auto glDrawMode = Renderer::getMeshDrawMode(this->drawMode);
-
-    glBindBuffer(GL_ARRAY_BUFFER, this->vboHandle);
-    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->vertices.size() * sizeof(Vertex)), this->vertices.data(), glDrawMode);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->eboHandle);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->indices.size() * sizeof(Index)), this->indices.data(), glDrawMode);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position)));
-    glEnableVertexAttribArray(0);
-    // normal attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, normal)));
-    glEnableVertexAttribArray(1);
-    // color attribute
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, color)));
-    glEnableVertexAttribArray(2);
-    // texture coord attribute
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, uv)));
-    glEnableVertexAttribArray(3);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    this->handle = Renderer::createMesh(this->vertices, this->indices, this->drawMode);
     this->initialized = true;
 }
 
 void MeshData::updateMeshData() {
     if (!this->initialized)
         return;
-
-    const auto glDrawMode = Renderer::getMeshDrawMode(this->drawMode);
-
-    glBindBuffer(GL_ARRAY_BUFFER, this->vboHandle);
-    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->vertices.size() * sizeof(Vertex)), this->vertices.data(), glDrawMode);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->eboHandle);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->indices.size() * sizeof(Index)), this->indices.data(), glDrawMode);
+    Renderer::updateMesh(this->handle, this->vertices, this->indices, this->drawMode);
 }
 
 void MeshData::render(glm::mat4 model) {
@@ -62,19 +26,12 @@ void MeshData::render(glm::mat4 model) {
         if (this->material->getShader()->usesModelMatrix())
             this->material->getShader()->setUniform("m", model);
     }
-    glDepthFunc(Renderer::getMeshDepthFunction(this->depthFunction));
-    glEnable(GL_CULL_FACE);
-    glCullFace(Renderer::getMeshCullType(this->cullType));
-    glBindVertexArray(this->vaoHandle);
-    glDrawElements(GL_TRIANGLES, static_cast<GLint>(this->indices.size()), GL_UNSIGNED_INT, nullptr);
-    glDisable(GL_CULL_FACE);
+    Renderer::drawMesh(this->handle, this->indices, this->depthFunction, this->cullType);
 }
 
 MeshData::~MeshData() {
     if (this->initialized) {
-        glDeleteVertexArrays(1, &this->vaoHandle);
-        glDeleteBuffers(1, &this->vboHandle);
-        glDeleteBuffers(1, &this->eboHandle);
+        Renderer::destroyMesh(this->handle);
     }
 }
 
