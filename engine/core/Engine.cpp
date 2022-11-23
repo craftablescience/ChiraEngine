@@ -7,7 +7,6 @@
 #include <loader/mesh/OBJMeshLoader.h>
 #include <loader/mesh/ChiraMeshLoader.h>
 #include <resource/provider/FilesystemResourceProvider.h>
-#include <resource/ShaderResource.h>
 #include <script/AngelScriptVM.h>
 #include <ui/debug/ConsolePanel.h>
 #include <ui/debug/ResourceUsageTrackerPanel.h>

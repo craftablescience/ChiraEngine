@@ -1,7 +1,7 @@
 #include "LightManager.h"
 
 #include <core/Logger.h>
-#include <resource/ShaderResource.h>
+#include <render/shader/Shader.h>
 #include <render/shader/UBO.h>
 
 using namespace chira;
@@ -9,9 +9,9 @@ using namespace chira;
 CHIRA_CREATE_LOG(LIGHTMANAGER);
 
 void LightManager::setupShaderMacros() {
-    ShaderResource::addPreprocessorSymbol("DIRECTIONAL_LIGHT_COUNT", std::to_string(DIRECTIONAL_LIGHT_COUNT));
-    ShaderResource::addPreprocessorSymbol("POINT_LIGHT_COUNT", std::to_string(POINT_LIGHT_COUNT));
-    ShaderResource::addPreprocessorSymbol("SPOT_LIGHT_COUNT", std::to_string(SPOT_LIGHT_COUNT));
+    Shader::addPreprocessorSymbol("DIRECTIONAL_LIGHT_COUNT", std::to_string(DIRECTIONAL_LIGHT_COUNT));
+    Shader::addPreprocessorSymbol("POINT_LIGHT_COUNT", std::to_string(POINT_LIGHT_COUNT));
+    Shader::addPreprocessorSymbol("SPOT_LIGHT_COUNT", std::to_string(SPOT_LIGHT_COUNT));
 }
 
 void LightManager::addLight(DirectionalLight* light) {

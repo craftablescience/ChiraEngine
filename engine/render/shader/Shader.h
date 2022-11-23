@@ -1,18 +1,23 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <resource/PropertiesResource.h>
 #include <math/Types.h>
+#include <render/backend/Renderer.h>
+#include <resource/PropertiesResource.h>
 #include <utility/HandleObject.h>
 
 namespace chira {
+
+constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_PREFIX = "#";
+constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_SUFFIX = "#";
 
 class Shader : public PropertiesResource, public HandleObject<int> {
 public:
     explicit Shader(std::string identifier_);
     void compile(const nlohmann::json& properties) override;
-    ~Shader() override;
     void use() const;
+    ~Shader() override;
+
     void setUniform(std::string_view name, bool value) const;
     void setUniform(std::string_view name, unsigned int value) const;
     void setUniform(std::string_view name, int value) const;
@@ -30,23 +35,36 @@ public:
     void setUniform(std::string_view name, glm::vec4i value) const;
     void setUniform(std::string_view name, glm::vec4f value) const;
     void setUniform(std::string_view name, glm::mat4 value) const;
-    [[nodiscard]] bool usesPVMatrices() const {
+
+    [[nodiscard]] inline bool usesPVMatrices() const {
         return this->usesPV;
     }
-    [[nodiscard]] bool usesModelMatrix() const {
+    [[nodiscard]] inline bool usesModelMatrix() const {
         return this->usesM;
     }
-    [[nodiscard]] bool isLit() const {
+    [[nodiscard]] inline bool isLit() const {
         return this->lit;
     }
-private:
-    void checkForCompilationErrors() const;
 
+    static void addPreprocessorSymbol(const std::string& name, const std::string& value);
+    static void setPreprocessorPrefix(const std::string& prefix);
+    static void setPreprocessorSuffix(const std::string& suffix);
+private:
+    static inline std::unordered_map<std::string, std::string> preprocessorSymbols;
+    static inline std::string preprocessorPrefix = std::string{SHADER_PREPROCESSOR_DEFAULT_PREFIX}; // NOLINT(cert-err58-cpp)
+    static inline std::string preprocessorSuffix = std::string{SHADER_PREPROCESSOR_DEFAULT_SUFFIX}; // NOLINT(cert-err58-cpp)
+
+    static std::string replaceMacros(const std::string&, const std::string&);
+
+    int shaderHandles[2] { -1, -1 };
     bool usesPV = true;
     bool usesM = true;
     bool lit = true;
     std::string vertexPath{"file://shaders/unlitTextured.vsh"};
     std::string fragmentPath{"file://shaders/unlitTextured.fsh"};
+
+    /// Should only be called in Shader::compile() !!!
+    void addShader(const std::string& path, ShaderType type);
     /// Should only be called in Shader::compile() !!!
     void setVertexShader(std::string path);
     /// Should only be called in Shader::compile() !!!

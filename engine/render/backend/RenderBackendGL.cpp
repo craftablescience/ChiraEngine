@@ -8,6 +8,7 @@
 
 #include <core/Assertions.h>
 #include <core/Logger.h>
+#include <i18n/TranslationManager.h>
 
 using namespace chira;
 
@@ -92,7 +93,6 @@ int RenderBackendGL::getTextureFormat(TextureFormat format) {
             return GL_RG;
         case TextureFormat::RGB:
             return GL_RGB;
-        default:
         case TextureFormat::RGBA:
             return GL_RGBA;
         case TextureFormat::BGR:
@@ -118,6 +118,7 @@ int RenderBackendGL::getTextureFormat(TextureFormat format) {
         case TextureFormat::DEPTH_STENCIL:
             return GL_DEPTH_STENCIL;
     }
+    return GL_RGBA;
 }
 
 int RenderBackendGL::getTextureFormatFromBitDepth(int bd) {
@@ -136,7 +137,6 @@ int RenderBackendGL::getTextureFormatFromBitDepth(int bd) {
 
 int RenderBackendGL::getWrapMode(WrapMode mode) {
     switch (mode) {
-        default:
         case WrapMode::REPEAT:
             return GL_REPEAT;
         case WrapMode::MIRRORED_REPEAT:
@@ -146,16 +146,17 @@ int RenderBackendGL::getWrapMode(WrapMode mode) {
         case WrapMode::CLAMP_TO_BORDER:
             return GL_CLAMP_TO_BORDER;
     }
+    return GL_REPEAT;
 }
 
 int RenderBackendGL::getFilterMode(FilterMode mode) {
     switch (mode) {
         case FilterMode::NEAREST:
             return GL_NEAREST;
-        default:
         case FilterMode::LINEAR:
             return GL_LINEAR;
     }
+    return GL_LINEAR;
 }
 
 unsigned int RenderBackendGL::createTexture2D(const Image& image, WrapMode wrapS, WrapMode wrapT, FilterMode filter,
@@ -223,4 +224,38 @@ void RenderBackendGL::useTexture(TextureType type, unsigned int handle, TextureU
             glBindTexture(GL_TEXTURE_CUBE_MAP, handle);
             break;
     }
+}
+
+int RenderBackendGL::getShaderType(ShaderType type) {
+    switch (type) {
+        case ShaderType::VERTEX:
+            return GL_VERTEX_SHADER;
+        case ShaderType::FRAGMENT:
+            return GL_FRAGMENT_SHADER;
+    }
+    return -1;
+}
+
+int RenderBackendGL::createShader(const std::string& shader, ShaderType type) {
+    auto data = std::string{GL_VERSION_STRING.data()} + "\n\n" + shader;
+    const char* dat = data.c_str();
+
+    int glType = getShaderType(type);
+    int handle = glCreateShader(glType);
+    glShaderSource(handle, 1, &dat, nullptr);
+    glCompileShader(handle);
+#if DEBUG
+    int success;
+    char infoLog[512];
+    glGetShaderiv(handle, GL_COMPILE_STATUS, &success);
+    if(!success) {
+        glGetShaderInfoLog(handle, 512, nullptr, infoLog);
+        LOG_GL.error(TRF("error.shader_resource.compilation_failure", glType, infoLog));
+    }
+#endif
+    return handle;
+}
+
+void RenderBackendGL::destroyShader(int handle) {
+    glDeleteShader(handle);
 }
