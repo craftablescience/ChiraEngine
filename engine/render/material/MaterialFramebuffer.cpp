@@ -1,5 +1,7 @@
 #include "MaterialFramebuffer.h"
 
+// todo(render): move to render backend
+#include <glad/gl.h>
 #include <entity/root/Frame.h>
 
 using namespace chira;

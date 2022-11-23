@@ -125,3 +125,37 @@ FilterMode chira::getFilterModeFromString(std::string_view mode) {
     LOG_RENDERERTYPES.warning(fmt::format("Invalid string passed to getFilterModeFromString: \"{}\"", mode));
     return FilterMode::LINEAR;
 }
+
+MeshDepthFunction chira::getMeshDepthFunctionFromString(std::string_view function) {
+    if (function == "NEVER")
+        return MeshDepthFunction::NEVER;
+    else if (function == "ALWAYS")
+        return MeshDepthFunction::ALWAYS;
+    else if (function == "LESS")
+        return MeshDepthFunction::LESS;
+    else if (function == "LEQUAL")
+        return MeshDepthFunction::LEQUAL;
+    else if (function == "EQUAL")
+        return MeshDepthFunction::EQUAL;
+    else if (function == "GEQUAL")
+        return MeshDepthFunction::GEQUAL;
+    else if (function == "GREATER")
+        return MeshDepthFunction::GREATER;
+    else if (function == "NOTEQUAL")
+        return MeshDepthFunction::NOTEQUAL;
+
+    LOG_RENDERERTYPES.warning(fmt::format("Invalid string passed to getMeshDepthFunctionFromString: \"{}\"", function));
+    return MeshDepthFunction::LEQUAL;
+}
+
+MeshCullType chira::getMeshCullTypeFromString(std::string_view type) {
+    if (type == "BACK")
+        return MeshCullType::BACK;
+    else if (type == "FRONT")
+        return MeshCullType::FRONT;
+    else if (type == "NONE")
+        return MeshCullType::NONE;
+
+    LOG_RENDERERTYPES.warning(fmt::format("Invalid string passed to getMeshCullTypeFromString: \"{}\"", type));
+    return MeshCullType::BACK;
+}

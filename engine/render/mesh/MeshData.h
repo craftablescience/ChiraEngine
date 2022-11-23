@@ -2,9 +2,8 @@
 
 #include <vector>
 #include <string>
-// todo(render): move to render backend
-#include <glad/gl.h>
 #include <loader/mesh/IMeshLoader.h>
+#include <render/backend/RendererTypes.h>
 #include <render/material/MaterialFactory.h>
 
 namespace chira {
@@ -16,16 +15,17 @@ public:
     virtual ~MeshData();
     [[nodiscard]] SharedPointer<IMaterial> getMaterial() const;
     void setMaterial(SharedPointer<IMaterial> newMaterial);
-    [[nodiscard]] int getDepthFunction() const;
-    [[nodiscard]] int getCullType() const;
+    [[nodiscard]] MeshDepthFunction getDepthFunction() const;
+    void setDepthFunction(MeshDepthFunction function);
+    [[nodiscard]] MeshCullType getCullType() const;
+    void setCullType(MeshCullType type);
     [[nodiscard]] std::vector<byte> getMeshData(const std::string& meshLoader) const;
     void appendMeshData(const std::string& loader, const std::string& identifier);
 protected:
     bool initialized = false;
-    int drawMode = GL_STATIC_DRAW;
-    int depthFunction = GL_LEQUAL;
-    bool backfaceCulling = true;
-    int cullType = GL_BACK;
+    MeshDrawMode drawMode = MeshDrawMode::STATIC;
+    MeshDepthFunction depthFunction = MeshDepthFunction::LEQUAL;
+    MeshCullType cullType = MeshCullType::BACK;
     SharedPointer<IMaterial> material;
     unsigned int vboHandle = 0, vaoHandle = 0, eboHandle = 0;
     std::vector<Vertex> vertices;

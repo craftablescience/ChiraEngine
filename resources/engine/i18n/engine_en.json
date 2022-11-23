@@ -26,11 +26,6 @@
   "debug.discord.generic_error": "Discord error {}: {}",
 
   "warn.obj_loader.not_triangulated": "OBJ file at {} is not triangulated, this will cause problems",
-  "warn.material.invalid_gl_format": "Invalid GL format: {}",
-  "warn.material.invalid_gl_wrap_type": "Invalid GL wrap type: {}",
-  "warn.material.invalid_gl_filter_type": "Invalid GL filter type: {}",
-  "warn.mesh.invalid_depth_function": "Invalid depth function value {}",
-  "warn.mesh.invalid_cull_type": "Invalid cull type value {}",
   "warn.properties_resource.missing_property": "Resource \"{}\" missing property \"{}\", using fallback...",
   "warn.resource.deleting_resource_at_exit": "Deleting \"{}\" (refcount {}) that was not already deleted!",
 

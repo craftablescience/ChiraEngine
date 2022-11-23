@@ -5,7 +5,7 @@
 using namespace chira;
 
 MeshDataBuilder::MeshDataBuilder() : MeshData() {
-    this->drawMode = GL_DYNAMIC_DRAW;
+    this->drawMode = MeshDrawMode::DYNAMIC;
 }
 
 void MeshDataBuilder::addVertex(Vertex vertex, bool addDuplicate) { // NOLINT(misc-no-recursion)
@@ -192,14 +192,6 @@ void MeshDataBuilder::addCube(Vertex center, glm::vec3 size, bool visibleOutside
                 addDuplicate
         );
     }
-}
-
-void MeshDataBuilder::enableBackfaceCulling(bool backfaceCulling_) {
-    this->backfaceCulling = backfaceCulling_;
-}
-
-bool MeshDataBuilder::isBackfaceCullingEnabled() const {
-    return this->backfaceCulling;
 }
 
 void MeshDataBuilder::update() {

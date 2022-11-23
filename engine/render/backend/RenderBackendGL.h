@@ -28,6 +28,10 @@ struct RenderBackendGL {
     [[nodiscard]] static int getShaderModuleType(ShaderModuleType type);
     [[nodiscard]] static int createShaderModule(const std::string& shader, ShaderModuleType type);
     static void destroyShaderModule(int handle);
+
+    [[nodiscard]] static int getMeshDrawMode(MeshDrawMode mode);
+    [[nodiscard]] static int getMeshDepthFunction(MeshDepthFunction function);
+    [[nodiscard]] static int getMeshCullType(MeshCullType type);
 };
 
 } // namespace chira

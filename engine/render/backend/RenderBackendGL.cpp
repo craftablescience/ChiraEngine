@@ -259,3 +259,47 @@ int RenderBackendGL::createShaderModule(const std::string& shader, ShaderModuleT
 void RenderBackendGL::destroyShaderModule(int handle) {
     glDeleteShader(handle);
 }
+
+int RenderBackendGL::getMeshDrawMode(MeshDrawMode mode) {
+    switch (mode) {
+        case MeshDrawMode::STATIC:
+            return GL_STATIC_DRAW;
+        case MeshDrawMode::DYNAMIC:
+            return GL_DYNAMIC_DRAW;
+    }
+    return GL_STATIC_DRAW;
+}
+
+int RenderBackendGL::getMeshDepthFunction(MeshDepthFunction function) {
+    switch (function) {
+        case MeshDepthFunction::NEVER:
+            return GL_NEVER;
+        case MeshDepthFunction::ALWAYS:
+            return GL_ALWAYS;
+        case MeshDepthFunction::EQUAL:
+            return GL_EQUAL;
+        case MeshDepthFunction::NOTEQUAL:
+            return GL_NOTEQUAL;
+        case MeshDepthFunction::LESS:
+            return GL_LESS;
+        case MeshDepthFunction::LEQUAL:
+            return GL_LEQUAL;
+        case MeshDepthFunction::GREATER:
+            return GL_GREATER;
+        case MeshDepthFunction::GEQUAL:
+            return GL_GEQUAL;
+    }
+    return GL_LEQUAL;
+}
+
+int RenderBackendGL::getMeshCullType(MeshCullType type) {
+    switch (type) {
+        case MeshCullType::BACK:
+            return GL_BACK;
+        case MeshCullType::FRONT:
+            return GL_FRONT;
+        case MeshCullType::NONE:
+            return GL_FRONT_AND_BACK;
+    }
+    return GL_BACK;
+}

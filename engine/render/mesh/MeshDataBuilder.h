@@ -13,8 +13,6 @@ public:
     void addSquare(Vertex v1, Vertex v2, Vertex v3, Vertex v4, bool addDuplicate = false);
     void addSquare(Vertex center, glm::vec2 size, SignedAxis normal, float offset = 0, bool addDuplicate = false);
     void addCube(Vertex center, glm::vec3 size, bool visibleOutside = true, bool addDuplicate = false);
-    void enableBackfaceCulling(bool backfaceCulling_);
-    [[nodiscard]] bool isBackfaceCullingEnabled() const;
     void update();
     /// Does not call update().
     void clear();

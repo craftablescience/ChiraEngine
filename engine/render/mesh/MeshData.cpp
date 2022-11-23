@@ -3,6 +3,8 @@
 #include <cstddef>
 #include <algorithm>
 #include <string>
+// todo(render): move to render backend
+#include <glad/gl.h>
 #include <config/ConEntry.h>
 #include <math/Matrix.h>
 
@@ -15,10 +17,12 @@ void MeshData::setupForRendering() {
 
     glBindVertexArray(this->vaoHandle);
 
+    const auto glDrawMode = Renderer::getMeshDrawMode(this->drawMode);
+
     glBindBuffer(GL_ARRAY_BUFFER, this->vboHandle);
-    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->vertices.size() * sizeof(Vertex)), this->vertices.data(), this->drawMode);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->vertices.size() * sizeof(Vertex)), this->vertices.data(), glDrawMode);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->eboHandle);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->indices.size() * sizeof(Index)), this->indices.data(), this->drawMode);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->indices.size() * sizeof(Index)), this->indices.data(), glDrawMode);
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position)));
@@ -42,10 +46,12 @@ void MeshData::updateMeshData() {
     if (!this->initialized)
         return;
 
+    const auto glDrawMode = Renderer::getMeshDrawMode(this->drawMode);
+
     glBindBuffer(GL_ARRAY_BUFFER, this->vboHandle);
-    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->vertices.size() * sizeof(Vertex)), this->vertices.data(), this->drawMode);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->vertices.size() * sizeof(Vertex)), this->vertices.data(), glDrawMode);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->eboHandle);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->indices.size() * sizeof(Index)), this->indices.data(), this->drawMode);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(this->indices.size() * sizeof(Index)), this->indices.data(), glDrawMode);
 }
 
 void MeshData::render(glm::mat4 model) {
@@ -56,15 +62,12 @@ void MeshData::render(glm::mat4 model) {
         if (this->material->getShader()->usesModelMatrix())
             this->material->getShader()->setUniform("m", model);
     }
-    glDepthFunc(this->depthFunction);
-    if (this->backfaceCulling) {
-        glEnable(GL_CULL_FACE);
-        glCullFace(this->cullType);
-    } else {
-        glDisable(GL_CULL_FACE);
-    }
+    glDepthFunc(Renderer::getMeshDepthFunction(this->depthFunction));
+    glEnable(GL_CULL_FACE);
+    glCullFace(Renderer::getMeshCullType(this->cullType));
     glBindVertexArray(this->vaoHandle);
     glDrawElements(GL_TRIANGLES, static_cast<GLint>(this->indices.size()), GL_UNSIGNED_INT, nullptr);
+    glDisable(GL_CULL_FACE);
 }
 
 MeshData::~MeshData() {
@@ -83,12 +86,20 @@ void MeshData::setMaterial(SharedPointer<IMaterial> newMaterial) {
     this->material = std::move(newMaterial);
 }
 
-int MeshData::getDepthFunction() const {
+MeshDepthFunction MeshData::getDepthFunction() const {
     return this->depthFunction;
 }
 
-int MeshData::getCullType() const {
+void MeshData::setDepthFunction(MeshDepthFunction function) {
+    this->depthFunction = function;
+}
+
+MeshCullType MeshData::getCullType() const {
     return this->cullType;
+}
+
+void MeshData::setCullType(MeshCullType type) {
+    this->cullType = type;
 }
 
 std::vector<byte> MeshData::getMeshData(const std::string& meshLoader) const {

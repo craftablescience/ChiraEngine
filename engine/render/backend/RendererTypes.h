@@ -43,14 +43,39 @@ enum class FilterMode {
     LINEAR,
 };
 
-TextureFormat getTextureFormatFromString(std::string_view format);
-TextureFormat getTextureFormatFromBitDepth(int bd, bool flipRB = false, bool useInts = false);
-WrapMode getWrapModeFromString(std::string_view mode);
-FilterMode getFilterModeFromString(std::string_view mode);
+[[nodiscard]] TextureFormat getTextureFormatFromString(std::string_view format);
+[[nodiscard]] TextureFormat getTextureFormatFromBitDepth(int bd, bool flipRB = false, bool useInts = false);
+[[nodiscard]] WrapMode getWrapModeFromString(std::string_view mode);
+[[nodiscard]] FilterMode getFilterModeFromString(std::string_view mode);
 
 enum class ShaderModuleType {
     VERTEX,
     FRAGMENT,
 };
+
+enum class MeshDrawMode {
+    STATIC,
+    DYNAMIC,
+};
+
+enum class MeshDepthFunction {
+    NEVER,
+    ALWAYS,
+    EQUAL,
+    NOTEQUAL,
+    LESS,
+    LEQUAL,
+    GREATER,
+    GEQUAL,
+};
+
+enum class MeshCullType {
+    BACK,
+    FRONT,
+    NONE,
+};
+
+[[nodiscard]] MeshDepthFunction getMeshDepthFunctionFromString(std::string_view function);
+[[nodiscard]] MeshCullType getMeshCullTypeFromString(std::string_view type);
 
 } // namespace chira

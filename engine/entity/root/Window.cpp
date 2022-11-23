@@ -4,6 +4,7 @@
 #include <backends/imgui_impl_glfw.h>
 #include <fmt/core.h>
 // todo(render): move to render backend
+#include <glad/gl.h>
 #include <glad/glversion.h>
 
 #include <config/Config.h>
