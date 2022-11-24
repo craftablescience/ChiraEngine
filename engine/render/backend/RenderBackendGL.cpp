@@ -41,7 +41,7 @@ bool RenderBackendGL::setupForDebugging() {
             // Others are ignored because learnopengl.com said they were duplicates
             return;
         }
-        std::string output = "---------------\nDebug message (" + std::to_string(id) + "): " +  message;
+        std::string output = "Debug message (" + std::to_string(id) + "): " +  message;
 
         output += "\nSource: ";
         switch (source) {
@@ -87,7 +87,7 @@ bool RenderBackendGL::setupForDebugging() {
     return IMGUI_CHECKVERSION();
 }
 
-int RenderBackendGL::getTextureFormat(TextureFormat format) {
+[[nodiscard]] static constexpr int getTextureFormatGL(TextureFormat format) {
     switch (format) {
         case TextureFormat::RED:
             return GL_RED;
@@ -123,21 +123,7 @@ int RenderBackendGL::getTextureFormat(TextureFormat format) {
     return GL_RGBA;
 }
 
-int RenderBackendGL::getTextureFormatFromBitDepth(int bd) {
-    switch (bd) {
-        case 1:
-            return GL_RED;
-        case 2:
-            return GL_RG;
-        case 3:
-            return GL_RGB;
-        default:
-        case 4:
-            return GL_RGBA;
-    }
-}
-
-int RenderBackendGL::getWrapMode(WrapMode mode) {
+[[nodiscard]] static constexpr int getWrapModeGL(WrapMode mode) {
     switch (mode) {
         case WrapMode::REPEAT:
             return GL_REPEAT;
@@ -151,7 +137,7 @@ int RenderBackendGL::getWrapMode(WrapMode mode) {
     return GL_REPEAT;
 }
 
-int RenderBackendGL::getFilterMode(FilterMode mode) {
+[[nodiscard]] static constexpr int getFilterModeGL(FilterMode mode) {
     switch (mode) {
         case FilterMode::NEAREST:
             return GL_NEAREST;
@@ -161,18 +147,19 @@ int RenderBackendGL::getFilterMode(FilterMode mode) {
     return GL_LINEAR;
 }
 
-unsigned int RenderBackendGL::createTexture2D(const Image& image, WrapMode wrapS, WrapMode wrapT, FilterMode filter,
-                                              bool genMipmaps /*= true*/, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
-    unsigned int handle;
-    glGenTextures(1, &handle);
+RenderBackendGL::TextureHandle RenderBackendGL::createTexture2D(const Image& image, WrapMode wrapS, WrapMode wrapT, FilterMode filter,
+                                                                bool genMipmaps /*= true*/, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
+    TextureHandle handle{};
+    glGenTextures(1, &handle.handle);
+    handle.type = TextureType::TWO_DIMENSIONAL;
 
-    const auto glFilter = getFilterMode(filter);
-    const auto glFormat = getTextureFormatFromBitDepth(image.getBitDepth());
+    const auto glFilter = getFilterModeGL(filter);
+    const auto glFormat = getTextureFormatGL(getTextureFormatFromBitDepth(image.getBitDepth()));
 
     glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
-    glBindTexture(GL_TEXTURE_2D, handle);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, getWrapMode(wrapS));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, getWrapMode(wrapT));
+    glBindTexture(GL_TEXTURE_2D, handle.handle);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, getWrapModeGL(wrapS));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, getWrapModeGL(wrapT));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glFilter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glFilter);
 
@@ -186,27 +173,28 @@ unsigned int RenderBackendGL::createTexture2D(const Image& image, WrapMode wrapS
     return handle;
 }
 
-unsigned int RenderBackendGL::createTextureCubemap(const Image& imageRT, const Image& imageLT, const Image& imageUP,
-                                                   const Image& imageDN, const Image& imageFD, const Image& imageBK,
-                                                   WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, FilterMode filter,
-                                                   bool genMipmaps /*= true*/, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
-    unsigned int handle;
-    glGenTextures(1, &handle);
+RenderBackendGL::TextureHandle RenderBackendGL::createTextureCubemap(const Image& imageRT, const Image& imageLT, const Image& imageUP,
+                                                                     const Image& imageDN, const Image& imageFD, const Image& imageBK,
+                                                                     WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, FilterMode filter,
+                                                                     bool genMipmaps /*= true*/, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
+    TextureHandle handle{};
+    glGenTextures(1, &handle.handle);
+    handle.type = TextureType::CUBEMAP;
 
-    const auto glFilter = getFilterMode(filter);
+    const auto glFilter = getFilterModeGL(filter);
 
     glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
-    glBindTexture(GL_TEXTURE_CUBE_MAP, handle);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, getWrapMode(wrapS));
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, getWrapMode(wrapT));
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, getWrapMode(wrapR));
+    glBindTexture(GL_TEXTURE_CUBE_MAP, handle.handle);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, getWrapModeGL(wrapS));
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, getWrapModeGL(wrapT));
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, getWrapModeGL(wrapR));
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, glFilter);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, glFilter);
 
     std::array<const Image*, 6> images{&imageRT, &imageLT, &imageUP, &imageDN, &imageFD, &imageBK};
     for (int i = 0; i < 6; i++) {
         runtime_assert(images[i]->getData(), "Texture failed to compile: missing image data");
-        const auto glFormat = getTextureFormatFromBitDepth(images[i]->getBitDepth());
+        const auto glFormat = getTextureFormatGL(getTextureFormatFromBitDepth(images[i]->getBitDepth()));
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glFormat, images[i]->getWidth(), images[i]->getHeight(), 0, glFormat, GL_UNSIGNED_BYTE, images[i]->getData());
     }
     if (genMipmaps) {
@@ -215,20 +203,20 @@ unsigned int RenderBackendGL::createTextureCubemap(const Image& imageRT, const I
     return handle;
 }
 
-void RenderBackendGL::useTexture(TextureType type, unsigned int handle, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
-    if (handle == 0) return;
+void RenderBackendGL::useTexture(TextureHandle handle, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
+    if (handle.handle == 0) return;
     glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
-    switch (type) {
+    switch (handle.type) {
         case TextureType::TWO_DIMENSIONAL:
-            glBindTexture(GL_TEXTURE_2D, handle);
+            glBindTexture(GL_TEXTURE_2D, handle.handle);
             break;
         case TextureType::CUBEMAP:
-            glBindTexture(GL_TEXTURE_CUBE_MAP, handle);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, handle.handle);
             break;
     }
 }
 
-int RenderBackendGL::getShaderModuleType(ShaderModuleType type) {
+[[nodiscard]] static constexpr int getShaderModuleTypeGL(ShaderModuleType type) {
     switch (type) {
         case ShaderModuleType::VERTEX:
             return GL_VERTEX_SHADER;
@@ -238,11 +226,11 @@ int RenderBackendGL::getShaderModuleType(ShaderModuleType type) {
     return -1;
 }
 
-int RenderBackendGL::createShaderModule(const std::string& shader, ShaderModuleType type) {
+RenderBackendGL::ShaderModuleHandle RenderBackendGL::createShaderModule(const std::string& shader, ShaderModuleType type) {
     auto data = std::string{GL_VERSION_STRING.data()} + "\n\n" + shader;
     const char* dat = data.c_str();
 
-    int glType = getShaderModuleType(type);
+    int glType = getShaderModuleTypeGL(type);
     int handle = glCreateShader(glType);
     glShaderSource(handle, 1, &dat, nullptr);
     glCompileShader(handle);
@@ -255,14 +243,14 @@ int RenderBackendGL::createShaderModule(const std::string& shader, ShaderModuleT
         LOG_GL.error(TRF("error.shader_resource.compilation_failure", glType, infoLog));
     }
 #endif
-    return handle;
+    return { .handle = handle };
 }
 
-void RenderBackendGL::destroyShaderModule(int handle) {
-    glDeleteShader(handle);
+void RenderBackendGL::destroyShaderModule(ShaderModuleHandle handle) {
+    glDeleteShader(handle.handle);
 }
 
-int RenderBackendGL::getMeshDrawMode(MeshDrawMode mode) {
+[[nodiscard]] static constexpr int getMeshDrawModeGL(MeshDrawMode mode) {
     switch (mode) {
         case MeshDrawMode::STATIC:
             return GL_STATIC_DRAW;
@@ -272,7 +260,7 @@ int RenderBackendGL::getMeshDrawMode(MeshDrawMode mode) {
     return GL_STATIC_DRAW;
 }
 
-int RenderBackendGL::getMeshDepthFunction(MeshDepthFunction function) {
+[[nodiscard]] static constexpr int getMeshDepthFunctionGL(MeshDepthFunction function) {
     switch (function) {
         case MeshDepthFunction::NEVER:
             return GL_NEVER;
@@ -294,7 +282,7 @@ int RenderBackendGL::getMeshDepthFunction(MeshDepthFunction function) {
     return GL_LEQUAL;
 }
 
-int RenderBackendGL::getMeshCullType(MeshCullType type) {
+[[nodiscard]] static constexpr int getMeshCullTypeGL(MeshCullType type) {
     switch (type) {
         case MeshCullType::BACK:
             return GL_BACK;
@@ -306,7 +294,7 @@ int RenderBackendGL::getMeshCullType(MeshCullType type) {
     return GL_BACK;
 }
 
-MeshHandle RenderBackendGL::createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode) {
+RenderBackendGL::MeshHandle RenderBackendGL::createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode) {
     MeshHandle handle{};
     glGenVertexArrays(1, &handle.vaoHandle);
     glGenBuffers(1, &handle.vboHandle);
@@ -314,7 +302,7 @@ MeshHandle RenderBackendGL::createMesh(const std::vector<Vertex>& vertices, cons
 
     glBindVertexArray(handle.vaoHandle);
 
-    const auto glDrawMode = getMeshDrawMode(drawMode);
+    const auto glDrawMode = getMeshDrawModeGL(drawMode);
 
     glBindBuffer(GL_ARRAY_BUFFER, handle.vboHandle);
     glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertices.size() * sizeof(Vertex)), vertices.data(), glDrawMode);
@@ -340,7 +328,7 @@ MeshHandle RenderBackendGL::createMesh(const std::vector<Vertex>& vertices, cons
 }
 
 void RenderBackendGL::updateMesh(MeshHandle handle, const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode) {
-    const auto glDrawMode = getMeshDrawMode(drawMode);
+    const auto glDrawMode = getMeshDrawModeGL(drawMode);
 
     glBindBuffer(GL_ARRAY_BUFFER, handle.vboHandle);
     glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertices.size() * sizeof(Vertex)), vertices.data(), glDrawMode);
@@ -349,9 +337,9 @@ void RenderBackendGL::updateMesh(MeshHandle handle, const std::vector<Vertex>& v
 }
 
 void RenderBackendGL::drawMesh(MeshHandle handle, const std::vector<Index>& indices, MeshDepthFunction depthFunction, MeshCullType cullType) {
-    glDepthFunc(getMeshDepthFunction(depthFunction));
+    glDepthFunc(getMeshDepthFunctionGL(depthFunction));
     glEnable(GL_CULL_FACE);
-    glCullFace(getMeshCullType(cullType));
+    glCullFace(getMeshCullTypeGL(cullType));
     glBindVertexArray(handle.vaoHandle);
     glDrawElements(GL_TRIANGLES, static_cast<GLint>(indices.size()), GL_UNSIGNED_INT, nullptr);
     glDisable(GL_CULL_FACE);

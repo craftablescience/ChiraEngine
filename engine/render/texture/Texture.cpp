@@ -25,11 +25,11 @@ void Texture::compile(const nlohmann::json& properties) {
 }
 
 void Texture::use() const {
-    Renderer::useTexture(TextureType::TWO_DIMENSIONAL, this->handle);
+    Renderer::useTexture(this->handle);
 }
 
 void Texture::use(TextureUnit activeTextureUnit) const {
-    Renderer::useTexture(TextureType::TWO_DIMENSIONAL, this->handle, activeTextureUnit);
+    Renderer::useTexture(this->handle, activeTextureUnit);
 }
 
 void Texture::setFilterMode(std::string filterModeStr_) {

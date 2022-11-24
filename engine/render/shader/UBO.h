@@ -6,7 +6,6 @@
 // todo(render): move to render backend
 #include <glad/gl.h>
 #include <math/Types.h>
-#include <utility/HandleObject.h>
 
 namespace chira {
 
@@ -15,13 +14,14 @@ class PointLight;
 class SpotLight;
 class Shader;
 
-class UniformBufferObject : public HandleObject<unsigned int> {
+class UniformBufferObject {
 public:
     explicit UniformBufferObject(std::string name_, unsigned int size);
     [[nodiscard]] unsigned int getBindingPoint() const;
     void update(const byte buffer[], GLsizeiptr length) const;
     void bindToShader(Shader* shader_) const;
 protected:
+    unsigned int handle = 0;
     unsigned int bindingPoint = 0;
     std::string name;
     static inline unsigned int uboBindingPoint = 0;

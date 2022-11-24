@@ -12,9 +12,7 @@ using namespace chira;
 
 CHIRA_CREATE_LOG(SHADER);
 
-Shader::Shader(std::string identifier_)
-    : PropertiesResource(std::move(identifier_))
-    , HandleObject<int>() {}
+Shader::Shader(std::string identifier_) : PropertiesResource(std::move(identifier_)) {}
 
 void Shader::compile(const nlohmann::json& properties) {
     this->handle = glCreateProgram();
@@ -43,7 +41,7 @@ void Shader::use() const {
 
 Shader::~Shader() {
     for (const auto shaderModuleHandle : this->shaderModuleHandles) {
-        if (shaderModuleHandle != -1)
+        if (shaderModuleHandle.handle != -1)
             Renderer::destroyShaderModule(shaderModuleHandle);
     }
     glDeleteProgram(this->handle);
@@ -162,10 +160,10 @@ std::string Shader::replaceMacros(const std::string& ignoredInclude, const std::
 }
 
 void Shader::addShaderModule(const std::string& path, ShaderModuleType type) {
-    auto shaderModuleString = Resource::getUniqueUncachedResource<StringResource>(path);
-    auto shaderModuleData = replaceMacros(shaderModuleString->getIdentifier().data(), shaderModuleString->getString());
-    int shaderModuleHandle = Renderer::createShaderModule(shaderModuleData, type);
-    glAttachShader(this->handle, shaderModuleHandle);
+    const auto shaderModuleString = Resource::getUniqueUncachedResource<StringResource>(path);
+    const auto shaderModuleData = replaceMacros(shaderModuleString->getIdentifier().data(), shaderModuleString->getString());
+    const auto shaderModuleHandle = Renderer::createShaderModule(shaderModuleData, type);
+    glAttachShader(this->handle, shaderModuleHandle.handle);
     this->shaderModuleHandles[static_cast<int>(type)] = shaderModuleHandle;
 }
 

@@ -8,7 +8,7 @@
 using namespace chira;
 
 void MeshData::setupForRendering() {
-    this->handle = Renderer::createMesh(this->vertices, this->indices, this->drawMode);
+    this->handle = Renderer::createMesh(this->vertices, this->indices, MeshDrawMode::STATIC);
     this->initialized = true;
 }
 

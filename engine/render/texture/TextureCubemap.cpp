@@ -28,11 +28,11 @@ void TextureCubemap::compile(const nlohmann::json& properties) {
 }
 
 void TextureCubemap::use() const {
-    Renderer::useTexture(TextureType::CUBEMAP, this->handle);
+    Renderer::useTexture(this->handle);
 }
 
 void TextureCubemap::use(TextureUnit activeTextureUnit) const {
-    Renderer::useTexture(TextureType::CUBEMAP, this->handle, activeTextureUnit);
+    Renderer::useTexture(this->handle, activeTextureUnit);
 }
 
 void TextureCubemap::setFilterMode(std::string filterModeStr_) {

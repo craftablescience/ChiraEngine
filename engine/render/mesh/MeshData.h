@@ -23,11 +23,11 @@ public:
     void appendMeshData(const std::string& loader, const std::string& identifier);
 protected:
     bool initialized = false;
+    Renderer::MeshHandle handle{};
     MeshDrawMode drawMode = MeshDrawMode::STATIC;
     MeshDepthFunction depthFunction = MeshDepthFunction::LEQUAL;
     MeshCullType cullType = MeshCullType::BACK;
     SharedPointer<IMaterial> material;
-    MeshHandle handle{};
     std::vector<Vertex> vertices;
     std::vector<Index> indices;
     /// Establishes the vertex buffers and copies the current mesh data into them.

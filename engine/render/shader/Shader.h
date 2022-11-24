@@ -4,14 +4,15 @@
 #include <math/Types.h>
 #include <render/backend/Renderer.h>
 #include <resource/PropertiesResource.h>
-#include <utility/HandleObject.h>
 
 namespace chira {
 
 constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_PREFIX = "#";
 constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_SUFFIX = "#";
 
-class Shader : public PropertiesResource, public HandleObject<int> {
+class Shader : public PropertiesResource {
+    // todo(render): UBO needs this to get the shader handle
+    friend class UniformBufferObject;
 public:
     explicit Shader(std::string identifier_);
     void compile(const nlohmann::json& properties) override;
@@ -56,7 +57,8 @@ private:
 
     static std::string replaceMacros(const std::string&, const std::string&);
 
-    int shaderModuleHandles[2] { -1, -1 };
+    int handle = -1;
+    Renderer::ShaderModuleHandle shaderModuleHandles[2] {{-1}, {-1}};
     bool usesPV = true;
     bool usesM = true;
     bool lit = true;

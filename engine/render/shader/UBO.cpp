@@ -6,7 +6,7 @@
 
 using namespace chira;
 
-UniformBufferObject::UniformBufferObject(std::string name_, unsigned int size) : HandleObject<unsigned int>(0), name(std::move(name_)) {
+UniformBufferObject::UniformBufferObject(std::string name_, unsigned int size) : name(std::move(name_)) {
     this->bindingPoint = UniformBufferObject::uboBindingPoint++;
     glGenBuffers(1, &this->handle);
     glBindBuffer(GL_UNIFORM_BUFFER, this->handle);
@@ -20,7 +20,7 @@ unsigned int UniformBufferObject::getBindingPoint() const {
 }
 
 void UniformBufferObject::bindToShader(Shader* shader_) const {
-    glUniformBlockBinding(shader_->getHandle(), glGetUniformBlockIndex(shader_->getHandle(), this->name.c_str()), this->bindingPoint);
+    glUniformBlockBinding(shader_->handle, glGetUniformBlockIndex(shader_->handle, this->name.c_str()), this->bindingPoint);
 }
 
 void UniformBufferObject::update(const byte buffer[], GLsizeiptr length) const {
