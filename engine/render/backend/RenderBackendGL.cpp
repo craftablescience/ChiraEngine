@@ -16,11 +16,11 @@ using namespace chira;
 
 CHIRA_CREATE_LOG(GL);
 
-std::string_view RenderBackendGL::getHumanName() {
+std::string_view Renderer::getHumanName() {
     return GL_VERSION_STRING_PRETTY;
 }
 
-bool RenderBackendGL::setupForDebugging() {
+bool Renderer::setupForDebugging() {
 #ifdef CHIRA_USE_GL_41
     if (!glfwExtensionSupported("GL_KHR_debug"))
         return false;
@@ -147,8 +147,8 @@ bool RenderBackendGL::setupForDebugging() {
     return GL_LINEAR;
 }
 
-RenderBackendGL::TextureHandle RenderBackendGL::createTexture2D(const Image& image, WrapMode wrapS, WrapMode wrapT, FilterMode filter,
-                                                                bool genMipmaps /*= true*/, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
+Renderer::TextureHandle Renderer::createTexture2D(const Image& image, WrapMode wrapS, WrapMode wrapT, FilterMode filter,
+                                                  bool genMipmaps /*= true*/, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
     TextureHandle handle{};
     glGenTextures(1, &handle.handle);
     handle.type = TextureType::TWO_DIMENSIONAL;
@@ -173,10 +173,10 @@ RenderBackendGL::TextureHandle RenderBackendGL::createTexture2D(const Image& ima
     return handle;
 }
 
-RenderBackendGL::TextureHandle RenderBackendGL::createTextureCubemap(const Image& imageRT, const Image& imageLT, const Image& imageUP,
-                                                                     const Image& imageDN, const Image& imageFD, const Image& imageBK,
-                                                                     WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, FilterMode filter,
-                                                                     bool genMipmaps /*= true*/, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
+Renderer::TextureHandle Renderer::createTextureCubemap(const Image& imageRT, const Image& imageLT, const Image& imageUP,
+                                                       const Image& imageDN, const Image& imageFD, const Image& imageBK,
+                                                       WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, FilterMode filter,
+                                                       bool genMipmaps /*= true*/, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
     TextureHandle handle{};
     glGenTextures(1, &handle.handle);
     handle.type = TextureType::CUBEMAP;
@@ -203,7 +203,7 @@ RenderBackendGL::TextureHandle RenderBackendGL::createTextureCubemap(const Image
     return handle;
 }
 
-void RenderBackendGL::useTexture(TextureHandle handle, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
+void Renderer::useTexture(TextureHandle handle, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
     if (handle.handle == 0) return;
     glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
     switch (handle.type) {
@@ -226,7 +226,7 @@ void RenderBackendGL::useTexture(TextureHandle handle, TextureUnit activeTexture
     return -1;
 }
 
-RenderBackendGL::ShaderModuleHandle RenderBackendGL::createShaderModule(const std::string& shader, ShaderModuleType type) {
+Renderer::ShaderModuleHandle Renderer::createShaderModule(const std::string& shader, ShaderModuleType type) {
     auto data = std::string{GL_VERSION_STRING.data()} + "\n\n" + shader;
     const char* dat = data.c_str();
 
@@ -246,7 +246,7 @@ RenderBackendGL::ShaderModuleHandle RenderBackendGL::createShaderModule(const st
     return { .handle = handle };
 }
 
-void RenderBackendGL::destroyShaderModule(ShaderModuleHandle handle) {
+void Renderer::destroyShaderModule(ShaderModuleHandle handle) {
     glDeleteShader(handle.handle);
 }
 
@@ -294,7 +294,7 @@ void RenderBackendGL::destroyShaderModule(ShaderModuleHandle handle) {
     return GL_BACK;
 }
 
-RenderBackendGL::MeshHandle RenderBackendGL::createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode) {
+Renderer::MeshHandle Renderer::createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode) {
     MeshHandle handle{};
     glGenVertexArrays(1, &handle.vaoHandle);
     glGenBuffers(1, &handle.vboHandle);
@@ -327,7 +327,7 @@ RenderBackendGL::MeshHandle RenderBackendGL::createMesh(const std::vector<Vertex
     return handle;
 }
 
-void RenderBackendGL::updateMesh(MeshHandle handle, const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode) {
+void Renderer::updateMesh(MeshHandle handle, const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode) {
     const auto glDrawMode = getMeshDrawModeGL(drawMode);
 
     glBindBuffer(GL_ARRAY_BUFFER, handle.vboHandle);
@@ -336,7 +336,7 @@ void RenderBackendGL::updateMesh(MeshHandle handle, const std::vector<Vertex>& v
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(indices.size() * sizeof(Index)), indices.data(), glDrawMode);
 }
 
-void RenderBackendGL::drawMesh(MeshHandle handle, const std::vector<Index>& indices, MeshDepthFunction depthFunction, MeshCullType cullType) {
+void Renderer::drawMesh(MeshHandle handle, const std::vector<Index>& indices, MeshDepthFunction depthFunction, MeshCullType cullType) {
     glDepthFunc(getMeshDepthFunctionGL(depthFunction));
     glEnable(GL_CULL_FACE);
     glCullFace(getMeshCullTypeGL(cullType));
@@ -345,7 +345,7 @@ void RenderBackendGL::drawMesh(MeshHandle handle, const std::vector<Index>& indi
     glDisable(GL_CULL_FACE);
 }
 
-void RenderBackendGL::destroyMesh(MeshHandle handle) {
+void Renderer::destroyMesh(MeshHandle handle) {
     glDeleteVertexArrays(1, &handle.vaoHandle);
     glDeleteBuffers(1, &handle.vboHandle);
     glDeleteBuffers(1, &handle.eboHandle);
