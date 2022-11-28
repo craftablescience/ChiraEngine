@@ -17,6 +17,8 @@ public:
 
     //todo(input): this is dumb
     static void setupKeybinds();
+
+    bool is_over_eview = false;
 protected:
     float scrollModifier = 40.f;
 private:

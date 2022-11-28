@@ -7,14 +7,10 @@
 #include <camera/EditorCamera.h>
 #include <core/Engine.h>
 
-using namespace chira;
+using namespace chira;;
 
 EngineView::EngineView() 
     : FramePanel(TRC("ui.engineview.title"), true, ImVec2(2.0F, 2.0F), false) {
-    InputManager::addCallback(InputMouseButton{Key::MOUSE_RIGHT, InputKeyEventType::RELEASED, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()))
-            cam->setActive(false);
-    }});
 }
 
 void EngineView::render() {
@@ -24,16 +20,17 @@ void EngineView::render() {
         ImGui::SetNextWindowSize(this->nextWindowSize, this->windowSizeCondition);
         this->preRenderContents();
         if (ImGui::Begin(this->title.c_str(), p_open, this->flags)) {
-            InputMouseButton{Key::MOUSE_RIGHT, InputKeyEventType::PRESSED, []{
-                ImGuiIO& io = ImGui::GetIO();
-                if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera())) {
-                    if ((io.MousePos.x >= ImGui::GetWindowPos().x && io.MousePos.x <= ImGui::GetWindowPos().x+ImGui::GetWindowWidth())
-                    && (io.MousePos.y >= ImGui::GetWindowPos().y && io.MousePos.y <= ImGui::GetWindowPos().y+ImGui::GetWindowHeight()))
-                    {
-                        cam->setActive(true);
-                    }
+            ImGuiIO& io = ImGui::GetIO();
+
+            if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera())) {
+                if ((io.MousePos.x >= ImGui::GetWindowPos().x && io.MousePos.x <= ImGui::GetWindowPos().x+ImGui::GetWindowWidth())
+                && (io.MousePos.y >= ImGui::GetWindowPos().y && io.MousePos.y <= ImGui::GetWindowPos().y+ImGui::GetWindowHeight()))
+                {
+                    cam->is_over_eview = true;
                 }
-            }};
+                else 
+                    cam->is_over_eview = false;
+            }
             this->renderContents();
         }
         ImGui::End();
