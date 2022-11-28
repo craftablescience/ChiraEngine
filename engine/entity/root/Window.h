@@ -48,6 +48,7 @@ public:
     void shouldStopAfterThisFrame(bool yes = true) const;
     /// Renders the splashscreen to all window's default framebuffer
     void displaySplashScreen();
+    ImGuiID dockspaceid;
 private:
     MeshDataBuilder surface;
     GLFWwindow* window = nullptr;

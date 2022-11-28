@@ -24,6 +24,8 @@
 // TODO: Make these prettier.
 #include <imfilebrowser.h>
 
+#include <imgui_internal.h>
+
 // All the UI elements in the editor
 #include <editorui/EngineView.h>
 #include <editorui/ResourceBrowser.h>
@@ -147,6 +149,7 @@ void MainEditorPanel::renderContents() {
     if (auto* framePanel = Engine::getWindow()->getPanel<EngineView>(engineviewID)) {
         framePanel->loadedFile = this->loadedFile;
     }
+    ImGui::ShowDemoWindow();
 }
 
 void MainEditorPanel::setLoadedFile(const std::string& meshName) {
@@ -165,6 +168,43 @@ void MainEditorPanel::setLoadedFile(const std::string& meshName) {
 
 std::string_view MainEditorPanel::getMeshId() const {
     return this->meshId;
+}
+
+static void CreateInitialLayout() {
+    static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+
+    ImGuiViewport *viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->Pos);
+    ImGui::SetNextWindowSize(viewport->Size);
+    ImGui::SetNextWindowViewport(viewport->ID);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+    if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+        window_flags |= ImGuiWindowFlags_NoBackground;
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    ImGui::Begin("ChiraEditDockspace", nullptr, window_flags);
+    ImGui::PopStyleVar();
+    ImGui::PopStyleVar(2);
+
+    ImGuiID dockspace_id = ImGui::GetID("ChiraEditDockspace");
+    ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+    ImGui::DockBuilderRemoveNode(dockspace_id);                            // Clear out existing layout
+    ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace); // Add empty node
+    ImGui::DockBuilderSetNodeSize(dockspace_id, ImGui::GetWindowSize());
+
+    ImGuiID dock_main_id = dockspace_id; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
+    ImGuiID dock_id_prop = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.20f, NULL, &dock_main_id);
+    ImGuiID dock_id_bottom = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.20f, NULL, &dock_main_id);
+
+    ImGui::DockBuilderDockWindow(TRC("ui.resourcebrowser.title"), dock_id_bottom);
+    ImGui::DockBuilderDockWindow(TRC("ui.entitypanel.title"), dock_id_prop);
+    ImGui::DockBuilderFinish(dockspace_id);
+    ImGui::End();
 }
 
 int main(int argc, const char* const argv[]) {
@@ -248,6 +288,7 @@ int main(int argc, const char* const argv[]) {
     camera->translate({-6.f * sqrtf(3.f), 6, 0});
     camera->setPitch(30.f);
     camera->setYaw(270.f);
+    camera->setName("Camera");
     frame->addChild(camera);
     frame->setCamera(camera);
 
@@ -271,4 +312,6 @@ int main(int argc, const char* const argv[]) {
     frame->addChild(grid);
 
     Engine::run();
+
+    CreateInitialLayout();
 }
