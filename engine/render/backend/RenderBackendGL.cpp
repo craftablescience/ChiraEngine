@@ -273,6 +273,10 @@ void Renderer::useTexture(TextureHandle handle, TextureUnit activeTextureUnit /*
     }
 }
 
+void Renderer::destroyTexture(Renderer::TextureHandle handle) {
+    glDeleteTextures(1, &handle.handle);
+}
+
 [[nodiscard]] static constexpr int getShaderModuleTypeGL(ShaderModuleType type) {
     switch (type) {
         case ShaderModuleType::VERTEX:

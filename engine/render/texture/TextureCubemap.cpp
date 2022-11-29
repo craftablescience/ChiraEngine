@@ -11,6 +11,12 @@ CHIRA_CREATE_LOG(TEXTURECUBEMAP);
 TextureCubemap::TextureCubemap(std::string identifier_)
     : ITexture(std::move(identifier_)) {}
 
+TextureCubemap::~TextureCubemap() {
+    //todo(render): add bool operators to handle types to check validity
+    if (this->handle.handle != 0)
+        Renderer::destroyTexture(this->handle);
+}
+
 void TextureCubemap::compile(const nlohmann::json& properties) {
     Serialize::fromJSON(this, properties);
 

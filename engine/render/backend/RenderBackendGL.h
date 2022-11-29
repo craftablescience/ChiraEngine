@@ -40,6 +40,7 @@ struct MeshHandle {
                                                  WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, FilterMode filter,
                                                  bool genMipmaps = true, TextureUnit activeTextureUnit = TextureUnit::G0);
 void useTexture(TextureHandle handle, TextureUnit activeTextureUnit = TextureUnit::G0);
+void destroyTexture(TextureHandle handle);
 
 [[nodiscard]] ShaderHandle createShader(std::string_view vertex, std::string_view fragment);
 void useShader(ShaderHandle handle);
