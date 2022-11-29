@@ -12,8 +12,7 @@ Texture::Texture(std::string identifier_, bool cacheTexture /*= true*/)
     , cache(cacheTexture) {}
 
 Texture::~Texture() {
-    //todo(render): add bool operators to handle types to check validity
-    if (this->handle.handle != 0)
+    if (this->handle)
         Renderer::destroyTexture(this->handle);
 }
 

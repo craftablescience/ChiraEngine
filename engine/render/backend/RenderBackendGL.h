@@ -11,29 +11,44 @@
 namespace chira::Renderer {
 
 struct TextureHandle {
-    unsigned int handle;
-    TextureType type;
+    unsigned int handle = 0;
+    TextureType type = TextureType::TWO_DIMENSIONAL;
+
+    explicit inline operator bool() const { return handle; }
+    inline bool operator!() const { return !handle; }
 };
 
 struct ShaderModuleHandle {
-    int handle;
+    int handle = 0;
+
+    explicit inline operator bool() const { return handle; }
+    inline bool operator!() const { return !handle; }
 };
 
 struct ShaderHandle {
-    int handle;
-    ShaderModuleHandle vertex;
-    ShaderModuleHandle fragment;
+    int handle = 0;
+    ShaderModuleHandle vertex{};
+    ShaderModuleHandle fragment{};
+
+    explicit inline operator bool() const { return handle && vertex && fragment; }
+    inline bool operator!() const { return !handle || !vertex || !fragment; }
 };
 
 struct UniformBufferHandle {
-    unsigned int handle;
-    unsigned int bindingPoint;
+    unsigned int handle = 0;
+    unsigned int bindingPoint = 0;
+
+    explicit inline operator bool() const { return handle; }
+    inline bool operator!() const { return handle; }
 };
 
 struct MeshHandle {
-    unsigned int vaoHandle;
-    unsigned int vboHandle;
-    unsigned int eboHandle;
+    unsigned int vaoHandle = 0;
+    unsigned int vboHandle = 0;
+    unsigned int eboHandle = 0;
+
+    explicit inline operator bool() const { return vaoHandle && vboHandle && eboHandle; }
+    inline bool operator!() const { return !vaoHandle || !vboHandle || !eboHandle; }
 };
 
 [[nodiscard]] std::string_view getHumanName();
