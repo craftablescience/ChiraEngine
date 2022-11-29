@@ -1,10 +1,8 @@
 #pragma once
 
+#include <cstddef>
 #include <string>
 #include <memory>
-#include <glm/glm.hpp>
-// todo(render): move to render backend
-#include <glad/gl.h>
 #include <math/Types.h>
 
 namespace chira {
@@ -18,7 +16,7 @@ class UniformBufferObject {
 public:
     explicit UniformBufferObject(std::string name_, unsigned int size);
     [[nodiscard]] unsigned int getBindingPoint() const;
-    void update(const byte buffer[], GLsizeiptr length) const;
+    void update(const byte buffer[], std::ptrdiff_t length) const;
     void bindToShader(Shader* shader_) const;
 protected:
     unsigned int handle = 0;

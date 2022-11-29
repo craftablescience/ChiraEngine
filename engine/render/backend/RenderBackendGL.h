@@ -3,7 +3,6 @@
 #include <string_view>
 #include <vector>
 #include <loader/image/Image.h>
-#include <math/Types.h>
 #include <math/Vertex.h>
 #include "RendererTypes.h"
 
@@ -17,6 +16,12 @@ struct TextureHandle {
 
 struct ShaderModuleHandle {
     int handle;
+};
+
+struct ShaderHandle {
+    int handle;
+    ShaderModuleHandle vertex;
+    ShaderModuleHandle fragment;
 };
 
 struct MeshHandle {
@@ -36,8 +41,27 @@ struct MeshHandle {
                                                  bool genMipmaps = true, TextureUnit activeTextureUnit = TextureUnit::G0);
 void useTexture(TextureHandle handle, TextureUnit activeTextureUnit = TextureUnit::G0);
 
-[[nodiscard]] ShaderModuleHandle createShaderModule(const std::string& shader, ShaderModuleType type);
-void destroyShaderModule(ShaderModuleHandle handle);
+[[nodiscard]] ShaderHandle createShader(std::string_view vertex, std::string_view fragment);
+void useShader(ShaderHandle handle);
+void destroyShader(ShaderHandle handle);
+
+void setShaderUniform(ShaderHandle handle, std::string_view name, bool value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, unsigned int value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, int value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, float value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec2b value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec2ui value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec2i value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec2f value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec3b value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec3ui value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec3i value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec3f value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec4b value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec4ui value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec4i value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec4f value);
+void setShaderUniform(ShaderHandle handle, std::string_view name, glm::mat4 value);
 
 [[nodiscard]] MeshHandle createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode);
 void updateMesh(MeshHandle handle, const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode);

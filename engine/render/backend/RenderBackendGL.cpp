@@ -1,7 +1,10 @@
 #include "RenderBackendGL.h"
 
 #include <cstddef>
+#include <cstring>
+#include <string>
 
+#include <glm/gtc/type_ptr.hpp>
 #include <glad/gl.h>
 #include <glad/glversion.h>
 #include <backends/imgui_impl_opengl3.h>
@@ -226,28 +229,139 @@ void Renderer::useTexture(TextureHandle handle, TextureUnit activeTextureUnit /*
     return -1;
 }
 
-Renderer::ShaderModuleHandle Renderer::createShaderModule(const std::string& shader, ShaderModuleType type) {
-    auto data = std::string{GL_VERSION_STRING.data()} + "\n\n" + shader;
+[[nodiscard]] static Renderer::ShaderModuleHandle createShaderModule(std::string_view shader, Renderer::ShaderHandle shaderHandle, ShaderModuleType type) {
+    auto data = std::string{GL_VERSION_STRING.data()} + "\n\n" + shader.data();
     const char* dat = data.c_str();
 
     int glType = getShaderModuleTypeGL(type);
     int handle = glCreateShader(glType);
     glShaderSource(handle, 1, &dat, nullptr);
     glCompileShader(handle);
-#if DEBUG
-    int success;
-    char infoLog[512];
+
+#ifdef DEBUG
+    int success = 0;
+    char infoLog[512] {0};
     glGetShaderiv(handle, GL_COMPILE_STATUS, &success);
-    if(!success) {
-        glGetShaderInfoLog(handle, 512, nullptr, infoLog);
-        LOG_GL.error(TRF("error.shader_resource.compilation_failure", glType, infoLog));
+    if (!success) {
+        glGetShaderInfoLog(handle, sizeof(infoLog), nullptr, infoLog);
+        LOG_GL.error(fmt::format("Shader module compilation failed: {}", infoLog));
     }
 #endif
+
+    glAttachShader(shaderHandle.handle, handle);
+
     return { .handle = handle };
 }
 
-void Renderer::destroyShaderModule(ShaderModuleHandle handle) {
+static void destroyShaderModule(Renderer::ShaderModuleHandle handle) {
     glDeleteShader(handle.handle);
+}
+
+Renderer::ShaderHandle Renderer::createShader(std::string_view vertex, std::string_view fragment) {
+    ShaderHandle handle{};
+    handle.handle = glCreateProgram();
+    handle.vertex = createShaderModule(vertex, handle, ShaderModuleType::VERTEX);
+    handle.fragment = createShaderModule(fragment, handle, ShaderModuleType::FRAGMENT);
+    glLinkProgram(handle.handle);
+
+#ifdef DEBUG
+    int success = 0;
+    char infoLog[512] {0};
+    glGetProgramiv(handle.handle, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(handle.handle, sizeof(infoLog), nullptr, infoLog);
+        LOG_GL.error(fmt::format("Shader linking failed: {}", infoLog));
+    }
+
+    success = 0;
+    memset(infoLog, 0, sizeof(infoLog));
+    glValidateProgram(handle.handle);
+    glGetProgramiv(handle.handle, GL_VALIDATE_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(handle.handle, sizeof(infoLog), nullptr, infoLog);
+        LOG_GL.error(fmt::format("Shader validation failed: {}", infoLog));
+    }
+#endif
+
+    return handle;
+}
+
+void Renderer::useShader(Renderer::ShaderHandle handle) {
+    glUseProgram(handle.handle);
+}
+
+void Renderer::destroyShader(Renderer::ShaderHandle handle) {
+    destroyShaderModule(handle.vertex);
+    destroyShaderModule(handle.fragment);
+    glDeleteProgram(handle.handle);
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, bool value) {
+    glUniform1i(glGetUniformLocation(handle.handle, name.data()), static_cast<int>(value));
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, int value) {
+    glUniform1i(glGetUniformLocation(handle.handle, name.data()), value);
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, unsigned int value) {
+    glUniform1ui(glGetUniformLocation(handle.handle, name.data()), value);
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, float value) {
+    glUniform1f(glGetUniformLocation(handle.handle, name.data()), value);
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec2b value) {
+    glUniform2i(glGetUniformLocation(handle.handle, name.data()), static_cast<int>(value.x), static_cast<int>(value.y));
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec2ui value) {
+    glUniform2ui(glGetUniformLocation(handle.handle, name.data()), value.x, value.y);
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec2i value) {
+    glUniform2i(glGetUniformLocation(handle.handle, name.data()), value.x, value.y);
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec2f value) {
+    glUniform2f(glGetUniformLocation(handle.handle, name.data()), value.x, value.y);
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec3b value) {
+    glUniform3i(glGetUniformLocation(handle.handle, name.data()), static_cast<int>(value.x), static_cast<int>(value.y), static_cast<int>(value.z));
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec3ui value) {
+    glUniform3ui(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z);
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec3i value) {
+    glUniform3i(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z);
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec3f value) {
+    glUniform3f(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z);
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec4b value) {
+    glUniform4i(glGetUniformLocation(handle.handle, name.data()), static_cast<int>(value.x), static_cast<int>(value.y), static_cast<int>(value.z), static_cast<int>(value.w));
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec4ui value) {
+    glUniform4ui(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z, value.w);
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec4i value) {
+    glUniform4i(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z, value.w);
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec4f value) {
+    glUniform4f(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z, value.w);
+}
+
+void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::mat4 value) {
+    glUniformMatrix4fv(glGetUniformLocation(handle.handle, name.data()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 [[nodiscard]] static constexpr int getMeshDrawModeGL(MeshDrawMode mode) {

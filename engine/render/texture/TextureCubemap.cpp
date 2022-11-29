@@ -1,7 +1,6 @@
 #include "TextureCubemap.h"
 
 #include <core/Logger.h>
-#include <i18n/TranslationManager.h>
 #include <loader/image/Image.h>
 #include <render/backend/Renderer.h>
 

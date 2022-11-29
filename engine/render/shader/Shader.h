@@ -19,23 +19,9 @@ public:
     void use() const;
     ~Shader() override;
 
-    void setUniform(std::string_view name, bool value) const;
-    void setUniform(std::string_view name, unsigned int value) const;
-    void setUniform(std::string_view name, int value) const;
-    void setUniform(std::string_view name, float value) const;
-    void setUniform(std::string_view name, glm::vec2b value) const;
-    void setUniform(std::string_view name, glm::vec2ui value) const;
-    void setUniform(std::string_view name, glm::vec2i value) const;
-    void setUniform(std::string_view name, glm::vec2f value) const;
-    void setUniform(std::string_view name, glm::vec3b value) const;
-    void setUniform(std::string_view name, glm::vec3ui value) const;
-    void setUniform(std::string_view name, glm::vec3i value) const;
-    void setUniform(std::string_view name, glm::vec3f value) const;
-    void setUniform(std::string_view name, glm::vec4b value) const;
-    void setUniform(std::string_view name, glm::vec4ui value) const;
-    void setUniform(std::string_view name, glm::vec4i value) const;
-    void setUniform(std::string_view name, glm::vec4f value) const;
-    void setUniform(std::string_view name, glm::mat4 value) const;
+    inline void setUniform(std::string_view name, ShaderUniformValueTypes auto value) {
+        Renderer::setShaderUniform(this->handle, name, value);
+    }
 
     [[nodiscard]] inline bool usesPVMatrices() const {
         return this->usesPV;
@@ -57,27 +43,19 @@ private:
 
     static std::string replaceMacros(const std::string&, const std::string&);
 
-    int handle = -1;
-    Renderer::ShaderModuleHandle shaderModuleHandles[2] {{-1}, {-1}};
+    Renderer::ShaderHandle handle{};
     bool usesPV = true;
     bool usesM = true;
     bool lit = true;
     std::string vertexPath{"file://shaders/unlitTextured.vsh"};
     std::string fragmentPath{"file://shaders/unlitTextured.fsh"};
-
-    /// Should only be called in Shader::compile() !!!
-    void addShaderModule(const std::string& path, ShaderModuleType type);
-    /// Should only be called in Shader::compile() !!!
-    void setVertexShader(std::string path);
-    /// Should only be called in Shader::compile() !!!
-    void setFragmentShader(std::string path);
 public:
     CHIRA_PROPS(
             CHIRA_PROP(Shader, usesPV),
             CHIRA_PROP(Shader, usesM),
             CHIRA_PROP(Shader, lit),
-            CHIRA_PROP_NAMED_SET(Shader, vertexPath, vertex, setVertexShader),
-            CHIRA_PROP_NAMED_SET(Shader, fragmentPath, fragment, setFragmentShader)
+            CHIRA_PROP_NAMED(Shader, vertexPath, vertex),
+            CHIRA_PROP_NAMED(Shader, fragmentPath, fragment)
     );
 };
 

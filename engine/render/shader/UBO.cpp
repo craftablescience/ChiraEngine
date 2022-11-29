@@ -1,5 +1,7 @@
 #include "UBO.h"
 
+// todo(render): move to render backend
+#include <glad/gl.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <entity/light/LightManager.h>
 #include "Shader.h"
@@ -20,10 +22,10 @@ unsigned int UniformBufferObject::getBindingPoint() const {
 }
 
 void UniformBufferObject::bindToShader(Shader* shader_) const {
-    glUniformBlockBinding(shader_->handle, glGetUniformBlockIndex(shader_->handle, this->name.c_str()), this->bindingPoint);
+    glUniformBlockBinding(shader_->handle.handle, glGetUniformBlockIndex(shader_->handle.handle, this->name.c_str()), this->bindingPoint);
 }
 
-void UniformBufferObject::update(const byte buffer[], GLsizeiptr length) const {
+void UniformBufferObject::update(const byte buffer[], std::ptrdiff_t length) const {
     glBindBuffer(GL_UNIFORM_BUFFER, this->handle);
     glBufferData(GL_UNIFORM_BUFFER, length, buffer, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);

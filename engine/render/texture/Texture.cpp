@@ -1,7 +1,6 @@
 #include "Texture.h"
 
 #include <core/Logger.h>
-#include <i18n/TranslationManager.h>
 #include <render/backend/Renderer.h>
 
 using namespace chira;
