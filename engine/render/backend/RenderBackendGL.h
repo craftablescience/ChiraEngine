@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <string_view>
 #include <vector>
 #include <loader/image/Image.h>
@@ -22,6 +23,11 @@ struct ShaderHandle {
     int handle;
     ShaderModuleHandle vertex;
     ShaderModuleHandle fragment;
+};
+
+struct UniformBufferHandle {
+    unsigned int handle;
+    unsigned int bindingPoint;
 };
 
 struct MeshHandle {
@@ -63,6 +69,12 @@ void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec4ui va
 void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec4i value);
 void setShaderUniform(ShaderHandle handle, std::string_view name, glm::vec4f value);
 void setShaderUniform(ShaderHandle handle, std::string_view name, glm::mat4 value);
+
+[[nodiscard]] UniformBufferHandle createUniformBuffer(std::ptrdiff_t size);
+void bindUniformBufferToShader(ShaderHandle shaderHandle, UniformBufferHandle uniformBufferHandle, std::string_view name);
+void updateUniformBuffer(UniformBufferHandle handle, const void* buffer, std::ptrdiff_t length);
+void updateUniformBufferPart(UniformBufferHandle handle, std::ptrdiff_t start, const void* buffer, std::ptrdiff_t length);
+void destroyUniformBuffer(UniformBufferHandle handle);
 
 [[nodiscard]] MeshHandle createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode);
 void updateMesh(MeshHandle handle, const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode);

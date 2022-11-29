@@ -78,5 +78,5 @@ void LightManager::removeLight(SpotLight* light) {
 }
 
 void LightManager::updateUBOs() {
-    LightsUBO::get()->updateLights(this->directionalLights, this->pointLights, this->spotLights, {this->directionalLightCount, this->pointLightCount, this->spotLightCount});
+    LightsUBO::get().update(this->directionalLights, this->pointLights, this->spotLights, {this->directionalLightCount, this->pointLightCount, this->spotLightCount});
 }

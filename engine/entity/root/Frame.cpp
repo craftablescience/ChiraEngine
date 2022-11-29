@@ -80,7 +80,7 @@ void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeig
 
     // Push camera projection/view
     if (this->mainCamera) {
-        PerspectiveViewUBO::get()->update(
+        PerspectiveViewUBO::get().update(
                 this->mainCamera->getProjection(),
                 this->mainCamera->getView(),
                 this->mainCamera->getGlobalPosition(),
@@ -99,7 +99,7 @@ void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeig
 
     // Pop camera projection/view
     if (this->mainCamera && Entity::getFrame() && Entity::getFrame()->getCamera()) {
-        PerspectiveViewUBO::get()->update(
+        PerspectiveViewUBO::get().update(
                 Entity::getFrame()->getCamera()->getProjection(),
                 Entity::getFrame()->getCamera()->getView(),
                 Entity::getFrame()->getCamera()->getGlobalPosition(),

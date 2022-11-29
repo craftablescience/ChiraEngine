@@ -23,10 +23,10 @@ void Shader::compile(const nlohmann::json& properties) {
     this->handle = Renderer::createShader(shaderModuleVertData, shaderModuleFragData);
 
     if (this->usesPV) {
-        PerspectiveViewUBO::get()->bindToShader(this);
+        PerspectiveViewUBO::get().bindToShader(this->handle);
     }
     if (this->lit) {
-        LightsUBO::get()->bindToShader(this);
+        LightsUBO::get().bindToShader(this->handle);
     }
 }
 

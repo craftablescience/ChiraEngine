@@ -422,6 +422,42 @@ void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view 
     glUniformMatrix4fv(glGetUniformLocation(handle.handle, name.data()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
+Renderer::UniformBufferHandle Renderer::createUniformBuffer(std::ptrdiff_t size) {
+    UniformBufferHandle handle{};
+
+    // The binding point needs to be different for each UBO
+    static unsigned int UBO_BINDING_POINT = 0;
+    handle.bindingPoint = UBO_BINDING_POINT++;
+
+    glGenBuffers(1, &handle.handle);
+    glBindBuffer(GL_UNIFORM_BUFFER, handle.handle);
+    glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, handle.bindingPoint);
+    glBindBufferRange(GL_UNIFORM_BUFFER, handle.bindingPoint, handle.handle, 0, size);
+
+    return handle;
+}
+
+void Renderer::bindUniformBufferToShader(Renderer::ShaderHandle shaderHandle, Renderer::UniformBufferHandle uniformBufferHandle, std::string_view name) {
+    glUniformBlockBinding(shaderHandle.handle, glGetUniformBlockIndex(shaderHandle.handle, name.data()), uniformBufferHandle.bindingPoint);
+}
+
+void Renderer::updateUniformBuffer(Renderer::UniformBufferHandle handle, const void* buffer, std::ptrdiff_t length) {
+    glBindBuffer(GL_UNIFORM_BUFFER, handle.handle);
+    glBufferData(GL_UNIFORM_BUFFER, length, buffer, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
+void Renderer::updateUniformBufferPart(Renderer::UniformBufferHandle handle, std::ptrdiff_t start, const void* buffer, std::ptrdiff_t length) {
+    glBindBuffer(GL_UNIFORM_BUFFER, handle.handle);
+    glBufferSubData(GL_UNIFORM_BUFFER, start, length, buffer);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
+void Renderer::destroyUniformBuffer(Renderer::UniformBufferHandle handle) {
+    glDeleteBuffers(1, &handle.handle);
+}
+
 [[nodiscard]] static constexpr int getMeshDrawModeGL(MeshDrawMode mode) {
     switch (mode) {
         case MeshDrawMode::STATIC:

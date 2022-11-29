@@ -11,8 +11,6 @@ constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_PREFIX = "#";
 constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_SUFFIX = "#";
 
 class Shader : public PropertiesResource {
-    // todo(render): UBO needs this to get the shader handle
-    friend class UniformBufferObject;
 public:
     explicit Shader(std::string identifier_);
     void compile(const nlohmann::json& properties) override;
