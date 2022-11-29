@@ -2,6 +2,8 @@
 
 #include <cstddef>
 #include <cstring>
+#include <map>
+#include <stack>
 #include <string>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -18,6 +20,58 @@
 using namespace chira;
 
 CHIRA_CREATE_LOG(GL);
+
+enum class RenderMode {
+    CULL_FACE,
+};
+
+static void changeRenderMode(RenderMode mode, bool enable) {
+    constexpr auto changeRenderModeGL = [](int mode, bool enable) -> void {
+        if (enable) {
+            glEnable(mode);
+        } else {
+            glDisable(mode);
+        }
+    };
+    switch (mode) {
+        case RenderMode::CULL_FACE:
+            return changeRenderModeGL(GL_CULL_FACE, enable);
+    }
+}
+
+/// State controller to avoid redundant state changes: each state is false by default
+static std::map<RenderMode, std::stack<bool>> GL_STATES {};
+static void initStates() {
+    GL_STATES[RenderMode::CULL_FACE] = std::stack<bool>{};
+    GL_STATES[RenderMode::CULL_FACE].push(true);
+}
+
+static void pushState(RenderMode mode, bool enable) {
+    static bool initedStates = false;
+    if (!initedStates) {
+        initStates();
+        initedStates = true;
+    }
+    runtime_assert(GL_STATES.contains(mode), "This render mode was not added to initStates()!!");
+    auto& stack = GL_STATES[mode];
+    bool current = stack.top();
+    stack.push(enable);
+    if (enable != current) {
+        changeRenderMode(mode, enable);
+    }
+}
+
+static void popState(RenderMode mode) {
+    if(!GL_STATES.contains(mode) || GL_STATES[mode].size() <= 1) {
+        runtime_assert(false, "GL state popped before push!");
+    }
+    auto& stack = GL_STATES[mode];
+    bool old = stack.top();
+    stack.pop();
+    if (stack.top() != old) {
+        changeRenderMode(mode, stack.top());
+    }
+}
 
 std::string_view Renderer::getHumanName() {
     return GL_VERSION_STRING_PRETTY;
@@ -452,11 +506,11 @@ void Renderer::updateMesh(MeshHandle handle, const std::vector<Vertex>& vertices
 
 void Renderer::drawMesh(MeshHandle handle, const std::vector<Index>& indices, MeshDepthFunction depthFunction, MeshCullType cullType) {
     glDepthFunc(getMeshDepthFunctionGL(depthFunction));
-    glEnable(GL_CULL_FACE);
+    pushState(RenderMode::CULL_FACE, true);
     glCullFace(getMeshCullTypeGL(cullType));
     glBindVertexArray(handle.vaoHandle);
     glDrawElements(GL_TRIANGLES, static_cast<GLint>(indices.size()), GL_UNSIGNED_INT, nullptr);
-    glDisable(GL_CULL_FACE);
+    popState(RenderMode::CULL_FACE);
 }
 
 void Renderer::destroyMesh(MeshHandle handle) {
