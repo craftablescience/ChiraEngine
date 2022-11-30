@@ -1,9 +1,10 @@
 <div align="center">
   <img width="400px" src="https://github.com/craftablescience/ChiraEngine/blob/main/branding/github/readme_banner.png?raw=true" alt="Chira Engine"/>
 
-  ![Windows Workflow Status](https://img.shields.io/github/workflow/status/craftablescience/ChiraEngine/Build%20Engine?label=Builds%20and%20Tests)
-  ![License](https://img.shields.io/github/license/craftablescience/ChiraEngine?label=License)
-  ![Discord](https://img.shields.io/discord/678074864346857482?label=Discord&logo=Discord&logoColor=%23FFFFFF)
+  [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5c8b0a7eba614cc8bc44d7d54789cf51)](https://app.codacy.com/gh/craftablescience/ChiraEngine?utm_source=github.com&utm_medium=referral&utm_content=craftablescience/ChiraEngine&utm_campaign=Badge_Grade_Settings)
+  ![Workflow Status](https://img.shields.io/github/workflow/status/craftablescience/ChiraEngine/Build%20Engine?label=builds%20and%20tests)
+  ![License](https://img.shields.io/github/license/craftablescience/ChiraEngine?label=license)
+  ![Discord](https://img.shields.io/discord/678074864346857482?label=discord&logo=Discord&logoColor=%23FFFFFF)
 
   A fully customizable (and heavily work-in-progress) MIT-licensed game engine, written in C++20.
 </div>
