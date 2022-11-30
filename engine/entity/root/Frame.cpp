@@ -1,7 +1,5 @@
 #include "Frame.h"
 
-// todo(render): move to render backend
-#include <glad/gl.h>
 #include <core/Engine.h>
 #include <render/shader/UBO.h>
 
@@ -30,48 +28,16 @@ Frame::Frame(int width_, int height_, ColorRGB backgroundColor_, bool smoothResi
 }
 
 void Frame::createFramebuffer() {
-    if (this->fboHandle != 0) {
-        glDeleteRenderbuffers(1, &this->rboHandle);
-        glDeleteTextures(1, &this->colorTexHandle);
-        glDeleteFramebuffers(1, &this->fboHandle);
-        this->fboHandle = 0;
-        this->colorTexHandle = 0;
-        this->rboHandle = 0;
+    if (this->handle) {
+        Renderer::destroyFrameBuffer(this->handle);
     }
-
-    glGenFramebuffers(1, &this->fboHandle);
-    glBindFramebuffer(GL_FRAMEBUFFER, this->fboHandle);
-
-    glGenTextures(1, &this->colorTexHandle);
-    glBindTexture(GL_TEXTURE_2D, this->colorTexHandle);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->width, this->height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->linearFiltering ? GL_LINEAR : GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->linearFiltering ? GL_LINEAR : GL_NEAREST);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->colorTexHandle, 0);
-
-    glGenRenderbuffers(1, &this->rboHandle);
-    glBindRenderbuffer(GL_RENDERBUFFER, this->rboHandle);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, this->width, this->height);
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, this->rboHandle);
-
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        LOG_FRAME.error("Framebuffer is not complete!");
-    }
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    this->handle = Renderer::createFrameBuffer(this->width, this->height, WrapMode::REPEAT, WrapMode::REPEAT,
+                                               this->linearFiltering ? FilterMode::LINEAR : FilterMode::NEAREST);
 }
 
 void Frame::render(glm::mat4 /*parentTransform*/) {
-    this->render(Entity::getFrame()->getFramebufferHandle(), Entity::getFrame()->width, Entity::getFrame()->height);
-}
-
-void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeight) {
-    glViewport(0, 0, this->width, this->height);
-    glBindFramebuffer(GL_FRAMEBUFFER, this->fboHandle);
-    glClearColor(this->backgroundColor.r, this->backgroundColor.g, this->backgroundColor.b, 1.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
+    Renderer::setClearColor(ColorRGBA{this->backgroundColor, 1.0f});
+    Renderer::pushFrameBuffer(this->handle);
 
     auto tempPos = this->position;
     this->position = {};
@@ -92,8 +58,6 @@ void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeig
     Group::render(glm::identity<glm::mat4>());
 
     if (this->renderSkybox) {
-        // Wiki says modern hardware is fine with this and it looks better
-        glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
         this->skybox.render(glm::identity<glm::mat4>());
     }
 
@@ -114,14 +78,13 @@ void Frame::render(unsigned int parentFBOHandle, int parentWidth, int parentHeig
     this->translate(tempPos);
     this->rotate(tempRot);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, parentFBOHandle);
-    glViewport(0, 0, parentWidth, parentHeight);
+    Renderer::popFrameBuffer();
 }
 
 Frame::~Frame() {
-    glDeleteRenderbuffers(1, &this->rboHandle);
-    glDeleteTextures(1, &this->colorTexHandle);
-    glDeleteFramebuffers(1, &this->fboHandle);
+    if (this->handle) {
+        Renderer::destroyFrameBuffer(this->handle);
+    }
 }
 
 glm::vec3 Frame::getGlobalPosition() {
@@ -134,14 +97,6 @@ const Frame* Frame::getFrame() const {
 
 Frame* Frame::getFrame() {
     return this;
-}
-
-unsigned int Frame::getFramebufferHandle() const {
-    return this->fboHandle;
-}
-
-unsigned int Frame::getColorTextureHandle() const {
-    return this->colorTexHandle;
 }
 
 void Frame::setFrameSize(glm::vec2i newSize) {

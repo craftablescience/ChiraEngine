@@ -201,18 +201,24 @@ void Window::render(glm::mat4 /*parentTransform*/) {
     ImGui::NewFrame();
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
 
-    Frame::render(this->fboHandle, this->width, this->height);
+    Frame::render(glm::identity<glm::mat4>());
+    glViewport(0, 0, this->width, this->height);
 
     for (auto& [uuid, panel] : this->panels) {
         panel->render();
     }
 
     glDisable(GL_DEPTH_TEST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, this->handle.fboHandle);
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     this->surface.render(glm::identity<glm::mat4>());
+
+    glEnable(GL_DEPTH_TEST);
+
     glfwSwapBuffers(this->window);
 }
 
@@ -353,15 +359,16 @@ void Window::shouldStopAfterThisFrame(bool yes) const {
 
 void Window::displaySplashScreen() {
     glfwMakeContextCurrent(this->window);
-    glBindFramebuffer(GL_FRAMEBUFFER, this->fboHandle);
-    glClear(GL_COLOR_BUFFER_BIT);
+    Renderer::pushFrameBuffer(this->handle);
     MeshDataBuilder plane;
     plane.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
     plane.setMaterial(Resource::getResource<MaterialTextured>("file://materials/splashscreen.json").castAssert<IMaterial>());
     plane.render(glm::identity<glm::mat4>());
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDisable(GL_DEPTH_TEST);
+    Renderer::popFrameBuffer();
+    glViewport(0, 0, this->width, this->height);
     this->surface.render(glm::identity<glm::mat4>());
+    glEnable(GL_DEPTH_TEST);
     glfwSwapBuffers(this->window);
 }
 

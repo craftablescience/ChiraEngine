@@ -23,6 +23,8 @@ CHIRA_CREATE_LOG(GL);
 
 enum class RenderMode {
     CULL_FACE,
+    DEPTH_TEST,
+    TEXTURE_CUBE_MAP_SEAMLESS,
 };
 
 static void changeRenderMode(RenderMode mode, bool enable) {
@@ -36,14 +38,29 @@ static void changeRenderMode(RenderMode mode, bool enable) {
     switch (mode) {
         case RenderMode::CULL_FACE:
             return changeRenderModeGL(GL_CULL_FACE, enable);
+        case RenderMode::DEPTH_TEST:
+            return changeRenderModeGL(GL_DEPTH_TEST, enable);
+        case RenderMode::TEXTURE_CUBE_MAP_SEAMLESS:
+            return changeRenderModeGL(GL_TEXTURE_CUBE_MAP_SEAMLESS, enable);
     }
 }
 
 /// State controller to avoid redundant state changes: each state is false by default
-static std::map<RenderMode, std::stack<bool>> GL_STATES {};
+static std::map<RenderMode, std::stack<bool>> GL_STATES{
+        { RenderMode::CULL_FACE, {}, },
+        { RenderMode::DEPTH_TEST, {}, },
+        { RenderMode::TEXTURE_CUBE_MAP_SEAMLESS, {}, },
+};
 static void initStates() {
-    GL_STATES[RenderMode::CULL_FACE] = std::stack<bool>{};
     GL_STATES[RenderMode::CULL_FACE].push(true);
+    GL_STATES[RenderMode::DEPTH_TEST].push(true);
+
+    // Wiki says modern hardware is fine with this and it looks better
+    GL_STATES[RenderMode::TEXTURE_CUBE_MAP_SEAMLESS].push(true);
+
+    for (const auto& [renderMode, stack] : GL_STATES) {
+        changeRenderMode(renderMode, stack.top());
+    }
 }
 
 static void pushState(RenderMode mode, bool enable) {
@@ -63,7 +80,7 @@ static void pushState(RenderMode mode, bool enable) {
 
 static void popState(RenderMode mode) {
     if(!GL_STATES.contains(mode) || GL_STATES[mode].size() <= 1) {
-        runtime_assert(false, "GL state popped before push!");
+        runtime_assert(false, "Attempted to pop render state without a corresponding push!");
     }
     auto& stack = GL_STATES[mode];
     bool old = stack.top();
@@ -142,6 +159,10 @@ bool Renderer::setupForDebugging() {
     glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 
     return IMGUI_CHECKVERSION();
+}
+
+void Renderer::setClearColor(ColorRGBA color) {
+    glClearColor(color.r, color.g, color.b, color.a);
 }
 
 [[nodiscard]] static constexpr int getTextureFormatGL(TextureFormat format) {
@@ -276,6 +297,81 @@ void Renderer::useTexture(TextureHandle handle, TextureUnit activeTextureUnit /*
 void Renderer::destroyTexture(Renderer::TextureHandle handle) {
     runtime_assert(static_cast<bool>(handle), "Invalid texture handle given to GL renderer");
     glDeleteTextures(1, &handle.handle);
+}
+
+static std::stack<Renderer::FrameBufferHandle> GL_FRAMEBUFFERS{};
+
+Renderer::FrameBufferHandle Renderer::createFrameBuffer(int width, int height, WrapMode wrapS, WrapMode wrapT, FilterMode filter, bool hasDepth /*= true*/) {
+    FrameBufferHandle handle{ .hasDepth = hasDepth, .width = width, .height = height, };
+    glGenFramebuffers(1, &handle.fboHandle);
+    glBindFramebuffer(GL_FRAMEBUFFER, handle.fboHandle);
+
+    const auto glFilter = getFilterModeGL(filter);
+
+    glGenTextures(1, &handle.colorHandle);
+    glBindTexture(GL_TEXTURE_2D, handle.colorHandle);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, getWrapModeGL(wrapS));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, getWrapModeGL(wrapT));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glFilter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glFilter);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, handle.colorHandle, 0);
+
+    if (hasDepth) {
+        glGenRenderbuffers(1, &handle.rboHandle);
+        glBindRenderbuffer(GL_RENDERBUFFER, handle.rboHandle);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, handle.rboHandle);
+    }
+
+#ifdef DEBUG
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        LOG_GL.error("FrameBuffer is not complete!");
+    }
+#endif
+
+    glBindFramebuffer(GL_FRAMEBUFFER, GL_FRAMEBUFFERS.empty() ? 0 : GL_FRAMEBUFFERS.top().fboHandle);
+    return handle;
+}
+
+void Renderer::pushFrameBuffer(Renderer::FrameBufferHandle handle) {
+    auto old = GL_FRAMEBUFFERS.empty() ? 0 : GL_FRAMEBUFFERS.top().fboHandle;
+    GL_FRAMEBUFFERS.push(handle);
+    if (old != GL_FRAMEBUFFERS.top().fboHandle) {
+        glViewport(0, 0, GL_FRAMEBUFFERS.top().width, GL_FRAMEBUFFERS.top().height);
+        glBindFramebuffer(GL_FRAMEBUFFER, GL_FRAMEBUFFERS.top().fboHandle);
+        pushState(RenderMode::DEPTH_TEST, GL_FRAMEBUFFERS.top().hasDepth);
+        if (GL_FRAMEBUFFERS.top().hasDepth) {
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        } else {
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
+    }
+}
+
+void Renderer::popFrameBuffer() {
+    runtime_assert(!GL_FRAMEBUFFERS.empty(), "Attempted to pop framebuffer without a corresponding push!");
+    auto old = GL_FRAMEBUFFERS.top().fboHandle;
+    GL_FRAMEBUFFERS.pop();
+    if (old != (GL_FRAMEBUFFERS.empty() ? 0 : GL_FRAMEBUFFERS.top().fboHandle)) {
+        if (!GL_FRAMEBUFFERS.empty()) {
+            // todo(render): this looks ugly, fix this when windowing is ported
+            glViewport(0, 0, GL_FRAMEBUFFERS.top().width, GL_FRAMEBUFFERS.top().height);
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, GL_FRAMEBUFFERS.empty() ? 0 : GL_FRAMEBUFFERS.top().fboHandle);
+        popState(RenderMode::DEPTH_TEST);
+    }
+}
+
+void Renderer::destroyFrameBuffer(Renderer::FrameBufferHandle handle) {
+    runtime_assert(static_cast<bool>(handle), "Invalid framebuffer handle given to GL renderer");
+    if (handle.hasDepth) {
+        glDeleteRenderbuffers(1, &handle.rboHandle);
+    }
+    glDeleteTextures(1, &handle.colorHandle);
+    glDeleteFramebuffers(1, &handle.fboHandle);
 }
 
 [[nodiscard]] static constexpr int getShaderModuleTypeGL(ShaderModuleType type) {

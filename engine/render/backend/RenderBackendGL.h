@@ -4,6 +4,7 @@
 #include <string_view>
 #include <vector>
 #include <loader/image/Image.h>
+#include <math/Color.h>
 #include <math/Vertex.h>
 #include "RendererTypes.h"
 
@@ -12,10 +13,24 @@ namespace chira::Renderer {
 
 struct TextureHandle {
     unsigned int handle = 0;
+
     TextureType type = TextureType::TWO_DIMENSIONAL;
 
     explicit inline operator bool() const { return handle; }
     inline bool operator!() const { return !handle; }
+};
+
+struct FrameBufferHandle {
+    unsigned int fboHandle = 0;
+    unsigned int colorHandle = 0;
+    unsigned int rboHandle = 0;
+
+    bool hasDepth = true;
+    int width = 0;
+    int height = 0;
+
+    explicit inline operator bool() const { return fboHandle && colorHandle && (!hasDepth || rboHandle); }
+    inline bool operator!() const { return !fboHandle || !colorHandle || (hasDepth && !rboHandle); }
 };
 
 struct ShaderModuleHandle {
@@ -54,6 +69,8 @@ struct MeshHandle {
 [[nodiscard]] std::string_view getHumanName();
 [[nodiscard]] bool setupForDebugging();
 
+void setClearColor(ColorRGBA color);
+
 [[nodiscard]] TextureHandle createTexture2D(const Image& image, WrapMode wrapS, WrapMode wrapT, FilterMode filter,
                                             bool genMipmaps = true, TextureUnit activeTextureUnit = TextureUnit::G0);
 [[nodiscard]] TextureHandle createTextureCubemap(const Image& imageRT, const Image& imageLT, const Image& imageUP,
@@ -62,6 +79,11 @@ struct MeshHandle {
                                                  bool genMipmaps = true, TextureUnit activeTextureUnit = TextureUnit::G0);
 void useTexture(TextureHandle handle, TextureUnit activeTextureUnit = TextureUnit::G0);
 void destroyTexture(TextureHandle handle);
+
+[[nodiscard]] FrameBufferHandle createFrameBuffer(int width, int height, WrapMode wrapS, WrapMode wrapT, FilterMode filter, bool hasDepth = true);
+void pushFrameBuffer(FrameBufferHandle handle);
+void popFrameBuffer();
+void destroyFrameBuffer(FrameBufferHandle handle);
 
 [[nodiscard]] ShaderHandle createShader(std::string_view vertex, std::string_view fragment);
 void useShader(ShaderHandle handle);

@@ -15,5 +15,5 @@ void MaterialFramebuffer::compile(const nlohmann::json& properties) {
 void MaterialFramebuffer::use() const {
     IMaterial::use();
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, this->frame->getColorTextureHandle());
+    glBindTexture(GL_TEXTURE_2D, this->frame->handle.colorHandle);
 }
