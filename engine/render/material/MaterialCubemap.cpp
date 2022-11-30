@@ -5,7 +5,6 @@
 using namespace chira;
 
 void MaterialCubemap::compile(const nlohmann::json& properties) {
-    IMaterial::compile(properties);
     Serialize::fromJSON(this, properties);
 }
 

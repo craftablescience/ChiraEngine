@@ -24,7 +24,7 @@ private:
     std::string fontPath{"file://fonts/noto_sans_jp/NotoSansJP-Regular.otf"};
     static const ImWchar* getRangeFromString(std::string_view input);
 public:
-    CHIRA_PROPS (
+    CHIRA_PROPS() (
             CHIRA_PROP(Font, name),
             CHIRA_PROP(Font, size),
             CHIRA_PROP_NAMED(Font, rangeStr, range),

@@ -16,7 +16,7 @@ protected:
     SharedPointer<Texture> texture;
     std::string texturePath{"file://textures/missing.json"};
 public:
-    CHIRA_PROPS (
+    CHIRA_PROPS_INHERITED(IMaterial) (
             CHIRA_PROP_NAMED_SET(MaterialTextured, texturePath, texture, setTexture)
     );
 private:

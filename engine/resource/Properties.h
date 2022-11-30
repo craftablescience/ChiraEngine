@@ -13,10 +13,10 @@ namespace chira::Serialize {
 template<class C, typename T>
 struct Property {
     constexpr Property(T C::*member_, std::string_view name_, T(C::*memberFuncGetter_)(), void(C::*memberFuncSetter_)(T))
-            : member(member_)
-            , name(name_)
-            , memberFuncGetter(memberFuncGetter_)
-            , memberFuncSetter(memberFuncSetter_) {}
+        : member(member_)
+        , name(name_)
+        , memberFuncGetter(memberFuncGetter_)
+        , memberFuncSetter(memberFuncSetter_) {}
 
     using Type = T;
 
@@ -35,7 +35,7 @@ constexpr auto createProperty(T C::*member, std::string_view name, T(C::*memberF
 
 template<class C>
 void fromJSON(C* obj, const nlohmann::json& data) {
-    const auto numProperties = std::tuple_size<decltype(C::props)>::value;
+    const auto numProperties = std::tuple_size_v<decltype(C::props)>;
     forSequence(std::make_index_sequence<numProperties>{}, [&](auto i) {
         const auto property = std::get<i>(C::props);
         using PropType = typename decltype(property)::Type;
@@ -48,6 +48,11 @@ void fromJSON(C* obj, const nlohmann::json& data) {
             }
         }
     });
+
+    // Handle single inheritance
+    if constexpr (!std::is_same_v<void, typename C::InheritPropsFromClass>) {
+        fromJSON<typename C::InheritPropsFromClass>(obj, data);
+    }
 }
 
 template<class C>
@@ -57,10 +62,9 @@ C fromJSON(const nlohmann::json& data) {
     return obj;
 }
 
+/// Helper function for recursion
 template<class C>
-nlohmann::json toJSON(C& obj) {
-    nlohmann::json out;
-
+void toJSON(C& obj, nlohmann::json& out) {
     const auto numProperties = std::tuple_size<decltype(C::props)>::value;
     forSequence(std::make_index_sequence<numProperties>{}, [&](auto i) {
         const auto property = std::get<i>(C::props);
@@ -71,12 +75,25 @@ nlohmann::json toJSON(C& obj) {
         }
     });
 
+    // Handle single inheritance
+    if constexpr (!std::is_same_v<void, typename C::InheritPropsFromClass>) {
+        toJSON<typename C::InheritPropsFromClass>(obj, out);
+    }
+}
+
+nlohmann::json toJSON(auto& obj) {
+    nlohmann::json out;
+    toJSON(obj, out);
     return out;
 }
 
 } // namespace chira::Serialize
 
-#define CHIRA_PROPS static inline const auto props = std::make_tuple
+#define CHIRA_PROPS_INHERITED(clazz) \
+    using InheritPropsFromClass = clazz; \
+    static inline const auto props = std::make_tuple
+#define CHIRA_PROPS() CHIRA_PROPS_INHERITED(void)
+
 #define CHIRA_PROP(clazz, member) chira::Serialize::createProperty(&clazz::member, #member)
 #define CHIRA_PROP_NAMED(clazz, member, name) chira::Serialize::createProperty(&clazz::member, #name)
 #define CHIRA_PROP_GET(clazz, member, getter) chira::Serialize::createProperty(&clazz::member, #member, &clazz::getter)

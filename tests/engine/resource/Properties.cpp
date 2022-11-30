@@ -12,7 +12,7 @@ struct SimpleStructWithProps {
     std::string name{"hello"};
     bool b = true;
 
-    CHIRA_PROPS (
+    CHIRA_PROPS() (
             CHIRA_PROP(SimpleStructWithProps, x),
             CHIRA_PROP(SimpleStructWithProps, y),
             CHIRA_PROP_NAMED(SimpleStructWithProps, z, third_number),
@@ -56,7 +56,7 @@ struct ComplexStructWithProps {
             {"second", false}
     };
 
-    CHIRA_PROPS (
+    CHIRA_PROPS() (
             CHIRA_PROP(ComplexStructWithProps, list),
             CHIRA_PROP(ComplexStructWithProps, dict)
     );
@@ -124,7 +124,7 @@ struct StructWithGettersAndSettersForProps {
         this->cWasSet = true;
     }
 
-    CHIRA_PROPS (
+    CHIRA_PROPS() (
             CHIRA_PROP_GET(StructWithGettersAndSettersForProps, a, getA),
             CHIRA_PROP_SET(StructWithGettersAndSettersForProps, b, setB),
             CHIRA_PROP_GET_SET(StructWithGettersAndSettersForProps, c, getC, setC)
@@ -150,4 +150,72 @@ TEST(Properties, gettersAndSetters) {
     EXPECT_FALSE(test2.b);
     EXPECT_TRUE(test2.cWasSet);
     EXPECT_STREQ(test2.c.c_str(), "inside setter");
+}
+
+struct StructWithPropsBase {
+    int base = 10;
+
+    CHIRA_PROPS() (
+            CHIRA_PROP(StructWithPropsBase, base)
+    );
+};
+
+struct StructWithPropsInherited : public StructWithPropsBase {
+    int derived = 20;
+
+    CHIRA_PROPS_INHERITED(StructWithPropsBase) (
+            CHIRA_PROP(StructWithPropsInherited, derived)
+    );
+};
+
+struct StructWithPropsInheritedYetAgain : public StructWithPropsInherited {
+    int derivedYetAgain = 30;
+
+    CHIRA_PROPS_INHERITED(StructWithPropsInherited) (
+            CHIRA_PROP(StructWithPropsInheritedYetAgain, derivedYetAgain)
+    );
+};
+
+TEST(Properties, singleInheritanceSingleLevelDeserialize) {
+    auto base = Serialize::fromJSON<StructWithPropsBase>(nlohmann::json::parse(R"({
+        "base": -45
+    })"));
+    EXPECT_EQ(base.base, -45);
+
+    auto derived = Serialize::fromJSON<StructWithPropsInherited>(nlohmann::json::parse(R"({
+        "base": -5,
+        "derived": 10
+    })"));
+    EXPECT_EQ(derived.base, -5);
+    EXPECT_EQ(derived.derived, 10);
+}
+
+TEST(Properties, singleInheritanceSingleLevelSerialize) {
+    StructWithPropsBase base{};
+    nlohmann::json baseJSON = Serialize::toJSON(base);
+    EXPECT_EQ(baseJSON["base"], 10);
+
+    StructWithPropsInherited derived{};
+    nlohmann::json derivedJSON = Serialize::toJSON(derived);
+    EXPECT_EQ(derivedJSON["base"], 10);
+    EXPECT_EQ(derivedJSON["derived"], 20);
+}
+
+TEST(Properties, singleInheritanceMultiLevelDeserialize) {
+    auto derived = Serialize::fromJSON<StructWithPropsInheritedYetAgain>(nlohmann::json::parse(R"({
+        "base": -5,
+        "derived": 10,
+        "derivedYetAgain": 15
+    })"));
+    EXPECT_EQ(derived.base, -5);
+    EXPECT_EQ(derived.derived, 10);
+    EXPECT_EQ(derived.derivedYetAgain, 15);
+}
+
+TEST(Properties, singleInheritanceMultiLevelSerialize) {
+    StructWithPropsInheritedYetAgain derived{};
+    nlohmann::json derivedJSON = Serialize::toJSON(derived);
+    EXPECT_EQ(derivedJSON["base"], 10);
+    EXPECT_EQ(derivedJSON["derived"], 20);
+    EXPECT_EQ(derivedJSON["derivedYetAgain"], 30);
 }

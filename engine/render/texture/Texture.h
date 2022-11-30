@@ -29,7 +29,7 @@ private:
     void setWrapModeS(std::string wrapModeSStr_);
     void setWrapModeT(std::string wrapModeTStr_);
 public:
-    CHIRA_PROPS (
+    CHIRA_PROPS() (
             CHIRA_PROP(Texture, verticalFlip),
             CHIRA_PROP(Texture, mipmaps),
             CHIRA_PROP_NAMED(Texture, filePath, image),
