@@ -31,6 +31,7 @@
 #include <editorui/ResourceBrowser.h>
 #include <editorui/EntityPanel.h>
 #include <editorui/CodeView.h>
+#include <editorui/ToolsPanel.h>
 
 #ifdef CHIRA_USE_DISCORD
     #include <hook/DiscordRPC.h>
@@ -207,6 +208,70 @@ static void CreateInitialLayout() {
     ImGui::End();
 }
 
+static void setup_colors()
+{
+    auto& style = ImGui::GetStyle();
+    ImVec4* colors = style.Colors;
+
+    colors[ImGuiCol_WindowBg]               = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+    colors[ImGuiCol_PopupBg]                = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);
+    colors[ImGuiCol_FrameBg]                = ImVec4(0.07f, 0.07f, 0.07f, 1.00f);
+    colors[ImGuiCol_FrameBgHovered]         = ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+    colors[ImGuiCol_FrameBgActive]          = ImVec4(0.07f, 0.07f, 0.07f, 1.00f);
+    colors[ImGuiCol_TitleBgActive]          = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);
+    colors[ImGuiCol_TitleBgCollapsed]       = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);
+    colors[ImGuiCol_MenuBarBg]              = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);
+    colors[ImGuiCol_CheckMark]              = ImVec4(0.87f, 0.31f, 0.96f, 0.70f);
+    colors[ImGuiCol_SliderGrab]             = ImVec4(0.87f, 0.31f, 0.96f, 0.70f);
+    colors[ImGuiCol_Button]                 = ImVec4(0.24f, 0.24f, 0.24f, 1.00f);
+    colors[ImGuiCol_ButtonHovered]          = ImVec4(0.38f, 0.38f, 0.38f, 1.00f);
+    colors[ImGuiCol_ButtonActive]           = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+    colors[ImGuiCol_Header]                 = ImVec4(0.18f, 0.18f, 0.18f, 1.00f);
+    colors[ImGuiCol_HeaderHovered]          = ImVec4(0.28f, 0.28f, 0.28f, 1.00f);
+    colors[ImGuiCol_HeaderActive]           = ImVec4(0.18f, 0.18f, 0.18f, 1.00f);
+    colors[ImGuiCol_SeparatorActive]        = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);
+    colors[ImGuiCol_Tab]                    = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);
+    colors[ImGuiCol_TabHovered]             = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+    colors[ImGuiCol_TabActive]              = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+    colors[ImGuiCol_TabUnfocused]           = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);
+    colors[ImGuiCol_TabUnfocusedActive]     = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+    colors[ImGuiCol_DockingPreview]         = ImVec4(0.87f, 0.31f, 0.96f, 0.70f);
+    colors[ImGuiCol_TableBorderStrong]      = ImVec4(0.31f, 0.31f, 0.35f, 0.00f);
+    colors[ImGuiCol_TableBorderLight]       = ImVec4(0.23f, 0.23f, 0.25f, 0.00f);
+    colors[ImGuiCol_TableRowBg]             = ImVec4(0.13f, 0.13f, 0.13f, 1.00f);
+    colors[ImGuiCol_TableRowBgAlt]          = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+    colors[ImGuiCol_TextSelectedBg]         = ImVec4(0.87f, 0.31f, 0.96f, 0.70f);
+    colors[ImGuiCol_NavHighlight]           = ImVec4(0.87f, 0.31f, 0.96f, 0.70f);
+
+    style.WindowPadding     = ImVec2(4, 4);
+    style.FramePadding      = ImVec2(6, 6);
+    style.ItemSpacing       = ImVec2(4, 2);
+
+    style.ScrollbarSize     = 12;
+    style.ScrollbarRounding = 12;
+
+    style.IndentSpacing     = 12;
+
+    style.WindowBorderSize  = 1;
+    style.ChildBorderSize   = 0;
+    style.PopupBorderSize   = 0;
+    style.FrameBorderSize   = 0;
+    style.PopupRounding     = 0;
+
+    style.FrameRounding     = 3;
+    style.GrabRounding      = 3;
+
+    style.WindowRounding    = 0;
+    style.ChildRounding     = 0;
+    style.TabBorderSize     = 0;
+    style.TabRounding       = 0;
+
+    if(ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
+}
+
 int main(int argc, const char* const argv[]) {
     Engine::preInit(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{"editor"});
@@ -230,42 +295,13 @@ int main(int argc, const char* const argv[]) {
 
     Engine::init();
 
-    // ImGui Color Setting
-    ImVec4* colors = ImGui::GetStyle().Colors;
-    colors[ImGuiCol_FrameBg]                = ImVec4(0.16f, 0.09f, 0.37f, 0.54f);
-    colors[ImGuiCol_FrameBgHovered]         = ImVec4(0.62f, 0.42f, 0.65f, 1.00f);
-    colors[ImGuiCol_FrameBgActive]          = ImVec4(0.27f, 0.27f, 0.76f, 1.00f);
-    colors[ImGuiCol_TitleBgActive]          = ImVec4(0.27f, 0.09f, 0.37f, 1.00f);
-    colors[ImGuiCol_CheckMark]              = ImVec4(0.27f, 0.27f, 0.76f, 1.00f);
-    colors[ImGuiCol_SliderGrab]             = ImVec4(0.19f, 0.09f, 0.47f, 1.00f);
-    colors[ImGuiCol_SliderGrabActive]       = ImVec4(0.62f, 0.42f, 0.65f, 1.00f);
-    colors[ImGuiCol_Button]                 = ImVec4(0.27f, 0.27f, 0.76f, 0.40f);
-    colors[ImGuiCol_ButtonHovered]          = ImVec4(0.50f, 0.40f, 0.79f, 1.00f);
-    colors[ImGuiCol_ButtonActive]           = ImVec4(0.62f, 0.42f, 0.65f, 1.00f);
-    colors[ImGuiCol_Header]                 = ImVec4(0.27f, 0.27f, 0.76f, 0.31f);
-    colors[ImGuiCol_HeaderHovered]          = ImVec4(0.47f, 0.27f, 0.76f, 0.80f);
-    colors[ImGuiCol_HeaderActive]           = ImVec4(0.62f, 0.42f, 0.65f, 1.00f);
-    colors[ImGuiCol_Separator]              = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
-    colors[ImGuiCol_SeparatorHovered]       = ImVec4(0.62f, 0.42f, 0.65f, 0.78f);
-    colors[ImGuiCol_SeparatorActive]        = ImVec4(0.62f, 0.42f, 0.65f, 1.00f);
-    colors[ImGuiCol_ResizeGrip]             = ImVec4(0.62f, 0.42f, 0.65f, 0.20f);
-    colors[ImGuiCol_ResizeGripHovered]      = ImVec4(0.62f, 0.42f, 0.65f, 0.67f);
-    colors[ImGuiCol_ResizeGripActive]       = ImVec4(0.62f, 0.42f, 0.65f, 0.95f);
-    colors[ImGuiCol_Tab]                    = ImVec4(0.35f, 0.16f, 0.45f, 0.86f);
-    colors[ImGuiCol_TabHovered]             = ImVec4(0.62f, 0.42f, 0.65f, 1.00f);
-    colors[ImGuiCol_TabActive]              = ImVec4(0.67f, 0.33f, 0.82f, 1.00f);
-    colors[ImGuiCol_TabUnfocused]           = ImVec4(0.11f, 0.07f, 0.15f, 0.97f);
-    colors[ImGuiCol_TabUnfocusedActive]     = ImVec4(0.30f, 0.14f, 0.42f, 1.00f);
-    colors[ImGuiCol_DockingPreview]         = ImVec4(0.62f, 0.42f, 0.65f, 0.70f);
+    setup_colors();
 
-    
-    Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
+        Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
 
     auto mainPanel = new MainEditorPanel();
     Engine::getWindow()->addPanel(mainPanel);
 
-    // TODO: This should be in focus and visible by default on editor load
-    // TODO: I have no idea how to do the above actually
     auto framePanel = new EngineView();
     auto frame = framePanel->getFrame();
     frame->setBackgroundColor(ColorRGB{0.15f});
@@ -283,6 +319,7 @@ int main(int argc, const char* const argv[]) {
     codePanelID = Engine::getWindow()->addPanel(codePanel);
 
     Engine::getWindow()->addPanel(new EntityPanel(frame));
+    Engine::getWindow()->addPanel(new ToolsPanel(frame));
 
     auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};
     camera->translate({-6.f * sqrtf(3.f), 6, 0});
