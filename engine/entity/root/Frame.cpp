@@ -87,6 +87,10 @@ Frame::~Frame() {
     }
 }
 
+void Frame::useFrameBufferTexture() const {
+    Renderer::useFrameBufferTexture(this->handle);
+}
+
 glm::vec3 Frame::getGlobalPosition() {
     return this->position;
 }

@@ -365,6 +365,11 @@ void Renderer::popFrameBuffer() {
     }
 }
 
+void Renderer::useFrameBufferTexture(Renderer::FrameBufferHandle handle, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
+    glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
+    glBindTexture(GL_TEXTURE_2D, handle.colorHandle);
+}
+
 void Renderer::destroyFrameBuffer(Renderer::FrameBufferHandle handle) {
     runtime_assert(static_cast<bool>(handle), "Invalid framebuffer handle given to GL renderer");
     if (handle.hasDepth) {

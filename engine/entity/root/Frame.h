@@ -11,14 +11,14 @@
 namespace chira {
 
 class Frame : public Group {
-    // todo(render): these things need to change
-    friend class MaterialFramebuffer;
+    // todo(render): need to abstract things for ImGUI
     friend class FramePanel;
 public:
     Frame(std::string name_, int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
     Frame(int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
     void render(glm::mat4 parentTransform) override;
     ~Frame() override;
+    void useFrameBufferTexture() const;
     [[nodiscard]] glm::vec3 getGlobalPosition() override;
     [[nodiscard]] const Frame* getFrame() const override;
     [[nodiscard]] Frame* getFrame() override;

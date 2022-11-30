@@ -83,6 +83,7 @@ void destroyTexture(TextureHandle handle);
 [[nodiscard]] FrameBufferHandle createFrameBuffer(int width, int height, WrapMode wrapS, WrapMode wrapT, FilterMode filter, bool hasDepth = true);
 void pushFrameBuffer(FrameBufferHandle handle);
 void popFrameBuffer();
+void useFrameBufferTexture(FrameBufferHandle handle, TextureUnit activeTextureUnit = TextureUnit::G0);
 void destroyFrameBuffer(FrameBufferHandle handle);
 
 [[nodiscard]] ShaderHandle createShader(std::string_view vertex, std::string_view fragment);
