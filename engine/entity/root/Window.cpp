@@ -148,6 +148,9 @@ bool Window::createGLFWWindow(std::string_view title) {
     ImGui::SetCurrentContext(this->imguiContext);
     auto& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_DockingEnable;
+#ifdef ImGuiViewports
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+#endif
     this->setImGuiConfigPath();
 
     ImGui_ImplGlfw_InitForOpenGL(this->window, true); // register for default input binds
@@ -202,6 +205,16 @@ void Window::render(glm::mat4 /*parentTransform*/) {
     glDisable(GL_DEPTH_TEST);
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+#ifdef ImGuiViewports
+    // Update and Render additional Platform Windows
+    // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
+    //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
+    GLFWwindow* backup_current_context = glfwGetCurrentContext();
+    ImGui::UpdatePlatformWindows();
+    ImGui::RenderPlatformWindowsDefault();
+    glfwMakeContextCurrent(backup_current_context);
+#endif
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     this->surface.render(glm::identity<glm::mat4>());
