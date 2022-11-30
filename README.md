@@ -9,6 +9,9 @@
 </div>
 
 ## Features
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5c8b0a7eba614cc8bc44d7d54789cf51)](https://app.codacy.com/gh/craftablescience/ChiraEngine?utm_source=github.com&utm_medium=referral&utm_content=craftablescience/ChiraEngine&utm_campaign=Badge_Grade_Settings)
+
 To summarize the major features:
 - Native Windows, Linux, and macOS support (OpenGL 4.1)
 - As extensible as possible: register custom logging hooks, resource types and providers, etc.
