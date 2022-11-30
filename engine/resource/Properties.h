@@ -35,6 +35,11 @@ constexpr auto createProperty(T C::*member, std::string_view name, T(C::*memberF
 
 template<class C>
 void fromJSON(C* obj, const nlohmann::json& data) {
+    // Handle single inheritance, deserialize base class first
+    if constexpr (!std::is_same_v<void, typename C::InheritPropsFromClass>) {
+        fromJSON<typename C::InheritPropsFromClass>(obj, data);
+    }
+
     const auto numProperties = std::tuple_size_v<decltype(C::props)>;
     forSequence(std::make_index_sequence<numProperties>{}, [&](auto i) {
         const auto property = std::get<i>(C::props);
@@ -48,11 +53,6 @@ void fromJSON(C* obj, const nlohmann::json& data) {
             }
         }
     });
-
-    // Handle single inheritance
-    if constexpr (!std::is_same_v<void, typename C::InheritPropsFromClass>) {
-        fromJSON<typename C::InheritPropsFromClass>(obj, data);
-    }
 }
 
 template<class C>
@@ -65,6 +65,11 @@ C fromJSON(const nlohmann::json& data) {
 /// Helper function for recursion
 template<class C>
 void toJSON(C& obj, nlohmann::json& out) {
+    // Handle single inheritance, serialize base class first
+    if constexpr (!std::is_same_v<void, typename C::InheritPropsFromClass>) {
+        toJSON<typename C::InheritPropsFromClass>(obj, out);
+    }
+
     const auto numProperties = std::tuple_size<decltype(C::props)>::value;
     forSequence(std::make_index_sequence<numProperties>{}, [&](auto i) {
         const auto property = std::get<i>(C::props);
@@ -74,11 +79,6 @@ void toJSON(C& obj, nlohmann::json& out) {
             out[property.name] = obj.*(property.member);
         }
     });
-
-    // Handle single inheritance
-    if constexpr (!std::is_same_v<void, typename C::InheritPropsFromClass>) {
-        toJSON<typename C::InheritPropsFromClass>(obj, out);
-    }
 }
 
 nlohmann::json toJSON(auto& obj) {
