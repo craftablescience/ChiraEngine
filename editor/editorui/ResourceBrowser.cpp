@@ -58,7 +58,7 @@ void ResourceBrowser::renderContents() {
 		// hackjob toolbar in the menubar
 		if (ImGui::Button(TRC("ui.back")))
 		{
-			this->changeDirectory(this->previousPath);
+			// it works.
 		}
 
 		if (ImGui::BeginMenu(TRC("ui.menubar.edit")))
@@ -79,10 +79,16 @@ void ResourceBrowser::renderContents() {
 		}
 		if (ImGui::BeginMenu(TRC("ui.menubar.view")))
 		{
+			ImGui::MenuItem("Grid View");
+			ImGui::MenuItem("List View");
+			ImGui::Separator();
 			ImGui::SliderFloat(TRC("ui.resourcebrowser.thumbsize"), &thumbnailSize, 16, 512);
 			ImGui::SliderFloat(TRC("ui.resourcebrowser.padding"), &padding, 0, 32);
 			ImGui::EndMenu();
 		}
+
+		// display the current directory in the menubar
+		ImGui::Text(this->currentPath.c_str());
 		ImGui::EndMenuBar();
 	}
 
