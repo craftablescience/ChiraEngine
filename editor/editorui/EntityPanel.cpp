@@ -6,9 +6,6 @@
 #include <i18n/TranslationManager.h>
 #include <ui/IPanel.h>
 #include <ui/FramePanel.h>
-#include <utility/Dialogs.h>
-// Used because file dialogs are broken on macOS
-#include <imfilebrowser.h>
 
 using namespace chira;
 
@@ -18,27 +15,31 @@ EntityPanel::EntityPanel(Frame* frame)
 }
 
 void EntityPanel::renderContents() {
-    ImGui::Text(TRC("ui.entitypanel.scenetree"));
-    
+    ImGui::Button("+");
+    ImGui::SameLine();
+    ImGui::Text("%u entities", this->curframe->getChildren()->size() - 2);
+
     //#region entity table
-    if (ImGui::BeginTable("scene_entity_list", 2,
-        ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody))
+    if (ImGui::BeginTable("scene_entity_list", 1,
+        ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_NoBordersInBody
+        | ImGuiTableFlags_RowBg))
     {
         // Icon column
-        ImGui::TableSetupColumn("", ImGuiTableColumnFlags_NoHide|ImGuiTableColumnFlags_WidthFixed, 15);
-        ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_NoHide);
+        ImGui::TableSetupColumn("", ImGuiTableColumnFlags_NoHide);
     
         ImGui::TableHeadersRow();
         
         for (auto const& entity : *this->curframe->getChildren())
         {
+            // don't include the editor camera
+            // TODO: Completely remove the editor camera from the main scene entity list?
+            if (entity->getName() == "EDITOR_CAMERA_DO_NOT_REMOVE" || entity->getName() == "EDITOR_GRID_DO_NOT_REMOVE")
+                continue;
+
             bool op = false;
-            bool is_selected = false;
-            ImGui::TableNextRow();
-            ImGui::TableNextColumn();
-            ImGui::TreeNodeEx("", ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanFullWidth);
-            ImGui::TableNextColumn();
-            ImGui::TreeNodeEx(std::string(entity->getName()).c_str(), ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanFullWidth);
+            // bool is_selected = false;
+            ImGui::TableNextRow();ImGui::TableNextColumn();
+            ImGui::TreeNodeEx(std::string(entity->getName()).c_str(), ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanFullWidth);
 
             if (ImGui::BeginPopupContextItem()) {
                 if (ImGui::Selectable("Delete")) {

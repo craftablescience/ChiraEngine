@@ -325,7 +325,7 @@ int main(int argc, const char* const argv[]) {
     camera->translate({-6.f * sqrtf(3.f), 6, 0});
     camera->setPitch(30.f);
     camera->setYaw(270.f);
-    camera->setName("Camera");
+    camera->setName("EDITOR_CAMERA_DO_NOT_REMOVE");
     frame->addChild(camera);
     frame->setCamera(camera);
 
@@ -336,7 +336,7 @@ int main(int argc, const char* const argv[]) {
 
     // OPTIMIZE: replace this multi cube mesh grid with a single textured plane grid
     // IDEA: the grid texture I made for Chisel could be reused here!
-    auto grid = new MeshDynamic{"grid"};
+    auto grid = new MeshDynamic{"EDITOR_GRID_DO_NOT_REMOVE"};
     auto gridMesh = grid->getMesh();
     gridMesh->setMaterial(CHIRA_GET_MATERIAL("MaterialUntextured", "file://materials/unlit.json"));
     for (int i = -5; i <= 5; i++) {
