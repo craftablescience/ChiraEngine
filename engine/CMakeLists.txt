@@ -13,3 +13,6 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/engine/script/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/ui/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imguicolortextedit/CMakeLists.txt)
+list(APPEND CHIRA_ENGINE_HEADERS
+${CMAKE_CURRENT_LIST_DIR}/thirdparty/fontawesome/IconsFontAwesome5.h
+${CMAKE_CURRENT_LIST_DIR}/thirdparty/fontawesome/fa-solid-900.h)
