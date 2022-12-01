@@ -56,31 +56,17 @@ void ResourceBrowser::renderContents() {
 	if (ImGui::BeginMenuBar())
 	{
 		// hackjob toolbar in the menubar
-		if (ImGui::Button(TRC("ui.back")))
+		if (ImGui::Button("<-"))
 		{
-			// it works.
+			// significantly better back button
+			
 		}
 
-		if (ImGui::BeginMenu(TRC("ui.menubar.edit")))
-		{
-			if (ImGui::MenuItem(TRC("ui.copy"), "Ctrl-C", nullptr))
-			{
-			}
-			if (ImGui::MenuItem(TRC("ui.cut"), "Ctrl-X", nullptr))
-			{
-			}
-			if (ImGui::MenuItem(TRC("ui.delete"), "Del", nullptr))
-			{
-			}
-			if (ImGui::MenuItem(TRC("ui.paste"), "Ctrl-V", nullptr))
-			{
-			}
-			ImGui::EndMenu();
-		}
+		ImGui::Button("Grid");
+		ImGui::Button("List");
+
 		if (ImGui::BeginMenu(TRC("ui.menubar.view")))
 		{
-			ImGui::MenuItem("Grid View");
-			ImGui::MenuItem("List View");
 			ImGui::Separator();
 			ImGui::SliderFloat(TRC("ui.resourcebrowser.thumbsize"), &thumbnailSize, 16, 512);
 			ImGui::SliderFloat(TRC("ui.resourcebrowser.padding"), &padding, 0, 32);
@@ -88,7 +74,7 @@ void ResourceBrowser::renderContents() {
 		}
 
 		// display the current directory in the menubar
-		ImGui::Text(this->currentPath.c_str());
+		ImGui::Text(std::string("file://" + this->currentPath).c_str());
 		ImGui::EndMenuBar();
 	}
 
@@ -151,6 +137,23 @@ void ResourceBrowser::renderContents() {
 			
 		}
 		ImGui::ImageButton((void*)icon->getHandle(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+
+		if (ImGui::BeginPopupContextItem()) {
+			if (ImGui::MenuItem(TRC("ui.copy"), "Ctrl-C", nullptr))
+			{
+			}
+			if (ImGui::MenuItem(TRC("ui.cut"), "Ctrl-X", nullptr))
+			{
+			}
+			if (ImGui::MenuItem(TRC("ui.delete"), "Del", nullptr))
+			{
+			}
+			if (ImGui::MenuItem(TRC("ui.paste"), "Ctrl-V", nullptr))
+			{
+			}
+
+			ImGui::EndPopup();
+		}
 		
 		if (ImGui::IsItemActivated())
 		{
