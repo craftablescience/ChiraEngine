@@ -6,6 +6,7 @@
 #include <i18n/TranslationManager.h>
 #include <ui/IPanel.h>
 #include <ui/FramePanel.h>
+#include "thirdparty/fontawesome/IconsFontAwesome5.h"
 
 using namespace chira;
 
@@ -15,7 +16,7 @@ EntityPanel::EntityPanel(Frame* frame)
 }
 
 void EntityPanel::renderContents() {
-    ImGui::Button("+");
+    ImGui::Button(ICON_FA_PLUS);
     ImGui::SameLine();
     ImGui::Text("%u entities", this->curframe->getChildren()->size() - 2);
 

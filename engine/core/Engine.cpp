@@ -16,6 +16,8 @@
 #include <ui/debug/ConsolePanel.h>
 #include <ui/debug/ResourceUsageTrackerPanel.h>
 #include "CommandLine.h"
+#include <thirdparty/fontawesome/IconsFontAwesome5.h>
+#include <thirdparty/fontawesome/fa-solid-900.h>
 
 #ifndef _WIN32 // This doesn't exist on windows so we don't want to include it there
     #include <sys/types.h>
@@ -172,6 +174,16 @@ void Engine::init(bool windowStartsVisible) {
 void Engine::run() {
     ImGui::SetCurrentContext(Engine::getWindow()->imguiContext);
     ImGui::GetIO().Fonts->Build();
+    ImFontAtlas* fonts = ImGui::GetIO().Fonts;
+    ImFontConfig config;
+    config.MergeMode = true;
+    config.PixelSnapH = true;
+    config.OversampleV = 1;
+    config.OversampleH = 1;
+
+    const ImWchar icon_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
+    fonts->AddFontFromMemoryCompressedTTF(font_awesome_compressed_data, font_awesome_compressed_size, 13.0f, &config, icon_ranges);
+    
 
     do {
         Engine::lastTime = Engine::currentTime;

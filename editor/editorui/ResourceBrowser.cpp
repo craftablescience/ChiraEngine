@@ -8,6 +8,7 @@
 #include <ui/FramePanel.h>
 #include <render/texture/Texture.h>
 #include <Editor.h>
+#include "thirdparty/fontawesome/IconsFontAwesome5.h"
 
 using namespace chira;
 
@@ -53,30 +54,33 @@ void ResourceBrowser::renderContents() {
 	static float thumbnailSize = 64.0f;
 	float cellSize = thumbnailSize + padding;
 
-	if (ImGui::BeginMenuBar())
+	// better toolbar
+	if (ImGui::Button("<-"))
 	{
-		// hackjob toolbar in the menubar
-		if (ImGui::Button("<-"))
-		{
-			// significantly better back button
-			
-		}
-
-		ImGui::Button("Grid");
-		ImGui::Button("List");
-
-		if (ImGui::BeginMenu(TRC("ui.menubar.view")))
-		{
-			ImGui::Separator();
-			ImGui::SliderFloat(TRC("ui.resourcebrowser.thumbsize"), &thumbnailSize, 16, 512);
-			ImGui::SliderFloat(TRC("ui.resourcebrowser.padding"), &padding, 0, 32);
-			ImGui::EndMenu();
-		}
-
-		// display the current directory in the menubar
-		ImGui::Text(std::string("file://" + this->currentPath).c_str());
-		ImGui::EndMenuBar();
+		// significantly better back button
 	}
+	ImGui::SameLine();
+	ImGui::Dummy(ImVec2(15, 0));
+	ImGui::SameLine();
+
+	ImGui::Button("Grid");
+	ImGui::SameLine();
+	ImGui::Button("List");
+	ImGui::SameLine();
+
+	if (ImGui::BeginPopupContextItem("viewsettings"))
+	{
+		ImGui::SliderFloat(TRC("ui.resourcebrowser.thumbsize"), &thumbnailSize, 16, 512);
+		ImGui::SliderFloat(TRC("ui.resourcebrowser.padding"), &padding, 0, 32);
+		ImGui::EndPopup();
+	}
+
+	if (ImGui::Button(TRC("ui.menubar.view")))
+		ImGui::OpenPopup("viewsettings");
+
+	ImGui::SameLine();
+	// display the current directory in the menubar
+	ImGui::Text(std::string("file://" + this->currentPath).c_str());
 
 	float panelWidth = ImGui::GetContentRegionAvail().x;
 	int columnCount = (int)(panelWidth / cellSize);

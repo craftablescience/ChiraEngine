@@ -158,7 +158,7 @@ bool Window::createGLFWWindow(std::string_view title) {
 
     auto defaultFont = Resource::getUniqueResource<Font>("file://fonts/default.json");
     ImGui::GetIO().FontDefault = defaultFont->getFont();
-    
+
     return true;
 }
 
