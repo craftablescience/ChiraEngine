@@ -1,9 +1,5 @@
 #include "Config.h"
 
-#ifdef DEBUG
-    #include <filesystem>
-#endif
-
 #include <core/Platform.h>
 #ifdef CHIRA_PLATFORM_WINDOWS
     #define WIN32_LEAN_AND_MEAN
