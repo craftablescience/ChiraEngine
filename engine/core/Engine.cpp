@@ -146,7 +146,7 @@ void Engine::run() {
         SteamAPI::Client::shutdown();
 #endif
 
-    window.reset();
+    Engine::window.reset();
 
     Resource::discardAll();
 

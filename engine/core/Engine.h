@@ -31,4 +31,4 @@ private:
     static inline double lastTime = 0.0, currentTime = 0.0;
 };
 
-} // namespace chira::Engine
+} // namespace chira

@@ -6,7 +6,6 @@
 #include <glad/gl.h>
 #include <glad/glversion.h>
 #include <SDL.h>
-#include <SDL_video.h>
 
 #include <config/Config.h>
 #include <config/ConEntry.h>
