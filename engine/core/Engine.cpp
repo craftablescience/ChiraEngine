@@ -11,6 +11,7 @@
 #include <ui/debug/ConsolePanel.h>
 #include <ui/debug/ResourceUsageTrackerPanel.h>
 #include "CommandLine.h"
+#include "Platform.h"
 
 #ifdef DEBUG
     #include <render/backend/Renderer.h>
@@ -37,7 +38,7 @@ static ConCommand crash{"crash", "Force-crashes the game or application (for deb
 }, CON_FLAG_CHEAT};
 
 void Engine::preInit(int argc, const char* const argv[]) {
-#ifdef _WIN32
+#ifdef CHIRA_PLATFORM_WINDOWS
     // Enable colored text in Windows console by setting encoding to UTF-8
     // #define CP_UTF8 65001 in windows.h
     system("chcp 65001 > nul");
@@ -64,7 +65,7 @@ void Engine::init(bool windowStartsVisible) {
 
 #ifdef DEBUG
     if (!Renderer::setupForDebugging()) {
-        LOG_ENGINE.warning(fmt::format("Render backend \"{}\" failed to setup for debugging!", Renderer::getHumanName()));
+        LOG_ENGINE.warning("Render backend \"{}\" failed to setup for debugging!", Renderer::getHumanName());
     }
 #endif
 
