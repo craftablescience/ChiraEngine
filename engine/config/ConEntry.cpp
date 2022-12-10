@@ -4,7 +4,6 @@
 
 #include <algorithm>
 #include <utility>
-
 #include <config/Config.h>
 
 using namespace chira;
@@ -18,6 +17,8 @@ static ConCommand info{"info", "Prints the description of the given convar(s) or
             LOG_CONENTRY.infoImportant(std::string{*ConCommandRegistry::getConCommand(name)});
         } else if (ConVarRegistry::hasConVar(name)) {
             LOG_CONENTRY.infoImportant(std::string{*ConVarRegistry::getConVar(name)});
+        } else {
+            LOG_CONENTRY.infoImportant("Cannot find convar or concommand \"{}\"!", name);
         }
     }
 }};

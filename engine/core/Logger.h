@@ -3,7 +3,7 @@
 #include <string_view>
 #include <functional>
 #include <unordered_map>
-
+#include <fmt/core.h>
 #include <utility/UUIDGenerator.h>
 
 namespace chira {
@@ -57,9 +57,11 @@ public:
             , outputLogger(LogType::LOG_OUTPUT, name_)
             , warningLogger(LogType::LOG_WARNING, name_)
             , errorLogger(LogType::LOG_ERROR, name_) {}
+
     [[nodiscard]] constexpr std::string_view getName() const {
         return this->name;
     }
+
     [[nodiscard]] inline constexpr const LogChannelLogger& info() const {
         return this->infoLogger;
     }
@@ -75,20 +77,46 @@ public:
     [[nodiscard]] inline constexpr const LogChannelLogger& error() const {
         return this->errorLogger;
     }
-    inline void info(std::string_view message) const {
-        this->info() << message;
+
+    template<typename... FmtArgs>
+    inline void info(std::string_view message, FmtArgs... fmtArgs) const {
+        if constexpr (sizeof...(fmtArgs) == 0) {
+            this->info() << message;
+        } else {
+            this->info() << fmt::format(fmt::runtime(message), fmtArgs...);
+        }
     }
-    inline void infoImportant(std::string_view message) const {
-        this->infoImportant() << message;
+    template<typename... FmtArgs>
+    inline void infoImportant(std::string_view message, FmtArgs... fmtArgs) const {
+        if constexpr (sizeof...(fmtArgs) == 0) {
+            this->infoImportant() << message;
+        } else {
+            this->infoImportant() << fmt::format(fmt::runtime(message), fmtArgs...);
+        }
     }
-    inline void output(std::string_view message) const {
-        this->output() << message;
+    template<typename... FmtArgs>
+    inline void output(std::string_view message, FmtArgs... fmtArgs) const {
+        if constexpr (sizeof...(fmtArgs) == 0) {
+            this->output() << message;
+        } else {
+            this->output() << fmt::format(fmt::runtime(message), fmtArgs...);
+        }
     }
-    inline void warning(std::string_view message) const {
-        this->warning() << message;
+    template<typename... FmtArgs>
+    inline void warning(std::string_view message, FmtArgs... fmtArgs) const {
+        if constexpr (sizeof...(fmtArgs) == 0) {
+            this->warning() << message;
+        } else {
+            this->warning() << fmt::format(fmt::runtime(message), fmtArgs...);
+        }
     }
-    inline void error(std::string_view message) const {
-        this->error() << message;
+    template<typename... FmtArgs>
+    inline void error(std::string_view message, FmtArgs... fmtArgs) const {
+        if constexpr (sizeof...(fmtArgs) == 0) {
+            this->error() << message;
+        } else {
+            this->error() << fmt::format(fmt::runtime(message), fmtArgs...);
+        }
     }
 private:
     std::string_view name;
