@@ -12,13 +12,14 @@ namespace chira {
 
 const std::string ENGINE_FILESYSTEM_PATH = "engine"; // NOLINT(cert-err58-cpp)
 
-class Engine {
-public:
+struct Engine {
     Engine() = delete;
+
     /// Ran at the very start of your program. Readies the engine for you to add features before init().
     static void preInit(int argc, const char* const argv[]);
     static void init(bool windowStartsVisible = true);
     static void run();
+
     /// Returns a pointer to the main window of the application.
     [[nodiscard]] static Window* getWindow();
     [[nodiscard]] static bool isStarted();
@@ -30,4 +31,4 @@ private:
     static inline double lastTime = 0.0, currentTime = 0.0;
 };
 
-} // namespace chira
+} // namespace chira::Engine

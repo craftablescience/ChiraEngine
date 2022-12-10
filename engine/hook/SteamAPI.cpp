@@ -13,7 +13,7 @@ using namespace steam;
 using namespace libloader;
 
 [[maybe_unused]]
-static ConVar steam_enable{"steam_enable", true, "Initialize Steam API functions.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+ConVar steam_enable{"steam_enable", true, "Initialize Steam API functions.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
 
 /// Helper function to stop repeating stuff
 template<typename T, typename U, typename... Params>

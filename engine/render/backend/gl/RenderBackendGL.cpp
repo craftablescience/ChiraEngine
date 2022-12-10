@@ -6,16 +6,15 @@
 #include <stack>
 #include <string>
 
+#include <imgui.h>
+#include <SDL.h>
+
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/gl.h>
 #include <glad/glversion.h>
-#include <backends/imgui_impl_opengl3.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 
 #include <core/Assertions.h>
 #include <core/Logger.h>
-#include <i18n/TranslationManager.h>
 
 using namespace chira;
 
@@ -96,7 +95,7 @@ std::string_view Renderer::getHumanName() {
 
 bool Renderer::setupForDebugging() {
 #ifdef CHIRA_USE_GL_41
-    if (!glfwExtensionSupported("GL_KHR_debug"))
+    if (!SDL_GL_ExtensionSupported("GL_KHR_debug"))
         return false;
 #endif
 

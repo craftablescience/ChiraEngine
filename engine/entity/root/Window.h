@@ -1,13 +1,11 @@
 #pragma once
 
 #include <unordered_map>
-
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#include <imgui.h>
-
 #include <utility/UUIDGenerator.h>
 #include "Frame.h"
+
+struct SDL_Window;
+struct ImGuiContext;
 
 namespace chira {
 
@@ -25,7 +23,7 @@ public:
     void removePanel(const uuids::uuid& panelID);
     void removeAllPanels();
     void setFrameSize(glm::vec2i newSize) override;
-    [[nodiscard]] glm::vec2d getMousePosition() const;
+    [[nodiscard]] static glm::vec2i getMousePosition();
     void captureMouse(bool capture);
     [[nodiscard]] bool isMouseCaptured() const;
     [[nodiscard]] bool isIconified() const;
@@ -38,14 +36,15 @@ public:
     void moveToCenter() const;
     /// Note: Images must have a bit depth of 8
     void setIcon(const std::string& identifier) const;
-    void shouldStopAfterThisFrame(bool yes = true) const;
+    void shouldCloseAfterThisFrame(bool yes = true);
     /// Renders the splashscreen to all window's default framebuffer
     void displaySplashScreen();
 private:
     MeshDataBuilder surface;
-    GLFWwindow* window = nullptr;
+    SDL_Window* window = nullptr;
+    void* glContext = nullptr;
     ImGuiContext* imguiContext = nullptr;
-    bool mouseCaptured = false, iconified = false;
+    bool mouseCaptured = false, iconified = false, shouldClose = false;
     double lastMouseX = -1.0, lastMouseY = -1.0;
     std::unordered_map<uuids::uuid, IPanel*> panels{};
 

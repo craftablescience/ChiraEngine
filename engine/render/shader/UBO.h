@@ -4,7 +4,7 @@
 #include <string>
 #include <entity/light/LightManager.h>
 #include <math/Types.h>
-#include <render/backend/Renderer.h>
+#include <render/backend/RenderBackend.h>
 
 namespace chira {
 

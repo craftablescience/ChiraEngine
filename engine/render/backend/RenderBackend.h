@@ -1,7 +1,7 @@
 #pragma once
 
 #if defined(CHIRA_USE_GL_41) || defined(CHIRA_USE_GL_43)
-    #include "RenderBackendGL.h"
+    #include "gl/RenderBackendGL.h"
 #else
-    #include "RenderBackendNull.h"
+    #include "null/RenderBackendNull.h"
 #endif

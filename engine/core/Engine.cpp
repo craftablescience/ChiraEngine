@@ -1,5 +1,7 @@
 #include "Engine.h"
 
+#include <SDL.h>
+
 #include <config/ConEntry.h>
 #include <entity/light/LightManager.h>
 #include <i18n/TranslationManager.h>
@@ -14,7 +16,7 @@
 #include "Platform.h"
 
 #ifdef DEBUG
-    #include <render/backend/Renderer.h>
+    #include <render/backend/RenderBackend.h>
 #endif
 #ifdef CHIRA_USE_DISCORD
     #include <hook/DiscordRPC.h>
@@ -28,12 +30,12 @@ using namespace chira;
 CHIRA_CREATE_LOG(ENGINE);
 
 [[maybe_unused]]
-static ConCommand quit{"quit", "Quits the game or application.", [] { // NOLINT(cert-err58-cpp)
-    Engine::getWindow()->shouldStopAfterThisFrame(true);
+ConCommand quit{"quit", "Quits the game or application.", [] { // NOLINT(cert-err58-cpp)
+    Engine::getWindow()->shouldCloseAfterThisFrame(true);
 }};
 
 [[maybe_unused]]
-static ConCommand crash{"crash", "Force-crashes the game or application (for debugging purposes).", [] { // NOLINT(cert-err58-cpp)
+ConCommand crash{"crash", "Force-crashes the game or application (for debugging purposes).", [] { // NOLINT(cert-err58-cpp)
     throw std::runtime_error{"Called crash command!"};
 }, CON_FLAG_CHEAT};
 
@@ -43,7 +45,7 @@ void Engine::preInit(int argc, const char* const argv[]) {
     // #define CP_UTF8 65001 in windows.h
     system("chcp 65001 > nul");
 #endif
-    CommandLine::initialize(argc, argv);
+    CommandLine::init(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
     TranslationManager::addTranslationFile("file://i18n/engine");
     LightManager::setupShaderMacros();
@@ -52,13 +54,10 @@ void Engine::preInit(int argc, const char* const argv[]) {
 void Engine::init(bool windowStartsVisible) {
     Engine::started = true;
 
-    if (!glfwInit()) {
-        LOG_ENGINE.error("GLFW failed to initialize!");
+    if (SDL_Init(SDL_INIT_VIDEO)) {
+        LOG_ENGINE.error("SDL2 failed to initialize: {}", SDL_GetError());
         exit(EXIT_FAILURE);
     }
-    glfwSetErrorCallback([](int error, const char* description) {
-        LOG_ENGINE.error(fmt::format("GLFW Error {}: {}\n", error, description));
-    });
 
     Engine::window.reset(new Window{TR("ui.window.title")});
     Engine::window->setVisible(windowStartsVisible);
@@ -108,11 +107,12 @@ void Engine::run() {
 
     do {
         Engine::lastTime = Engine::currentTime;
-        Engine::currentTime = glfwGetTime();
+        Engine::currentTime = SDL_GetTicks64();
 
         Engine::window->update();
         Engine::window->render(glm::identity<glm::mat4>());
 
+        /*
         glfwPollEvents();
         for (auto& keybind: InputManager::getKeyButtonCallbacks()) {
             if (glfwGetKey(Engine::window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
@@ -122,6 +122,7 @@ void Engine::run() {
             if (glfwGetMouseButton(Engine::window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
                 keybind();
         }
+        */
 
 #ifdef CHIRA_USE_DISCORD
         if (DiscordRPC::initialized())
@@ -132,7 +133,7 @@ void Engine::run() {
             SteamAPI::Client::runCallbacks();
 #endif
         Events::update();
-    } while (!glfwWindowShouldClose(Engine::window->window));
+    } while (/*!glfwWindowShouldClose(Engine::window->window)*/ true);
 
     LOG_ENGINE.info("Exiting...");
 
@@ -145,11 +146,11 @@ void Engine::run() {
         SteamAPI::Client::shutdown();
 #endif
 
-    Engine::window.reset();
+    window.reset();
 
     Resource::discardAll();
 
-    glfwTerminate();
+    SDL_Quit();
     exit(EXIT_SUCCESS);
 }
 

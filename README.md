@@ -43,10 +43,12 @@ next to the executable. Check the GitHub Actions script to see which DLLs need c
 - Dear ImGui v1.89
 - Discord RPC
 - {fmt} v9.0.0
-- GLAD (OpenGL 4.1 Core, GL_KHR_debug extension)
-- GLFW v3.3.9
+- GLAD (OpenGL 4.1 Core / OpenGL 4.3 Core)
 - GLM v0.9.9.9
+- ImGui Filebrowser
+- LibLoader
 - nlohmann_json v3.10.5
+- SDL v2.26.1
 - stb_image v2.27
 - stduuid v1.1
 - TinyFileDialogs v3.8.8

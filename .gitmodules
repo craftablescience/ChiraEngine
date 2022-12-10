@@ -4,9 +4,6 @@
 [submodule "engine/thirdparty/fmt"]
 	path = engine/thirdparty/fmt
 	url = https://github.com/fmtlib/fmt
-[submodule "engine/thirdparty/glfw"]
-	path = engine/thirdparty/glfw
-	url = https://github.com/glfw/glfw
 [submodule "engine/thirdparty/glm"]
 	path = engine/thirdparty/glm
 	url = https://github.com/g-truc/glm
@@ -25,3 +22,6 @@
 [submodule "engine/thirdparty/imgui-filebrowser"]
 	path = engine/thirdparty/imgui-filebrowser
 	url = https://github.com/AirGuanZ/imgui-filebrowser
+[submodule "engine/thirdparty/sdl2"]
+	path = engine/thirdparty/sdl2
+	url = https://github.com/libsdl-org/SDL

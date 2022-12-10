@@ -1,11 +1,11 @@
-#include "RendererTypes.h"
+#include "RenderTypes.h"
 
 #include <fmt/core.h>
 #include <core/Logger.h>
 
 using namespace chira;
 
-CHIRA_CREATE_LOG(RENDERERTYPES);
+CHIRA_CREATE_LOG(RENDERTYPES);
 
 TextureFormat chira::getTextureFormatFromString(std::string_view format) {
     if (format == "RED") {
@@ -40,7 +40,7 @@ TextureFormat chira::getTextureFormatFromString(std::string_view format) {
         return TextureFormat::DEPTH_STENCIL;
     }
 
-    LOG_RENDERERTYPES.warning(fmt::format("Invalid string passed to getTextureFormatFromString: \"{}\"", format));
+    LOG_RENDERTYPES.warning("Invalid string passed to getTextureFormatFromString: \"{}\"", format);
     return TextureFormat::RGBA;
 }
 
@@ -111,7 +111,7 @@ WrapMode chira::getWrapModeFromString(std::string_view mode) {
         return WrapMode::CLAMP_TO_EDGE;
     }
 
-    LOG_RENDERERTYPES.warning(fmt::format("Invalid string passed to getWrapModeFromString: \"{}\"", mode));
+    LOG_RENDERTYPES.warning("Invalid string passed to getWrapModeFromString: \"{}\"", mode);
     return WrapMode::REPEAT;
 }
 
@@ -122,7 +122,7 @@ FilterMode chira::getFilterModeFromString(std::string_view mode) {
         return FilterMode::LINEAR;
     }
 
-    LOG_RENDERERTYPES.warning(fmt::format("Invalid string passed to getFilterModeFromString: \"{}\"", mode));
+    LOG_RENDERTYPES.warning("Invalid string passed to getFilterModeFromString: \"{}\"", mode);
     return FilterMode::LINEAR;
 }
 
@@ -144,7 +144,7 @@ MeshDepthFunction chira::getMeshDepthFunctionFromString(std::string_view functio
     else if (function == "NOTEQUAL")
         return MeshDepthFunction::NOTEQUAL;
 
-    LOG_RENDERERTYPES.warning(fmt::format("Invalid string passed to getMeshDepthFunctionFromString: \"{}\"", function));
+    LOG_RENDERTYPES.warning("Invalid string passed to getMeshDepthFunctionFromString: \"{}\"", function);
     return MeshDepthFunction::LEQUAL;
 }
 
@@ -156,6 +156,6 @@ MeshCullType chira::getMeshCullTypeFromString(std::string_view type) {
     else if (type == "NONE")
         return MeshCullType::NONE;
 
-    LOG_RENDERERTYPES.warning(fmt::format("Invalid string passed to getMeshCullTypeFromString: \"{}\"", type));
+    LOG_RENDERTYPES.warning("Invalid string passed to getMeshCullTypeFromString: \"{}\"", type);
     return MeshCullType::BACK;
 }

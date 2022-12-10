@@ -10,7 +10,7 @@ using namespace chira;
 CHIRA_CREATE_LOG(DISCORD);
 
 [[maybe_unused]]
-static ConVar discord_enable{"discord_enable", true, "Allows applications to use Discord rich presence.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+ConVar discord_enable{"discord_enable", true, "Allows applications to use Discord rich presence.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
 
 void DiscordRPC::init(std::string_view appId) {
     if (DiscordRPC::isInitialized || !discord_enable.getValue<bool>())

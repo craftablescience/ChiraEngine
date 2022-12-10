@@ -103,7 +103,7 @@ public:
                     addResourceFolderSelected();
                 ImGui::Separator();
                 if (ImGui::MenuItem(TRC("ui.menubar.exit"))) // Exit
-                    Engine::getWindow()->shouldStopAfterThisFrame();
+                    Engine::getWindow()->shouldCloseAfterThisFrame();
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu(TRC("ui.menubar.convert"))) { // Convert

@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <math/Types.h>
-#include <render/backend/Renderer.h>
+#include <render/backend/RenderBackend.h>
 #include <resource/PropertiesResource.h>
 
 namespace chira {

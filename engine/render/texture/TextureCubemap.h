@@ -1,6 +1,6 @@
 #pragma once
 
-#include <render/backend/RendererTypes.h>
+#include <render/backend/RenderTypes.h>
 #include "ITexture.h"
 
 namespace chira {

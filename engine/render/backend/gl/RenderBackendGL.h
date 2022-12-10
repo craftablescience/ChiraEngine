@@ -6,7 +6,7 @@
 #include <loader/image/Image.h>
 #include <math/Color.h>
 #include <math/Vertex.h>
-#include "RendererTypes.h"
+#include "../RenderTypes.h"
 
 /// OpenGL 4.1 (or 4.3) render backend
 namespace chira::Renderer {

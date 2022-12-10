@@ -3,8 +3,8 @@
 #include <string>
 
 #include <resource/PropertiesResource.h>
-#include <render/backend/Renderer.h>
-#include <render/backend/RendererTypes.h>
+#include <render/backend/RenderBackend.h>
+#include <render/backend/RenderTypes.h>
 
 namespace chira {
 

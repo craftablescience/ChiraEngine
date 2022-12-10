@@ -9,7 +9,7 @@ using namespace chira;
 CHIRA_CREATE_LOG(CONENTRY);
 
 [[maybe_unused]]
-static ConCommand info{"info", "Prints the description of the given convar(s) or concommand(s).", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
+ConCommand info{"info", "Prints the description of the given convar(s) or concommand(s).", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
     for (const auto& name : args) {
         if (ConCommandRegistry::hasConCommand(name)) {
             LOG_CONENTRY.infoImportant(std::string{*ConCommandRegistry::getConCommand(name)});
@@ -22,7 +22,7 @@ static ConCommand info{"info", "Prints the description of the given convar(s) or
 }};
 
 [[maybe_unused]]
-static ConCommand find{"find", "Finds convars and/or concommands from the given substring.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
+ConCommand find{"find", "Finds convars and/or concommands from the given substring.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
     bool resultFound = false;
     for (const auto& substr : args) {
         for (const auto& concommand: ConCommandRegistry::getConCommandList()) {
@@ -44,7 +44,7 @@ static ConCommand find{"find", "Finds convars and/or concommands from the given 
 }};
 
 [[maybe_unused]]
-static ConCommand con_entries{"con_entries", "Prints the description of every convar and concommand currently registered.", [] { // NOLINT(cert-err58-cpp)
+ConCommand con_entries{"con_entries", "Prints the description of every convar and concommand currently registered.", [] { // NOLINT(cert-err58-cpp)
     LOG_CONENTRY.infoImportant("-- Commands --");
     auto concommandList = ConCommandRegistry::getConCommandList();
     std::sort(concommandList.begin(), concommandList.end());
@@ -273,7 +273,7 @@ std::string_view ConVar::getTypeAsString() const {
 
 // Create cheats convar
 [[maybe_unused]]
-static ConVar cheats{"cheats", false, "Unlocks certain commands that break gameplay."}; // NOLINT(cert-err58-cpp)
+ConVar cheats{"cheats", false, "Unlocks certain commands that break gameplay."}; // NOLINT(cert-err58-cpp)
 
 bool ConVar::areCheatsEnabled() {
     return cheats.getValue<bool>();
