@@ -1,0 +1,6 @@
+[submodule "layout/doxygen-awesome-css"]
+	path = layout/doxygen-awesome-css
+	url = https://github.com/jothepro/doxygen-awesome-css.git
+[submodule "chira-main"]
+	path = chira-main
+	url = https://github.com/craftablescience/ChiraEngine
