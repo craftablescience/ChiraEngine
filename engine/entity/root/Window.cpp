@@ -15,6 +15,8 @@
 #include <render/material/MaterialTextured.h>
 #include <ui/Font.h>
 #include <ui/IPanel.h>
+#include <thirdparty/fontawesome/IconsFontAwesome5.h>
+#include <thirdparty/fontawesome/fa-solid-900.h>
 
 using namespace chira;
 
@@ -158,11 +160,20 @@ bool Window::createGLFWWindow(std::string_view title) {
 
     auto defaultFont = Resource::getUniqueResource<Font>("file://fonts/default.json");
     ImGui::GetIO().FontDefault = defaultFont->getFont();
-
     return true;
 }
 
 static void makeSurface(Window* window, MeshDataBuilder* surface) {
+    ImFontAtlas* fonts = ImGui::GetIO().Fonts;
+    ImFontConfig config;
+    config.MergeMode = true;
+    config.PixelSnapH = true;
+    config.OversampleV = 1;
+    config.OversampleH = 1;
+
+    const ImWchar icon_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
+    fonts->AddFontFromMemoryCompressedTTF(font_awesome_compressed_data, font_awesome_compressed_size, 13.0f, &config, icon_ranges);
+    
     surface->addSquare({}, {2, -2}, SignedAxis::ZN, 0);
     surface->setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/window.json", window).castAssert<IMaterial>());
 }
