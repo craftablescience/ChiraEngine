@@ -12,11 +12,7 @@
 #include <core/Engine.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <i18n/TranslationManager.h>
-#include <entity/model/Mesh.h>
-#include <entity/model/MeshDynamic.h>
-#include "camera/EditorCamera.h"
 #include <ui/IPanel.h>
-#include <ui/FramePanel.h>
 #include <utility/Dialogs.h>
 #include <render/material/MaterialPhong.h>
 
@@ -238,7 +234,7 @@ int main(int argc, const char* const argv[]) {
 
     setup_colors();
 
-        Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
+    Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
 
     auto mainPanel = new MainEditorPanel();
     Engine::getWindow()->addPanel(mainPanel);
