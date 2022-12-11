@@ -399,9 +399,9 @@ void Renderer::destroyFrameBuffer(Renderer::FrameBufferHandle handle) {
 
 #ifdef DEBUG
     int success = 0;
-    char infoLog[512] {0};
     glGetShaderiv(handle, GL_COMPILE_STATUS, &success);
     if (!success) {
+        char infoLog[512] {0};
         glGetShaderInfoLog(handle, sizeof(infoLog), nullptr, infoLog);
         LOG_GL.error(fmt::format("Shader module compilation failed: {}", infoLog));
     }
