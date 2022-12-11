@@ -68,28 +68,6 @@ MainEditorPanel::MainEditorPanel() : IPanel(TR("ui.window.title"), true) {
                     ImGuiWindowFlags_NoDecoration;
 }
 
-void MainEditorPanel::convertToModelTypeSelected(const std::string& extension, const std::string& type) const {
-    std::string filepath = Dialogs::saveFile(extension);
-    if (filepath.empty())
-        return Dialogs::popupError(TR("error.modelviewer.filename_empty"));
-
-    if (!Engine::getWindow()->hasChild(this->meshId))
-        return Dialogs::popupError(TR("error.modelviewer.no_model_present"));
-
-    std::ofstream file{filepath, std::ios::binary};
-    std::vector<byte> meshData = Engine::getWindow()->getChild<Mesh>(this->meshId)->getMeshData(type);
-    file.write(reinterpret_cast<const char*>(&meshData[0]), static_cast<std::streamsize>(meshData.size()));
-    file.close();
-}
-
-void MainEditorPanel::convertToOBJSelected() const {
-    this->convertToModelTypeSelected(".obj", "obj");
-}
-
-void MainEditorPanel::convertToCMDLSelected() const {
-    this->convertToModelTypeSelected(".cmdl", "cmdl");
-}
-
 void MainEditorPanel::preRenderContents() {
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
@@ -111,38 +89,29 @@ void MainEditorPanel::preRenderContents() {
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu(TRC("ui.menubar.tools"))) {
+            ImGui::MenuItem("Tools Manager");
+            ImGui::Separator();
+            ImGui::Text("tools go here");
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu(TRC("ui.menubar.help"))) {
+            ImGui::MenuItem("ChiraEngine Documentation");
+            ImGui::MenuItem("ChiraEditor Help");
+            ImGui::Separator();
+            ImGui::MenuItem("About Tool");
+            ImGui::MenuItem("About ChiraEngine");
             ImGui::EndMenu();
         }
+
+        // TODO: Insert current tool here
+        ImGui::Text("ChiraEngine (editor-extended) [` - Open Console]");
+
         ImGui::EndMainMenuBar();
     }
 
 }
 
 void MainEditorPanel::renderContents() {
-    if (auto* framePanel = Engine::getWindow()->getPanel<EngineView>(engineviewID)) {
-        framePanel->loadedFile = this->loadedFile;
-    }
-}
-
-void MainEditorPanel::setLoadedFile(const std::string& meshName) {
-    if (!Resource::hasResource(meshName)) {
-        Dialogs::popupError(TRF("error.modelviewer.resource_is_invalid", meshName));
-        return;
-    }
-    if (auto* framePanel = Engine::getWindow()->getPanel<FramePanel>(engineviewID)) {
-        if (framePanel->getFrame()->hasChild(this->meshId)) {
-            framePanel->getFrame()->removeChild(this->meshId);
-        }
-        framePanel->getFrame()->addChild(new Mesh{meshName});
-    }
-    this->loadedFile = meshName;
-}
-
-std::string_view MainEditorPanel::getMeshId() const {
-    return this->meshId;
 }
 
 static void CreateInitialLayout() {
@@ -176,8 +145,6 @@ static void CreateInitialLayout() {
     ImGuiID dock_id_prop = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.20f, NULL, &dock_main_id);
     ImGuiID dock_id_bottom = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.20f, NULL, &dock_main_id);
 
-    ImGui::DockBuilderDockWindow(TRC("ui.resourcebrowser.title"), dock_id_bottom);
-    ImGui::DockBuilderDockWindow(TRC("ui.entitypanel.title"), dock_id_prop);
     ImGui::DockBuilderFinish(dockspace_id);
     ImGui::End();
 }
@@ -275,38 +242,6 @@ int main(int argc, const char* const argv[]) {
 
     auto mainPanel = new MainEditorPanel();
     Engine::getWindow()->addPanel(mainPanel);
-
-    auto framePanel = new EngineView();
-    auto frame = framePanel->getFrame();
-    frame->setBackgroundColor(ColorRGB{0.15f});
-    engineviewID = Engine::getWindow()->addPanel(framePanel);
-
-    auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};
-    camera->translate({-6.f * sqrtf(3.f), 6, 0});
-    camera->setPitch(30.f);
-    camera->setYaw(270.f);
-    camera->setName("EDITOR_CAMERA_DO_NOT_REMOVE");
-    frame->addChild(camera);
-    frame->setCamera(camera);
-
-    //todo: the camera must be set for the window root for keybinds to affect it
-    //EXPLAIN: Todo? what is there todo here? It looks like it's already done from the code?
-    Engine::getWindow()->setCamera(camera);
-    EditorCamera::setupKeybinds();
-
-    // OPTIMIZE: replace this multi cube mesh grid with a single textured plane grid
-    // IDEA: the grid texture I made for Chisel could be reused here!
-    auto grid = new MeshDynamic{"EDITOR_GRID_DO_NOT_REMOVE"};
-    auto gridMesh = grid->getMesh();
-    gridMesh->setMaterial(CHIRA_GET_MATERIAL("MaterialUntextured", "file://materials/unlit.json"));
-    for (int i = -5; i <= 5; i++) {
-        gridMesh->addCube(Vertex{{i, 0, 0}}, {0.025f, 0.025f, 10.025f});
-        gridMesh->addCube(Vertex{{0, 0, i}}, {10.025f, 0.025f, 0.025f});
-    }
-    gridMesh->addCube({{2.5f, 0, 0}, {0, 0, 0}, {1, 0, 0}}, {5.f + 0.026f, 0.03f, 0.03f});
-    gridMesh->addCube({{0, 0, 2.5f}, {0, 0, 0}, {0, 0, 1}}, {0.03f, 0.03f, 5.f + 0.026f});
-    gridMesh->addCube({{0, 0,    0}, {0, 0, 0}, {0, 1, 0}}, glm::vec3{0.05f});
-    frame->addChild(grid);
 
     Engine::run();
 }
