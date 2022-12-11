@@ -26,13 +26,6 @@
 
 #include <imgui_internal.h>
 
-// All the UI elements in the editor
-#include <editorui/EngineView.h>
-#include <editorui/ResourceBrowser.h>
-#include <editorui/EntityPanel.h>
-#include <editorui/CodeView.h>
-#include <editorui/ToolsPanel.h>
-
 #ifdef CHIRA_USE_DISCORD
     #include <hook/DiscordRPC.h>
 #endif
@@ -46,10 +39,6 @@
 using namespace chira;
 
 CHIRA_CREATE_LOG(EDITOR);
-
-unsigned int engineviewID = 0;
-unsigned int resourcepanelID = 0;
-unsigned int codePanelID = 0;
 
 static inline void addResourceFolderSelected() {
     auto folder = Dialogs::openFolder();
@@ -79,13 +68,6 @@ MainEditorPanel::MainEditorPanel() : IPanel(TR("ui.window.title"), true) {
                     ImGuiWindowFlags_NoDecoration;
 }
 
-// Opens a file dialog used to select a model definition
-void MainEditorPanel::addModelSelected() {
-    std::string path = FilesystemResourceProvider::getResourceIdentifier(modeldialog.GetSelected().string());
-    if (!path.empty())
-            this->setLoadedFile(path);
-}
-
 void MainEditorPanel::convertToModelTypeSelected(const std::string& extension, const std::string& type) const {
     std::string filepath = Dialogs::saveFile(extension);
     if (filepath.empty())
@@ -109,13 +91,15 @@ void MainEditorPanel::convertToCMDLSelected() const {
 }
 
 void MainEditorPanel::preRenderContents() {
-    modeldialog.SetTitle("Open Resource");
-    modeldialog.SetTypeFilters({".mdef"});
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
-            if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) { // Open Model...
-                modeldialog.Open();
-            }
+            ImGui::MenuItem(TRC("ui.menubar.new"));
+            ImGui::Separator();
+            ImGui::MenuItem(TRC("ui.menubar.open"));
+            ImGui::Separator();
+            ImGui::MenuItem(TRC("ui.menubar.save"));
+            ImGui::MenuItem(TRC("ui.menubar.saveas"));
+            ImGui::Separator();
             if (ImGui::MenuItem(TRC("ui.menubar.add_resource_folder"))) // Add Resource Folder...
                 addResourceFolderSelected();
             ImGui::Separator();
@@ -123,25 +107,16 @@ void MainEditorPanel::preRenderContents() {
                 Engine::getWindow()->shouldStopAfterThisFrame();
             ImGui::EndMenu();
         }
-        if (ImGui::BeginMenu(TRC("ui.menubar.convert"))) { // Convert
-            if (ImGui::MenuItem(TRC("ui.menubar.convert_to_obj"))) // Convert to OBJ...
-                this->convertToOBJSelected();
-            if (ImGui::MenuItem(TRC("ui.menubar.convert_to_cmdl"))) // Convert to CMDL...
-                this->convertToCMDLSelected();
+        if (ImGui::BeginMenu(TRC("ui.menubar.window"))) {
             ImGui::EndMenu();
         }
-        if (ImGui::BeginMenu(TRC("ui.menubar.window"))) {
-            
+        if (ImGui::BeginMenu(TRC("ui.menubar.tools"))) {
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu(TRC("ui.menubar.help"))) {
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
-    }
-    
-    // Model Dialog specific logic
-    modeldialog.Display();
-    if (modeldialog.HasSelected()) {
-        this->addModelSelected();
-        modeldialog.ClearSelected();
     }
 
 }
@@ -150,7 +125,6 @@ void MainEditorPanel::renderContents() {
     if (auto* framePanel = Engine::getWindow()->getPanel<EngineView>(engineviewID)) {
         framePanel->loadedFile = this->loadedFile;
     }
-    ImGui::ShowDemoWindow();
 }
 
 void MainEditorPanel::setLoadedFile(const std::string& meshName) {
@@ -307,20 +281,6 @@ int main(int argc, const char* const argv[]) {
     frame->setBackgroundColor(ColorRGB{0.15f});
     engineviewID = Engine::getWindow()->addPanel(framePanel);
 
-    // Engine tool panels
-    // The resource browser
-    auto resourcePanel = new ResourceBrowser(mainPanel);
-    resourcepanelID = Engine::getWindow()->addPanel(resourcePanel);
-    // IDEA: having a game config system to define folders and whatnot would be cool
-    resourcePanel->loadResourceFolder("editor");
-
-    // Code View
-    auto codePanel = new CodePanel();
-    codePanelID = Engine::getWindow()->addPanel(codePanel);
-
-    Engine::getWindow()->addPanel(new EntityPanel(frame));
-    Engine::getWindow()->addPanel(new ToolsPanel(frame));
-
     auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};
     camera->translate({-6.f * sqrtf(3.f), 6, 0});
     camera->setPitch(30.f);
@@ -349,6 +309,4 @@ int main(int argc, const char* const argv[]) {
     frame->addChild(grid);
 
     Engine::run();
-
-    CreateInitialLayout();
 }
