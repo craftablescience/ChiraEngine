@@ -34,7 +34,7 @@ void EntityPanel::renderContents() {
         {
             // don't include the editor camera
             // TODO: Completely remove the editor camera from the main scene entity list?
-            if (entity->getName() == "EDITOR_CAMERA_DO_NOT_REMOVE" || entity->getName() == "EDITOR_GRID_DO_NOT_REMOVE")
+            if (entity->getName() == "EDITOR_CAMERA" || entity->getName() == "EDITOR_GRID")
                 continue;
 
             bool op = false;

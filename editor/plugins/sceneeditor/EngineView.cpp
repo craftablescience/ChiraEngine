@@ -46,7 +46,7 @@ void EngineView::renderOverlayContents() {
     if (ImGui::BeginChild("evopt_holder", ImVec2(200, ImGui::GetWindowHeight()))) {
         if (ImGui::CollapsingHeader(TRC("ui.engineview.options"))) {
             ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
-            this->frame->getChild("EDITOR_GRID_DO_NOT_REMOVE")->setVisible(this->showGrid);
+            this->frame->getChild("EDITOR_GRID")->setVisible(this->showGrid);
             ImGui::Text("Current file: %s", this->loadedFile.c_str());
         }
         ImGui::EndChild();
