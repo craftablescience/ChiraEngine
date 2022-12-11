@@ -6,6 +6,8 @@ namespace chira {
         EditorPlugin(std::string ID);
         std::string getID();
 
+        virtual void doPlugin();
+
         protected:
         std::string ID;
     };
