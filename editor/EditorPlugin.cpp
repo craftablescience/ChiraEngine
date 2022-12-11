@@ -9,3 +9,7 @@ EditorPlugin::EditorPlugin(std::string ID) {
 std::string EditorPlugin::getID() {
     return this->ID;
 }
+
+void EditorPlugin::doPlugin() {
+
+}

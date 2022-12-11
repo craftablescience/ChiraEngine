@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 namespace chira {
     class EditorPlugin {
         public:
@@ -7,7 +8,6 @@ namespace chira {
         std::string getID();
 
         virtual void doPlugin();
-        
 
         protected:
         std::string ID;
