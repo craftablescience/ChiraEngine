@@ -7,6 +7,7 @@ namespace chira {
         std::string getID();
 
         virtual void doPlugin();
+        
 
         protected:
         std::string ID;
