@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - docs
+      - main
 
 jobs:
   deploy:
