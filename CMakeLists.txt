@@ -3,9 +3,8 @@ cmake_minimum_required(VERSION 3.16)
 if(APPLE)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OSX deployment version")
     if(CMAKE_GENERATOR STREQUAL Xcode)
-        # todo: use apple clang one day?
-        set(CMAKE_XCODE_ATTRIBUTE_CC "/usr/local/opt/llvm/bin/clang")
-        set(CMAKE_XCODE_ATTRIBUTE_CXX "/usr/local/opt/llvm/bin/clang++")
+        set(CMAKE_XCODE_ATTRIBUTE_CC ${CMAKE_C_COMPILER})
+        set(CMAKE_XCODE_ATTRIBUTE_CXX ${CMAKE_CXX_COMPILER})
     endif()
 endif()
 
