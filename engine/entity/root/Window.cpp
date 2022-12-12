@@ -89,7 +89,7 @@ bool Window::createGLFWWindow(std::string_view title) {
         windowFlags |= SDL_WINDOW_MAXIMIZED;
     }
     if (win_fullscreen.getValue<bool>()) {
-        windowFlags |= SDL_WINDOW_FULLSCREEN;
+        windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
     this->window = SDL_CreateWindow(title.data(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->width, this->height, windowFlags);
     if (!this->window) {
@@ -274,7 +274,7 @@ void Window::setFullscreen(bool goFullscreen) const {
 }
 
 bool Window::isFullscreen() const {
-    return SDL_GetWindowFlags(this->window) & SDL_WINDOW_FULLSCREEN;
+    return SDL_GetWindowFlags(this->window) & SDL_WINDOW_FULLSCREEN_DESKTOP;
 }
 
 void Window::setMaximized(bool maximize) {
