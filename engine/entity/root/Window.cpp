@@ -67,11 +67,16 @@ ConVar input_raw_mouse_motion{"input_raw_mouse_motion", true, "Get more accurate
 bool Window::createGLFWWindow(std::string_view title) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, GL_VERSION_MAJOR);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, GL_VERSION_MINOR);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+    int glContextFlags;
+    SDL_GL_GetAttribute(SDL_GL_CONTEXT_FLAGS, &glContextFlags);
+    glContextFlags |= SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG;
 #ifdef DEBUG
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG | SDL_GL_CONTEXT_DEBUG_FLAG);
-#else
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+    glContextFlags |= SDL_GL_CONTEXT_DEBUG_FLAG;
 #endif
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, glContextFlags);
+
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
