@@ -119,8 +119,8 @@ void Engine::run() {
             // todo(input): check this function, if ImGui processed an event we should ignore that event
             ImGui_ImplSDL2_ProcessEvent(&event);
 
-            // todo(render): wtf
-            extern ConVar win_maximized;
+            // todo(render): set win_maximized true when maximized and false when restored
+            //extern ConVar win_maximized;
 
             // todo(input): this is O(n^2) and was written badly because i hope it will be rewritten soon please fix
             switch (event.type) {
@@ -137,9 +137,10 @@ void Engine::run() {
                             Engine::window->iconified = true;
                             break;
                         case SDL_WINDOWEVENT_RESTORED:
-                            win_maximized.setValue(false, false);
+                            //win_maximized.setValue(false, false);
+                            break;
                         case SDL_WINDOWEVENT_MAXIMIZED:
-                            win_maximized.setValue(true, false);
+                            //win_maximized.setValue(true, false);
                             break;
                         case SDL_WINDOWEVENT_SIZE_CHANGED: {
                             int w, h;
