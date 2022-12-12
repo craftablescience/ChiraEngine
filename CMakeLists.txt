@@ -1,9 +1,25 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OSX deployment version")
+if(APPLE)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OSX deployment version")
+    if(CMAKE_GENERATOR STREQUAL Xcode)
+        # todo: use apple clang one day?
+        set(CMAKE_XCODE_ATTRIBUTE_CC "/usr/local/opt/llvm/bin/clang")
+        set(CMAKE_XCODE_ATTRIBUTE_CXX "/usr/local/opt/llvm/bin/clang++")
+    endif()
+endif()
 
 project(ChiraEngine HOMEPAGE_URL "https://github.com/craftablescience/ChiraEngine")
 set(CMAKE_CXX_STANDARD 20)
+
+# If we're not building a debug build just assume it's release
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    set(CHIRA_DEBUG_BUILD ON)
+    message(STATUS "Building debug build.")
+else()
+    set(CHIRA_DEBUG_BUILD OFF)
+    message(STATUS "Building release build.")
+endif()
 
 # You should add this to your own CMake to load Chira Engine's dependencies
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
@@ -11,12 +27,30 @@ set(CMAKE_BUILD_RPATH_USE_ORIGIN TRUE)
 set(CMAKE_INSTALL_RPATH $ORIGIN)
 
 # Put all libraries in the executable folder
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 # Compile with PIC
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# Compile with LTO if supported
+if(CHIRA_DEBUG_BUILD)
+    option(CHIRA_BUILD_WITH_LTO "Build Chira Engine with Link-Time Optimizations" OFF)
+else()
+    option(CHIRA_BUILD_WITH_LTO "Build Chira Engine with Link-Time Optimizations" ON)
+endif()
+set(CHIRA_BUILD_WITH_LTO_INTERNAL OFF)
+if(CHIRA_BUILD_WITH_LTO)
+    include(CheckIPOSupported)
+    check_ipo_supported(RESULT CHIRA_BUILD_WITH_LTO_INTERNAL)
+endif()
+if(CHIRA_BUILD_WITH_LTO_INTERNAL)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+    message(STATUS "Building with LTO enabled.")
+else()
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION OFF)
+    message(STATUS "Building with LTO disabled.")
+endif()
 
 # This is for detecting Clang, MSVC, and Clang-CL
 string(TOLOWER "${CMAKE_CXX_COMPILER_ID}" CHIRA_COMPILER_ID)
@@ -38,7 +72,7 @@ endif()
 option(CHIRA_BUILD_WITH_WARNINGS "Build Chira Engine with warnings enabled" ON)
 option(CHIRA_TREAT_WARNINGS_AS_ERRORS "Build Chira Engine with warnings treated as errors" OFF) # Currently catches warnings from libraries
 macro(apply_optimizations target)
-    if(CMAKE_BUILD_TYPE MATCHES Debug)
+    if(CHIRA_DEBUG_BUILD)
         target_compile_definitions(${target} PRIVATE DEBUG)
 
         if(CHIRA_COMPILER_CLANG)
@@ -53,7 +87,7 @@ macro(apply_optimizations target)
             target_compile_options(${target} PRIVATE /Od)
         endif()
 
-    elseif(CMAKE_BUILD_TYPE MATCHES Release)
+    else()
         target_compile_definitions(${target} PRIVATE RELEASE)
 
         # Build with optimizations and don't omit stack pointer for debugging
@@ -78,12 +112,6 @@ macro(apply_optimizations target)
         elseif(CHIRA_COMPILER_MSVC)
             target_compile_options(${target} PRIVATE /WX)
         endif()
-    endif()
-    
-    # psst! didn't know where else to put this so here. We need this for xcode
-    if(CMAKE_GENERATOR STREQUAL Xcode)
-        set_target_properties(${target} PROPERTIES XCODE_ATTRIBUTE_CC "/usr/local/opt/llvm/bin/clang")
-        set_target_properties(${target} PROPERTIES XCODE_ATTRIBUTE_CXX "/usr/local/opt/llvm/bin/clang++")
     endif()
 endmacro()
 
