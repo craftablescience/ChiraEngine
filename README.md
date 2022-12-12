@@ -10,17 +10,17 @@
 
 ## Features
 To summarize the major features:
-  - Native Windows, Linux, and macOS support (OpenGL 4.1)
-  - As extensible as possible: register custom logging hooks, resource types and providers, etc.
-  - Custom preprocessing of GLSL shaders, with macros and #include directives
-  - Robust resource loading and management to facilitate sharing of congruent data
-  - Data-oriented design, using entities as building blocks
-  - Hassle-free Discord Rich Presence and Steamworks API wrappers
-  - Inline text localization
-  - Event queue to communicate between entities (or other parts of the engine)
-  - Console commands to run actions on the fly, with the ability to pass arguments
-  - Variables modifiable from the console, with support for caching between sessions
-  - Logger built-in with colored text and hooks
+- Native Windows, Linux, and macOS support (OpenGL 4.1)
+- As extensible as possible: register custom logging hooks, resource types and providers, etc.
+- Custom preprocessing of GLSL shaders, with macros and #include directives
+- Robust resource loading and management to facilitate sharing of congruent data
+- Data-oriented design, using entities as building blocks
+- Hassle-free Discord Rich Presence and Steamworks API wrappers
+- Inline text localization
+- Event queue to communicate between entities (or other parts of the engine)
+- Console commands to run actions on the fly, with the ability to pass arguments
+- Variables modifiable from the console, with support for caching between sessions
+- Logger built-in with colored text and hooks
 
 The goal of the engine is to have as much customization as possible, while still maintaining ease of use.
 
@@ -39,39 +39,39 @@ next to the executable. Check the GitHub Actions script to see which DLLs need c
 (\*\*) Homebrew LLVM/Clang is required because Apple Clang as of this time does not support certain C++ features that are used inside the engine.
 
 ## Bundled Dependencies
-  - AngelScript v2.35.1
-  - Dear ImGui v1.89
-  - Discord RPC
-  - {fmt} v9.0.0
-  - GLAD (OpenGL 4.1 Core / OpenGL 4.3 Core)
-  - GLM v0.9.9.9
-  - ImGui Filebrowser
-  - LibLoader
-  - nlohmann_json v3.10.5
-  - SDL v2.26.1
-  - stb_image v2.27
-  - stduuid v1.1
-  - TinyFileDialogs v3.8.8
+- AngelScript v2.35.1
+- Dear ImGui v1.89
+- Discord RPC
+- {fmt} v9.0.0
+- GLAD (OpenGL 4.1 Core / OpenGL 4.3 Core)
+- GLM v0.9.9.9
+- ImGui Filebrowser
+- LibLoader
+- nlohmann_json v3.10.5
+- SDL v2.26.1
+- stb_image v2.27
+- stduuid v1.1
+- TinyFileDialogs v3.8.8
 
 ## Development (Windows)
-  - **CLion**: The project will compile without any prior configuration, but you will most likely need to install the Windows SDK (see below).
+- **CLion**: The project will compile without any prior configuration, but you will most likely need to install the Windows SDK (see below).
 
-  - **Visual Studio 2022**: You will need to install (most of) the following components. Some are not required, like the AddressSanitizer and Just-In-Time debugger. This is an old screenshot, make any upgrades to the versions of these components that you see fit.
+- **Visual Studio 2022**: You will need to install (most of) the following components. Some are not required, like the AddressSanitizer and Just-In-Time debugger. This is an old screenshot, make any upgrades to the versions of these components that you see fit.
   ![image](https://user-images.githubusercontent.com/26600014/128105644-cfa92f30-dc96-4476-a4c9-8d8b5f3ce129.png)
 
 ## Development (Linux)
-  - **CLion (recommended)**: The project will compile without any prior configuration, but you will need to install a few things first.
+- **CLion (recommended)**: The project will compile without any prior configuration, but you will need to install a few things first.
 
   On Debian-based distros, run:
   
   `sudo apt update && sudo apt install cmake build-essential xorg-dev mesa-common-dev mesa-utils`
 
 ## Development (macOS)
-  - **Required**: You must install llvm from homebrew as the default Apple Clang does not work properly. use the command `brew install llvm`.
+- **Required**: You must install llvm from homebrew as the default Apple Clang does not work properly. use the command `brew install llvm`.
     
-  - **Using Cmake/Terminal**: Run `cmake_configure_macos.sh Makefiles` to configure cmake to use Unix Makefiles. To build ChiraEngine run `cmake --build build --config Debug`
+- **Using Cmake/Terminal**: Run `cmake_configure_macos.sh Makefiles` to configure cmake to use Unix Makefiles. To build ChiraEngine run `cmake --build build --config Debug`
         
-  - **XCode**: Run `cmake_configure_macos.sh Xcode` to configure cmake to use Xcode Projects. You will find the ChiraEngine project under `build`. ***Building under Xcode is currently unsupported due to issues with trying to use a custom compiler.***
+- **XCode**: Run `cmake_configure_macos.sh Xcode` to configure cmake to use Xcode Projects. You will find the ChiraEngine project under `build`. ***Building under Xcode is currently unsupported due to issues with trying to use a custom compiler.***
 
 ## Usage
 I recommend adding this repository as a submodule to your project.
