@@ -12,7 +12,8 @@ namespace chira {
 
 const std::string ENGINE_FILESYSTEM_PATH = "engine"; // NOLINT(cert-err58-cpp)
 
-struct Engine {
+class Engine {
+public:
     Engine() = delete;
 
     /// Ran at the very start of your program. Readies the engine for you to add features before init().
@@ -24,11 +25,11 @@ struct Engine {
     [[nodiscard]] static Window* getWindow();
     [[nodiscard]] static bool isStarted();
     /// Only guaranteed to work after run() in a render method
-    [[nodiscard]] static double getDeltaTime();
+    [[nodiscard]] static uint64_t getDeltaTicks();
 private:
     static inline std::unique_ptr<Window> window;
     static inline bool started = false;
-    static inline double lastTime = 0.0, currentTime = 0.0;
+    static inline uint64_t lastTime = 0, currentTime = 0;
 };
 
 } // namespace chira

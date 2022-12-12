@@ -1,5 +1,6 @@
 #include "Engine.h"
 
+#include <backends/imgui_impl_sdl.h>
 #include <SDL.h>
 
 #include <config/ConEntry.h>
@@ -42,8 +43,12 @@ ConCommand crash{"crash", "Force-crashes the game or application (for debugging 
 void Engine::preInit(int argc, const char* const argv[]) {
 #ifdef CHIRA_PLATFORM_WINDOWS
     // Enable colored text in Windows console by setting encoding to UTF-8
-    // #define CP_UTF8 65001 in windows.h
+    // #define CP_UTF8 65001 in Windows.h
     system("chcp 65001 > nul");
+
+    // Force enable DPI awareness because the manifest method didn't work
+    SDL_SetHintWithPriority(SDL_HINT_WINDOWS_DPI_SCALING, "0", SDL_HINT_OVERRIDE);
+    SDL_SetHintWithPriority(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitorv2", SDL_HINT_OVERRIDE);
 #endif
     CommandLine::init(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
@@ -54,7 +59,7 @@ void Engine::preInit(int argc, const char* const argv[]) {
 void Engine::init(bool windowStartsVisible) {
     Engine::started = true;
 
-    if (SDL_Init(SDL_INIT_VIDEO)) {
+    if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER)) {
         LOG_ENGINE.error("SDL2 failed to initialize: {}", SDL_GetError());
         exit(EXIT_FAILURE);
     }
@@ -81,17 +86,17 @@ void Engine::init(bool windowStartsVisible) {
 
     // Add console UI panel
     auto consoleID = Engine::getWindow()->addPanel(new ConsolePanel{});
-    InputManager::addCallback(InputKeyButton{Key::GRAVE_ACCENT, InputKeyEventType::PRESSED, [consoleID] {
+    Input::KeyEvent::create(Input::Key::SDLK_BACKQUOTE, Input::KeyEventType::PRESSED, [consoleID] {
         auto console = Engine::getWindow()->getPanel(consoleID);
         console->setVisible(!console->isVisible());
-    }});
+    });
 
     // Add resource usage tracker UI panel
     auto resourceUsageTrackerID = Engine::getWindow()->addPanel(new ResourceUsageTrackerPanel{});
-    InputManager::addCallback(InputKeyButton{Key::F1, InputKeyEventType::PRESSED, [resourceUsageTrackerID] {
+    Input::KeyEvent::create(Input::Key::SDLK_F1, Input::KeyEventType::PRESSED, [resourceUsageTrackerID] {
         auto resourceUsageTracker = Engine::getWindow()->getPanel(resourceUsageTrackerID);
         resourceUsageTracker->setVisible(!resourceUsageTracker->isVisible());
-    }});
+    });
 
     // Start script VM
     AngelScriptVM::init();
@@ -109,31 +114,103 @@ void Engine::run() {
         Engine::lastTime = Engine::currentTime;
         Engine::currentTime = SDL_GetTicks64();
 
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            // todo(input): check this function, if ImGui processed an event we should ignore that event
+            ImGui_ImplSDL2_ProcessEvent(&event);
+
+            // todo(render): wtf
+            extern ConVar win_maximized;
+
+            // todo(input): this is O(n^2) and was written badly because i hope it will be rewritten soon please fix
+            switch (event.type) {
+                case SDL_QUIT:
+                    Engine::window->shouldCloseAfterThisFrame();
+                    break;
+                case SDL_WINDOWEVENT:
+                    switch (event.window.event) {
+                        case SDL_WINDOWEVENT_SHOWN:
+                            Engine::window->iconified = false;
+                            break;
+                        case SDL_WINDOWEVENT_HIDDEN:
+                        case SDL_WINDOWEVENT_MINIMIZED:
+                            Engine::window->iconified = true;
+                            break;
+                        case SDL_WINDOWEVENT_RESTORED:
+                            win_maximized.setValue(false, false);
+                        case SDL_WINDOWEVENT_MAXIMIZED:
+                            win_maximized.setValue(true, false);
+                            break;
+                        case SDL_WINDOWEVENT_SIZE_CHANGED: {
+                            int w, h;
+                            SDL_GetWindowSizeInPixels(Engine::window->window, &w, &h);
+                            Engine::getWindow()->setSize({w, h}, false);
+                            break;
+                        }
+                        default:
+                            // There's quite a few events we don't care about or are already handled by other events
+                            break;
+                    }
+                    break;
+                case SDL_KEYDOWN:
+                    for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
+                        if (keyEvent.getEvent() == event.key.keysym.sym &&
+                                ((keyEvent.getEventType() == Input::KeyEventType::PRESSED && event.key.state == SDL_PRESSED)  ||
+                                (keyEvent.getEventType() == Input::KeyEventType::RELEASED && event.key.state == SDL_RELEASED) ||
+                                (keyEvent.getEventType() == Input::KeyEventType::REPEATED && event.key.repeat))) {
+                            keyEvent();
+                        }
+                    }
+                    break;
+                case SDL_MOUSEBUTTONDOWN:
+                    for (const auto& mouseEvent : Input::MouseEvent::getEvents()) {
+                        if (static_cast<uint8_t>(mouseEvent.getEvent()) == event.button.button && mouseEvent.getEventType() == Input::MouseEventType::CLICKED) {
+                            mouseEvent(event.button.x, event.button.y, event.button.clicks);
+                        }
+                    }
+                    break;
+                case SDL_MOUSEBUTTONUP:
+                    for (const auto& mouseEvent : Input::MouseEvent::getEvents()) {
+                        if (static_cast<uint8_t>(mouseEvent.getEvent()) == event.button.button && mouseEvent.getEventType() == Input::MouseEventType::RELEASED) {
+                            mouseEvent(event.button.x, event.button.y, event.button.clicks);
+                        }
+                    }
+                    break;
+                case SDL_MOUSEMOTION:
+                    for (const auto& mouseMotionEvent : Input::MouseMotionEvent::getEvents()) {
+                        if (mouseMotionEvent.getEvent() == Input::MouseMotion::MOVEMENT) {
+                            mouseMotionEvent(event.motion.x, event.motion.y, event.motion.xrel, event.motion.yrel);
+                        }
+                    }
+                    break;
+                case SDL_MOUSEWHEEL:
+                    for (const auto& mouseMotionEvent : Input::MouseMotionEvent::getEvents()) {
+                        if (mouseMotionEvent.getEvent() == Input::MouseMotion::SCROLL) {
+                            mouseMotionEvent(event.wheel.x, event.wheel.y, event.wheel.x, event.wheel.y);
+                        }
+                    }
+                    break;
+                default:
+                    // todo(input): handle joystick / game controller inputs!
+                    break;
+            }
+        }
+
         Engine::window->update();
         Engine::window->render(glm::identity<glm::mat4>());
 
-        /*
-        glfwPollEvents();
-        for (auto& keybind: InputManager::getKeyButtonCallbacks()) {
-            if (glfwGetKey(Engine::window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
-                keybind();
-        }
-        for (auto& keybind: InputManager::getMouseButtonCallbacks()) {
-            if (glfwGetMouseButton(Engine::window->window, static_cast<int>(keybind.getKey())) && keybind.getEventType() == InputKeyEventType::REPEAT)
-                keybind();
-        }
-        */
-
 #ifdef CHIRA_USE_DISCORD
-        if (DiscordRPC::initialized())
+        if (DiscordRPC::initialized()) {
             DiscordRPC::updatePresence();
+        }
 #endif
 #ifdef CHIRA_USE_STEAMWORKS
-        if (SteamAPI::Client::initialized())
+        if (SteamAPI::Client::initialized()) {
             SteamAPI::Client::runCallbacks();
+        }
 #endif
         Events::update();
-    } while (/*!glfwWindowShouldClose(Engine::window->window)*/ true);
+    } while (!Engine::window->shouldClose);
 
     LOG_ENGINE.info("Exiting...");
 
@@ -162,6 +239,6 @@ bool Engine::isStarted() {
     return Engine::started;
 }
 
-double Engine::getDeltaTime() {
+uint64_t Engine::getDeltaTicks() {
     return Engine::currentTime - Engine::lastTime;
 }

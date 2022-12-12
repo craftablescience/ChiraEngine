@@ -222,12 +222,12 @@ option(CHIRA_BUILD_EDITOR "Build the editor GUI application" ON)
 if(CHIRA_BUILD_EDITOR)
     include(${CMAKE_CURRENT_SOURCE_DIR}/editor/CMakeLists.txt)
     if(WIN32)
-        list(APPEND CHIRA_EDITOR_SOURCES ${CMAKE_CURRENT_LIST_DIR}/resources/platform/windows/icon.rc)
+        list(APPEND CHIRA_EDITOR_SOURCES ${CMAKE_CURRENT_LIST_DIR}/resources/editor/platform/windows/app.rc)
     endif()
     if(APPLE)
         list(APPEND CHIRA_APPLE_BUNDLE_FILES
-                ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/macOS/AppIcon.icns
-                ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/macOS/Info.plist)
+                ${CMAKE_CURRENT_SOURCE_DIR}/resources/editor/platform/macOS/AppIcon.icns
+                ${CMAKE_CURRENT_SOURCE_DIR}/resources/editor/platform/macOS/Info.plist)
         list(APPEND CHIRA_EDITOR_SOURCES ${CHIRA_APPLE_BUNDLE_FILES})
     endif()
     add_executable(ChiraEditor ${CHIRA_EDITOR_SOURCES})
@@ -236,7 +236,7 @@ if(CHIRA_BUILD_EDITOR)
         add_custom_target(
                 CopyEditorIcon
                 ALL
-                COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/windows/icon.ico ${CMAKE_BINARY_DIR}/resources/platform/windows/icon.ico)
+                COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/resources/editor/platform/windows/icon.ico ${CMAKE_BINARY_DIR}/resources/editor/platform/windows/icon.ico)
         add_dependencies(ChiraEditor CopyEditorIcon)
     endif()
     if(APPLE)
@@ -264,8 +264,8 @@ if(CHIRA_BUILD_EDITOR)
             set(CPACK_GENERATOR "Bundle" CACHE STRING "" FORCE)
             set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_CURRENT_SOURCE_DIR}/branding/github/readme_banner.png" CACHE STRING "" FORCE)
             set(CPACK_DMG_SLA_USE_RESOURCE_FILE_LICENSE TRUE CACHE BOOL "" FORCE)
-            set(CPACK_BUNDLE_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/macOS/Info.plist CACHE STRING "" FORCE)
-            set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/macOS/AppIcon.icns CACHE STRING "" FORCE)
+            set(CPACK_BUNDLE_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/resources/editor/platform/macOS/Info.plist CACHE STRING "" FORCE)
+            set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/resources/editor/platform/macOS/AppIcon.icns CACHE STRING "" FORCE)
         elseif(UNIX)
             #todo: DEB and/or RPM
             message(FATAL_ERROR "Sorry, no Linux installer is supported yet.")

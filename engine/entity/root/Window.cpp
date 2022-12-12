@@ -11,7 +11,6 @@
 #include <config/ConEntry.h>
 #include <core/Engine.h>
 #include <event/Events.h>
-#include <input/InputManager.h>
 #include <loader/image/Image.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <render/material/MaterialFramebuffer.h>
@@ -38,25 +37,28 @@ ConCommand win_setpos{"win_setpos", "Set the X and Y position of the engine wind
 }};
 
 ConVar win_width{"win_width", 1280, "The width of the engine window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
-    Engine::getWindow()->setFrameSize({static_cast<int>(std::stoi(newValue.data())), Engine::getWindow()->getFrameSize().y});
+    Engine::getWindow()->setSize({static_cast<int>(std::stoi(newValue.data())), Engine::getWindow()->getFrameSize().y});
 }};
 
 ConVar win_height{"win_height", 720, "The height of the engine window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
-    Engine::getWindow()->setFrameSize({Engine::getWindow()->getFrameSize().x, static_cast<int>(std::stoi(newValue.data()))});
+    Engine::getWindow()->setSize({Engine::getWindow()->getFrameSize().x, static_cast<int>(std::stoi(newValue.data()))});
 }};
 
-ConVar win_fullscreen{"win_fullscreen", false, "If the window is in fullscreen. Overrides \"win_start_maximized\" if true at startup.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
+ConVar win_maximized{"win_maximized", true, "If the window is maximized.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
+    Engine::getWindow()->setMaximized(static_cast<bool>(std::stoi(newValue.data())));
+}};
+
+ConVar win_fullscreen{"win_fullscreen", false, "If the window is fullscreen. Overrides \"win_maximized\" if true.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
     Engine::getWindow()->setFullscreen(static_cast<bool>(std::stoi(newValue.data())));
 }};
 
 ConVar win_vsync{"win_vsync", true, "Limit the FPS to your monitor's resolution.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
-    if (win_vsync.getValue<bool>()) {
-        // Fall back to regular vsync if we don't have adaptive vsync
-        if (SDL_GL_SetSwapInterval(-1) == -1) {
-            SDL_GL_SetSwapInterval(1);
-        }
-    } else {
+    if (!static_cast<bool>(std::stoi(newValue.data()))) {
         SDL_GL_SetSwapInterval(0);
+        return;
+    } else if (SDL_GL_SetSwapInterval(-1) == -1) {
+        // Fall back to regular vsync if we don't have adaptive vsync
+        SDL_GL_SetSwapInterval(1);
     }
 }};
 
@@ -81,7 +83,14 @@ bool Window::createGLFWWindow(std::string_view title) {
     int windowFlags =
             SDL_WINDOW_OPENGL |
             SDL_WINDOW_ALLOW_HIGHDPI |
+            SDL_WINDOW_RESIZABLE |
             (this->visible ? SDL_WINDOW_SHOWN : SDL_WINDOW_HIDDEN);
+    if (win_maximized.getValue<bool>()) {
+        windowFlags |= SDL_WINDOW_MAXIMIZED;
+    }
+    if (win_fullscreen.getValue<bool>()) {
+        windowFlags |= SDL_WINDOW_FULLSCREEN;
+    }
     this->window = SDL_CreateWindow(title.data(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->width, this->height, windowFlags);
     if (!this->window) {
         LOG_WINDOW.error("Window creation failed!");
@@ -97,11 +106,8 @@ bool Window::createGLFWWindow(std::string_view title) {
 
     this->setIcon("file://textures/ui/icon.png");
 
-    if (win_fullscreen.getValue<bool>()) {
-        this->setFullscreen(true);
-    }
-
-    // todo: initialize convars here
+    // looks ugly, but we can't call this stuff because the engine is still creating us
+    // fix this in the rewrite
     if (win_vsync.getValue<bool>()) {
         // Try enabling adaptive vsync
         if (SDL_GL_SetSwapInterval(-1) == -1) {
@@ -110,61 +116,6 @@ bool Window::createGLFWWindow(std::string_view title) {
     } else {
         SDL_GL_SetSwapInterval(0);
     }
-
-//    glfwSetFramebufferSizeCallback(this->window, [](GLFWwindow* /*w*/, int width_, int height_) {
-//        Engine::getWindow()->setFrameSize({width_, height_});
-//    });
-//    glfwSetKeyCallback(this->window, [](GLFWwindow* /*w*/, int key, int /*scancode*/, int action, int /*mods*/) {
-//        if (action == GLFW_REPEAT) return;
-//        for (auto& keybind : InputManager::getKeyButtonCallbacks()) {
-//            if (keybind.getKey() == static_cast<Key>(key) && keybind.getEventType() == static_cast<InputKeyEventType>(action))
-//                keybind();
-//        }
-//    });
-//    glfwSetMouseButtonCallback(this->window, [](GLFWwindow* /*w*/, int key, int action, int /*mods*/) {
-//        if (action == GLFW_REPEAT) return;
-//        for (auto& keybind : InputManager::getMouseButtonCallbacks()) {
-//            if (keybind.getKey() == static_cast<Key>(key) && keybind.getEventType() == static_cast<InputKeyEventType>(action))
-//                keybind();
-//        }
-//    });
-//    glfwSetCursorPosCallback(this->window, [](GLFWwindow* w, double xPos, double yPos) {
-//        auto* window_ = static_cast<Window*>(glfwGetWindowUserPointer(w));
-//        auto& lastMX = window_->lastMouseX;
-//        auto& lastMY = window_->lastMouseY;
-//
-//        if (lastMX == -1) lastMX = xPos;
-//        if (lastMY == -1) lastMY = yPos;
-//
-//        int width, height;
-//        glfwGetWindowSize(w, &width, &height);
-//        double xOffset = xPos - lastMX;
-//        double yOffset = yPos - lastMY;
-//
-//        for (auto& movebind : InputManager::getMouseMovementCallbacks()) {
-//            if (movebind.getType() == InputMouseMovementEventType::MOVE)
-//                movebind(xOffset, yOffset);
-//        }
-//
-//        lastMX = xPos;
-//        lastMY = yPos;
-//    });
-//    glfwSetScrollCallback(this->window, [](GLFWwindow* /*w*/, double x, double y) {
-//        for (auto& movebind : InputManager::getMouseMovementCallbacks()) {
-//            if (movebind.getType() == InputMouseMovementEventType::SCROLL)
-//                movebind(x,y);
-//        }
-//    });
-//    glfwSetWindowIconifyCallback(this->window, [](GLFWwindow* w, int isIconified) {
-//        static_cast<Window*>(glfwGetWindowUserPointer(w))->iconified = (isIconified == GLFW_TRUE);
-//    });
-//    glfwSetDropCallback(this->window, [](GLFWwindow* /*w*/, int count, const char** paths) {
-//        std::vector<std::string> files;
-//        files.reserve(count);
-//        for (int i = 0; i < count; i++)
-//            files.emplace_back(paths[i]);
-//        Events::createEvent("chira::window::files_dropped", files);
-//    });
 
     this->imguiContext = ImGui::CreateContext();
     ImGui::SetCurrentContext(this->imguiContext);
@@ -272,9 +223,10 @@ void Window::removeAllPanels() {
     this->panels.clear();
 }
 
-void Window::setFrameSize(glm::vec2i newSize) {
+void Window::setSize(glm::vec2i newSize, bool setWindowSize /*= true*/) {
     Frame::setFrameSize(newSize);
-    SDL_SetWindowSize(this->window, this->width, this->height);
+    if (setWindowSize)
+        SDL_SetWindowSize(this->window, this->width, this->height);
     win_width.setValue(this->width, false);
     win_height.setValue(this->height, false);
 }
@@ -317,6 +269,7 @@ void Window::setFullscreen(bool goFullscreen) const {
     if (!goFullscreen) {
         this->moveToCenter();
     }
+    SDL_SetWindowFullscreen(this->window, goFullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
     win_fullscreen.setValue(goFullscreen, false);
 }
 
@@ -334,6 +287,7 @@ void Window::setMaximized(bool maximize) {
         SDL_GetWindowSize(this->window, &this->width, &this->height);
         Frame::setFrameSize({this->width, this->height});
     }
+    win_maximized.setValue(maximize, false);
 }
 
 bool Window::isMaximized() const {

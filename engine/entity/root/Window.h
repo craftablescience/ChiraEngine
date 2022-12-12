@@ -22,7 +22,7 @@ public:
     [[nodiscard]] IPanel* getPanel(const uuids::uuid& panelID);
     void removePanel(const uuids::uuid& panelID);
     void removeAllPanels();
-    void setFrameSize(glm::vec2i newSize) override;
+    void setSize(glm::vec2i newSize, bool setWindowSize = true);
     [[nodiscard]] static glm::vec2i getMousePosition();
     void captureMouse(bool capture);
     [[nodiscard]] bool isMouseCaptured() const;
@@ -50,6 +50,8 @@ private:
 
     Window(std::string name_, std::string_view title);
     explicit Window(std::string_view title);
+
+    using Frame::setFrameSize;
 
     bool createGLFWWindow(std::string_view title);
     static void setImGuiConfigPath();
