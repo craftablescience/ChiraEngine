@@ -232,13 +232,6 @@ if(CHIRA_BUILD_EDITOR)
     endif()
     add_executable(ChiraEditor ${CHIRA_EDITOR_SOURCES})
     apply_optimizations(ChiraEditor)
-    if(WIN32)
-        add_custom_target(
-                CopyEditorIcon
-                ALL
-                COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/resources/editor/platform/windows/icon.ico ${CMAKE_BINARY_DIR}/resources/editor/platform/windows/icon.ico)
-        add_dependencies(ChiraEditor CopyEditorIcon)
-    endif()
     if(APPLE)
         set_target_properties(ChiraEditor PROPERTIES
                 MACOSX_BUNDLE TRUE
@@ -290,7 +283,6 @@ if(CHIRA_BUILD_TESTS)
 endif()
 
 # Copy resources
-add_custom_command(
-        TARGET ${PROJECT_NAME}
-        PRE_BUILD
+add_custom_target(${PROJECT_NAME}CopyResources
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/resources)
+add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}CopyResources)
