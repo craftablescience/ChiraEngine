@@ -107,7 +107,7 @@ void DiscordRPC::updatePresence() {
         if (!DiscordRPC::smallImageText.empty())
             discordPresence.smallImageText = DiscordRPC::smallImageText.c_str();
 
-        DiscordButton buttons[2] { nullptr };
+        DiscordButton buttons[2] {{}, {}};
         if (!DiscordRPC::button1.url.empty()) {
             buttons[0].label = DiscordRPC::button1.name.c_str();
             buttons[0].url = DiscordRPC::button1.url.c_str();
