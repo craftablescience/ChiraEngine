@@ -160,6 +160,7 @@ list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glad)
 
 # GLM
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glm)
+target_compile_definitions(glm INTERFACE -DGLM_FORCE_SILENT_WARNINGS)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glm)
 
 # IMGUI
