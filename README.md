@@ -24,6 +24,14 @@ To summarize the major features:
 
 The goal of the engine is to have as much customization as possible, while still maintaining ease of use.
 
+## Supported Platforms
+
+| Platform          | Graphics API |
+|-------------------|--------------|
+| Windows           | OpenGL 4.3   |
+| Linux             | OpenGL 4.3   |
+| macOS             | OpenGL 4.1   |
+
 ## Supported Compilers
 
 | Compiler (Latest) | Windows             | Linux     | macOS                    |
@@ -36,7 +44,7 @@ The goal of the engine is to have as much customization as possible, while still
 (\*) MinGW builds on Windows will work, but running the application outside your IDE will require you to copy some DLLs
 next to the executable. Check the GitHub Actions script to see which DLLs need copied from the MinGW bin directory.
 
-(\*\*) Homebrew LLVM/Clang is required because Apple Clang as of this time does not support certain C++ features that are used inside the engine.
+(\*\*) Homebrew LLVM/Clang is required because Apple Clang as of this time does not support certain C++20 features that are used inside the engine.
 
 ## Bundled Dependencies
 - AngelScript v2.35.1
