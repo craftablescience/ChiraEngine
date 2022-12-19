@@ -243,7 +243,7 @@ static void setup_colors()
 
 static bool imBegin(const std::string name);
 
-static void imEnd();
+static void imEnd(std::string test);
 
 static void imText(const std::string label);
 
@@ -274,7 +274,7 @@ int main(int argc, const char* const argv[]) {
     // TODO: Move these not here. Make a specific set of cpp files for registering functions
     AngelScriptVM::registerGlobalFunction(imBegin, "ImGui_Begin");
     AngelScriptVM::registerGlobalFunction(imText, "ImGui_Text");
-    // AngelScriptVM::registerGlobalFunction(imEnd, "ImGui_End");
+    AngelScriptVM::registerGlobalFunction(imEnd, "ImGui_End");
 
     setup_colors();
 
@@ -294,6 +294,6 @@ static void imText(const std::string label) {
     ImGui::Text(label.c_str());
 }
 
-static void imEnd() {
+static void imEnd(std::string test) {
     ImGui::End();
 }
