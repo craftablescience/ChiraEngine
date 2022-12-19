@@ -35,6 +35,7 @@ using namespace chira;
 CHIRA_CREATE_LOG(EDITOR);
 
 unsigned int mpid;
+bool about_open = false;
 
 [[maybe_unused]]
 static ConCommand load_tool{"load_tool", "Attempts to load the given editor plugin.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
@@ -97,7 +98,7 @@ void MainEditorPanel::preRenderContents() {
             ImGui::MenuItem(TRC("ui.menubar.open"));
             ImGui::Separator();
             ImGui::MenuItem(TRC("ui.menubar.save"));
-            ImGui::MenuItem(TRC("ui.menubar.saveas"));
+            ImGui::MenuItem(TRC("ui.menubar.save_as"));
             ImGui::Separator();
             if (ImGui::MenuItem(TRC("ui.menubar.add_resource_folder"))) // Add Resource Folder...
                 addResourceFolderSelected();
@@ -124,7 +125,9 @@ void MainEditorPanel::preRenderContents() {
             ImGui::MenuItem("ChiraEditor Help");
             ImGui::Separator();
             ImGui::MenuItem("About Tool");
-            ImGui::MenuItem("About ChiraEngine");
+            if (ImGui::MenuItem("About ChiraEngine")) {
+                about_open = true;
+            }
             ImGui::EndMenu();
         }
 
@@ -136,7 +139,62 @@ void MainEditorPanel::preRenderContents() {
 
 }
 
+bool tpc_open = false;
+ImGuiWindowFlags popup_flags = ImGuiWindowFlags_AlwaysAutoResize|ImGuiWindowFlags_NoResize
+    |ImGuiWindowFlags_NoCollapse|ImGuiWindowFlags_NoDocking;
+
+std::string tpc[14] = {
+    "AngelScript",
+    "Dear ImGui - ocornut",
+    "Discord RPC - Discord",
+    "fmt", "fontawesome",
+    "GLAD", "GLFW", "GLM",
+    "imgui-filebrowser - AirGuanZ",
+    "imguicolortextedit - BalazsJako",
+    "JSON - nlohmann", "LibLoader",
+    "stb - nothings", "stduuid - mariusbancila",
+};
+
+static void tpCreditsPanel() {
+    if (ImGui::Begin("Third Party Credits", &tpc_open,
+    popup_flags)) {
+        for (std::string line : tpc) {
+            ImGui::Text(line.c_str());
+        }
+        if (ImGui::Button("Close")) {
+            tpc_open = false;
+        }
+    }
+    ImGui::End();
+}
+
+static void aboutPanel() {
+    if (ImGui::Begin("About ChiraEngine", &about_open,
+    popup_flags)) {
+        ImGui::Text("ChiraEngine (editor-extended)");
+        ImGui::Text("Created by craftablescience, ashifolfi, and many others");
+        ImGui::Text("Editor by ashifolfi");
+        if (ImGui::Button("Third Paty Credits")) {
+            tpc_open = true;
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Close")) {
+            about_open = false;
+            tpc_open = false;
+        }
+    }
+    ImGui::End();
+}
+
 void MainEditorPanel::renderContents() {
+    // about window
+    if (about_open)
+        aboutPanel();    
+    else
+        tpc_open = false;
+    if (tpc_open)
+        tpCreditsPanel();
+
     for (EditorPlugin* tool : this->editorplugins) {
         tool->doPlugin();
     }
@@ -243,7 +301,7 @@ static void setup_colors()
 
 static bool imBegin(const std::string name);
 
-static void imEnd(std::string test);
+static void imEnd();
 
 static void imText(const std::string label);
 
@@ -274,7 +332,7 @@ int main(int argc, const char* const argv[]) {
     // TODO: Move these not here. Make a specific set of cpp files for registering functions
     AngelScriptVM::registerGlobalFunction(imBegin, "ImGui_Begin");
     AngelScriptVM::registerGlobalFunction(imText, "ImGui_Text");
-    AngelScriptVM::registerGlobalFunction(imEnd, "ImGui_End");
+    AngelScriptVM::registerGlobalFunction(imEnd, "ImGui_End", "void ImGui_End()");
 
     setup_colors();
 
@@ -294,6 +352,6 @@ static void imText(const std::string label) {
     ImGui::Text(label.c_str());
 }
 
-static void imEnd(std::string test) {
+static void imEnd() {
     ImGui::End();
 }

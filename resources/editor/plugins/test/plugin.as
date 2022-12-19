@@ -6,5 +6,5 @@ void doPlugin() {
     if (ImGui_Begin("Example Plugin")) {
         ImGui_Text("Hello World!");
     }
-    ImGui_End("");
+    ImGui_End();
 }
