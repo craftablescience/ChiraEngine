@@ -299,11 +299,17 @@ static void setup_colors()
     }
 }
 
-static bool imBegin(const std::string name);
+static bool imBegin(const std::string name) {
+    return ImGui::Begin(name.c_str());
+}
 
-static void imEnd();
+static void imText(const std::string label) {
+    ImGui::Text(label.c_str());
+}
 
-static void imText(const std::string label);
+static void imEnd() {
+    ImGui::End();
+}
 
 int main(int argc, const char* const argv[]) {
     Engine::preInit(argc, argv);
@@ -342,16 +348,4 @@ int main(int argc, const char* const argv[]) {
     mpid = Engine::getWindow()->addPanel(mainPanel);
 
     Engine::run();
-}
-
-static bool imBegin(const std::string name) {
-    return ImGui::Begin(name.c_str());
-}
-
-static void imText(const std::string label) {
-    ImGui::Text(label.c_str());
-}
-
-static void imEnd() {
-    ImGui::End();
 }
