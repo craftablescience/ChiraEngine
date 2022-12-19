@@ -8,10 +8,15 @@ class ExamplePlugin : EditorPlugin {
     }
     
     void doPlugin() {
-        ImGui.SetNextWindowSize(ImVec2(200,200), ImGuiCond_Always);
-        if (ImGui.Begin("Example Plugin")) {
-            ImGui.Text("Hello World!");
-        }
-        ImGui.End();
+        print("Hello World!")
+        // ImGui.SetNextWindowSize(ImVec2(200,200), ImGuiCond_Always);
+        // if (ImGui.Begin("Example Plugin")) {
+        //     ImGui.Text("Hello World!");
+        // }
+        // ImGui.End();
     }
+}
+
+void update() {
+    print("Hello World!");
 }

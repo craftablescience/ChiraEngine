@@ -15,12 +15,10 @@
 #include <ui/IPanel.h>
 #include <utility/Dialogs.h>
 #include <render/material/MaterialPhong.h>
-
-// Used because file dialogs are broken on macOS
-// TODO: Make these prettier.
 #include <imfilebrowser.h>
-
 #include <imgui_internal.h>
+#include "EditorPlugin.h"
+#include <script/AngelScriptVM.h>
 
 #ifdef CHIRA_USE_DISCORD
     #include <hook/DiscordRPC.h>
@@ -35,6 +33,21 @@
 using namespace chira;
 
 CHIRA_CREATE_LOG(EDITOR);
+
+unsigned int mpid;
+
+[[maybe_unused]]
+static ConCommand load_tool{"load_tool", "Attempts to load the given editor plugin.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
+    for (const auto& name : args) {
+        LOG_EDITOR.info("Attempting to load tool '"+name+"'...");
+        MainEditorPanel *panel = Engine::getWindow()->getPanel<MainEditorPanel>(mpid);
+        // if (panel->getTool(name) != nullptr) {
+        //     LOG_EDITOR.error("Tool '"+name+"' is already loaded!");
+        // } else {
+            panel->addTool(new EditorPlugin(name));
+        // }
+    }
+}};
 
 static inline void addResourceFolderSelected() {
     auto folder = Dialogs::openFolder();
@@ -64,6 +77,18 @@ MainEditorPanel::MainEditorPanel() : IPanel(TR("ui.window.title"), true) {
                     ImGuiWindowFlags_NoDecoration;
 }
 
+void MainEditorPanel::addTool(EditorPlugin *tool) {
+    this->editorplugins.push_back(tool);
+}
+
+EditorPlugin *MainEditorPanel::getTool(std::string name) {
+    for (EditorPlugin* tool : this->editorplugins) {
+        if (tool->getID() == name) {
+            return tool;
+        }
+    }
+}
+
 void MainEditorPanel::preRenderContents() {
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
@@ -87,7 +112,11 @@ void MainEditorPanel::preRenderContents() {
         if (ImGui::BeginMenu(TRC("ui.menubar.tools"))) {
             ImGui::MenuItem("Tools Manager");
             ImGui::Separator();
-            ImGui::Text("tools go here");
+            for (EditorPlugin* tool : this->editorplugins) {
+                if (ImGui::MenuItem(tool->getID().c_str())) {
+
+                }
+            }
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu(TRC("ui.menubar.help"))) {
@@ -100,7 +129,7 @@ void MainEditorPanel::preRenderContents() {
         }
 
         // TODO: Insert current tool here
-        ImGui::Text("ChiraEngine (editor-extended) [` - Open Console]");
+        ImGui::Text("              ChiraEngine (editor-extended) [` - Open Console]");
 
         ImGui::EndMainMenuBar();
     }
@@ -108,6 +137,9 @@ void MainEditorPanel::preRenderContents() {
 }
 
 void MainEditorPanel::renderContents() {
+    for (EditorPlugin* tool : this->editorplugins) {
+        tool->doPlugin();
+    }
 }
 
 static void CreateInitialLayout() {
@@ -209,6 +241,12 @@ static void setup_colors()
     }
 }
 
+static bool imBegin(const std::string name);
+
+static void imEnd();
+
+static void imText(const std::string label);
+
 int main(int argc, const char* const argv[]) {
     Engine::preInit(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{"editor"});
@@ -232,12 +270,30 @@ int main(int argc, const char* const argv[]) {
 
     Engine::init();
 
+    // register these here
+    // TODO: Move these not here. Make a specific set of cpp files for registering functions
+    AngelScriptVM::registerGlobalFunction(imBegin, "ImGui_Begin");
+    AngelScriptVM::registerGlobalFunction(imText, "ImGui_Text");
+    // AngelScriptVM::registerGlobalFunction(imEnd, "ImGui_End");
+
     setup_colors();
 
     Engine::getWindow()->setBackgroundColor(ColorRGB{0.15f});
 
     auto mainPanel = new MainEditorPanel();
-    Engine::getWindow()->addPanel(mainPanel);
+    mpid = Engine::getWindow()->addPanel(mainPanel);
 
     Engine::run();
+}
+
+static bool imBegin(const std::string name) {
+    return ImGui::Begin(name.c_str());
+}
+
+static void imText(const std::string label) {
+    ImGui::Text(label.c_str());
+}
+
+static void imEnd() {
+    ImGui::End();
 }

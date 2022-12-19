@@ -2,6 +2,8 @@
 
 #include <ui/IPanel.h>
 #include <imfilebrowser.h>
+#include <entity/logic/Script.h>
+#include "EditorPlugin.h"
 
 namespace chira {
 
@@ -10,7 +12,11 @@ public:
     MainEditorPanel();
     void preRenderContents() override;
     void renderContents() override;
+    void addTool(EditorPlugin *tool);
+    EditorPlugin *getTool(std::string name);
     [[nodiscard]] std::string_view getMeshId() const;
+
+    std::vector<EditorPlugin*> editorplugins;
 };
 
 } // namespace chira

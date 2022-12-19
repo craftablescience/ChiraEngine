@@ -31,6 +31,8 @@
   "ui.menubar.file": "File",
   "ui.menubar.view": "View",
   "ui.menubar.window": "Window",
+  "ui.menubar.tools": "Tools",
+  "ui.menubar.help": "Help",
 
   "ui.editor.show_grid": "Show Grid",
 
