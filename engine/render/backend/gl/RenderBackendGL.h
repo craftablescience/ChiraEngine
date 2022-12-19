@@ -78,12 +78,14 @@ void setClearColor(ColorRGBA color);
                                                  WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, FilterMode filter,
                                                  bool genMipmaps = true, TextureUnit activeTextureUnit = TextureUnit::G0);
 void useTexture(TextureHandle handle, TextureUnit activeTextureUnit = TextureUnit::G0);
+[[nodiscard]] void* getImGuiTextureHandle(TextureHandle handle);
 void destroyTexture(TextureHandle handle);
 
 [[nodiscard]] FrameBufferHandle createFrameBuffer(int width, int height, WrapMode wrapS, WrapMode wrapT, FilterMode filter, bool hasDepth = true);
 void pushFrameBuffer(FrameBufferHandle handle);
 void popFrameBuffer();
 void useFrameBufferTexture(FrameBufferHandle handle, TextureUnit activeTextureUnit = TextureUnit::G0);
+[[nodiscard]] void* getImGuiFrameBufferHandle(FrameBufferHandle handle);
 void destroyFrameBuffer(FrameBufferHandle handle);
 
 [[nodiscard]] ShaderHandle createShader(std::string_view vertex, std::string_view fragment);

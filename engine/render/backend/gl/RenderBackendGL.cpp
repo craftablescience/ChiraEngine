@@ -293,6 +293,11 @@ void Renderer::useTexture(TextureHandle handle, TextureUnit activeTextureUnit /*
     }
 }
 
+void* Renderer::getImGuiTextureHandle(Renderer::TextureHandle handle) {
+    runtime_assert(handle.type != TextureType::CUBEMAP, "Should probably not be using a cubemap texture in ImGui!");
+    return reinterpret_cast<void*>(static_cast<unsigned long long>(handle.handle));
+}
+
 void Renderer::destroyTexture(Renderer::TextureHandle handle) {
     runtime_assert(static_cast<bool>(handle), "Invalid texture handle given to GL renderer");
     glDeleteTextures(1, &handle.handle);
@@ -367,6 +372,10 @@ void Renderer::popFrameBuffer() {
 void Renderer::useFrameBufferTexture(Renderer::FrameBufferHandle handle, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
     glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
     glBindTexture(GL_TEXTURE_2D, handle.colorHandle);
+}
+
+void* Renderer::getImGuiFrameBufferHandle(Renderer::FrameBufferHandle handle) {
+    return reinterpret_cast<void*>(static_cast<unsigned long long>(handle.colorHandle));
 }
 
 void Renderer::destroyFrameBuffer(Renderer::FrameBufferHandle handle) {

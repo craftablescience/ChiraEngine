@@ -11,8 +11,6 @@
 namespace chira {
 
 class Frame : public Group {
-    // todo(render): need to abstract things for ImGUI
-    friend class FramePanel;
 public:
     Frame(std::string name_, int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
     Frame(int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
@@ -31,6 +29,7 @@ public:
     void setSkybox(const std::string& cubemapId);
     [[nodiscard]] SharedPointer<MaterialCubemap> getSkybox() const;
     [[nodiscard]] LightManager* getLightManager();
+    [[nodiscard]] Renderer::FrameBufferHandle getRawHandle() const;
 protected:
     ColorRGB backgroundColor{};
     Renderer::FrameBufferHandle handle{};

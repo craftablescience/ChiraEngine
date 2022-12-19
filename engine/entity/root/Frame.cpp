@@ -149,3 +149,7 @@ SharedPointer<MaterialCubemap> Frame::getSkybox() const {
 LightManager* Frame::getLightManager() {
     return &this->lightManager;
 }
+
+Renderer::FrameBufferHandle Frame::getRawHandle() const {
+    return this->handle;
+}
