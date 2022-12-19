@@ -149,9 +149,6 @@ endif()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/fmt)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES fmt::fmt)
 
-# OPENGL
-find_package(OpenGL REQUIRED)
-
 # GLAD
 option(CHIRA_USE_GL_41 "Use OpenGL 4.1 instead of OpenGL 4.3" ON)
 set(GLAD_USE_GL_41 ${CHIRA_USE_GL_41} CACHE BOOL "" FORCE)
@@ -229,10 +226,10 @@ if(CHIRA_USE_STEAMWORKS)
 endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-        ${OPENGL_INCLUDE_DIRS}
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/addons
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/fmt/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/libloader/include
@@ -240,10 +237,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stb
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stduuid/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs)
-target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/engine)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} ${CHIRA_ENGINE_LINK_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${CHIRA_ENGINE_LINK_LIBRARIES})
 
 # CHIRAEDITOR
 option(CHIRA_BUILD_EDITOR "Build the editor GUI application" ON)
