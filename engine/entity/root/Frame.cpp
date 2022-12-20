@@ -32,7 +32,7 @@ void Frame::createFramebuffer() {
         Renderer::destroyFrameBuffer(this->handle);
     }
     this->handle = Renderer::createFrameBuffer(this->width, this->height, WrapMode::REPEAT, WrapMode::REPEAT,
-                                               this->linearFiltering ? FilterMode::LINEAR : FilterMode::NEAREST);
+                                               this->linearFiltering ? FilterMode::LINEAR : FilterMode::NEAREST, true);
 }
 
 void Frame::render(glm::mat4 /*parentTransform*/) {
@@ -87,8 +87,8 @@ Frame::~Frame() {
     }
 }
 
-void Frame::useFrameBufferTexture() const {
-    Renderer::useFrameBufferTexture(this->handle);
+void Frame::useFrameBufferTexture(TextureUnit activeTextureUnit /*= TextureUnit::G0*/) const {
+    Renderer::useFrameBufferTexture(this->handle, activeTextureUnit);
 }
 
 glm::vec3 Frame::getGlobalPosition() {

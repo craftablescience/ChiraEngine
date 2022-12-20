@@ -1,4 +1,4 @@
-#include "RenderBackendGL.h"
+#include "BackendGL.h"
 
 #include <cstddef>
 #include <cstring>
@@ -8,6 +8,8 @@
 
 #include <imgui.h>
 #include <SDL.h>
+#include <backends/imgui_impl_sdl.h>
+#include <backends/imgui_impl_opengl3.h>
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/gl.h>
@@ -45,7 +47,7 @@ static void changeRenderMode(RenderMode mode, bool enable) {
 }
 
 /// State controller to avoid redundant state changes: each state is false by default
-static std::map<RenderMode, std::stack<bool>> GL_STATES{
+std::map<RenderMode, std::stack<bool>> GL_STATES{
         { RenderMode::CULL_FACE, {}, },
         { RenderMode::DEPTH_TEST, {}, },
         { RenderMode::TEXTURE_CUBE_MAP_SEAMLESS, {}, },
@@ -225,7 +227,7 @@ void Renderer::setClearColor(ColorRGBA color) {
 }
 
 Renderer::TextureHandle Renderer::createTexture2D(const Image& image, WrapMode wrapS, WrapMode wrapT, FilterMode filter,
-                                                  bool genMipmaps /*= true*/, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
+                                                  bool genMipmaps, TextureUnit activeTextureUnit) {
     TextureHandle handle{};
     glGenTextures(1, &handle.handle);
     handle.type = TextureType::TWO_DIMENSIONAL;
@@ -253,7 +255,7 @@ Renderer::TextureHandle Renderer::createTexture2D(const Image& image, WrapMode w
 Renderer::TextureHandle Renderer::createTextureCubemap(const Image& imageRT, const Image& imageLT, const Image& imageUP,
                                                        const Image& imageDN, const Image& imageFD, const Image& imageBK,
                                                        WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, FilterMode filter,
-                                                       bool genMipmaps /*= true*/, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
+                                                       bool genMipmaps, TextureUnit activeTextureUnit) {
     TextureHandle handle{};
     glGenTextures(1, &handle.handle);
     handle.type = TextureType::CUBEMAP;
@@ -280,7 +282,7 @@ Renderer::TextureHandle Renderer::createTextureCubemap(const Image& imageRT, con
     return handle;
 }
 
-void Renderer::useTexture(TextureHandle handle, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
+void Renderer::useTexture(TextureHandle handle, TextureUnit activeTextureUnit) {
     runtime_assert(static_cast<bool>(handle), "Invalid texture handle given to GL renderer");
     glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
     switch (handle.type) {
@@ -303,9 +305,9 @@ void Renderer::destroyTexture(Renderer::TextureHandle handle) {
     glDeleteTextures(1, &handle.handle);
 }
 
-static std::stack<Renderer::FrameBufferHandle> GL_FRAMEBUFFERS{};
+std::stack<Renderer::FrameBufferHandle> GL_FRAMEBUFFERS{};
 
-Renderer::FrameBufferHandle Renderer::createFrameBuffer(int width, int height, WrapMode wrapS, WrapMode wrapT, FilterMode filter, bool hasDepth /*= true*/) {
+Renderer::FrameBufferHandle Renderer::createFrameBuffer(int width, int height, WrapMode wrapS, WrapMode wrapT, FilterMode filter, bool hasDepth) {
     FrameBufferHandle handle{ .hasDepth = hasDepth, .width = width, .height = height, };
     glGenFramebuffers(1, &handle.fboHandle);
     glBindFramebuffer(GL_FRAMEBUFFER, handle.fboHandle);
@@ -369,7 +371,7 @@ void Renderer::popFrameBuffer() {
     }
 }
 
-void Renderer::useFrameBufferTexture(Renderer::FrameBufferHandle handle, TextureUnit activeTextureUnit /*= TextureUnit::G0*/) {
+void Renderer::useFrameBufferTexture(Renderer::FrameBufferHandle handle, TextureUnit activeTextureUnit) {
     glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
     glBindTexture(GL_TEXTURE_2D, handle.colorHandle);
 }
@@ -694,4 +696,26 @@ void Renderer::destroyMesh(MeshHandle handle) {
     glDeleteVertexArrays(1, &handle.vaoHandle);
     glDeleteBuffers(1, &handle.vboHandle);
     glDeleteBuffers(1, &handle.eboHandle);
+}
+
+void Renderer::initImGui(SDL_Window* window, void* context) {
+    ImGui_ImplSDL2_InitForOpenGL(window, context);
+    ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
+}
+
+void Renderer::startImGuiFrame(SDL_Window* window) {
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame(window);
+    ImGui::NewFrame();
+    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
+}
+
+void Renderer::endImGuiFrame() {
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void Renderer::destroyImGui() {
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
 }

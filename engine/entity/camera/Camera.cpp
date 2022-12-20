@@ -1,7 +1,5 @@
 #include "Camera.h"
 
-#include <entity/root/Window.h>
-
 using namespace chira;
 
 Camera::Camera(std::string name_, CameraProjectionMode mode, float fov_)

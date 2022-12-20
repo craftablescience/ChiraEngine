@@ -5,8 +5,8 @@
 #include <string_view>
 
 #include <loader/settings/JSONSettingsLoader.h>
-#include <entity/root/Window.h>
 #include <math/Color.h>
+#include <render/backend/RenderDevice.h>
 
 namespace chira {
 
@@ -18,7 +18,7 @@ public:
 
     /// Ran at the very start of your program. Readies the engine for you to add features before init().
     static void preInit(int argc, const char* const argv[]);
-    static void init(bool windowStartsVisible = true);
+    static void init();
     static void run();
 
     /// Returns a pointer to the main window of the application.

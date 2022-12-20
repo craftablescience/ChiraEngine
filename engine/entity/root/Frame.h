@@ -16,7 +16,7 @@ public:
     Frame(int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
     void render(glm::mat4 parentTransform) override;
     ~Frame() override;
-    void useFrameBufferTexture() const;
+    void useFrameBufferTexture(TextureUnit activeTextureUnit = TextureUnit::G0) const;
     [[nodiscard]] glm::vec3 getGlobalPosition() override;
     [[nodiscard]] const Frame* getFrame() const override;
     [[nodiscard]] Frame* getFrame() override;

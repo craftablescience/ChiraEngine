@@ -1,10 +1,9 @@
-#include "Window.h"
+#include "DeviceSDL.h"
 
-#include <backends/imgui_impl_opengl3.h>
-#include <backends/imgui_impl_sdl.h>
 // todo(render): move to render backend
 #include <glad/gl.h>
 #include <glad/glversion.h>
+#include <imgui.h>
 #include <SDL.h>
 
 #include <config/Config.h>
@@ -23,12 +22,7 @@ using namespace chira;
 CHIRA_CREATE_LOG(WINDOW);
 
 [[maybe_unused]]
-ConCommand r_gl_version{"r_gl_version", "Print the current OpenGL version.", [](ConCommand::CallbackArgs /*args*/) { // NOLINT(cert-err58-cpp)
-    LOG_WINDOW.infoImportant(GL_VERSION_STRING_PRETTY);
-}};
-
-[[maybe_unused]]
-ConCommand win_setpos{"win_setpos", "Set the X and Y position of the engine window, (0,0) being at the top left. If no arguments are given, places it in the center of the screen.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
+ConCommand win_setpos{"win_setpos", "Set the X and Y position of the main window, (0,0) being at the top left. If no arguments are given, places it in the center of the screen.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
     if (args.empty()) {
         Engine::getWindow()->moveToCenter();
     } else if (args.size() >= 2) {
@@ -36,19 +30,19 @@ ConCommand win_setpos{"win_setpos", "Set the X and Y position of the engine wind
     }
 }};
 
-ConVar win_width{"win_width", 1280, "The width of the engine window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
+ConVar win_width{"win_width", 1280, "The width of the main window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
     Engine::getWindow()->setSize({static_cast<int>(std::stoi(newValue.data())), Engine::getWindow()->getFrameSize().y});
 }};
 
-ConVar win_height{"win_height", 720, "The height of the engine window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
+ConVar win_height{"win_height", 720, "The height of the main window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
     Engine::getWindow()->setSize({Engine::getWindow()->getFrameSize().x, static_cast<int>(std::stoi(newValue.data()))});
 }};
 
-ConVar win_maximized{"win_maximized", true, "If the window is maximized.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
+ConVar win_maximized{"win_maximized", true, "If the main window is maximized.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
     Engine::getWindow()->setMaximized(static_cast<bool>(std::stoi(newValue.data())));
 }};
 
-ConVar win_fullscreen{"win_fullscreen", false, "If the window is fullscreen. Overrides \"win_maximized\" if true.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
+ConVar win_fullscreen{"win_fullscreen", false, "If the main window is fullscreen. Overrides \"win_maximized\" if true.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
     Engine::getWindow()->setFullscreen(static_cast<bool>(std::stoi(newValue.data())));
 }};
 
@@ -62,6 +56,7 @@ ConVar win_vsync{"win_vsync", true, "Limit the FPS to your monitor's resolution.
     }
 }};
 
+[[maybe_unused]]
 ConVar input_raw_mouse_motion{"input_raw_mouse_motion", true, "Get more accurate mouse motion.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
 
 bool Window::createGLFWWindow(std::string_view title) {
@@ -128,8 +123,7 @@ bool Window::createGLFWWindow(std::string_view title) {
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_DockingEnable;
     Window::setImGuiConfigPath();
 
-    ImGui_ImplSDL2_InitForOpenGL(this->window, this->glContext);
-    ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
+    Renderer::initImGui(this->window, this->glContext);
 
     auto defaultFont = Resource::getUniqueResource<Font>("file://fonts/default.json");
     ImGui::GetIO().FontDefault = defaultFont->getFont();
@@ -160,16 +154,13 @@ Window::Window(std::string_view title)
     }
 }
 
-void Window::render(glm::mat4 /*parentTransform*/) {
+void Window::render(glm::mat4) {
     SDL_GL_MakeCurrent(this->window, this->glContext);
     ImGui::SetCurrentContext(this->imguiContext);
 
     Window::setImGuiConfigPath();
 
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplSDL2_NewFrame(this->window);
-    ImGui::NewFrame();
-    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
+    Renderer::startImGuiFrame(this->window);
 
     Frame::render(glm::identity<glm::mat4>());
     glViewport(0, 0, this->width, this->height);
@@ -181,8 +172,7 @@ void Window::render(glm::mat4 /*parentTransform*/) {
     glDisable(GL_DEPTH_TEST);
 
     glBindFramebuffer(GL_FRAMEBUFFER, this->handle.fboHandle);
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    Renderer::endImGuiFrame();
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     this->surface.render(glm::identity<glm::mat4>());
@@ -195,8 +185,7 @@ void Window::render(glm::mat4 /*parentTransform*/) {
 Window::~Window() {
     this->removeAllPanels();
     ImGui::SetCurrentContext(this->imguiContext);
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplSDL2_Shutdown();
+    Renderer::destroyImGui();
     ImGui::DestroyContext(this->imguiContext);
     SDL_GL_DeleteContext(this->glContext);
     SDL_DestroyWindow(this->window);

@@ -28,11 +28,11 @@ void TextureCubemap::compile(const nlohmann::json& properties) {
 
     this->handle = Renderer::createTextureCubemap(*fileRT, *fileLT, *fileUP, *fileDN, *fileFD, *fileBK,
                                                   this->wrapModeS, this->wrapModeT, this->wrapModeR, this->filterMode,
-                                                  this->mipmaps);
+                                                  this->mipmaps, TextureUnit::G0);
 }
 
 void TextureCubemap::use() const {
-    Renderer::useTexture(this->handle);
+    Renderer::useTexture(this->handle, TextureUnit::G0);
 }
 
 void TextureCubemap::use(TextureUnit activeTextureUnit) const {

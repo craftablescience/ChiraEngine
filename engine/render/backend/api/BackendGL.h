@@ -8,6 +8,8 @@
 #include <math/Vertex.h>
 #include "../RenderTypes.h"
 
+struct SDL_Window;
+
 /// OpenGL 4.1 (or 4.3) render backend
 namespace chira::Renderer {
 
@@ -72,19 +74,19 @@ struct MeshHandle {
 void setClearColor(ColorRGBA color);
 
 [[nodiscard]] TextureHandle createTexture2D(const Image& image, WrapMode wrapS, WrapMode wrapT, FilterMode filter,
-                                            bool genMipmaps = true, TextureUnit activeTextureUnit = TextureUnit::G0);
+                                            bool genMipmaps, TextureUnit activeTextureUnit);
 [[nodiscard]] TextureHandle createTextureCubemap(const Image& imageRT, const Image& imageLT, const Image& imageUP,
                                                  const Image& imageDN, const Image& imageFD, const Image& imageBK,
                                                  WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, FilterMode filter,
-                                                 bool genMipmaps = true, TextureUnit activeTextureUnit = TextureUnit::G0);
-void useTexture(TextureHandle handle, TextureUnit activeTextureUnit = TextureUnit::G0);
+                                                 bool genMipmaps, TextureUnit activeTextureUnit);
+void useTexture(TextureHandle handle, TextureUnit activeTextureUnit);
 [[nodiscard]] void* getImGuiTextureHandle(TextureHandle handle);
 void destroyTexture(TextureHandle handle);
 
-[[nodiscard]] FrameBufferHandle createFrameBuffer(int width, int height, WrapMode wrapS, WrapMode wrapT, FilterMode filter, bool hasDepth = true);
+[[nodiscard]] FrameBufferHandle createFrameBuffer(int width, int height, WrapMode wrapS, WrapMode wrapT, FilterMode filter, bool hasDepth);
 void pushFrameBuffer(FrameBufferHandle handle);
 void popFrameBuffer();
-void useFrameBufferTexture(FrameBufferHandle handle, TextureUnit activeTextureUnit = TextureUnit::G0);
+void useFrameBufferTexture(FrameBufferHandle handle, TextureUnit activeTextureUnit);
 [[nodiscard]] void* getImGuiFrameBufferHandle(FrameBufferHandle handle);
 void destroyFrameBuffer(FrameBufferHandle handle);
 
@@ -120,5 +122,10 @@ void destroyUniformBuffer(UniformBufferHandle handle);
 void updateMesh(MeshHandle handle, const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode);
 void drawMesh(MeshHandle handle, const std::vector<Index>& indices, MeshDepthFunction depthFunction, MeshCullType cullType);
 void destroyMesh(MeshHandle handle);
+
+void initImGui(SDL_Window* window, void* context);
+void startImGuiFrame(SDL_Window* window);
+void endImGuiFrame();
+void destroyImGui();
 
 } // namespace chira::Renderer

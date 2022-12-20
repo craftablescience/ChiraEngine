@@ -8,7 +8,7 @@ namespace chira {
 class Texture final : public ITexture {
 public:
     explicit Texture(std::string identifier_, bool cacheTexture = true);
-    ~Texture();
+    ~Texture() override;
     void compile(const nlohmann::json& properties) override;
     void use() const override;
     void use(TextureUnit activeTextureUnit) const override;

@@ -56,7 +56,7 @@ void Engine::preInit(int argc, const char* const argv[]) {
     LightManager::setupShaderMacros();
 }
 
-void Engine::init(bool windowStartsVisible) {
+void Engine::init() {
     Engine::started = true;
 
     if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER)) {
@@ -65,7 +65,6 @@ void Engine::init(bool windowStartsVisible) {
     }
 
     Engine::window.reset(new Window{TR("ui.window.title")});
-    Engine::window->setVisible(windowStartsVisible);
 
 #ifdef DEBUG
     if (!Renderer::setupForDebugging()) {
@@ -216,12 +215,14 @@ void Engine::run() {
     LOG_ENGINE.info("Exiting...");
 
 #ifdef CHIRA_USE_DISCORD
-    if (DiscordRPC::initialized())
+    if (DiscordRPC::initialized()) {
         DiscordRPC::shutdown();
+    }
 #endif
 #ifdef CHIRA_USE_STEAMWORKS
-    if (SteamAPI::Client::initialized())
+    if (SteamAPI::Client::initialized()) {
         SteamAPI::Client::shutdown();
+    }
 #endif
 
     Engine::window.reset();

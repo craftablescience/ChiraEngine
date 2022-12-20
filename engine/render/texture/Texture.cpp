@@ -22,14 +22,14 @@ void Texture::compile(const nlohmann::json& properties) {
     auto imageFile = Resource::getResource<Image>(this->filePath, this->verticalFlip);
 
     this->handle = Renderer::createTexture2D(*imageFile, this->wrapModeS, this->wrapModeT, this->filterMode,
-                                             this->mipmaps);
+                                             this->mipmaps, TextureUnit::G0);
     if (this->cache) {
         this->file = imageFile;
     }
 }
 
 void Texture::use() const {
-    Renderer::useTexture(this->handle);
+    Renderer::useTexture(this->handle, TextureUnit::G0);
 }
 
 void Texture::use(TextureUnit activeTextureUnit) const {

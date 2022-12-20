@@ -1,8 +1,8 @@
 #pragma once
 
 #include <unordered_map>
+#include <entity/root/Frame.h>
 #include <utility/UUIDGenerator.h>
-#include "Frame.h"
 
 struct SDL_Window;
 struct ImGuiContext;
@@ -11,12 +11,10 @@ namespace chira {
 
 class IPanel;
 
-class Window : public Frame {
-    // We don't want people making windows and adding them to the entity tree
-    // Only the Engine can make windows!
+struct Window : public Frame {
     friend class Engine;
 public:
-    void render(glm::mat4 parentTransform) override;
+    void render(glm::mat4) override;
     ~Window() override;
     uuids::uuid addPanel(IPanel* panel);
     [[nodiscard]] IPanel* getPanel(const uuids::uuid& panelID);
@@ -50,8 +48,6 @@ private:
 
     Window(std::string name_, std::string_view title);
     explicit Window(std::string_view title);
-
-    using Frame::setFrameSize;
 
     bool createGLFWWindow(std::string_view title);
     static void setImGuiConfigPath();

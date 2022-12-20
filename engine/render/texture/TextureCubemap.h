@@ -8,7 +8,7 @@ namespace chira {
 class TextureCubemap final : public ITexture {
 public:
     explicit TextureCubemap(std::string identifier_);
-    ~TextureCubemap();
+    ~TextureCubemap() override;
     void compile(const nlohmann::json& properties) override;
     void use() const override;
     void use(TextureUnit activeTextureUnit) const override;
