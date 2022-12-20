@@ -2,4 +2,4 @@
 
 using namespace chira;
 
-CHIRA_CREATE_LOG_SHARED(ASSERT);
+CHIRA_CREATE_LOG(ASSERT);
