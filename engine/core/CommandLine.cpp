@@ -1,5 +1,6 @@
 #include "CommandLine.h"
 
+#include <algorithm>
 #include <vector>
 
 using namespace chira;
