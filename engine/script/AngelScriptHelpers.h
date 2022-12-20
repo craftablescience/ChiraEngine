@@ -111,8 +111,10 @@ struct asTypeString<R(ArgTypes...)> {
     std::string operator()() const {
         std::ostringstream os;
         os << asTypeString<R>()() << ' ' << this->name << '(';
-        ((os << asTypeString<ArgTypes>().as_param()() << ", "), ...);
-        os.seekp(-2, std::stringstream::cur);
+        if constexpr (sizeof...(ArgTypes) > 0) {
+            ((os << asTypeString<ArgTypes>().as_param()() << ", "), ...);
+            os.seekp(-2, std::stringstream::cur);
+        }
         os << ")";
         return String::stripRight(os.str());
     }
