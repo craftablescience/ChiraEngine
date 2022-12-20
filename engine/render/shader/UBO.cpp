@@ -16,8 +16,8 @@ void PerspectiveViewUBO::update(glm::mat4 proj, glm::mat4 view, glm::vec3 viewPo
     Renderer::updateUniformBufferPart(this->handle, 0 * glm::MAT4_SIZE, &proj, glm::MAT4_SIZE);
     Renderer::updateUniformBufferPart(this->handle, 1 * glm::MAT4_SIZE, &view, glm::MAT4_SIZE);
     Renderer::updateUniformBufferPart(this->handle, 2 * glm::MAT4_SIZE, glm::value_ptr(proj * view), glm::MAT4_SIZE);
-    Renderer::updateUniformBufferPart(this->handle, 3 * glm::MAT4_SIZE, glm::value_ptr(glm::vec4{viewPos, 1.0}), glm::VEC4_SIZE);
-    Renderer::updateUniformBufferPart(this->handle, (3 * glm::MAT4_SIZE) + glm::VEC4_SIZE, glm::value_ptr(glm::vec4{viewLookDir, 1.0}), glm::VEC4_SIZE);
+    Renderer::updateUniformBufferPart(this->handle, 3 * glm::MAT4_SIZE, glm::value_ptr(glm::vec4{viewPos, 1.0}), glm::VEC4F_SIZE);
+    Renderer::updateUniformBufferPart(this->handle, (3 * glm::MAT4_SIZE) + glm::VEC4F_SIZE, glm::value_ptr(glm::vec4{viewLookDir, 1.0}), glm::VEC4F_SIZE);
 }
 
 LightsUBO::LightsUBO() : UniformBufferObject("LIGHTS") {}
@@ -41,8 +41,8 @@ void LightsUBO::update(DirectionalLight* directionalLights[], PointLight* pointL
         }
 
         glm::vec4 dir{glm::eulerAngles(light->getRotation()), 0.f};
-        Renderer::updateUniformBufferPart(this->handle, position, &dir, glm::VEC4_SIZE);
-        position += glm::VEC4_SIZE;
+        Renderer::updateUniformBufferPart(this->handle, position, &dir, glm::VEC4F_SIZE);
+        position += glm::VEC4F_SIZE;
 
         Renderer::updateUniformBufferPart(this->handle, position, light->getLightData(), sizeof(DirectionalLightData));
         position += sizeof(DirectionalLightData);
@@ -58,8 +58,8 @@ void LightsUBO::update(DirectionalLight* directionalLights[], PointLight* pointL
         }
 
         glm::vec4 pos{light->getGlobalPosition(), 0.f};
-        Renderer::updateUniformBufferPart(this->handle, position, &pos, glm::VEC4_SIZE);
-        position += glm::VEC4_SIZE;
+        Renderer::updateUniformBufferPart(this->handle, position, &pos, glm::VEC4F_SIZE);
+        position += glm::VEC4F_SIZE;
 
         Renderer::updateUniformBufferPart(this->handle, position, light->getLightData(), sizeof(PointLightData));
         position += sizeof(PointLightData);
@@ -75,12 +75,12 @@ void LightsUBO::update(DirectionalLight* directionalLights[], PointLight* pointL
         }
 
         glm::vec4 pos{light->getGlobalPosition(), 0.f};
-        Renderer::updateUniformBufferPart(this->handle, position, &pos, glm::VEC4_SIZE);
-        position += glm::VEC4_SIZE;
+        Renderer::updateUniformBufferPart(this->handle, position, &pos, glm::VEC4F_SIZE);
+        position += glm::VEC4F_SIZE;
 
         glm::vec4 dir{glm::eulerAngles(light->getRotation()), 0.f};
-        Renderer::updateUniformBufferPart(this->handle, position, &dir, glm::VEC4_SIZE);
-        position += glm::VEC4_SIZE;
+        Renderer::updateUniformBufferPart(this->handle, position, &dir, glm::VEC4F_SIZE);
+        position += glm::VEC4F_SIZE;
 
         Renderer::updateUniformBufferPart(this->handle, position, light->getLightData(), sizeof(SpotLightData));
         position += sizeof(SpotLightData);
@@ -88,5 +88,5 @@ void LightsUBO::update(DirectionalLight* directionalLights[], PointLight* pointL
     position += SPOT_LIGHT_DATA_SIZE * nullLights;
 
     glm::vec4 counts{numberOfLights, 1.f};
-    Renderer::updateUniformBufferPart(this->handle, position, &counts, glm::VEC4_SIZE);
+    Renderer::updateUniformBufferPart(this->handle, position, &counts, glm::VEC4F_SIZE);
 }

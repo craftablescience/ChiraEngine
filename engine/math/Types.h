@@ -25,7 +25,7 @@ using vec4ui = vec<4, unsigned int>;
 using vec4f  = vec<4, float>;
 using vec4d  = vec<4, double>;
 
-constexpr const std::size_t VEC4_SIZE = sizeof(vec4f);
+constexpr const std::size_t VEC4F_SIZE = sizeof(vec4f);
 constexpr const std::size_t MAT4_SIZE = sizeof(mat4);
 
 } // namespace glm
