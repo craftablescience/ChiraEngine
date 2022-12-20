@@ -129,5 +129,5 @@ private:
 
 } // namespace chira
 
-#define CHIRA_CREATE_LOG(name) static LogChannel LOG_##name{#name}
-#define CHIRA_CREATE_LOG_SHARED(name) LogChannel LOG_##name{#name}
+#define CHIRA_CREATE_LOG(name) chira::LogChannel LOG_##name{#name}
+#define CHIRA_GET_LOG(name) extern chira::LogChannel LOG_##name

@@ -33,7 +33,7 @@ inline void breakInDebugger() {
 
 } // namespace chira
 
-extern chira::LogChannel LOG_ASSERT;
+CHIRA_GET_LOG(ASSERT);
 
 // Leave outside the Chira namespace so it can be conditionally replaced with a macro
 // (why did modern compilers not implement this??)
