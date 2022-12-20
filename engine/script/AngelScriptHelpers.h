@@ -3,7 +3,7 @@
 #include <string>
 #include <sstream>
 #include <core/Platform.h>
-#include <utility/String.h>
+#include <utility/Concepts.h>
 
 #if defined(CHIRA_COMPILER_GNU) || defined(CHIRA_COMPILER_CLANG)
     #include <cxxabi.h>
@@ -13,7 +13,7 @@
 /*
  * Code contents adapted from the first half of https://accu.org/journals/overload/18/95/golodetz_1608/
  * Notable changes include using variadic templates to register functions with any amount of arguments,
- * as well as getting the name of a type as a string dynamically.
+ * getting the name of a type as a string dynamically, and fixing registration of pointers to primitives.
  */
 
 namespace chira {
@@ -54,25 +54,28 @@ struct asTypeString : asSimpleTypeString {
     }
 };
 
-template<>
-struct asTypeString<std::string> : asSimpleTypeString {
-    explicit asTypeString(const std::string& name_ = "") : asSimpleTypeString(name_) {}
-    [[nodiscard]] std::string type() const override {
-        return "string";
-    }
-};
-
 template<typename T>
 struct asTypeString<const T> : asTypeString<T> {
     explicit asTypeString(const std::string& name_ = "") : asTypeString<T>(name_) {
-        this->prefix = "const ";
+        this->prefix = "const";
     }
     asTypeString& as_param() {
         return *this;
     }
 };
 
-template<typename T>
+template<CArithmetic T>
+struct asTypeString<T*> : asTypeString<T> {
+    explicit asTypeString(const std::string& name_ = "") : asTypeString<T>(name_) {
+        this->suffix = "&";
+    }
+    asTypeString& as_param() {
+        this->suffix = "&out";
+        return *this;
+    }
+};
+
+template<CNonArithmetic T>
 struct asTypeString<T*> : asTypeString<T> {
     explicit asTypeString(const std::string& name_ = "") : asTypeString<T>(name_) {
         this->suffix = "@";
@@ -102,6 +105,15 @@ struct asTypeString<const T&> : asTypeString<T> {
     }
 };
 
+// Specialize string type
+template<>
+struct asTypeString<std::string> : asSimpleTypeString {
+    explicit asTypeString(const std::string& name_ = "") : asSimpleTypeString(name_) {}
+    [[nodiscard]] std::string type() const override {
+        return "string";
+    }
+};
+
 template<typename R, typename... ArgTypes>
 struct asTypeString<R(ArgTypes...)> {
     std::string name;
@@ -111,10 +123,12 @@ struct asTypeString<R(ArgTypes...)> {
     std::string operator()() const {
         std::ostringstream os;
         os << asTypeString<R>()() << ' ' << this->name << '(';
-        ((os << asTypeString<ArgTypes>().as_param()() << ", "), ...);
-        os.seekp(-2, std::stringstream::cur);
+        if constexpr (sizeof...(ArgTypes) > 0) {
+            ((os << asTypeString<ArgTypes>().as_param()() << ","), ...);
+            os.seekp(-1, std::stringstream::cur);
+        }
         os << ")";
-        return String::stripRight(os.str());
+        return os.str();
     }
 };
 
