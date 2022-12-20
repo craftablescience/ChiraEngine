@@ -10,6 +10,7 @@ namespace chira {
         EditorPlugin(std::string ID);
         std::string getID();
         std::function<void()> doPlugin;
+        void setVisible(bool visible);
         
         private:
         std::string ID;
