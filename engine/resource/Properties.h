@@ -61,7 +61,7 @@ template<class C>
 nlohmann::json toJSON(C& obj) {
     nlohmann::json out;
 
-    const auto numProperties = std::tuple_size<decltype(C::props)>::value;
+    constexpr auto numProperties = std::tuple_size_v<decltype(C::props)>;
     forSequence(std::make_index_sequence<numProperties>{}, [&](auto i) {
         const auto property = std::get<i>(C::props);
         if (property.memberFuncGetter) {
