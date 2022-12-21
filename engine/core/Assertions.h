@@ -34,8 +34,6 @@ inline void breakInDebugger() {
 
 } // namespace chira
 
-CHIRA_GET_LOG(ASSERT);
-
 // Leave outside the Chira namespace so it can be conditionally replaced with a macro
 // (why did modern compilers not implement this??)
 #ifdef CHIRA_USE_SOURCE_LOCATION
@@ -49,6 +47,7 @@ inline void runtime_assert(bool shouldAssert, std::string_view message, const st
             "In function: " + location.function_name() + '\n' +
             "At line: " + std::to_string(location.line()) + "\n\n" +
             message.data();
+    CHIRA_GET_LOG(ASSERT);
     LOG_ASSERT.error(assertMsg);
 
 #ifdef DEBUG
