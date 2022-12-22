@@ -17,3 +17,7 @@ void EditorPlugin::doPlugin() {
 std::string EditorPlugin::getID() {
     return this->ID;
 }
+
+EditorPlugin::~EditorPlugin() {
+    this->script.callFunction<void>("stop");
+}

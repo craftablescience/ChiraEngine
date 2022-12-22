@@ -40,13 +40,26 @@ bool about_open = false;
 [[maybe_unused]]
 static ConCommand load_tool{"load_tool", "Attempts to load the given editor plugin.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
     for (const auto& name : args) {
-        LOG_EDITOR.info("Attempting to load tool '"+name+"'...");
+        LOG_EDITOR.info("Loading tool \"{}\"...", name);
         MainEditorPanel *panel = Engine::getWindow()->getPanel<MainEditorPanel>(mpid);
-        // if (panel->getTool(name) != nullptr) {
-        //     LOG_EDITOR.error("Tool '"+name+"' is already loaded!");
-        // } else {
+        if (panel->getTool(name) != nullptr) {
+            LOG_EDITOR.error("A tool with ID \"{}\" is already loaded!", name);
+        } else {
             panel->addTool(new EditorPlugin(name));
-        // }
+        }
+    }
+}};
+
+[[maybe_unused]]
+static ConCommand unload_tool{"unload_tool", "Unloads a loaded tool.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
+    for (const auto& name : args) {
+        LOG_EDITOR.info("Unloading tool \"{}\"...", name);
+        MainEditorPanel *panel = Engine::getWindow()->getPanel<MainEditorPanel>(mpid);
+        if (panel->getTool(name) != nullptr) {
+            panel->removeTool(name);
+        } else {
+            LOG_EDITOR.error("No tool with ID \"{}\" has been loaded.", name);
+        }
     }
 }};
 
@@ -83,11 +96,26 @@ void MainEditorPanel::addTool(EditorPlugin *tool) {
 }
 
 EditorPlugin *MainEditorPanel::getTool(std::string name) {
+    if (this->editorplugins.empty())
+        return nullptr;
     for (EditorPlugin* tool : this->editorplugins) {
         if (tool->getID() == name) {
             return tool;
         }
     }
+    return nullptr;
+}
+
+void MainEditorPanel::removeTool(std::string name) {
+    this->editorplugins.erase(
+        std::remove_if(this->editorplugins.begin(), this->editorplugins.end(), 
+        [&name](EditorPlugin* plugin) {
+        if (plugin->getID() == name) {
+            delete plugin;
+            return true;
+        }
+        return false;
+    }), this->editorplugins.end());
 }
 
 void MainEditorPanel::preRenderContents() {

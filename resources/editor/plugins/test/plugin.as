@@ -14,6 +14,6 @@ void doPlugin() {
     }
 }
 
-void setVisible() {
-    p_visible = true;
+void setVisible(bool visible) {
+    p_visible = visible;
 }

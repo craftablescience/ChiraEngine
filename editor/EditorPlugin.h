@@ -8,6 +8,7 @@ namespace chira {
     class EditorPlugin {
         public:
         EditorPlugin(std::string ID);
+        ~EditorPlugin();
         std::string getID();
         void doPlugin();
         void setVisible(bool visible);
@@ -15,5 +16,19 @@ namespace chira {
         private:
         std::string ID;
         AngelScriptHolder script;
+    };
+
+    class EditorTool {
+    public:
+        EditorTool(std::string ID);
+        virtual void renderContents();
+
+        [[nodiscard]] std::string getID() const;
+        [[nodiscard]] bool isVisible() const;
+        void setVisible(bool visible);
+
+    protected:
+        std::string ID;
+        bool visible = true;
     };
 } // namespace chira
