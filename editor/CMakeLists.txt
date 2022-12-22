@@ -32,7 +32,7 @@ if(WIN32)
         add_custom_target(
                 CopyEditorIcon
                 ALL
-                COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/windows/icon.ico ${CMAKE_BINARY_DIR}/resources/platform/windows/icon.ico)
+                COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/../resources/platform/windows/icon.ico ${CMAKE_BINARY_DIR}/resources/platform/windows/icon.ico)
         add_dependencies(ChiraEditor CopyEditorIcon)
 endif()
 
@@ -62,8 +62,8 @@ if(CHIRA_EDITOR_BUILD_INSTALLER)
                 set(CPACK_GENERATOR "Bundle" CACHE STRING "" FORCE)
                 set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_CURRENT_SOURCE_DIR}/branding/github/readme_banner.png" CACHE STRING "" FORCE)
                 set(CPACK_DMG_SLA_USE_RESOURCE_FILE_LICENSE TRUE CACHE BOOL "" FORCE)
-                set(CPACK_BUNDLE_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/macOS/Info.plist CACHE STRING "" FORCE)
-                set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/macOS/AppIcon.icns CACHE STRING "" FORCE)
+                set(CPACK_BUNDLE_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/../resources/platform/macOS/Info.plist CACHE STRING "" FORCE)
+                set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/../resources/platform/macOS/AppIcon.icns CACHE STRING "" FORCE)
         elseif(UNIX)
                 #todo: DEB and/or RPM
                 message(FATAL_ERROR "Sorry, no Linux installer is supported yet.")
