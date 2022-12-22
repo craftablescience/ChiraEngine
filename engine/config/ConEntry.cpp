@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <utility>
+#include <fmt/core.h>
 #include <config/Config.h>
 
 using namespace chira;
@@ -18,8 +19,30 @@ static ConCommand info{"info", "Prints the description of the given convar(s) or
         } else if (ConVarRegistry::hasConVar(name)) {
             LOG_CONENTRY.infoImportant(std::string{*ConVarRegistry::getConVar(name)});
         } else {
-            LOG_CONENTRY.infoImportant("Cannot find convar or concommand \"{}\"!", name);
+            LOG_CONENTRY.infoImportant(fmt::format("Cannot find convar or concommand \"{}\"!", name));
         }
+    }
+}};
+
+[[maybe_unused]]
+static ConCommand find{"find", "Finds convars and/or concommands from the given substring.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
+    bool resultFound = false;
+    for (const auto& substr : args) {
+        for (const auto& concommand: ConCommandRegistry::getConCommandList()) {
+            if (concommand.find(substr) != std::string::npos) {
+                LOG_CONENTRY.infoImportant(std::string{*ConCommandRegistry::getConCommand(concommand)});
+                resultFound = true;
+            }
+        }
+        for (const auto& convar: ConVarRegistry::getConVarList()) {
+            if (convar.find(substr) != std::string::npos) {
+                LOG_CONENTRY.infoImportant(std::string{*ConVarRegistry::getConVar(convar)});
+                resultFound = true;
+            }
+        }
+    }
+    if (!resultFound) {
+        LOG_CONENTRY.infoImportant("No results.");
     }
 }};
 
@@ -117,11 +140,10 @@ std::vector<ConCommand*>& ConCommandRegistry::getConCommands() {
 }
 
 bool ConCommandRegistry::registerConCommand(ConCommand* concommand) {
-    if (!ConCommandRegistry::hasConCommand(concommand->getName())) {
-        ConCommandRegistry::getConCommands().push_back(concommand);
-        return true;
-    }
-    return false;
+    if (ConCommandRegistry::hasConCommand(concommand->getName()))
+        return false;
+    ConCommandRegistry::getConCommands().push_back(concommand);
+    return true;
 }
 
 void ConCommandRegistry::deregisterConCommand(ConCommand* concommand) {
@@ -158,41 +180,41 @@ JSONSettingsLoader& ConVarRegistry::getConVarCache() {
 }
 
 bool ConVarRegistry::registerConVar(ConVar* convar) {
-    if (!ConVarRegistry::hasConVar(convar->getName())) {
-        ConVarRegistry::getConVars().push_back(convar);
-        if (convar->hasFlag(CON_FLAG_CACHE) && ConVarRegistry::getConVarCache().hasValue(convar->getName().data())) {
-            // There's an entry for the convar in cache, load it
-            switch (convar->getType()) {
-                using enum ConVarType;
-                case BOOLEAN: {
-                    auto value = convar->getValue<bool>();
-                    ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
-                    convar->setValue(value, false);
-                    break;
-                }
-                case INTEGER: {
-                    auto value = convar->getValue<int>();
-                    ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
-                    convar->setValue(value, false);
-                    break;
-                }
-                case DOUBLE: {
-                    auto value = convar->getValue<double>();
-                    ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
-                    convar->setValue(value, false);
-                    break;
-                }
-                case STRING: {
-                    auto value = convar->getValue<std::string>();
-                    ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
-                    convar->setValue(value, false);
-                    break;
-                }
+    if (ConVarRegistry::hasConVar(convar->getName()))
+        return false;
+    ConVarRegistry::getConVars().push_back(convar);
+
+    if (convar->hasFlag(CON_FLAG_CACHE) && ConVarRegistry::getConVarCache().hasValue(convar->getName().data())) {
+        // There's an entry for the convar in cache, load it
+        switch (convar->getType()) {
+            using enum ConVarType;
+            case BOOLEAN: {
+                auto value = convar->getValue<bool>();
+                ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+                convar->setValue(value, false);
+                break;
+            }
+            case INTEGER: {
+                auto value = convar->getValue<int>();
+                ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+                convar->setValue(value, false);
+                break;
+            }
+            case DOUBLE: {
+                auto value = convar->getValue<double>();
+                ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+                convar->setValue(value, false);
+                break;
+            }
+            case STRING: {
+                auto value = convar->getValue<std::string>();
+                ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+                convar->setValue(value, false);
+                break;
             }
         }
-        return true;
     }
-    return false;
+    return true;
 }
 
 void ConVarRegistry::deregisterConVar(ConVar* convar) {

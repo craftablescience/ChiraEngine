@@ -100,6 +100,7 @@ void ConsolePanel::renderContents() {
     char buf[1024] {0};
     if (ImGui::InputText("CommandInput", buf, sizeof(buf) - 1, ImGuiInputTextFlags_EnterReturnsTrue)) {
         reclaimFocus = true;
+        LOG_CONSOLE.info(buf);
         this->processConsoleMessage(buf);
     }
     ImGui::PopItemWidth();
