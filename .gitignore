@@ -28,3 +28,9 @@ ChiraEngine.xcodeproj/xcuserdata
 # KDevelop
 *.kdev4
 .kdev4/
+
+# clangd
+.cache/
+
+# what
+steam_appid.txt
