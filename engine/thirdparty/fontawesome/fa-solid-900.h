@@ -1,3 +1,4 @@
+#pragma once
 // File: 'fa-solid-900.ttf' (191112 bytes)
 // Exported using binary_to_compressed_c.cpp
 static const unsigned int font_awesome_compressed_size = 130927;
