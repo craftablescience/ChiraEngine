@@ -4,11 +4,14 @@ using namespace chira;
 
 EditorPlugin::EditorPlugin(std::string ID) : script("file://plugins/"+ID+"/plugin.as") {
     this->ID = ID;
-    this->doPlugin = this->script.getFunction("doPlugin");
 }
 
 void EditorPlugin::setVisible(bool visible) {
-    this->script.getFunction("setVisible")();
+    this->script.callFunction<void>("setVisible", visible);
+}
+
+void EditorPlugin::doPlugin() {
+    this->script.callFunction<void>("doPlugin");
 }
 
 std::string EditorPlugin::getID() {

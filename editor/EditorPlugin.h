@@ -9,7 +9,7 @@ namespace chira {
         public:
         EditorPlugin(std::string ID);
         std::string getID();
-        std::function<void()> doPlugin;
+        void doPlugin();
         void setVisible(bool visible);
         
         private:
