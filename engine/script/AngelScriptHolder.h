@@ -9,6 +9,8 @@
 
 namespace chira {
 
+// CHIRA_GET_LOG(ANGELSCRIPT);
+
 class AngelScriptHolder {
 public:
     explicit AngelScriptHolder(std::string identifier_);
@@ -19,7 +21,6 @@ public:
 
     template<typename R, typename... Args>
     [[nodiscard]] R callFunction(std::string_view funcName, Args... args) const {
-        CHIRA_GET_LOG(ANGELSCRIPT);
 
         const auto funcNameFull = asTypeString<R(Args...)>(funcName.data())();
 
@@ -53,7 +54,7 @@ public:
             (addArg.template operator()<decltype(args)>(argNum, args), ...);
 
             if (int r = this->context->Execute(); r != asEXECUTION_FINISHED) {
-                LOG_ANGELSCRIPT.error("An exception in \"{}\" occurred:\n{}", this->identifier, this->context->GetExceptionString());
+                // LOG_ANGELSCRIPT.error("An exception in \"{}\" occurred:\n{}", this->identifier, this->context->GetExceptionString());
             }
 
             if constexpr (std::is_same_v<R, void>) {
@@ -84,7 +85,7 @@ public:
                 }
             }
         } else {
-            LOG_ANGELSCRIPT.error(R"(Script at "{}" does not have a function with signature "{}")", this->identifier, funcNameFull);
+            // LOG_ANGELSCRIPT.error(R"(Script at "{}" does not have a function with signature "{}")", this->identifier, funcNameFull);
             if constexpr (std::is_same_v<R, void>) {
                 return;
             } else {
