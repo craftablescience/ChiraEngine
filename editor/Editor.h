@@ -13,8 +13,8 @@ public:
     void preRenderContents() override;
     void renderContents() override;
     void addTool(EditorPlugin *tool);
-    void removeTool(std::string name);
-    EditorPlugin *getTool(std::string name);
+    void removeTool(const std::string& name);
+    EditorPlugin *getTool(const std::string& name);
     [[nodiscard]] std::string_view getMeshId() const;
 
     std::vector<EditorPlugin*> editorplugins;

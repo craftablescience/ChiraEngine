@@ -7,7 +7,7 @@
 namespace chira {
     class EditorPlugin {
         public:
-        EditorPlugin(std::string ID);
+        EditorPlugin(const std::string& ID);
         ~EditorPlugin();
         std::string getID();
         void doPlugin();
@@ -20,7 +20,7 @@ namespace chira {
 
     class EditorTool {
     public:
-        EditorTool(std::string ID);
+        EditorTool(const std::string& ID);
         virtual void renderContents();
 
         [[nodiscard]] std::string getID() const;

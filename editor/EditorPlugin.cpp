@@ -2,7 +2,7 @@
 
 using namespace chira;
 
-EditorPlugin::EditorPlugin(std::string ID) : script("file://plugins/"+ID+"/plugin.as") {
+EditorPlugin::EditorPlugin(const std::string& ID) : script("file://plugins/"+ID+"/plugin.as") {
     this->ID = ID;
 }
 
