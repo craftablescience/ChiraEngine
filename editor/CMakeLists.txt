@@ -9,13 +9,13 @@ list(APPEND CHIRA_EDITOR_SOURCES
 )
 
 if(WIN32)
-        list(APPEND CHIRA_EDITOR_SOURCES ${CMAKE_CURRENT_LIST_DIR}/resources/platform/windows/icon.rc)
+        list(APPEND CHIRA_EDITOR_SOURCES ${CMAKE_CURRENT_LIST_DIR}/../resources/platform/windows/icon.rc)
 endif()
 
 if(APPLE)
         list(APPEND CHIRA_APPLE_BUNDLE_FILES
-                ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/macOS/AppIcon.icns
-                ${CMAKE_CURRENT_SOURCE_DIR}/resources/platform/macOS/Info.plist)
+                ${CMAKE_CURRENT_SOURCE_DIR}/../resources/platform/macOS/AppIcon.icns
+                ${CMAKE_CURRENT_SOURCE_DIR}/../resources/platform/macOS/Info.plist)
         list(APPEND CHIRA_EDITOR_SOURCES ${CHIRA_APPLE_BUNDLE_FILES})
 endif()
 
