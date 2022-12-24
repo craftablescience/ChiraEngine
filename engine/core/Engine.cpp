@@ -156,10 +156,14 @@ void Engine::run() {
                     break;
                 case SDL_KEYDOWN:
                     for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
-                        if (keyEvent.getEvent() == event.key.keysym.sym &&
-                                ((keyEvent.getEventType() == Input::KeyEventType::PRESSED && event.key.state == SDL_PRESSED)  ||
-                                (keyEvent.getEventType() == Input::KeyEventType::RELEASED && event.key.state == SDL_RELEASED) ||
-                                (keyEvent.getEventType() == Input::KeyEventType::REPEATED && event.key.repeat))) {
+                        if (keyEvent.getEvent() == event.key.keysym.sym && keyEvent.getEventType() == Input::KeyEventType::PRESSED) {
+                            keyEvent();
+                        }
+                    }
+                    break;
+                case SDL_KEYUP:
+                    for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
+                        if (keyEvent.getEvent() == event.key.keysym.sym && keyEvent.getEventType() == Input::KeyEventType::RELEASED) {
                             keyEvent();
                         }
                     }
@@ -195,6 +199,15 @@ void Engine::run() {
                 default:
                     // todo(input): handle joystick / game controller inputs!
                     break;
+            }
+        }
+
+        // Handle repeating events
+        // This is a pointer to a static variable in SDL so this is safe
+        static const auto* keyStates = SDL_GetKeyboardState(nullptr);
+        for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
+            if (keyStates[SDL_GetScancodeFromKey(keyEvent.getEvent())] && keyEvent.getEventType() == Input::KeyEventType::REPEATED) {
+                keyEvent();
             }
         }
 
