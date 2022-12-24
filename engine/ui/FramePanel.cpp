@@ -4,14 +4,10 @@
 
 using namespace chira;
 
-FramePanel::FramePanel(const std::string& title_, bool startVisible, ImVec2 windowSize, bool enforceSize)
-    : IPanel(title_, startVisible, windowSize, enforceSize), currentSize(windowSize.x, windowSize.y) {
-    this->frame = new Frame{static_cast<int>(windowSize.x), static_cast<int>(windowSize.y)};
-}
-
-FramePanel::~FramePanel() {
-    delete this->frame;
-}
+FramePanel::FramePanel(const std::string& title_, Frame* frame_, bool startVisible, ImVec2 windowSize, bool enforceSize)
+    : IPanel(title_, startVisible, windowSize, enforceSize)
+    , frame(frame_)
+    , currentSize(windowSize.x, windowSize.y) {}
 
 void FramePanel::renderContents() {
     if (ImGui::BeginChild("__internal_frame__")) {
