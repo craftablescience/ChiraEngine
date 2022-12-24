@@ -157,6 +157,7 @@ void Device::refresh() {
 
     Renderer::startImGuiFrame(this->window);
 
+    this->frame.update();
     this->frame.render(glm::identity<glm::mat4>());
     glViewport(0, 0, this->width, this->height);
 

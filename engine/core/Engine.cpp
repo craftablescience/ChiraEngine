@@ -113,8 +113,6 @@ void Engine::run() {
         Engine::lastTime = Engine::currentTime;
         Engine::currentTime = SDL_GetTicks64();
 
-        Engine::device->refresh();
-
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             // todo(input): check this function, if ImGui processed an event we should ignore that event
@@ -211,8 +209,7 @@ void Engine::run() {
             }
         }
 
-        Engine::device->getFrame()->update();
-        Engine::device->getFrame()->render(glm::identity<glm::mat4>());
+        Engine::device->refresh();
 
 #ifdef CHIRA_USE_DISCORD
         if (DiscordRPC::initialized()) {
