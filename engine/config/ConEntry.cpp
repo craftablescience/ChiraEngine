@@ -7,6 +7,7 @@
 using namespace chira;
 
 CHIRA_CREATE_LOG(CONENTRY);
+CHIRA_CREATE_LOG(CONVAR);
 
 [[maybe_unused]]
 ConCommand info{"info", "Prints the description of the given convar(s) or concommand(s).", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)

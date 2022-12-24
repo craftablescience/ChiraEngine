@@ -7,6 +7,8 @@
 #include <core/Logger.h>
 #include "AngelScriptVM.h"
 
+CHIRA_GET_LOG(ANGELSCRIPT);
+
 namespace chira {
 
 class AngelScriptHolder {
@@ -19,14 +21,13 @@ public:
 
     template<typename R, typename... Args>
     [[nodiscard]] R callFunction(std::string_view funcName, Args... args) const {
-        CHIRA_GET_LOG(ANGELSCRIPT);
-
         const auto funcNameFull = asTypeString<R(Args...)>(funcName.data())();
 
         if (auto* func = this->module->GetFunctionByDecl(funcNameFull.c_str()); func) {
             this->context->Prepare(func);
 
-            const auto addArg = [&] <typename T> (int& argNum, T arg) {
+            int argNum = 0;
+            const auto addArg = [&] <typename T> (T arg) -> void {
                 // todo(as): handle non-primitives
                 // todo(as): check if its a pointer or a reference
                 if constexpr (std::is_arithmetic_v<T>) {
@@ -48,9 +49,7 @@ public:
                 }
                 argNum++;
             };
-
-            int argNum = 0;
-            (addArg.template operator()<decltype(args)>(argNum, args), ...);
+            (addArg.template operator()<decltype(args)>(args), ...);
 
             if (int r = this->context->Execute(); r != asEXECUTION_FINISHED) {
                 LOG_ANGELSCRIPT.error("An exception in \"{}\" occurred:\n{}", this->identifier, this->context->GetExceptionString());

@@ -11,6 +11,8 @@
 #include <core/Logger.h>
 #include <loader/settings/JSONSettingsLoader.h>
 
+CHIRA_GET_LOG(CONVAR);
+
 namespace chira {
 
 enum ConFlags {
@@ -140,8 +142,7 @@ public:
     [[nodiscard]] ConVarType getType() const;
     [[nodiscard]] std::string_view getTypeAsString() const;
 
-    template<typename T>
-    requires ConVarValidType<T>
+    template<ConVarValidType T>
     inline T getValue() const {
         if constexpr (std::is_same_v<T, std::string>) {
             return this->value;
@@ -157,8 +158,6 @@ public:
     }
 
     void setValue(ConVarValidType auto newValue, bool runCallback = true) {
-        CHIRA_CREATE_LOG(CONVAR);
-
         if (this->hasFlag(CON_FLAG_CHEAT) && !ConVar::areCheatsEnabled()) {
             LOG_CONVAR.error("Cannot set value of cheat-protected convar with cheats disabled.");
             return;
@@ -215,7 +214,7 @@ public:
         }
     }
 
-    [[nodiscard]] explicit operator std::string() const override {
+    [[nodiscard]] explicit inline operator std::string() const override {
         return std::string{this->getName()} + ": " + this->getTypeAsString().data() + " - " + this->getDescription().data();
     }
 
