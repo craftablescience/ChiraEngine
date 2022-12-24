@@ -4,33 +4,26 @@ using namespace chira;
 
 Script::Script(std::string name_, const std::string& scriptID)
     : Entity(std::move(name_))
-    , script(scriptID) {
-    this->updateFunc = this->script.getFunction("update");
-    this->renderFunc = this->script.getFunction("render");
-}
+    , script(scriptID) {}
 
 Script::Script(const std::string& scriptID)
     : Entity()
-    , script(scriptID) {
-    this->script.getFunction("init")();
-    this->updateFunc = this->script.getFunction("update");
-    this->renderFunc = this->script.getFunction("render");
-}
+    , script(scriptID) {}
 
 void Script::onAddedToTree() {
-    this->script.getFunction("init")();
+    this->script.callFunction<void>("init");
 }
 
 void Script::update() {
-    this->updateFunc();
+    this->script.callFunction<void>("update");
     Entity::update();
 }
 
 void Script::render(glm::mat4 parentTransform) {
-    this->renderFunc();
+    this->script.callFunction<void>("render");
     Entity::render(parentTransform);
 }
 
 Script::~Script() {
-    this->script.getFunction("stop")();
+    this->script.callFunction<void>("stop");
 }

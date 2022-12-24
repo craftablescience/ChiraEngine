@@ -9,7 +9,7 @@ using namespace chira;
 CHIRA_CREATE_LOG(I18N);
 
 [[maybe_unused]] // todo: set language based on system language
-static ConVar ui_language{"ui_language", std::string{"en"}, "The language code used to get translated strings.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+ConVar ui_language{"ui_language", std::string{"en"}, "The language code used to get translated strings.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
 
 const std::unordered_map<std::string,std::string>& TranslationManager::getCodeAndNamePairs() {
     static std::unordered_map<std::string, std::string> languageDefinitions {

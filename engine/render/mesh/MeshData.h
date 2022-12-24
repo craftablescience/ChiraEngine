@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
 #include <string>
-#include <glad/gl.h>
+#include <vector>
 #include <loader/mesh/IMeshLoader.h>
+#include <render/backend/RenderTypes.h>
 #include <render/material/MaterialFactory.h>
 
 namespace chira {
@@ -15,23 +15,24 @@ public:
     virtual ~MeshData();
     [[nodiscard]] SharedPointer<IMaterial> getMaterial() const;
     void setMaterial(SharedPointer<IMaterial> newMaterial);
-    [[nodiscard]] int getDepthFunction() const;
-    [[nodiscard]] int getCullType() const;
+    [[nodiscard]] MeshDepthFunction getDepthFunction() const;
+    void setDepthFunction(MeshDepthFunction function);
+    [[nodiscard]] MeshCullType getCullType() const;
+    void setCullType(MeshCullType type);
     [[nodiscard]] std::vector<byte> getMeshData(const std::string& meshLoader) const;
     void appendMeshData(const std::string& loader, const std::string& identifier);
 protected:
     bool initialized = false;
-    int drawMode = GL_STATIC_DRAW;
-    int depthFunction = GL_LEQUAL;
-    bool backfaceCulling = true;
-    int cullType = GL_BACK;
+    Renderer::MeshHandle handle{};
+    MeshDrawMode drawMode = MeshDrawMode::STATIC;
+    MeshDepthFunction depthFunction = MeshDepthFunction::LEQUAL;
+    MeshCullType cullType = MeshCullType::BACK;
     SharedPointer<IMaterial> material;
-    unsigned int vboHandle = 0, vaoHandle = 0, eboHandle = 0;
     std::vector<Vertex> vertices;
     std::vector<Index> indices;
-    /// Establishes the OpenGL buffers and copies the current mesh data into them.
+    /// Establishes the vertex buffers and copies the current mesh data into them.
     void setupForRendering();
-    /// Updates the OpenGL buffers with the current mesh data.
+    /// Updates the vertex buffers with the current mesh data.
     void updateMeshData();
     /// Does not call updateMeshData().
     void clearMeshData();

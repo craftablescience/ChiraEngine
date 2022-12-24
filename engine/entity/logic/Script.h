@@ -15,8 +15,6 @@ public:
     ~Script() override;
 private:
     AngelScriptHolder script;
-    std::function<void()> updateFunc;
-    std::function<void()> renderFunc;
 };
 
 } // namespace chira

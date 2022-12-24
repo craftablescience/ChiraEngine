@@ -25,6 +25,14 @@ To summarize the major features:
 
 The goal of the engine is to have as much customization as possible, while still maintaining ease of use.
 
+## Supported Platforms
+
+| Platform          | Graphics API |
+|-------------------|--------------|
+| Windows           | OpenGL 4.3   |
+| Linux             | OpenGL 4.3   |
+| macOS             | OpenGL 4.1   |
+
 ## Supported Compilers
 
 | Compiler (Latest) | Windows             | Linux     | macOS                    |
@@ -37,17 +45,19 @@ The goal of the engine is to have as much customization as possible, while still
 (\*) MinGW builds on Windows will work, but running the application outside your IDE will require you to copy some DLLs
 next to the executable. Check the GitHub Actions script to see which DLLs need copied from the MinGW bin directory.
 
-(\*\*) Homebrew LLVM/Clang is required because Apple Clang as of this time does not support certain C++ features that are used inside the engine.
+(\*\*) Homebrew LLVM/Clang is required because Apple Clang as of this time does not support certain C++20 features that are used inside the engine.
 
 ## Bundled Dependencies
 - AngelScript v2.35.1
 - Dear ImGui v1.89
 - Discord RPC
 - {fmt} v9.0.0
-- GLAD (OpenGL 4.1 Core, GL_KHR_debug extension)
-- GLFW v3.3.9
+- GLAD (OpenGL 4.1 Core / OpenGL 4.3 Core)
 - GLM v0.9.9.9
+- ImGui Filebrowser
+- LibLoader
 - nlohmann_json v3.10.5
+- SDL v2.26.1
 - stb_image v2.27
 - stduuid v1.1
 - TinyFileDialogs v3.8.8
@@ -62,8 +72,9 @@ next to the executable. Check the GitHub Actions script to see which DLLs need c
 - **CLion (recommended)**: The project will compile without any prior configuration, but you will need to install a few things first.
 
   On Debian-based distros, run:
-    - `sudo apt update && sudo apt install cmake build-essential xorg-dev mesa-common-dev mesa-utils`
-    
+  
+  `sudo apt update && sudo apt install cmake build-essential xorg-dev mesa-common-dev mesa-utils`
+
 ## Development (macOS)
 - **Required**: You must install llvm from homebrew as the default Apple Clang does not work properly. use the command `brew install llvm`.
     

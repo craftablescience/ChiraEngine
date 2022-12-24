@@ -1,6 +1,5 @@
 #include "String.h"
 
-#include <cctype>
 #include <algorithm>
 #include <sstream>
 #include <regex>
@@ -46,13 +45,13 @@ std::vector<std::string> String::split(const std::string& input, char delimiter)
 
 std::string String::toLower(std::string_view str) {
     std::string out{str};
-    std::transform(out.begin(), out.end(), out.begin(), ::tolower);
+    std::transform(out.begin(), out.end(), out.begin(), toLowerChar);
     return out;
 }
 
 std::string String::toUpper(std::string_view str) {
     std::string out{str};
-    std::transform(out.begin(), out.end(), out.begin(), ::toupper);
+    std::transform(out.begin(), out.end(), out.begin(), toUpperChar);
     return out;
 }
 

@@ -14,14 +14,15 @@ class Frame : public Group {
 public:
     Frame(std::string name_, int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
     Frame(int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
+    /// Deletes and recreates the existing framebuffer if one already exists.
+    /// If one doesn't exist, initialize a new framebuffer.
+    void recreateFramebuffer();
     void render(glm::mat4 parentTransform) override;
-    void render(unsigned int parentFBOHandle, int parentWidth, int parentHeight);
     ~Frame() override;
+    void useFrameBufferTexture(TextureUnit activeTextureUnit = TextureUnit::G0) const;
     [[nodiscard]] glm::vec3 getGlobalPosition() override;
     [[nodiscard]] const Frame* getFrame() const override;
     [[nodiscard]] Frame* getFrame() override;
-    [[nodiscard]] unsigned int getFramebufferHandle() const;
-    [[nodiscard]] unsigned int getColorTextureHandle() const;
     virtual void setFrameSize(glm::vec2i newSize);
     [[nodiscard]] glm::vec2i getFrameSize() const;
     [[nodiscard]] ColorRGB getBackgroundColor() const;
@@ -31,9 +32,10 @@ public:
     void setSkybox(const std::string& cubemapId);
     [[nodiscard]] SharedPointer<MaterialCubemap> getSkybox() const;
     [[nodiscard]] LightManager* getLightManager();
+    [[nodiscard]] Renderer::FrameBufferHandle getRawHandle() const;
 protected:
-    unsigned int fboHandle = 0, colorTexHandle = 0, rboHandle = 0;
     ColorRGB backgroundColor{};
+    Renderer::FrameBufferHandle handle{};
     int width = 0, height = 0;
     bool linearFiltering = true;
 
@@ -43,9 +45,6 @@ protected:
     Camera* mainCamera = nullptr;
 
     LightManager lightManager{};
-
-    /// Deletes the existing framebuffer if one already exists.
-    void createFramebuffer();
 };
 
 } // namespace chira

@@ -1,31 +1,37 @@
 #include "CommandLine.h"
 
-#include <config/ConEntry.h>
+#include <algorithm>
+#include <vector>
 
 using namespace chira;
 
-void CommandLine::initialize(int argc, const char* const argv[]) {
+// todo(cmd): set convars in init if option starts with a +
+// todo(cmd): glob string values like "hello there" into one value minus quotes
+
+std::vector<const char*> arguments{};
+
+void CommandLine::init(int argc, const char* const argv[]) {
     for (int i = 0; i < argc; i++) {
-        CommandLine::arguments.emplace_back(argv[i]);
+        arguments.emplace_back(argv[i]);
     }
 }
 
 bool CommandLine::has(std::string_view argument) {
-    return std::find(CommandLine::arguments.begin(), CommandLine::arguments.end(), argument) != CommandLine::arguments.end();
+    return std::find(arguments.begin(), arguments.end(), argument) != arguments.end();
 }
 
 std::string_view CommandLine::get(std::string_view argument) {
-    for (int i = 0; i < CommandLine::arguments.size() - 1; i++) {
-        if (argument == CommandLine::arguments.at(i)) {
-            return CommandLine::arguments.at(i + 1);
+    for (int i = 0; i < arguments.size() - 1; i++) {
+        if (argument == arguments.at(i)) {
+            return arguments.at(i + 1);
         }
     }
     return "";
 }
 
 std::string_view CommandLine::getProgramName() {
-    if (!CommandLine::arguments.empty()) {
-        return CommandLine::arguments.at(0);
+    if (!arguments.empty()) {
+        return arguments.at(0);
     }
     return "";
 }

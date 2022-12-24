@@ -10,32 +10,37 @@
 
 namespace chira::Serialize {
 
-template<class Class, typename T>
+template<class C, typename T>
 struct Property {
-    constexpr Property(T Class::*member_, std::string_view name_, T(Class::*memberFuncGetter_)(), void(Class::*memberFuncSetter_)(T))
-            : member(member_)
-            , name(name_)
-            , memberFuncGetter(memberFuncGetter_)
-            , memberFuncSetter(memberFuncSetter_) {}
+    constexpr Property(T C::*member_, std::string_view name_, T(C::*memberFuncGetter_)(), void(C::*memberFuncSetter_)(T))
+        : member(member_)
+        , name(name_)
+        , memberFuncGetter(memberFuncGetter_)
+        , memberFuncSetter(memberFuncSetter_) {}
 
     using Type = T;
 
-    T Class::*member;
+    T C::*member;
     std::string_view name;
-    T(Class::*memberFuncGetter)();
-    void(Class::*memberFuncSetter)(T);
+    T(C::*memberFuncGetter)();
+    void(C::*memberFuncSetter)(T);
 };
 
 // https://stackoverflow.com/questions/20405569/in-function-call-why-doesnt-nullptr-match-a-pointer-to-a-template-object
 // what the fuck C++
-template<class Class, typename T>
-constexpr auto createProperty(T Class::*member, std::string_view name, T(Class::*memberFuncGetter)() = static_cast<T(Class::*)()>(nullptr), void(Class::*memberFuncSetter)(T) = static_cast<void(Class::*)(T)>(nullptr)) {
-    return Property<Class, T>{member, name, memberFuncGetter, memberFuncSetter};
+template<class C, typename T>
+constexpr auto createProperty(T C::*member, std::string_view name, T(C::*memberFuncGetter)() = static_cast<T(C::*)()>(nullptr), void(C::*memberFuncSetter)(T) = static_cast<void(C::*)(T)>(nullptr)) {
+    return Property<C, T>{member, name, memberFuncGetter, memberFuncSetter};
 }
 
 template<class C>
 void fromJSON(C* obj, const nlohmann::json& data) {
-    const auto numProperties = std::tuple_size<decltype(C::props)>::value;
+    // Handle single inheritance, deserialize base class first
+    if constexpr (!std::is_same_v<void, typename C::InheritPropsFromClass>) {
+        fromJSON<typename C::InheritPropsFromClass>(obj, data);
+    }
+
+    constexpr auto numProperties = std::tuple_size_v<decltype(C::props)>;
     forSequence(std::make_index_sequence<numProperties>{}, [&](auto i) {
         const auto property = std::get<i>(C::props);
         using PropType = typename decltype(property)::Type;
@@ -57,11 +62,15 @@ C fromJSON(const nlohmann::json& data) {
     return obj;
 }
 
+/// Helper function for recursion
 template<class C>
-nlohmann::json toJSON(C& obj) {
-    nlohmann::json out;
+void toJSON(C& obj, nlohmann::json& out) {
+    // Handle single inheritance, serialize base class first
+    if constexpr (!std::is_same_v<void, typename C::InheritPropsFromClass>) {
+        toJSON<typename C::InheritPropsFromClass>(obj, out);
+    }
 
-    const auto numProperties = std::tuple_size<decltype(C::props)>::value;
+    constexpr auto numProperties = std::tuple_size_v<decltype(C::props)>;
     forSequence(std::make_index_sequence<numProperties>{}, [&](auto i) {
         const auto property = std::get<i>(C::props);
         if (property.memberFuncGetter) {
@@ -70,13 +79,21 @@ nlohmann::json toJSON(C& obj) {
             out[property.name] = obj.*(property.member);
         }
     });
+}
 
+nlohmann::json toJSON(auto& obj) {
+    nlohmann::json out;
+    toJSON(obj, out);
     return out;
 }
 
 } // namespace chira::Serialize
 
-#define CHIRA_PROPS static inline const auto props = std::make_tuple
+#define CHIRA_PROPS_INHERITED(clazz) \
+    using InheritPropsFromClass = clazz; \
+    static inline const auto props = std::make_tuple
+#define CHIRA_PROPS() CHIRA_PROPS_INHERITED(void)
+
 #define CHIRA_PROP(clazz, member) chira::Serialize::createProperty(&clazz::member, #member)
 #define CHIRA_PROP_NAMED(clazz, member, name) chira::Serialize::createProperty(&clazz::member, #name)
 #define CHIRA_PROP_GET(clazz, member, getter) chira::Serialize::createProperty(&clazz::member, #member, &clazz::getter)
