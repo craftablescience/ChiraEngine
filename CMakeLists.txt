@@ -164,6 +164,24 @@ if(APPLE)
 endif()
 
 
+# Basic ImGui sources
+list(APPEND IMGUI_HEADERS
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imconfig.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_internal.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imstb_rectpack.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imstb_textedit.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imstb_truetype.h
+        # Plus ImGui-Filebrowser for convenience
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser/imfilebrowser.h)
+list(APPEND IMGUI_SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_demo.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_draw.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_tables.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_widgets.cpp)
+
+
 # Figure out what render backend and device backend we are using
 if(CHIRA_BUILD_HEADLESS)
     #todo(render): implement a headless mode for testing
@@ -194,7 +212,32 @@ else()
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs)
     list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs)
     list(APPEND CHIRA_ENGINE_LINK_LIBRARIES tinyfiledialogs)
+
+    # Add ImGui platform
+    list(APPEND IMGUI_HEADERS
+            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_sdl.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_opengl3.h)
+    list(APPEND IMGUI_SOURCES
+            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_sdl.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_opengl3.cpp)
+    list(APPEND IMGUI_INCLUDE_DIRS
+            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/sdl2/include)
+    list(APPEND IMGUI_LINK_LIBRARIES SDL2::SDL2)
 endif()
+
+
+# IMGUI
+list(APPEND IMGUI_SOURCES ${IMGUI_HEADERS})
+add_library(imgui STATIC ${IMGUI_SOURCES})
+target_include_directories(imgui PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui
+        ${IMGUI_INCLUDE_DIRS})
+target_link_libraries(imgui PRIVATE ${IMGUI_LINK_LIBRARIES})
+
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES imgui)
 
 
 # ANGELSCRIPT
@@ -203,6 +246,7 @@ list(APPEND CHIRA_ENGINE_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/addons
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/include)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES angelscript)
+
 
 # DISCORD
 if(CHIRA_USE_DISCORD)
@@ -213,22 +257,18 @@ if(CHIRA_USE_DISCORD)
     list(APPEND CHIRA_ENGINE_LINK_LIBRARIES discord-rpc)
 endif()
 
+
 # FMT
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/fmt)
 list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/fmt/include)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES fmt::fmt)
+
 
 # GLM
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glm)
 target_compile_definitions(glm INTERFACE GLM_FORCE_SILENT_WARNINGS)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glm)
 
-# IMGUI & IMGUI-FILEBROWSER
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui)
-list(APPEND CHIRA_ENGINE_INCLUDE_DIRS
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser)
-list(APPEND CHIRA_ENGINE_LINK_LIBRARIES imgui)
 
 # LIBLOADER
 set(LIBLOADER_BUILD_TEST OFF CACHE BOOL "" FORCE)
@@ -236,20 +276,24 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/libloader)
 list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/libloader/include)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES LibLoader)
 
+
 # NLOHMANN_JSON
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/json)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES nlohmann_json::nlohmann_json)
+
 
 # STB
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stb)
 list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/stb)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES stb)
 
+
 # STEAMWORKS
 if(CHIRA_USE_STEAMWORKS)
     list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_STEAMWORKS)
 endif()
+
 
 # STDUUID
 set(UUID_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -326,6 +370,7 @@ if(CHIRA_BUILD_EDITOR)
     endif()
 endif()
 
+
 # CHIRATEST
 if(CHIRA_BUILD_TESTS)
     add_executable(ChiraTest ${CHIRA_TEST_SOURCES})
@@ -340,6 +385,7 @@ if(CHIRA_BUILD_TESTS)
             PRE_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/bin ${CMAKE_BINARY_DIR})
 endif()
+
 
 # Copy resources
 add_custom_target(${PROJECT_NAME}CopyResources
