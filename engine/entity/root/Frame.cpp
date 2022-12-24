@@ -14,7 +14,7 @@ Frame::Frame(std::string name_, int width_, int height_, ColorRGB backgroundColo
     , height(height_)
     , linearFiltering(smoothResize) {
     if (initNow)
-        this->createFramebuffer();
+        this->recreateFramebuffer();
 }
 
 Frame::Frame(int width_, int height_, ColorRGB backgroundColor_, bool smoothResize, bool initNow)
@@ -24,10 +24,10 @@ Frame::Frame(int width_, int height_, ColorRGB backgroundColor_, bool smoothResi
     , height(height_)
     , linearFiltering(smoothResize) {
     if (initNow)
-        this->createFramebuffer();
+        this->recreateFramebuffer();
 }
 
-void Frame::createFramebuffer() {
+void Frame::recreateFramebuffer() {
     if (this->handle) {
         Renderer::destroyFrameBuffer(this->handle);
     }
@@ -106,7 +106,7 @@ Frame* Frame::getFrame() {
 void Frame::setFrameSize(glm::vec2i newSize) {
     this->width = newSize.x;
     this->height = newSize.y;
-    this->createFramebuffer();
+    this->recreateFramebuffer();
     if (this->getCamera())
         this->getCamera()->createProjection(newSize);
 }

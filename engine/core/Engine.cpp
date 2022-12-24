@@ -32,7 +32,7 @@ CHIRA_CREATE_LOG(ENGINE);
 
 [[maybe_unused]]
 ConCommand quit{"quit", "Quits the game or application.", [] { // NOLINT(cert-err58-cpp)
-    Engine::getWindow()->shouldCloseAfterThisFrame(true);
+    Engine::getDevice()->closeAfterThisFrame(true);
 }};
 
 [[maybe_unused]]
@@ -64,7 +64,7 @@ void Engine::init() {
         exit(EXIT_FAILURE);
     }
 
-    Engine::window.reset(new Window{TR("ui.window.title")});
+    Engine::device.reset(new Device{TR("ui.window.title")});
 
 #ifdef DEBUG
     if (!Renderer::setupForDebugging()) {
@@ -72,7 +72,7 @@ void Engine::init() {
     }
 #endif
 
-    Engine::window->displaySplashScreen();
+    Engine::device->displaySplashScreen();
 
     IMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     IMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
@@ -84,16 +84,16 @@ void Engine::init() {
 #endif
 
     // Add console UI panel
-    auto consoleID = Engine::getWindow()->addPanel(new ConsolePanel{});
+    auto consoleID = Engine::device->addPanel(new ConsolePanel{});
     Input::KeyEvent::create(Input::Key::SDLK_BACKQUOTE, Input::KeyEventType::PRESSED, [consoleID] {
-        auto console = Engine::getWindow()->getPanel(consoleID);
+        auto console = Engine::device->getPanel(consoleID);
         console->setVisible(!console->isVisible());
     });
 
     // Add resource usage tracker UI panel
-    auto resourceUsageTrackerID = Engine::getWindow()->addPanel(new ResourceUsageTrackerPanel{});
+    auto resourceUsageTrackerID = Engine::device->addPanel(new ResourceUsageTrackerPanel{});
     Input::KeyEvent::create(Input::Key::SDLK_F1, Input::KeyEventType::PRESSED, [resourceUsageTrackerID] {
-        auto resourceUsageTracker = Engine::getWindow()->getPanel(resourceUsageTrackerID);
+        auto resourceUsageTracker = Engine::device->getPanel(resourceUsageTrackerID);
         resourceUsageTracker->setVisible(!resourceUsageTracker->isVisible());
     });
 
@@ -106,12 +106,14 @@ void Engine::init() {
 }
 
 void Engine::run() {
-    ImGui::SetCurrentContext(Engine::getWindow()->imguiContext);
+    ImGui::SetCurrentContext(Engine::device->imguiContext);
     ImGui::GetIO().Fonts->Build();
 
     do {
         Engine::lastTime = Engine::currentTime;
         Engine::currentTime = SDL_GetTicks64();
+
+        Engine::device->refresh();
 
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -124,16 +126,16 @@ void Engine::run() {
             // todo(input): this is O(n^2) and was written badly because i hope it will be rewritten soon please fix
             switch (event.type) {
                 case SDL_QUIT:
-                    Engine::window->shouldCloseAfterThisFrame();
+                    Engine::device->closeAfterThisFrame();
                     break;
                 case SDL_WINDOWEVENT:
                     switch (event.window.event) {
                         case SDL_WINDOWEVENT_SHOWN:
-                            Engine::window->iconified = false;
+                            Engine::device->iconified = false;
                             break;
                         case SDL_WINDOWEVENT_HIDDEN:
                         case SDL_WINDOWEVENT_MINIMIZED:
-                            Engine::window->iconified = true;
+                            Engine::device->iconified = true;
                             break;
                         case SDL_WINDOWEVENT_RESTORED:
                             //win_maximized.setValue(false, false);
@@ -143,8 +145,8 @@ void Engine::run() {
                             break;
                         case SDL_WINDOWEVENT_SIZE_CHANGED: {
                             int w, h;
-                            SDL_GetWindowSizeInPixels(Engine::window->window, &w, &h);
-                            Engine::getWindow()->setSize({w, h}, false);
+                            SDL_GetWindowSizeInPixels(Engine::device->window, &w, &h);
+                            Engine::device->setSize({w, h}, false);
                             break;
                         }
                         default:
@@ -196,8 +198,8 @@ void Engine::run() {
             }
         }
 
-        Engine::window->update();
-        Engine::window->render(glm::identity<glm::mat4>());
+        Engine::device->getFrame()->update();
+        Engine::device->getFrame()->render(glm::identity<glm::mat4>());
 
 #ifdef CHIRA_USE_DISCORD
         if (DiscordRPC::initialized()) {
@@ -210,7 +212,7 @@ void Engine::run() {
         }
 #endif
         Events::update();
-    } while (!Engine::window->shouldClose);
+    } while (!Engine::device->shouldCloseAfterThisFrame());
 
     LOG_ENGINE.info("Exiting...");
 
@@ -225,16 +227,12 @@ void Engine::run() {
     }
 #endif
 
-    Engine::window.reset();
+    Engine::device.reset();
 
     Resource::discardAll();
 
     SDL_Quit();
     exit(EXIT_SUCCESS);
-}
-
-Window* Engine::getWindow() {
-    return Engine::window.get();
 }
 
 bool Engine::isStarted() {

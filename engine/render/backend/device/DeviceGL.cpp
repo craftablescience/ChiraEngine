@@ -1,4 +1,4 @@
-#include "DeviceSDL.h"
+#include "DeviceGL.h"
 
 // todo(render): move to render backend
 #include <glad/gl.h>
@@ -24,26 +24,26 @@ CHIRA_CREATE_LOG(WINDOW);
 [[maybe_unused]]
 ConCommand win_setpos{"win_setpos", "Set the X and Y position of the main window, (0,0) being at the top left. If no arguments are given, places it in the center of the screen.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
     if (args.empty()) {
-        Engine::getWindow()->moveToCenter();
+        Engine::getDevice()->moveToCenter();
     } else if (args.size() >= 2) {
-        Engine::getWindow()->moveToPosition({static_cast<int>(std::stoi(args[0])), static_cast<int>(std::stoi(args[1]))});
+        Engine::getDevice()->moveToPosition({static_cast<int>(std::stoi(args[0])), static_cast<int>(std::stoi(args[1]))});
     }
 }};
 
 ConVar win_width{"win_width", 1280, "The width of the main window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
-    Engine::getWindow()->setSize({static_cast<int>(std::stoi(newValue.data())), Engine::getWindow()->getFrameSize().y});
+    Engine::getDevice()->setSize({static_cast<int>(std::stoi(newValue.data())), Engine::getDevice()->getFrame()->getFrameSize().y});
 }};
 
 ConVar win_height{"win_height", 720, "The height of the main window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
-    Engine::getWindow()->setSize({Engine::getWindow()->getFrameSize().x, static_cast<int>(std::stoi(newValue.data()))});
+    Engine::getDevice()->setSize({Engine::getDevice()->getFrame()->getFrameSize().x, static_cast<int>(std::stoi(newValue.data()))});
 }};
 
 ConVar win_maximized{"win_maximized", true, "If the main window is maximized.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
-    Engine::getWindow()->setMaximized(static_cast<bool>(std::stoi(newValue.data())));
+    Engine::getDevice()->setMaximized(static_cast<bool>(std::stoi(newValue.data())));
 }};
 
 ConVar win_fullscreen{"win_fullscreen", false, "If the main window is fullscreen. Overrides \"win_maximized\" if true.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
-    Engine::getWindow()->setFullscreen(static_cast<bool>(std::stoi(newValue.data())));
+    Engine::getDevice()->setFullscreen(static_cast<bool>(std::stoi(newValue.data())));
 }};
 
 ConVar win_vsync{"win_vsync", true, "Limit the FPS to your monitor's resolution.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
@@ -59,7 +59,12 @@ ConVar win_vsync{"win_vsync", true, "Limit the FPS to your monitor's resolution.
 [[maybe_unused]]
 ConVar input_raw_mouse_motion{"input_raw_mouse_motion", true, "Get more accurate mouse motion.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
 
-bool Window::createGLFWWindow(std::string_view title) {
+static void setImGuiConfigPath() {
+    static std::string configPath = Config::getConfigFile("imgui.ini");
+    ImGui::GetIO().IniFilename = configPath.c_str();
+}
+
+bool Device::createGLFWWindow(std::string_view title) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, GL_VERSION_MAJOR);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, GL_VERSION_MINOR);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -121,7 +126,7 @@ bool Window::createGLFWWindow(std::string_view title) {
     ImGui::SetCurrentContext(this->imguiContext);
     auto& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_DockingEnable;
-    Window::setImGuiConfigPath();
+    setImGuiConfigPath();
 
     Renderer::initImGui(this->window, this->glContext);
 
@@ -131,38 +136,28 @@ bool Window::createGLFWWindow(std::string_view title) {
     return true;
 }
 
-static void makeSurface(Window* window, MeshDataBuilder* surface) {
-    surface->addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-    surface->setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/window.json", window).castAssert<IMaterial>());
-}
-
-Window::Window(std::string name_, std::string_view title)
-    : Frame(std::move(name_), win_width.getValue<int>(), win_height.getValue<int>(), {}, true, false) {
-    this->visible = false;
-    if (this->createGLFWWindow(title)) {
-        this->createFramebuffer();
-        makeSurface(this, &this->surface);
+Device::Device(std::string_view title) : frame(win_width.getValue<int>(), win_height.getValue<int>(), {}, true, false) {
+    this->width = win_width.getValue<int>();
+    this->height = win_height.getValue<int>();
+    this->frame.setVisible(false);
+    bool success = this->createGLFWWindow(title);
+    runtime_assert(success, "Could not create SDL window!");
+    if (success) {
+        this->frame.recreateFramebuffer();
+        this->surface.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
+        this->surface.setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/window.json", &this->frame).castAssert<IMaterial>());
     }
 }
 
-Window::Window(std::string_view title)
-    : Frame(win_width.getValue<int>(), win_height.getValue<int>(), {}, true, false) {
-    this->visible = false;
-    if (this->createGLFWWindow(title)) {
-        this->createFramebuffer();
-        makeSurface(this, &this->surface);
-    }
-}
-
-void Window::render(glm::mat4) {
+void Device::refresh() {
     SDL_GL_MakeCurrent(this->window, this->glContext);
     ImGui::SetCurrentContext(this->imguiContext);
 
-    Window::setImGuiConfigPath();
+    setImGuiConfigPath();
 
     Renderer::startImGuiFrame(this->window);
 
-    Frame::render(glm::identity<glm::mat4>());
+    this->frame.render(glm::identity<glm::mat4>());
     glViewport(0, 0, this->width, this->height);
 
     for (auto& [uuid, panel] : this->panels) {
@@ -171,7 +166,7 @@ void Window::render(glm::mat4) {
 
     glDisable(GL_DEPTH_TEST);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, this->handle.fboHandle);
+    glBindFramebuffer(GL_FRAMEBUFFER, this->frame.getRawHandle().fboHandle);
     Renderer::endImGuiFrame();
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -182,7 +177,7 @@ void Window::render(glm::mat4) {
     SDL_GL_SwapWindow(this->window);
 }
 
-Window::~Window() {
+Device::~Device() {
     this->removeAllPanels();
     ImGui::SetCurrentContext(this->imguiContext);
     Renderer::destroyImGui();
@@ -191,47 +186,53 @@ Window::~Window() {
     SDL_DestroyWindow(this->window);
 }
 
-uuids::uuid Window::addPanel(IPanel* panel) {
+Frame* Device::getFrame() {
+    return &this->frame;
+}
+
+uuids::uuid Device::addPanel(IPanel* panel) {
     const auto uuid = UUIDGenerator::getNewUUID();
     this->panels[uuid] = panel;
     return uuid;
 }
 
-IPanel* Window::getPanel(const uuids::uuid& panelID) {
+IPanel* Device::getPanel(const uuids::uuid& panelID) {
     if (this->panels.count(panelID) > 0)
         return this->panels[panelID];
     return nullptr;
 }
 
-void Window::removePanel(const uuids::uuid& panelID) {
+void Device::removePanel(const uuids::uuid& panelID) {
     if (this->panels.count(panelID) > 0) {
         delete this->panels[panelID];
         this->panels.erase(panelID);
     }
 }
 
-void Window::removeAllPanels() {
+void Device::removeAllPanels() {
     for (const auto& [panelID, panel] : this->panels) {
         delete panel;
     }
     this->panels.clear();
 }
 
-void Window::setSize(glm::vec2i newSize, bool setWindowSize /*= true*/) {
-    Frame::setFrameSize(newSize);
+void Device::setSize(glm::vec2i newSize, bool setWindowSize /*= true*/) {
+    this->width = newSize.x;
+    this->height = newSize.y;
+    this->frame.setFrameSize(newSize);
     if (setWindowSize)
-        SDL_SetWindowSize(this->window, this->width, this->height);
+        SDL_SetWindowSize(this->window, newSize.x, newSize.y);
     win_width.setValue(this->width, false);
     win_height.setValue(this->height, false);
 }
 
-glm::vec2i Window::getMousePosition() {
+glm::vec2i Device::getMousePosition() {
     int x = -1, y = -1;
     SDL_GetMouseState(&x, &y);
     return {x, y};
 }
 
-void Window::captureMouse(bool capture) {
+void Device::captureMouse(bool capture) {
     this->mouseCaptured = capture;
     if (capture) {
         SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -242,24 +243,24 @@ void Window::captureMouse(bool capture) {
     }
 }
 
-bool Window::isMouseCaptured() const {
+bool Device::isMouseCaptured() const {
     return this->mouseCaptured;
 }
 
-bool Window::isIconified() const {
+bool Device::isIconified() const {
     return this->iconified;
 }
 
-void Window::setVisible(bool visibility) {
+void Device::setVisible(bool visibility) {
     if (visibility) {
         SDL_ShowWindow(this->window);
     } else {
         SDL_HideWindow(this->window);
     }
-    Frame::setVisible(visibility);
+    this->frame.setVisible(visibility);
 }
 
-void Window::setFullscreen(bool goFullscreen) const {
+void Device::setFullscreen(bool goFullscreen) const {
     if (!goFullscreen) {
         this->moveToCenter();
     }
@@ -267,11 +268,11 @@ void Window::setFullscreen(bool goFullscreen) const {
     win_fullscreen.setValue(goFullscreen, false);
 }
 
-bool Window::isFullscreen() const {
+bool Device::isFullscreen() const {
     return SDL_GetWindowFlags(this->window) & SDL_WINDOW_FULLSCREEN_DESKTOP;
 }
 
-void Window::setMaximized(bool maximize) {
+void Device::setMaximized(bool maximize) {
     if (!this->isFullscreen()) {
         if (maximize) {
             SDL_MaximizeWindow(this->window);
@@ -279,22 +280,22 @@ void Window::setMaximized(bool maximize) {
             SDL_RestoreWindow(this->window);
         }
         SDL_GetWindowSize(this->window, &this->width, &this->height);
-        Frame::setFrameSize({this->width, this->height});
+        this->frame.setFrameSize({this->width, this->height});
     }
     win_maximized.setValue(maximize, false);
 }
 
-bool Window::isMaximized() const {
+bool Device::isMaximized() const {
     return SDL_GetWindowFlags(this->window) & SDL_WINDOW_MAXIMIZED;
 }
 
-void Window::moveToPosition(glm::vec2i pos) const {
+void Device::moveToPosition(glm::vec2i pos) const {
     if (this->isFullscreen())
         return;
     SDL_SetWindowPosition(this->window, pos.x, pos.y);
 }
 
-void Window::moveToCenter() const {
+void Device::moveToCenter() const {
     if (this->isFullscreen())
         return;
     SDL_Rect rect;
@@ -302,7 +303,7 @@ void Window::moveToCenter() const {
     SDL_SetWindowPosition(this->window, rect.w / 2, rect.h / 2);
 }
 
-void Window::setIcon(const std::string& identifier) const {
+void Device::setIcon(const std::string& identifier) const {
     int iconWidth, iconHeight, bitsPerPixel;
     auto* icon = Image::getUncompressedImage(FilesystemResourceProvider::getResourceAbsolutePath(identifier), &iconWidth, &iconHeight, &bitsPerPixel, 4, false);
     runtime_assert(icon, "Window icon has no data");
@@ -312,13 +313,17 @@ void Window::setIcon(const std::string& identifier) const {
     Image::deleteUncompressedImage(icon);
 }
 
-void Window::shouldCloseAfterThisFrame(bool yes) {
+bool Device::shouldCloseAfterThisFrame() const {
+    return this->shouldClose;
+}
+
+void Device::closeAfterThisFrame(bool yes /*= true*/) {
     this->shouldClose = yes;
 }
 
-void Window::displaySplashScreen() {
+void Device::displaySplashScreen() {
     SDL_GL_MakeCurrent(this->window, this->glContext);
-    Renderer::pushFrameBuffer(this->handle);
+    Renderer::pushFrameBuffer(this->frame.getRawHandle());
     MeshDataBuilder plane;
     plane.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
     plane.setMaterial(Resource::getResource<MaterialTextured>("file://materials/splashscreen.json").castAssert<IMaterial>());
@@ -329,9 +334,4 @@ void Window::displaySplashScreen() {
     this->surface.render(glm::identity<glm::mat4>());
     glEnable(GL_DEPTH_TEST);
     SDL_GL_SwapWindow(this->window);
-}
-
-void Window::setImGuiConfigPath() {
-    static std::string configPath = Config::getConfigFile("imgui.ini");
-    ImGui::GetIO().IniFilename = configPath.c_str();
 }
