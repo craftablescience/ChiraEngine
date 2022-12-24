@@ -378,12 +378,6 @@ if(CHIRA_BUILD_TESTS)
     target_include_directories(ChiraTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tests)
     include(GoogleTest)
     gtest_discover_tests(ChiraTest)
-
-    # Copy gtest binaries next to the executable
-    add_custom_command(
-            TARGET ChiraTest
-            PRE_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/bin ${CMAKE_BINARY_DIR})
 endif()
 
 
