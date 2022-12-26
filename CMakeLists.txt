@@ -59,6 +59,10 @@ option(CHIRA_BUILD_HEADLESS "Build Chira Engine without any visible window(s). Z
 option(CHIRA_USE_DISCORD "Build Chira Engine with Discord rich presence features if possible" ON)
 option(CHIRA_USE_STEAMWORKS "Build Chira Engine with Steamworks API features if possible" ON)
 
+# Renderers!
+set(CHIRA_RENDER_BACKEND "OpenGL" CACHE STRING "The rendering backend ChiraEngine will use")
+set(CHIRA_RENDER_DEVICE "OpenGL" CACHE STRING "The rendering device ChiraEngine will use (usually the same as the backend)")
+
 
 # Print out what is enabled and what isn't
 message(STATUS "Options:")
@@ -72,6 +76,7 @@ message(STATUS "  CHIRA_TREAT_WARNINGS_AS_ERRORS: ${CHIRA_TREAT_WARNINGS_AS_ERRO
 message(STATUS "  CHIRA_BUILD_HEADLESS: ${CHIRA_BUILD_HEADLESS}")
 message(STATUS "  CHIRA_USE_DISCORD: ${CHIRA_USE_DISCORD}")
 message(STATUS "  CHIRA_USE_STEAMWORKS: ${CHIRA_USE_STEAMWORKS}")
+message(STATUS "  CHIRA_RENDER: \n      BACKEND: ${CHIRA_RENDER_BACKEND}\n      DEVICE: ${CHIRA_RENDER_DEVICE}")
 
 
 # You should add this to your own CMake to load Chira Engine's dependencies in non-Windows environments
@@ -188,20 +193,27 @@ if(CHIRA_BUILD_HEADLESS)
     #list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_BUILD_HEADLESS)
     message(FATAL_ERROR "Headless mode is not implemented yet!")
 else()
-    # The graphics API we use varies based on platform
-    # macOS: OpenGL 4.1
-    # Windows and Linux: OpenGL 4.3
-    if(APPLE)
-        set(GLAD_USE_GL_41 ON CACHE BOOL "" FORCE)
-        list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_41)
-    else()
+    # renderer swapping
+    if (${CHIRA_RENDER_BACKEND} MATCHES "OpenGL")
+        # The OpenGL API we use varies based on platform
+        # macOS: OpenGL 4.1
+        # Windows and Linux: OpenGL 4.3
+        if(APPLE)
+            set(GLAD_USE_GL_41 ON CACHE BOOL "" FORCE)
+            list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_41)
+        else()
+            set(GLAD_USE_GL_41 OFF CACHE BOOL "" FORCE)
+            list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_43)
+        endif()
+        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad)
+        list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_IMPL_OPENGL_LOADER_GLAD2)
+        list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad/include)
+        list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glad)
+    elseif (${CHIRA_RENDER_BACKEND} MATCHES "DirectX")
         set(GLAD_USE_GL_41 OFF CACHE BOOL "" FORCE)
-        list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_43)
+        # Only DX11 is supported right now
+        list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_DX11)
     endif()
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad)
-    list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_IMPL_OPENGL_LOADER_GLAD2)
-    list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad/include)
-    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glad)
 
     # SDL2
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/sdl2)
