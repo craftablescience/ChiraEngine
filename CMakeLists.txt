@@ -84,7 +84,6 @@ set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_RPATH_USE_ORIGIN TRUE)
 set(CMAKE_INSTALL_RPATH $ORIGIN)
 
-
 # Put all dynamic libraries in the executable directory
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
@@ -148,7 +147,6 @@ macro(apply_optimizations target)
     endif()
 endmacro()
 
-
 # Enable tests if wanted
 if(CHIRA_BUILD_TESTS)
     include(FetchContent)
@@ -186,6 +184,8 @@ list(APPEND IMGUI_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_tables.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_widgets.cpp)
 
+# include rendering option macros/functions
+include(cmake/rendering.cmake)
 
 # Figure out what render backend and device backend we are using
 if(CHIRA_BUILD_HEADLESS)
@@ -193,27 +193,7 @@ if(CHIRA_BUILD_HEADLESS)
     #list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_BUILD_HEADLESS)
     message(FATAL_ERROR "Headless mode is not implemented yet!")
 else()
-    # renderer swapping
-    if (${CHIRA_RENDER_BACKEND} MATCHES "OpenGL")
-        # The OpenGL API we use varies based on platform
-        # macOS: OpenGL 4.1
-        # Windows and Linux: OpenGL 4.3
-        if(APPLE)
-            set(GLAD_USE_GL_41 ON CACHE BOOL "" FORCE)
-            list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_41)
-        else()
-            set(GLAD_USE_GL_41 OFF CACHE BOOL "" FORCE)
-            list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_43)
-        endif()
-        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad)
-        list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_IMPL_OPENGL_LOADER_GLAD2)
-        list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad/include)
-        list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glad)
-    elseif (${CHIRA_RENDER_BACKEND} MATCHES "DirectX")
-        set(GLAD_USE_GL_41 OFF CACHE BOOL "" FORCE)
-        # Only DX11 is supported right now
-        list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_DX11)
-    endif()
+    # generally shared
 
     # SDL2
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/sdl2)
@@ -225,13 +205,31 @@ else()
     list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs)
     list(APPEND CHIRA_ENGINE_LINK_LIBRARIES tinyfiledialogs)
 
-    # Add ImGui platform
-    list(APPEND IMGUI_HEADERS
-            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_sdl.h
-            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_opengl3.h)
-    list(APPEND IMGUI_SOURCES
-            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_sdl.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_opengl3.cpp)
+    # renderer swapping
+    if (${CHIRA_RENDER_BACKEND} MATCHES "OpenGL")
+        # The OpenGL API we use varies based on platform
+        # macOS: OpenGL 4.1
+        # Windows and Linux: OpenGL 4.3
+        if(APPLE)
+            set(GLAD_USE_GL_41 ON CACHE BOOL "" FORCE)
+            render_def(GL_41)
+        else()
+            set(GLAD_USE_GL_41 OFF CACHE BOOL "" FORCE)
+            render_def(GL_43)
+        endif()
+        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad)
+        list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_IMPL_OPENGL_LOADER_GLAD2)
+        list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad/include)
+        list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glad)
+
+        # set imgui platform
+        imgui_platform(sdl opengl3)
+    elseif (${CHIRA_RENDER_BACKEND} MATCHES "DirectX")
+        # Only DX11 is supported right now
+        render_def(DX11)
+        imgui_platform(sdl dx11)
+    endif()
+
     list(APPEND IMGUI_INCLUDE_DIRS
             ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/sdl2/include)
     list(APPEND IMGUI_LINK_LIBRARIES SDL2::SDL2)
