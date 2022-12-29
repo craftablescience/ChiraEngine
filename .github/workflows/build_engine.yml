@@ -6,11 +6,15 @@ on:
     branches: [main]
   workflow_dispatch:
     # nothing here
+
+env:
+  BUILD_DIR: ${{github.workspace}}/build
+
 jobs:
   build-msvc:
     strategy:
       matrix:
-        build_type: [ Debug, Release ]
+        build_type: [Debug, Release]
     runs-on: windows-latest
     defaults:
       run:
@@ -28,31 +32,32 @@ jobs:
           spectre: true
 
       - name: Configure CMake
-        run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON
+        run: cmake -G "Ninja" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON
 
       - name: Build
-        run: cmake --build build --config ${{matrix.build_type}} -- -j%NUMBER_OF_PROCESSORS%
-
-      - name: Test
-        working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{matrix.build_type}}
+        working-directory: ${{env.BUILD_DIR}}
+        run: cmake --build . --config ${{matrix.build_type}} -t ChiraEditor -- -j%NUMBER_OF_PROCESSORS%
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: ChiraEngine-Windows-msvc-${{matrix.build_type}}
           path: |
-            ${{github.workspace}}/build/resources/
-            ${{github.workspace}}/build/ChiraEditor.exe
-            ${{github.workspace}}/build/*.dll
+            ${{env.BUILD_DIR}}/resources/
+            ${{env.BUILD_DIR}}/ChiraEditor.exe
+            ${{env.BUILD_DIR}}/*.dll
           retention-days: 1
+
+      - name: Test
+        working-directory: ${{env.BUILD_DIR}}
+        run: cmake --build . --config ${{matrix.build_type}} -t all -- -j%NUMBER_OF_PROCESSORS% && ctest -C ${{matrix.build_type}}
 
   build-mingw:
     strategy:
       fail-fast: false
       matrix:
         build_type: [Debug, Release]
-        sys: [mingw64] # [mingw64, clang64]
+        sys: [mingw64, clang64]
     runs-on: windows-latest
     defaults:
       run:
@@ -75,42 +80,45 @@ jobs:
             toolchain:p
             cmake:p
             ninja:p
+
       - name: Configure CMake (mingw64)
         if: ${{ matrix.sys == 'mingw64' }}
-        run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
+        run: cmake -G "Ninja" -B '${{env.BUILD_DIR}}' -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
 
       - name: Configure CMake (clang64)
         if: ${{ matrix.sys == 'clang64' }}
-        run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON -DCMAKE_C_COMPILER="/mingw64/bin/clang.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/clang++.exe"
+        run: cmake -G "Ninja" -B '${{env.BUILD_DIR}}' -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON -DCMAKE_C_COMPILER="/clang64/bin/clang.exe" -DCMAKE_CXX_COMPILER="/clang64/bin/clang++.exe"
 
       - name: Build
-        run: cmake --build build --config ${{matrix.build_type}} -- -j$(nproc)
-
-      - name: Test
-        working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{matrix.build_type}}
+        working-directory: ${{env.BUILD_DIR}}
+        run: cmake --build . --config ${{matrix.build_type}} -t ChiraEditor -- -j$(nproc)
 
       - name: Copy Necessary DLLs (mingw64)
         if: ${{ matrix.sys == 'mingw64' }}
         run: |
-          cp /mingw64/bin/libgcc_s_seh-1.dll build/libgcc_s_seh-1.dll
-          cp /mingw64/bin/libstdc++-6.dll    build/libstdc++-6.dll
+          cp /mingw64/bin/libgcc_s_seh-1.dll '${{env.BUILD_DIR}}/libgcc_s_seh-1.dll'
+          cp /mingw64/bin/libstdc++-6.dll    '${{env.BUILD_DIR}}/libstdc++-6.dll'
 
       - name: Copy Necessary DLLs (clang64)
         if: ${{ matrix.sys == 'clang64' }}
         run: |
-          cp /clang64/bin/libc++.dll            build/libc++.dll
-          cp /clang64/bin/libunwind.dll         build/libunwind.dll
+          cp /clang64/bin/libc++.dll    '${{env.BUILD_DIR}}/libc++.dll'
+          cp /clang64/bin/libunwind.dll '${{env.BUILD_DIR}}/libunwind.dll'
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: ChiraEngine-Windows-mingw64-${{matrix.build_type}}
           path: |
-            ${{github.workspace}}/build/resources/
-            ${{github.workspace}}/build/ChiraEditor.exe
-            ${{github.workspace}}/build/*.dll
+            ${{env.BUILD_DIR}}/resources/
+            ${{env.BUILD_DIR}}/ChiraEditor.exe
+            ${{env.BUILD_DIR}}/*.dll
           retention-days: 1
+
+      - name: Test
+        if: ${{ matrix.sys == 'mingw64' }} # Clang crashes trying to link ChiraTest target, probably not my fault
+        working-directory: ${{env.BUILD_DIR}}
+        run: cmake --build . --config ${{matrix.build_type}} -t all -- -j$(nproc) && ctest -C ${{matrix.build_type}}
 
   build-linux:
     strategy:
@@ -126,41 +134,42 @@ jobs:
           submodules: recursive
 
       - name: Install Necessary Packages
-        run: sudo apt update && sudo apt install -y cmake build-essential xorg-dev mesa-common-dev mesa-utils
+        run: sudo apt update && sudo apt install -y cmake build-essential ninja-build xorg-dev mesa-common-dev mesa-utils
 
       - name: Install GCC
-        if: ${{matrix.compiler == 'gcc'}}
+        if: ${{ matrix.compiler == 'gcc' }}
         uses: egor-tensin/setup-gcc@v1
         with:
           version: 11
           platform: x64
 
       - name: Install Clang
-        if: ${{matrix.compiler == 'clang'}}
+        if: ${{ matrix.compiler == 'clang' }}
         uses: egor-tensin/setup-clang@v1
         with:
           version: 13
           platform: x64
 
       - name: Configure CMake
-        run: cmake -G "Unix Makefiles" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON
+        run: cmake -G "Ninja" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON
 
       - name: Build
-        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}} -- -j$(nproc)
-
-      - name: Test
-        working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{matrix.build_type}}
+        working-directory: ${{env.BUILD_DIR}}
+        run: cmake --build . --config ${{matrix.build_type}} -t ChiraEditor -- -j$(nproc)
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: ChiraEngine-Linux-${{matrix.compiler}}-${{matrix.build_type}}
           path: |
-            ${{github.workspace}}/build/resources/
-            ${{github.workspace}}/build/ChiraEditor
-            ${{github.workspace}}/build/*.so*
+            ${{env.BUILD_DIR}}/resources/
+            ${{env.BUILD_DIR}}/ChiraEditor
+            ${{env.BUILD_DIR}}/*.so*
           retention-days: 1
+
+      - name: Test
+        working-directory: ${{env.BUILD_DIR}}
+        run: cmake --build . --config ${{matrix.build_type}} -t all -- -j$(nproc) && ctest -C ${{matrix.build_type}}
 
   build-macos:
     strategy:
@@ -182,18 +191,19 @@ jobs:
         run: ${{github.workspace}}/cmake_configure_macos.sh ${{matrix.generator}}
 
       - name: Build
-        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}} -- -j$(nproc)
-
-      - name: Test
-        working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{matrix.build_type}}
+        working-directory: ${{env.BUILD_DIR}}
+        run: cmake --build . --config ${{matrix.build_type}} -t ChiraEditor -- -j$(nproc)
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: ChiraEngine-macOS-${{matrix.generator}}-${{matrix.build_type}}
           path: |
-            ${{github.workspace}}/build/resources/
-            ${{github.workspace}}/build/ChiraEditor.app
-            ${{github.workspace}}/build/*.dylib*
+            ${{env.BUILD_DIR}}/resources/
+            ${{env.BUILD_DIR}}/ChiraEditor.app
+            ${{env.BUILD_DIR}}/*.dylib*
           retention-days: 1
+
+      - name: Test
+        working-directory: ${{env.BUILD_DIR}}
+        run: cmake --build . --config ${{matrix.build_type}} -t all -- -j$(nproc) && ctest -C ${{matrix.build_type}}

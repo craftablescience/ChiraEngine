@@ -25,18 +25,18 @@ FilesystemResourceProvider::FilesystemResourceProvider(std::string path_, bool i
     // One requires a bit of work to access though.
 #ifdef CHIRA_PLATFORM_APPLE
     // Finding the bundle and it's resources directory
-    std::string status;
-    if (CFBundleRef mainbundle =  CFBundleGetMainBundle()) {
-        CFURLRef appUrlRef = CFBundleCopyBundleURL(mainbundle);
+    bool error = false;
+    if (CFBundleRef mainBundle = CFBundleGetMainBundle()) {
+        CFURLRef appUrlRef = CFBundleCopyBundleURL(mainBundle);
         CFStringRef macPath;
-        if (appUrlRef != nullptr)
+        if (appUrlRef)
             macPath = CFURLCopyFileSystemPath(appUrlRef, kCFURLPOSIXPathStyle);
         else
             macPath = nullptr;
 
         const char* rawpath;
 
-        if (macPath != nullptr)
+        if (macPath)
             rawpath = CFStringGetCStringPtr(macPath, kCFStringEncodingASCII);
         else
             rawpath = nullptr;
@@ -48,21 +48,19 @@ FilesystemResourceProvider::FilesystemResourceProvider(std::string path_, bool i
             LOG_FILESYSTEM.info("Found resources in app bundle!");
             this->path = rawpath + append + FILESYSTEM_ROOT_FOLDER + '/' + this->path;
         } else {
-            status = "NOBUNDLE";
+            error = true;
         }
     } else {
-        status = "NOBUNDLE";
+        error = true;
     }
-    if (status == "NOBUNDLE") {
+    if (error) {
         LOG_FILESYSTEM.warning("Could not find resources in our app bundle! Falling back to working directory...");
         if (std::filesystem::exists(std::filesystem::path{FILESYSTEM_ROOT_FOLDER + '/' + this->path})) {
             LOG_FILESYSTEM.info("Found resources in working directory!");
             this->path = FILESYSTEM_ROOT_FOLDER + '/' + this->path;
         } else {
-            status = "FATALERROR";
+            LOG_FILESYSTEM.error("No known search path contains our required resources! Did you mistype something?");
         }
-    } else if (status == "FATALERROR") {
-        throw std::runtime_error{"[FILESYSTEM] FATAL ERROR: No known search path contains our required resources! Did you mistype something?"};
     }
 #else
     // Other platforms can just look in the working directory
