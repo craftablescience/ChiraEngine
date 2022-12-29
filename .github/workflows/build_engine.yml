@@ -116,6 +116,7 @@ jobs:
           retention-days: 1
 
       - name: Test
+        if: ${{ matrix.sys == 'mingw64' }} # Clang crashes trying to link ChiraTest target, probably not my fault
         working-directory: ${{env.BUILD_DIR}}
         run: cmake --build . --config ${{matrix.build_type}} -t all -- -j$(nproc) && ctest -C ${{matrix.build_type}}
 
