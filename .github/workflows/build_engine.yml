@@ -192,7 +192,7 @@ jobs:
         working-directory: ${{env.BUILD_DIR}}
         run: cmake --build . --config ${{matrix.build_type}} -t ChiraEditor -- -j$(nproc)
 
-      - name: Upload Artifacts
+      - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: ChiraEngine-macOS-${{matrix.generator}}-${{matrix.build_type}}
