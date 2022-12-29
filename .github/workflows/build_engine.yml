@@ -10,7 +10,7 @@ jobs:
   build-msvc:
     strategy:
       matrix:
-        build_type: [ Debug, Release ]
+        build_type: [Debug, Release]
     runs-on: windows-latest
     defaults:
       run:
@@ -126,7 +126,7 @@ jobs:
           submodules: recursive
 
       - name: Install Necessary Packages
-        run: sudo apt update && sudo apt install -y cmake build-essential xorg-dev mesa-common-dev mesa-utils
+        run: sudo apt update && sudo apt install -y cmake build-essential ninja-build xorg-dev mesa-common-dev mesa-utils
 
       - name: Install GCC
         if: ${{matrix.compiler == 'gcc'}}
@@ -143,7 +143,7 @@ jobs:
           platform: x64
 
       - name: Configure CMake
-        run: cmake -G "Unix Makefiles" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON
+        run: cmake -G "Ninja" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON
 
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}} -- -j$(nproc)
