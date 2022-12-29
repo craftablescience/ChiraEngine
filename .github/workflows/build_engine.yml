@@ -80,13 +80,16 @@ jobs:
             toolchain:p
             cmake:p
             ninja:p
+
       - name: Configure CMake (mingw64)
         if: ${{ matrix.sys == 'mingw64' }}
-        run: cmake -G "Ninja" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
+        working-directory: ${{github.workspace}}
+        run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
 
       - name: Configure CMake (clang64)
         if: ${{ matrix.sys == 'clang64' }}
-        run: cmake -G "Ninja" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON -DCMAKE_C_COMPILER="/mingw64/bin/clang.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/clang++.exe"
+        working-directory: ${{github.workspace}}
+        run: cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_USE_PCH=ON -DCMAKE_C_COMPILER="/mingw64/bin/clang.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/clang++.exe"
 
       - name: Build
         working-directory: ${{env.BUILD_DIR}}
@@ -95,14 +98,14 @@ jobs:
       - name: Copy Necessary DLLs (mingw64)
         if: ${{ matrix.sys == 'mingw64' }}
         run: |
-          cp /mingw64/bin/libgcc_s_seh-1.dll ${{env.BUILD_DIR}}/libgcc_s_seh-1.dll
-          cp /mingw64/bin/libstdc++-6.dll    ${{env.BUILD_DIR}}/libstdc++-6.dll
+          cp /mingw64/bin/libgcc_s_seh-1.dll '${{env.BUILD_DIR}}/libgcc_s_seh-1.dll'
+          cp /mingw64/bin/libstdc++-6.dll    '${{env.BUILD_DIR}}/libstdc++-6.dll'
 
       - name: Copy Necessary DLLs (clang64)
         if: ${{ matrix.sys == 'clang64' }}
         run: |
-          cp /clang64/bin/libc++.dll    ${{env.BUILD_DIR}}/libc++.dll
-          cp /clang64/bin/libunwind.dll ${{env.BUILD_DIR}}/libunwind.dll
+          cp /clang64/bin/libc++.dll    '${{env.BUILD_DIR}}/libc++.dll'
+          cp /clang64/bin/libunwind.dll '${{env.BUILD_DIR}}/libunwind.dll'
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
