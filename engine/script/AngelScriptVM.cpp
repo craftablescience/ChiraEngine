@@ -10,15 +10,23 @@
 #include <scriptmath/scriptmathcomplex.h>
 #include <scriptstdstring/scriptstdstring.h>
 #include <weakref/weakref.h>
+#include <script/ASBindings.h>
 
 #include <core/Logger.h>
 
 using namespace chira;
 
+// list of bindings
+std::function<void()> liblist[] {
+    ASB_Entity,
+    ASB_ImGui
+};
+
+
 CHIRA_CREATE_LOG(ANGELSCRIPTVM);
 
 static void messageCallback(const asSMessageInfo* msg, void*);
-static void print(const std::string& message);
+static void print(const std::string &message);
 
 void AngelScriptVM::init() {
     AngelScriptVM::asEngine = asCreateScriptEngine();
@@ -34,9 +42,16 @@ void AngelScriptVM::init() {
     RegisterScriptGrid(       AngelScriptVM::asEngine);
     RegisterScriptHandle(     AngelScriptVM::asEngine);
     RegisterScriptWeakRef(    AngelScriptVM::asEngine);
-    RegisterScriptAny(        AngelScriptVM::asEngine);
+    RegisterScriptAny(AngelScriptVM::asEngine);
 
     AngelScriptVM::registerGlobalFunction(print, "print");
+
+    // register bindings
+    for (std::function<void()> func : liblist)
+    {
+        func();
+    }
+    
 }
 
 static void messageCallback(const asSMessageInfo* msg, void*) {

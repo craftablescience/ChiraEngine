@@ -292,22 +292,6 @@ static void setup_colors()
     }
 }
 
-static bool imBegin(const std::string& name, bool *is_open) {
-    return ImGui::Begin(name.c_str(), is_open);
-}
-
-static void imText(const std::string& label) {
-    ImGui::Text(label.c_str());
-}
-
-static void imEnd() {
-    ImGui::End();
-}
-
-static bool imButton(const std::string& label) {
-    return ImGui::Button(label.c_str());
-}
-
 int main(int argc, const char* const argv[]) {
     Engine::preInit(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{"editor"});
@@ -330,13 +314,6 @@ int main(int argc, const char* const argv[]) {
 #endif
 
     Engine::init();
-
-    // register these here
-    // TODO: Move these not here. Make a specific set of cpp files for registering functions
-    AngelScriptVM::registerGlobalFunction(imBegin, "ImGui_Begin");
-    AngelScriptVM::registerGlobalFunction(imText, "ImGui_Text");
-    AngelScriptVM::registerGlobalFunction(imEnd, "ImGui_End");
-    AngelScriptVM::registerGlobalFunction(imButton, "ImGui_Button");
 
     setup_colors();
 

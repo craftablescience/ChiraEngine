@@ -34,3 +34,6 @@ ChiraEngine.xcodeproj/xcuserdata
 
 # what
 steam_appid.txt
+
+# generator that is not ready at all
+generator/

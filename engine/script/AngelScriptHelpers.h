@@ -1,5 +1,7 @@
 #pragma once
 
+#include "thirdparty/angelscript/source/as_scriptfunction.h"
+#include <functional>
 #include <string>
 #include <sstream>
 #include <core/Platform.h>
@@ -36,6 +38,15 @@ struct asSimpleTypeString {
         return *this;
     }
 };
+
+#pragma region Registering Lists
+
+struct asFunctionList {
+    std::string name;
+    unsigned int func;
+};
+
+#pragma endregion
 
 template<typename T>
 struct asTypeString : asSimpleTypeString {
