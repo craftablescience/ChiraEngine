@@ -10,7 +10,8 @@ namespace chira {
 
 class ScriptEngine {
     public:
-        void init();
+        static void init();
+        static void shutdown();
 };
 
 } // namespace chira

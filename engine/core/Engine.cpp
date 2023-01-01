@@ -206,6 +206,8 @@ void Engine::run() {
 
     Resource::discardAll();
 
+    ScriptEngine::shutdown();
+
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }

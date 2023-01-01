@@ -2,6 +2,7 @@
 
 #include <core/Logger.h>
 #include <i18n/TranslationManager.h>
+#include <script/Engine.h>
 
 using namespace chira;
 
@@ -26,6 +27,14 @@ void MonoRuntime::init() {
 
 void MonoRuntime::shutdown() {
     mono_jit_cleanup(MonoRuntime::domain);
+}
+
+void ScriptEngine::init() {
+    MonoRuntime::init();
+}
+
+void ScriptEngine::shutdown() {
+    MonoRuntime::shutdown();
 }
 
 static void print(MonoString* message) {
