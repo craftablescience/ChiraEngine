@@ -1,8 +1,42 @@
-# IDE
-.idea/
+# Visual Studio
 .vs/
 .vscode/
 
+# Jetbrains IDEs
+.idea/
+.fleet/
+
+# Kate
+*.kate-swp
+
+# Kdevelop
+*.kdev4
+
+# Qt Creator
+*.config
+*.creator
+*.creator.*
+*.files
+*.includes
+*.cflags
+*.cxxflags
+
+# Vim
+*.swo
+*.swp
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+.history/
+
+# Xcode
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+*.xcodeproj/*
+
+# cmake
 CMakeSettings.json
 
 # Build
@@ -12,6 +46,38 @@ out*/
 
 .ccls-cache
 
+# C#
+[Oo]bj/
+
+###################
+### OS specific ###
+###################
+
+# Linux
+*~
+.directory
+
 # macOS
-*/.DS_Store
 .DS_Store
+__MACOSX
+
+# Windows
+# https://github.com/github/gitignore/blob/main/Global/Windows.gitignore
+[Tt]humbs.db
+[Tt]humbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# don't block build-scripts or build_scripts
+# these folders could be actually useful
+!build_scripts/
+!build-scripts/
