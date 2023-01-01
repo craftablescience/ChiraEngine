@@ -195,18 +195,25 @@ endif()
 
 # Scripting languages
 set(CHIRA_SCRIPT_LANG "AngelScript" CACHE STRING "Choose which scripting language this build of ChiraEngine will use" )
-if (${CHIRA_SCRIPT_LANG} MATCHES "AngelScript")
-    # ANGELSCRIPT
+
+if (${CHIRA_SCRIPT_LANG} MATCHES "AngelScript") # ANGELSCRIPT
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript)
     list(APPEND CHIRA_ENGINE_LINK_LIBRARIES angelscript)
     list(APPEND SCRIPT_LANG_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/addons
                                     ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/include)
-elseif (${CHIRA_SCRIPT_LANG} MATCHES "CSharp")
-    # MONO
+
+elseif (${CHIRA_SCRIPT_LANG} MATCHES "CSharp") # MONO
+
+    # Locate Mono using pkgconfig and apply the C and LD flags + link the library
     pkg_check_modules(MONO REQUIRED IMPORTED_TARGET mono-2)
     target_compile_options(ChiraEngine PRIVATE ${MONO_CFLAGS} ${MONO_CFLAGS_OTHER})
     target_link_options(ChiraEngine PRIVATE ${MONO_LDFLAGS} ${MONO_LDFLAGS_OTHER})
     target_link_libraries(ChiraEngine PUBLIC PkgConfig::MONO)
+
+    # we have to add this here because when we initially make it the library isn't defined
+    # TODO: Make this process less fragmented/messy
+    add_dependencies(${PROJECT_NAME} ChiraSharpAssembly)
+
 endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
