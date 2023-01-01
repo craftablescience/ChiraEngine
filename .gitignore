@@ -50,6 +50,9 @@ out*/
 [Oo]bj/
 bin/
 
+# Steam
+steam_appid.txt
+
 ###################
 ### OS specific ###
 ###################
