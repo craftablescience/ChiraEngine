@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
+find_package(PkgConfig)
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OSX deployment version")
 
@@ -106,10 +107,6 @@ if(APPLE)
     list(APPEND CHIRA_ENGINE_LINK_LIBRARIES ${CORE_LIB})
 endif()
 
-# ANGELSCRIPT
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript)
-list(APPEND CHIRA_ENGINE_LINK_LIBRARIES angelscript)
-
 # DISCORD
 option(CHIRA_USE_DISCORD "Build Chira Engine with Discord rich presence features" ON)
 if(CHIRA_USE_DISCORD)
@@ -196,10 +193,24 @@ if(CHIRA_USE_STEAMWORKS)
     target_compile_definitions(${PROJECT_NAME} PUBLIC CHIRA_USE_STEAMWORKS)
 endif()
 
+# Scripting languages
+set(CHIRA_SCRIPT_LANG "AngelScript" CACHE STRING "Choose which scripting language this build of ChiraEngine will use" )
+if (${CHIRA_SCRIPT_LANG} MATCHES "AngelScript")
+    # ANGELSCRIPT
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES angelscript)
+    list(APPEND SCRIPT_LANG_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/addons
+                                    ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/include)
+elseif (${CHIRA_SCRIPT_LANG} MATCHES "CSharp")
+    # MONO
+    pkg_check_modules(MONO REQUIRED mono-2)
+    target_compile_options(${PROJECT_NAME} PRIVATE ${MONO_CFLAGS})
+    target_link_options(${PROJECT_NAME} PRIVATE ${MONO_LDFLAGS})
+endif()
+
 target_include_directories(${PROJECT_NAME} PUBLIC
         ${OPENGL_INCLUDE_DIRS}
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/addons
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/include
+        ${SCRIPT_LANG_INCLUDE}
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/fmt/include
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/libloader/include
