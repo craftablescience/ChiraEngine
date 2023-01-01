@@ -203,9 +203,10 @@ if (${CHIRA_SCRIPT_LANG} MATCHES "AngelScript")
                                     ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/include)
 elseif (${CHIRA_SCRIPT_LANG} MATCHES "CSharp")
     # MONO
-    pkg_check_modules(MONO REQUIRED mono-2)
-    target_compile_options(${PROJECT_NAME} PRIVATE ${MONO_CFLAGS})
-    target_link_options(${PROJECT_NAME} PRIVATE ${MONO_LDFLAGS})
+    pkg_check_modules(MONO REQUIRED IMPORTED_TARGET mono-2)
+    target_compile_options(ChiraEngine PRIVATE ${MONO_CFLAGS} ${MONO_CFLAGS_OTHER})
+    target_link_options(ChiraEngine PRIVATE ${MONO_LDFLAGS} ${MONO_LDFLAGS_OTHER})
+    target_link_libraries(ChiraEngine PUBLIC PkgConfig::MONO)
 endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
