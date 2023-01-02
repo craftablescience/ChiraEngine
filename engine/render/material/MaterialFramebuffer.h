@@ -15,6 +15,8 @@ public:
     void use() const override;
 protected:
     Frame* frame;
+public:
+    CHIRA_PROPS_INHERITED(IMaterial) ();
 };
 
 } // namespace chira

@@ -1,9 +1,5 @@
 #include "Config.h"
 
-#ifdef DEBUG
-    #include <filesystem>
-#endif
-
 #include <core/Platform.h>
 #ifdef CHIRA_PLATFORM_WINDOWS
     #define WIN32_LEAN_AND_MEAN
@@ -21,7 +17,7 @@
 using namespace chira;
 
 [[maybe_unused]]
-static ConCommand open_config_dir{"open_config_dir", "Opens the config directory in the OS's graphical file browser.", [] { // NOLINT(cert-err58-cpp)
+ConCommand open_config_dir{"open_config_dir", "Opens the config directory in the OS's graphical file browser.", [] { // NOLINT(cert-err58-cpp)
     std::string dir = Config::getConfigDirectory().data();
 #if defined(CHIRA_PLATFORM_WINDOWS)
     ShellExecute(nullptr, "open", dir.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
@@ -63,4 +59,8 @@ std::string_view Config::getConfigDirectory() {
     pathString.append(R"(\AppData\Local\ChiraEngine\)");
 #endif
     return pathString;
+}
+
+std::string Config::getConfigFile(std::string_view file) {
+    return std::string{Config::getConfigDirectory()} + file.data();
 }

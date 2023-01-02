@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <string>
 #include <string_view>
+#include <vector>
 #include <glm/glm.hpp>
 #include <core/Assertions.h>
 #include <math/Matrix.h>

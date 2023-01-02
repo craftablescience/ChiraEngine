@@ -16,7 +16,7 @@ protected:
     SharedPointer<TextureCubemap> cubemap;
     std::string cubemapPath{"file://textures/missing.json"};
 public:
-    CHIRA_PROPS (
+    CHIRA_PROPS_INHERITED(IMaterial) (
             CHIRA_PROP_NAMED_SET(MaterialCubemap, cubemapPath, cubemap, setTextureCubemap)
     );
 private:

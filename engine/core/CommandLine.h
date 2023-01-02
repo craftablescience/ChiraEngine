@@ -1,23 +1,13 @@
 #pragma once
 
-#include <string>
 #include <string_view>
-#include <vector>
 
-namespace chira {
+namespace chira::CommandLine {
 
-class CommandLine {
-    friend class Engine;
-private:
-    static void initialize(int argc, const char* const argv[]);
-public:
-    CommandLine() = delete;
+/// Initialization is only meant to happen once per program instantiation.
+void init(int argc, const char* const argv[]);
+[[nodiscard]] bool has(std::string_view argument);
+[[nodiscard]] std::string_view get(std::string_view argument);
+[[nodiscard]] std::string_view getProgramName();
 
-    [[nodiscard]] static bool has(std::string_view argument);
-    [[nodiscard]] static std::string_view get(std::string_view argument);
-    [[nodiscard]] static std::string_view getProgramName();
-private:
-    static inline std::vector<std::string> arguments;
-};
-
-} // namespace chira
+} // namespace chira::CommandLine

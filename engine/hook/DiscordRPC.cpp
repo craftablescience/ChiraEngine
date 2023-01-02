@@ -10,7 +10,7 @@ using namespace chira;
 CHIRA_CREATE_LOG(DISCORD);
 
 [[maybe_unused]]
-static ConVar discord_enable{"discord_enable", true, "Allows applications to use Discord rich presence.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+ConVar discord_enable{"discord_enable", true, "Allows applications to use Discord rich presence.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
 
 void DiscordRPC::init(std::string_view appId) {
     if (DiscordRPC::isInitialized || !discord_enable.getValue<bool>())
@@ -107,7 +107,7 @@ void DiscordRPC::updatePresence() {
         if (!DiscordRPC::smallImageText.empty())
             discordPresence.smallImageText = DiscordRPC::smallImageText.c_str();
 
-        DiscordButton buttons[2] { nullptr };
+        DiscordButton buttons[2] {{}, {}};
         if (!DiscordRPC::button1.url.empty()) {
             buttons[0].label = DiscordRPC::button1.name.c_str();
             buttons[0].url = DiscordRPC::button1.url.c_str();

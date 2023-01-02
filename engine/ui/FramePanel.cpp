@@ -4,14 +4,10 @@
 
 using namespace chira;
 
-FramePanel::FramePanel(const std::string& title_, bool startVisible, ImVec2 windowSize, bool enforceSize)
-    : IPanel(title_, startVisible, windowSize, enforceSize), currentSize(windowSize.x, windowSize.y) {
-    this->frame = new Frame{static_cast<int>(windowSize.x), static_cast<int>(windowSize.y)};
-}
-
-FramePanel::~FramePanel() {
-    delete this->frame;
-}
+FramePanel::FramePanel(const std::string& title_, Frame* frame_, bool startVisible, ImVec2 windowSize, bool enforceSize)
+    : IPanel(title_, startVisible, windowSize, enforceSize)
+    , frame(frame_)
+    , currentSize(windowSize.x, windowSize.y) {}
 
 void FramePanel::renderContents() {
     if (ImGui::BeginChild("__internal_frame__")) {
@@ -21,8 +17,7 @@ void FramePanel::renderContents() {
             this->frame->setFrameSize(size);
             this->currentSize = size;
         }
-        // thank you C++ for this whole casting mess
-        ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<unsigned long long>(this->frame->getColorTextureHandle())), guiSize, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::Image(Renderer::getImGuiFrameBufferHandle(this->frame->getRawHandle()), guiSize, ImVec2(0, 1), ImVec2(1, 0));
     }
     ImGui::EndChild();
 }

@@ -26,7 +26,7 @@ protected:
     float shininess = 32.f;
     float lambertFactor = 1.f;
 public:
-    CHIRA_PROPS(
+    CHIRA_PROPS_INHERITED(IMaterial) (
             CHIRA_PROP_NAMED_SET(MaterialPhong, diffusePath, diffuse, setTextureDiffuse),
             CHIRA_PROP_NAMED_SET(MaterialPhong, specularPath, specular, setTextureSpecular),
             CHIRA_PROP_SET(MaterialPhong, shininess, setShininess),

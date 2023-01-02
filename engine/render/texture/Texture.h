@@ -1,7 +1,6 @@
 #pragma once
 
-#include <glad/gl.h>
-#include "Image.h"
+#include <loader/image/Image.h>
 #include "ITexture.h"
 
 namespace chira {
@@ -9,18 +8,18 @@ namespace chira {
 class Texture final : public ITexture {
 public:
     explicit Texture(std::string identifier_, bool cacheTexture = true);
+    ~Texture() override;
     void compile(const nlohmann::json& properties) override;
-    void use() override;
+    void use() const override;
+    void use(TextureUnit activeTextureUnit) const override;
 protected:
     SharedPointer<Image> file;
     std::string filePath{"file://textures/missing.png"};
-    int format = GL_RGBA;
-    std::string formatOverride{"NONE"};
-    int wrapModeS = GL_REPEAT;
+    WrapMode wrapModeS = WrapMode::REPEAT;
     std::string wrapModeSStr{"REPEAT"};
-    int wrapModeT = GL_REPEAT;
+    WrapMode wrapModeT = WrapMode::REPEAT;
     std::string wrapModeTStr{"REPEAT"};
-    int filterMode = GL_LINEAR;
+    FilterMode filterMode = FilterMode::LINEAR;
     std::string filterModeStr{"LINEAR"};
     bool mipmaps = true;
     bool verticalFlip = true;
@@ -30,8 +29,7 @@ private:
     void setWrapModeS(std::string wrapModeSStr_);
     void setWrapModeT(std::string wrapModeTStr_);
 public:
-    CHIRA_PROPS (
-            CHIRA_PROP(Texture, formatOverride),
+    CHIRA_PROPS() (
             CHIRA_PROP(Texture, verticalFlip),
             CHIRA_PROP(Texture, mipmaps),
             CHIRA_PROP_NAMED(Texture, filePath, image),

@@ -50,6 +50,7 @@ struct ColorRGBA {
     float a;
     ColorRGBA(float R, float G, float B, float A = 1.f);
     explicit ColorRGBA(float all, float A = 1.f);
+    explicit ColorRGBA(ColorRGB color, float A = 1.f);
     ColorRGBA();
     bool operator==(const ColorRGBA& other) const {
         return this->r == other.r && this->g == other.g && this->b == other.b && this->a == other.a;

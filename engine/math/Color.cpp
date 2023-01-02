@@ -27,4 +27,5 @@ ColorRGBA::ColorRGBA(float R, float G, float B, float A)
     , b(std::clamp(B, 0.f, 1.f))
     , a(std::clamp(A, 0.f, 1.f)) {}
 ColorRGBA::ColorRGBA(float all, float A) : ColorRGBA(all, all, all, A) {}
+ColorRGBA::ColorRGBA(ColorRGB color, float A) : ColorRGBA(color.r, color.g, color.b, A) {}
 ColorRGBA::ColorRGBA() : ColorRGBA(0) {}

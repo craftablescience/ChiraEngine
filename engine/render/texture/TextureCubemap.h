@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glad/gl.h>
+#include <render/backend/RenderTypes.h>
 #include "ITexture.h"
 
 namespace chira {
@@ -8,8 +8,10 @@ namespace chira {
 class TextureCubemap final : public ITexture {
 public:
     explicit TextureCubemap(std::string identifier_);
+    ~TextureCubemap() override;
     void compile(const nlohmann::json& properties) override;
-    void use() override;
+    void use() const override;
+    void use(TextureUnit activeTextureUnit) const override;
 protected:
     std::string imageFD{"file://textures/missing.png"};
     std::string imageBK{"file://textures/missing.png"};
@@ -23,26 +25,14 @@ protected:
     bool verticalFlipDN = false;
     bool verticalFlipLT = false;
     bool verticalFlipRT = false;
-    int formatFD = GL_RGBA;
-    int formatBK = GL_RGBA;
-    int formatUP = GL_RGBA;
-    int formatDN = GL_RGBA;
-    int formatLT = GL_RGBA;
-    int formatRT = GL_RGBA;
-    std::string formatOverrideFD{"NONE"};
-    std::string formatOverrideBK{"NONE"};
-    std::string formatOverrideUP{"NONE"};
-    std::string formatOverrideDN{"NONE"};
-    std::string formatOverrideLT{"NONE"};
-    std::string formatOverrideRT{"NONE"};
     bool mipmaps = true;
-    int filterMode = GL_LINEAR;
+    FilterMode filterMode = FilterMode::LINEAR;
     std::string filterModeStr{"LINEAR"};
-    int wrapModeS = GL_REPEAT;
+    WrapMode wrapModeS = WrapMode::REPEAT;
     std::string wrapModeSStr{"REPEAT"};
-    int wrapModeT = GL_REPEAT;
+    WrapMode wrapModeT = WrapMode::REPEAT;
     std::string wrapModeTStr{"REPEAT"};
-    int wrapModeR = GL_REPEAT;
+    WrapMode wrapModeR = WrapMode::REPEAT;
     std::string wrapModeRStr{"REPEAT"};
 private:
     void setFilterMode(std::string filterModeStr_);
@@ -50,7 +40,7 @@ private:
     void setWrapModeT(std::string wrapModeTStr_);
     void setWrapModeR(std::string wrapModeRStr_);
 public:
-    CHIRA_PROPS(
+    CHIRA_PROPS() (
             CHIRA_PROP(TextureCubemap, imageFD),
             CHIRA_PROP(TextureCubemap, imageBK),
             CHIRA_PROP(TextureCubemap, imageUP),
@@ -63,12 +53,6 @@ public:
             CHIRA_PROP(TextureCubemap, verticalFlipDN),
             CHIRA_PROP(TextureCubemap, verticalFlipLT),
             CHIRA_PROP(TextureCubemap, verticalFlipRT),
-            CHIRA_PROP(TextureCubemap, formatOverrideFD),
-            CHIRA_PROP(TextureCubemap, formatOverrideBK),
-            CHIRA_PROP(TextureCubemap, formatOverrideUP),
-            CHIRA_PROP(TextureCubemap, formatOverrideDN),
-            CHIRA_PROP(TextureCubemap, formatOverrideLT),
-            CHIRA_PROP(TextureCubemap, formatOverrideRT),
             CHIRA_PROP(TextureCubemap, mipmaps),
             CHIRA_PROP_NAMED_SET(TextureCubemap, filterModeStr, filterMode, setFilterMode),
             CHIRA_PROP_NAMED_SET(TextureCubemap, wrapModeSStr, wrapModeS, setWrapModeS),

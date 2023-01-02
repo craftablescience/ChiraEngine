@@ -200,7 +200,7 @@ TEST(ConVarRegistry, hasConVar) {
 
 TEST(ConVarRegistry, cacheConVar) {
     // Just in case!
-    std::filesystem::remove(std::string{Config::getConfigDirectory().data()} + "/convars.json");
+    std::filesystem::remove(Config::getConfigFile("convars.json"));
     {
         JSONSettingsLoader cache{"convars.json"};
         EXPECT_FALSE(cache.hasValue("my_cached_convar_bool"));
@@ -233,5 +233,5 @@ TEST(ConVarRegistry, cacheConVar) {
         EXPECT_STREQ(my_cached_convar_string.getValue<std::string>().c_str(), "hello");
     }
     // Clean up after ourselves
-    std::filesystem::remove(std::string{Config::getConfigDirectory().data()} + "/convars.json");
+    std::filesystem::remove(Config::getConfigFile("convars.json"));
 }

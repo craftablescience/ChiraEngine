@@ -5,14 +5,13 @@
 using namespace chira;
 
 void MaterialPhong::compile(const nlohmann::json& properties) {
-    IMaterial::compile(properties);
     Serialize::fromJSON(this, properties);
 }
 
 void MaterialPhong::use() const {
     IMaterial::use();
-    this->diffuse->use();
-    this->specular->use();
+    this->diffuse->use(TextureUnit::G0);
+    this->specular->use(TextureUnit::G1);
     this->shader->setUniform("material.shininess", this->shininess);
     this->shader->setUniform("material.lambertFactor", this->lambertFactor);
 }
@@ -24,7 +23,6 @@ SharedPointer<Texture> MaterialPhong::getTextureDiffuse() const {
 void MaterialPhong::setTextureDiffuse(std::string path) {
     this->diffusePath = std::move(path);
     this->diffuse = Resource::getResource<Texture>(this->diffusePath);
-    this->diffuse->setTextureUnit(GL_TEXTURE0);
     this->shader->use();
     this->shader->setUniform("material.diffuse", 0);
 }
@@ -36,7 +34,6 @@ SharedPointer<Texture> MaterialPhong::getTextureSpecular() const {
 void MaterialPhong::setTextureSpecular(std::string path) {
     this->specularPath = std::move(path);
     this->specular = Resource::getResource<Texture>(this->specularPath);
-    this->specular->setTextureUnit(GL_TEXTURE1);
     this->shader->use();
     this->shader->setUniform("material.specular", 1);
 }

@@ -11,4 +11,5 @@ list(APPEND CHIRA_ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/MaterialFactory.cpp
         ${CMAKE_CURRENT_LIST_DIR}/MaterialFramebuffer.cpp
         ${CMAKE_CURRENT_LIST_DIR}/MaterialPhong.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/MaterialTextured.cpp)
+        ${CMAKE_CURRENT_LIST_DIR}/MaterialTextured.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/MaterialUntextured.cpp)

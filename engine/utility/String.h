@@ -6,6 +6,20 @@
 
 namespace chira::String {
 
+[[nodiscard]] constexpr char toLowerChar(char in) {
+    if (in >= 'A' && in <= 'Z') {
+        return static_cast<char>(in + 32);
+    }
+    return in;
+}
+
+[[nodiscard]] constexpr char toUpperChar(char in) {
+    if (in >= 'a' && in <= 'z') {
+        return static_cast<char>(in - 32);
+    }
+    return in;
+}
+
 bool startsWith(std::string_view str, char beginning);
 bool startsWith(std::string_view str, std::string_view beginning);
 

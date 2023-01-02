@@ -8,65 +8,65 @@
 using namespace chira;
 
 void EditorCamera::setupKeybinds() {
-    InputManager::addCallback(InputKeyButton{Key::W, InputKeyEventType::REPEAT, []{
-        if (auto cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
-            cam->translateWithRotation({0, 0, -cam->getMovementSpeed() * Engine::getDeltaTime()});
-    }});
-    InputManager::addCallback(InputKeyButton{Key::S, InputKeyEventType::REPEAT, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
-            cam->translateWithRotation({0, 0, cam->getMovementSpeed() * Engine::getDeltaTime()});
-    }});
-    InputManager::addCallback(InputKeyButton{Key::A, InputKeyEventType::REPEAT, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
-            cam->translateWithRotation({-cam->getMovementSpeed() * Engine::getDeltaTime(), 0, 0});
-    }});
-    InputManager::addCallback(InputKeyButton{Key::D, InputKeyEventType::REPEAT, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
-            cam->translateWithRotation({cam->getMovementSpeed() * Engine::getDeltaTime(), 0, 0});
-    }});
-    InputManager::addCallback(InputKeyButton{Key::SPACE, InputKeyEventType::REPEAT, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
-            cam->translateWithRotation({0, cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
-    }});
-    InputManager::addCallback(InputKeyButton{Key::LEFT_SHIFT, InputKeyEventType::REPEAT, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
-            cam->translateWithRotation({0, -cam->getMovementSpeed() * Engine::getDeltaTime(), 0});
-    }});
-    InputManager::addCallback(InputMouseButton{Key::MOUSE_RIGHT, InputKeyEventType::PRESSED, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()))
+    Input::KeyEvent::create(Input::Key::SDLK_w, Input::KeyEventType::REPEATED, [] {
+        if (auto cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive())
+            cam->translateWithRotation({0, 0, -cam->getMovementSpeed() * (static_cast<float>(Engine::getDeltaTicks()) / 1000)});
+    });
+    Input::KeyEvent::create(Input::Key::SDLK_s, Input::KeyEventType::REPEATED, [] {
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive())
+            cam->translateWithRotation({0, 0, cam->getMovementSpeed() * (static_cast<float>(Engine::getDeltaTicks()) / 1000)});
+    });
+    Input::KeyEvent::create(Input::Key::SDLK_a, Input::KeyEventType::REPEATED, [] {
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive())
+            cam->translateWithRotation({-cam->getMovementSpeed() * (static_cast<float>(Engine::getDeltaTicks()) / 1000), 0, 0});
+    });
+    Input::KeyEvent::create(Input::Key::SDLK_d, Input::KeyEventType::REPEATED, [] {
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive())
+            cam->translateWithRotation({cam->getMovementSpeed() * (static_cast<float>(Engine::getDeltaTicks()) / 1000), 0, 0});
+    });
+    Input::KeyEvent::create(Input::Key::SDLK_SPACE, Input::KeyEventType::REPEATED, [] {
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive())
+            cam->translateWithRotation({0, cam->getMovementSpeed() * (static_cast<float>(Engine::getDeltaTicks()) / 1000), 0});
+    });
+    Input::KeyEvent::create(Input::Key::SDLK_LSHIFT, Input::KeyEventType::REPEATED, [] {
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive())
+            cam->translateWithRotation({0, -cam->getMovementSpeed() * (static_cast<float>(Engine::getDeltaTicks()) / 1000), 0});
+    });
+    Input::MouseEvent::create(Input::Mouse::BUTTON_RIGHT, Input::MouseEventType::CLICKED, [](int, int, uint8_t) {
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()))
             cam->setActive(true);
-    }});
-    InputManager::addCallback(InputMouseButton{Key::MOUSE_RIGHT, InputKeyEventType::RELEASED, []{
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()))
+    });
+    Input::MouseEvent::create(Input::Mouse::BUTTON_RIGHT, Input::MouseEventType::RELEASED, [](int, int, uint8_t) {
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()))
             cam->setActive(false);
-    }});
-    InputManager::addCallback(InputMouseMovement{InputMouseMovementEventType::MOVE, [](double xOffset, double yOffset) {
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive()) {
-            xOffset *= cam->getMouseSensitivity() * Engine::getDeltaTime();
-            yOffset *= cam->getMouseSensitivity() * Engine::getDeltaTime();
+    });
+    Input::MouseMotionEvent::create(Input::MouseMotion::MOVEMENT, Input::MouseMotionEventType::NOT_APPLICABLE, [](int, int, int xRel, int yRel) {
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive()) {
+            float xOffset = static_cast<float>(xRel) * cam->getMouseSensitivity() * (static_cast<float>(Engine::getDeltaTicks()) / 1000);
+            float yOffset = static_cast<float>(yRel) * cam->getMouseSensitivity() * (static_cast<float>(Engine::getDeltaTicks()) / 1000);
 
             if (ConVarRegistry::hasConVar("input_invert_x_axis") && ConVarRegistry::getConVar("input_invert_x_axis")->getValue<bool>())
-                cam->yaw += static_cast<float>(xOffset);
+                cam->yaw += xOffset;
             else
-                cam->yaw -= static_cast<float>(xOffset);
+                cam->yaw -= xOffset;
 
             if (ConVarRegistry::hasConVar("input_invert_y_axis") && ConVarRegistry::getConVar("input_invert_y_axis")->getValue<bool>())
-                cam->pitch -= static_cast<float>(yOffset);
+                cam->pitch -= yOffset;
             else
-                cam->pitch += static_cast<float>(yOffset);
+                cam->pitch += yOffset;
 
-            if (cam->pitch > 89.8f)
-                cam->pitch = 89.8f;
-            else if (cam->pitch < -89.8f)
-                cam->pitch = -89.8f;
+            if (cam->pitch > 89.9f)
+                cam->pitch = 89.9f;
+            else if (cam->pitch < -89.9f)
+                cam->pitch = -89.9f;
         }
-    }});
-    InputManager::addCallback(InputMouseMovement{InputMouseMovementEventType::SCROLL, [](double x, double y) {
-        if (auto* cam = assert_cast<EditorCamera*>(Engine::getWindow()->getCamera()); cam && cam->getActive())
+    });
+    Input::MouseMotionEvent::create(Input::MouseMotion::SCROLL, Input::MouseMotionEventType::NOT_APPLICABLE, [](int x, int y, int, int) {
+        if (auto* cam = assert_cast<EditorCamera*>(Engine::getRoot()->getCamera()); cam && cam->getActive())
             cam->translateWithRotation({
-                x * cam->getMovementSpeed() / 40,
+                static_cast<float>(x) * cam->getMovementSpeed() / 40,
                 0,
-                -y * cam->getMovementSpeed() / 40 // negate for OpenGL
+                -static_cast<float>(y) * cam->getMovementSpeed() / 40 // negate for OpenGL
             });
-    }});
+    });
 }
