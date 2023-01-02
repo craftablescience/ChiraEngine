@@ -206,8 +206,8 @@ elseif (${CHIRA_SCRIPT_LANG} MATCHES "CSharp") # MONO
 
     # Locate Mono using pkgconfig and apply the C and LD flags + link the library
     pkg_check_modules(MONO REQUIRED IMPORTED_TARGET mono-2)
-    target_compile_options(ChiraEngine PRIVATE ${MONO_CFLAGS} ${MONO_CFLAGS_OTHER})
-    target_link_options(ChiraEngine PRIVATE ${MONO_LDFLAGS} ${MONO_LDFLAGS_OTHER})
+    # target_compile_options(ChiraEngine PRIVATE ${MONO_CFLAGS} ${MONO_CFLAGS_OTHER})
+    # target_link_options(ChiraEngine PRIVATE ${MONO_LDFLAGS} ${MONO_LDFLAGS_OTHER})
     target_link_libraries(ChiraEngine PUBLIC PkgConfig::MONO)
 
     # we have to add this here because when we initially make it the library isn't defined
@@ -295,12 +295,6 @@ if(CHIRA_BUILD_TESTS)
     target_include_directories(ChiraTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tests)
     include(GoogleTest)
     gtest_discover_tests(ChiraTest)
-
-    # Copy gtest binaries next to the executable
-    add_custom_command(
-            TARGET ChiraTest
-            PRE_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/bin ${CMAKE_BINARY_DIR})
 endif()
 
 # Copy resources

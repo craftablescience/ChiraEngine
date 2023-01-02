@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 #include <TestHelpers.h>
 
-#include <script/AngelScriptHolder.h>
+#include <script/AS/AngelScriptHolder.h>
 
 using namespace chira;
 
 TEST(AngelScriptHolder, helloWorld) {
     PREINIT_ENGINE();
-    SETUP_ANGELSCRIPT();
+    SETUP_SCRIPTENGINE();
 
     AngelScriptHolder script{"file://scripts/test.as"};
     LOG_BEGIN();
@@ -17,4 +17,6 @@ TEST(AngelScriptHolder, helloWorld) {
     EXPECT_STREQ(LOG_LAST_SOURCE, "ANGELSCRIPTVM");
     EXPECT_STREQ(LOG_LAST_MESSAGE, "hello world");
     LOG_END();
+
+    SHUTDOWN_SCRIPTENGINE();
 }
