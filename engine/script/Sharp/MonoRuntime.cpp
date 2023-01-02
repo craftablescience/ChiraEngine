@@ -46,7 +46,7 @@ void MonoRuntime::init() {
         throw std::runtime_error(TRC("error.monoruntime.jit_init_failure"));
     }
 
-    // register some base calls for testing
+    // register some base calls
     mono_add_internal_call("ChiraSharp.CE::Print(string)", (const void*)print);
 
     // load in the base assembly
