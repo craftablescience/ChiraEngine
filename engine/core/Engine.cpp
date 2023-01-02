@@ -10,7 +10,8 @@
 #include <loader/mesh/OBJMeshLoader.h>
 #include <loader/mesh/ChiraMeshLoader.h>
 #include <resource/provider/FilesystemResourceProvider.h>
-#include <script/AngelScriptVM.h>
+#include <resource/ShaderResource.h>
+#include <script/Engine.h>
 #include <ui/debug/ConsolePanel.h>
 #include <ui/debug/ResourceUsageTrackerPanel.h>
 #include "CommandLine.h"
@@ -98,7 +99,7 @@ void Engine::init() {
     });
 
     // Start script VM
-    AngelScriptVM::init();
+    ScriptEngine::init();
 
     // Create default resources
     Events::createEvent("chira::engine::create_default_resources");
@@ -241,6 +242,8 @@ void Engine::run() {
     Engine::device.reset();
 
     Resource::discardAll();
+
+    ScriptEngine::shutdown();
 
     SDL_Quit();
     exit(EXIT_SUCCESS);

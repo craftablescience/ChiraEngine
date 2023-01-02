@@ -1,14 +1,13 @@
 #include <gtest/gtest.h>
 #include <TestHelpers.h>
 
-#include <script/AngelScriptHolder.h>
+#include <script/AS/AngelScriptHolder.h>
 
 using namespace chira;
 
 TEST(AngelScriptHolder, print) {
     PREINIT_ENGINE();
-    SETUP_ANGELSCRIPT();
-    LOG_BEGIN();
+    SETUP_SCRIPTENGINE();
 
     AngelScriptHolder script{"file://scripts/test.as"};
 
@@ -19,6 +18,8 @@ TEST(AngelScriptHolder, print) {
     EXPECT_STREQ(LOG_LAST_MESSAGE, "hello world");
 
     LOG_END();
+
+    SHUTDOWN_SCRIPTENGINE();
 }
 
 TEST(AngelScriptHolder, callFuncVoidParamsNone) {

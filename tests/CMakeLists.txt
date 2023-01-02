@@ -6,8 +6,12 @@ list(APPEND CHIRA_TEST_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/engine/math/AxisTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/resource/provider/FilesystemResourceProviderTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/resource/Properties.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/engine/script/AngelScriptHelpersTest.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/engine/script/AngelScriptHolderTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/ui/debug/ConsolePanelTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/utility/StringTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/utility/UUIDGeneratorTest.cpp)
+
+if (${CHIRA_SCRIPT_LANG} MATCHES "AngelScript")
+        include(${CMAKE_CURRENT_LIST_DIR}/engine/script/AS/CMakeLists.txt)
+elseif (${CHIRA_SCRIPT_LANG} MATCHES "CSharp")
+        include(${CMAKE_CURRENT_LIST_DIR}/engine/script/Sharp/CMakeLists.txt)
+endif ()

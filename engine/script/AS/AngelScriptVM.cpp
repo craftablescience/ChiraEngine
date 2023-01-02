@@ -13,6 +13,8 @@
 
 #include <core/Logger.h>
 
+#include <script/Engine.h>
+
 using namespace chira;
 
 CHIRA_CREATE_LOG(ANGELSCRIPTVM);
@@ -37,6 +39,14 @@ void AngelScriptVM::init() {
     RegisterScriptAny(        AngelScriptVM::asEngine);
 
     AngelScriptVM::registerGlobalFunction(print, "print");
+}
+
+void ScriptEngine::init() {
+    AngelScriptVM::init();
+}
+
+void ScriptEngine::shutdown() {
+    // nothing needed for AS apparently
 }
 
 static void messageCallback(const asSMessageInfo* msg, void*) {

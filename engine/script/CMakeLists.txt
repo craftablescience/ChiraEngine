@@ -1,8 +1,9 @@
-list(APPEND CHIRA_ENGINE_HEADERS
-        ${CMAKE_CURRENT_LIST_DIR}/AngelScriptHelpers.h
-        ${CMAKE_CURRENT_LIST_DIR}/AngelScriptHolder.h
-        ${CMAKE_CURRENT_LIST_DIR}/AngelScriptVM.h)
+if (${CHIRA_SCRIPT_LANG} MATCHES "AngelScript")
+    include(${CMAKE_CURRENT_LIST_DIR}/AS/CMakeLists.txt)
+elseif (${CHIRA_SCRIPT_LANG} MATCHES "CSharp")
+    include(${CMAKE_CURRENT_LIST_DIR}/Sharp/CMakeLists.txt)
+endif ()
 
-list(APPEND CHIRA_ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/AngelScriptHolder.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/AngelScriptVM.cpp)
+list(APPEND CHIRA_ENGINE_HEADERS
+    ${CMAKE_CURRENT_LIST_DIR}/Engine.h
+)

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <entity/Entity.h>
-#include <script/AngelScriptHolder.h>
 
 namespace chira {
 
@@ -14,7 +13,7 @@ public:
     void render(glm::mat4 parentTransform) override;
     ~Script() override;
 private:
-    AngelScriptHolder script;
+    // AngelScriptHolder script;
 };
 
 } // namespace chira

@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
+find_package(PkgConfig)
 include(CMakeDependentOption)
 
 
@@ -240,14 +241,6 @@ list(APPEND CHIRA_ENGINE_INCLUDE_DIRS
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES imgui)
 
 
-# ANGELSCRIPT
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript)
-list(APPEND CHIRA_ENGINE_INCLUDE_DIRS
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/addons
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/include)
-list(APPEND CHIRA_ENGINE_LINK_LIBRARIES angelscript)
-
-
 # DISCORD
 if(CHIRA_USE_DISCORD)
     set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -312,6 +305,29 @@ apply_optimizations(${PROJECT_NAME})
 if(CHIRA_BUILD_WITH_PCH)
     target_precompile_headers(${PROJECT_NAME} PRIVATE ${CHIRA_ENGINE_HEADERS})
 endif()
+
+
+# Scripting languages
+set(CHIRA_SCRIPT_LANG "AngelScript" CACHE STRING "Choose which scripting language this build of ChiraEngine will use" )
+
+if (${CHIRA_SCRIPT_LANG} MATCHES "AngelScript") # ANGELSCRIPT
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES angelscript)
+    list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/addons
+                                    ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/angelscript/include)
+
+elseif (${CHIRA_SCRIPT_LANG} MATCHES "CSharp") # MONO
+
+    # Locate Mono using pkgconfig and apply the C and LD flags + link the library
+    pkg_check_modules(MONO REQUIRED IMPORTED_TARGET mono-2)
+    target_link_libraries(ChiraEngine PUBLIC PkgConfig::MONO)
+
+    # we have to add this here because when we initially make this target the library isn't defined
+    # TODO: Make this process less fragmented/messy
+    add_dependencies(${PROJECT_NAME} ChiraSharpAssembly)
+
+endif()
+
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
         ${CHIRA_ENGINE_DEFINITIONS})
