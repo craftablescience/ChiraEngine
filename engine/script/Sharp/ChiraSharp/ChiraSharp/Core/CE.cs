@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 
 namespace ChiraSharp {
-    public class CE
+    public static class CE
     {
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
         extern static public void Print(string message);

@@ -3,7 +3,7 @@ using ChiraSharp;
 
 namespace ChiraTest {
 	public class TestEnt {
-		string message;
+		readonly string message;
 
 		public TestEnt()
 		{
