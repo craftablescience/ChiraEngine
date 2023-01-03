@@ -38,6 +38,7 @@ public:
     [[nodiscard]] bool isMaximized() const;
     void moveToPosition(glm::vec2i pos) const;
     void moveToCenter() const;
+    SDL_Window *getWindow() { return window; };
 
     /// Note: Images must have a bit depth of 8
     void setIcon(const std::string& identifier) const;

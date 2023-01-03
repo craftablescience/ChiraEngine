@@ -26,6 +26,10 @@
     #include <hook/SteamAPI.h>
 #endif
 
+#ifdef CHIRA_USE_QT
+    #include <QCoreApplication>
+#endif
+
 using namespace chira;
 
 CHIRA_CREATE_LOG(ENGINE);
@@ -105,128 +109,128 @@ void Engine::init() {
     Events::update();
 }
 
-void Engine::run() {
-    ImGui::SetCurrentContext(Engine::device->imguiContext);
-    ImGui::GetIO().Fonts->Build();
+void Engine::update() {
+    Engine::lastTime = Engine::currentTime;
+    Engine::currentTime = SDL_GetTicks64();
 
-    do {
-        Engine::lastTime = Engine::currentTime;
-        Engine::currentTime = SDL_GetTicks64();
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        // todo(input): check this function, if ImGui processed an event we should ignore that event
+        ImGui_ImplSDL2_ProcessEvent(&event);
 
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            // todo(input): check this function, if ImGui processed an event we should ignore that event
-            ImGui_ImplSDL2_ProcessEvent(&event);
-
-            // todo(input): this is O(n^2) and was written badly because i hope it will be rewritten soon please fix
-            switch (event.type) {
-                case SDL_QUIT:
-                    Engine::device->closeAfterThisFrame();
-                    break;
-                case SDL_WINDOWEVENT:
-                    switch (event.window.event) {
-                        case SDL_WINDOWEVENT_SHOWN:
-                            Engine::device->iconified = false;
-                            break;
-                        case SDL_WINDOWEVENT_HIDDEN:
-                        case SDL_WINDOWEVENT_MINIMIZED:
-                            Engine::device->iconified = true;
-                            break;
-                        case SDL_WINDOWEVENT_RESTORED:
-                            if (auto* win_maximized = ConVarRegistry::getConVar("win_maximized")) {
-                                win_maximized->setValue(false, false);
-                            }
-                            break;
-                        case SDL_WINDOWEVENT_MAXIMIZED:
-                            if (auto* win_maximized = ConVarRegistry::getConVar("win_maximized")) {
-                                win_maximized->setValue(true, false);
-                            }
-                            break;
-                        case SDL_WINDOWEVENT_SIZE_CHANGED: {
-                            int w, h;
-                            SDL_GetWindowSizeInPixels(Engine::device->window, &w, &h);
-                            Engine::device->setSize({w, h}, false);
-                            break;
+        // todo(input): this is O(n^2) and was written badly because i hope it will be rewritten soon please fix
+        switch (event.type) {
+            case SDL_QUIT:
+                Engine::device->closeAfterThisFrame();
+                break;
+            case SDL_WINDOWEVENT:
+                switch (event.window.event) {
+                    case SDL_WINDOWEVENT_SHOWN:
+                        Engine::device->iconified = false;
+                        break;
+                    case SDL_WINDOWEVENT_HIDDEN:
+                    case SDL_WINDOWEVENT_MINIMIZED:
+                        Engine::device->iconified = true;
+                        break;
+                    case SDL_WINDOWEVENT_RESTORED:
+                        if (auto* win_maximized = ConVarRegistry::getConVar("win_maximized")) {
+                            win_maximized->setValue(false, false);
                         }
-                        default:
-                            // There's quite a few events we don't care about or are already handled by other events
-                            break;
-                    }
-                    break;
-                case SDL_KEYDOWN:
-                    for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
-                        if (keyEvent.getEvent() == event.key.keysym.sym && keyEvent.getEventType() == Input::KeyEventType::PRESSED) {
-                            keyEvent();
+                        break;
+                    case SDL_WINDOWEVENT_MAXIMIZED:
+                        if (auto* win_maximized = ConVarRegistry::getConVar("win_maximized")) {
+                            win_maximized->setValue(true, false);
                         }
+                        break;
+                    case SDL_WINDOWEVENT_SIZE_CHANGED: {
+                        int w, h;
+                        SDL_GetWindowSizeInPixels(Engine::device->window, &w, &h);
+                        Engine::device->setSize({w, h}, false);
+                        break;
                     }
-                    break;
-                case SDL_KEYUP:
-                    for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
-                        if (keyEvent.getEvent() == event.key.keysym.sym && keyEvent.getEventType() == Input::KeyEventType::RELEASED) {
-                            keyEvent();
-                        }
+                    default:
+                        // There's quite a few events we don't care about or are already handled by other events
+                        break;
+                }
+                break;
+            case SDL_KEYDOWN:
+                for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
+                    if (keyEvent.getEvent() == event.key.keysym.sym && keyEvent.getEventType() == Input::KeyEventType::PRESSED) {
+                        keyEvent();
                     }
-                    break;
-                case SDL_MOUSEBUTTONDOWN:
-                    for (const auto& mouseEvent : Input::MouseEvent::getEvents()) {
-                        if (static_cast<uint8_t>(mouseEvent.getEvent()) == event.button.button && mouseEvent.getEventType() == Input::MouseEventType::CLICKED) {
-                            mouseEvent(event.button.x, event.button.y, event.button.clicks);
-                        }
+                }
+                break;
+            case SDL_KEYUP:
+                for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
+                    if (keyEvent.getEvent() == event.key.keysym.sym && keyEvent.getEventType() == Input::KeyEventType::RELEASED) {
+                        keyEvent();
                     }
-                    break;
-                case SDL_MOUSEBUTTONUP:
-                    for (const auto& mouseEvent : Input::MouseEvent::getEvents()) {
-                        if (static_cast<uint8_t>(mouseEvent.getEvent()) == event.button.button && mouseEvent.getEventType() == Input::MouseEventType::RELEASED) {
-                            mouseEvent(event.button.x, event.button.y, event.button.clicks);
-                        }
+                }
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                for (const auto& mouseEvent : Input::MouseEvent::getEvents()) {
+                    if (static_cast<uint8_t>(mouseEvent.getEvent()) == event.button.button && mouseEvent.getEventType() == Input::MouseEventType::CLICKED) {
+                        mouseEvent(event.button.x, event.button.y, event.button.clicks);
                     }
-                    break;
-                case SDL_MOUSEMOTION:
-                    for (const auto& mouseMotionEvent : Input::MouseMotionEvent::getEvents()) {
-                        if (mouseMotionEvent.getEvent() == Input::MouseMotion::MOVEMENT) {
-                            mouseMotionEvent(event.motion.x, event.motion.y, event.motion.xrel, event.motion.yrel);
-                        }
+                }
+                break;
+            case SDL_MOUSEBUTTONUP:
+                for (const auto& mouseEvent : Input::MouseEvent::getEvents()) {
+                    if (static_cast<uint8_t>(mouseEvent.getEvent()) == event.button.button && mouseEvent.getEventType() == Input::MouseEventType::RELEASED) {
+                        mouseEvent(event.button.x, event.button.y, event.button.clicks);
                     }
-                    break;
-                case SDL_MOUSEWHEEL:
-                    for (const auto& mouseMotionEvent : Input::MouseMotionEvent::getEvents()) {
-                        if (mouseMotionEvent.getEvent() == Input::MouseMotion::SCROLL) {
-                            mouseMotionEvent(event.wheel.x, event.wheel.y, event.wheel.x, event.wheel.y);
-                        }
+                }
+                break;
+            case SDL_MOUSEMOTION:
+                for (const auto& mouseMotionEvent : Input::MouseMotionEvent::getEvents()) {
+                    if (mouseMotionEvent.getEvent() == Input::MouseMotion::MOVEMENT) {
+                        mouseMotionEvent(event.motion.x, event.motion.y, event.motion.xrel, event.motion.yrel);
                     }
-                    break;
-                default:
-                    // todo(input): handle joystick / game controller inputs!
-                    break;
-            }
+                }
+                break;
+            case SDL_MOUSEWHEEL:
+                for (const auto& mouseMotionEvent : Input::MouseMotionEvent::getEvents()) {
+                    if (mouseMotionEvent.getEvent() == Input::MouseMotion::SCROLL) {
+                        mouseMotionEvent(event.wheel.x, event.wheel.y, event.wheel.x, event.wheel.y);
+                    }
+                }
+                break;
+            default:
+                // todo(input): handle joystick / game controller inputs!
+                break;
         }
+    }
 
-        // Handle repeating events
-        // This is a pointer to a static variable in SDL so this is safe
-        static const auto* keyStates = SDL_GetKeyboardState(nullptr);
-        for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
-            if (keyStates[SDL_GetScancodeFromKey(keyEvent.getEvent())] && keyEvent.getEventType() == Input::KeyEventType::REPEATED) {
-                keyEvent();
-            }
+    // Handle repeating events
+    // This is a pointer to a static variable in SDL so this is safe
+    static const auto* keyStates = SDL_GetKeyboardState(nullptr);
+    for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
+        if (keyStates[SDL_GetScancodeFromKey(keyEvent.getEvent())] && keyEvent.getEventType() == Input::KeyEventType::REPEATED) {
+            keyEvent();
         }
+    }
 
-        Engine::device->refresh();
+    Engine::device->refresh();
 
 #ifdef CHIRA_USE_DISCORD
-        if (DiscordRPC::initialized()) {
-            DiscordRPC::updatePresence();
-        }
+    if (DiscordRPC::initialized()) {
+        DiscordRPC::updatePresence();
+    }
 #endif
 #ifdef CHIRA_USE_STEAMWORKS
-        if (SteamAPI::Client::initialized()) {
-            SteamAPI::Client::runCallbacks();
-        }
+    if (SteamAPI::Client::initialized()) {
+        SteamAPI::Client::runCallbacks();
+    }
 #endif
-        Events::update();
-    } while (!Engine::device->shouldCloseAfterThisFrame());
+    Events::update();
 
-    LOG_ENGINE.info("Exiting...");
+#ifdef CHIRA_USE_QT
+    QCoreApplication::sendPostedEvents();
+    QCoreApplication::processEvents();
+#endif
+}
 
+void Engine::shutdown() {
 #ifdef CHIRA_USE_DISCORD
     if (DiscordRPC::initialized()) {
         DiscordRPC::shutdown();
@@ -241,7 +245,21 @@ void Engine::run() {
     Engine::device.reset();
 
     Resource::discardAll();
+}
 
+// the code previously placed where update and shutdown are was separated out
+// so that Qt could be implemented properly
+void Engine::run() {
+    ImGui::SetCurrentContext(Engine::device->imguiContext);
+    ImGui::GetIO().Fonts->Build();
+
+    do {
+        Engine::update();
+    } while (!Engine::device->shouldCloseAfterThisFrame());
+
+    LOG_ENGINE.info("Exiting...");
+
+    Engine::shutdown();
     SDL_Quit();
     exit(EXIT_SUCCESS);
 }
