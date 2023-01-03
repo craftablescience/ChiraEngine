@@ -1,6 +1,7 @@
 {
   "ui.window.title": "Chira Editor",
   "ui.qtwindow.title": "Chira Editor QT",
+  "ui.resbrowser.title": "Resource Browser",
 
   "ui.engineview.title": "Engine View",
   "ui.entities": "Entities",

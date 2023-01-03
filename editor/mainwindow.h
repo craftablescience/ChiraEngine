@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QCloseEvent>
 
 namespace Ui {
 class MainWindow;
@@ -14,8 +15,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots:
-    void on_ceShowGrid_stateChanged(int arg1);
+    void closeEvent (QCloseEvent *event);
 
 private:
     Ui::MainWindow *ui;
