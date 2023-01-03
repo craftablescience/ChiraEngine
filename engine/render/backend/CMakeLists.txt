@@ -1,6 +1,5 @@
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/render/backend/api/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/render/backend/device/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/render/backend/Qt/CMakeLists.txt)
 
 list(APPEND CHIRA_ENGINE_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/RenderBackend.h

@@ -1,4 +1,7 @@
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/ui/debug/CMakeLists.txt)
+if (CHIRA_USE_QT)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/engine/ui/qt/CMakeLists.txt)
+endif()
 
 list(APPEND CHIRA_ENGINE_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/Font.h

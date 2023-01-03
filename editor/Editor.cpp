@@ -27,8 +27,10 @@
 // Need to register phong material!
 #include <render/material/MaterialPhong.h>
 
-#include <QApplication>
-#include <mainwindow.h>
+#ifdef CHIRA_USE_QT
+    #include <QApplication>
+    #include <mainwindow.h>
+#endif
 
 using namespace chira;
 
@@ -154,7 +156,9 @@ std::string_view ModelViewerPanel::getMeshId() const {
 }
 
 int main(int argc, const char* const argv[]) {
+#ifdef CHIRA_USE_QT
     QApplication app(argc, const_cast<char**>(argv));
+#endif
 
     Engine::preInit(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{"editor"});
@@ -202,8 +206,10 @@ int main(int argc, const char* const argv[]) {
     gridMesh->addCube({{0, 0,    0}, {0, 0, 0}, {0, 1, 0}}, glm::vec3{0.05f});
     Engine::getRoot()->addChild(grid);
 
+#ifdef CHIRA_USE_QT
     MainWindow w;
     w.show();
+#endif
 
     Engine::run();
 }

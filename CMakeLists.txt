@@ -1,11 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 include(CMakeDependentOption)
 
-# Qt
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
-
 # Must set some Apple options before creating the project
 if(APPLE)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum OSX deployment version")
@@ -62,6 +57,7 @@ option(CHIRA_TREAT_WARNINGS_AS_ERRORS "Build Chira Engine with warnings treated 
 option(CHIRA_BUILD_HEADLESS "Build Chira Engine without any visible window(s). Zero reliance on SDL. Primarily for testing purposes." OFF)
 option(CHIRA_USE_DISCORD "Build Chira Engine with Discord rich presence features if possible" ON)
 option(CHIRA_USE_STEAMWORKS "Build Chira Engine with Steamworks API features if possible" ON)
+option(CHIRA_USE_QT "Build Chira Engine to work embedded in a Qt window" OFF)
 
 
 # Print out what is enabled and what isn't
@@ -76,6 +72,7 @@ message(STATUS "  CHIRA_TREAT_WARNINGS_AS_ERRORS: ${CHIRA_TREAT_WARNINGS_AS_ERRO
 message(STATUS "  CHIRA_BUILD_HEADLESS: ${CHIRA_BUILD_HEADLESS}")
 message(STATUS "  CHIRA_USE_DISCORD: ${CHIRA_USE_DISCORD}")
 message(STATUS "  CHIRA_USE_STEAMWORKS: ${CHIRA_USE_STEAMWORKS}")
+message(STATUS "  CHIRA_USE_QT: ${CHIRA_USE_QT}")
 
 
 # You should add this to your own CMake to load Chira Engine's dependencies in non-Windows environments
@@ -192,6 +189,19 @@ if(CHIRA_BUILD_HEADLESS)
     #list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_BUILD_HEADLESS)
     message(FATAL_ERROR "Headless mode is not implemented yet!")
 else()
+    if (CHIRA_USE_QT)
+        set(CMAKE_AUTOMOC ON)
+        set(CMAKE_AUTORCC ON)
+        set(CMAKE_AUTOUIC ON)
+
+        # Qt
+        find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets)
+        find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
+        list(APPEND CHIRA_ENGINE_LINK_LIBRARIES Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets)
+        list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${Qt${QT_VERSION_MAJOR}Widgets_PRIVATE_INCLUDE_DIRS})
+        list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_QT)
+    endif()
+
     # The graphics API we use varies based on platform
     # macOS: OpenGL 4.1
     # Windows and Linux: OpenGL 4.3 or 4.1
@@ -212,12 +222,6 @@ else()
     list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_IMPL_OPENGL_LOADER_GLAD2)
     list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad/include)
     list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glad)
-
-    # Qt
-    find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets)
-    find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
-    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets)
-    list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${Qt${QT_VERSION_MAJOR}Widgets_PRIVATE_INCLUDE_DIRS})
 
     # SDL2
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/sdl2)

@@ -26,7 +26,9 @@
     #include <hook/SteamAPI.h>
 #endif
 
-#include <QCoreApplication>
+#ifdef CHIRA_USE_QT
+    #include <QCoreApplication>
+#endif
 
 using namespace chira;
 
@@ -110,8 +112,6 @@ void Engine::init() {
 void Engine::update() {
     Engine::lastTime = Engine::currentTime;
     Engine::currentTime = SDL_GetTicks64();
-
-    QCoreApplication::sendPostedEvents();
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -224,7 +224,10 @@ void Engine::update() {
 #endif
     Events::update();
 
+#ifdef CHIRA_USE_QT
+    QCoreApplication::sendPostedEvents();
     QCoreApplication::processEvents();
+#endif
 }
 
 void Engine::shutdown() {
