@@ -129,7 +129,7 @@ void ui::Window::UpdateWindowSize()
 //-----------------------------------------------------------------//
 void ui::Window::Resize( int w, int h )
 {
-    SDL_SetWindowSize( m_pHwnd, w, h );
+    chira::Engine::getDevice()->setSize(glm::vec2i(w, h), true);
     m_nHeight = h;
     m_nWidth = w;
 }

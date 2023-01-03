@@ -9,6 +9,10 @@
 
 // qt includes
 #include <QLayout>
+#include <QSizePolicy>
+
+// element includes
+#include "Panels/resourcebrowser.h"
 
 using namespace chira;
 
@@ -18,8 +22,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     auto* window = new ui::Window();
-    this->layout()->addWidget(window->GetWidget());
-    ui->dockWidget->setWindowTitle(TR("ui.resbrowser.title").c_str());
+    window->GetWidget()->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    layout()->addWidget(window->GetWidget());
+
+    ResourceBrowser* resbrows = new ResourceBrowser();
+    this->addDockWidget(Qt::BottomDockWidgetArea, resbrows);
+
     this->setWindowTitle(TR("ui.qtwindow.title").c_str());
 }
 
