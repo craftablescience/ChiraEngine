@@ -19,6 +19,8 @@ public:
     /// Ran at the very start of your program. Readies the engine for you to add features before init().
     static void preInit(int argc, const char* const argv[]);
     static void init();
+    static void update();
+    static void shutdown();
     static void run();
 
     /// Returns a pointer to the main window of the application.

@@ -15,3 +15,13 @@ out*/
 # macOS
 */.DS_Store
 .DS_Store
+
+# Qt Creator
+*.config
+*.creator
+*.creator.*
+*.files
+*.includes
+*.cflags
+*.cxxflags
+CMakeLists.txt.user

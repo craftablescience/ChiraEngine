@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
 include(CMakeDependentOption)
 
+# Qt
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 
 # Must set some Apple options before creating the project
 if(APPLE)
@@ -190,18 +194,30 @@ if(CHIRA_BUILD_HEADLESS)
 else()
     # The graphics API we use varies based on platform
     # macOS: OpenGL 4.1
-    # Windows and Linux: OpenGL 4.3
+    # Windows and Linux: OpenGL 4.3 or 4.1
     if(APPLE)
-        set(GLAD_USE_GL_41 ON CACHE BOOL "" FORCE)
+        set(GLAD_USE_GL_41 ON CACHE BOOL "")
         list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_41)
     else()
-        set(GLAD_USE_GL_41 OFF CACHE BOOL "" FORCE)
+        set(GLAD_USE_GL_41 OFF CACHE BOOL "")
+    endif()
+
+    if (GLAD_USE_GL_41)
+        list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_41)
+    else()
         list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_43)
     endif()
+
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad)
     list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_IMPL_OPENGL_LOADER_GLAD2)
     list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad/include)
     list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glad)
+
+    # Qt
+    find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets)
+    find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Widgets)
+    list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${Qt${QT_VERSION_MAJOR}Widgets_PRIVATE_INCLUDE_DIRS})
 
     # SDL2
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/sdl2)
