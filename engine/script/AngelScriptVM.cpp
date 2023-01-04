@@ -18,7 +18,6 @@ using namespace chira;
 
 // list of bindings
 std::function<void()> liblist[] {
-    ASB_Entity,
     ASB_ImGui
 };
 
