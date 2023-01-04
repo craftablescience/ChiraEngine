@@ -1,12 +1,17 @@
-list(APPEND CHIRA_HEADER_SOURCES
+list(APPEND CHIRA_EDITOR_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/Editor.h
         ${CMAKE_CURRENT_LIST_DIR}/EditorPlugin.h
+        ${CMAKE_CURRENT_LIST_DIR}/EngineView.h
 )
 
 list(APPEND CHIRA_EDITOR_SOURCES
+        ${CHIRA_EDITOR_HEADERS}
         ${CMAKE_CURRENT_LIST_DIR}/Editor.cpp
         ${CMAKE_CURRENT_LIST_DIR}/EditorPlugin.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/EngineView.cpp
 )
+
+include(${CMAKE_CURRENT_LIST_DIR}/modeleditor/CMakeLists.txt)
 
 if(WIN32)
         list(APPEND CHIRA_EDITOR_SOURCES ${CMAKE_CURRENT_LIST_DIR}/../resources/platform/windows/icon.rc)
