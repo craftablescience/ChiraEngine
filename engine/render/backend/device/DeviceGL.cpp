@@ -125,7 +125,7 @@ bool Device::createGLFWWindow(std::string_view title) {
     this->imguiContext = ImGui::CreateContext();
     ImGui::SetCurrentContext(this->imguiContext);
     auto& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
     setImGuiConfigPath();
 
     Renderer::initImGui(this->window, this->glContext);
