@@ -1,0 +1,9 @@
+list(APPEND CHIRA_EDITOR_HEADERS
+    ${CMAKE_CURRENT_LIST_DIR}/ModelScene.h
+    ${CMAKE_CURRENT_LIST_DIR}/ModelEditor.h
+)
+
+list(APPEND CHIRA_EDITOR_SOURCES
+    ${CMAKE_CURRENT_LIST_DIR}/ModelScene.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ModelEditor.cpp
+)

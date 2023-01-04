@@ -30,6 +30,8 @@
 // Need to register phong material!
 #include <render/material/MaterialPhong.h>
 
+#include "modeleditor/ModelEditor.h"
+
 using namespace chira;
 
 CHIRA_CREATE_LOG(EDITOR);
@@ -321,6 +323,8 @@ int main(int argc, const char* const argv[]) {
 
     auto mainPanel = new MainEditorPanel();
     mpid = Engine::getWindow()->addPanel(mainPanel);
+
+    Engine::getWindow()->addPanel(new ModelEditor());
 
     Engine::run();
 }

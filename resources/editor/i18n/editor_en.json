@@ -8,24 +8,22 @@
   
   "ui.back": "Back",
 
+
   "ui.engineview.title": "Engine View",
   "ui.engineview.options": "Engine View Options",
 
-  "ui.codeview.title": "Script Editor",
-  
-  "ui.entitypanel.title": "Entities",
 
-  "ui.resourcebrowser.title": "Resource Browser",
-  "ui.resourcebrowser.padding": "Padding",
-  "ui.resourcebrowser.thumbsize": "Thumbnail Size",
-  
-  "ui.entities": "Entities",
+  "ui.modeleditor.title": "Model Editor",
+  "ui.modeleditor.open_model": "Open Model...",
+  "ui.modeleditor.convert": "Convert",
+  "ui.modeleditor.convert_to_obj": "Convert to OBJ...",
+  "ui.modeleditor.convert_to_cmdl": "Convert to CMDL...",
+  "error.modeleditor.filename_empty": "Please specify a proper path and filename.",
+  "error.modeleditor.no_model_present": "There is no model present to convert.",
+  "error.modeleditor.file_is_not_resource": "File selected is not a resource.",
 
-  "ui.menubar.open_model": "Open Model...",
+
   "ui.menubar.add_resource_folder": "Add Resource Folder...",
-  "ui.menubar.convert": "Convert",
-  "ui.menubar.convert_to_obj": "Convert to OBJ...",
-  "ui.menubar.convert_to_cmdl": "Convert to CMDL...",
   "ui.menubar.edit": "Edit",
   "ui.menubar.file": "File",
   "ui.menubar.view": "View",
@@ -33,8 +31,10 @@
   "ui.menubar.tools": "Tools",
   "ui.menubar.help": "Help",
 
+
   "ui.editor.show_grid": "Show Grid",
 
+  
   "ui.settings.title": "Settings",
   "ui.settings.window_width": "Window Width",
   "ui.settings.window_height": "Window Height",
@@ -47,10 +47,8 @@
   "ui.settings.discord_integration": "Discord Rich Presence",
   "ui.settings.apply": "Apply",
 
-  "error.modelviewer.filename_empty": "Please specify a proper path and filename.",
-  "error.modelviewer.no_model_present": "There is no model present to convert.",
-  "error.modelviewer.file_is_not_resource": "File selected is not a resource.",
-  "error.modelviewer.resource_folder_already_registered": "Resource folder is already registered.",
-  "error.modelviewer.resource_folder_not_valid": "Please select a valid folder in the resources folder.",
-  "error.modelviewer.resource_is_invalid": "Resource identifier {} does not point to a visible resource."
+
+  "error.editor.resource_folder_already_registered": "Resource folder is already registered.",
+  "error.editor.resource_folder_not_valid": "Please select a valid folder in the resources folder.",
+  "error.editor.resource_is_invalid": "Resource identifier {} does not point to a visible resource."
 }
