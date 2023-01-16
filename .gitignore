@@ -15,3 +15,7 @@ out*/
 # macOS
 */.DS_Store
 .DS_Store
+
+.kdev4/
+.kdev4/*
+*.kdev4

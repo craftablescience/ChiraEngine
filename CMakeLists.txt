@@ -190,14 +190,20 @@ if(CHIRA_BUILD_HEADLESS)
 else()
     # The graphics API we use varies based on platform
     # macOS: OpenGL 4.1
-    # Windows and Linux: OpenGL 4.3
+    # Windows and Linux: OpenGL 4.3 or 4.1
     if(APPLE)
-        set(GLAD_USE_GL_41 ON CACHE BOOL "" FORCE)
+        set(GLAD_USE_GL_41 ON CACHE BOOL "")
         list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_41)
     else()
-        set(GLAD_USE_GL_41 OFF CACHE BOOL "" FORCE)
+        set(GLAD_USE_GL_41 OFF CACHE BOOL "")
+    endif()
+
+    if (GLAD_USE_GL_41)
+        list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_41)
+    else()
         list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_43)
     endif()
+    
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad)
     list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_IMPL_OPENGL_LOADER_GLAD2)
     list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad/include)
@@ -385,3 +391,4 @@ endif()
 add_custom_target(${PROJECT_NAME}CopyResources
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/resources)
 add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}CopyResources)
+
