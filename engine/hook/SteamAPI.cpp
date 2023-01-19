@@ -4,6 +4,7 @@
 #include <libloader.hpp>
 #include <config/ConEntry.h>
 #include <core/Logger.h>
+#include <core/System.h>
 #include <event/Events.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <utility/String.h>
@@ -12,8 +13,27 @@ using namespace chira;
 using namespace steam;
 using namespace libloader;
 
-[[maybe_unused]]
+CHIRA_CREATE_LOG(STEAM);
+
 ConVar steam_enable{"steam_enable", true, "Initialize Steam API functions.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+
+CHIRA_CREATE_SYSTEM(Steam) {
+    static void init() {
+        if (steam_enable.getValue<bool>() && (!SteamAPI::Client::initialized() && !SteamAPI::Client::initSteam())) {
+            LOG_STEAM.warning("Steam failed to initialize");
+        }
+    }
+    static void update() {
+        if (SteamAPI::Client::initialized()) {
+            SteamAPI::Client::runCallbacks();
+        }
+    }
+    static void deinit() {
+        if (SteamAPI::Client::initialized()) {
+            SteamAPI::Client::shutdown();
+        }
+    }
+};
 
 /// Helper function to stop repeating stuff
 template<typename T, typename U, typename... Params>

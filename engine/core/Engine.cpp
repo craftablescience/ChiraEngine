@@ -15,15 +15,10 @@
 #include <ui/debug/ResourceUsageTrackerPanel.h>
 #include "CommandLine.h"
 #include "Platform.h"
+#include "System.h"
 
 #ifdef DEBUG
     #include <render/backend/RenderBackend.h>
-#endif
-#ifdef CHIRA_USE_DISCORD
-    #include <hook/DiscordRPC.h>
-#endif
-#ifdef CHIRA_USE_STEAMWORKS
-    #include <hook/SteamAPI.h>
 #endif
 
 using namespace chira;
@@ -74,14 +69,11 @@ void Engine::init() {
 
     Engine::device->displaySplashScreen();
 
+    // Start up some auto-registered stuff (order is random!)
+    SystemRegistry::initAll();
+
     IMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     IMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
-
-#ifdef CHIRA_USE_STEAMWORKS
-    bool steamEnable = ConVarRegistry::hasConVar("steam_enable") && ConVarRegistry::getConVar("steam_enable")->getValue<bool>();
-    if (steamEnable && (!SteamAPI::Client::initialized() && !SteamAPI::Client::initSteam()))
-        LOG_ENGINE.warning("Steam failed to initialize");
-#endif
 
     // Add console UI panel
     auto consoleID = Engine::device->addPanel(new ConsolePanel{});
@@ -212,31 +204,14 @@ void Engine::run() {
 
         Engine::device->refresh();
 
-#ifdef CHIRA_USE_DISCORD
-        if (DiscordRPC::initialized()) {
-            DiscordRPC::updatePresence();
-        }
-#endif
-#ifdef CHIRA_USE_STEAMWORKS
-        if (SteamAPI::Client::initialized()) {
-            SteamAPI::Client::runCallbacks();
-        }
-#endif
+        SystemRegistry::updateAll();
+
         Events::update();
     } while (!Engine::device->shouldCloseAfterThisFrame());
 
     LOG_ENGINE.info("Exiting...");
 
-#ifdef CHIRA_USE_DISCORD
-    if (DiscordRPC::initialized()) {
-        DiscordRPC::shutdown();
-    }
-#endif
-#ifdef CHIRA_USE_STEAMWORKS
-    if (SteamAPI::Client::initialized()) {
-        SteamAPI::Client::shutdown();
-    }
-#endif
+    SystemRegistry::deinitAll();
 
     Engine::device.reset();
 

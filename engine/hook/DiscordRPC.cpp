@@ -3,14 +3,28 @@
 #include <discord_rpc.h>
 #include <config/ConEntry.h>
 #include <core/Logger.h>
+#include <core/System.h>
 #include <i18n/TranslationManager.h>
 
 using namespace chira;
 
 CHIRA_CREATE_LOG(DISCORD);
 
-[[maybe_unused]]
 ConVar discord_enable{"discord_enable", true, "Allows applications to use Discord rich presence.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+
+CHIRA_CREATE_SYSTEM(Discord) {
+    // Discord should be initialized manually before Engine::init
+    static void update() {
+        if (DiscordRPC::initialized()) {
+            DiscordRPC::updatePresence();
+        }
+    }
+    static void deinit() {
+        if (DiscordRPC::initialized()) {
+            DiscordRPC::shutdown();
+        }
+    }
+};
 
 void DiscordRPC::init(std::string_view appId) {
     if (DiscordRPC::isInitialized || !discord_enable.getValue<bool>())
