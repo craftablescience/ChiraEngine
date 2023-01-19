@@ -3,7 +3,8 @@ list(APPEND CHIRA_ENGINE_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/CommandLine.h
         ${CMAKE_CURRENT_LIST_DIR}/Engine.h
         ${CMAKE_CURRENT_LIST_DIR}/Logger.h
-        ${CMAKE_CURRENT_LIST_DIR}/Platform.h)
+        ${CMAKE_CURRENT_LIST_DIR}/Platform.h
+        ${CMAKE_CURRENT_LIST_DIR}/System.h)
 
 list(APPEND CHIRA_ENGINE_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/Assertions.cpp
