@@ -45,12 +45,12 @@ void EditorCamera::setupKeybinds() {
             float xOffset = static_cast<float>(xRel) * cam->getMouseSensitivity() * (static_cast<float>(Engine::getDeltaTicks()) / 1000);
             float yOffset = static_cast<float>(yRel) * cam->getMouseSensitivity() * (static_cast<float>(Engine::getDeltaTicks()) / 1000);
 
-            if (ConVarRegistry::hasConVar("input_invert_x_axis") && ConVarRegistry::getConVar("input_invert_x_axis")->getValue<bool>())
+            if (auto invertX = ConEntryRegistry::getConVar("input_invert_x_axis"); invertX && invertX->getValue<bool>())
                 cam->yaw += xOffset;
             else
                 cam->yaw -= xOffset;
 
-            if (ConVarRegistry::hasConVar("input_invert_y_axis") && ConVarRegistry::getConVar("input_invert_y_axis")->getValue<bool>())
+            if (auto invertY = ConEntryRegistry::getConVar("input_invert_y_axis"); invertY && invertY->getValue<bool>())
                 cam->pitch -= yOffset;
             else
                 cam->pitch += yOffset;

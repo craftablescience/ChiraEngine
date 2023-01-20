@@ -11,19 +11,33 @@
 #include <core/Logger.h>
 #include <loader/settings/JSONSettingsLoader.h>
 
-CHIRA_GET_LOG(CONVAR);
+CHIRA_GET_LOG(CONENTRY);
 
 namespace chira {
 
 enum ConFlags {
-    CON_FLAG_NONE     = 1 << 0, // None
-    CON_FLAG_CHEAT    = 1 << 1, // Cheat-protected
-    CON_FLAG_HIDDEN   = 1 << 2, // Doesn't show up in search
-    CON_FLAG_CACHE    = 1 << 3, // Value is saved at exit and loaded at start (useless for concommands)
-    CON_FLAG_READONLY = 1 << 4, // ConVar cannot be changed in the CONSOLE. Still modifiable in code (useless for concommands)
+    CON_FLAG_NONE     =      0, // None
+    CON_FLAG_CHEAT    = 1 << 0, // Cheat-protected
+    CON_FLAG_HIDDEN   = 1 << 1, // Doesn't show up in search
+    CON_FLAG_CACHE    = 1 << 2, // Value is saved at exit and loaded at start (useless for concommands)
+    CON_FLAG_READONLY = 1 << 3, // ConVar cannot be changed in the CONSOLE. Still modifiable in code (useless for concommands)
+    CON_FLAG_DEVONLY  = 1 << 4, // Reserved for possible future use
 };
 
-class ConCommand {
+class ConEntry {
+public:
+    ConEntry(std::string name_, std::string description_, int flags_ = CON_FLAG_NONE);
+    virtual ~ConEntry() = default;
+    [[nodiscard]] std::string_view getName() const;
+    [[nodiscard]] std::string_view getDescription() const;
+    [[nodiscard]] bool hasFlag(ConFlags flag) const;
+protected:
+    std::string name;
+    std::string description;
+    int flags;
+};
+
+class ConCommand : public ConEntry {
 public:
     using CallbackArgs = const std::vector<std::string>&;
 
@@ -31,46 +45,37 @@ public:
     ConCommand(std::string name_, std::function<void(CallbackArgs)> callback_, int flags_ = CON_FLAG_NONE);
     ConCommand(std::string name_, std::string description_, const std::function<void()>& callback_, int flags_ = CON_FLAG_NONE);
     ConCommand(std::string name_, std::string description_, std::function<void(CallbackArgs)> callback_, int flags_ = CON_FLAG_NONE);
-    ~ConCommand();
-    [[nodiscard]] std::string_view getName() const;
-    [[nodiscard]] std::string_view getDescription() const;
-    [[nodiscard]] bool hasFlag(ConFlags flag) const;
+    ~ConCommand() override;
+
     void fire(CallbackArgs args);
-    [[nodiscard]] virtual explicit operator std::string() const {
+    [[nodiscard]] explicit inline operator std::string() const {
         return std::string{this->getName()} + " - " + this->getDescription().data();
     }
 private:
-    std::string name;
-    std::string description;
-    int flags;
     std::function<void(CallbackArgs)> callback;
 };
 
+// Registry be declared before ConVar because of the magic of templates
 class ConVar;
 
-class ConCommandRegistry {
+class ConEntryRegistry {
     friend ConCommand;
-    friend class ConVar;
+    friend ConVar;
 public:
-    ConCommandRegistry() = delete;
+    ConEntryRegistry() = delete;
+
     [[nodiscard]] static bool hasConCommand(std::string_view name);
     [[nodiscard]] static ConCommand* getConCommand(std::string_view name);
     [[nodiscard]] static std::vector<std::string> getConCommandList();
-private:
-    static std::vector<ConCommand*>& getConCommands();
-    static bool registerConCommand(ConCommand* concommand);
-    static void deregisterConCommand(ConCommand* concommand);
-};
 
-// Must be declared before ConVar
-class ConVarRegistry {
-    friend class ConVar;
-public:
-    ConVarRegistry() = delete;
     [[nodiscard]] static bool hasConVar(std::string_view name);
     [[nodiscard]] static ConVar* getConVar(std::string_view name);
     [[nodiscard]] static std::vector<std::string> getConVarList();
 private:
+    static std::vector<ConCommand*>& getConCommands();
+    static bool registerConCommand(ConCommand* concommand);
+    static void deregisterConCommand(ConCommand* concommand);
+
     static std::vector<ConVar*>& getConVars();
     static JSONSettingsLoader& getConVarCache();
     static bool registerConVar(ConVar* convar);
@@ -92,12 +97,12 @@ enum class ConVarType {
     STRING,
 };
 
-class ConVar : public ConCommand {
+class ConVar : public ConEntry {
 public:
     using CallbackArg = std::string_view;
 
     ConVar(std::string name_, ConVarValidType auto defaultValue, int flags_ = CON_FLAG_NONE, std::function<void(CallbackArg)> onChanged = [](CallbackArg) {})
-            : ConCommand(std::move(name_), [](ConCommand::CallbackArgs) {}, flags_)
+            : ConEntry(std::move(name_), "No description provided.", flags_)
             , changedCallback(std::move(onChanged)) {
         if constexpr (std::is_same_v<decltype(defaultValue), std::string>) {
             this->value = std::move(defaultValue);
@@ -112,13 +117,11 @@ public:
                 this->type = ConVarType::DOUBLE;
             }
         }
-        // undo parent class ctor
-        ConCommandRegistry::deregisterConCommand(this);
-        runtime_assert(ConVarRegistry::registerConVar(this), "This convar already exists! This will cause problems...");
+        runtime_assert(ConEntryRegistry::registerConVar(this), "This convar already exists!");
     }
 
     ConVar(std::string name_, ConVarValidType auto defaultValue, std::string description_, int flags_ = CON_FLAG_NONE, std::function<void(CallbackArg)> onChanged = [](CallbackArg) {})
-            : ConCommand(std::move(name_), std::move(description_), [](ConCommand::CallbackArgs) {}, flags_)
+            : ConEntry(std::move(name_), std::move(description_), flags_)
             , changedCallback(std::move(onChanged)) {
         if constexpr (std::is_same_v<decltype(defaultValue), std::string>) {
             this->value = std::move(defaultValue);
@@ -133,17 +136,15 @@ public:
                 this->type = ConVarType::DOUBLE;
             }
         }
-        // undo parent class ctor
-        ConCommandRegistry::deregisterConCommand(this);
-        runtime_assert(ConVarRegistry::registerConVar(this), "This convar already exists! This will cause problems...");
+        runtime_assert(ConEntryRegistry::registerConVar(this), "This convar already exists!");
     }
 
-    ~ConVar();
+    ~ConVar() override;
     [[nodiscard]] ConVarType getType() const;
     [[nodiscard]] std::string_view getTypeAsString() const;
 
     template<ConVarValidType T>
-    inline T getValue() const {
+    [[nodiscard]] inline T getValue() const {
         if constexpr (std::is_same_v<T, std::string>) {
             return this->value;
         } else {
@@ -159,7 +160,7 @@ public:
 
     void setValue(ConVarValidType auto newValue, bool runCallback = true) {
         if (this->hasFlag(CON_FLAG_CHEAT) && !ConVar::areCheatsEnabled()) {
-            LOG_CONVAR.error("Cannot set value of cheat-protected convar with cheats disabled.");
+            LOG_CONENTRY.error("Cannot set value of cheat-protected convar with cheats disabled.");
             return;
         }
 
@@ -167,6 +168,13 @@ public:
             switch (this->type) {
                 using enum ConVarType;
                 case BOOLEAN:
+                    if (newValue == "true") {
+                        this->value = "1";
+                        break;
+                    } else if (newValue == "false") {
+                        this->value = "0";
+                    }
+                    // Fallthrough intentional
                 case INTEGER:
                     try {
                         this->value = std::to_string(std::stoi(newValue));
@@ -209,22 +217,21 @@ public:
             try {
                 this->changedCallback(this->value);
             } catch (const std::exception& e) {
-                LOG_CONVAR.error(std::string{"Encountered error executing convar callback: "} + e.what());
+                LOG_CONENTRY.error("Encountered error executing convar callback: {}", e.what());
             }
         }
     }
 
-    [[nodiscard]] explicit inline operator std::string() const override {
+    [[nodiscard]] explicit inline operator std::string() const {
         return std::string{this->getName()} + ": " + this->getTypeAsString().data() + " - " + this->getDescription().data();
     }
 
+    /// Convenience function to check the value of sv_cheats
     [[nodiscard]] static bool areCheatsEnabled();
 private:
     std::function<void(CallbackArg)> changedCallback;
     std::string value;
     ConVarType type;
-
-    using ConCommand::fire;
 };
 
 } // namespace chira

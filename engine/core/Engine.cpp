@@ -125,12 +125,12 @@ void Engine::run() {
                             Engine::device->iconified = true;
                             break;
                         case SDL_WINDOWEVENT_RESTORED:
-                            if (auto* win_maximized = ConVarRegistry::getConVar("win_maximized")) {
+                            if (auto* win_maximized = ConEntryRegistry::getConVar("win_maximized")) {
                                 win_maximized->setValue(false, false);
                             }
                             break;
                         case SDL_WINDOWEVENT_MAXIMIZED:
-                            if (auto* win_maximized = ConVarRegistry::getConVar("win_maximized")) {
+                            if (auto* win_maximized = ConEntryRegistry::getConVar("win_maximized")) {
                                 win_maximized->setValue(true, false);
                             }
                             break;
