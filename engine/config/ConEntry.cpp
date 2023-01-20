@@ -7,17 +7,16 @@
 using namespace chira;
 
 CHIRA_CREATE_LOG(CONENTRY);
-CHIRA_CREATE_LOG(CONVAR);
 
 [[maybe_unused]]
 ConCommand info{"info", "Prints the description of the given convar(s) or concommand(s).", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
     for (const auto& name : args) {
-        if (ConCommandRegistry::hasConCommand(name)) {
-            LOG_CONENTRY.infoImportant(std::string{*ConCommandRegistry::getConCommand(name)});
-        } else if (ConVarRegistry::hasConVar(name)) {
-            LOG_CONENTRY.infoImportant(std::string{*ConVarRegistry::getConVar(name)});
+        if (ConEntryRegistry::hasConCommand(name)) {
+            LOG_CONENTRY.infoImportant(std::string{*ConEntryRegistry::getConCommand(name)});
+        } else if (ConEntryRegistry::hasConVar(name)) {
+            LOG_CONENTRY.infoImportant(std::string{*ConEntryRegistry::getConVar(name)});
         } else {
-            LOG_CONENTRY.infoImportant("Cannot find convar or concommand \"{}\"!", name);
+            LOG_CONENTRY.infoImportant("Unknown console entry \"{}\"", name);
         }
     }
 }};
@@ -26,15 +25,15 @@ ConCommand info{"info", "Prints the description of the given convar(s) or concom
 ConCommand find{"find", "Finds convars and/or concommands from the given substring.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
     bool resultFound = false;
     for (const auto& substr : args) {
-        for (const auto& concommand: ConCommandRegistry::getConCommandList()) {
+        for (const auto& concommand: ConEntryRegistry::getConCommandList()) {
             if (concommand.find(substr) != std::string::npos) {
-                LOG_CONENTRY.infoImportant(std::string{*ConCommandRegistry::getConCommand(concommand)});
+                LOG_CONENTRY.infoImportant(std::string{*ConEntryRegistry::getConCommand(concommand)});
                 resultFound = true;
             }
         }
-        for (const auto& convar: ConVarRegistry::getConVarList()) {
+        for (const auto& convar: ConEntryRegistry::getConVarList()) {
             if (convar.find(substr) != std::string::npos) {
-                LOG_CONENTRY.infoImportant(std::string{*ConVarRegistry::getConVar(convar)});
+                LOG_CONENTRY.infoImportant(std::string{*ConEntryRegistry::getConVar(convar)});
                 resultFound = true;
             }
         }
@@ -47,23 +46,40 @@ ConCommand find{"find", "Finds convars and/or concommands from the given substri
 [[maybe_unused]]
 ConCommand con_entries{"con_entries", "Prints the description of every convar and concommand currently registered.", [] { // NOLINT(cert-err58-cpp)
     LOG_CONENTRY.infoImportant("-- Commands --");
-    auto concommandList = ConCommandRegistry::getConCommandList();
+    auto concommandList = ConEntryRegistry::getConCommandList();
     std::sort(concommandList.begin(), concommandList.end());
     for (const auto& name : concommandList) {
-        if (const auto* concommand = ConCommandRegistry::getConCommand(name); !concommand->hasFlag(CON_FLAG_HIDDEN)) {
+        if (const auto* concommand = ConEntryRegistry::getConCommand(name); !concommand->hasFlag(CON_FLAG_HIDDEN)) {
             LOG_CONENTRY.infoImportant(std::string{*concommand});
         }
     }
 
     LOG_CONENTRY.infoImportant("-- Variables --");
-    auto convarList = ConVarRegistry::getConVarList();
+    auto convarList = ConEntryRegistry::getConVarList();
     std::sort(convarList.begin(), convarList.end());
     for (const auto& name : convarList) {
-        if (const auto* convar = ConVarRegistry::getConVar(name); !convar->hasFlag(CON_FLAG_HIDDEN)) {
+        if (const auto* convar = ConEntryRegistry::getConVar(name); !convar->hasFlag(CON_FLAG_HIDDEN)) {
             LOG_CONENTRY.infoImportant(std::string{*convar});
         }
     }
 }};
+
+ConEntry::ConEntry(std::string name_, std::string description_, int flags_)
+        : name(std::move(name_))
+        , description(std::move(description_))
+        , flags(flags_) {}
+
+std::string_view ConEntry::getName() const {
+    return this->name;
+}
+
+std::string_view ConEntry::getDescription() const {
+    return this->description;
+}
+
+bool ConEntry::hasFlag(ConFlags flag) const {
+    return (this->flags & flag) == flag;
+}
 
 ConCommand::ConCommand(std::string name_, const std::function<void()>& callback_, int flags_)
     : ConCommand(std::move(name_), "No description provided.", callback_, flags_) {}
@@ -75,27 +91,13 @@ ConCommand::ConCommand(std::string name_, std::string description_, const std::f
     : ConCommand(std::move(name_), std::move(description_), [callback_](ConCommand::CallbackArgs) {callback_();}, flags_) {}
 
 ConCommand::ConCommand(std::string name_, std::string description_, std::function<void(ConCommand::CallbackArgs)> callback_, int flags_)
-    : name(std::move(name_))
-    , description(std::move(description_))
-    , flags(flags_)
+    : ConEntry(std::move(name_), std::move(description_), flags_)
     , callback(std::move(callback_)) {
-    runtime_assert(ConCommandRegistry::registerConCommand(this), "This concommand already exists! This will cause problems...");
+    runtime_assert(ConEntryRegistry::registerConCommand(this), "This concommand already exists!");
 }
 
 ConCommand::~ConCommand() {
-    ConCommandRegistry::deregisterConCommand(this);
-}
-
-std::string_view ConCommand::getName() const {
-    return this->name;
-}
-
-std::string_view ConCommand::getDescription() const {
-    return this->description;
-}
-
-bool ConCommand::hasFlag(ConFlags flag) const {
-    return (this->flags & static_cast<int>(flag)) == static_cast<int>(flag);
+    ConEntryRegistry::deregisterConCommand(this);
 }
 
 void ConCommand::fire(ConCommand::CallbackArgs args) {
@@ -106,8 +108,8 @@ void ConCommand::fire(ConCommand::CallbackArgs args) {
     this->callback(args);
 }
 
-bool ConCommandRegistry::hasConCommand(std::string_view name) {
-    for (const auto* concommand : ConCommandRegistry::getConCommands()) {
+bool ConEntryRegistry::hasConCommand(std::string_view name) {
+    for (const auto* concommand : ConEntryRegistry::getConCommands()) {
         if (concommand->getName() == name) {
             return true;
         }
@@ -115,8 +117,8 @@ bool ConCommandRegistry::hasConCommand(std::string_view name) {
     return false;
 }
 
-ConCommand* ConCommandRegistry::getConCommand(std::string_view name) {
-    for (auto* concommand : ConCommandRegistry::getConCommands()) {
+ConCommand* ConEntryRegistry::getConCommand(std::string_view name) {
+    for (auto* concommand : ConEntryRegistry::getConCommands()) {
         if (concommand->getName() == name) {
             return concommand;
         }
@@ -124,34 +126,35 @@ ConCommand* ConCommandRegistry::getConCommand(std::string_view name) {
     return nullptr;
 }
 
-std::vector<std::string> ConCommandRegistry::getConCommandList() {
+std::vector<std::string> ConEntryRegistry::getConCommandList() {
     std::vector<std::string> out;
-    for (const auto* concommand : ConCommandRegistry::getConCommands()) {
+    for (const auto* concommand : ConEntryRegistry::getConCommands()) {
         out.emplace_back(concommand->getName().data());
     }
     return out;
 }
 
-std::vector<ConCommand*>& ConCommandRegistry::getConCommands() {
+std::vector<ConCommand*>& ConEntryRegistry::getConCommands() {
     static std::vector<ConCommand*> concommands;
     return concommands;
 }
 
-bool ConCommandRegistry::registerConCommand(ConCommand* concommand) {
-    if (ConCommandRegistry::hasConCommand(concommand->getName()))
+bool ConEntryRegistry::registerConCommand(ConCommand* concommand) {
+    if (ConEntryRegistry::hasConCommand(concommand->getName()))
         return false;
-    ConCommandRegistry::getConCommands().push_back(concommand);
+    ConEntryRegistry::getConCommands().push_back(concommand);
     return true;
 }
 
-void ConCommandRegistry::deregisterConCommand(ConCommand* concommand) {
-    ConCommandRegistry::getConCommands().erase(std::remove_if(ConCommandRegistry::getConCommands().begin(), ConCommandRegistry::getConCommands().end(), [concommand](ConCommand* other) {
+void ConEntryRegistry::deregisterConCommand(ConCommand* concommand) {
+    auto& concommands = ConEntryRegistry::getConCommands();
+    concommands.erase(std::remove_if(concommands.begin(), concommands.end(), [concommand](ConCommand* other) {
         return concommand->getName() == other->getName();
-    }), ConCommandRegistry::getConCommands().end());
+    }), concommands.end());
 }
 
-bool ConVarRegistry::hasConVar(std::string_view name) {
-    for (const auto* convar : ConVarRegistry::getConVars()) {
+bool ConEntryRegistry::hasConVar(std::string_view name) {
+    for (const auto* convar : ConEntryRegistry::getConVars()) {
         if (convar->getName() == name) {
             return true;
         }
@@ -159,54 +162,63 @@ bool ConVarRegistry::hasConVar(std::string_view name) {
     return false;
 }
 
-std::vector<std::string> ConVarRegistry::getConVarList() {
+ConVar* ConEntryRegistry::getConVar(std::string_view name) {
+    for (auto* convar : ConEntryRegistry::getConVars()) {
+        if (convar->getName() == name) {
+            return convar;
+        }
+    }
+    return nullptr;
+}
+
+std::vector<std::string> ConEntryRegistry::getConVarList() {
     std::vector<std::string> out;
-    for (const auto* convar : ConVarRegistry::getConVars()) {
+    for (const auto* convar : ConEntryRegistry::getConVars()) {
         out.emplace_back(convar->getName().data());
     }
     return out;
 }
 
-std::vector<ConVar*>& ConVarRegistry::getConVars() {
+std::vector<ConVar*>& ConEntryRegistry::getConVars() {
     static std::vector<ConVar*> convars;
     return convars;
 }
 
-JSONSettingsLoader& ConVarRegistry::getConVarCache() {
+JSONSettingsLoader& ConEntryRegistry::getConVarCache() {
     static JSONSettingsLoader convarCache{"convars.json"};
     return convarCache;
 }
 
-bool ConVarRegistry::registerConVar(ConVar* convar) {
-    if (ConVarRegistry::hasConVar(convar->getName()))
+bool ConEntryRegistry::registerConVar(ConVar* convar) {
+    if (ConEntryRegistry::hasConVar(convar->getName()))
         return false;
-    ConVarRegistry::getConVars().push_back(convar);
+    ConEntryRegistry::getConVars().push_back(convar);
 
-    if (convar->hasFlag(CON_FLAG_CACHE) && ConVarRegistry::getConVarCache().hasValue(convar->getName().data())) {
+    if (convar->hasFlag(CON_FLAG_CACHE) && ConEntryRegistry::getConVarCache().hasValue(convar->getName().data())) {
         // There's an entry for the convar in cache, load it
         switch (convar->getType()) {
             using enum ConVarType;
             case BOOLEAN: {
                 auto value = convar->getValue<bool>();
-                ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+                ConEntryRegistry::getConVarCache().getValue(convar->getName().data(), &value);
                 convar->setValue(value, false);
                 break;
             }
             case INTEGER: {
                 auto value = convar->getValue<int>();
-                ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+                ConEntryRegistry::getConVarCache().getValue(convar->getName().data(), &value);
                 convar->setValue(value, false);
                 break;
             }
             case DOUBLE: {
                 auto value = convar->getValue<double>();
-                ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+                ConEntryRegistry::getConVarCache().getValue(convar->getName().data(), &value);
                 convar->setValue(value, false);
                 break;
             }
             case STRING: {
                 auto value = convar->getValue<std::string>();
-                ConVarRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+                ConEntryRegistry::getConVarCache().getValue(convar->getName().data(), &value);
                 convar->setValue(value, false);
                 break;
             }
@@ -215,42 +227,35 @@ bool ConVarRegistry::registerConVar(ConVar* convar) {
     return true;
 }
 
-void ConVarRegistry::deregisterConVar(ConVar* convar) {
+void ConEntryRegistry::deregisterConVar(ConVar* convar) {
     // Cache it!
     if (convar->hasFlag(CON_FLAG_CACHE)) {
+        auto& cache = ConEntryRegistry::getConVarCache();
         switch (convar->getType()) {
             using enum ConVarType;
             case BOOLEAN:
-                ConVarRegistry::getConVarCache().setValue(convar->getName().data(), convar->getValue<bool>(), true, true);
+                cache.setValue(convar->getName().data(), convar->getValue<bool>(), true, true);
                 break;
             case INTEGER:
-                ConVarRegistry::getConVarCache().setValue(convar->getName().data(), convar->getValue<int>(), true, true);
+                cache.setValue(convar->getName().data(), convar->getValue<int>(), true, true);
                 break;
             case DOUBLE:
-                ConVarRegistry::getConVarCache().setValue(convar->getName().data(), convar->getValue<double>(), true, true);
+                cache.setValue(convar->getName().data(), convar->getValue<double>(), true, true);
                 break;
             case STRING:
-                ConVarRegistry::getConVarCache().setValue(convar->getName().data(), convar->getValue<std::string>(), true, true);
+                cache.setValue(convar->getName().data(), convar->getValue<std::string>(), true, true);
         }
     }
 
     // Erase it!
-    ConVarRegistry::getConVars().erase(std::remove_if(ConVarRegistry::getConVars().begin(), ConVarRegistry::getConVars().end(), [convar](ConVar* other) {
+    auto& convars = ConEntryRegistry::getConVars();
+    convars.erase(std::remove_if(convars.begin(), convars.end(), [convar](ConVar* other) {
         return convar->getName() == other->getName();
-    }), ConVarRegistry::getConVars().end());
-}
-
-ConVar* ConVarRegistry::getConVar(std::string_view name) {
-    for (auto* convar : ConVarRegistry::getConVars()) {
-        if (convar->getName() == name) {
-            return convar;
-        }
-    }
-    return nullptr;
+    }), convars.end());
 }
 
 ConVar::~ConVar() {
-    ConVarRegistry::deregisterConVar(this);
+    ConEntryRegistry::deregisterConVar(this);
 }
 
 ConVarType ConVar::getType() const {
@@ -272,10 +277,9 @@ std::string_view ConVar::getTypeAsString() const {
     return "";
 }
 
-// Create cheats convar
 [[maybe_unused]]
-ConVar cheats{"cheats", false, "Unlocks certain commands that break gameplay."}; // NOLINT(cert-err58-cpp)
+ConVar sv_cheats{"sv_cheats", false, "Unlocks certain commands that break gameplay."}; // NOLINT(cert-err58-cpp)
 
 bool ConVar::areCheatsEnabled() {
-    return cheats.getValue<bool>();
+    return sv_cheats.getValue<bool>();
 }

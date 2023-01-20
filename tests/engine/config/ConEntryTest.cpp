@@ -9,13 +9,12 @@
 using namespace chira;
 
 TEST(ConCommand, createConCommand) {
-    EXPECT_FALSE(ConCommandRegistry::hasConCommand("my_concommand"));
-
+    EXPECT_FALSE(ConEntryRegistry::hasConCommand("my_concommand"));
     {
         ConCommand my_concommand{"my_concommand", [] {}};
-        EXPECT_TRUE(ConCommandRegistry::hasConCommand("my_concommand"));
+        EXPECT_TRUE(ConEntryRegistry::hasConCommand("my_concommand"));
     }
-    EXPECT_FALSE(ConCommandRegistry::hasConCommand("my_concommand"));
+    EXPECT_FALSE(ConEntryRegistry::hasConCommand("my_concommand"));
 }
 
 TEST(ConCommand, callbackCallsBack) {
@@ -45,16 +44,16 @@ TEST(ConCommand, cheatConCommand) {
         check = true;
     }, CON_FLAG_CHEAT};
 
-    ConVarRegistry::getConVar("cheats")->setValue(false);
+    ConEntryRegistry::getConVar("sv_cheats")->setValue(false);
     my_cheat_concommand.fire({});
     ASSERT_FALSE(check);
 
-    ConVarRegistry::getConVar("cheats")->setValue(true);
+    ConEntryRegistry::getConVar("sv_cheats")->setValue(true);
     my_cheat_concommand.fire({});
     ASSERT_TRUE(check);
 
     // Put it back the way you found it!
-    ConVarRegistry::getConVar("cheats")->setValue(false);
+    ConEntryRegistry::getConVar("sv_cheats")->setValue(false);
 }
 
 TEST(ConVar, createConVar) {
@@ -175,30 +174,30 @@ TEST(ConVar, typeConversionsSetter) {
 TEST(ConVar, cheatConVar) {
     ConVar my_cheat_convar{"my_cheat_convar", false, CON_FLAG_CHEAT};
 
-    ConVarRegistry::getConVar("cheats")->setValue(false);
+    ConEntryRegistry::getConVar("sv_cheats")->setValue(false);
     my_cheat_convar.setValue(true);
     ASSERT_FALSE(my_cheat_convar.getValue<bool>());
 
-    ConVarRegistry::getConVar("cheats")->setValue(true);
+    ConEntryRegistry::getConVar("sv_cheats")->setValue(true);
     my_cheat_convar.setValue(true);
     ASSERT_TRUE(my_cheat_convar.getValue<bool>());
 
     // Put it back the way you found it!
-    ConVarRegistry::getConVar("cheats")->setValue(false);
+    ConEntryRegistry::getConVar("sv_cheats")->setValue(false);
 }
 
-TEST(ConVarRegistry, hasConVar) {
-    EXPECT_FALSE(ConVarRegistry::hasConVar("my_convar"));
+TEST(ConEntryRegistry, hasConVar) {
+    EXPECT_FALSE(ConEntryRegistry::hasConVar("my_convar"));
 
     {
         ConVar my_convar{"my_convar", 0};
-        EXPECT_TRUE(ConVarRegistry::hasConVar("my_convar"));
+        EXPECT_TRUE(ConEntryRegistry::hasConVar("my_convar"));
     }
 
-    EXPECT_FALSE(ConVarRegistry::hasConVar("my_convar"));
+    EXPECT_FALSE(ConEntryRegistry::hasConVar("my_convar"));
 }
 
-TEST(ConVarRegistry, cacheConVar) {
+TEST(ConEntryRegistry, cacheConVar) {
     // Just in case!
     std::filesystem::remove(Config::getConfigFile("convars.json"));
     {
