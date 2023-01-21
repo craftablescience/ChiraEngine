@@ -1,13 +1,14 @@
 #pragma once
 
 #include <cstddef>
-#include <typeinfo>
+#include <typeindex>
 
 namespace chira {
 
+// todo(c++): make this consteval when possible!
 template<typename T>
-constexpr std::size_t getHashOfType() {
-    return typeid(T).hash_code();
+std::type_index typeHash() {
+    return typeid(T);
 }
 
 template<typename T, T... S, typename F>

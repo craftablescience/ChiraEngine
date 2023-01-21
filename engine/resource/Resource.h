@@ -6,7 +6,6 @@
 #include <vector>
 #include <nlohmann/json.hpp>
 #include <core/Logger.h>
-#include <event/Events.h>
 #include <math/Types.h>
 #include <utility/SharedPointer.h>
 #include <utility/Types.h>
@@ -117,7 +116,7 @@ public:
         return nullptr;
     }
 
-    /// The only way to make a propertiesResource without a provider is to make it unique, and not to cache it.
+    /// The only way to make a PropertiesResource without a provider is to make it unique, and not to cache it.
     /// You might want to use this sparingly as it defeats the entire point of a cached, shared resource system.
     template<typename ResourceType, typename... Params>
     static std::unique_ptr<ResourceType> getUniqueUncachedPropertyResource(const std::string& identifier, const nlohmann::json& props, Params... params) {
@@ -142,27 +141,39 @@ public:
     static void discardAll();
 
     template<typename ResourceType>
-    static uuids::uuid registerDefaultResource(const std::string& identifier) {
-        return Events::addListener("chira::engine::create_default_resources", [identifier](const std::any&) {
-            Resource::defaultResources[getHashOfType<ResourceType>()] = Resource::getUniqueResource<ResourceType>(identifier).template castAssert<Resource>();
-        });
+    static bool registerDefaultResource(const std::string& identifier) {
+        Resource::getDefaultResourceConstructors()[typeHash<ResourceType>()] = [identifier] {
+            Resource::defaultResources[typeHash<ResourceType>()] = Resource::getUniqueResource<ResourceType>(identifier).template castAssert<Resource>();
+        };
+        return true;
     }
 
     template<typename ResourceType>
     static bool hasDefaultResource() {
-        return Resource::defaultResources.count(getHashOfType<ResourceType>()) > 0;
+        return Resource::defaultResources.contains(typeHash<ResourceType>());
     }
 
     template<typename ResourceType>
     static SharedPointer<ResourceType> getDefaultResource() {
-        return Resource::defaultResources[getHashOfType<ResourceType>()].template castAssert<ResourceType>();
+        return Resource::defaultResources[typeHash<ResourceType>()].template castAssert<ResourceType>();
+    }
+
+    static void createDefaultResources() {
+        for (const auto& [id, ctor] : Resource::getDefaultResourceConstructors()) {
+            ctor();
+        }
     }
 
 protected:
     static inline std::unordered_map<std::string, std::vector<std::unique_ptr<IResourceProvider>>> providers;
     static inline std::unordered_map<std::string, std::unordered_map<std::string, SharedPointer<Resource>>> resources;
-    static inline std::unordered_map<std::size_t, SharedPointer<Resource>> defaultResources;
+    static inline std::unordered_map<std::type_index, SharedPointer<Resource>> defaultResources;
     static inline std::vector<std::string> garbageResources;
+
+    static auto getDefaultResourceConstructors() -> std::unordered_map<std::type_index, std::function<void()>>& {
+        static std::unordered_map<std::type_index, std::function<void()>> defaultResourceConstructors;
+        return defaultResourceConstructors;
+    }
 
     /// We do a few predeclaration workarounds
     static void logResourceError(const std::string& identifier, const std::string& resourceName);
@@ -171,5 +182,5 @@ protected:
 } // namespace chira
 
 #define CHIRA_REGISTER_DEFAULT_RESOURCE(type, identifier) \
-    static inline const uuids::uuid type##DefaultResourceRegistryHelper = \
+    static inline const auto type##DefaultResourceRegistryHelper = \
         chira::Resource::registerDefaultResource<type>(identifier)
