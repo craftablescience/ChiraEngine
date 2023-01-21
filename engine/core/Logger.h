@@ -38,10 +38,12 @@ private:
 };
 
 class LogChannel {
-    class LogChannelLogger {
+    class InternalLogger {
     public:
-        constexpr LogChannelLogger(LogType type_, std::string_view source_) : type(type_), source(source_) {}
-        inline const LogChannelLogger& operator<<(std::string_view message) const {
+        constexpr InternalLogger(LogType type_, std::string_view source_)
+            : type(type_)
+            , source(source_) {}
+        inline const InternalLogger& operator<<(std::string_view message) const {
             Logger::log(this->type, this->source, message);
             return *this;
         }
@@ -51,7 +53,7 @@ class LogChannel {
     };
 public:
     /// Assumes the std::string_view passed will never lose sight of the data it is viewing
-    constexpr explicit LogChannel(std::string_view name_)
+    explicit constexpr LogChannel(std::string_view name_)
             : name(name_)
             , infoLogger(LogType::LOG_INFO, name_)
             , infoImportantLogger(LogType::LOG_INFO_IMPORTANT, name_)
@@ -63,19 +65,19 @@ public:
         return this->name;
     }
 
-    [[nodiscard]] inline constexpr const LogChannelLogger& info() const {
+    [[nodiscard]] constexpr const InternalLogger& info() const {
         return this->infoLogger;
     }
-    [[nodiscard]] inline constexpr const LogChannelLogger& infoImportant() const {
+    [[nodiscard]] constexpr const InternalLogger& infoImportant() const {
         return this->infoImportantLogger;
     }
-    [[nodiscard]] inline constexpr const LogChannelLogger& output() const {
+    [[nodiscard]] constexpr const InternalLogger& output() const {
         return this->outputLogger;
     }
-    [[nodiscard]] inline constexpr const LogChannelLogger& warning() const {
+    [[nodiscard]] constexpr const InternalLogger& warning() const {
         return this->warningLogger;
     }
-    [[nodiscard]] inline constexpr const LogChannelLogger& error() const {
+    [[nodiscard]] constexpr const InternalLogger& error() const {
         return this->errorLogger;
     }
 
@@ -121,11 +123,11 @@ public:
     }
 private:
     std::string_view name;
-    LogChannelLogger infoLogger;
-    LogChannelLogger infoImportantLogger;
-    LogChannelLogger outputLogger;
-    LogChannelLogger warningLogger;
-    LogChannelLogger errorLogger;
+    InternalLogger infoLogger;
+    InternalLogger infoImportantLogger;
+    InternalLogger outputLogger;
+    InternalLogger warningLogger;
+    InternalLogger errorLogger;
 };
 
 } // namespace chira
