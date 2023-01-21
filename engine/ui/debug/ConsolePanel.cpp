@@ -8,12 +8,15 @@ using namespace chira;
 
 CHIRA_CREATE_LOG(CONSOLE);
 
+// This is handled directly in the console input processing function
+[[maybe_unused]]
+ConCommand clear{"clear", "Clears the console.", [] (ConCommand::CallbackArgs) {}};
+
 ConsolePanel::ConsolePanel(ImVec2 windowSize) : IPanel(TR("ui.console.title"), false, windowSize) {
     this->loggingId = Logger::addCallback([&](LogType type, std::string_view source, std::string_view message) {
-        //todo(config): use a convarref?
-        static const auto* log_source = ConEntryRegistry::getConVar("log_source");
+        static const ConVarRef log_source{"log_source"};
         std::string logSource;
-        if (log_source->getValue<bool>()) {
+        if (log_source.getValue<bool>()) {
             logSource += "[";
             logSource += source.data();
             logSource += "]";

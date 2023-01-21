@@ -20,7 +20,7 @@ public:
             CHIRA_PROP_NAMED_SET(MaterialCubemap, cubemapPath, cubemap, setTextureCubemap)
     );
 private:
-    CHIRA_REGISTER_MATERIAL_TYPE(MaterialCubemap); // NOLINT(cert-err58-cpp)
+    CHIRA_REGISTER_MATERIAL_TYPE(MaterialCubemap);
 };
 
 } // namespace chira

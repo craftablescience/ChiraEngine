@@ -27,12 +27,12 @@ using namespace chira;
 CHIRA_CREATE_LOG(ENGINE);
 
 [[maybe_unused]]
-ConCommand quit{"quit", "Quits the game or application.", [] { // NOLINT(cert-err58-cpp)
+ConCommand quit{"quit", "Quits the game or application.", [] {
     Engine::getDevice()->closeAfterThisFrame(true);
 }};
 
 [[maybe_unused]]
-ConCommand crash{"crash", "Force-crashes the game or application (for debugging purposes).", [] { // NOLINT(cert-err58-cpp)
+ConCommand crash{"crash", "Force-crashes the game or application (for debugging purposes).", [] {
     throw std::runtime_error{"Called crash command!"};
 }, CON_FLAG_CHEAT};
 

@@ -17,7 +17,7 @@
 using namespace chira;
 
 [[maybe_unused]]
-ConCommand open_config_dir{"open_config_dir", "Opens the config directory in the OS's graphical file browser.", [] { // NOLINT(cert-err58-cpp)
+ConCommand open_config_dir{"open_config_dir", "Opens the config directory in the OS's graphical file browser.", [] {
     std::string dir = Config::getConfigDirectory().data();
 #if defined(CHIRA_PLATFORM_WINDOWS)
     ShellExecute(nullptr, "open", dir.c_str(), nullptr, nullptr, SW_SHOWNORMAL);

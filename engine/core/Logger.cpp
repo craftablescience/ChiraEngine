@@ -8,8 +8,8 @@
 
 using namespace chira;
 
-ConVar log_timestamp{"log_timestamp", true, "Print the timestamp of a console message in the terminal.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
-ConVar log_source{"log_source", true, "Print the source of a console message in the terminal and console panel.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+ConVar log_timestamp{"log_timestamp", true, "Print the timestamp of a console message in the terminal.", CON_FLAG_CACHE};
+ConVar log_source{"log_source", true, "Print the source of a console message in the terminal and console panel.", CON_FLAG_CACHE};
 
 // Using std::endl here instead of '\n' in debug
 // sometimes with '\n', the buffer doesn't get flushed until the application exits

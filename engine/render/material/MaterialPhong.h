@@ -33,7 +33,7 @@ public:
             CHIRA_PROP_SET(MaterialPhong, lambertFactor, setLambertFactor)
     );
 private:
-    CHIRA_REGISTER_MATERIAL_TYPE(MaterialPhong); // NOLINT(cert-err58-cpp)
+    CHIRA_REGISTER_MATERIAL_TYPE(MaterialPhong);
 };
 
 } // namespace chira

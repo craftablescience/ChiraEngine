@@ -32,7 +32,7 @@ public:
     );
 
 private:
-    CHIRA_REGISTER_DEFAULT_RESOURCE(MeshDataResource, "file://meshes/missing.json"); // NOLINT(cert-err58-cpp)
+    CHIRA_REGISTER_DEFAULT_RESOURCE(MeshDataResource, "file://meshes/missing.json");
 };
 
 } // namespace chira
