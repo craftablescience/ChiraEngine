@@ -5,6 +5,7 @@
 
 #include <config/ConEntry.h>
 #include <entity/light/LightManager.h>
+#include <event/Events.h>
 #include <i18n/TranslationManager.h>
 #include <input/InputManager.h>
 #include <loader/mesh/OBJMeshLoader.h>
@@ -93,7 +94,9 @@ void Engine::init() {
     AngelScriptVM::init();
 
     // Create default resources
-    Events::createEvent("chira::engine::create_default_resources");
+    Resource::createDefaultResources();
+
+    // Any events fired?
     Events::update();
 }
 
