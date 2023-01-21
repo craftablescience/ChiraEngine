@@ -9,7 +9,7 @@ using namespace chira;
 CHIRA_CREATE_LOG(CONENTRY);
 
 [[maybe_unused]]
-ConCommand about{"about", "Prints the description of the given convar(s) or concommand(s).", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
+ConCommand about{"about", "Prints the description of the given convar(s) or concommand(s).", [](ConCommand::CallbackArgs args) {
     for (const auto& name : args) {
         if (ConEntryRegistry::hasConCommand(name)) {
             LOG_CONENTRY.infoImportant(std::string{*ConEntryRegistry::getConCommand(name)});
@@ -22,7 +22,7 @@ ConCommand about{"about", "Prints the description of the given convar(s) or conc
 }};
 
 [[maybe_unused]]
-ConCommand find{"find", "Finds convars and/or concommands from the given substring.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
+ConCommand find{"find", "Finds convars and/or concommands from the given substring.", [](ConCommand::CallbackArgs args) {
     bool resultFound = false;
     for (const auto& substr : args) {
         for (const auto& concommand: ConEntryRegistry::getConCommandList()) {
@@ -44,7 +44,7 @@ ConCommand find{"find", "Finds convars and/or concommands from the given substri
 }};
 
 [[maybe_unused]]
-ConCommand con_entries{"con_entries", "Prints the description of every convar and concommand currently registered.", [] { // NOLINT(cert-err58-cpp)
+ConCommand con_entries{"con_entries", "Prints the description of every convar and concommand currently registered.", [] {
     LOG_CONENTRY.infoImportant("-- Commands --");
     auto concommandList = ConEntryRegistry::getConCommandList();
     std::sort(concommandList.begin(), concommandList.end());
@@ -93,7 +93,7 @@ ConCommand::ConCommand(std::string name_, std::string description_, const std::f
 ConCommand::ConCommand(std::string name_, std::string description_, std::function<void(ConCommand::CallbackArgs)> callback_, int flags_)
     : ConEntry(std::move(name_), std::move(description_), flags_)
     , callback(std::move(callback_)) {
-    runtime_assert(ConEntryRegistry::registerConCommand(this), "This concommand already exists!");
+    runtime_assert(ConEntryRegistry::registerConCommand(this), "This ConCommand already exists!");
 }
 
 ConCommand::~ConCommand() {
@@ -102,7 +102,7 @@ ConCommand::~ConCommand() {
 
 void ConCommand::fire(ConCommand::CallbackArgs args) {
     if (this->hasFlag(CON_FLAG_CHEAT) && !ConVar::areCheatsEnabled()) {
-        LOG_CONENTRY.error("Cannot fire cheat-protected concommand with cheats disabled.");
+        LOG_CONENTRY.error("Cannot fire cheat-protected ConCommand with cheats disabled.");
         return;
     }
     this->callback(args);
@@ -277,8 +277,7 @@ std::string_view ConVar::getTypeAsString() const {
     return "";
 }
 
-[[maybe_unused]]
-ConVar sv_cheats{"sv_cheats", false, "Unlocks certain commands that break gameplay."}; // NOLINT(cert-err58-cpp)
+ConVar sv_cheats{"sv_cheats", false, "Unlocks certain console entries that break gameplay."};
 
 bool ConVar::areCheatsEnabled() {
     return sv_cheats.getValue<bool>();
