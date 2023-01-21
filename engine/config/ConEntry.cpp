@@ -9,7 +9,7 @@ using namespace chira;
 CHIRA_CREATE_LOG(CONENTRY);
 
 [[maybe_unused]]
-ConCommand info{"info", "Prints the description of the given convar(s) or concommand(s).", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
+ConCommand about{"about", "Prints the description of the given convar(s) or concommand(s).", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
     for (const auto& name : args) {
         if (ConEntryRegistry::hasConCommand(name)) {
             LOG_CONENTRY.infoImportant(std::string{*ConEntryRegistry::getConCommand(name)});
