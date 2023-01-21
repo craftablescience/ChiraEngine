@@ -27,7 +27,7 @@ public:
             this->context->Prepare(func);
 
             int argNum = 0;
-            const auto addArg = [&] <typename T> (T arg) -> void {
+            [[maybe_unused]] const auto addArg = [&] <typename T> (T arg) -> void {
                 // todo(as): handle non-primitives
                 // todo(as): check if its a pointer or a reference
                 if constexpr (std::is_arithmetic_v<T>) {
