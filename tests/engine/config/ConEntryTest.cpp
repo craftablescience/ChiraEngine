@@ -234,3 +234,34 @@ TEST(ConEntryRegistry, cacheConVar) {
     // Clean up after ourselves
     std::filesystem::remove(Config::getConfigFile("convars.json"));
 }
+
+TEST(ConCommandRef, all) {
+    int x = 0;
+    ConCommand test{"test", [&x] (ConCommand::CallbackArgs) { x++; }};
+    {
+        ConCommandRef testRef{"test"};
+        ASSERT_TRUE(testRef);
+        testRef.fire({});
+        EXPECT_EQ(x, 1);
+    }
+    {
+        ConCommandRef testRef{"nonexistent"};
+        EXPECT_FALSE(testRef);
+    }
+}
+
+TEST(ConVarRef, all) {
+    ConVar test{"test", 0};
+    {
+        ConVarRef testRef{"test"};
+        ASSERT_TRUE(testRef);
+        EXPECT_EQ(testRef.getValue<int>(), 0);
+        testRef.setValue(1);
+        EXPECT_EQ(testRef.getValue<int>(), 1);
+    }
+    EXPECT_EQ(test.getValue<int>(), 1);
+    {
+        ConVarRef testRef{"nonexistent"};
+        EXPECT_FALSE(testRef);
+    }
+}

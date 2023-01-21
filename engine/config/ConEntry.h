@@ -1,12 +1,11 @@
 #pragma once
 
 #include <exception>
+#include <functional>
 #include <string>
 #include <string_view>
-#include <functional>
 #include <type_traits>
 #include <vector>
-
 #include <core/Assertions.h>
 #include <core/Logger.h>
 #include <loader/settings/JSONSettingsLoader.h>
@@ -117,7 +116,7 @@ public:
                 this->type = ConVarType::DOUBLE;
             }
         }
-        runtime_assert(ConEntryRegistry::registerConVar(this), "This convar already exists!");
+        runtime_assert(ConEntryRegistry::registerConVar(this), "This ConVar already exists!");
     }
 
     ConVar(std::string name_, ConVarValidType auto defaultValue, std::string description_, int flags_ = CON_FLAG_NONE, std::function<void(CallbackArg)> onChanged = [](CallbackArg) {})
@@ -136,7 +135,7 @@ public:
                 this->type = ConVarType::DOUBLE;
             }
         }
-        runtime_assert(ConEntryRegistry::registerConVar(this), "This convar already exists!");
+        runtime_assert(ConEntryRegistry::registerConVar(this), "This ConVar already exists!");
     }
 
     ~ConVar() override;
@@ -160,7 +159,7 @@ public:
 
     void setValue(ConVarValidType auto newValue, bool runCallback = true) {
         if (this->hasFlag(CON_FLAG_CHEAT) && !ConVar::areCheatsEnabled()) {
-            LOG_CONENTRY.error("Cannot set value of cheat-protected convar with cheats disabled.");
+            LOG_CONENTRY.error("Cannot set value of cheat-protected ConVar with cheats disabled.");
             return;
         }
 
@@ -217,7 +216,7 @@ public:
             try {
                 this->changedCallback(this->value);
             } catch (const std::exception& e) {
-                LOG_CONENTRY.error("Encountered error executing convar callback: {}", e.what());
+                LOG_CONENTRY.error("Encountered error executing ConVar callback: {}", e.what());
             }
         }
     }
@@ -232,6 +231,47 @@ private:
     std::function<void(CallbackArg)> changedCallback;
     std::string value;
     ConVarType type;
+};
+
+class ConCommandRef {
+public:
+    explicit ConCommandRef(std::string_view name) {
+        this->command = ConEntryRegistry::getConCommand(name);
+        if (!this->command) {
+            LOG_CONENTRY.error("ConCommandRef named \"{}\" refers to a nonexistent ConVar!", name);
+        }
+    }
+    [[nodiscard]] inline std::string_view getName() const { return this->command->getName(); }
+    [[nodiscard]] inline std::string_view getDescription() const { return this->command->getDescription(); }
+    [[nodiscard]] inline bool hasFlag(ConFlags flag) const { return this->command->hasFlag(flag); }
+    inline void fire(ConCommand::CallbackArgs args) { return this->command->fire(args); }
+    [[nodiscard]] explicit inline operator std::string() const { return this->command->operator std::string(); }
+
+    [[nodiscard]] explicit inline operator bool() const { return this->command; }
+private:
+    ConCommand* command;
+};
+
+class ConVarRef {
+public:
+    explicit ConVarRef(std::string_view name) {
+        this->var = ConEntryRegistry::getConVar(name);
+        if (!this->var) {
+            LOG_CONENTRY.error("ConVarRef named \"{}\" refers to a nonexistent ConVar!", name);
+        }
+    }
+    [[nodiscard]] inline std::string_view getName() const { return this->var->getName(); }
+    [[nodiscard]] inline std::string_view getDescription() const { return this->var->getDescription(); }
+    [[nodiscard]] inline bool hasFlag(ConFlags flag) const { return this->var->hasFlag(flag); }
+    [[nodiscard]] inline ConVarType getType() const { return this->var->getType(); }
+    [[nodiscard]] inline std::string_view getTypeAsString() const { return this->var->getTypeAsString(); }
+    template<ConVarValidType T> [[nodiscard]] inline T getValue() const { return this->var->getValue<T>(); }
+    inline void setValue(ConVarValidType auto value, bool runCallback = true) const { return this->var->setValue(value, runCallback); }
+    [[nodiscard]] explicit inline operator std::string() const { return this->var->operator std::string(); }
+
+    [[nodiscard]] explicit inline operator bool() const { return this->var; }
+private:
+    ConVar* var;
 };
 
 } // namespace chira
