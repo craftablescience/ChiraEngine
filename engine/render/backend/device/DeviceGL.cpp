@@ -22,7 +22,7 @@ using namespace chira;
 CHIRA_CREATE_LOG(WINDOW);
 
 [[maybe_unused]]
-ConCommand win_setpos{"win_setpos", "Set the X and Y position of the main window, (0,0) being at the top left. If no arguments are given, places it in the center of the screen.", [](ConCommand::CallbackArgs args) { // NOLINT(cert-err58-cpp)
+ConCommand win_setpos{"win_setpos", "Set the X and Y position of the main window, (0,0) being at the top left. If no arguments are given, places it in the center of the screen.", [](ConCommand::CallbackArgs args) {
     if (args.empty()) {
         Engine::getDevice()->moveToCenter();
     } else if (args.size() >= 2) {
@@ -30,23 +30,23 @@ ConCommand win_setpos{"win_setpos", "Set the X and Y position of the main window
     }
 }};
 
-ConVar win_width{"win_width", 1280, "The width of the main window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
+ConVar win_width{"win_width", 1280, "The width of the main window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) {
     Engine::getDevice()->setSize({static_cast<int>(std::stoi(newValue.data())), Engine::getDevice()->getFrame()->getFrameSize().y});
 }};
 
-ConVar win_height{"win_height", 720, "The height of the main window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
+ConVar win_height{"win_height", 720, "The height of the main window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) {
     Engine::getDevice()->setSize({Engine::getDevice()->getFrame()->getFrameSize().x, static_cast<int>(std::stoi(newValue.data()))});
 }};
 
-ConVar win_maximized{"win_maximized", true, "If the main window is maximized.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
+ConVar win_maximized{"win_maximized", true, "If the main window is maximized.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) {
     Engine::getDevice()->setMaximized(static_cast<bool>(std::stoi(newValue.data())));
 }};
 
-ConVar win_fullscreen{"win_fullscreen", false, "If the main window is fullscreen. Overrides \"win_maximized\" if true.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
+ConVar win_fullscreen{"win_fullscreen", false, "If the main window is fullscreen. Overrides \"win_maximized\" if true.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) {
     Engine::getDevice()->setFullscreen(static_cast<bool>(std::stoi(newValue.data())));
 }};
 
-ConVar win_vsync{"win_vsync", true, "Limit the FPS to your monitor's resolution.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) { // NOLINT(cert-err58-cpp)
+ConVar win_vsync{"win_vsync", true, "Limit the FPS to your monitor's resolution.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) {
     if (!static_cast<bool>(std::stoi(newValue.data()))) {
         SDL_GL_SetSwapInterval(0);
         return;
@@ -57,7 +57,7 @@ ConVar win_vsync{"win_vsync", true, "Limit the FPS to your monitor's resolution.
 }};
 
 [[maybe_unused]]
-ConVar input_raw_mouse_motion{"input_raw_mouse_motion", true, "Get more accurate mouse motion.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+ConVar input_raw_mouse_motion{"input_raw_mouse_motion", true, "Get more accurate mouse motion.", CON_FLAG_CACHE};
 
 static void setImGuiConfigPath() {
     static std::string configPath = Config::getConfigFile("imgui.ini");

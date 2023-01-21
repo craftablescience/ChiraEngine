@@ -5,8 +5,8 @@
 
 namespace chira {
 
-const std::string FILESYSTEM_ROOT_FOLDER = "resources"; // NOLINT(cert-err58-cpp)
-const std::string FILESYSTEM_PROVIDER_NAME = "file"; // NOLINT(cert-err58-cpp)
+const std::string FILESYSTEM_ROOT_FOLDER = "resources";
+const std::string FILESYSTEM_PROVIDER_NAME = "file";
 
 class FilesystemResourceProvider : public IResourceProvider {
 public:

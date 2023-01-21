@@ -10,7 +10,7 @@
 
 namespace chira {
 
-const std::string ENGINE_FILESYSTEM_PATH = "engine"; // NOLINT(cert-err58-cpp)
+const std::string ENGINE_FILESYSTEM_PATH = "engine";
 
 class Engine {
 public:

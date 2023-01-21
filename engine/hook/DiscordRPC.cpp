@@ -10,7 +10,7 @@ using namespace chira;
 
 CHIRA_CREATE_LOG(DISCORD);
 
-ConVar discord_enable{"discord_enable", true, "Allows applications to use Discord rich presence.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+ConVar discord_enable{"discord_enable", true, "Allows applications to use Discord rich presence.", CON_FLAG_CACHE};
 
 CHIRA_CREATE_SYSTEM(Discord) {
     // Discord should be initialized manually before Engine::init

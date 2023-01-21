@@ -17,7 +17,7 @@ public:
         return fmt::format(fmt::runtime(TranslationManager::getTranslation(identifier)), params...);
     }
 private:
-    static inline std::unordered_map<std::string,std::string> languageStrings; // NOLINT(cert-err58-cpp)
+    static inline std::unordered_map<std::string,std::string> languageStrings;
 };
 
 } // namespace chira

@@ -20,7 +20,7 @@ public:
             CHIRA_PROP_NAMED_SET(MaterialTextured, texturePath, texture, setTexture)
     );
 private:
-    CHIRA_REGISTER_MATERIAL_TYPE(MaterialTextured); // NOLINT(cert-err58-cpp)
+    CHIRA_REGISTER_MATERIAL_TYPE(MaterialTextured);
 };
 
 } // namespace chira

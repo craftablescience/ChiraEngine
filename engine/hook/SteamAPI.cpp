@@ -15,7 +15,7 @@ using namespace libloader;
 
 CHIRA_CREATE_LOG(STEAM);
 
-ConVar steam_enable{"steam_enable", true, "Initialize Steam API functions.", CON_FLAG_CACHE}; // NOLINT(cert-err58-cpp)
+ConVar steam_enable{"steam_enable", true, "Initialize Steam API functions.", CON_FLAG_CACHE};
 
 CHIRA_CREATE_SYSTEM(Steam) {
     static void init() {

@@ -43,7 +43,7 @@ protected:
     int bitDepth = -1;
     bool verticalFlip = true;
 private:
-    CHIRA_REGISTER_DEFAULT_RESOURCE(Image, "file://textures/missing.png"); // NOLINT(cert-err58-cpp)
+    CHIRA_REGISTER_DEFAULT_RESOURCE(Image, "file://textures/missing.png");
 };
 
 } // namespace chira

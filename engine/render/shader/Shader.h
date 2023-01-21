@@ -36,8 +36,8 @@ public:
     static void setPreprocessorSuffix(const std::string& suffix);
 private:
     static inline std::unordered_map<std::string, std::string> preprocessorSymbols;
-    static inline std::string preprocessorPrefix = std::string{SHADER_PREPROCESSOR_DEFAULT_PREFIX}; // NOLINT(cert-err58-cpp)
-    static inline std::string preprocessorSuffix = std::string{SHADER_PREPROCESSOR_DEFAULT_SUFFIX}; // NOLINT(cert-err58-cpp)
+    static inline std::string preprocessorPrefix = std::string{SHADER_PREPROCESSOR_DEFAULT_PREFIX};
+    static inline std::string preprocessorSuffix = std::string{SHADER_PREPROCESSOR_DEFAULT_SUFFIX};
 
     static std::string replaceMacros(const std::string&, const std::string&);
 

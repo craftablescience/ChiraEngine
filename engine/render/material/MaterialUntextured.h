@@ -11,7 +11,7 @@ public:
 public:
     CHIRA_PROPS_INHERITED(IMaterial) ();
 private:
-    CHIRA_REGISTER_MATERIAL_TYPE(MaterialUntextured); // NOLINT(cert-err58-cpp)
+    CHIRA_REGISTER_MATERIAL_TYPE(MaterialUntextured);
 };
 
 } // namespace chira
