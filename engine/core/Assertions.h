@@ -1,10 +1,11 @@
 #pragma once
 
 #include <string_view>
+#include <utility>
 
 #include "Platform.h"
 
-#ifndef CHIRA_PLATFORM_WINDOWS
+#ifndef CHIRA_COMPILER_MSVC
     #include <csignal>
 #endif
 
@@ -45,11 +46,25 @@ inline T assert_cast(auto obj) {
 }
 
 inline void breakInDebugger() {
-#ifdef CHIRA_PLATFORM_WINDOWS
+#ifdef CHIRA_COMPILER_MSVC
     __debugbreak();
 #else
     std::raise(SIGINT);
 #endif
 }
+
+/// Thank you cppreference.com!
+/// This is a C++23 thing, std::unreachable, creates undefined behaviour
+[[noreturn]] inline void unreachable(std::string_view rationale = "Unreachable code reached!") {
+    runtime_assert(false, rationale);
+#if defined(__cpp_lib_unreachable)
+    std::unreachable();
+#elif defined(CHIRA_COMPILER_GNU) || defined(CHIRA_COMPILER_CLANG)
+    __builtin_unreachable();
+#elif defined(CHIRA_COMPILER_MSVC) || defined(CHIRA_COMPILER_INTEL)
+    __assume(false);
+#endif
+}
+#define CHIRA_NO_DEFAULT default: unreachable("Hit the default case in a NO_DEFAULT switch!"); break
 
 } // namespace chira

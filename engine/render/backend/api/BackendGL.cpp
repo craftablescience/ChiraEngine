@@ -1,7 +1,6 @@
 #include "BackendGL.h"
 
 #include <cstddef>
-#include <cstring>
 #include <map>
 #include <stack>
 #include <string>
@@ -395,6 +394,7 @@ void Renderer::destroyFrameBuffer(Renderer::FrameBufferHandle handle) {
             return GL_VERTEX_SHADER;
         case ShaderModuleType::FRAGMENT:
             return GL_FRAGMENT_SHADER;
+        CHIRA_NO_DEFAULT;
     }
     return -1;
 }
