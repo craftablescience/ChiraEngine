@@ -10,13 +10,13 @@
 #include <input/InputManager.h>
 #include <loader/mesh/OBJMeshLoader.h>
 #include <loader/mesh/ChiraMeshLoader.h>
+#include <plugin/Plugin.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <script/AngelScriptVM.h>
 #include <ui/debug/ConsolePanel.h>
 #include <ui/debug/ResourceUsageTrackerPanel.h>
 #include "CommandLine.h"
 #include "Platform.h"
-#include "Plugin.h"
 
 #ifdef DEBUG
     #include <render/backend/RenderBackend.h>

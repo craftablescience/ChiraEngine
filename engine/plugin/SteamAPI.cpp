@@ -4,10 +4,10 @@
 #include <libloader.hpp>
 #include <config/ConEntry.h>
 #include <core/Logger.h>
-#include <core/Plugin.h>
 #include <event/Events.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <utility/String.h>
+#include "Plugin.h"
 
 using namespace chira;
 using namespace steam;
