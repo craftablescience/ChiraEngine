@@ -32,7 +32,7 @@
 #elif defined(__linux__)
     #define CHIRA_PLATFORM_LINUX
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
-    #define CHIRA_PLATFORM_XBSD
+    #define CHIRA_PLATFORM_BSD
 #elif defined(__sun)
     #define CHIRA_PLATFORM_SOLARIS
 #else

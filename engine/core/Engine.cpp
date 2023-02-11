@@ -16,7 +16,7 @@
 #include <ui/debug/ResourceUsageTrackerPanel.h>
 #include "CommandLine.h"
 #include "Platform.h"
-#include "System.h"
+#include "Plugin.h"
 
 #ifdef DEBUG
     #include <render/backend/RenderBackend.h>
@@ -49,7 +49,7 @@ void Engine::preInit(int argc, const char* const argv[]) {
     CommandLine::init(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
     TranslationManager::addTranslationFile("file://i18n/engine");
-    LightManager::setupShaderMacros();
+    PluginRegistry::preinitAll();
 }
 
 void Engine::init() {
@@ -71,7 +71,7 @@ void Engine::init() {
     Engine::device->displaySplashScreen();
 
     // Start up some auto-registered stuff (order is random!)
-    SystemRegistry::initAll();
+    PluginRegistry::initAll();
 
     IMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     IMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
@@ -207,14 +207,14 @@ void Engine::run() {
 
         Engine::device->refresh();
 
-        SystemRegistry::updateAll();
+        PluginRegistry::updateAll();
 
         Events::update();
     } while (!Engine::device->shouldCloseAfterThisFrame());
 
     LOG_ENGINE.info("Exiting...");
 
-    SystemRegistry::deinitAll();
+    PluginRegistry::deinitAll();
 
     Engine::device.reset();
 
