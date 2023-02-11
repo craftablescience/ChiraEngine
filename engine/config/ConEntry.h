@@ -173,7 +173,7 @@ public:
                     } else if (newValue == "false") {
                         this->value = "0";
                     }
-                    // Fallthrough intentional
+                    [[fallthrough]];
                 case INTEGER:
                     try {
                         this->value = std::to_string(std::stoi(newValue));
@@ -188,7 +188,6 @@ public:
                         this->value = std::to_string(static_cast<double>(newValue.size()));
                     }
                     break;
-                default:
                 case STRING:
                     this->value = newValue;
                     break;
@@ -205,7 +204,6 @@ public:
                 case DOUBLE:
                     this->value = std::to_string(static_cast<double>(newValue));
                     break;
-                default:
                 case STRING:
                     this->value = std::to_string(newValue);
                     break;
