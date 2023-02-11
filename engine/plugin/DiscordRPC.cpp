@@ -3,8 +3,8 @@
 #include <discord_rpc.h>
 #include <config/ConEntry.h>
 #include <core/Logger.h>
-#include <core/Plugin.h>
 #include <i18n/TranslationManager.h>
+#include "Plugin.h"
 
 using namespace chira;
 

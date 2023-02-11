@@ -18,10 +18,10 @@
 #include <render/material/MaterialPhong.h>
 
 #ifdef CHIRA_USE_DISCORD
-    #include <hook/DiscordRPC.h>
+    #include <plugin/DiscordRPC.h>
 #endif
 #ifdef CHIRA_USE_STEAMWORKS
-    #include <hook/SteamAPI.h>
+    #include <plugin/SteamAPI.h>
 #endif
 
 // Need to register phong material!
