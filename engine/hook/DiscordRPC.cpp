@@ -3,7 +3,7 @@
 #include <discord_rpc.h>
 #include <config/ConEntry.h>
 #include <core/Logger.h>
-#include <core/System.h>
+#include <core/Plugin.h>
 #include <i18n/TranslationManager.h>
 
 using namespace chira;
@@ -12,14 +12,14 @@ CHIRA_CREATE_LOG(DISCORD);
 
 ConVar discord_enable{"discord_enable", true, "Allows applications to use Discord rich presence.", CON_FLAG_CACHE};
 
-CHIRA_CREATE_SYSTEM(Discord) {
+CHIRA_CREATE_PLUGIN(Discord) {
     // Discord should be initialized manually before Engine::init
-    static void update() {
+    CHIRA_PLUGIN_UPDATE() {
         if (DiscordRPC::initialized()) {
             DiscordRPC::updatePresence();
         }
     }
-    static void deinit() {
+    CHIRA_PLUGIN_DEINIT() {
         if (DiscordRPC::initialized()) {
             DiscordRPC::shutdown();
         }

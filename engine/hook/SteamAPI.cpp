@@ -4,7 +4,7 @@
 #include <libloader.hpp>
 #include <config/ConEntry.h>
 #include <core/Logger.h>
-#include <core/System.h>
+#include <core/Plugin.h>
 #include <event/Events.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <utility/String.h>
@@ -17,18 +17,18 @@ CHIRA_CREATE_LOG(STEAM);
 
 ConVar steam_enable{"steam_enable", true, "Initialize Steam API functions.", CON_FLAG_CACHE};
 
-CHIRA_CREATE_SYSTEM(Steam) {
-    static void init() {
+CHIRA_CREATE_PLUGIN(Steam) {
+    CHIRA_PLUGIN_INIT() {
         if (steam_enable.getValue<bool>() && (!SteamAPI::Client::initialized() && !SteamAPI::Client::initSteam())) {
             LOG_STEAM.warning("Steam failed to initialize");
         }
     }
-    static void update() {
+    CHIRA_PLUGIN_UPDATE() {
         if (SteamAPI::Client::initialized()) {
             SteamAPI::Client::runCallbacks();
         }
     }
-    static void deinit() {
+    CHIRA_PLUGIN_DEINIT() {
         if (SteamAPI::Client::initialized()) {
             SteamAPI::Client::shutdown();
         }
