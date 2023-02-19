@@ -22,12 +22,16 @@
 #endif
 
 // Leave outside the Chira namespace so it can be conditionally replaced with a macro
-// (why did modern compilers not implement this??)
-#ifdef CHIRA_USE_SOURCE_LOCATION
-void runtime_assert(bool shouldAssert, std::string_view message, const std::source_location& location = std::source_location::current());
+#ifdef CHIRA_BUILD_WITH_ASSERTS
+    // (why did modern compilers not implement this??)
+    #ifdef CHIRA_USE_SOURCE_LOCATION
+        void runtime_assert(bool shouldAssert, std::string_view message, const std::source_location& location = std::source_location::current());
+    #else
+        #define runtime_assert(shouldAssert, message) runtime_assert_internal(shouldAssert, message, __FILE__, __LINE__, __FUNCTION__)
+        void runtime_assert_internal(bool shouldAssert, std::string_view message, const char* file, int line, const char* function);
+    #endif
 #else
-#define runtime_assert(shouldAssert, message) runtime_assert_internal(shouldAssert, message, __FILE__, __LINE__, __FUNCTION__)
-void runtime_assert_internal(bool shouldAssert, std::string_view message, const char* file, int line, const char* function);
+    #define runtime_assert(shouldAssert, message)
 #endif
 
 namespace chira {
