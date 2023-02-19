@@ -49,15 +49,13 @@ public:
                 }
                 argNum++;
             };
-            (addArg.template operator()<decltype(args)>(args), ...);
+            (addArg.template operator()<Args>(args), ...);
 
             if (int r = this->context->Execute(); r != asEXECUTION_FINISHED) {
                 LOG_ANGELSCRIPT.error("An exception in \"{}\" occurred:\n{}", this->identifier, this->context->GetExceptionString());
             }
 
-            if constexpr (std::is_same_v<R, void>) {
-                return;
-            } else {
+            if constexpr (!std::is_same_v<R, void>) {
                 // todo(as): handle non-primitives
                 // todo(as): check if its a pointer or a reference
                 if constexpr (std::is_arithmetic_v<R>) {
@@ -84,9 +82,7 @@ public:
             }
         } else {
             LOG_ANGELSCRIPT.error(R"(Script at "{}" does not have a function with signature "{}")", this->identifier, funcNameFull);
-            if constexpr (std::is_same_v<R, void>) {
-                return;
-            } else {
+            if constexpr (!std::is_same_v<R, void>) {
                 return {};
             }
         }
