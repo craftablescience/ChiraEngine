@@ -49,6 +49,7 @@ option(CHIRA_BUILD_EDITOR "Build the editor GUI application" ON)
 cmake_dependent_option(CHIRA_BUILD_EDITOR_INSTALLER "Build an installer for the editor binaries" OFF "CHIRA_BUILD_EDITOR" OFF)
 option(CHIRA_BUILD_TESTS "Run Chira Engine's built-in tests" ON)
 
+option(CHIRA_BUILD_WITH_ASSERTS "Build Chira Engine with assertions enabled" ON)
 cmake_dependent_option(CHIRA_BUILD_WITH_LTO "Build Chira Engine with Link-Time Optimizations" ON "NOT CHIRA_DEBUG_BUILD" OFF)
 # Precompiled headers seem to make compilation slower when not using MSVC
 cmake_dependent_option(CHIRA_BUILD_WITH_PCH "Build Chira Engine with precompiled headers" ON "CHIRA_COMPILER_MSVC" OFF)
@@ -65,6 +66,7 @@ message(STATUS "Options:")
 message(STATUS "  CHIRA_BUILD_EDITOR: ${CHIRA_BUILD_EDITOR}")
 message(STATUS "  CHIRA_BUILD_EDITOR_INSTALLER: ${CHIRA_BUILD_EDITOR_INSTALLER}")
 message(STATUS "  CHIRA_BUILD_TESTS: ${CHIRA_BUILD_TESTS}")
+message(STATUS "  CHIRA_BUILD_WITH_ASSERTS: ${CHIRA_BUILD_WITH_ASSERTS}")
 message(STATUS "  CHIRA_BUILD_WITH_LTO: ${CHIRA_BUILD_WITH_LTO}")
 message(STATUS "  CHIRA_BUILD_WITH_PCH: ${CHIRA_BUILD_WITH_PCH}")
 message(STATUS "  CHIRA_BUILD_WITH_WARNINGS: ${CHIRA_BUILD_WITH_WARNINGS}")
@@ -96,6 +98,12 @@ if(CHIRA_BUILD_WITH_LTO)
     check_ipo_supported(RESULT CHIRA_BUILD_WITH_LTO_INTERNAL)
 endif()
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ${CHIRA_BUILD_WITH_LTO_INTERNAL})
+
+
+# Enable/disable assertions
+if(CHIRA_BUILD_WITH_ASSERTS)
+    list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_BUILD_WITH_ASSERTS)
+endif()
 
 
 # Macro to apply optimization flags to multiple targets
