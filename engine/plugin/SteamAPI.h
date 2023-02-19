@@ -13,16 +13,6 @@ class library;
 
 namespace steam {
 
-// -- Singleton types --
-// Contents don't matter as these are just passed through to Steam API calls
-struct ISteamClient    {};
-struct ISteamUser      {};
-struct ISteamFriends   {};
-struct ISteamUtils     {};
-struct ISteamUserStats {};
-struct ISteamApps      {};
-struct ISteamUGC       {};
-
 // -- Enums --
 enum class NotificationPosition : int {
     TOP_LEFT     = 0,
@@ -197,17 +187,17 @@ struct SteamAPI {
     static void generateAppIDFile(unsigned int appID);
 
     struct Client {
-        static steam::ISteamClient* get();
-        static bool initSteam();
-        static bool initialized();
-        static void runCallbacks();
-        static void shutdown();
+        static void* get();
+        static bool  initSteam();
+        static bool  initialized();
+        static void  runCallbacks();
+        static void  shutdown();
     private:
         static inline bool isInitialized = false;
     };
 
     struct User {
-        static steam::ISteamUser* get();
+        static void*         get();
         static bool          isLoggedOn();
         static std::uint64_t getSteamID();
         static bool          isBehindNAT();
@@ -221,13 +211,13 @@ struct SteamAPI {
     };
 
     struct Friends {
-        static steam::ISteamFriends* get();
+        static void*         get();
         static std::string   getPersonaName();
         static std::uint64_t setPersonaName(std::string_view name);
     };
 
     struct Utils {
-        static steam::ISteamUtils* get();
+        static void*         get();
         static std::uint32_t getSecondsSinceAppActive();
         static std::uint32_t getSecondsSinceComputerActive();
         static std::uint32_t getServerRealTime();
@@ -250,12 +240,12 @@ struct SteamAPI {
     };
 
     struct UserStats {
-        static steam::ISteamUserStats* get();
+        static void* get();
         // todo: implement wrappers + callbacks
     };
 
     struct Apps {
-        static steam::ISteamApps*         get();
+        static void*                      get();
         static bool                       userOwnsThisAppID();
         static bool                       isLowViolence();
         static bool                       isCybercafe();
@@ -285,7 +275,7 @@ struct SteamAPI {
     };
 
     struct UGC {
-        static steam::ISteamUGC* get();
+        static void* get();
         // todo: implement wrappers + callbacks
     };
 };

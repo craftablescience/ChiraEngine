@@ -40,9 +40,11 @@ CHIRA_REGISTER_PLUGIN(Steam);
 template<typename T, typename U, typename... Params>
 inline T steamFunctionWrapper(const std::string& function, T defaultValue, U steamSingleton, Params... params) {
     if (steamSingleton) {
-        T out = defaultValue;
-        SteamAPI::get().call<T>(function, out, steamSingleton, params...);
-        return out;
+        auto out = SteamAPI::get().call<T>(function, steamSingleton, params...);
+        if (!out) {
+            return defaultValue;
+        }
+        return *out;
     }
     return defaultValue;
 }
@@ -51,9 +53,8 @@ inline T steamFunctionWrapper(const std::string& function, T defaultValue, U ste
 template<typename T, typename... Params>
 inline std::string steamFunctionStringWrapper(const std::string& function, const std::string& defaultValue, T steamSingleton, Params... params) {
     if (steamSingleton) {
-        const char* out = defaultValue.c_str();
-        SteamAPI::get().call<const char*>(function, out, steamSingleton, params...);
-        return out ? std::string{out} : defaultValue;
+        auto out = SteamAPI::get().call<const char*>(function, steamSingleton, params...);
+        return out ? std::string{*out} : defaultValue;
     }
     return defaultValue;
 }
@@ -69,21 +70,20 @@ void SteamAPI::generateAppIDFile(unsigned int appID) {
     file.close();
 }
 
-ISteamClient* SteamAPI::Client::get() {
-    ISteamClient* client = nullptr;
-    SteamAPI::get().call<ISteamClient*>("SteamClient", client);
-    return client;
+void* SteamAPI::Client::get() {
+    if (auto client = SteamAPI::get().call<void*>("SteamClient"))
+        return *client;
+    return nullptr;
 }
 
 bool SteamAPI::Client::initSteam() {
     if (SteamAPI::Client::isInitialized)
         return true;
-    bool out;
-    if (SteamAPI::get().call<bool>("SteamAPI_Init", out)) {
-        SteamAPI::Client::isInitialized = out;
+    if (auto out = SteamAPI::get().call<bool>("SteamAPI_Init"); out && *out) {
+        SteamAPI::Client::isInitialized = true;
         // Handle callbacks manually
-        SteamAPI::get().callVoid("SteamAPI_ManualDispatch_Init");
-        return out;
+        SteamAPI::get().call<void>("SteamAPI_ManualDispatch_Init");
+        return true;
     }
     return false;
 }
@@ -98,7 +98,7 @@ void SteamAPI::Client::runCallbacks() {
         steamPipe = steamFunctionWrapper<std::int32_t>("SteamAPI_GetHSteamPipe", 0, client);
     else
         return;
-    SteamAPI::get().callVoid("SteamAPI_ManualDispatch_RunFrame", steamPipe);
+    SteamAPI::get().call<void>("SteamAPI_ManualDispatch_RunFrame", steamPipe);
     CallbackMessage callback{};
     while (steamFunctionWrapper<bool>("SteamAPI_ManualDispatch_GetNextCallback", false, steamPipe, &callback)) {
         switch (static_cast<CallbackMessageType>(callback.callbackType)) {
@@ -132,22 +132,22 @@ void SteamAPI::Client::runCallbacks() {
                 Events::createEvent("chira::steam::file_details_result", *reinterpret_cast<Callbacks::FileDetailsResult*>(callback.callback));
                 break;
         }
-        SteamAPI::get().callVoid("SteamAPI_ManualDispatch_FreeLastCallback", steamPipe);
+        SteamAPI::get().call<void>("SteamAPI_ManualDispatch_FreeLastCallback", steamPipe);
     }
     // Not called automatically anymore!
-    SteamAPI::get().callVoid("SteamAPI_ReleaseCurrentThreadMemory");
+    SteamAPI::get().call<void>("SteamAPI_ReleaseCurrentThreadMemory");
 }
 
 void SteamAPI::Client::shutdown() {
-    SteamAPI::get().callVoid("SteamAPI_Shutdown");
+    SteamAPI::get().call<void>("SteamAPI_Shutdown");
 }
 
 // -------------------------------- USER -------------------------------- //
 
-ISteamUser* SteamAPI::User::get() {
-    ISteamUser* user = nullptr;
-    SteamAPI::get().call<ISteamUser*>("SteamAPI_SteamUser_v021", user);
-    return user;
+void* SteamAPI::User::get() {
+    if (auto user = SteamAPI::get().call<void*>("SteamAPI_SteamUser_v021"))
+        return *user;
+    return nullptr;
 }
 
 bool SteamAPI::User::isLoggedOn() {
@@ -192,10 +192,10 @@ std::uint64_t SteamAPI::User::getMarketEligibility() {
 
 // -------------------------------- FRIENDS -------------------------------- //
 
-ISteamFriends* SteamAPI::Friends::get() {
-    ISteamFriends* friends = nullptr;
-    SteamAPI::get().call<ISteamFriends*>("SteamAPI_SteamFriends_v017", friends);
-    return friends;
+void* SteamAPI::Friends::get() {
+    if (auto friends = SteamAPI::get().call<void*>("SteamAPI_SteamFriends_v017"))
+        return *friends;
+    return nullptr;
 }
 
 std::string SteamAPI::Friends::getPersonaName() {
@@ -208,10 +208,10 @@ std::uint64_t SteamAPI::Friends::setPersonaName(std::string_view name) {
 
 // -------------------------------- UTILS -------------------------------- //
 
-ISteamUtils* SteamAPI::Utils::get() {
-    ISteamUtils* utils = nullptr;
-    SteamAPI::get().call<ISteamUtils*>("SteamAPI_SteamUtils_v010", utils);
-    return utils;
+void* SteamAPI::Utils::get() {
+    if (auto utils = SteamAPI::get().call<void*>("SteamAPI_SteamUtils_v010"))
+        return *utils;
+    return nullptr;
 }
 
 std::uint32_t SteamAPI::Utils::getSecondsSinceAppActive() {
@@ -248,7 +248,7 @@ std::uint32_t SteamAPI::Utils::getAppID() {
 
 void SteamAPI::Utils::setOverlayNotificationPosition(NotificationPosition position) {
     if (auto utils = SteamAPI::Utils::get())
-        SteamAPI::get().callVoid("SteamAPI_ISteamUtils_SetOverlayNotificationPosition", utils, position);
+        SteamAPI::get().call<void>("SteamAPI_ISteamUtils_SetOverlayNotificationPosition", utils, position);
 }
 
 std::uint32_t SteamAPI::Utils::getIPCCallCount() {
@@ -265,7 +265,7 @@ bool SteamAPI::Utils::isRunningInVR() {
 
 void SteamAPI::Utils::setOverlayNotificationInset(int horizontalInset, int verticalInset) {
     if (auto utils = SteamAPI::Utils::get())
-        SteamAPI::get().callVoid("SteamAPI_ISteamUtils_SetOverlayNotificationInset", utils, horizontalInset, verticalInset);
+        SteamAPI::get().call<void>("SteamAPI_ISteamUtils_SetOverlayNotificationInset", utils, horizontalInset, verticalInset);
 }
 
 bool SteamAPI::Utils::isBigPictureModeOn() {
@@ -274,7 +274,7 @@ bool SteamAPI::Utils::isBigPictureModeOn() {
 
 void SteamAPI::Utils::startVRDashboard() {
     if (auto utils = SteamAPI::Utils::get())
-        SteamAPI::get().callVoid("SteamAPI_ISteamUtils_StartVRDashboard", utils);
+        SteamAPI::get().call<void>("SteamAPI_ISteamUtils_StartVRDashboard", utils);
 }
 
 bool SteamAPI::Utils::isVRHeadsetStreamingEnabled() {
@@ -283,7 +283,7 @@ bool SteamAPI::Utils::isVRHeadsetStreamingEnabled() {
 
 void SteamAPI::Utils::setVRHeadsetStreamingEnabled(bool enabled) {
     if (auto utils = SteamAPI::Utils::get())
-        SteamAPI::get().callVoid("SteamAPI_ISteamUtils_SetVRHeadsetStreamingEnabled", utils, enabled);
+        SteamAPI::get().call<void>("SteamAPI_ISteamUtils_SetVRHeadsetStreamingEnabled", utils, enabled);
 }
 
 bool SteamAPI::Utils::isRunningOnSteamDeck() {
@@ -292,23 +292,23 @@ bool SteamAPI::Utils::isRunningOnSteamDeck() {
 
 void SteamAPI::Utils::setGameLauncherMode(bool launcherMode) {
     if (auto utils = SteamAPI::Utils::get())
-        SteamAPI::get().callVoid("SteamAPI_ISteamUtils_SetGameLauncherMode", utils, launcherMode);
+        SteamAPI::get().call<void>("SteamAPI_ISteamUtils_SetGameLauncherMode", utils, launcherMode);
 }
 
 // -------------------------------- USER STATS -------------------------------- //
 
-ISteamUserStats* SteamAPI::UserStats::get() {
-    ISteamUserStats* userStats = nullptr;
-    SteamAPI::get().call<ISteamUserStats*>("SteamAPI_SteamUserStats_v012", userStats);
-    return userStats;
+void* SteamAPI::UserStats::get() {
+    if (auto userStats = SteamAPI::get().call<void*>("SteamAPI_SteamUserStats_v012"))
+        return *userStats;
+    return nullptr;
 }
 
 // -------------------------------- APPS -------------------------------- //
 
-ISteamApps* SteamAPI::Apps::get() {
-    ISteamApps* apps = nullptr;
-    SteamAPI::get().call<ISteamApps*>("SteamAPI_SteamApps_v008", apps);
-    return apps;
+void* SteamAPI::Apps::get() {
+    if (auto apps = SteamAPI::get().call<void*>("SteamAPI_SteamApps_v008"))
+        return *apps;
+    return nullptr;
 }
 
 bool SteamAPI::Apps::userOwnsThisAppID() {
@@ -356,45 +356,45 @@ int SteamAPI::Apps::getDLCCount() {
 }
 
 bool SteamAPI::Apps::getDLCData(int dlc, std::uint32_t* appID, bool* available, std::string& name) {
-    if (auto apps = SteamAPI::Apps::get()) {
-        bool isValid = false;
-        char* cname = new char[FilesystemResourceProvider::FILEPATH_MAX_LENGTH];
-        SteamAPI::get().call("SteamAPI_ISteamApps_BGetDLCDataByIndex", isValid, apps, dlc, appID, available, cname, static_cast<std::int32_t>(FilesystemResourceProvider::FILEPATH_MAX_LENGTH));
-        if (!isValid) {
-            delete[] cname;
-            return false;
-        }
-        name = cname;
-        delete[] cname;
-        return true;
+    auto apps = SteamAPI::Apps::get();
+    if (!apps) {
+        return false;
     }
-    return false;
+    char* cname = new char[FilesystemResourceProvider::FILEPATH_MAX_LENGTH];
+    auto isValid = SteamAPI::get().call<bool>("SteamAPI_ISteamApps_BGetDLCDataByIndex", apps, dlc, appID, available, cname, static_cast<std::int32_t>(FilesystemResourceProvider::FILEPATH_MAX_LENGTH));
+    if (!isValid || !(*isValid)) {
+        delete[] cname;
+        return false;
+    }
+    name = cname;
+    delete[] cname;
+    return true;
 }
 
 void SteamAPI::Apps::installDLC(std::uint32_t appID) {
     if (auto apps = SteamAPI::Apps::get())
-        SteamAPI::get().callVoid("SteamAPI_ISteamApps_InstallDLC", apps, appID);
+        SteamAPI::get().call<void>("SteamAPI_ISteamApps_InstallDLC", apps, appID);
 }
 
 void SteamAPI::Apps::uninstallDLC(std::uint32_t appID) {
     if (auto apps = SteamAPI::Apps::get())
-        SteamAPI::get().callVoid("SteamAPI_ISteamApps_UninstallDLC", apps, appID);
+        SteamAPI::get().call<void>("SteamAPI_ISteamApps_UninstallDLC", apps, appID);
 }
 
 std::string SteamAPI::Apps::getCurrentBranch() {
-    if (auto apps = SteamAPI::Apps::get()) {
-        char* out = new char[FilesystemResourceProvider::FILEPATH_MAX_LENGTH];
-        bool isOnBeta = false;
-        SteamAPI::get().call("SteamAPI_ISteamApps_GetCurrentBetaName", isOnBeta, apps, out, static_cast<std::int32_t>(FilesystemResourceProvider::FILEPATH_MAX_LENGTH));
-        if (!isOnBeta) {
-            delete[] out;
-            return "";
-        }
-        std::string path{out};
-        delete[] out;
-        return path;
+    auto apps = SteamAPI::Apps::get();
+    if (!apps) {
+        return "";
     }
-    return "";
+    char* out = new char[FilesystemResourceProvider::FILEPATH_MAX_LENGTH];
+    auto isOnBeta = SteamAPI::get().call<bool>("SteamAPI_ISteamApps_GetCurrentBetaName", apps, out, static_cast<std::int32_t>(FilesystemResourceProvider::FILEPATH_MAX_LENGTH));
+    if (!isOnBeta || !(*isOnBeta)) {
+        delete[] out;
+        return "";
+    }
+    std::string path{out};
+    delete[] out;
+    return path;
 }
 
 bool SteamAPI::Apps::markContentCorrupt(bool missingFilesOnly) {
@@ -402,30 +402,36 @@ bool SteamAPI::Apps::markContentCorrupt(bool missingFilesOnly) {
 }
 
 std::vector<std::uint32_t> SteamAPI::Apps::getInstalledDepots(std::uint32_t appID) {
-    if (auto apps = SteamAPI::Apps::get()) {
-        auto* out = new std::uint32_t[32]; // GodotSteam uses 32 so we do too
-        std::uint32_t size = 0;
-        SteamAPI::get().call("SteamAPI_ISteamApps_GetInstalledDepots", size, apps, appID, out, 32);
-        std::vector<std::uint32_t> depots;
-        for (unsigned int i = 0; i < size; i++) {
-            depots.push_back(out[i]);
-        }
-        delete[] out;
-        return depots;
+    auto apps = SteamAPI::Apps::get();
+    if (!apps) {
+        return {};
     }
-    return {};
+    auto* out = new std::uint32_t[32]; // GodotSteam uses 32 so we do too
+    auto size = SteamAPI::get().call<std::uint32_t>("SteamAPI_ISteamApps_GetInstalledDepots", apps, appID, out, 32);
+    if (!size) {
+        return {};
+    }
+    std::vector<std::uint32_t> depots;
+    for (unsigned int i = 0; i < size; i++) {
+        depots.push_back(out[i]);
+    }
+    delete[] out;
+    return depots;
 }
 
 std::string SteamAPI::Apps::getAppInstallPath(std::uint32_t appID) {
-    if (auto apps = SteamAPI::Apps::get()) {
-        auto* out = new char[FilesystemResourceProvider::FILEPATH_MAX_LENGTH];
-        std::uint32_t size = 0;
-        SteamAPI::get().call("SteamAPI_ISteamApps_GetAppInstallDir", size, apps, appID, out, static_cast<std::uint32_t>(FilesystemResourceProvider::FILEPATH_MAX_LENGTH));
-        std::string path{out, size - 1};
-        delete[] out;
-        return path;
+    auto apps = SteamAPI::Apps::get();
+    if (!apps) {
+        return "";
     }
-    return "";
+    auto* out = new char[FilesystemResourceProvider::FILEPATH_MAX_LENGTH];
+    auto size = SteamAPI::get().call<std::uint32_t>("SteamAPI_ISteamApps_GetAppInstallDir", apps, appID, out, static_cast<std::uint32_t>(FilesystemResourceProvider::FILEPATH_MAX_LENGTH));
+    if (!size) {
+        return "";
+    }
+    std::string path{out, *size - 1};
+    delete[] out;
+    return path;
 }
 
 bool SteamAPI::Apps::isAppInstalled(std::uint32_t appID) {
@@ -462,8 +468,8 @@ bool SteamAPI::Apps::isTimedTrial(std::uint32_t* secondsAllowed, std::uint32_t* 
 
 // -------------------------------- UGC -------------------------------- //
 
-ISteamUGC* SteamAPI::UGC::get() {
-    ISteamUGC* ugc = nullptr;
-    SteamAPI::get().call<ISteamUGC*>("SteamAPI_SteamUGC_v016", ugc);
-    return ugc;
+void* SteamAPI::UGC::get() {
+    if (auto ugc = SteamAPI::get().call<void*>("SteamAPI_SteamUGC_v016"))
+        return *ugc;
+    return nullptr;
 }
