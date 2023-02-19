@@ -17,24 +17,24 @@ CHIRA_CREATE_LOG(STEAM);
 
 ConVar steam_enable{"steam_enable", true, "Initialize Steam API functions.", CON_FLAG_CACHE};
 
-CHIRA_CREATE_PLUGIN(Steam) {
-    CHIRA_PLUGIN_INIT() {
+struct SteamPlugin final : public IPlugin {
+    void init() override {
         if (steam_enable.getValue<bool>() && (!SteamAPI::Client::initialized() && !SteamAPI::Client::initSteam())) {
             LOG_STEAM.warning("Steam failed to initialize");
         }
     }
-    CHIRA_PLUGIN_UPDATE() {
+    void update() override {
         if (SteamAPI::Client::initialized()) {
             SteamAPI::Client::runCallbacks();
         }
     }
-    CHIRA_PLUGIN_DEINIT() {
+    void deinit() override {
         if (SteamAPI::Client::initialized()) {
             SteamAPI::Client::shutdown();
         }
     }
 };
-CHIRA_REGISTER_PLUGIN(Steam);
+CHIRA_REGISTER_PLUGIN(SteamPlugin);
 
 /// Helper function to stop repeating stuff
 template<typename T, typename U, typename... Params>

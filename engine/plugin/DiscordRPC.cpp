@@ -12,20 +12,20 @@ CHIRA_CREATE_LOG(DISCORD);
 
 ConVar discord_enable{"discord_enable", true, "Allows applications to use Discord rich presence.", CON_FLAG_CACHE};
 
-CHIRA_CREATE_PLUGIN(Discord) {
+struct DiscordPlugin final : public IPlugin {
     // Discord should be initialized manually before Engine::init
-    CHIRA_PLUGIN_UPDATE() {
+    void update() override {
         if (DiscordRPC::initialized()) {
             DiscordRPC::updatePresence();
         }
     }
-    CHIRA_PLUGIN_DEINIT() {
+    void deinit() override {
         if (DiscordRPC::initialized()) {
             DiscordRPC::shutdown();
         }
     }
 };
-CHIRA_REGISTER_PLUGIN(Discord);
+CHIRA_REGISTER_PLUGIN(DiscordPlugin);
 
 void DiscordRPC::init(std::string_view appId) {
     if (DiscordRPC::isInitialized || !discord_enable.getValue<bool>())
