@@ -25,6 +25,7 @@ CHIRA_CREATE_PLUGIN(Discord) {
         }
     }
 };
+CHIRA_REGISTER_PLUGIN(Discord);
 
 void DiscordRPC::init(std::string_view appId) {
     if (DiscordRPC::isInitialized || !discord_enable.getValue<bool>())

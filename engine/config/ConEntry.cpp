@@ -78,7 +78,7 @@ std::string_view ConEntry::getDescription() const {
 }
 
 bool ConEntry::hasFlag(ConFlags flag) const {
-    return (this->flags & flag) == flag;
+    return this->flags & flag;
 }
 
 ConCommand::ConCommand(std::string name_, const std::function<void()>& callback_, int flags_)

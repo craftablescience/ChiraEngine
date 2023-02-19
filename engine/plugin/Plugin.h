@@ -61,29 +61,24 @@ private:
     }
 };
 
-template<typename T>
-struct Plugin {
-    Plugin() = delete;
+#define CHIRA_CREATE_PLUGIN(name) struct name##Plugin
+#define CHIRA_REGISTER_PLUGIN(name) \
+    [[maybe_unused]] const auto name##Plugin_Register_Funcs = [] { \
+        if constexpr (requires {name##Plugin::preinit();}) { \
+            PluginRegistry::addPreinitFn(&name##Plugin::preinit); \
+        } \
+        if constexpr (requires {name##Plugin::init();}) { \
+            PluginRegistry::addInitFn(&name##Plugin::init); \
+        } \
+        if constexpr (requires {name##Plugin::update();}) { \
+            PluginRegistry::addUpdateFn(&name##Plugin::update); \
+        } \
+        if constexpr (requires {name##Plugin::deinit();}) { \
+            PluginRegistry::addDeinitFn(&name##Plugin::deinit); \
+        } \
+        return true; \
+    } ()
 
-private:
-    [[maybe_unused]] static inline const auto registerFns = [] {
-        if constexpr (requires {T::preinit();}) {
-            PluginRegistry::addPreinitFn(&T::preinit);
-        }
-        if constexpr (requires {T::init();}) {
-            PluginRegistry::addInitFn(&T::init);
-        }
-        if constexpr (requires {T::update();}) {
-            PluginRegistry::addUpdateFn(&T::update);
-        }
-        if constexpr (requires {T::deinit();}) {
-            PluginRegistry::addDeinitFn(&T::deinit);
-        }
-        return true;
-    } ();
-};
-
-#define CHIRA_CREATE_PLUGIN(name) struct name##Plugin : public Plugin<name##Plugin>
 #define CHIRA_PLUGIN_PREINIT() static void preinit()
 #define CHIRA_PLUGIN_INIT()    static void init()
 #define CHIRA_PLUGIN_UPDATE()  static void update()

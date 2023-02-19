@@ -34,6 +34,7 @@ CHIRA_CREATE_PLUGIN(Steam) {
         }
     }
 };
+CHIRA_REGISTER_PLUGIN(Steam);
 
 /// Helper function to stop repeating stuff
 template<typename T, typename U, typename... Params>
