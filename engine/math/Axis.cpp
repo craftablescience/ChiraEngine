@@ -12,7 +12,7 @@ Axis getAxisFromString(std::string_view str) {
     else if (str == "Z")
         return Axis::Z;
     else {
-        runtime_assert(false, TRF("error.axis.invalid_value", str, "axis"));
+        runtime_assert(false, "This string cannot be converted to Axis!");
         return Axis::Z;
     }
 }
@@ -31,7 +31,7 @@ SignedAxis getSignedAxisFromString(std::string_view str) {
     else if (str == "ZN")
         return SignedAxis::ZN;
     else {
-        runtime_assert(false, TRF("error.axis.invalid_value", str, "signedAxis"));
+        runtime_assert(false, "This string cannot be converted to SignedAxis!");
         return SignedAxis::ZN;
     }
 }
