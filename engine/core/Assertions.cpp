@@ -4,7 +4,7 @@
 #include "Logger.h"
 
 #ifdef DEBUG
-    #include <ui/Dialogs.h>
+    #include <ui/Popups.h>
 #endif
 
 using namespace chira;

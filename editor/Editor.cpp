@@ -7,15 +7,15 @@
 #include <fstream>
 #include <config/ConEntry.h>
 #include <core/Engine.h>
+#include <entity/model/Mesh.h>
+#include <entity/camera/EditorCamera.h>
+#include <entity/model/MeshDynamic.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <i18n/TranslationManager.h>
-#include <entity/model/Mesh.h>
-#include <entity/model/MeshDynamic.h>
-#include <entity/camera/EditorCamera.h>
 #include <ui/IPanel.h>
+#include <ui/Popups.h>
+
 #include <imfilebrowser.h>
-#include <ui/Dialogs.h>
-#include <render/material/MaterialPhong.h>
 
 #ifdef CHIRA_USE_DISCORD
     #include <plugin/DiscordRPC.h>
@@ -29,28 +29,6 @@
 
 using namespace chira;
 
-static inline void addResourceFolderSelected() {
-    auto folder = Dialogs::openFolder();
-    if (folder.empty())
-        return; // cancelled
-
-    auto resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(folder);
-    if (resourceFolderPath.empty())
-        return Dialogs::popupError(TR("error.modelviewer.resource_folder_not_valid"));
-
-    bool resourceExists = false;
-    for (const auto& fileProvider : Resource::getResourceProviders(FILESYSTEM_PROVIDER_NAME)) {
-        if (resourceFolderPath == assert_cast<FilesystemResourceProvider*>(fileProvider.get())->getFolder()) {
-            resourceExists = true;
-            break;
-        }
-    }
-    if (!resourceExists)
-        Resource::addResourceProvider(new FilesystemResourceProvider{resourceFolderPath});
-    else
-        Dialogs::popupError(TR("error.modelviewer.resource_folder_already_registered"));
-}
-
 class ModelViewerPanel : public IPanel {
 public:
     ModelViewerPanel() : IPanel(TR("ui.engineview.title"), true) {
@@ -60,6 +38,11 @@ public:
                 ImGuiWindowFlags_NoResize     |
                 ImGuiWindowFlags_NoBringToFrontOnFocus |
                 ImGuiWindowFlags_NoBackground ;
+
+        this->modelDialog.SetTitle("Open Resource");
+        this->modelDialog.SetTypeFilters({".json"});
+
+        this->folderDialog.SetTitle("Add Resource Folder");
     }
 
     // Opens a file dialog used to select a model definition
@@ -69,11 +52,25 @@ public:
             this->setLoadedFile(path);
     }
 
-    void convertToModelTypeSelected(const std::string& extension, const std::string& type) const {
-        std::string filepath = Dialogs::saveFile(extension);
-        if (filepath.empty())
-            return Dialogs::popupError(TR("error.modelviewer.filename_empty"));
+    void addResourceFolderSelected() {
+        std::string resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(this->modelDialog.GetSelected().string());
+        if (resourceFolderPath.empty())
+            return Dialogs::popupError(TR("error.modelviewer.resource_folder_not_valid"));
 
+        bool resourceExists = false;
+        for (const auto& fileProvider : Resource::getResourceProviders(FILESYSTEM_PROVIDER_NAME)) {
+            if (resourceFolderPath == assert_cast<FilesystemResourceProvider*>(fileProvider.get())->getFolder()) {
+                resourceExists = true;
+                break;
+            }
+        }
+        if (!resourceExists)
+            Resource::addResourceProvider(new FilesystemResourceProvider{resourceFolderPath});
+        else
+            Dialogs::popupError(TR("error.modelviewer.resource_folder_already_registered"));
+    }
+
+    void convertToModelTypeSelected(const std::string& filepath, const std::string& type) const {
         if (!Engine::getRoot()->hasChild(this->meshId))
             return Dialogs::popupError(TR("error.modelviewer.no_model_present"));
 
@@ -84,23 +81,26 @@ public:
     }
 
     void convertToOBJSelected() const {
-        this->convertToModelTypeSelected(".obj", "obj");
+        std::string filepath = this->saveDialogOBJ.GetSelected().string();
+        if (filepath.empty())
+            return Dialogs::popupError(TR("error.modelviewer.filename_empty"));
+        this->convertToModelTypeSelected(filepath, "obj");
     }
 
     void convertToCMDLSelected() const {
-        this->convertToModelTypeSelected(".cmdl", "cmdl");
+        std::string filepath = this->saveDialogCMDL.GetSelected().string();
+        if (filepath.empty())
+            return Dialogs::popupError(TR("error.modelviewer.filename_empty"));
+        this->convertToModelTypeSelected(filepath, "cmdl");
     }
 
     void preRenderContents() override {
-        this->modelDialog.SetTitle("Open Resource");
-        this->modelDialog.SetTypeFilters({".json"});
         if (ImGui::BeginMainMenuBar()) {
             if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
-                if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) { // Open Model...
+                if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) // Open Model...
                     this->modelDialog.Open();
-                }
                 if (ImGui::MenuItem(TRC("ui.menubar.add_resource_folder"))) // Add Resource Folder...
-                    addResourceFolderSelected();
+                    this->folderDialog.Open();
                 ImGui::Separator();
                 if (ImGui::MenuItem(TRC("ui.menubar.exit"))) // Exit
                     Engine::getDevice()->closeAfterThisFrame();
@@ -108,9 +108,9 @@ public:
             }
             if (ImGui::BeginMenu(TRC("ui.menubar.convert"))) { // Convert
                 if (ImGui::MenuItem(TRC("ui.menubar.convert_to_obj"))) // Convert to OBJ...
-                    this->convertToOBJSelected();
+                    this->saveDialogOBJ.Open();
                 if (ImGui::MenuItem(TRC("ui.menubar.convert_to_cmdl"))) // Convert to CMDL...
-                    this->convertToCMDLSelected();
+                    this->saveDialogCMDL.Open();
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
@@ -121,6 +121,21 @@ public:
         if (this->modelDialog.HasSelected()) {
             this->addModelSelected();
             this->modelDialog.ClearSelected();
+        }
+        this->folderDialog.Display();
+        if (this->folderDialog.HasSelected()) {
+            this->addResourceFolderSelected();
+            this->folderDialog.ClearSelected();
+        }
+        this->saveDialogOBJ.Display();
+        if (this->saveDialogOBJ.HasSelected()) {
+            this->convertToOBJSelected();
+            this->saveDialogOBJ.ClearSelected();
+        }
+        this->saveDialogCMDL.Display();
+        if (this->saveDialogCMDL.HasSelected()) {
+            this->convertToCMDLSelected();
+            this->saveDialogCMDL.ClearSelected();
         }
 
         ImGui::SetNextWindowPos(ImVec2{0, ImGui::GetFrameHeight()});
@@ -153,7 +168,10 @@ private:
     std::string loadedFile;
     std::string meshId;
     bool showGrid = true;
-    ImGui::FileBrowser modelDialog;
+    ImGui::FileBrowser modelDialog{ImGuiFileBrowserFlags_CloseOnEsc};
+    ImGui::FileBrowser folderDialog{ImGuiFileBrowserFlags_CloseOnEsc | ImGuiFileBrowserFlags_SelectDirectory};
+    ImGui::FileBrowser saveDialogOBJ{ImGuiFileBrowserFlags_CloseOnEsc | ImGuiFileBrowserFlags_EnterNewFilename};
+    ImGui::FileBrowser saveDialogCMDL{ImGuiFileBrowserFlags_CloseOnEsc | ImGuiFileBrowserFlags_EnterNewFilename};
 };
 
 int main(int argc, const char* const argv[]) {
