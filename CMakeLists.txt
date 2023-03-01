@@ -216,11 +216,6 @@ else()
     list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/sdl2/include)
     list(APPEND CHIRA_ENGINE_LINK_LIBRARIES SDL2::SDL2)
 
-    # TINYFILEDIALOGS
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs)
-    list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/tinyfiledialogs)
-    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES tinyfiledialogs)
-
     # Add ImGui platform
     list(APPEND IMGUI_HEADERS
             ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_sdl.h
