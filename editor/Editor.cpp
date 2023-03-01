@@ -14,7 +14,7 @@
 #include <entity/camera/EditorCamera.h>
 #include <ui/IPanel.h>
 #include <imfilebrowser.h>
-#include <utility/Dialogs.h>
+#include <ui/Dialogs.h>
 #include <render/material/MaterialPhong.h>
 
 #ifdef CHIRA_USE_DISCORD

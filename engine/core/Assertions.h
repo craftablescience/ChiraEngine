@@ -28,8 +28,8 @@
         void runtime_assert(bool shouldAssert, std::string_view message, const std::source_location& location = std::source_location::current());
     #else
         #define runtime_assert(shouldAssert, message) runtime_assert_internal(shouldAssert, message, __FILE__, __LINE__, __FUNCTION__)
-        void runtime_assert_internal(bool shouldAssert, std::string_view message, const char* file, int line, const char* function);
     #endif
+    void runtime_assert_internal(bool shouldAssert, std::string_view message, const char* file, unsigned int line, const char* function);
 #else
     #define runtime_assert(shouldAssert, message)
 #endif
