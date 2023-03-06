@@ -62,20 +62,20 @@ concept ShaderUniformValueTypes =
         std::same_as<T, int>          ||
         std::same_as<T, float>        ||
 
-        std::same_as<T, glm::vec2b>  ||
-        std::same_as<T, glm::vec2ui> ||
-        std::same_as<T, glm::vec2i>  ||
-        std::same_as<T, glm::vec2f>  ||
+        std::same_as<T, glm::vec2b> ||
+        std::same_as<T, glm::vec2u> ||
+        std::same_as<T, glm::vec2i> ||
+        std::same_as<T, glm::vec2f> ||
 
-        std::same_as<T, glm::vec3b>  ||
-        std::same_as<T, glm::vec3ui> ||
-        std::same_as<T, glm::vec3i>  ||
-        std::same_as<T, glm::vec3f>  ||
+        std::same_as<T, glm::vec3b> ||
+        std::same_as<T, glm::vec3u> ||
+        std::same_as<T, glm::vec3i> ||
+        std::same_as<T, glm::vec3f> ||
 
-        std::same_as<T, glm::vec4b>  ||
-        std::same_as<T, glm::vec4ui> ||
-        std::same_as<T, glm::vec4i>  ||
-        std::same_as<T, glm::vec4f>  ||
+        std::same_as<T, glm::vec4b> ||
+        std::same_as<T, glm::vec4u> ||
+        std::same_as<T, glm::vec4i> ||
+        std::same_as<T, glm::vec4f> ||
         std::same_as<T, glm::mat4>;
 
 enum class MeshDrawMode {

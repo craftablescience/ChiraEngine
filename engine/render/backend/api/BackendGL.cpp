@@ -480,87 +480,87 @@ void Renderer::destroyShader(Renderer::ShaderHandle handle) {
     glDeleteProgram(handle.handle);
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, bool value) {
+void Renderer::setShaderUniform1b(Renderer::ShaderHandle handle, std::string_view name, bool value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform1i(glGetUniformLocation(handle.handle, name.data()), static_cast<int>(value));
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, int value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
-    glUniform1i(glGetUniformLocation(handle.handle, name.data()), value);
-}
-
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, unsigned int value) {
+void Renderer::setShaderUniform1u(Renderer::ShaderHandle handle, std::string_view name, unsigned int value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform1ui(glGetUniformLocation(handle.handle, name.data()), value);
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, float value) {
+void Renderer::setShaderUniform1i(Renderer::ShaderHandle handle, std::string_view name, int value) {
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    glUniform1i(glGetUniformLocation(handle.handle, name.data()), value);
+}
+
+void Renderer::setShaderUniform1f(Renderer::ShaderHandle handle, std::string_view name, float value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform1f(glGetUniformLocation(handle.handle, name.data()), value);
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec2b value) {
+void Renderer::setShaderUniform2b(Renderer::ShaderHandle handle, std::string_view name, glm::vec2b value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform2i(glGetUniformLocation(handle.handle, name.data()), static_cast<int>(value.x), static_cast<int>(value.y));
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec2ui value) {
+void Renderer::setShaderUniform2u(Renderer::ShaderHandle handle, std::string_view name, glm::vec2u value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform2ui(glGetUniformLocation(handle.handle, name.data()), value.x, value.y);
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec2i value) {
+void Renderer::setShaderUniform2i(Renderer::ShaderHandle handle, std::string_view name, glm::vec2i value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform2i(glGetUniformLocation(handle.handle, name.data()), value.x, value.y);
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec2f value) {
+void Renderer::setShaderUniform2f(Renderer::ShaderHandle handle, std::string_view name, glm::vec2f value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform2f(glGetUniformLocation(handle.handle, name.data()), value.x, value.y);
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec3b value) {
+void Renderer::setShaderUniform3b(Renderer::ShaderHandle handle, std::string_view name, glm::vec3b value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform3i(glGetUniformLocation(handle.handle, name.data()), static_cast<int>(value.x), static_cast<int>(value.y), static_cast<int>(value.z));
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec3ui value) {
+void Renderer::setShaderUniform3u(Renderer::ShaderHandle handle, std::string_view name, glm::vec3u value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform3ui(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z);
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec3i value) {
+void Renderer::setShaderUniform3i(Renderer::ShaderHandle handle, std::string_view name, glm::vec3i value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform3i(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z);
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec3f value) {
+void Renderer::setShaderUniform3f(Renderer::ShaderHandle handle, std::string_view name, glm::vec3f value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform3f(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z);
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec4b value) {
+void Renderer::setShaderUniform4b(Renderer::ShaderHandle handle, std::string_view name, glm::vec4b value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform4i(glGetUniformLocation(handle.handle, name.data()), static_cast<int>(value.x), static_cast<int>(value.y), static_cast<int>(value.z), static_cast<int>(value.w));
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec4ui value) {
+void Renderer::setShaderUniform4u(Renderer::ShaderHandle handle, std::string_view name, glm::vec4u value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform4ui(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z, value.w);
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec4i value) {
+void Renderer::setShaderUniform4i(Renderer::ShaderHandle handle, std::string_view name, glm::vec4i value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform4i(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z, value.w);
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::vec4f value) {
+void Renderer::setShaderUniform4f(Renderer::ShaderHandle handle, std::string_view name, glm::vec4f value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniform4f(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z, value.w);
 }
 
-void Renderer::setShaderUniform(Renderer::ShaderHandle handle, std::string_view name, glm::mat4 value) {
+void Renderer::setShaderUniform4m(Renderer::ShaderHandle handle, std::string_view name, glm::mat4 value) {
     runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
     glUniformMatrix4fv(glGetUniformLocation(handle.handle, name.data()), 1, GL_FALSE, glm::value_ptr(value));
 }
