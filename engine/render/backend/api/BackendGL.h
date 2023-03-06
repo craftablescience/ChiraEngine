@@ -28,8 +28,8 @@ struct FrameBufferHandle {
     unsigned int rboHandle = 0;
 
     bool hasDepth = true;
-    int width = 0;
-    int height = 0;
+    int width = -1;
+    int height = -1;
 
     explicit inline operator bool() const { return fboHandle && colorHandle && (!hasDepth || rboHandle); }
     inline bool operator!() const { return !fboHandle || !colorHandle || (hasDepth && !rboHandle); }
@@ -89,6 +89,8 @@ void popFrameBuffer();
 void useFrameBufferTexture(FrameBufferHandle handle, TextureUnit activeTextureUnit);
 [[nodiscard]] void* getImGuiFrameBufferHandle(FrameBufferHandle handle);
 void destroyFrameBuffer(FrameBufferHandle handle);
+[[nodiscard]] int getFrameBufferWidth(FrameBufferHandle handle);
+[[nodiscard]] int getFrameBufferHeight(FrameBufferHandle handle);
 
 [[nodiscard]] ShaderHandle createShader(std::string_view vertex, std::string_view fragment);
 void useShader(ShaderHandle handle);
