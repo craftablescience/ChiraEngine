@@ -25,3 +25,6 @@
 [submodule "engine/thirdparty/sdl2"]
 	path = engine/thirdparty/sdl2
 	url = https://github.com/libsdl-org/SDL
+[submodule "engine/thirdparty/magic_enum"]
+	path = engine/thirdparty/magic_enum
+	url = https://github.com/Neargye/magic_enum

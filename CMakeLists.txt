@@ -280,6 +280,12 @@ list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdpa
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES LibLoader)
 
 
+# MAGIC_ENUM
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/magic_enum)
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/magic_enum/include)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES magic_enum)
+
+
 # NLOHMANN_JSON
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/json)
