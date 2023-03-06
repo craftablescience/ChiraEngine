@@ -362,7 +362,6 @@ void Renderer::popFrameBuffer() {
     GL_FRAMEBUFFERS.pop();
     if (old != (GL_FRAMEBUFFERS.empty() ? 0 : GL_FRAMEBUFFERS.top().fboHandle)) {
         if (!GL_FRAMEBUFFERS.empty()) {
-            // todo(render): this looks ugly, fix this when windowing is ported
             glViewport(0, 0, GL_FRAMEBUFFERS.top().width, GL_FRAMEBUFFERS.top().height);
         }
         glBindFramebuffer(GL_FRAMEBUFFER, GL_FRAMEBUFFERS.empty() ? 0 : GL_FRAMEBUFFERS.top().fboHandle);
@@ -371,8 +370,10 @@ void Renderer::popFrameBuffer() {
 }
 
 void Renderer::useFrameBufferTexture(Renderer::FrameBufferHandle handle, TextureUnit activeTextureUnit) {
-    glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
-    glBindTexture(GL_TEXTURE_2D, handle.colorHandle);
+    if (handle.colorHandle != 0) {
+        glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
+        glBindTexture(GL_TEXTURE_2D, handle.colorHandle);
+    }
 }
 
 void* Renderer::getImGuiFrameBufferHandle(Renderer::FrameBufferHandle handle) {
@@ -380,12 +381,22 @@ void* Renderer::getImGuiFrameBufferHandle(Renderer::FrameBufferHandle handle) {
 }
 
 void Renderer::destroyFrameBuffer(Renderer::FrameBufferHandle handle) {
-    runtime_assert(static_cast<bool>(handle), "Invalid framebuffer handle given to GL renderer");
+    if (!handle) {
+        return;
+    }
     if (handle.hasDepth) {
         glDeleteRenderbuffers(1, &handle.rboHandle);
     }
     glDeleteTextures(1, &handle.colorHandle);
     glDeleteFramebuffers(1, &handle.fboHandle);
+}
+
+int Renderer::getFrameBufferWidth(Renderer::FrameBufferHandle handle) {
+    return handle.width;
+}
+
+int Renderer::getFrameBufferHeight(Renderer::FrameBufferHandle handle) {
+    return handle.height;
 }
 
 [[nodiscard]] static constexpr int getShaderModuleTypeGL(ShaderModuleType type) {
