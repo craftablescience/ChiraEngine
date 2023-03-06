@@ -19,7 +19,4 @@ enum class SignedAxis {
     ZN,
 };
 
-Axis getAxisFromString(std::string_view str);
-SignedAxis getSignedAxisFromString(std::string_view str);
-
 } // namespace chira
