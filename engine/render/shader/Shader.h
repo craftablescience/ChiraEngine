@@ -17,8 +17,56 @@ public:
     void use() const;
     ~Shader() override;
 
-    inline void setUniform(std::string_view name, ShaderUniformValueTypes auto value) {
-        Renderer::setShaderUniform(this->handle, name, value);
+    inline void setUniform(std::string_view name, bool value) {
+        Renderer::setShaderUniform1b(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, unsigned int value) {
+        Renderer::setShaderUniform1u(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, int value) {
+        Renderer::setShaderUniform1i(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, float value) {
+        Renderer::setShaderUniform1f(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, glm::vec2b value) {
+        Renderer::setShaderUniform2b(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, glm::vec2u value) {
+        Renderer::setShaderUniform2u(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, glm::vec2i value) {
+        Renderer::setShaderUniform2i(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, glm::vec2f value) {
+        Renderer::setShaderUniform2f(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, glm::vec3b value) {
+        Renderer::setShaderUniform3b(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, glm::vec3u value) {
+        Renderer::setShaderUniform3u(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, glm::vec3i value) {
+        Renderer::setShaderUniform3i(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, glm::vec3f value) {
+        Renderer::setShaderUniform3f(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, glm::vec4b value) {
+        Renderer::setShaderUniform4b(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, glm::vec4u value) {
+        Renderer::setShaderUniform4u(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, glm::vec4i value) {
+        Renderer::setShaderUniform4i(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, glm::vec4f value) {
+        Renderer::setShaderUniform4f(this->handle, name, value);
+    }
+    inline void setUniform(std::string_view name, glm::mat4 value) {
+        Renderer::setShaderUniform4m(this->handle, name, value);
     }
 
     [[nodiscard]] inline bool usesPVMatrices() const {
