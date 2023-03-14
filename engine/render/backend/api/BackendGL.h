@@ -84,6 +84,7 @@ void useTexture(TextureHandle handle, TextureUnit activeTextureUnit);
 void destroyTexture(TextureHandle handle);
 
 [[nodiscard]] FrameBufferHandle createFrameBuffer(int width, int height, WrapMode wrapS, WrapMode wrapT, FilterMode filter, bool hasDepth);
+void recreateFrameBuffer(Renderer::FrameBufferHandle* handle, int width, int height, WrapMode wrapS, WrapMode wrapT, FilterMode filter, bool hasDepth);
 void pushFrameBuffer(FrameBufferHandle handle);
 void popFrameBuffer();
 void useFrameBufferTexture(FrameBufferHandle handle, TextureUnit activeTextureUnit);

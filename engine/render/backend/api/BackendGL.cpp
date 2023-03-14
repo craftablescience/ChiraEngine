@@ -373,6 +373,8 @@ void Renderer::useFrameBufferTexture(Renderer::FrameBufferHandle handle, Texture
     if (handle.colorHandle != 0) {
         glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
         glBindTexture(GL_TEXTURE_2D, handle.colorHandle);
+    } else if (!handle) {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 }
 
@@ -399,6 +401,19 @@ int Renderer::getFrameBufferHeight(Renderer::FrameBufferHandle handle) {
     return handle.height;
 }
 
+void Renderer::recreateFrameBuffer(Renderer::FrameBufferHandle* handle, int width, int height, WrapMode wrapS, WrapMode wrapT, FilterMode filter, bool hasDepth) {
+    if (!handle)
+        return;
+    if (*handle) {
+        destroyFrameBuffer(*handle);
+        *handle = Renderer::createFrameBuffer(width, height, wrapS, wrapT, filter, hasDepth);
+    } else {
+        // This is the window framebuffer, just resize it
+        handle->width = width;
+        handle->height = height;
+    }
+}
+
 [[nodiscard]] static constexpr int getShaderModuleTypeGL(ShaderModuleType type) {
     switch (type) {
         case ShaderModuleType::VERTEX:
@@ -407,7 +422,6 @@ int Renderer::getFrameBufferHeight(Renderer::FrameBufferHandle handle) {
             return GL_FRAGMENT_SHADER;
         CHIRA_NO_DEFAULT;
     }
-    return -1;
 }
 
 [[nodiscard]] static Renderer::ShaderModuleHandle createShaderModule(std::string_view shader, Renderer::ShaderHandle shaderHandle, ShaderModuleType type) {
