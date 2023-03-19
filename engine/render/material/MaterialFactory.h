@@ -28,15 +28,15 @@ using MaterialFactory = AbstractFactory<SharedPointer<IMaterial>>;
 
 } // namespace chira
 
-#define CHIRA_REGISTER_MATERIAL_TYPE(ResourceClassName)                                         \
-    static inline const bool ResourceClassName##FactoryRegistryHelper =                         \
-        chira::MaterialFactory::registerTypeFactory(                                            \
-            #ResourceClassName,                                                                 \
-            [](const std::string& materialId) -> chira::SharedPointer<chira::IMaterial> {       \
-                return chira::Resource::getResource<ResourceClassName>(materialId)              \
-                       .castAssert<chira::IMaterial>();                                         \
-            }                                                                                   \
+#define CHIRA_REGISTER_MATERIAL_TYPE(ResourceClassName)                                      \
+    static inline const bool ResourceClassName##FactoryRegistryHelper =                      \
+        chira::MaterialFactory::registerTypeFactory(                                         \
+            #ResourceClassName,                                                              \
+            [](const std::string& materialId) -> chira::SharedPointer<chira::IMaterial> {    \
+                return chira::Resource::getResource<ResourceClassName>(materialId)           \
+                       .castAssert<chira::IMaterial>();                                      \
+            }                                                                                \
         )
 
 #define CHIRA_GET_MATERIAL(type, identifier) \
-    chira::MaterialFactory::getTypeFactory(type)(identifier).castAssert<chira::IMaterial>()
+    chira::MaterialFactory::getTypeFactory(type)(identifier)
