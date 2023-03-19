@@ -14,13 +14,13 @@ class AbstractFactory {
 public:
     AbstractFactory() = delete;
     static bool registerTypeFactory(const std::string& name, factoryFunction createFunc) {
-        if (AbstractFactory::getFactoryMethods().count(name) > 0)
+        if (AbstractFactory::getFactoryMethods().contains(name))
             return false;
         AbstractFactory::getFactoryMethods()[name] = createFunc;
         return true;
     }
     static const factoryFunction& getTypeFactory(const std::string& name) {
-        return AbstractFactory::getFactoryMethods()[name];
+        return AbstractFactory::getFactoryMethods().at(name);
     }
 protected:
     static std::unordered_map<std::string, factoryFunction>& getFactoryMethods() {
