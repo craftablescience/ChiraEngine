@@ -69,7 +69,7 @@ void Resource::removeResource(const std::string& identifier) {
     const std::string& provider = id.first, name = id.second;
     // If the count is 2, then it's being held by the resource manager and the object requesting its removal.
     // Anything below 2 means it should be already deleted everywhere except the resource manager.
-    if (Resource::resources[provider].count(name) > 0 && Resource::resources[provider][name].useCount() <= 2)
+    if (Resource::resources[provider].contains(name) && Resource::resources[provider][name].useCount() <= 2)
         Resource::garbageResources.push_back(identifier);
 }
 
