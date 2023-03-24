@@ -49,18 +49,18 @@ next to the executable. Check the GitHub Actions script to see which DLLs need c
 
 ## Bundled Dependencies
 - AngelScript v2.35.1
-- Dear ImGui v1.89
+- Dear ImGui v1.89.5
 - Discord RPC
-- {fmt} v9.0.0
+- {fmt} v9.1.0
 - GLAD (OpenGL 4.1 Core / OpenGL 4.3 Core)
-- GLM v0.9.9.9
+- GLM v0.9.9
 - ImGui Filebrowser
 - LibLoader
-- nlohmann_json v3.10.5
-- SDL v2.26.1
+- magic_enum v0.8.2
+- nlohmann_json v3.11.2
+- SDL v2.26.4
 - stb_image v2.27
 - stduuid v1.1
-- TinyFileDialogs v3.8.8
 
 ## Development (Windows)
 - **CLion**: The project will compile without any prior configuration, but you will most likely need to install the Windows SDK (see below).
