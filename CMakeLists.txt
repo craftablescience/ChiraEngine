@@ -218,10 +218,10 @@ else()
 
     # Add ImGui platform
     list(APPEND IMGUI_HEADERS
-            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_sdl.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_sdl2.h
             ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_opengl3.h)
     list(APPEND IMGUI_SOURCES
-            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_sdl.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_sdl2.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_opengl3.cpp)
     list(APPEND IMGUI_INCLUDE_DIRS
             ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/sdl2/include)
