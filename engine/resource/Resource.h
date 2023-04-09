@@ -102,18 +102,20 @@ public:
 
     /// You might want to use this sparingly as it defeats the entire point of a cached, shared resource system.
     template<typename ResourceType, typename... Params>
-    static std::unique_ptr<ResourceType> getUniqueUncachedResource(const std::string& identifier, Params... params) {
+    static SharedPointer<ResourceType> getUniqueUncachedResource(const std::string& identifier, Params... params) {
         auto id = Resource::splitResourceIdentifier(identifier);
         const std::string& provider = id.first, name = id.second;
         for (auto i = Resource::providers[provider].rbegin(); i != Resource::providers[provider].rend(); i++) {
             if ((*i)->hasResource(name)) {
-                auto resource = std::make_unique<ResourceType>(identifier, std::forward<Params>(params)...);
+                auto resource = SharedPointer<ResourceType>(new ResourceType{identifier, std::forward<Params>(params)...});
                 (*i)->compileResource(name, resource.get());
+                // We're not holding onto this
+                resource.setHolderAmountForDelete(0);
                 return resource;
             }
         }
         Resource::logResourceError("error.resource.resource_not_found", identifier);
-        return nullptr;
+        return SharedPointer<ResourceType>{};
     }
 
     /// The only way to make a PropertiesResource without a provider is to make it unique, and not to cache it.
