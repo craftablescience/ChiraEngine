@@ -348,11 +348,11 @@ void Renderer::pushFrameBuffer(Renderer::FrameBufferHandle handle) {
         glViewport(0, 0, GL_FRAMEBUFFERS.top().width, GL_FRAMEBUFFERS.top().height);
         glBindFramebuffer(GL_FRAMEBUFFER, GL_FRAMEBUFFERS.top().fboHandle);
         pushState(RenderMode::DEPTH_TEST, GL_FRAMEBUFFERS.top().hasDepth);
-        if (GL_FRAMEBUFFERS.top().hasDepth) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-        } else {
-            glClear(GL_COLOR_BUFFER_BIT);
-        }
+    }
+    if (GL_FRAMEBUFFERS.top().hasDepth) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    } else {
+        glClear(GL_COLOR_BUFFER_BIT);
     }
 }
 
