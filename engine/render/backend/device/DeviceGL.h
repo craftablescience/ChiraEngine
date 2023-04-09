@@ -33,7 +33,7 @@ struct WindowHandle {
     bool frameIsSelfOwned = false;
 
     explicit inline operator bool() const { return window; }
-    inline bool operator!() const { return window; }
+    inline bool operator!() const { return !window; }
 };
 
 [[nodiscard]] bool initBackendAndCreateSplashscreen(bool splashScreenVisible);
