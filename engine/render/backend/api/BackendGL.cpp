@@ -333,7 +333,7 @@ Renderer::FrameBufferHandle Renderer::createFrameBuffer(int width, int height, W
 
 #ifdef DEBUG
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        LOG_GL.error("FrameBuffer is not complete!");
+        LOG_GL.error("FrameBuffer is not complete! Error: {}", glGetError());
     }
 #endif
 

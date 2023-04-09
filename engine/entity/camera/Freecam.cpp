@@ -8,11 +8,11 @@
 using namespace chira;
 
 bool Freecam::getActive() const {
-    return this->active && Engine::getDevice()->isMouseCaptured();
+    return this->active && Renderer::isMouseCapturedWindow(Engine::getDevice());
 }
 
 void Freecam::setActive(bool active_) {
-    Engine::getDevice()->captureMouse(active_);
+    Renderer::setMouseCapturedWindow(Engine::getDevice(), active_);
     this->active = active_;
 }
 

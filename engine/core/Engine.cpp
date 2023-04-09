@@ -1,6 +1,5 @@
 #include "Engine.h"
 
-#include <backends/imgui_impl_sdl2.h>
 #include <SDL.h>
 
 #include <config/ConEntry.h>
@@ -28,13 +27,25 @@ CHIRA_CREATE_LOG(ENGINE);
 
 [[maybe_unused]]
 ConCommand quit{"quit", "Quits the game or application.", [] {
-    Engine::getDevice()->closeAfterThisFrame(true);
+    Renderer::queueDestroyWindow(Engine::getDevice(), true);
 }};
 
 [[maybe_unused]]
 ConCommand crash{"crash", "Force-crashes the game or application (for debugging purposes).", [] {
     throw std::runtime_error{"Called crash command!"};
 }, CON_FLAG_CHEAT};
+
+ConVar win_width{"win_width", 1280, "The width of the main window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) {
+    if (Engine::getDevice()) {
+        Renderer::setWindowSize(Engine::getDevice(), static_cast<int>(std::stoi(newValue.data())), Renderer::getWindowSize(Engine::getDevice()).y);
+    }
+}};
+
+ConVar win_height{"win_height", 720, "The height of the main window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) {
+    if (Engine::getDevice()) {
+        Renderer::setWindowSize(Engine::getDevice(), Renderer::getWindowSize(Engine::getDevice()).x, static_cast<int>(std::stoi(newValue.data())));
+    }
+}};
 
 void Engine::preInit(int argc, const char* const argv[]) {
 #ifdef CHIRA_PLATFORM_WINDOWS
@@ -88,140 +99,40 @@ void Engine::init(bool visibleSplashScreen /*= true*/) {
 
     Renderer::destroySplashscreen();
 
-    Engine::device.reset(new Device{TR("ui.window.title")});
+    Engine::mainWindow = Renderer::createWindow(win_width.getValue<int>(), win_height.getValue<int>(), TR("ui.window.title"), nullptr);
 
     // Add console UI panel
-    auto consoleID = Engine::device->addPanel(new ConsolePanel{});
+    auto consoleID = Renderer::addPanelToWindow(Engine::mainWindow, new ConsolePanel{});
     Input::KeyEvent::create(Input::Key::SDLK_BACKQUOTE, Input::KeyEventType::PRESSED, [consoleID] {
-        auto console = Engine::device->getPanel(consoleID);
+        auto console = Renderer::getPanelOnWindow(Engine::mainWindow, consoleID);
         console->setVisible(!console->isVisible());
     });
 
     // Add resource usage tracker UI panel
-    auto resourceUsageTrackerID = Engine::device->addPanel(new ResourceUsageTrackerPanel{});
+    auto resourceUsageTrackerID = Renderer::addPanelToWindow(Engine::mainWindow, new ResourceUsageTrackerPanel{});
     Input::KeyEvent::create(Input::Key::SDLK_F1, Input::KeyEventType::PRESSED, [resourceUsageTrackerID] {
-        auto resourceUsageTracker = Engine::device->getPanel(resourceUsageTrackerID);
+        auto resourceUsageTracker = Renderer::getPanelOnWindow(Engine::mainWindow, resourceUsageTrackerID);
         resourceUsageTracker->setVisible(!resourceUsageTracker->isVisible());
     });
 }
 
 void Engine::run() {
-    ImGui::SetCurrentContext(Engine::device->imguiContext);
-    ImGui::GetIO().Fonts->Build();
-
     do {
         Engine::lastTime = Engine::currentTime;
         Engine::currentTime = SDL_GetTicks64();
 
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            // todo(input): check this function, if ImGui processed an event we should ignore that event
-            ImGui_ImplSDL2_ProcessEvent(&event);
-
-            // todo(input): this is O(n^2) and was written badly because i hope it will be rewritten soon please fix
-            switch (event.type) {
-                case SDL_QUIT:
-                    Engine::device->closeAfterThisFrame();
-                    break;
-                case SDL_WINDOWEVENT:
-                    switch (event.window.event) {
-                        case SDL_WINDOWEVENT_SHOWN:
-                            Engine::device->iconified = false;
-                            break;
-                        case SDL_WINDOWEVENT_HIDDEN:
-                        case SDL_WINDOWEVENT_MINIMIZED:
-                            Engine::device->iconified = true;
-                            break;
-                        case SDL_WINDOWEVENT_RESTORED:
-                            if (auto* win_maximized = ConEntryRegistry::getConVar("win_maximized")) {
-                                win_maximized->setValue(false, false);
-                            }
-                            break;
-                        case SDL_WINDOWEVENT_MAXIMIZED:
-                            if (auto* win_maximized = ConEntryRegistry::getConVar("win_maximized")) {
-                                win_maximized->setValue(true, false);
-                            }
-                            break;
-                        case SDL_WINDOWEVENT_SIZE_CHANGED: {
-                            int w, h;
-                            SDL_GetWindowSizeInPixels(Engine::device->window, &w, &h);
-                            Engine::device->setSize({w, h}, false);
-                            break;
-                        }
-                        default:
-                            // There's quite a few events we don't care about or are already handled by other events
-                            break;
-                    }
-                    break;
-                case SDL_KEYDOWN:
-                    for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
-                        if (keyEvent.getEvent() == event.key.keysym.sym && keyEvent.getEventType() == Input::KeyEventType::PRESSED) {
-                            keyEvent();
-                        }
-                    }
-                    break;
-                case SDL_KEYUP:
-                    for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
-                        if (keyEvent.getEvent() == event.key.keysym.sym && keyEvent.getEventType() == Input::KeyEventType::RELEASED) {
-                            keyEvent();
-                        }
-                    }
-                    break;
-                case SDL_MOUSEBUTTONDOWN:
-                    for (const auto& mouseEvent : Input::MouseEvent::getEvents()) {
-                        if (static_cast<uint8_t>(mouseEvent.getEvent()) == event.button.button && mouseEvent.getEventType() == Input::MouseEventType::CLICKED) {
-                            mouseEvent(event.button.x, event.button.y, event.button.clicks);
-                        }
-                    }
-                    break;
-                case SDL_MOUSEBUTTONUP:
-                    for (const auto& mouseEvent : Input::MouseEvent::getEvents()) {
-                        if (static_cast<uint8_t>(mouseEvent.getEvent()) == event.button.button && mouseEvent.getEventType() == Input::MouseEventType::RELEASED) {
-                            mouseEvent(event.button.x, event.button.y, event.button.clicks);
-                        }
-                    }
-                    break;
-                case SDL_MOUSEMOTION:
-                    for (const auto& mouseMotionEvent : Input::MouseMotionEvent::getEvents()) {
-                        if (mouseMotionEvent.getEvent() == Input::MouseMotion::MOVEMENT) {
-                            mouseMotionEvent(event.motion.x, event.motion.y, event.motion.xrel, event.motion.yrel);
-                        }
-                    }
-                    break;
-                case SDL_MOUSEWHEEL:
-                    for (const auto& mouseMotionEvent : Input::MouseMotionEvent::getEvents()) {
-                        if (mouseMotionEvent.getEvent() == Input::MouseMotion::SCROLL) {
-                            mouseMotionEvent(event.wheel.x, event.wheel.y, event.wheel.x, event.wheel.y);
-                        }
-                    }
-                    break;
-                default:
-                    // todo(input): handle joystick / game controller inputs!
-                    break;
-            }
-        }
-
-        // Handle repeating events
-        // This is a pointer to a static variable in SDL so this is safe
-        static const auto* keyStates = SDL_GetKeyboardState(nullptr);
-        for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
-            if (keyStates[SDL_GetScancodeFromKey(keyEvent.getEvent())] && keyEvent.getEventType() == Input::KeyEventType::REPEATED) {
-                keyEvent();
-            }
-        }
-
-        Engine::device->refresh();
+        Renderer::refreshWindows();
 
         PluginRegistry::updateAll();
 
         Events::update();
-    } while (!Engine::device->shouldCloseAfterThisFrame());
+    } while (!Renderer::isWindowAboutToBeDestroyed(Engine::mainWindow));
 
     LOG_ENGINE.info("Exiting...");
 
     PluginRegistry::deinitAll();
 
-    Engine::device.reset();
+    Renderer::destroyBackend();
 
     Resource::discardAll();
 

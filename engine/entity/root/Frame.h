@@ -12,8 +12,8 @@ namespace chira {
 
 class Frame : public Group {
 public:
-    Frame(std::string name_, int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
-    Frame(int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true, bool initNow = true);
+    Frame(std::string name_, int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true);
+    Frame(int width_, int height_, ColorRGB backgroundColor_ = {}, bool smoothResize = true);
     /// Deletes and recreates the existing framebuffer if one already exists.
     /// If one doesn't exist, initialize a new framebuffer.
     void recreateFramebuffer();
