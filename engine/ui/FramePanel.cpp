@@ -17,7 +17,7 @@ void FramePanel::renderContents() {
             this->frame->setFrameSize(size);
             this->currentSize = size;
         }
-        ImGui::Image(Renderer::getImGuiFrameBufferHandle(this->frame->getRawHandle()), guiSize, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::Image(Renderer::getImGuiFrameBufferHandle(*this->frame->getRawHandle()), guiSize, ImVec2(0, 1), ImVec2(1, 0));
     }
     ImGui::EndChild();
 }
