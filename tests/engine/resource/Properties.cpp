@@ -12,7 +12,7 @@ struct SimpleStructWithProps {
     std::string name{"hello"};
     bool b = true;
 
-    CHIRA_PROPS() (
+    CHIRA_PROPS(
             CHIRA_PROP(SimpleStructWithProps, x),
             CHIRA_PROP(SimpleStructWithProps, y),
             CHIRA_PROP_NAMED(SimpleStructWithProps, z, third_number),
@@ -56,7 +56,7 @@ struct ComplexStructWithProps {
             {"second", false}
     };
 
-    CHIRA_PROPS() (
+    CHIRA_PROPS(
             CHIRA_PROP(ComplexStructWithProps, list),
             CHIRA_PROP(ComplexStructWithProps, dict)
     );
@@ -124,7 +124,7 @@ struct StructWithGettersAndSettersForProps {
         this->cWasSet = true;
     }
 
-    CHIRA_PROPS() (
+    CHIRA_PROPS(
             CHIRA_PROP_GET(StructWithGettersAndSettersForProps, a, getA),
             CHIRA_PROP_SET(StructWithGettersAndSettersForProps, b, setB),
             CHIRA_PROP_GET_SET(StructWithGettersAndSettersForProps, c, getC, setC)
@@ -155,7 +155,7 @@ TEST(Properties, gettersAndSetters) {
 struct StructWithPropsBase {
     int base = 10;
 
-    CHIRA_PROPS() (
+    CHIRA_PROPS(
             CHIRA_PROP(StructWithPropsBase, base)
     );
 };

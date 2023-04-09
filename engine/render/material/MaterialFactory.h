@@ -19,7 +19,7 @@ protected:
     SharedPointer<Shader> shader;
     std::string shaderPath{"file://shaders/unlitTextured.json"};
 public:
-    CHIRA_PROPS() (
+    CHIRA_PROPS(
             CHIRA_PROP_NAMED_SET(IMaterial, shaderPath, shader, setShader)
     );
 };

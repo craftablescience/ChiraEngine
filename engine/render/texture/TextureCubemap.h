@@ -40,7 +40,7 @@ private:
     void setWrapModeT(std::string wrapModeTStr_);
     void setWrapModeR(std::string wrapModeRStr_);
 public:
-    CHIRA_PROPS() (
+    CHIRA_PROPS(
             CHIRA_PROP(TextureCubemap, imageFD),
             CHIRA_PROP(TextureCubemap, imageBK),
             CHIRA_PROP(TextureCubemap, imageUP),

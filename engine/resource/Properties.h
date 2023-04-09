@@ -92,7 +92,7 @@ nlohmann::json toJSON(auto& obj) {
 #define CHIRA_PROPS_INHERITED(clazz) \
     using InheritPropsFromClass = clazz; \
     static inline const auto props = std::make_tuple
-#define CHIRA_PROPS() CHIRA_PROPS_INHERITED(void)
+#define CHIRA_PROPS CHIRA_PROPS_INHERITED(void)
 
 #define CHIRA_PROP(clazz, member) chira::Serialize::createProperty(&clazz::member, #member)
 #define CHIRA_PROP_NAMED(clazz, member, name) chira::Serialize::createProperty(&clazz::member, #name)

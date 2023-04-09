@@ -1,6 +1,6 @@
 // Disable console window on Windows (MSVC)
 #include <core/Platform.h>
-#if defined(_WIN32) && !defined(DEBUG) && defined(CHIRA_COMPILER_MSVC)
+#if defined(CHIRA_PLATFORM_WINDOWS) && !defined(DEBUG) && defined(CHIRA_COMPILER_MSVC)
     #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #endif
 
