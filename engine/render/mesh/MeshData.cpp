@@ -15,7 +15,7 @@ void MeshData::setupForRendering() {
 void MeshData::updateMeshData() {
     if (!this->initialized)
         return;
-    Renderer::updateMesh(this->handle, this->vertices, this->indices, this->drawMode);
+    Renderer::updateMesh(&this->handle, this->vertices, this->indices, this->drawMode);
 }
 
 void MeshData::render(glm::mat4 model) {
@@ -26,7 +26,7 @@ void MeshData::render(glm::mat4 model) {
         if (this->material->getShader()->usesModelMatrix())
             this->material->getShader()->setUniform("m", model);
     }
-    Renderer::drawMesh(this->handle, this->indices, this->depthFunction, this->cullType);
+    Renderer::drawMesh(this->handle, this->depthFunction, this->cullType);
 }
 
 MeshData::~MeshData() {
