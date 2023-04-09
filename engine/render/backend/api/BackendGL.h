@@ -56,7 +56,7 @@ struct UniformBufferHandle {
     unsigned int bindingPoint = 0;
 
     explicit inline operator bool() const { return handle; }
-    inline bool operator!() const { return handle; }
+    inline bool operator!() const { return !handle; }
 };
 
 struct MeshHandle {
