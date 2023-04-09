@@ -204,7 +204,7 @@ static int findFreeWindow() {
 
     Renderer::initImGui(handle.window, GL_CONTEXT);
 
-    auto defaultFont = Resource::getUniqueResource<Font>("file://fonts/default.json");
+    auto defaultFont = Resource::getUniqueUncachedResource<Font>("file://fonts/default.json");
     io.FontDefault = defaultFont->getFont();
     io.Fonts->Build();
 
@@ -293,8 +293,6 @@ void Device::refreshWindows() {
                 }
                 break;
             case SDL_KEYDOWN:
-                if (ImGui::GetIO().WantCaptureKeyboard)
-                    break;
                 for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
                     if (keyEvent.getEvent() == event.key.keysym.sym && keyEvent.getEventType() == Input::KeyEventType::PRESSED) {
                         keyEvent();
@@ -302,8 +300,6 @@ void Device::refreshWindows() {
                 }
                 break;
             case SDL_KEYUP:
-                if (ImGui::GetIO().WantCaptureKeyboard)
-                    break;
                 for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
                     if (keyEvent.getEvent() == event.key.keysym.sym && keyEvent.getEventType() == Input::KeyEventType::RELEASED) {
                         keyEvent();
@@ -311,8 +307,6 @@ void Device::refreshWindows() {
                 }
                 break;
             case SDL_MOUSEBUTTONDOWN:
-                if (ImGui::GetIO().WantCaptureMouse)
-                    break;
                 for (const auto& mouseEvent : Input::MouseEvent::getEvents()) {
                     if (static_cast<uint8_t>(mouseEvent.getEvent()) == event.button.button && mouseEvent.getEventType() == Input::MouseEventType::CLICKED) {
                         mouseEvent(event.button.x, event.button.y, event.button.clicks);
@@ -320,8 +314,6 @@ void Device::refreshWindows() {
                 }
                 break;
             case SDL_MOUSEBUTTONUP:
-                if (ImGui::GetIO().WantCaptureMouse)
-                    break;
                 for (const auto& mouseEvent : Input::MouseEvent::getEvents()) {
                     if (static_cast<uint8_t>(mouseEvent.getEvent()) == event.button.button && mouseEvent.getEventType() == Input::MouseEventType::RELEASED) {
                         mouseEvent(event.button.x, event.button.y, event.button.clicks);
@@ -329,8 +321,6 @@ void Device::refreshWindows() {
                 }
                 break;
             case SDL_MOUSEMOTION:
-                if (ImGui::GetIO().WantCaptureMouse)
-                    break;
                 for (const auto& mouseMotionEvent : Input::MouseMotionEvent::getEvents()) {
                     if (mouseMotionEvent.getEvent() == Input::MouseMotion::MOVEMENT) {
                         mouseMotionEvent(event.motion.x, event.motion.y, event.motion.xrel, event.motion.yrel);
@@ -338,8 +328,6 @@ void Device::refreshWindows() {
                 }
                 break;
             case SDL_MOUSEWHEEL:
-                if (ImGui::GetIO().WantCaptureMouse)
-                    break;
                 for (const auto& mouseMotionEvent : Input::MouseMotionEvent::getEvents()) {
                     if (mouseMotionEvent.getEvent() == Input::MouseMotion::SCROLL) {
                         mouseMotionEvent(event.wheel.x, event.wheel.y, event.wheel.x, event.wheel.y);
@@ -355,11 +343,9 @@ void Device::refreshWindows() {
     // Handle repeating events
     // This is a pointer to a static variable in SDL so this is safe
     static const auto* keyStates = SDL_GetKeyboardState(nullptr);
-    if (!ImGui::GetIO().WantCaptureKeyboard) {
-        for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
-            if (keyStates[SDL_GetScancodeFromKey(keyEvent.getEvent())] && keyEvent.getEventType() == Input::KeyEventType::REPEATED) {
-                keyEvent();
-            }
+    for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
+        if (keyStates[SDL_GetScancodeFromKey(keyEvent.getEvent())] && keyEvent.getEventType() == Input::KeyEventType::REPEATED) {
+            keyEvent();
         }
     }
 }
