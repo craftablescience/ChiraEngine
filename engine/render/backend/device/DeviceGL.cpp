@@ -217,6 +217,11 @@ void Device::refreshWindows() {
         if (!handle)
             continue;
 
+        if (Device::isWindowAboutToBeDestroyed(&handle)) {
+            Device::destroyWindow(&handle);
+            continue;
+        }
+
         if (!Device::isWindowVisible(&handle)) {
             handle.frame->update();
             continue;
@@ -228,12 +233,12 @@ void Device::refreshWindows() {
         ImGui::SetCurrentContext(handle.imguiContext);
         setImGuiConfigPath();
 
+        Renderer::pushFrameBuffer(*handle.frame->getRawHandle());
         Renderer::startImGuiFrame(handle.window);
 
         handle.frame->update();
         handle.frame->render(glm::identity<glm::mat4>());
 
-        Renderer::pushFrameBuffer(*handle.frame->getRawHandle());
         for (auto& [uuid, panel] : handle.panels) {
             panel->render();
         }
@@ -256,18 +261,26 @@ void Device::refreshWindows() {
     // Process input
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
-        ImGui_ImplSDL2_ProcessEvent(&event);
-
         auto* handle = reinterpret_cast<Device::WindowHandle*>(SDL_GetWindowData(SDL_GetWindowFromID(event.window.windowID), "handle"));
         if (!handle)
             continue;
 
+        ImGui::SetCurrentContext(handle->imguiContext);
+        ImGui_ImplSDL2_ProcessEvent(&event);
+
         switch (event.type) {
             case SDL_QUIT:
-                Device::queueDestroyWindow(handle, true);
+                for (auto& windowHandle : WINDOWS) {
+                    if (windowHandle) {
+                        Device::queueDestroyWindow(&windowHandle, true);
+                    }
+                }
                 break;
             case SDL_WINDOWEVENT:
                 switch (event.window.event) {
+                    case SDL_WINDOWEVENT_CLOSE:
+                        Device::queueDestroyWindow(handle, true);
+                        break;
                     case SDL_WINDOWEVENT_RESIZED:
                     case SDL_WINDOWEVENT_SIZE_CHANGED:
                     case SDL_WINDOWEVENT_MAXIMIZED:
@@ -280,6 +293,8 @@ void Device::refreshWindows() {
                 }
                 break;
             case SDL_KEYDOWN:
+                if (ImGui::GetIO().WantCaptureKeyboard)
+                    break;
                 for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
                     if (keyEvent.getEvent() == event.key.keysym.sym && keyEvent.getEventType() == Input::KeyEventType::PRESSED) {
                         keyEvent();
@@ -287,6 +302,8 @@ void Device::refreshWindows() {
                 }
                 break;
             case SDL_KEYUP:
+                if (ImGui::GetIO().WantCaptureKeyboard)
+                    break;
                 for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
                     if (keyEvent.getEvent() == event.key.keysym.sym && keyEvent.getEventType() == Input::KeyEventType::RELEASED) {
                         keyEvent();
@@ -294,6 +311,8 @@ void Device::refreshWindows() {
                 }
                 break;
             case SDL_MOUSEBUTTONDOWN:
+                if (ImGui::GetIO().WantCaptureMouse)
+                    break;
                 for (const auto& mouseEvent : Input::MouseEvent::getEvents()) {
                     if (static_cast<uint8_t>(mouseEvent.getEvent()) == event.button.button && mouseEvent.getEventType() == Input::MouseEventType::CLICKED) {
                         mouseEvent(event.button.x, event.button.y, event.button.clicks);
@@ -301,6 +320,8 @@ void Device::refreshWindows() {
                 }
                 break;
             case SDL_MOUSEBUTTONUP:
+                if (ImGui::GetIO().WantCaptureMouse)
+                    break;
                 for (const auto& mouseEvent : Input::MouseEvent::getEvents()) {
                     if (static_cast<uint8_t>(mouseEvent.getEvent()) == event.button.button && mouseEvent.getEventType() == Input::MouseEventType::RELEASED) {
                         mouseEvent(event.button.x, event.button.y, event.button.clicks);
@@ -308,6 +329,8 @@ void Device::refreshWindows() {
                 }
                 break;
             case SDL_MOUSEMOTION:
+                if (ImGui::GetIO().WantCaptureMouse)
+                    break;
                 for (const auto& mouseMotionEvent : Input::MouseMotionEvent::getEvents()) {
                     if (mouseMotionEvent.getEvent() == Input::MouseMotion::MOVEMENT) {
                         mouseMotionEvent(event.motion.x, event.motion.y, event.motion.xrel, event.motion.yrel);
@@ -315,6 +338,8 @@ void Device::refreshWindows() {
                 }
                 break;
             case SDL_MOUSEWHEEL:
+                if (ImGui::GetIO().WantCaptureMouse)
+                    break;
                 for (const auto& mouseMotionEvent : Input::MouseMotionEvent::getEvents()) {
                     if (mouseMotionEvent.getEvent() == Input::MouseMotion::SCROLL) {
                         mouseMotionEvent(event.wheel.x, event.wheel.y, event.wheel.x, event.wheel.y);
@@ -330,9 +355,11 @@ void Device::refreshWindows() {
     // Handle repeating events
     // This is a pointer to a static variable in SDL so this is safe
     static const auto* keyStates = SDL_GetKeyboardState(nullptr);
-    for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
-        if (keyStates[SDL_GetScancodeFromKey(keyEvent.getEvent())] && keyEvent.getEventType() == Input::KeyEventType::REPEATED) {
-            keyEvent();
+    if (!ImGui::GetIO().WantCaptureKeyboard) {
+        for (const auto& keyEvent : Input::KeyEvent::getEvents()) {
+            if (keyStates[SDL_GetScancodeFromKey(keyEvent.getEvent())] && keyEvent.getEventType() == Input::KeyEventType::REPEATED) {
+                keyEvent();
+            }
         }
     }
 }
@@ -492,7 +519,9 @@ void Device::destroyWindow(WindowHandle* handle) {
 
 void Device::destroyAllWindows() {
     for (auto& handle : WINDOWS) {
-        Device::destroyWindow(&handle);
+        if (handle) {
+            Device::destroyWindow(&handle);
+        }
     }
 }
 
