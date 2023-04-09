@@ -40,6 +40,7 @@ public:
 
     //todo(input): this is dumb
     static void setupKeybinds();
+
 protected:
     float movementSpeed    = 4.f;
     float mouseSensitivity = 6.f;

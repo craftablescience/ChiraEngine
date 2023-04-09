@@ -96,7 +96,7 @@ private:
     std::string vertexPath{"file://shaders/unlitTextured.vsh"};
     std::string fragmentPath{"file://shaders/unlitTextured.fsh"};
 public:
-    CHIRA_PROPS() (
+    CHIRA_PROPS(
             CHIRA_PROP(Shader, usesPV),
             CHIRA_PROP(Shader, usesM),
             CHIRA_PROP(Shader, lit),

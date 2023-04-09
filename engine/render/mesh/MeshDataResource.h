@@ -21,7 +21,7 @@ private:
     std::string depthFuncStr{"LESS"};
     std::string cullTypeStr{"BACK"};
 public:
-    CHIRA_PROPS() (
+    CHIRA_PROPS(
             CHIRA_PROP(MeshDataResource, materialSetInCode),
             CHIRA_PROP(MeshDataResource, materialType),
             CHIRA_PROP_NAMED(MeshDataResource, materialPath, material),
