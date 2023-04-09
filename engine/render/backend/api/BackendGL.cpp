@@ -665,7 +665,7 @@ void Renderer::destroyUniformBuffer(Renderer::UniformBufferHandle handle) {
 }
 
 Renderer::MeshHandle Renderer::createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode) {
-    MeshHandle handle{};
+    MeshHandle handle{ .numIndices = static_cast<int>(indices.size()) };
     glGenVertexArrays(1, &handle.vaoHandle);
     glGenBuffers(1, &handle.vboHandle);
     glGenBuffers(1, &handle.eboHandle);
@@ -697,27 +697,28 @@ Renderer::MeshHandle Renderer::createMesh(const std::vector<Vertex>& vertices, c
     return handle;
 }
 
-void Renderer::updateMesh(MeshHandle handle, const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode) {
-    runtime_assert(static_cast<bool>(handle), "Invalid mesh handle given to GL renderer");
+void Renderer::updateMesh(MeshHandle* handle, const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode) {
+    runtime_assert(static_cast<bool>(*handle), "Invalid mesh handle given to GL renderer");
     const auto glDrawMode = getMeshDrawModeGL(drawMode);
-    glBindBuffer(GL_ARRAY_BUFFER, handle.vboHandle);
+    glBindBuffer(GL_ARRAY_BUFFER, handle->vboHandle);
     glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertices.size() * sizeof(Vertex)), vertices.data(), glDrawMode);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle.eboHandle);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle->eboHandle);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(indices.size() * sizeof(Index)), indices.data(), glDrawMode);
+    handle->numIndices = static_cast<int>(indices.size());
 }
 
-void Renderer::drawMesh(MeshHandle handle, const std::vector<Index>& indices, MeshDepthFunction depthFunction, MeshCullType cullType) {
-    runtime_assert(static_cast<bool>(handle), "Invalid mesh handle given to GL renderer");
+void Renderer::drawMesh(MeshHandle handle, MeshDepthFunction depthFunction, MeshCullType cullType) {
+    runtime_assert(static_cast<bool>(handle), "Invalid mesh handle given to GL renderer!");
     pushState(RenderMode::CULL_FACE, true);
     glDepthFunc(getMeshDepthFunctionGL(depthFunction));
     glCullFace(getMeshCullTypeGL(cullType));
     glBindVertexArray(handle.vaoHandle);
-    glDrawElements(GL_TRIANGLES, static_cast<GLint>(indices.size()), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, handle.numIndices, GL_UNSIGNED_INT, nullptr);
     popState(RenderMode::CULL_FACE);
 }
 
 void Renderer::destroyMesh(MeshHandle handle) {
-    runtime_assert(static_cast<bool>(handle), "Invalid mesh handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid mesh handle given to GL renderer!");
     glDeleteVertexArrays(1, &handle.vaoHandle);
     glDeleteBuffers(1, &handle.vboHandle);
     glDeleteBuffers(1, &handle.eboHandle);

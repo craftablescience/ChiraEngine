@@ -63,6 +63,7 @@ struct MeshHandle {
     unsigned int vaoHandle = 0;
     unsigned int vboHandle = 0;
     unsigned int eboHandle = 0;
+    int numIndices = 0;
 
     explicit inline operator bool() const { return vaoHandle && vboHandle && eboHandle; }
     inline bool operator!() const { return !vaoHandle || !vboHandle || !eboHandle; }
@@ -122,8 +123,8 @@ void updateUniformBufferPart(UniformBufferHandle handle, std::ptrdiff_t start, c
 void destroyUniformBuffer(UniformBufferHandle handle);
 
 [[nodiscard]] MeshHandle createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode);
-void updateMesh(MeshHandle handle, const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode);
-void drawMesh(MeshHandle handle, const std::vector<Index>& indices, MeshDepthFunction depthFunction, MeshCullType cullType);
+void updateMesh(MeshHandle* handle, const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode);
+void drawMesh(MeshHandle handle, MeshDepthFunction depthFunction, MeshCullType cullType);
 void destroyMesh(MeshHandle handle);
 
 void initImGui(SDL_Window* window, void* context);
