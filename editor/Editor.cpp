@@ -103,7 +103,7 @@ public:
                     this->folderDialog.Open();
                 ImGui::Separator();
                 if (ImGui::MenuItem(TRC("ui.menubar.exit"))) // Exit
-                    Engine::getDevice()->closeAfterThisFrame();
+                    Renderer::queueDestroyWindow(Engine::getDevice(), true);
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu(TRC("ui.menubar.convert"))) { // Convert
@@ -199,7 +199,7 @@ int main(int argc, const char* const argv[]) {
 
     Engine::getRoot()->setBackgroundColor(ColorRGB{0.15f});
 
-    Engine::getDevice()->addPanel(new ModelViewerPanel{});
+    Renderer::addPanelToWindow(Engine::getDevice(), new ModelViewerPanel{});
 
     auto camera = new EditorCamera{CameraProjectionMode::PERSPECTIVE, 120.f};
     camera->translate({-6.f * sqrtf(3.f), 6, 0});

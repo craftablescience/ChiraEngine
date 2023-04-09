@@ -9,66 +9,80 @@ struct ImGuiContext;
 
 namespace chira {
 
-namespace Renderer {
+class IPanel;
 
-struct Window {
+} // namespace chira
 
+// OpenGL 4.1 (or 4.3) SDL backend
+namespace chira::Renderer {
+
+struct WindowHandle {
+    MeshDataBuilder surface;
+    std::unordered_map<uuids::uuid, IPanel*> panels{};
+    SDL_Window* window = nullptr;
+    ImGuiContext* imguiContext = nullptr;
+    int width = -1;
+    int height = -1;
+    bool hidden = false;
+    bool mouseCaptured = false;
+    bool iconified = false;
+    bool shouldClose = false;
+
+    // todo(render): get rid of Frame here
+    Frame* frame = nullptr;
+    bool frameIsSelfOwned = false;
+
+    explicit inline operator bool() const { return window; }
+    inline bool operator!() const { return window; }
 };
 
 [[nodiscard]] bool initBackendAndCreateSplashscreen(bool splashScreenVisible);
 void destroySplashscreen();
+void destroyBackend();
 
+/// Note: If an icon image is present, it must be RGBA8888
+[[nodiscard]] WindowHandle* createWindow(int width, int height, std::string_view title, Frame* frame);
+void refreshWindows();
+[[nodiscard]] int getWindowCount();
 
+[[nodiscard]] Frame* getWindowFrame(WindowHandle* handle);
+
+void setWindowMaximized(WindowHandle* handle, bool maximize);
+[[nodiscard]] bool isWindowMaximized(WindowHandle* handle);
+
+void minimizeWindow(WindowHandle* handle, bool minimize);
+[[nodiscard]] bool isWindowMinimized(WindowHandle* handle);
+
+void setWindowFullscreen(WindowHandle* handle, bool fullscreen);
+[[nodiscard]] bool isWindowFullscreen(WindowHandle* handle);
+
+void setWindowVisibility(WindowHandle* handle, bool visible);
+[[nodiscard]] bool isWindowVisible(WindowHandle* handle);
+
+void setWindowSize(WindowHandle* handle, int width, int height);
+[[nodiscard]] glm::vec2i getWindowSize(WindowHandle* handle);
+
+void setWindowPosition(WindowHandle* handle, int width, int height);
+void setWindowPositionFromCenter(WindowHandle* handle, int width, int height);
+[[nodiscard]] glm::vec2i getWindowPosition(WindowHandle* handle);
+
+void setMousePositionGlobal(int x, int y);
+void setMousePositionInWindow(WindowHandle* handle, int x, int y);
+[[nodiscard]] glm::vec2i getMousePositionGlobal();
+[[nodiscard]] glm::vec2i getMousePositionInFocusedWindow();
+
+void setMouseCapturedWindow(WindowHandle* handle, bool captured);
+[[nodiscard]] bool isMouseCapturedWindow(WindowHandle* handle);
+
+/// Destroys windows the next time refreshWindows() is called
+void queueDestroyWindow(WindowHandle* handle, bool free);
+[[nodiscard]] bool isWindowAboutToBeDestroyed(WindowHandle* handle);
+void destroyWindow(WindowHandle* handle);
+void destroyAllWindows();
+
+uuids::uuid addPanelToWindow(WindowHandle* handle, IPanel* panel);
+[[nodiscard]] IPanel* getPanelOnWindow(WindowHandle* handle, const uuids::uuid& panelID);
+void removePanelFromWindow(WindowHandle* handle, const uuids::uuid& panelID);
+void removeAllPanelsFromWindow(WindowHandle* handle);
 
 } // namespace Renderer
-
-class IPanel;
-
-class Device {
-    friend class Engine;
-private:
-    explicit Device(std::string_view title);
-public:
-    void refresh();
-    ~Device();
-
-    [[nodiscard]] Frame* getFrame();
-
-    uuids::uuid addPanel(IPanel* panel);
-    [[nodiscard]] IPanel* getPanel(const uuids::uuid& panelID);
-    void removePanel(const uuids::uuid& panelID);
-    void removeAllPanels();
-
-    void setSize(glm::vec2i newSize, bool setWindowSize = true);
-    [[nodiscard]] static glm::vec2i getMousePosition();
-    void captureMouse(bool capture);
-    [[nodiscard]] bool isMouseCaptured() const;
-    [[nodiscard]] bool isIconified() const;
-    void setVisible(bool visibility);
-    void setFullscreen(bool goFullscreen) const;
-    [[nodiscard]] bool isFullscreen() const;
-    void setMaximized(bool maximize);
-    [[nodiscard]] bool isMaximized() const;
-    void moveToPosition(glm::vec2i pos) const;
-    void moveToCenter() const;
-
-    /// Note: Images must have a bit depth of 8
-    void setIcon(const std::string& identifier) const;
-
-    [[nodiscard]] bool shouldCloseAfterThisFrame() const;
-    void closeAfterThisFrame(bool yes = true);
-
-private:
-    Frame frame;
-    bool visible = true;
-    MeshDataBuilder surface{};
-    SDL_Window* window = nullptr;
-    ImGuiContext* imguiContext = nullptr;
-    bool mouseCaptured = false, iconified = false, shouldClose = false;
-    int width = -1, height = -1;
-    std::unordered_map<uuids::uuid, IPanel*> panels{};
-
-    bool createWindow(std::string_view title);
-};
-
-} // namespace chira

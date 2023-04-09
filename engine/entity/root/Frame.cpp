@@ -7,24 +7,22 @@ using namespace chira;
 
 CHIRA_CREATE_LOG(FRAME);
 
-Frame::Frame(std::string name_, int width_, int height_, ColorRGB backgroundColor_, bool smoothResize, bool initNow)
+Frame::Frame(std::string name_, int width_, int height_, ColorRGB backgroundColor_, bool smoothResize)
     : Group(std::move(name_))
     , backgroundColor(backgroundColor_)
     , width(width_)
     , height(height_)
     , linearFiltering(smoothResize) {
-    if (initNow)
-        this->recreateFramebuffer();
+    this->recreateFramebuffer();
 }
 
-Frame::Frame(int width_, int height_, ColorRGB backgroundColor_, bool smoothResize, bool initNow)
+Frame::Frame(int width_, int height_, ColorRGB backgroundColor_, bool smoothResize)
     : Group()
     , backgroundColor(backgroundColor_)
     , width(width_)
     , height(height_)
     , linearFiltering(smoothResize) {
-    if (initNow)
-        this->recreateFramebuffer();
+    this->recreateFramebuffer();
 }
 
 void Frame::recreateFramebuffer() {

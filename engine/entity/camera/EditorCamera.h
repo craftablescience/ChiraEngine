@@ -15,7 +15,7 @@ public:
         this->scrollModifier = scrollModifier_;
     }
 
-    //todo(input): this is dumb
+    // todo(input): this is dumb
     static void setupKeybinds();
 protected:
     float scrollModifier = 40.f;
