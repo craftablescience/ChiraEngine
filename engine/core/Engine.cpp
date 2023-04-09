@@ -27,7 +27,7 @@ CHIRA_CREATE_LOG(ENGINE);
 
 [[maybe_unused]]
 ConCommand quit{"quit", "Quits the game or application.", [] {
-    Renderer::queueDestroyWindow(Engine::getDevice(), true);
+    Device::queueDestroyWindow(Engine::getDevice(), true);
 }};
 
 [[maybe_unused]]
@@ -37,13 +37,13 @@ ConCommand crash{"crash", "Force-crashes the game or application (for debugging 
 
 ConVar win_width{"win_width", 1280, "The width of the main window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) {
     if (Engine::getDevice()) {
-        Renderer::setWindowSize(Engine::getDevice(), static_cast<int>(std::stoi(newValue.data())), Renderer::getWindowSize(Engine::getDevice()).y);
+        Device::setWindowSize(Engine::getDevice(), static_cast<int>(std::stoi(newValue.data())), Device::getWindowSize(Engine::getDevice()).y);
     }
 }};
 
 ConVar win_height{"win_height", 720, "The height of the main window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) {
     if (Engine::getDevice()) {
-        Renderer::setWindowSize(Engine::getDevice(), Renderer::getWindowSize(Engine::getDevice()).x, static_cast<int>(std::stoi(newValue.data())));
+        Device::setWindowSize(Engine::getDevice(), Device::getWindowSize(Engine::getDevice()).x, static_cast<int>(std::stoi(newValue.data())));
     }
 }};
 
@@ -71,7 +71,7 @@ void Engine::init(bool visibleSplashScreen /*= true*/) {
         exit(EXIT_FAILURE);
     }
 
-    if (!Renderer::initBackendAndCreateSplashscreen(visibleSplashScreen)) {
+    if (!Device::initBackendAndCreateSplashscreen(visibleSplashScreen)) {
         LOG_ENGINE.error("Failed to initialize graphics!");
         exit(EXIT_FAILURE);
     }
@@ -97,21 +97,25 @@ void Engine::init(bool visibleSplashScreen /*= true*/) {
     // Any events fired?
     Events::update();
 
-    Renderer::destroySplashscreen();
+    Device::destroySplashscreen();
 
-    Engine::mainWindow = Renderer::createWindow(win_width.getValue<int>(), win_height.getValue<int>(), TR("ui.window.title"), nullptr);
+    Engine::mainWindow = Device::createWindow(win_width.getValue<int>(), win_height.getValue<int>(), TR("ui.window.title"), nullptr);
+    if (!Engine::mainWindow) {
+        LOG_ENGINE.error("Failed to create main window!");
+        exit(EXIT_FAILURE);
+    }
 
     // Add console UI panel
-    auto consoleID = Renderer::addPanelToWindow(Engine::mainWindow, new ConsolePanel{});
+    auto consoleID = Device::addPanelToWindow(Engine::mainWindow, new ConsolePanel{});
     Input::KeyEvent::create(Input::Key::SDLK_BACKQUOTE, Input::KeyEventType::PRESSED, [consoleID] {
-        auto console = Renderer::getPanelOnWindow(Engine::mainWindow, consoleID);
+        auto console = Device::getPanelOnWindow(Engine::mainWindow, consoleID);
         console->setVisible(!console->isVisible());
     });
 
     // Add resource usage tracker UI panel
-    auto resourceUsageTrackerID = Renderer::addPanelToWindow(Engine::mainWindow, new ResourceUsageTrackerPanel{});
+    auto resourceUsageTrackerID = Device::addPanelToWindow(Engine::mainWindow, new ResourceUsageTrackerPanel{});
     Input::KeyEvent::create(Input::Key::SDLK_F1, Input::KeyEventType::PRESSED, [resourceUsageTrackerID] {
-        auto resourceUsageTracker = Renderer::getPanelOnWindow(Engine::mainWindow, resourceUsageTrackerID);
+        auto resourceUsageTracker = Device::getPanelOnWindow(Engine::mainWindow, resourceUsageTrackerID);
         resourceUsageTracker->setVisible(!resourceUsageTracker->isVisible());
     });
 }
@@ -121,18 +125,18 @@ void Engine::run() {
         Engine::lastTime = Engine::currentTime;
         Engine::currentTime = SDL_GetTicks64();
 
-        Renderer::refreshWindows();
+        Device::refreshWindows();
 
         PluginRegistry::updateAll();
 
         Events::update();
-    } while (!Renderer::isWindowAboutToBeDestroyed(Engine::mainWindow));
+    } while (!Device::isWindowAboutToBeDestroyed(Engine::mainWindow));
 
     LOG_ENGINE.info("Exiting...");
 
     PluginRegistry::deinitAll();
 
-    Renderer::destroyBackend();
+    Device::destroyBackend();
 
     Resource::discardAll();
 

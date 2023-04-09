@@ -22,13 +22,13 @@ public:
     static void run();
 
     /// Returns a pointer to the main window of the application.
-    [[nodiscard]] static Renderer::WindowHandle* getDevice() { return Engine::mainWindow; }
-    [[nodiscard]] static Frame* getRoot() { return Renderer::getWindowFrame(Engine::mainWindow); }
+    [[nodiscard]] static Device::WindowHandle* getDevice() { return Engine::mainWindow; }
+    [[nodiscard]] static Frame* getRoot() { return Device::getWindowFrame(Engine::mainWindow); }
     [[nodiscard]] static bool isStarted();
     /// Only guaranteed to work after run() in a render method
     [[nodiscard]] static uint64_t getDeltaTicks();
 private:
-    static inline Renderer::WindowHandle* mainWindow = nullptr;
+    static inline Device::WindowHandle* mainWindow = nullptr;
     static inline bool started = false;
     static inline uint64_t lastTime = 0, currentTime = 0;
 };

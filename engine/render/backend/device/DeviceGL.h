@@ -14,7 +14,7 @@ class IPanel;
 } // namespace chira
 
 // OpenGL 4.1 (or 4.3) SDL backend
-namespace chira::Renderer {
+namespace chira::Device {
 
 struct WindowHandle {
     MeshDataBuilder surface;
@@ -25,7 +25,6 @@ struct WindowHandle {
     int height = -1;
     bool hidden = false;
     bool mouseCaptured = false;
-    bool iconified = false;
     bool shouldClose = false;
 
     // todo(render): get rid of Frame here

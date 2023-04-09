@@ -1,6 +1,6 @@
 #include "DeviceGL.h"
 
-#include <vector>
+#include <array>
 
 #include <backends/imgui_impl_sdl2.h>
 #include <glad/gl.h>
@@ -54,7 +54,7 @@ static void setImGuiConfigPath() {
 SDL_Window* SPLASHSCREEN = nullptr;
 void* GL_CONTEXT = nullptr;
 
-bool Renderer::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
+bool Device::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
     static bool alreadyRan = false;
     if (alreadyRan)
         return false;
@@ -132,24 +132,36 @@ bool Renderer::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
     return true;
 }
 
-void Renderer::destroySplashscreen() {
+void Device::destroySplashscreen() {
     if (SPLASHSCREEN) {
         SDL_DestroyWindow(SPLASHSCREEN);
         SPLASHSCREEN = nullptr;
     }
 }
 
-void Renderer::destroyBackend() {
+void Device::destroyBackend() {
     Renderer::destroyImGui();
-    Renderer::destroyAllWindows();
+    Device::destroyAllWindows();
     SDL_GL_DeleteContext(GL_CONTEXT);
 }
 
-std::vector<Renderer::WindowHandle> WINDOWS;
+std::array<Device::WindowHandle, 256> WINDOWS{};
 
-[[nodiscard]] Renderer::WindowHandle* Renderer::createWindow(int width, int height, std::string_view title, Frame* frame) {
-    WINDOWS.emplace_back();
-    WindowHandle& handle = WINDOWS.at(WINDOWS.size() - 1);
+static int findFreeWindow() {
+    for (int i = 0; i < WINDOWS.size(); i++) {
+        if (!WINDOWS.at(i))
+            return i;
+    }
+    return -1;
+}
+
+[[nodiscard]] Device::WindowHandle* Device::createWindow(int width, int height, std::string_view title, Frame* frame) {
+    int free = findFreeWindow();
+    if (free == -1)
+        return nullptr;
+
+    WINDOWS[free] = WindowHandle{};
+    WindowHandle& handle = WINDOWS.at(free);
 
     handle.width = width;
     handle.height = height;
@@ -202,23 +214,29 @@ std::vector<Renderer::WindowHandle> WINDOWS;
     return &handle;
 }
 
-void Renderer::refreshWindows() {
+void Device::refreshWindows() {
     // Render each window
     for (auto& handle : WINDOWS) {
-        if (!Renderer::isWindowVisible(&handle)) {
+        if (!handle) {
+            continue;
+        }
+
+        if (!Device::isWindowVisible(&handle)) {
             handle.frame->update();
             continue;
         }
 
         SDL_GL_MakeCurrent(handle.window, GL_CONTEXT);
+        glViewport(0, 0, handle.width, handle.height);
+
         ImGui::SetCurrentContext(handle.imguiContext);
         setImGuiConfigPath();
 
+        Renderer::pushFrameBuffer(*handle.frame->getRawHandle());
         Renderer::startImGuiFrame(handle.window);
 
         handle.frame->update();
         handle.frame->render(glm::identity<glm::mat4>());
-        glViewport(0, 0, handle.width, handle.height);
 
         for (auto& [uuid, panel] : handle.panels) {
             panel->render();
@@ -226,10 +244,9 @@ void Renderer::refreshWindows() {
 
         glDisable(GL_DEPTH_TEST);
 
-        glBindFramebuffer(GL_FRAMEBUFFER, handle.frame->getRawHandle()->fboHandle);
         Renderer::endImGuiFrame();
+        Renderer::popFrameBuffer();
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         handle.surface.render(glm::identity<glm::mat4>());
 
         glEnable(GL_DEPTH_TEST);
@@ -242,13 +259,13 @@ void Renderer::refreshWindows() {
     while (SDL_PollEvent(&event)) {
         ImGui_ImplSDL2_ProcessEvent(&event);
 
-        auto* handle = reinterpret_cast<Renderer::WindowHandle*>(SDL_GetWindowData(SDL_GetWindowFromID(event.window.windowID), "handle"));
+        auto* handle = reinterpret_cast<Device::WindowHandle*>(SDL_GetWindowData(SDL_GetWindowFromID(event.window.windowID), "handle"));
         if (!handle)
             continue;
 
         switch (event.type) {
             case SDL_QUIT:
-                Renderer::queueDestroyWindow(handle, true);
+                Device::queueDestroyWindow(handle, true);
                 break;
             case SDL_WINDOWEVENT:
                 switch (event.window.event) {
@@ -321,16 +338,20 @@ void Renderer::refreshWindows() {
     }
 }
 
-[[nodiscard]] int Renderer::getWindowCount() {
-    return static_cast<int>(WINDOWS.size());
+[[nodiscard]] int Device::getWindowCount() {
+    int count = 0;
+    for (const auto& handle : WINDOWS) {
+        count += static_cast<bool>(handle);
+    }
+    return count;
 }
 
-[[nodiscard]] Frame* Renderer::getWindowFrame(WindowHandle* handle) {
+[[nodiscard]] Frame* Device::getWindowFrame(WindowHandle* handle) {
     return handle->frame;
 }
 
-void Renderer::setWindowMaximized(WindowHandle* handle, bool maximize) {
-    if (Renderer::isWindowFullscreen(handle))
+void Device::setWindowMaximized(WindowHandle* handle, bool maximize) {
+    if (Device::isWindowFullscreen(handle))
         return;
     if (maximize) {
         SDL_MaximizeWindow(handle->window);
@@ -341,11 +362,11 @@ void Renderer::setWindowMaximized(WindowHandle* handle, bool maximize) {
     handle->frame->setFrameSize({handle->width, handle->height});
 }
 
-[[nodiscard]] bool Renderer::isWindowMaximized(WindowHandle* handle) {
+[[nodiscard]] bool Device::isWindowMaximized(WindowHandle* handle) {
     return SDL_GetWindowFlags(handle->window) & SDL_WINDOW_MAXIMIZED;
 }
 
-void Renderer::minimizeWindow(WindowHandle* handle, bool minimize) {
+void Device::minimizeWindow(WindowHandle* handle, bool minimize) {
     if (minimize) {
         SDL_MinimizeWindow(handle->window);
     } else {
@@ -353,19 +374,19 @@ void Renderer::minimizeWindow(WindowHandle* handle, bool minimize) {
     }
 }
 
-[[nodiscard]] bool Renderer::isWindowMinimized(WindowHandle* handle) {
+[[nodiscard]] bool Device::isWindowMinimized(WindowHandle* handle) {
     return SDL_GetWindowFlags(handle->window) & SDL_WINDOW_MINIMIZED;
 }
 
-void Renderer::setWindowFullscreen(WindowHandle* handle, bool fullscreen) {
+void Device::setWindowFullscreen(WindowHandle* handle, bool fullscreen) {
     SDL_SetWindowFullscreen(handle->window, fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
 }
 
-[[nodiscard]] bool Renderer::isWindowFullscreen(WindowHandle* handle) {
+[[nodiscard]] bool Device::isWindowFullscreen(WindowHandle* handle) {
     return SDL_GetWindowFlags(handle->window) & SDL_WINDOW_FULLSCREEN_DESKTOP;
 }
 
-void Renderer::setWindowVisibility(WindowHandle* handle, bool visible) {
+void Device::setWindowVisibility(WindowHandle* handle, bool visible) {
     if (visible) {
         SDL_ShowWindow(handle->window);
     } else {
@@ -374,64 +395,64 @@ void Renderer::setWindowVisibility(WindowHandle* handle, bool visible) {
     handle->hidden = visible;
 }
 
-[[nodiscard]] bool Renderer::isWindowVisible(WindowHandle* handle) {
+[[nodiscard]] bool Device::isWindowVisible(WindowHandle* handle) {
     return !handle->hidden;
 }
 
-void Renderer::setWindowSize(WindowHandle* handle, int width, int height) {
+void Device::setWindowSize(WindowHandle* handle, int width, int height) {
     handle->width = width;
     handle->height = height;
     handle->frame->setFrameSize({width, height});
     SDL_SetWindowSize(handle->window, width, height);
 }
 
-[[nodiscard]] glm::vec2i Renderer::getWindowSize(WindowHandle* handle) {
+[[nodiscard]] glm::vec2i Device::getWindowSize(WindowHandle* handle) {
     glm::vec2i dims;
     SDL_GetWindowSize(handle->window, &dims.x, &dims.y);
     return dims;
 }
 
-void Renderer::setWindowPosition(WindowHandle* handle, int width, int height) {
-    if (Renderer::isWindowFullscreen(handle))
+void Device::setWindowPosition(WindowHandle* handle, int width, int height) {
+    if (Device::isWindowFullscreen(handle))
         return;
     SDL_SetWindowPosition(handle->window, width, height);
 }
 
-void Renderer::setWindowPositionFromCenter(WindowHandle* handle, int width, int height) {
-    if (Renderer::isWindowFullscreen(handle))
+void Device::setWindowPositionFromCenter(WindowHandle* handle, int width, int height) {
+    if (Device::isWindowFullscreen(handle))
         return;
     SDL_Rect rect;
     SDL_GetDisplayBounds(0, &rect);
     SDL_SetWindowPosition(handle->window, (rect.w / 2) + width, (rect.h / 2) + height);
 }
 
-[[nodiscard]] glm::vec2i Renderer::getWindowPosition(WindowHandle* handle) {
+[[nodiscard]] glm::vec2i Device::getWindowPosition(WindowHandle* handle) {
     glm::vec2i pos;
     SDL_GetWindowPosition(handle->window, &pos.x, &pos.y);
     return pos;
 }
 
-void Renderer::setMousePositionGlobal(int x, int y) {
+void Device::setMousePositionGlobal(int x, int y) {
     SDL_WarpMouseGlobal(x, y);
 }
 
-void Renderer::setMousePositionInWindow(WindowHandle* handle, int x, int y) {
+void Device::setMousePositionInWindow(WindowHandle* handle, int x, int y) {
     SDL_WarpMouseInWindow(handle->window, x, y);
 }
 
-[[nodiscard]] glm::vec2i Renderer::getMousePositionGlobal() {
+[[nodiscard]] glm::vec2i Device::getMousePositionGlobal() {
     glm::vec2i pos{-1, -1};
     SDL_GetGlobalMouseState(&pos.x, &pos.y);
     return pos;
 }
 
-[[nodiscard]] glm::vec2i Renderer::getMousePositionInFocusedWindow() {
+[[nodiscard]] glm::vec2i Device::getMousePositionInFocusedWindow() {
     glm::vec2i pos{-1, -1};
     SDL_GetMouseState(&pos.x, &pos.y);
     return pos;
 }
 
-void Renderer::setMouseCapturedWindow(WindowHandle* handle, bool captured) {
+void Device::setMouseCapturedWindow(WindowHandle* handle, bool captured) {
     SDL_RaiseWindow(handle->window);
     ImGui::SetCurrentContext(handle->imguiContext);
     setImGuiConfigPath();
@@ -446,58 +467,56 @@ void Renderer::setMouseCapturedWindow(WindowHandle* handle, bool captured) {
     handle->mouseCaptured = captured;
 }
 
-[[nodiscard]] bool Renderer::isMouseCapturedWindow(WindowHandle* handle) {
+[[nodiscard]] bool Device::isMouseCapturedWindow(WindowHandle* handle) {
     return handle->mouseCaptured;
 }
 
 /// Destroys windows the next time refreshWindows() is called
-void Renderer::queueDestroyWindow(WindowHandle* handle, bool free) {
+void Device::queueDestroyWindow(WindowHandle* handle, bool free) {
     handle->shouldClose = free;
 }
 
-[[nodiscard]] bool Renderer::isWindowAboutToBeDestroyed(WindowHandle* handle) {
+[[nodiscard]] bool Device::isWindowAboutToBeDestroyed(WindowHandle* handle) {
     return handle->shouldClose;
 }
 
-void Renderer::destroyWindow(WindowHandle* handle) {
+void Device::destroyWindow(WindowHandle* handle) {
     if (handle->frameIsSelfOwned) {
         delete handle->frame;
     }
-    Renderer::removeAllPanelsFromWindow(handle);
+    Device::removeAllPanelsFromWindow(handle);
     ImGui::DestroyContext(handle->imguiContext);
+    handle->imguiContext = nullptr;
     SDL_DestroyWindow(handle->window);
-
-    WINDOWS.erase(std::remove_if(WINDOWS.begin(), WINDOWS.end(), [&handle](Renderer::WindowHandle& other) {
-        return handle->window == other.window;
-    }), WINDOWS.end());
+    handle->window = nullptr;
 }
 
-void Renderer::destroyAllWindows() {
+void Device::destroyAllWindows() {
     for (auto& handle : WINDOWS) {
-        Renderer::destroyWindow(&handle);
+        Device::destroyWindow(&handle);
     }
 }
 
-uuids::uuid Renderer::addPanelToWindow(WindowHandle* handle, IPanel* panel) {
+uuids::uuid Device::addPanelToWindow(WindowHandle* handle, IPanel* panel) {
     const auto uuid = UUIDGenerator::getNewUUID();
     handle->panels[uuid] = panel;
     return uuid;
 }
 
-[[nodiscard]] IPanel* Renderer::getPanelOnWindow(WindowHandle* handle, const uuids::uuid& panelID) {
+[[nodiscard]] IPanel* Device::getPanelOnWindow(WindowHandle* handle, const uuids::uuid& panelID) {
     if (handle->panels.contains(panelID))
         return handle->panels[panelID];
     return nullptr;
 }
 
-void Renderer::removePanelFromWindow(WindowHandle* handle, const uuids::uuid& panelID) {
+void Device::removePanelFromWindow(WindowHandle* handle, const uuids::uuid& panelID) {
     if (handle->panels.contains(panelID)) {
         delete handle->panels[panelID];
         handle->panels.erase(panelID);
     }
 }
 
-void Renderer::removeAllPanelsFromWindow(WindowHandle* handle) {
+void Device::removeAllPanelsFromWindow(WindowHandle* handle) {
     for (const auto& [panelID, panel] : handle->panels) {
         delete panel;
     }
