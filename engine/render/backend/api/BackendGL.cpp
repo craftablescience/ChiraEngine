@@ -241,7 +241,7 @@ Renderer::TextureHandle Renderer::createTexture2D(const Image& image, WrapMode w
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glFilter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glFilter);
 
-    runtime_assert(image.getData(), "Texture failed to compile: missing image data");
+    runtime_assert(image.getData(), "Texture failed to compile: missing image data!");
     if (image.getData()) {
         glTexImage2D(GL_TEXTURE_2D, 0, glFormat, image.getWidth(), image.getHeight(), 0, glFormat, GL_UNSIGNED_BYTE, image.getData());
         if (genMipmaps) {
@@ -271,7 +271,7 @@ Renderer::TextureHandle Renderer::createTextureCubemap(const Image& imageRT, con
 
     std::array<const Image*, 6> images{&imageRT, &imageLT, &imageUP, &imageDN, &imageFD, &imageBK};
     for (int i = 0; i < 6; i++) {
-        runtime_assert(images[i]->getData(), "Texture failed to compile: missing image data");
+        runtime_assert(images[i]->getData(), "Texture failed to compile: missing image data!");
         const auto glFormat = getTextureFormatGL(getTextureFormatFromBitDepth(images[i]->getBitDepth()));
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glFormat, images[i]->getWidth(), images[i]->getHeight(), 0, glFormat, GL_UNSIGNED_BYTE, images[i]->getData());
     }
@@ -282,7 +282,7 @@ Renderer::TextureHandle Renderer::createTextureCubemap(const Image& imageRT, con
 }
 
 void Renderer::useTexture(TextureHandle handle, TextureUnit activeTextureUnit) {
-    runtime_assert(static_cast<bool>(handle), "Invalid texture handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid texture handle given to GL renderer!");
     glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
     switch (handle.type) {
         case TextureType::TWO_DIMENSIONAL:
@@ -300,7 +300,7 @@ void* Renderer::getImGuiTextureHandle(Renderer::TextureHandle handle) {
 }
 
 void Renderer::destroyTexture(Renderer::TextureHandle handle) {
-    runtime_assert(static_cast<bool>(handle), "Invalid texture handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid texture handle given to GL renderer!");
     glDeleteTextures(1, &handle.handle);
 }
 
@@ -449,7 +449,7 @@ void Renderer::recreateFrameBuffer(Renderer::FrameBufferHandle* handle, int widt
 }
 
 static void destroyShaderModule(Renderer::ShaderModuleHandle handle) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader module handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader module handle given to GL renderer!");
     glDeleteShader(handle.handle);
 }
 
@@ -483,99 +483,99 @@ Renderer::ShaderHandle Renderer::createShader(std::string_view vertex, std::stri
 }
 
 void Renderer::useShader(Renderer::ShaderHandle handle) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUseProgram(handle.handle);
 }
 
 void Renderer::destroyShader(Renderer::ShaderHandle handle) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     destroyShaderModule(handle.vertex);
     destroyShaderModule(handle.fragment);
     glDeleteProgram(handle.handle);
 }
 
 void Renderer::setShaderUniform1b(Renderer::ShaderHandle handle, std::string_view name, bool value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform1i(glGetUniformLocation(handle.handle, name.data()), static_cast<int>(value));
 }
 
 void Renderer::setShaderUniform1u(Renderer::ShaderHandle handle, std::string_view name, unsigned int value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform1ui(glGetUniformLocation(handle.handle, name.data()), value);
 }
 
 void Renderer::setShaderUniform1i(Renderer::ShaderHandle handle, std::string_view name, int value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform1i(glGetUniformLocation(handle.handle, name.data()), value);
 }
 
 void Renderer::setShaderUniform1f(Renderer::ShaderHandle handle, std::string_view name, float value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform1f(glGetUniformLocation(handle.handle, name.data()), value);
 }
 
 void Renderer::setShaderUniform2b(Renderer::ShaderHandle handle, std::string_view name, glm::vec2b value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform2i(glGetUniformLocation(handle.handle, name.data()), static_cast<int>(value.x), static_cast<int>(value.y));
 }
 
 void Renderer::setShaderUniform2u(Renderer::ShaderHandle handle, std::string_view name, glm::vec2u value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform2ui(glGetUniformLocation(handle.handle, name.data()), value.x, value.y);
 }
 
 void Renderer::setShaderUniform2i(Renderer::ShaderHandle handle, std::string_view name, glm::vec2i value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform2i(glGetUniformLocation(handle.handle, name.data()), value.x, value.y);
 }
 
 void Renderer::setShaderUniform2f(Renderer::ShaderHandle handle, std::string_view name, glm::vec2f value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform2f(glGetUniformLocation(handle.handle, name.data()), value.x, value.y);
 }
 
 void Renderer::setShaderUniform3b(Renderer::ShaderHandle handle, std::string_view name, glm::vec3b value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform3i(glGetUniformLocation(handle.handle, name.data()), static_cast<int>(value.x), static_cast<int>(value.y), static_cast<int>(value.z));
 }
 
 void Renderer::setShaderUniform3u(Renderer::ShaderHandle handle, std::string_view name, glm::vec3u value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform3ui(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z);
 }
 
 void Renderer::setShaderUniform3i(Renderer::ShaderHandle handle, std::string_view name, glm::vec3i value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform3i(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z);
 }
 
 void Renderer::setShaderUniform3f(Renderer::ShaderHandle handle, std::string_view name, glm::vec3f value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform3f(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z);
 }
 
 void Renderer::setShaderUniform4b(Renderer::ShaderHandle handle, std::string_view name, glm::vec4b value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform4i(glGetUniformLocation(handle.handle, name.data()), static_cast<int>(value.x), static_cast<int>(value.y), static_cast<int>(value.z), static_cast<int>(value.w));
 }
 
 void Renderer::setShaderUniform4u(Renderer::ShaderHandle handle, std::string_view name, glm::vec4u value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform4ui(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z, value.w);
 }
 
 void Renderer::setShaderUniform4i(Renderer::ShaderHandle handle, std::string_view name, glm::vec4i value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform4i(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z, value.w);
 }
 
 void Renderer::setShaderUniform4f(Renderer::ShaderHandle handle, std::string_view name, glm::vec4f value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniform4f(glGetUniformLocation(handle.handle, name.data()), value.x, value.y, value.z, value.w);
 }
 
 void Renderer::setShaderUniform4m(Renderer::ShaderHandle handle, std::string_view name, glm::mat4 value) {
-    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid shader handle given to GL renderer!");
     glUniformMatrix4fv(glGetUniformLocation(handle.handle, name.data()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
@@ -596,27 +596,27 @@ Renderer::UniformBufferHandle Renderer::createUniformBuffer(std::ptrdiff_t size)
 }
 
 void Renderer::bindUniformBufferToShader(Renderer::ShaderHandle shaderHandle, Renderer::UniformBufferHandle uniformBufferHandle, std::string_view name) {
-    runtime_assert(static_cast<bool>(shaderHandle), "Invalid shader handle given to GL renderer");
-    runtime_assert(static_cast<bool>(uniformBufferHandle), "Invalid uniform buffer handle given to GL renderer");
+    runtime_assert(static_cast<bool>(shaderHandle), "Invalid shader handle given to GL renderer!");
+    runtime_assert(static_cast<bool>(uniformBufferHandle), "Invalid uniform buffer handle given to GL renderer!");
     glUniformBlockBinding(shaderHandle.handle, glGetUniformBlockIndex(shaderHandle.handle, name.data()), uniformBufferHandle.bindingPoint);
 }
 
 void Renderer::updateUniformBuffer(Renderer::UniformBufferHandle handle, const void* buffer, std::ptrdiff_t length) {
-    runtime_assert(static_cast<bool>(handle), "Invalid uniform buffer handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid uniform buffer handle given to GL renderer!");
     glBindBuffer(GL_UNIFORM_BUFFER, handle.handle);
     glBufferData(GL_UNIFORM_BUFFER, length, buffer, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void Renderer::updateUniformBufferPart(Renderer::UniformBufferHandle handle, std::ptrdiff_t start, const void* buffer, std::ptrdiff_t length) {
-    runtime_assert(static_cast<bool>(handle), "Invalid uniform buffer handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid uniform buffer handle given to GL renderer!");
     glBindBuffer(GL_UNIFORM_BUFFER, handle.handle);
     glBufferSubData(GL_UNIFORM_BUFFER, start, length, buffer);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void Renderer::destroyUniformBuffer(Renderer::UniformBufferHandle handle) {
-    runtime_assert(static_cast<bool>(handle), "Invalid uniform buffer handle given to GL renderer");
+    runtime_assert(static_cast<bool>(handle), "Invalid uniform buffer handle given to GL renderer!");
     glDeleteBuffers(1, &handle.handle);
 }
 
@@ -698,7 +698,7 @@ Renderer::MeshHandle Renderer::createMesh(const std::vector<Vertex>& vertices, c
 }
 
 void Renderer::updateMesh(MeshHandle* handle, const std::vector<Vertex>& vertices, const std::vector<Index>& indices, MeshDrawMode drawMode) {
-    runtime_assert(static_cast<bool>(*handle), "Invalid mesh handle given to GL renderer");
+    runtime_assert(static_cast<bool>(*handle), "Invalid mesh handle given to GL renderer!");
     const auto glDrawMode = getMeshDrawModeGL(drawMode);
     glBindBuffer(GL_ARRAY_BUFFER, handle->vboHandle);
     glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(vertices.size() * sizeof(Vertex)), vertices.data(), glDrawMode);

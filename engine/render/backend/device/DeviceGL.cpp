@@ -187,9 +187,6 @@ static int findFreeWindow() {
         handle.frameIsSelfOwned = true;
     }
 
-    handle.surface.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-    handle.surface.setMaterial(Resource::getResource<MaterialFrameBuffer>("file://materials/window.json", handle.frame->getRawHandle()).castAssert<IMaterial>());
-
     int iconWidth, iconHeight, bitsPerPixel;
     auto* icon = Image::getUncompressedImage(FilesystemResourceProvider::getResourceAbsolutePath("file://textures/ui/icon.png"), &iconWidth, &iconHeight, &bitsPerPixel, 4, false);
     if (icon) {
@@ -217,9 +214,8 @@ static int findFreeWindow() {
 void Device::refreshWindows() {
     // Render each window
     for (auto& handle : WINDOWS) {
-        if (!handle) {
+        if (!handle)
             continue;
-        }
 
         if (!Device::isWindowVisible(&handle)) {
             handle.frame->update();
@@ -232,12 +228,12 @@ void Device::refreshWindows() {
         ImGui::SetCurrentContext(handle.imguiContext);
         setImGuiConfigPath();
 
-        Renderer::pushFrameBuffer(*handle.frame->getRawHandle());
         Renderer::startImGuiFrame(handle.window);
 
         handle.frame->update();
         handle.frame->render(glm::identity<glm::mat4>());
 
+        Renderer::pushFrameBuffer(*handle.frame->getRawHandle());
         for (auto& [uuid, panel] : handle.panels) {
             panel->render();
         }
@@ -247,7 +243,10 @@ void Device::refreshWindows() {
         Renderer::endImGuiFrame();
         Renderer::popFrameBuffer();
 
-        handle.surface.render(glm::identity<glm::mat4>());
+        MeshDataBuilder surface;
+        surface.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
+        surface.setMaterial(Resource::getUniqueUncachedResource<MaterialFrameBuffer>("file://materials/window.json", handle.frame->getRawHandle()).castAssert<IMaterial>());
+        surface.render(glm::identity<glm::mat4>());
 
         glEnable(GL_DEPTH_TEST);
 

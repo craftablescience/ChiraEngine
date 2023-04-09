@@ -17,7 +17,6 @@ class IPanel;
 namespace chira::Device {
 
 struct WindowHandle {
-    MeshDataBuilder surface;
     std::unordered_map<uuids::uuid, IPanel*> panels{};
     SDL_Window* window = nullptr;
     ImGuiContext* imguiContext = nullptr;
