@@ -32,7 +32,7 @@ public:
     void setSkybox(const std::string& cubemapId);
     [[nodiscard]] SharedPointer<MaterialCubemap> getSkybox() const;
     [[nodiscard]] LightManager* getLightManager();
-    [[nodiscard]] Renderer::FrameBufferHandle getRawHandle() const;
+    [[nodiscard]] Renderer::FrameBufferHandle* getRawHandle();
 protected:
     ColorRGB backgroundColor{};
     Renderer::FrameBufferHandle handle{};

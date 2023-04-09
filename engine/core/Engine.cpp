@@ -52,7 +52,7 @@ void Engine::preInit(int argc, const char* const argv[]) {
     PluginRegistry::preinitAll();
 }
 
-void Engine::init() {
+void Engine::init(bool visibleSplashScreen /*= true*/) {
     Engine::started = true;
 
     if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER)) {
@@ -60,7 +60,10 @@ void Engine::init() {
         exit(EXIT_FAILURE);
     }
 
-    Engine::device.reset(new Device{TR("ui.window.title")});
+    if (!Renderer::initBackendAndCreateSplashscreen(visibleSplashScreen)) {
+        LOG_ENGINE.error("Failed to initialize graphics!");
+        exit(EXIT_FAILURE);
+    }
 
 #ifdef DEBUG
     if (!Renderer::setupForDebugging()) {
@@ -68,13 +71,24 @@ void Engine::init() {
     }
 #endif
 
-    Engine::device->displaySplashScreen();
-
     // Start up some auto-registered stuff (order is random!)
     PluginRegistry::initAll();
 
     IMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     IMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
+
+    // Start script VM
+    AngelScriptVM::init();
+
+    // Create default resources
+    Resource::createDefaultResources();
+
+    // Any events fired?
+    Events::update();
+
+    Renderer::destroySplashscreen();
+
+    Engine::device.reset(new Device{TR("ui.window.title")});
 
     // Add console UI panel
     auto consoleID = Engine::device->addPanel(new ConsolePanel{});
@@ -89,15 +103,6 @@ void Engine::init() {
         auto resourceUsageTracker = Engine::device->getPanel(resourceUsageTrackerID);
         resourceUsageTracker->setVisible(!resourceUsageTracker->isVisible());
     });
-
-    // Start script VM
-    AngelScriptVM::init();
-
-    // Create default resources
-    Resource::createDefaultResources();
-
-    // Any events fired?
-    Events::update();
 }
 
 void Engine::run() {

@@ -150,6 +150,6 @@ LightManager* Frame::getLightManager() {
     return &this->lightManager;
 }
 
-Renderer::FrameBufferHandle Frame::getRawHandle() const {
-    return this->handle;
+Renderer::FrameBufferHandle* Frame::getRawHandle() {
+    return &this->handle;
 }

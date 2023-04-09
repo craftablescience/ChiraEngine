@@ -9,6 +9,19 @@ struct ImGuiContext;
 
 namespace chira {
 
+namespace Renderer {
+
+struct Window {
+
+};
+
+[[nodiscard]] bool initBackendAndCreateSplashscreen(bool splashScreenVisible);
+void destroySplashscreen();
+
+
+
+} // namespace Renderer
+
 class IPanel;
 
 class Device {
@@ -45,21 +58,17 @@ public:
     [[nodiscard]] bool shouldCloseAfterThisFrame() const;
     void closeAfterThisFrame(bool yes = true);
 
-    /// Renders the splashscreen to the window's default framebuffer
-    void displaySplashScreen();
-
 private:
     Frame frame;
     bool visible = true;
     MeshDataBuilder surface{};
     SDL_Window* window = nullptr;
-    void* glContext = nullptr;
     ImGuiContext* imguiContext = nullptr;
     bool mouseCaptured = false, iconified = false, shouldClose = false;
     int width = -1, height = -1;
     std::unordered_map<uuids::uuid, IPanel*> panels{};
 
-    bool createGLFWWindow(std::string_view title);
+    bool createWindow(std::string_view title);
 };
 
 } // namespace chira

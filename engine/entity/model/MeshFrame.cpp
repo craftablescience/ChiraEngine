@@ -1,17 +1,17 @@
 #include "MeshFrame.h"
 
-#include <render/material/MaterialFramebuffer.h>
+#include <render/material/MaterialFrameBuffer.h>
 
 using namespace chira;
 
 MeshFrame::MeshFrame(std::string name_, int width_, int height_, ColorRGB backgroundColor_, bool smoothResize)
     : Frame(std::move(name_), width_, height_, backgroundColor_, smoothResize) {
-    this->mesh.getMesh()->setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/unlitTextured.json", this).castAssert<IMaterial>());
+    this->mesh.getMesh()->setMaterial(Resource::getResource<MaterialFrameBuffer>("file://materials/unlitTextured.json", &this->handle).castAssert<IMaterial>());
 }
 
 MeshFrame::MeshFrame(int width_, int height_, ColorRGB backgroundColor_, bool smoothResize)
     : Frame(width_, height_, backgroundColor_, smoothResize) {
-    this->mesh.getMesh()->setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/unlitTextured.json", this).castAssert<IMaterial>());
+    this->mesh.getMesh()->setMaterial(Resource::getResource<MaterialFrameBuffer>("file://materials/unlitTextured.json", &this->handle).castAssert<IMaterial>());
 }
 
 void MeshFrame::render(glm::mat4 parentTransform) {

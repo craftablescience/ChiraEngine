@@ -12,7 +12,7 @@
 #include <event/Events.h>
 #include <loader/image/Image.h>
 #include <resource/provider/FilesystemResourceProvider.h>
-#include <render/material/MaterialFramebuffer.h>
+#include <render/material/MaterialFrameBuffer.h>
 #include <render/material/MaterialTextured.h>
 #include <ui/Font.h>
 #include <ui/IPanel.h>
@@ -59,24 +59,33 @@ ConVar win_vsync{"win_vsync", true, "Limit the FPS to your monitor's resolution.
 [[maybe_unused]]
 ConVar input_raw_mouse_motion{"input_raw_mouse_motion", true, "Get more accurate mouse motion.", CON_FLAG_CACHE};
 
+Renderer::FrameBufferHandle WINDOW_FRAMEBUFFER_HANDLE{};
+
+static inline void resizeCurrentWindowFrameBuffer(int width, int height) {
+    Renderer::recreateFrameBuffer(&WINDOW_FRAMEBUFFER_HANDLE, width, height, WrapMode::REPEAT, WrapMode::REPEAT, FilterMode::LINEAR, true);
+}
+
 static void setImGuiConfigPath() {
     static std::string configPath = Config::getConfigFile("imgui.ini");
     ImGui::GetIO().IniFilename = configPath.c_str();
 }
 
-bool Device::createGLFWWindow(std::string_view title) {
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, GL_VERSION_MAJOR);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, GL_VERSION_MINOR);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
+SDL_Window* SPLASHSCREEN = nullptr;
+void* GL_CONTEXT = nullptr;
 
-    int glContextFlags;
-    SDL_GL_GetAttribute(SDL_GL_CONTEXT_FLAGS, &glContextFlags);
-    glContextFlags |= SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG;
-#ifdef DEBUG
-    glContextFlags |= SDL_GL_CONTEXT_DEBUG_FLAG;
-#endif
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, glContextFlags);
+bool Renderer::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
+    static bool alreadyRan = false;
+    if (alreadyRan)
+        return false;
+    alreadyRan = true;
+
+    int windowFlags =
+            SDL_WINDOW_OPENGL |
+            SDL_WINDOW_ALLOW_HIGHDPI |
+            SDL_WINDOW_ALWAYS_ON_TOP |
+            SDL_WINDOW_BORDERLESS |
+            (splashScreenVisible ? SDL_WINDOW_SHOWN : SDL_WINDOW_HIDDEN);
+    int width = 640, height = 480;
 
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
@@ -86,6 +95,69 @@ bool Device::createGLFWWindow(std::string_view title) {
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
+    SPLASHSCREEN = SDL_CreateWindow("Loading...", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, windowFlags);
+    if (!SPLASHSCREEN) {
+        LOG_WINDOW.error("Splashscreen window creation failed! Error: {}", SDL_GetError());
+        return false;
+    }
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, GL_VERSION_MAJOR);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, GL_VERSION_MINOR);
+
+    int glContextFlags;
+    SDL_GL_GetAttribute(SDL_GL_CONTEXT_FLAGS, &glContextFlags);
+    glContextFlags |= SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG;
+#ifdef DEBUG
+    glContextFlags |= SDL_GL_CONTEXT_DEBUG_FLAG;
+#endif
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, glContextFlags);
+
+    GL_CONTEXT = SDL_GL_CreateContext(SPLASHSCREEN);
+    if (!GL_CONTEXT) {
+        LOG_WINDOW.error("Splashscreen window context creation failed! Error: {}", SDL_GetError());
+        return false;
+    }
+    if (!gladLoadGL((GLADloadfunc) SDL_GL_GetProcAddress)) {
+        LOG_WINDOW.error("{} must be available to run this program!", GL_VERSION_STRING_PRETTY);
+        return false;
+    }
+    if (SDL_GL_MakeCurrent(SPLASHSCREEN, GL_CONTEXT)) {
+        LOG_WINDOW.error("Splashscreen window context failed to be made current! Error: {}", SDL_GetError());
+        return false;
+    }
+
+    Renderer::pushFrameBuffer(WINDOW_FRAMEBUFFER_HANDLE);
+    resizeCurrentWindowFrameBuffer(width, height);
+    glViewport(0, 0, width, height);
+
+    MeshDataBuilder plane;
+    plane.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
+    plane.setMaterial(Resource::getResource<MaterialTextured>("file://materials/splashscreen.json").castAssert<IMaterial>());
+    plane.render(glm::identity<glm::mat4>());
+
+    glDisable(GL_DEPTH_TEST);
+    Renderer::popFrameBuffer();
+
+    MeshDataBuilder windowSurface;
+    windowSurface.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
+    windowSurface.setMaterial(Resource::getResource<MaterialFrameBuffer>("file://materials/window.json", &WINDOW_FRAMEBUFFER_HANDLE).castAssert<IMaterial>());
+    windowSurface.render(glm::identity<glm::mat4>());
+
+    glEnable(GL_DEPTH_TEST);
+    SDL_GL_SwapWindow(SPLASHSCREEN);
+
+    return true;
+}
+
+void Renderer::destroySplashscreen() {
+    if (SPLASHSCREEN) {
+        SDL_DestroyWindow(SPLASHSCREEN);
+        SPLASHSCREEN = nullptr;
+    }
+}
+
+bool Device::createWindow(std::string_view title) {
     int windowFlags =
             SDL_WINDOW_OPENGL |
             SDL_WINDOW_ALLOW_HIGHDPI |
@@ -99,14 +171,11 @@ bool Device::createGLFWWindow(std::string_view title) {
     }
     this->window = SDL_CreateWindow(title.data(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->width, this->height, windowFlags);
     if (!this->window) {
-        LOG_WINDOW.error("Window creation failed!");
+        LOG_WINDOW.error("Window creation failed! Error: {}", SDL_GetError());
         return false;
     }
-    this->glContext = SDL_GL_CreateContext(this->window);
-    SDL_GL_MakeCurrent(this->window, this->glContext);
-
-    if (!gladLoadGL((GLADloadfunc) SDL_GL_GetProcAddress)) {
-        LOG_WINDOW.error("OpenGL {} must be available to run this program", GL_VERSION_STRING_PRETTY);
+    if (SDL_GL_MakeCurrent(this->window, GL_CONTEXT)) {
+        LOG_WINDOW.error("Window context failed to be made current! Error: {}", SDL_GetError());
         return false;
     }
 
@@ -129,7 +198,7 @@ bool Device::createGLFWWindow(std::string_view title) {
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_DockingEnable;
     setImGuiConfigPath();
 
-    Renderer::initImGui(this->window, this->glContext);
+    Renderer::initImGui(this->window, GL_CONTEXT);
 
     auto defaultFont = Resource::getUniqueResource<Font>("file://fonts/default.json");
     ImGui::GetIO().FontDefault = defaultFont->getFont();
@@ -141,17 +210,17 @@ Device::Device(std::string_view title) : frame(win_width.getValue<int>(), win_he
     this->width = win_width.getValue<int>();
     this->height = win_height.getValue<int>();
     this->frame.setVisible(false);
-    bool success = this->createGLFWWindow(title);
+    bool success = this->createWindow(title);
     runtime_assert(success, "Could not create SDL window!");
     if (success) {
         this->frame.recreateFramebuffer();
         this->surface.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-        this->surface.setMaterial(Resource::getResource<MaterialFramebuffer>("file://materials/window.json", &this->frame).castAssert<IMaterial>());
+        this->surface.setMaterial(Resource::getResource<MaterialFrameBuffer>("file://materials/window.json", this->frame.getRawHandle()).castAssert<IMaterial>());
     }
 }
 
 void Device::refresh() {
-    SDL_GL_MakeCurrent(this->window, this->glContext);
+    SDL_GL_MakeCurrent(this->window, GL_CONTEXT);
     ImGui::SetCurrentContext(this->imguiContext);
 
     setImGuiConfigPath();
@@ -168,7 +237,7 @@ void Device::refresh() {
 
     glDisable(GL_DEPTH_TEST);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, this->frame.getRawHandle().fboHandle);
+    glBindFramebuffer(GL_FRAMEBUFFER, this->frame.getRawHandle()->fboHandle);
     Renderer::endImGuiFrame();
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -184,7 +253,7 @@ Device::~Device() {
     ImGui::SetCurrentContext(this->imguiContext);
     Renderer::destroyImGui();
     ImGui::DestroyContext(this->imguiContext);
-    SDL_GL_DeleteContext(this->glContext);
+    SDL_GL_DeleteContext(GL_CONTEXT);
     SDL_DestroyWindow(this->window);
 }
 
@@ -321,19 +390,4 @@ bool Device::shouldCloseAfterThisFrame() const {
 
 void Device::closeAfterThisFrame(bool yes /*= true*/) {
     this->shouldClose = yes;
-}
-
-void Device::displaySplashScreen() {
-    SDL_GL_MakeCurrent(this->window, this->glContext);
-    Renderer::pushFrameBuffer(this->frame.getRawHandle());
-    MeshDataBuilder plane;
-    plane.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-    plane.setMaterial(Resource::getResource<MaterialTextured>("file://materials/splashscreen.json").castAssert<IMaterial>());
-    plane.render(glm::identity<glm::mat4>());
-    glDisable(GL_DEPTH_TEST);
-    Renderer::popFrameBuffer();
-    glViewport(0, 0, this->width, this->height);
-    this->surface.render(glm::identity<glm::mat4>());
-    glEnable(GL_DEPTH_TEST);
-    SDL_GL_SwapWindow(this->window);
 }
