@@ -1,0 +1,4 @@
+<map id="chira::PerspectiveViewUBO" name="chira::PerspectiveViewUBO">
+<area shape="rect" id="node1" title="Stores two mat4 values, named PV." alt="" coords="5,109,204,136"/>
+<area shape="rect" id="node2" href="$dd/db8/classchira_1_1_uniform_buffer_object.html" title=" " alt="" coords="7,5,203,61"/>
+</map>
