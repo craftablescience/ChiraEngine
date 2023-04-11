@@ -62,6 +62,8 @@ next to the executable. Check the GitHub Actions script to see which DLLs need c
 - stb_image v2.27
 - stduuid v1.1
 
+[doxygen-awesome-css](https://github.com/jothepro/doxygen-awesome-css) is used in the Doxygen documentation.
+
 ## Development (Windows)
 - **CLion**: The project will compile without any prior configuration, but you will most likely need to install the Windows SDK (see below).
 
