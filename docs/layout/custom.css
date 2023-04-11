@@ -1,0 +1,19 @@
+@media (prefers-color-scheme: dark) {
+    html:not(.light-mode) {
+        --primary-color         : #AB54D1;
+        --primary-dark-color    : #AB54D1;
+        --primary-light-color   : #AB54D1;
+
+        /* --code-background: #29175E;
+        --fragment-background: #29175E; */
+
+        --code-background: #303033;
+        --fragment-background: #303033;
+
+        --page-background-color: #0F0F0F;
+        --side-nav-background: #242424;
+        --header-background: var(--side-nav-background);
+
+        --searchbar-background-color: #29175E;
+    }
+}

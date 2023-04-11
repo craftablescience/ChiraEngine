@@ -12,6 +12,9 @@ out*/
 
 .ccls-cache
 
+# Doxygen
+docs/html
+
 # macOS
 */.DS_Store
 .DS_Store
