@@ -5,8 +5,6 @@
 
 namespace chira {
 
-// todo(as): this thing crashes the engine on exit and i cant figure out why
-
 struct AngelScriptComponent {
 public:
     explicit AngelScriptComponent(const std::string& scriptID)

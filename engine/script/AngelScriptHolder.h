@@ -14,7 +14,7 @@ namespace chira {
 class AngelScriptHolder {
 public:
     explicit AngelScriptHolder(std::string identifier_);
-    ~AngelScriptHolder();
+
     [[nodiscard]] std::string_view getIdentifier() const {
         return this->identifier;
     }
