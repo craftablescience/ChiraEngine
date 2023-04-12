@@ -1,7 +1,5 @@
 #include "MaterialFrameBuffer.h"
 
-#include <entity/root/Frame.h>
-
 using namespace chira;
 
 void MaterialFrameBuffer::compile(const nlohmann::json& properties) {
