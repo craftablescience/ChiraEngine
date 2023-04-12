@@ -1,6 +1,8 @@
 #pragma once
 
+#include <concepts>
 #include <type_traits>
+
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 
