@@ -91,7 +91,6 @@ var hierarchy =
         [ "chira::IMaterial", "df/d5f/classchira_1_1_i_material.html", [
           [ "chira::MaterialCubemap", "dc/d74/classchira_1_1_material_cubemap.html", null ],
           [ "chira::MaterialFrameBuffer", "d3/d3c/classchira_1_1_material_frame_buffer.html", null ],
-          [ "chira::MaterialFrameBuffer", "d3/d3c/classchira_1_1_material_frame_buffer.html", null ],
           [ "chira::MaterialPhong", "d8/da4/classchira_1_1_material_phong.html", null ],
           [ "chira::MaterialTextured", "d6/d69/classchira_1_1_material_textured.html", null ],
           [ "chira::MaterialUntextured", "d9/d2f/classchira_1_1_material_untextured.html", null ]

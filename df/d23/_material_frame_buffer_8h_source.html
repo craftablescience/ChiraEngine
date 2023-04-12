@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Chira Engine: engine/render/material/MaterialFrameBuffer.cpp Source File</title>
+<title>Chira Engine: engine/render/material/MaterialFrameBuffer.h Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -82,7 +82,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('df/dd1/material_2_material_framebuffer_8cpp_source.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('df/d23/_material_frame_buffer_8h_source.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -102,31 +102,40 @@ $(document).ready(function(){initNavTree('df/dd1/material_2_material_framebuffer
 
 <div class="header">
   <div class="headertitle">
-<div class="title">MaterialFrameBuffer.cpp</div>  </div>
+<div class="title">MaterialFrameBuffer.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;MaterialFrameBuffer.h&quot;</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;entity/root/Frame.h&gt;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;MaterialUntextured.h&quot;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">using namespace </span>chira;</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">namespace </span>chira {</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keywordtype">void</span> MaterialFrameBuffer::compile(<span class="keyword">const</span> nlohmann::json&amp; properties) {</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    Serialize::fromJSON(<span class="keyword">this</span>, properties);</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    this-&gt;shader-&gt;use();</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    this-&gt;shader-&gt;setUniform(<span class="stringliteral">&quot;texture0&quot;</span>, 0);</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;}</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keywordtype">void</span> MaterialFrameBuffer::use()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    IMaterial::use();</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    Renderer::useFrameBufferTexture(*this-&gt;handle, TextureUnit::G0);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;}</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">class </span>Frame;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="../../d3/d3c/classchira_1_1_material_frame_buffer.html">    9</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d3/d3c/classchira_1_1_material_frame_buffer.html">MaterialFrameBuffer</a> final : <span class="keyword">public</span> <a class="code" href="../../df/d5f/classchira_1_1_i_material.html">IMaterial</a> {</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <a class="code" href="../../d3/d3c/classchira_1_1_material_frame_buffer.html">MaterialFrameBuffer</a>(std::string identifier_, <a class="code" href="../../dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html">Renderer::FrameBufferHandle</a>* handle_)</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        : <a class="code" href="../../df/d5f/classchira_1_1_i_material.html">IMaterial</a>(std::move(identifier_))</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        , handle(handle_) {}</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">void</span> compile(<span class="keyword">const</span> nlohmann::json&amp; properties) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordtype">void</span> use() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="../../dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html">Renderer::FrameBufferHandle</a>* handle;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    CHIRA_PROPS_INHERITED(<a class="code" href="../../df/d5f/classchira_1_1_i_material.html">IMaterial</a>) ();</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;};</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;} <span class="comment">// namespace chira</span></div>
+<div class="ttc" id="aclasschira_1_1_i_material_html"><div class="ttname"><a href="../../df/d5f/classchira_1_1_i_material.html">chira::IMaterial</a></div><div class="ttdef"><b>Definition:</b> <a href="../../db/de2/_material_factory_8h_source.html#l00011">MaterialFactory.h:11</a></div></div>
+<div class="ttc" id="aclasschira_1_1_material_frame_buffer_html"><div class="ttname"><a href="../../d3/d3c/classchira_1_1_material_frame_buffer.html">chira::MaterialFrameBuffer</a></div><div class="ttdef"><b>Definition:</b> <a href="../../df/d23/_material_frame_buffer_8h_source.html#l00009">MaterialFrameBuffer.h:9</a></div></div>
+<div class="ttc" id="astructchira_1_1_renderer_1_1_frame_buffer_handle_html"><div class="ttname"><a href="../../dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html">chira::Renderer::FrameBufferHandle</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d26/_backend_g_l_8h_source.html#l00025">BackendGL.h:25</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="../../dir_6eaa9a4b68db9d3a4b16103d94f334fb.html">render</a></li><li class="navelem"><a class="el" href="../../dir_0c5d6466e08d89b2c91842fdc3ffe2e0.html">material</a></li><li class="navelem"><b>MaterialFrameBuffer.cpp</b></li>
+    <li class="navelem"><a class="el" href="../../dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="../../dir_6eaa9a4b68db9d3a4b16103d94f334fb.html">render</a></li><li class="navelem"><a class="el" href="../../dir_0c5d6466e08d89b2c91842fdc3ffe2e0.html">material</a></li><li class="navelem"><b>MaterialFrameBuffer.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
