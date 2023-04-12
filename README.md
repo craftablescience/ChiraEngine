@@ -51,6 +51,7 @@ next to the executable. Check the GitHub Actions script to see which DLLs need c
 - AngelScript v2.35.1
 - Dear ImGui v1.89.5
 - Discord RPC
+- entt v3.11.1
 - {fmt} v9.1.0
 - GLAD (OpenGL 4.1 Core / OpenGL 4.3 Core)
 - GLM v0.9.9

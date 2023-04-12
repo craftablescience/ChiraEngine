@@ -3,7 +3,6 @@
 #include <SDL.h>
 
 #include <config/ConEntry.h>
-#include <entity/light/LightManager.h>
 #include <event/Events.h>
 #include <i18n/TranslationManager.h>
 #include <input/InputManager.h>
@@ -27,7 +26,7 @@ CHIRA_CREATE_LOG(ENGINE);
 
 [[maybe_unused]]
 ConCommand quit{"quit", "Quits the game or application.", [] {
-    Device::queueDestroyWindow(Engine::getDevice(), true);
+    Device::queueDestroyWindow(Engine::getMainWindow(), true);
 }};
 
 [[maybe_unused]]
@@ -36,14 +35,14 @@ ConCommand crash{"crash", "Force-crashes the game or application (for debugging 
 }, CON_FLAG_CHEAT};
 
 ConVar win_width{"win_width", 1280, "The width of the main window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) {
-    if (Engine::getDevice()) {
-        Device::setWindowSize(Engine::getDevice(), static_cast<int>(std::stoi(newValue.data())), Device::getWindowSize(Engine::getDevice()).y);
+    if (Engine::getMainWindow()) {
+        Device::setWindowSize(Engine::getMainWindow(), static_cast<int>(std::stoi(newValue.data())), Device::getWindowSize(Engine::getMainWindow()).y);
     }
 }};
 
 ConVar win_height{"win_height", 720, "The height of the main window.", CON_FLAG_CACHE, [](ConVar::CallbackArg newValue) {
-    if (Engine::getDevice()) {
-        Device::setWindowSize(Engine::getDevice(), Device::getWindowSize(Engine::getDevice()).x, static_cast<int>(std::stoi(newValue.data())));
+    if (Engine::getMainWindow()) {
+        Device::setWindowSize(Engine::getMainWindow(), Device::getWindowSize(Engine::getMainWindow()).x, static_cast<int>(std::stoi(newValue.data())));
     }
 }};
 

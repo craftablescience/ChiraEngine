@@ -1,8 +1,7 @@
 #pragma once
 
 #include <unordered_map>
-#include <entity/root/Frame.h>
-#include <utility/UUIDGenerator.h>
+#include <entity/Layer.h>
 
 struct SDL_Window;
 struct ImGuiContext;
@@ -26,9 +25,8 @@ struct WindowHandle {
     bool mouseCaptured = false;
     bool shouldClose = false;
 
-    // todo(render): get rid of Frame here
-    Frame* frame = nullptr;
-    bool frameIsSelfOwned = false;
+    Layer* layer = nullptr;
+    bool layerIsSelfOwned = false;
 
     explicit inline operator bool() const { return window; }
     inline bool operator!() const { return !window; }
@@ -39,11 +37,11 @@ void destroySplashscreen();
 void destroyBackend();
 
 /// Note: If an icon image is present, it must be RGBA8888
-[[nodiscard]] WindowHandle* createWindow(int width, int height, std::string_view title, Frame* frame);
+[[nodiscard]] WindowHandle* createWindow(int width, int height, std::string_view title, Layer* layer);
 void refreshWindows();
 [[nodiscard]] int getWindowCount();
 
-[[nodiscard]] Frame* getWindowFrame(WindowHandle* handle);
+[[nodiscard]] Layer* getWindowLayer(WindowHandle* handle);
 
 void setWindowMaximized(WindowHandle* handle, bool maximize);
 [[nodiscard]] bool isWindowMaximized(WindowHandle* handle);

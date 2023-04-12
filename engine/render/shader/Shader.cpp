@@ -26,7 +26,8 @@ void Shader::compile(const nlohmann::json& properties) {
         PerspectiveViewUBO::get().bindToShader(this->handle);
     }
     if (this->lit) {
-        LightsUBO::get().bindToShader(this->handle);
+        // todo(light)
+        // LightsUBO::get().bindToShader(this->handle);
     }
 }
 
@@ -39,11 +40,7 @@ Shader::~Shader() {
 }
 
 void Shader::addPreprocessorSymbol(const std::string& name, const std::string& value) {
-    if (!Shader::preprocessorSymbols.contains(name)) {
-        Shader::preprocessorSymbols.insert(std::pair<std::string, std::string>{name, value});
-    } else {
-        Shader::preprocessorSymbols[name] = value;
-    }
+    Shader::preprocessorSymbols[name] = value;
 }
 
 void Shader::setPreprocessorPrefix(const std::string& prefix) {

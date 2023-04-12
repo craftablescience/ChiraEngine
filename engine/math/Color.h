@@ -4,7 +4,7 @@ namespace chira {
 
 struct ColorR {
     float r;
-    explicit ColorR(float R);
+    ColorR(float R); // NOLINT(google-explicit-constructor)
     ColorR();
     bool operator==(const ColorR& other) const {
         return this->r == other.r;
@@ -18,7 +18,7 @@ struct ColorRG {
     float r;
     float g;
     ColorRG(float R, float G);
-    explicit ColorRG(float all);
+    ColorRG(float all); // NOLINT(google-explicit-constructor)
     ColorRG();
     bool operator==(const ColorRG& other) const {
         return this->r == other.r && this->g == other.g;
@@ -33,7 +33,7 @@ struct ColorRGB {
     float g;
     float b;
     ColorRGB(float R, float G, float B);
-    explicit ColorRGB(float all);
+    ColorRGB(float all); // NOLINT(google-explicit-constructor)
     ColorRGB();
     bool operator==(const ColorRGB& other) const {
         return this->r == other.r && this->g == other.g && this->b == other.b;
@@ -49,8 +49,8 @@ struct ColorRGBA {
     float b;
     float a;
     ColorRGBA(float R, float G, float B, float A = 1.f);
-    explicit ColorRGBA(float all, float A = 1.f);
-    explicit ColorRGBA(ColorRGB color, float A = 1.f);
+    ColorRGBA(float all, float A = 1.f); // NOLINT(google-explicit-constructor)
+    ColorRGBA(ColorRGB color, float A = 1.f); // NOLINT(google-explicit-constructor)
     ColorRGBA();
     bool operator==(const ColorRGBA& other) const {
         return this->r == other.r && this->g == other.g && this->b == other.b && this->a == other.a;

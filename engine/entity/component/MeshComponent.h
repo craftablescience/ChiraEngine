@@ -1,22 +1,25 @@
 #pragma once
 
-#include <entity/Entity.h>
 #include <render/mesh/MeshDataResource.h>
+#include "TransformComponent.h"
 
 namespace chira {
 
-class Mesh : public Entity {
-public:
-    Mesh(std::string name_, const std::string& meshId);
-    explicit Mesh(const std::string& meshId);
-    void render(glm::mat4 parentTransform) override;
+struct MeshComponent {
+    explicit MeshComponent(const std::string& meshId)
+            : mesh(Resource::getResource<MeshDataResource>(meshId))
+            , transform(nullptr) {}
+
     [[nodiscard]] SharedPointer<MeshDataResource> getMeshResource() const {
         return this->mesh;
     }
+
     [[nodiscard]] std::vector<byte> getMeshData(const std::string& meshLoader) const {
         return this->mesh->getMeshData(meshLoader);
     }
-private:
+
+public:
+    TransformComponent* transform;
     SharedPointer<MeshDataResource> mesh;
 };
 

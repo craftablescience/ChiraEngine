@@ -22,8 +22,7 @@ public:
     static void run();
 
     /// Returns a pointer to the main window of the application.
-    [[nodiscard]] static Device::WindowHandle* getDevice() { return Engine::mainWindow; }
-    [[nodiscard]] static Frame* getRoot() { return Device::getWindowFrame(Engine::mainWindow); }
+    [[nodiscard]] static Device::WindowHandle* getMainWindow() { return Engine::mainWindow; }
     [[nodiscard]] static bool isStarted();
     /// Only guaranteed to work after run() in a render method
     [[nodiscard]] static uint64_t getDeltaTicks();

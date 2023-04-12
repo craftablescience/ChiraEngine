@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <entity/component/LightComponents.h>
 #include <math/Types.h>
 #include <render/backend/RenderBackend.h>
 #include <resource/PropertiesResource.h>
@@ -83,7 +84,11 @@ public:
     static void setPreprocessorPrefix(const std::string& prefix);
     static void setPreprocessorSuffix(const std::string& suffix);
 private:
-    static inline std::unordered_map<std::string, std::string> preprocessorSymbols;
+    static inline std::unordered_map<std::string, std::string> preprocessorSymbols{
+            {"DIRECTIONAL_LIGHT_MAX", std::to_string(DIRECTIONAL_LIGHT_MAX)},
+            {"POINT_LIGHT_MAX", std::to_string(POINT_LIGHT_MAX)},
+            {"SPOT_LIGHT_MAX", std::to_string(SPOT_LIGHT_MAX)},
+    };
     static inline std::string preprocessorPrefix = std::string{SHADER_PREPROCESSOR_DEFAULT_PREFIX};
     static inline std::string preprocessorSuffix = std::string{SHADER_PREPROCESSOR_DEFAULT_SUFFIX};
 

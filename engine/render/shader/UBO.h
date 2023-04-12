@@ -2,7 +2,7 @@
 
 #include <cstddef>
 #include <string>
-#include <entity/light/LightManager.h>
+#include <entity/component/LightComponents.h>
 #include <math/Types.h>
 #include <render/backend/RenderBackend.h>
 
@@ -36,17 +36,15 @@ private:
     PerspectiveViewUBO();
 };
 
-constexpr const std::size_t DIRECTIONAL_LIGHT_DATA_SIZE = glm::VEC4F_SIZE  + sizeof(DirectionalLightData);
-constexpr const std::size_t POINT_LIGHT_DATA_SIZE       = glm::VEC4F_SIZE  + sizeof(PointLightData);
-constexpr const std::size_t SPOT_LIGHT_DATA_SIZE   = (2 * glm::VEC4F_SIZE) + sizeof(SpotLightData);
+// todo(render): lighting is broken right now? seems like the buffer is being updated properly in renderdoc...
 
 /// Stores lights
-struct LightsUBO final : public UniformBufferObject<(DIRECTIONAL_LIGHT_DATA_SIZE * DIRECTIONAL_LIGHT_COUNT) +
-                                                    (POINT_LIGHT_DATA_SIZE       * POINT_LIGHT_COUNT) +
-                                                    (SPOT_LIGHT_DATA_SIZE        * SPOT_LIGHT_COUNT) +
+struct LightsUBO final : public UniformBufferObject<((4 * glm::VEC4F_SIZE) * DIRECTIONAL_LIGHT_MAX) +
+                                                    ((5 * glm::VEC4F_SIZE) * POINT_LIGHT_MAX) +
+                                                    ((6 * glm::VEC4F_SIZE) * SPOT_LIGHT_MAX) +
                                                     glm::VEC4F_SIZE> {
     static LightsUBO& get();
-    void update(DirectionalLight* directionalLights[], PointLight* pointLights[], SpotLight* spotLights[], glm::vec3 numberOfLights) const;
+    void update(DirectionalLightComponent* directionalLights[], PointLightComponent* pointLights[], SpotLightComponent* spotLights[], glm::vec3 numberOfLights) const;
 private:
     LightsUBO();
 };

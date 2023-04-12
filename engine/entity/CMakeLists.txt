@@ -1,11 +1,10 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/camera/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/light/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/logic/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/model/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/root/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/component/CMakeLists.txt)
 
 list(APPEND CHIRA_ENGINE_HEADERS
-        ${CMAKE_CURRENT_LIST_DIR}/Entity.h)
+        ${CMAKE_CURRENT_LIST_DIR}/Entity.h
+        ${CMAKE_CURRENT_LIST_DIR}/Layer.h
+        ${CMAKE_CURRENT_LIST_DIR}/Scene.h)
 
 list(APPEND CHIRA_ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/Entity.cpp)
+        ${CMAKE_CURRENT_LIST_DIR}/Layer.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/Scene.cpp)

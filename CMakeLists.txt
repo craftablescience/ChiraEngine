@@ -267,6 +267,12 @@ list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdpa
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES fmt::fmt)
 
 
+# EnTT
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/entt)
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/entt/src)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES EnTT::EnTT)
+
+
 # GLM
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glm)
 target_compile_definitions(glm INTERFACE GLM_FORCE_SILENT_WARNINGS)
@@ -315,7 +321,7 @@ list(APPEND CHIRA_ENGINE_LINK_LIBRARIES stduuid)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/CMakeLists.txt)
 list(APPEND CHIRA_ENGINE_SOURCES ${CHIRA_ENGINE_HEADERS})
 
-add_library(${PROJECT_NAME} STATIC ${CHIRA_ENGINE_SOURCES})
+add_library(${PROJECT_NAME} ${CHIRA_ENGINE_SOURCES})
 apply_optimizations(${PROJECT_NAME})
 
 if(CHIRA_BUILD_WITH_PCH)

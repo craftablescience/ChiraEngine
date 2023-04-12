@@ -28,6 +28,9 @@
 [submodule "engine/thirdparty/magic_enum"]
 	path = engine/thirdparty/magic_enum
 	url = https://github.com/Neargye/magic_enum
+[submodule "engine/thirdparty/entt"]
+	path = engine/thirdparty/entt
+	url = https://github.com/skypjack/entt
 [submodule "docs/layout/doxygen-awesome-css"]
 	path = docs/layout/doxygen-awesome-css
 	url = https://github.com/jothepro/doxygen-awesome-css

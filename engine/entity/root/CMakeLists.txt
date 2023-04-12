@@ -1,7 +1,0 @@
-list(APPEND CHIRA_ENGINE_HEADERS
-        ${CMAKE_CURRENT_LIST_DIR}/Frame.h
-        ${CMAKE_CURRENT_LIST_DIR}/Group.h)
-
-list(APPEND CHIRA_ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/Frame.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/Group.cpp)
