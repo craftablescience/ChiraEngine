@@ -1,83 +1,122 @@
 #pragma once
 
-#include <unordered_map>
-#include <string>
-#include <string_view>
-#include <vector>
 #include <glm/glm.hpp>
+#include <entt/entt.hpp>
+
 #include <core/Assertions.h>
-#include <math/Matrix.h>
+#include "component/NameComponent.h"
+#include "component/TransformComponent.h"
+#include "component/UUIDComponent.h"
+#include "Scene.h"
 
 namespace chira {
 
-class Group;
-class Frame;
-
-/// The base entity class. Note that the name of an entity stored in the name variable should
-/// match the name assigned to the entity in the parent's entity map.
-/// Note the entity tree must have a Window as the root entity, always!
-/// Window objects are Frame objects, Frame objects are Root objects (the wonders of inheritance)
+/// The base entity class.
 class Entity {
-public:
-    explicit Entity(std::string name_);
-    /// Initializes name to a random UUID.
-    Entity();
-    virtual ~Entity();
+    friend Scene;
 
-    /// Run game logic.
-    virtual void update();
-
-    /// Draw to screen.
-    virtual void render(glm::mat4 parentTransform);
-
-    [[nodiscard]] virtual const Frame* getFrame() const;
-    [[nodiscard]] virtual Frame* getFrame();
-    [[nodiscard]] virtual const Group* getGroup() const;
-    [[nodiscard]] virtual Group* getGroup();
-
-    [[nodiscard]] Entity* getParent() const;
-    [[nodiscard]] std::string_view getName() const;
-
-    [[nodiscard]] Entity* getChild(std::string_view name_) const;
-    template<typename EntityType>
-    [[nodiscard]] EntityType* getChild(std::string_view name_) const {
-        return assert_cast<EntityType*>(this->getChild(name_));
-    }
-    [[nodiscard]] bool hasChild(std::string_view name_) const;
-    virtual std::string_view addChild(Entity* child);
-    virtual void removeChild(std::string_view name_);
-    void removeAllChildren();
-
-    [[nodiscard]] bool isVisible() const;
-    virtual void setVisible(bool visibility);
-
-    virtual void setPosition(glm::vec3 newPos);
-    virtual void setRotation(glm::quat newRot);
-    [[nodiscard]] virtual glm::vec3 getPosition();
-    [[nodiscard]] virtual glm::vec3 getGlobalPosition();
-    /// Note: the global rotation is inaccessible.
-    [[nodiscard]] virtual glm::quat getRotation();
-    virtual void translate(glm::vec3 translateByAmount);
-    virtual void translateWithRotation(glm::vec3 translateByAmount);
-    virtual void rotate(glm::quat rotateByAmount);
-    virtual void rotate(glm::vec3 rotateByAmount);
 protected:
-    Entity* parent = nullptr;
-    std::string name;
-    std::vector<Entity*> children;
-    bool visible = true;
-
-    // The following are in local space and are relative to the parent.
-    glm::vec3 position{};
-    glm::quat rotation = glm::identity<glm::quat>();
-
-    /// For internal use only!
-    void setParent(Entity* newParent) {
-        this->parent = newParent;
+    explicit Entity(Scene* scene_)
+            : handle(scene_->getRegistry().create())
+            , scene(scene_) {
+        this->addComponent<TransformComponent>();
     }
 
-    /// Callback called after parent is set
-    virtual void onAddedToTree() {}
+public:
+    Entity(const Entity&) = default;
+    Entity& operator=(const Entity&) = default;
+    Entity(Entity&&) = default;
+    Entity& operator=(Entity&&) = default;
+
+    template<typename T, typename... Args>
+    T& addComponent(Args&& ...args) {
+        runtime_assert(!this->hasComponent<T>(), "Entity already has this component!");
+        auto& component = this->scene->getRegistry().emplace<T>(this->handle, std::forward<Args>(args)...);
+        if constexpr (CComponentHasTransform<T>) {
+            component.transform = &this->getComponent<TransformComponent>();
+        }
+        return component;
+    }
+
+    template<typename T>
+    [[nodiscard]] T& getComponent() {
+        runtime_assert(this->hasComponent<T>(), "Entity doesn't have this component!");
+        return this->scene->getRegistry().get<T>(this->handle);
+    }
+
+    template<typename T>
+    [[nodiscard]] T& getComponent() const {
+        runtime_assert(this->hasComponent<T>(), "Entity doesn't have this component!");
+        return this->scene->getRegistry().get<T>(this->handle);
+    }
+
+    template<typename T>
+    [[nodiscard]] T* tryGetComponent() const {
+        return this->scene->getRegistry().try_get<T>(this->handle);
+    }
+
+    template<typename T>
+    [[nodiscard]] bool hasComponent() const {
+        return this->scene->getRegistry().all_of<T>(this->handle);
+    }
+
+    template<typename T>
+    void tryRemoveComponent() {
+        this->scene->getRegistry().remove<T>(this->handle);
+    }
+
+    template<typename T>
+    void removeComponent() {
+        runtime_assert(this->hasComponent<T>(), "Entity doesn't have this component!");
+        this->scene->getRegistry().erase<T>(this->handle);
+    }
+
+    [[nodiscard]] std::string getName() const {
+        if (auto nameComponent = this->tryGetComponent<NameComponent>()) {
+            return nameComponent->name;
+        }
+        return uuids::to_string(this->getComponent<UUIDComponent>().uuid);
+    }
+
+    [[nodiscard]] TransformComponent& getTransform() {
+        return this->scene->getRegistry().get<TransformComponent>(this->handle);
+    }
+
+    [[nodiscard]] const TransformComponent& getTransform() const {
+        return this->scene->getRegistry().get<TransformComponent>(this->handle);
+    }
+
+    uuids::uuid getUUID() {
+        return this->getComponent<UUIDComponent>().uuid;
+    }
+
+    uuids::uuid getSceneUUID() {
+        return this->scene->getUUID();
+    }
+
+    [[nodiscard]] entt::entity getRawHandle() const {
+        return this->handle;
+    }
+
+    explicit operator bool() const {
+        return this->scene->getRegistry().valid(this->handle);
+    }
+
+    bool operator!() const {
+        return !static_cast<bool>(*this);
+    }
+
+    bool operator==(const Entity& other) const {
+        return this->handle == other.handle && this->scene == other.scene;
+    }
+
+    bool operator!=(const Entity& other) const {
+        return !(*this == other);
+    }
+
+protected:
+    Scene* scene = nullptr;
+    entt::entity handle = entt::null;
 };
 
 } // namespace chira
