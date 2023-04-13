@@ -107,86 +107,147 @@ $(document).ready(function(){initNavTree('db/d3a/_entity_8h_source.html','../../
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;string_view&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;glm/glm.hpp&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;core/Assertions.h&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;math/Matrix.h&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span>chira {</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;glm/glm.hpp&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;entt/entt.hpp&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;core/Assertions.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;component/NameComponent.h&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;component/TagComponents.h&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;component/TransformComponent.h&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;component/UUIDComponent.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;Scene.h&quot;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">class </span>Group;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">class </span>Frame;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="../../de/dca/classchira_1_1_entity.html">   20</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a> {</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../de/dca/classchira_1_1_entity.html#a980f368aa07ce358583982821533a54a">Entity</a>(std::string name_);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <a class="code" href="../../de/dca/classchira_1_1_entity.html#a980f368aa07ce358583982821533a54a">Entity</a>();</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>();</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../de/dca/classchira_1_1_entity.html#a00b6eeaf99b35c8f8b10b5fbfc1baf4f">update</a>();</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../de/dca/classchira_1_1_entity.html#af7107917a1f31fe7bd6ada4da2043c02">render</a>(glm::mat4 parentTransform);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    [[nodiscard]] <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="../../dd/d2e/classchira_1_1_frame.html">Frame</a>* getFrame() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    [[nodiscard]] <span class="keyword">virtual</span> <a class="code" href="../../dd/d2e/classchira_1_1_frame.html">Frame</a>* getFrame();</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    [[nodiscard]] <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="../../dc/da7/classchira_1_1_group.html">Group</a>* getGroup() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    [[nodiscard]] <span class="keyword">virtual</span> <a class="code" href="../../dc/da7/classchira_1_1_group.html">Group</a>* getGroup();</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    [[nodiscard]] <a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>* getParent() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    [[nodiscard]] std::string_view getName() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    [[nodiscard]] <a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>* getChild(std::string_view name_) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> EntityType&gt;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    [[nodiscard]] EntityType* getChild(std::string_view name_)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordflow">return</span> assert_cast&lt;EntityType*&gt;(this-&gt;getChild(name_));</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> hasChild(std::string_view name_) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">virtual</span> std::string_view addChild(<a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>* child);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> removeChild(std::string_view name_);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">void</span> removeAllChildren();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> isVisible() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> setVisible(<span class="keywordtype">bool</span> visibility);</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span>chira {</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="../../de/dca/classchira_1_1_entity.html">   16</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a> {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">friend</span> <a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>(<a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>* scene_)</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;            : handle(scene_-&gt;getRegistry().create())</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;            , scene(scene_) {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        this-&gt;addComponent&lt;TransformComponent&gt;();</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    }</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>(<span class="keyword">const</span> <a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>(<a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>&amp; operator=(<a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    T&amp; addComponent(Args&amp;&amp; ...args) {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        runtime_assert(!this-&gt;hasComponent&lt;T&gt;(), <span class="stringliteral">&quot;Entity already has this component!&quot;</span>);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keyword">auto</span>&amp; component = this-&gt;scene-&gt;getRegistry().emplace&lt;T&gt;(this-&gt;handle, std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordflow">if</span> constexpr (CComponentHasTransform&lt;T&gt;) {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            component.transform = &amp;this-&gt;getComponent&lt;TransformComponent&gt;();</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        }</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keywordflow">return</span> component;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    }</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">void</span> addTagComponent() {</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        runtime_assert(!this-&gt;hasComponent&lt;T&gt;(), <span class="stringliteral">&quot;Entity already has this component!&quot;</span>);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        this-&gt;scene-&gt;getRegistry().emplace&lt;T&gt;(this-&gt;handle);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    }</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    [[nodiscard]] T&amp; getComponent() {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        runtime_assert(this-&gt;hasComponent&lt;T&gt;(), <span class="stringliteral">&quot;Entity doesn&#39;t have this component!&quot;</span>);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordflow">return</span> this-&gt;scene-&gt;getRegistry().get&lt;T&gt;(this-&gt;handle);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> setPosition(glm::vec3 newPos);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> setRotation(glm::quat newRot);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    [[nodiscard]] <span class="keyword">virtual</span> glm::vec3 getPosition();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    [[nodiscard]] <span class="keyword">virtual</span> glm::vec3 getGlobalPosition();</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    [[nodiscard]] <span class="keyword">virtual</span> glm::quat <a class="code" href="../../de/dca/classchira_1_1_entity.html#acf924458fd32b28cbe9d9231a1f6ac74">getRotation</a>();</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> translate(glm::vec3 translateByAmount);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> translateWithRotation(glm::vec3 translateByAmount);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> rotate(glm::quat rotateByAmount);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> rotate(glm::vec3 rotateByAmount);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>* parent = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    std::string name;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    std::vector&lt;Entity*&gt; children;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">bool</span> visible = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    [[nodiscard]] T&amp; getComponent()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        runtime_assert(this-&gt;hasComponent&lt;T&gt;(), <span class="stringliteral">&quot;Entity doesn&#39;t have this component!&quot;</span>);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordflow">return</span> this-&gt;scene-&gt;getRegistry().get&lt;T&gt;(this-&gt;handle);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    [[nodiscard]] T* tryGetComponent()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordflow">return</span> this-&gt;scene-&gt;getRegistry().try_get&lt;T&gt;(this-&gt;handle);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> hasComponent()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordflow">return</span> this-&gt;scene-&gt;getRegistry().all_of&lt;T&gt;(this-&gt;handle);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="comment">// The following are in local space and are relative to the parent.</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    glm::vec3 position{};</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    glm::quat rotation = glm::identity&lt;glm::quat&gt;();</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="../../de/dca/classchira_1_1_entity.html#a08d5b038f4806b5ead7d261e113acfbc">   75</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="../../de/dca/classchira_1_1_entity.html#a08d5b038f4806b5ead7d261e113acfbc">setParent</a>(<a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>* newParent) {</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        this-&gt;parent = newParent;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="../../de/dca/classchira_1_1_entity.html#a436898c72c643b0ee73b140a2e4c0ba8">   80</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../de/dca/classchira_1_1_entity.html#a436898c72c643b0ee73b140a2e4c0ba8">onAddedToTree</a>() {}</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;};</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;} <span class="comment">// namespace chira</span></div>
-<div class="ttc" id="aclasschira_1_1_entity_html"><div class="ttname"><a href="../../de/dca/classchira_1_1_entity.html">chira::Entity</a></div><div class="ttdoc">The base entity class.</div><div class="ttdef"><b>Definition:</b> <a href="../../db/d3a/_entity_8h_source.html#l00020">Entity.h:20</a></div></div>
-<div class="ttc" id="aclasschira_1_1_entity_html_a00b6eeaf99b35c8f8b10b5fbfc1baf4f"><div class="ttname"><a href="../../de/dca/classchira_1_1_entity.html#a00b6eeaf99b35c8f8b10b5fbfc1baf4f">chira::Entity::update</a></div><div class="ttdeci">virtual void update()</div><div class="ttdoc">Run game logic.</div><div class="ttdef"><b>Definition:</b> <a href="../../de/dfc/_entity_8cpp_source.html#l00019">Entity.cpp:19</a></div></div>
-<div class="ttc" id="aclasschira_1_1_entity_html_a08d5b038f4806b5ead7d261e113acfbc"><div class="ttname"><a href="../../de/dca/classchira_1_1_entity.html#a08d5b038f4806b5ead7d261e113acfbc">chira::Entity::setParent</a></div><div class="ttdeci">void setParent(Entity *newParent)</div><div class="ttdoc">For internal use only!</div><div class="ttdef"><b>Definition:</b> <a href="../../db/d3a/_entity_8h_source.html#l00075">Entity.h:75</a></div></div>
-<div class="ttc" id="aclasschira_1_1_entity_html_a436898c72c643b0ee73b140a2e4c0ba8"><div class="ttname"><a href="../../de/dca/classchira_1_1_entity.html#a436898c72c643b0ee73b140a2e4c0ba8">chira::Entity::onAddedToTree</a></div><div class="ttdeci">virtual void onAddedToTree()</div><div class="ttdoc">Callback called after parent is set.</div><div class="ttdef"><b>Definition:</b> <a href="../../db/d3a/_entity_8h_source.html#l00080">Entity.h:80</a></div></div>
-<div class="ttc" id="aclasschira_1_1_entity_html_a980f368aa07ce358583982821533a54a"><div class="ttname"><a href="../../de/dca/classchira_1_1_entity.html#a980f368aa07ce358583982821533a54a">chira::Entity::Entity</a></div><div class="ttdeci">Entity()</div><div class="ttdoc">Initializes name to a random UUID.</div><div class="ttdef"><b>Definition:</b> <a href="../../de/dfc/_entity_8cpp_source.html#l00013">Entity.cpp:13</a></div></div>
-<div class="ttc" id="aclasschira_1_1_entity_html_acf924458fd32b28cbe9d9231a1f6ac74"><div class="ttname"><a href="../../de/dca/classchira_1_1_entity.html#acf924458fd32b28cbe9d9231a1f6ac74">chira::Entity::getRotation</a></div><div class="ttdeci">virtual glm::quat getRotation()</div><div class="ttdoc">Note: the global rotation is inaccessible.</div><div class="ttdef"><b>Definition:</b> <a href="../../de/dfc/_entity_8cpp_source.html#l00134">Entity.cpp:134</a></div></div>
-<div class="ttc" id="aclasschira_1_1_entity_html_af7107917a1f31fe7bd6ada4da2043c02"><div class="ttname"><a href="../../de/dca/classchira_1_1_entity.html#af7107917a1f31fe7bd6ada4da2043c02">chira::Entity::render</a></div><div class="ttdeci">virtual void render(glm::mat4 parentTransform)</div><div class="ttdoc">Draw to screen.</div><div class="ttdef"><b>Definition:</b> <a href="../../de/dfc/_entity_8cpp_source.html#l00025">Entity.cpp:25</a></div></div>
-<div class="ttc" id="aclasschira_1_1_frame_html"><div class="ttname"><a href="../../dd/d2e/classchira_1_1_frame.html">chira::Frame</a></div><div class="ttdef"><b>Definition:</b> <a href="../../de/dd6/_frame_8h_source.html#l00013">Frame.h:13</a></div></div>
-<div class="ttc" id="aclasschira_1_1_group_html"><div class="ttname"><a href="../../dc/da7/classchira_1_1_group.html">chira::Group</a></div><div class="ttdoc">The Group is an in-world entity that is purely symbolic (for now at least).</div><div class="ttdef"><b>Definition:</b> <a href="../../d7/dc4/_group_8h_source.html#l00008">Group.h:8</a></div></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> tryRemoveComponent() {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        this-&gt;scene-&gt;getRegistry().remove&lt;T&gt;(this-&gt;handle);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">void</span> removeComponent() {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        runtime_assert(this-&gt;hasComponent&lt;T&gt;(), <span class="stringliteral">&quot;Entity doesn&#39;t have this component!&quot;</span>);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        this-&gt;scene-&gt;getRegistry().erase&lt;T&gt;(this-&gt;handle);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    [[nodiscard]] <span class="keywordtype">bool</span> getVisible()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordflow">return</span> !this-&gt;hasComponent&lt;NoRenderTagComponent&gt;();</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    }</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">void</span> setVisible(<span class="keywordtype">bool</span> visible) {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keywordflow">if</span> (visible) {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            this-&gt;tryRemoveComponent&lt;NoRenderTagComponent&gt;();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!this-&gt;hasComponent&lt;NoRenderTagComponent&gt;()) {</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            this-&gt;addTagComponent&lt;NoRenderTagComponent&gt;();</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    }</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    [[nodiscard]] std::string getName()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">if</span> (<span class="keyword">auto</span> nameComponent = this-&gt;tryGetComponent&lt;NameComponent&gt;()) {</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <span class="keywordflow">return</span> nameComponent-&gt;name;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keywordflow">return</span> uuids::to_string(this-&gt;getComponent&lt;UUIDComponent&gt;().uuid);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    [[nodiscard]] <a class="code" href="../../d3/de7/structchira_1_1_transform_component.html">TransformComponent</a>&amp; getTransform() {</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keywordflow">return</span> this-&gt;scene-&gt;getRegistry().get&lt;<a class="code" href="../../d3/de7/structchira_1_1_transform_component.html">TransformComponent</a>&gt;(this-&gt;handle);</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    }</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    [[nodiscard]] <span class="keyword">const</span> <a class="code" href="../../d3/de7/structchira_1_1_transform_component.html">TransformComponent</a>&amp; getTransform()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="keywordflow">return</span> this-&gt;scene-&gt;getRegistry().get&lt;<a class="code" href="../../d3/de7/structchira_1_1_transform_component.html">TransformComponent</a>&gt;(this-&gt;handle);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    }</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    uuids::uuid getUUID() {</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keywordflow">return</span> this-&gt;getComponent&lt;UUIDComponent&gt;().uuid;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    }</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    uuids::uuid getSceneUUID() {</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="keywordflow">return</span> this-&gt;scene-&gt;getUUID();</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    }</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    [[nodiscard]] entt::entity getRawHandle()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <span class="keywordflow">return</span> this-&gt;handle;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    }</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keyword">explicit</span> <span class="keyword">operator</span> bool()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keywordflow">return</span> this-&gt;scene-&gt;getRegistry().valid(this-&gt;handle);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    }</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordtype">bool</span> operator!()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="keywordflow">return</span> !<span class="keyword">static_cast&lt;</span><span class="keywordtype">bool</span><span class="keyword">&gt;</span>(*this);</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    }</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>&amp; other)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="keywordflow">return</span> this-&gt;handle == other.handle &amp;&amp; this-&gt;scene == other.scene;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    }</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> <a class="code" href="../../de/dca/classchira_1_1_entity.html">Entity</a>&amp; other)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <span class="keywordflow">return</span> !(*<span class="keyword">this</span> == other);</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    }</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>* scene = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    entt::entity handle = entt::null;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;};</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160; </div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;} <span class="comment">// namespace chira</span></div>
+<div class="ttc" id="aclasschira_1_1_entity_html"><div class="ttname"><a href="../../de/dca/classchira_1_1_entity.html">chira::Entity</a></div><div class="ttdoc">The base entity class.</div><div class="ttdef"><b>Definition:</b> <a href="../../db/d3a/_entity_8h_source.html#l00016">Entity.h:16</a></div></div>
+<div class="ttc" id="aclasschira_1_1_scene_html"><div class="ttname"><a href="../../d5/db7/classchira_1_1_scene.html">chira::Scene</a></div><div class="ttdef"><b>Definition:</b> <a href="../../de/d56/_scene_8h_source.html#l00015">Scene.h:15</a></div></div>
+<div class="ttc" id="astructchira_1_1_transform_component_html"><div class="ttname"><a href="../../d3/de7/structchira_1_1_transform_component.html">chira::TransformComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d94/_transform_component_8h_source.html#l00011">TransformComponent.h:11</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

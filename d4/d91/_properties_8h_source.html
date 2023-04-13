@@ -198,7 +198,7 @@ $(document).ready(function(){initNavTree('d4/d91/_properties_8h_source.html','..
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#define CHIRA_PROPS_INHERITED(clazz) \</span></div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">    using InheritPropsFromClass = clazz; \</span></div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">    static inline const auto props = std::make_tuple</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">#define CHIRA_PROPS() CHIRA_PROPS_INHERITED(void)</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">#define CHIRA_PROPS CHIRA_PROPS_INHERITED(void)</span></div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#define CHIRA_PROP(clazz, member) chira::Serialize::createProperty(&amp;clazz::member, #member)</span></div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">#define CHIRA_PROP_NAMED(clazz, member, name) chira::Serialize::createProperty(&amp;clazz::member, #name)</span></div>

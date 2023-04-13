@@ -1,8 +1,0 @@
-<map id="chira::SpotLight" name="chira::SpotLight">
-<area shape="rect" id="node1" title=" " alt="" coords="207,282,329,309"/>
-<area shape="rect" id="node2" href="$de/dca/classchira_1_1_entity.html" title="The base entity class." alt="" coords="25,185,125,212"/>
-<area shape="rect" id="node5" title=" " alt="" coords="15,275,153,316"/>
-<area shape="rect" id="node3" title=" " alt="" coords="31,96,118,123"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,5,144,47"/>
-<area shape="rect" id="node6" href="$d8/dcf/structchira_1_1_spot_light_data.html" title=" " alt="" coords="220,185,375,212"/>
-</map>

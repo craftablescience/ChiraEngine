@@ -52,12 +52,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d3/dc0/classchira_1_1_directional_light.html#a4b72c71f0cf0b68f171c2089a91e5dc9",
-"d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a266c3e565a5b03d2174d5f11c1c9126f",
-"d6/dd8/class_model_viewer_panel.html#a7b22c8c3f11d109a682e4ca0079ef214",
-"da/d25/classchira_1_1_log_channel.html#a3504088270407741034f3ed009b47d0d",
-"dd/d4f/structchira_1_1_renderer_1_1_texture_handle.html#a50ea046741634e9119cf2a1b812847b7",
-"dir_5f161f52789d55ec0062c440ce756bb4.html"
+"d3/dd9/_render_types_8h.html#a3fac41c8f067291e899afc4721ed340ca969f331a87d8c958473c32b4d0e61a44",
+"d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a2c60e29c476cbbbcf9569a8ce42a989a",
+"d6/dd8/class_model_viewer_panel.html#a5063e326193c6c79857e3af79e602324",
+"da/d73/structchira_1_1_steam_a_p_i_1_1_client.html",
+"dd/df9/_con_entry_8h.html#a2578ccb1fd024212c18273449a8195d5a3f1809ca26b06b1a5cf61f5682119805"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

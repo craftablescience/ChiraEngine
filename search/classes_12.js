@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['windowhandle_289',['WindowHandle',['../d7/d15/structchira_1_1_device_1_1_window_handle.html',1,'chira::Device']]]
+  ['vertex_286',['Vertex',['../d6/df6/structchira_1_1_vertex.html',1,'chira']]]
 ];

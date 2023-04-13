@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['objmeshloader_246',['OBJMeshLoader',['../dd/d84/classchira_1_1_o_b_j_mesh_loader.html',1,'chira']]]
+  ['namecomponent_240',['NameComponent',['../d9/d38/structchira_1_1_name_component.html',1,'chira']]],
+  ['norendertagcomponent_241',['NoRenderTagComponent',['../d5/d45/structchira_1_1_no_render_tag_component.html',1,'chira']]]
 ];

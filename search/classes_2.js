@@ -2,7 +2,7 @@ var searchData=
 [
   ['callbackmessage_180',['CallbackMessage',['../d0/d89/structsteam_1_1_callback_message.html',1,'steam']]],
   ['callbacks_181',['Callbacks',['../d9/da3/structsteam_1_1_callbacks.html',1,'steam']]],
-  ['camera_182',['Camera',['../d5/de0/classchira_1_1_camera.html',1,'chira']]],
+  ['cameracomponent_182',['CameraComponent',['../dd/dae/structchira_1_1_camera_component.html',1,'chira']]],
   ['chirameshheader_183',['ChiraMeshHeader',['../d4/db5/structchira_1_1_chira_mesh_header.html',1,'chira']]],
   ['chirameshloader_184',['ChiraMeshLoader',['../d7/d5f/classchira_1_1_chira_mesh_loader.html',1,'chira']]],
   ['client_185',['Client',['../da/d73/structchira_1_1_steam_a_p_i_1_1_client.html',1,'chira::SteamAPI']]],

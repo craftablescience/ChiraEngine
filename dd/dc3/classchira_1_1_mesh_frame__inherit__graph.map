@@ -1,6 +1,0 @@
-<map id="chira::MeshFrame" name="chira::MeshFrame">
-<area shape="rect" id="node1" title=" " alt="" coords="5,229,144,256"/>
-<area shape="rect" id="node2" href="$dd/d2e/classchira_1_1_frame.html" title=" " alt="" coords="23,155,126,181"/>
-<area shape="rect" id="node3" href="$dc/da7/classchira_1_1_group.html" title="The Group is an in&#45;world entity that is purely symbolic (for now at least)." alt="" coords="24,80,125,107"/>
-<area shape="rect" id="node4" href="$de/dca/classchira_1_1_entity.html" title="The base entity class." alt="" coords="25,5,125,32"/>
-</map>

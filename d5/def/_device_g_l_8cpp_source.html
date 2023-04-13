@@ -117,13 +117,13 @@ $(document).ready(function(){initNavTree('d5/def/_device_g_l_8cpp_source.html','
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;config/Config.h&gt;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;config/ConEntry.h&gt;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;core/Engine.h&gt;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;event/Events.h&gt;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;input/InputManager.h&gt;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;loader/image/Image.h&gt;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &lt;resource/provider/FilesystemResourceProvider.h&gt;</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;render/material/MaterialFrameBuffer.h&gt;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;render/material/MaterialTextured.h&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;event/Events.h&gt;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;input/InputManager.h&gt;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;loader/image/Image.h&gt;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;resource/provider/FilesystemResourceProvider.h&gt;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &lt;render/material/MaterialFrameBuffer.h&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;render/material/MaterialTextured.h&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;render/mesh/MeshDataBuilder.h&gt;</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;ui/Font.h&gt;</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;ui/IPanel.h&gt;</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
@@ -262,13 +262,13 @@ $(document).ready(function(){initNavTree('d5/def/_device_g_l_8cpp_source.html','
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;}</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;[[nodiscard]] <a class="code" href="../../d7/d15/structchira_1_1_device_1_1_window_handle.html">Device::WindowHandle</a>* Device::createWindow(<span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, std::string_view title, <a class="code" href="../../dd/d2e/classchira_1_1_frame.html">Frame</a>* frame) {</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordtype">int</span> free = findFreeWindow();</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keywordflow">if</span> (free == -1)</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;[[nodiscard]] <a class="code" href="../../d7/d15/structchira_1_1_device_1_1_window_handle.html">Device::WindowHandle</a>* Device::createWindow(<span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, std::string_view title, <a class="code" href="../../d6/d7f/classchira_1_1_layer.html">Layer</a>* layer) {</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordtype">int</span> freeWindow = findFreeWindow();</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keywordflow">if</span> (freeWindow == -1)</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    WINDOWS[free] = WindowHandle{};</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    WindowHandle&amp; handle = WINDOWS.at(free);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    WINDOWS[freeWindow] = WindowHandle{};</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    WindowHandle&amp; handle = WINDOWS.at(freeWindow);</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    handle.width = width;</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    handle.height = height;</div>
@@ -286,12 +286,12 @@ $(document).ready(function(){initNavTree('d5/def/_device_g_l_8cpp_source.html','
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    SDL_SetWindowData(handle.window, <span class="stringliteral">&quot;handle&quot;</span>, &amp;handle);</div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    SDL_GL_MakeCurrent(handle.window, GL_CONTEXT);</div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160; </div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="keywordflow">if</span> (frame) {</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        handle.frame = frame;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        handle.frameIsSelfOwned = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="keywordflow">if</span> (layer) {</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        handle.layer = layer;</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        handle.layerIsSelfOwned = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        handle.frame = <span class="keyword">new</span> <a class="code" href="../../dd/d2e/classchira_1_1_frame.html">Frame</a>{width, height};</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        handle.frameIsSelfOwned = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        handle.layer = <span class="keyword">new</span> <a class="code" href="../../d6/d7f/classchira_1_1_layer.html">Layer</a>{{width, height}};</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        handle.layerIsSelfOwned = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    }</div>
 <div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160; </div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <span class="keywordtype">int</span> iconWidth, iconHeight, bitsPerPixel;</div>
@@ -330,7 +330,7 @@ $(document).ready(function(){initNavTree('d5/def/_device_g_l_8cpp_source.html','
 <div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;        }</div>
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160; </div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;        <span class="keywordflow">if</span> (!Device::isWindowVisible(&amp;handle)) {</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;            handle.frame-&gt;update();</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;            handle.layer-&gt;update();</div>
 <div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;            <span class="keywordflow">continue</span>;</div>
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;        }</div>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
@@ -340,11 +340,11 @@ $(document).ready(function(){initNavTree('d5/def/_device_g_l_8cpp_source.html','
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;        ImGui::SetCurrentContext(handle.imguiContext);</div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;        setImGuiConfigPath();</div>
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;        Renderer::pushFrameBuffer(*handle.frame-&gt;getRawHandle());</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;        Renderer::pushFrameBuffer(*handle.layer-&gt;getRawHandle());</div>
 <div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;        Renderer::startImGuiFrame(handle.window);</div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160; </div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;        handle.frame-&gt;update();</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;        handle.frame-&gt;render(glm::identity&lt;glm::mat4&gt;());</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;        handle.layer-&gt;update();</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;        handle.layer-&gt;render();</div>
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; [uuid, panel] : handle.panels) {</div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;            panel-&gt;render();</div>
@@ -357,7 +357,7 @@ $(document).ready(function(){initNavTree('d5/def/_device_g_l_8cpp_source.html','
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160; </div>
 <div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;        <a class="code" href="../../de/da0/classchira_1_1_mesh_data_builder.html">MeshDataBuilder</a> surface;</div>
 <div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;        surface.<a class="code" href="../../de/da0/classchira_1_1_mesh_data_builder.html#a7f234c1342a61c083b0d290818f1d8db">addSquare</a>({}, {2, -2}, SignedAxis::ZN, 0);</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;        surface.setMaterial(Resource::getUniqueUncachedResource&lt;MaterialFrameBuffer&gt;(<span class="stringliteral">&quot;file://materials/window.json&quot;</span>, handle.frame-&gt;getRawHandle()).castAssert&lt;<a class="code" href="../../df/d5f/classchira_1_1_i_material.html">IMaterial</a>&gt;());</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;        surface.setMaterial(Resource::getUniqueUncachedResource&lt;MaterialFrameBuffer&gt;(<span class="stringliteral">&quot;file://materials/window.json&quot;</span>, handle.layer-&gt;getRawHandle()).castAssert&lt;<a class="code" href="../../df/d5f/classchira_1_1_i_material.html">IMaterial</a>&gt;());</div>
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;        surface.render(glm::identity&lt;glm::mat4&gt;());</div>
 <div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160; </div>
 <div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;        glEnable(GL_DEPTH_TEST);</div>
@@ -392,7 +392,7 @@ $(document).ready(function(){initNavTree('d5/def/_device_g_l_8cpp_source.html','
 <div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;                    <span class="keywordflow">case</span> SDL_WINDOWEVENT_SIZE_CHANGED:</div>
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;                    <span class="keywordflow">case</span> SDL_WINDOWEVENT_MAXIMIZED:</div>
 <div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;                        SDL_GetWindowSizeInPixels(handle-&gt;window, &amp;handle-&gt;width, &amp;handle-&gt;height);</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;                        handle-&gt;frame-&gt;setFrameSize({handle-&gt;width, handle-&gt;height});</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;                        handle-&gt;layer-&gt;setSize({handle-&gt;width, handle-&gt;height});</div>
 <div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;                        <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;                    <span class="keywordflow">default</span>:</div>
 <div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;                        <span class="comment">// There&#39;s quite a few events we don&#39;t care about</span></div>
@@ -465,8 +465,8 @@ $(document).ready(function(){initNavTree('d5/def/_device_g_l_8cpp_source.html','
 <div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    <span class="keywordflow">return</span> count;</div>
 <div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;}</div>
 <div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160; </div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;[[nodiscard]] <a class="code" href="../../dd/d2e/classchira_1_1_frame.html">Frame</a>* Device::getWindowFrame(WindowHandle* handle) {</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    <span class="keywordflow">return</span> handle-&gt;frame;</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;[[nodiscard]] <a class="code" href="../../d6/d7f/classchira_1_1_layer.html">Layer</a>* Device::getWindowLayer(WindowHandle* handle) {</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    <span class="keywordflow">return</span> handle-&gt;layer;</div>
 <div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;}</div>
 <div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160; </div>
 <div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;<span class="keywordtype">void</span> Device::setWindowMaximized(WindowHandle* handle, <span class="keywordtype">bool</span> maximize) {</div>
@@ -478,7 +478,7 @@ $(document).ready(function(){initNavTree('d5/def/_device_g_l_8cpp_source.html','
 <div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;        SDL_RestoreWindow(handle-&gt;window);</div>
 <div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;    }</div>
 <div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;    SDL_GetWindowSize(handle-&gt;window, &amp;handle-&gt;width, &amp;handle-&gt;height);</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    handle-&gt;frame-&gt;setFrameSize({handle-&gt;width, handle-&gt;height});</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    handle-&gt;layer-&gt;setSize({handle-&gt;width, handle-&gt;height});</div>
 <div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;}</div>
 <div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160; </div>
 <div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;[[nodiscard]] <span class="keywordtype">bool</span> Device::isWindowMaximized(WindowHandle* handle) {</div>
@@ -521,7 +521,7 @@ $(document).ready(function(){initNavTree('d5/def/_device_g_l_8cpp_source.html','
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;<span class="keywordtype">void</span> Device::setWindowSize(WindowHandle* handle, <span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height) {</div>
 <div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;    handle-&gt;width = width;</div>
 <div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;    handle-&gt;height = height;</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;    handle-&gt;frame-&gt;setFrameSize({width, height});</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;    handle-&gt;layer-&gt;setSize({width, height});</div>
 <div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;    SDL_SetWindowSize(handle-&gt;window, width, height);</div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;}</div>
 <div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160; </div>
@@ -599,8 +599,8 @@ $(document).ready(function(){initNavTree('d5/def/_device_g_l_8cpp_source.html','
 <div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;}</div>
 <div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160; </div>
 <div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;<span class="keywordtype">void</span> Device::destroyWindow(WindowHandle* handle) {</div>
-<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;    <span class="keywordflow">if</span> (handle-&gt;frameIsSelfOwned) {</div>
-<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;        <span class="keyword">delete</span> handle-&gt;frame;</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;    <span class="keywordflow">if</span> (handle-&gt;layerIsSelfOwned) {</div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;        <span class="keyword">delete</span> handle-&gt;layer;</div>
 <div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;    }</div>
 <div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;    Device::removeAllPanelsFromWindow(handle);</div>
 <div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;    ImGui::DestroyContext(handle-&gt;imguiContext);</div>
@@ -644,12 +644,12 @@ $(document).ready(function(){initNavTree('d5/def/_device_g_l_8cpp_source.html','
 <div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;}</div>
 <div class="ttc" id="aclasschira_1_1_con_var_html"><div class="ttname"><a href="../../db/dc4/classchira_1_1_con_var.html">chira::ConVar</a></div><div class="ttdef"><b>Definition:</b> <a href="../../dd/df9/_con_entry_8h_source.html#l00099">ConEntry.h:99</a></div></div>
 <div class="ttc" id="aclasschira_1_1_filesystem_resource_provider_html_abd0b09c051bde588c4db1362f8b43843"><div class="ttname"><a href="../../de/de0/classchira_1_1_filesystem_resource_provider.html#abd0b09c051bde588c4db1362f8b43843">chira::FilesystemResourceProvider::getResourceAbsolutePath</a></div><div class="ttdeci">static std::string getResourceAbsolutePath(const std::string &amp;identifier)</div><div class="ttdoc">Takes a resource identifier and returns the full absolute path, if it exists.</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d47/_filesystem_resource_provider_8cpp_source.html#l00143">FilesystemResourceProvider.cpp:143</a></div></div>
-<div class="ttc" id="aclasschira_1_1_frame_html"><div class="ttname"><a href="../../dd/d2e/classchira_1_1_frame.html">chira::Frame</a></div><div class="ttdef"><b>Definition:</b> <a href="../../de/dd6/_frame_8h_source.html#l00013">Frame.h:13</a></div></div>
 <div class="ttc" id="aclasschira_1_1_i_material_html"><div class="ttname"><a href="../../df/d5f/classchira_1_1_i_material.html">chira::IMaterial</a></div><div class="ttdef"><b>Definition:</b> <a href="../../db/de2/_material_factory_8h_source.html#l00011">MaterialFactory.h:11</a></div></div>
 <div class="ttc" id="aclasschira_1_1_i_panel_html"><div class="ttname"><a href="../../df/dde/classchira_1_1_i_panel.html">chira::IPanel</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d1/dd2/_i_panel_8h_source.html#l00010">IPanel.h:10</a></div></div>
+<div class="ttc" id="aclasschira_1_1_layer_html"><div class="ttname"><a href="../../d6/d7f/classchira_1_1_layer.html">chira::Layer</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d6/d5a/_layer_8h_source.html#l00008">Layer.h:8</a></div></div>
 <div class="ttc" id="aclasschira_1_1_mesh_data_builder_html"><div class="ttname"><a href="../../de/da0/classchira_1_1_mesh_data_builder.html">chira::MeshDataBuilder</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d0/d07/_mesh_data_builder_8h_source.html#l00008">MeshDataBuilder.h:8</a></div></div>
 <div class="ttc" id="aclasschira_1_1_mesh_data_builder_html_a7f234c1342a61c083b0d290818f1d8db"><div class="ttname"><a href="../../de/da0/classchira_1_1_mesh_data_builder.html#a7f234c1342a61c083b0d290818f1d8db">chira::MeshDataBuilder::addSquare</a></div><div class="ttdeci">void addSquare(Vertex v1, Vertex v2, Vertex v3, Vertex v4, bool addDuplicate=false)</div><div class="ttdoc">Vertex v4 forms a face with vertex v1 and v3.</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d70/_mesh_data_builder_8cpp_source.html#l00031">MeshDataBuilder.cpp:31</a></div></div>
-<div class="ttc" id="astructchira_1_1_device_1_1_window_handle_html"><div class="ttname"><a href="../../d7/d15/structchira_1_1_device_1_1_window_handle.html">chira::Device::WindowHandle</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d2/d6b/_device_g_l_8h_source.html#l00019">DeviceGL.h:19</a></div></div>
+<div class="ttc" id="astructchira_1_1_device_1_1_window_handle_html"><div class="ttname"><a href="../../d7/d15/structchira_1_1_device_1_1_window_handle.html">chira::Device::WindowHandle</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d2/d6b/_device_g_l_8h_source.html#l00018">DeviceGL.h:18</a></div></div>
 <div class="ttc" id="astructchira_1_1_renderer_1_1_frame_buffer_handle_html"><div class="ttname"><a href="../../dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html">chira::Renderer::FrameBufferHandle</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d26/_backend_g_l_8h_source.html#l00025">BackendGL.h:25</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

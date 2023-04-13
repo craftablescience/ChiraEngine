@@ -1,7 +1,7 @@
 var classchira_1_1_i_material =
 [
     [ "IMaterial", "df/d5f/classchira_1_1_i_material.html#a4dfeca98615200d468e573952f604605", null ],
-    [ "CHIRA_PROPS", "df/d5f/classchira_1_1_i_material.html#a8572419a8283ef59568b21ea18bb569b", null ],
+    [ "CHIRA_PROPS", "df/d5f/classchira_1_1_i_material.html#ad7f08cd33f9b72d41c008536101a3524", null ],
     [ "compile", "df/d5f/classchira_1_1_i_material.html#a6fc03bc688d9fb04648682a2720239dd", null ],
     [ "getShader", "df/d5f/classchira_1_1_i_material.html#a6c940357a73ba318be5eb163e694d714", null ],
     [ "setShader", "df/d5f/classchira_1_1_i_material.html#a88ddb7b7be068303b4d1236d4639f6cf", null ],

@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['abstractfactory_166',['AbstractFactory',['../d6/dfd/classchira_1_1_abstract_factory.html',1,'chira']]],
+  ['abstractfactory_165',['AbstractFactory',['../d6/dfd/classchira_1_1_abstract_factory.html',1,'chira']]],
+  ['angelscriptcomponent_166',['AngelScriptComponent',['../dc/d7f/structchira_1_1_angel_script_component.html',1,'chira']]],
   ['angelscriptholder_167',['AngelScriptHolder',['../d8/da5/classchira_1_1_angel_script_holder.html',1,'chira']]],
   ['angelscriptvm_168',['AngelScriptVM',['../dd/dc3/classchira_1_1_angel_script_v_m.html',1,'chira']]],
   ['apps_169',['Apps',['../d0/d48/structchira_1_1_steam_a_p_i_1_1_apps.html',1,'chira::SteamAPI']]],

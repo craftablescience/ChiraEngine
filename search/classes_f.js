@@ -1,8 +1,23 @@
 var searchData=
 [
-  ['texture_274',['Texture',['../d4/d36/classchira_1_1_texture.html',1,'chira']]],
-  ['texturecubemap_275',['TextureCubemap',['../d6/d75/classchira_1_1_texture_cubemap.html',1,'chira']]],
-  ['texturehandle_276',['TextureHandle',['../dd/d4f/structchira_1_1_renderer_1_1_texture_handle.html',1,'chira::Renderer']]],
-  ['translationfileresource_277',['TranslationFileResource',['../d7/d6b/classchira_1_1_translation_file_resource.html',1,'chira']]],
-  ['translationmanager_278',['TranslationManager',['../dc/d59/classchira_1_1_translation_manager.html',1,'chira']]]
+  ['scene_250',['Scene',['../d5/db7/classchira_1_1_scene.html',1,'chira']]],
+  ['scenetagcomponent_251',['SceneTagComponent',['../db/dc6/structchira_1_1_scene_tag_component.html',1,'chira']]],
+  ['shader_252',['Shader',['../d2/d71/classchira_1_1_shader.html',1,'chira']]],
+  ['shaderhandle_253',['ShaderHandle',['../d8/db3/structchira_1_1_renderer_1_1_shader_handle.html',1,'chira::Renderer']]],
+  ['shadermodulehandle_254',['ShaderModuleHandle',['../dd/db1/structchira_1_1_renderer_1_1_shader_module_handle.html',1,'chira::Renderer']]],
+  ['sharedpointer_255',['SharedPointer',['../d4/d08/classchira_1_1_shared_pointer.html',1,'chira']]],
+  ['sharedpointer_3c_20chira_3a_3afont_20_3e_256',['SharedPointer&lt; chira::Font &gt;',['../d4/d08/classchira_1_1_shared_pointer.html',1,'chira']]],
+  ['sharedpointer_3c_20chira_3a_3aimage_20_3e_257',['SharedPointer&lt; chira::Image &gt;',['../d4/d08/classchira_1_1_shared_pointer.html',1,'chira']]],
+  ['sharedpointer_3c_20chira_3a_3aimaterial_20_3e_258',['SharedPointer&lt; chira::IMaterial &gt;',['../d4/d08/classchira_1_1_shared_pointer.html',1,'chira']]],
+  ['sharedpointer_3c_20chira_3a_3ameshdataresource_20_3e_259',['SharedPointer&lt; chira::MeshDataResource &gt;',['../d4/d08/classchira_1_1_shared_pointer.html',1,'chira']]],
+  ['sharedpointer_3c_20chira_3a_3aresource_20_3e_260',['SharedPointer&lt; chira::Resource &gt;',['../d4/d08/classchira_1_1_shared_pointer.html',1,'chira']]],
+  ['sharedpointer_3c_20chira_3a_3ashader_20_3e_261',['SharedPointer&lt; chira::Shader &gt;',['../d4/d08/classchira_1_1_shared_pointer.html',1,'chira']]],
+  ['sharedpointer_3c_20chira_3a_3atexture_20_3e_262',['SharedPointer&lt; chira::Texture &gt;',['../d4/d08/classchira_1_1_shared_pointer.html',1,'chira']]],
+  ['sharedpointer_3c_20chira_3a_3atexturecubemap_20_3e_263',['SharedPointer&lt; chira::TextureCubemap &gt;',['../d4/d08/classchira_1_1_shared_pointer.html',1,'chira']]],
+  ['sharedpointermetadata_264',['SharedPointerMetadata',['../d9/d83/structchira_1_1_shared_pointer_metadata.html',1,'chira']]],
+  ['skyboxcomponent_265',['SkyboxComponent',['../d3/d21/structchira_1_1_skybox_component.html',1,'chira']]],
+  ['spotlightcomponent_266',['SpotLightComponent',['../df/d16/structchira_1_1_spot_light_component.html',1,'chira']]],
+  ['steamapi_267',['SteamAPI',['../db/d65/structchira_1_1_steam_a_p_i.html',1,'chira']]],
+  ['steamplugin_268',['SteamPlugin',['../da/d3d/struct_steam_plugin.html',1,'']]],
+  ['stringresource_269',['StringResource',['../d3/d87/classchira_1_1_string_resource.html',1,'chira']]]
 ];

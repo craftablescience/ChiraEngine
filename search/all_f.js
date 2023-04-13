@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['recreateframebuffer_119',['recreateFramebuffer',['../dd/d2e/classchira_1_1_frame.html#af4288172073450934b7ff3bcd964fe59',1,'chira::Frame']]],
-  ['reference_120',['Reference',['../d8/d5e/md_docs_pages_reference_reference.html',1,'']]],
-  ['removeresource_121',['removeResource',['../d8/d5c/classchira_1_1_resource.html#a1974972c478a169f10e22ed1c84c94cb',1,'chira::Resource']]],
-  ['render_122',['render',['../de/dca/classchira_1_1_entity.html#af7107917a1f31fe7bd6ada4da2043c02',1,'chira::Entity::render()'],['../d9/de4/classchira_1_1_script.html#a2b2dcd056952c56ad8b022913aaa06c8',1,'chira::Script::render()'],['../d5/d65/classchira_1_1_mesh.html#a8c2da28a4058fde61beeda6c8a6b3813',1,'chira::Mesh::render()'],['../d5/dc6/classchira_1_1_mesh_dynamic.html#a15c03deaa58023f6899c863a0b2ba419',1,'chira::MeshDynamic::render()'],['../d1/d9f/classchira_1_1_mesh_frame.html#a2c7f1c4eb6a78054df1b90c82964447d',1,'chira::MeshFrame::render()'],['../dd/d2e/classchira_1_1_frame.html#a74c13e38bb2209eadc8562464c8bda2e',1,'chira::Frame::render()']]],
-  ['resource_123',['Resource',['../d8/d5c/classchira_1_1_resource.html',1,'chira']]],
-  ['resourceusagetrackerpanel_124',['ResourceUsageTrackerPanel',['../d5/dc8/classchira_1_1_resource_usage_tracker_panel.html',1,'chira']]]
+  ['reference_116',['Reference',['../d8/d5e/md_docs_pages_reference_reference.html',1,'']]],
+  ['removeresource_117',['removeResource',['../d8/d5c/classchira_1_1_resource.html#a1974972c478a169f10e22ed1c84c94cb',1,'chira::Resource']]],
+  ['resource_118',['Resource',['../d8/d5c/classchira_1_1_resource.html',1,'chira']]],
+  ['resourceusagetrackerpanel_119',['ResourceUsageTrackerPanel',['../d5/dc8/classchira_1_1_resource_usage_tracker_panel.html',1,'chira']]]
 ];

@@ -134,78 +134,94 @@ $(document).ready(function(){initNavTree('d9/d3f/_u_b_o_8cpp_source.html','../..
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordflow">return</span> singleton;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;}</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> LightsUBO::update(<a class="code" href="../../d3/dc0/classchira_1_1_directional_light.html">DirectionalLight</a>* directionalLights[], <a class="code" href="../../dd/d58/classchira_1_1_point_light.html">PointLight</a>* pointLights[], <a class="code" href="../../d0/dac/classchira_1_1_spot_light.html">SpotLight</a>* spotLights[], glm::vec3 numberOfLights)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> LightsUBO::update(<a class="code" href="../../d1/de2/structchira_1_1_directional_light_component.html">DirectionalLightComponent</a>* directionalLights[], <a class="code" href="../../df/d2a/structchira_1_1_point_light_component.html">PointLightComponent</a>* pointLights[], <a class="code" href="../../df/d16/structchira_1_1_spot_light_component.html">SpotLightComponent</a>* spotLights[], glm::vec3 numberOfLights)<span class="keyword"> const </span>{</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="comment">// todo: minimize the number of buffer writes</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> position = 0;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">int</span> nullLights;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    nullLights = 0;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; DIRECTIONAL_LIGHT_COUNT; i++) {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; DIRECTIONAL_LIGHT_MAX; i++) {</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keyword">auto</span>* light = directionalLights[i];</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordflow">if</span> (!light) {</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            nullLights++;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            <span class="keywordflow">continue</span>;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        }</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        glm::vec4 dir{glm::eulerAngles(light-&gt;getRotation()), 0.f};</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, &amp;dir, glm::VEC4F_SIZE);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        position += glm::VEC4F_SIZE;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, light-&gt;getLightData(), <span class="keyword">sizeof</span>(<a class="code" href="../../da/d33/structchira_1_1_directional_light_data.html">DirectionalLightData</a>));</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        position += <span class="keyword">sizeof</span>(<a class="code" href="../../da/d33/structchira_1_1_directional_light_data.html">DirectionalLightData</a>);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    position += DIRECTIONAL_LIGHT_DATA_SIZE * nullLights;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;transform-&gt;getRotationEuler(), 0.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        position += glm::VEC4F_SIZE;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;ambient, 1.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        position += glm::VEC4F_SIZE;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;diffuse, 1.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        position += glm::VEC4F_SIZE;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    nullLights = 0;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; POINT_LIGHT_COUNT; i++) {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keyword">auto</span>* light = pointLights[i];</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordflow">if</span> (!light) {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            nullLights++;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            <span class="keywordflow">continue</span>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        }</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        glm::vec4 pos{light-&gt;getGlobalPosition(), 0.f};</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, &amp;pos, glm::VEC4F_SIZE);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        position += glm::VEC4F_SIZE;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, light-&gt;getLightData(), <span class="keyword">sizeof</span>(<a class="code" href="../../dc/d90/structchira_1_1_point_light_data.html">PointLightData</a>));</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        position += <span class="keyword">sizeof</span>(<a class="code" href="../../dc/d90/structchira_1_1_point_light_data.html">PointLightData</a>);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    }</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    position += POINT_LIGHT_DATA_SIZE * nullLights;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    nullLights = 0;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; SPOT_LIGHT_COUNT; i++) {</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">auto</span>* light = spotLights[i];</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keywordflow">if</span> (!light) {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            nullLights++;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            <span class="keywordflow">continue</span>;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        }</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;specular, 1.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        position += glm::VEC4F_SIZE;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    }</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    position += (glm::VEC4F_SIZE * 4) * nullLights;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    nullLights = 0;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; POINT_LIGHT_MAX; i++) {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keyword">auto</span>* light = pointLights[i];</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordflow">if</span> (!light) {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            nullLights++;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <span class="keywordflow">continue</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        }</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;transform-&gt;getPosition(), 0.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        position += glm::VEC4F_SIZE;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;ambient, 1.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        position += glm::VEC4F_SIZE;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;diffuse, 1.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        position += glm::VEC4F_SIZE;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;specular, 1.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        position += glm::VEC4F_SIZE;</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        glm::vec4 pos{light-&gt;getGlobalPosition(), 0.f};</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, &amp;pos, glm::VEC4F_SIZE);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        position += glm::VEC4F_SIZE;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        glm::vec4 dir{glm::eulerAngles(light-&gt;getRotation()), 0.f};</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, &amp;dir, glm::VEC4F_SIZE);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        position += glm::VEC4F_SIZE;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, light-&gt;getLightData(), <span class="keyword">sizeof</span>(<a class="code" href="../../d8/dcf/structchira_1_1_spot_light_data.html">SpotLightData</a>));</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        position += <span class="keyword">sizeof</span>(<a class="code" href="../../d8/dcf/structchira_1_1_spot_light_data.html">SpotLightData</a>);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    position += SPOT_LIGHT_DATA_SIZE * nullLights;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;falloff, 1.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        position += glm::VEC4F_SIZE;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    position += (glm::VEC4F_SIZE * 5) * nullLights;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    nullLights = 0;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; SPOT_LIGHT_MAX; i++) {</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keyword">auto</span>* light = spotLights[i];</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">if</span> (!light) {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            nullLights++;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <span class="keywordflow">continue</span>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        }</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    glm::vec4 counts{numberOfLights, 1.f};</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    Renderer::updateUniformBufferPart(this-&gt;handle, position, &amp;counts, glm::VEC4F_SIZE);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
-<div class="ttc" id="aclasschira_1_1_directional_light_html"><div class="ttname"><a href="../../d3/dc0/classchira_1_1_directional_light.html">chira::DirectionalLight</a></div><div class="ttdef"><b>Definition:</b> <a href="../../da/d51/_directional_light_8h_source.html#l00013">DirectionalLight.h:13</a></div></div>
-<div class="ttc" id="aclasschira_1_1_point_light_html"><div class="ttname"><a href="../../dd/d58/classchira_1_1_point_light.html">chira::PointLight</a></div><div class="ttdef"><b>Definition:</b> <a href="../../df/dcc/_point_light_8h_source.html#l00014">PointLight.h:14</a></div></div>
-<div class="ttc" id="aclasschira_1_1_spot_light_html"><div class="ttname"><a href="../../d0/dac/classchira_1_1_spot_light.html">chira::SpotLight</a></div><div class="ttdef"><b>Definition:</b> <a href="../../de/d23/_spot_light_8h_source.html#l00014">SpotLight.h:14</a></div></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;transform-&gt;getPosition(), 0.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        position += glm::VEC4F_SIZE;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;transform-&gt;getRotationEuler(), 0.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        position += glm::VEC4F_SIZE;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;diffuse, 1.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        position += glm::VEC4F_SIZE;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;specular, 1.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        position += glm::VEC4F_SIZE;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;falloff, 1.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        position += glm::VEC4F_SIZE;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{light-&gt;cutoff, 0.f, 1.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        position += glm::VEC4F_SIZE;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    position += (glm::VEC4F_SIZE * 6) * nullLights;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    Renderer::updateUniformBufferPart(this-&gt;handle, position, glm::value_ptr(glm::vec4{numberOfLights, 1.f}), glm::VEC4F_SIZE);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;}</div>
 <div class="ttc" id="aclasschira_1_1_uniform_buffer_object_html"><div class="ttname"><a href="../../dd/db8/classchira_1_1_uniform_buffer_object.html">chira::UniformBufferObject</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d5/da1/_u_b_o_8h_source.html#l00012">UBO.h:12</a></div></div>
-<div class="ttc" id="astructchira_1_1_directional_light_data_html"><div class="ttname"><a href="../../da/d33/structchira_1_1_directional_light_data.html">chira::DirectionalLightData</a></div><div class="ttdef"><b>Definition:</b> <a href="../../da/d51/_directional_light_8h_source.html#l00007">DirectionalLight.h:7</a></div></div>
-<div class="ttc" id="astructchira_1_1_lights_u_b_o_html"><div class="ttname"><a href="../../da/dad/structchira_1_1_lights_u_b_o.html">chira::LightsUBO</a></div><div class="ttdoc">Stores lights.</div><div class="ttdef"><b>Definition:</b> <a href="../../d5/da1/_u_b_o_8h_source.html#l00044">UBO.h:47</a></div></div>
+<div class="ttc" id="astructchira_1_1_directional_light_component_html"><div class="ttname"><a href="../../d1/de2/structchira_1_1_directional_light_component.html">chira::DirectionalLightComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d3/da0/_light_components_8h_source.html#l00012">LightComponents.h:12</a></div></div>
+<div class="ttc" id="astructchira_1_1_lights_u_b_o_html"><div class="ttname"><a href="../../da/dad/structchira_1_1_lights_u_b_o.html">chira::LightsUBO</a></div><div class="ttdoc">Stores lights.</div><div class="ttdef"><b>Definition:</b> <a href="../../d5/da1/_u_b_o_8h_source.html#l00040">UBO.h:43</a></div></div>
 <div class="ttc" id="astructchira_1_1_perspective_view_u_b_o_html"><div class="ttname"><a href="../../d8/db0/structchira_1_1_perspective_view_u_b_o.html">chira::PerspectiveViewUBO</a></div><div class="ttdoc">Stores two mat4 values, named PV.</div><div class="ttdef"><b>Definition:</b> <a href="../../d5/da1/_u_b_o_8h_source.html#l00032">UBO.h:32</a></div></div>
-<div class="ttc" id="astructchira_1_1_point_light_data_html"><div class="ttname"><a href="../../dc/d90/structchira_1_1_point_light_data.html">chira::PointLightData</a></div><div class="ttdef"><b>Definition:</b> <a href="../../df/dcc/_point_light_8h_source.html#l00007">PointLight.h:7</a></div></div>
-<div class="ttc" id="astructchira_1_1_spot_light_data_html"><div class="ttname"><a href="../../d8/dcf/structchira_1_1_spot_light_data.html">chira::SpotLightData</a></div><div class="ttdef"><b>Definition:</b> <a href="../../de/d23/_spot_light_8h_source.html#l00007">SpotLight.h:7</a></div></div>
+<div class="ttc" id="astructchira_1_1_point_light_component_html"><div class="ttname"><a href="../../df/d2a/structchira_1_1_point_light_component.html">chira::PointLightComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d3/da0/_light_components_8h_source.html#l00019">LightComponents.h:19</a></div></div>
+<div class="ttc" id="astructchira_1_1_spot_light_component_html"><div class="ttname"><a href="../../df/d16/structchira_1_1_spot_light_component.html">chira::SpotLightComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d3/da0/_light_components_8h_source.html#l00028">LightComponents.h:28</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
