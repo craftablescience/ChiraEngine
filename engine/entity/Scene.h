@@ -38,6 +38,11 @@ public:
         return this->getRegistry().view<T...>();
     }
 
+    template<typename... T>
+    auto getEntities(auto&& exclude) const {
+        return this->getRegistry().view<T...>(exclude);
+    }
+
     [[nodiscard]] bool hasEntity(uuids::uuid entityID);
 
     void removeEntity(uuids::uuid entityID);

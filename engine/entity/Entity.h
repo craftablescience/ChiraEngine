@@ -5,6 +5,7 @@
 
 #include <core/Assertions.h>
 #include "component/NameComponent.h"
+#include "component/TagComponents.h"
 #include "component/TransformComponent.h"
 #include "component/UUIDComponent.h"
 #include "Scene.h"
@@ -39,6 +40,12 @@ public:
     }
 
     template<typename T>
+    void addTagComponent() {
+        runtime_assert(!this->hasComponent<T>(), "Entity already has this component!");
+        this->scene->getRegistry().emplace<T>(this->handle);
+    }
+
+    template<typename T>
     [[nodiscard]] T& getComponent() {
         runtime_assert(this->hasComponent<T>(), "Entity doesn't have this component!");
         return this->scene->getRegistry().get<T>(this->handle);
@@ -69,6 +76,18 @@ public:
     void removeComponent() {
         runtime_assert(this->hasComponent<T>(), "Entity doesn't have this component!");
         this->scene->getRegistry().erase<T>(this->handle);
+    }
+
+    [[nodiscard]] bool getVisible() const {
+        return !this->hasComponent<NoRenderTagComponent>();
+    }
+
+    void setVisible(bool visible) {
+        if (visible) {
+            this->tryRemoveComponent<NoRenderTagComponent>();
+        } else if (!this->hasComponent<NoRenderTagComponent>()) {
+            this->addTagComponent<NoRenderTagComponent>();
+        }
     }
 
     [[nodiscard]] std::string getName() const {

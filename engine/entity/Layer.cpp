@@ -6,6 +6,7 @@
 #include "component/MeshComponent.h"
 #include "component/MeshDynamicComponent.h"
 #include "component/SkyboxComponent.h"
+#include "component/TagComponents.h"
 #include "component/TransformComponent.h"
 
 using namespace chira;
@@ -84,7 +85,7 @@ void Layer::render() {
         scene->setupForRender(this->size);
 
         // Render MeshComponent
-        auto meshView = scene->getEntities<TransformComponent, MeshComponent>();
+        auto meshView = scene->getEntities<MeshComponent>(entt::exclude<NoRenderTagComponent>);
         for (auto entity : meshView) {
             auto& transformComponent = registry.get<TransformComponent>(entity);
             auto& meshComponent = registry.get<MeshComponent>(entity);
@@ -92,7 +93,7 @@ void Layer::render() {
         }
 
         // Render MeshDynamicComponent
-        auto meshDynamicView = scene->getEntities<TransformComponent, MeshDynamicComponent>();
+        auto meshDynamicView = scene->getEntities<MeshDynamicComponent>(entt::exclude<NoRenderTagComponent>);
         for (auto entity : meshDynamicView) {
             auto& transformComponent = registry.get<TransformComponent>(entity);
             auto& meshDynamicComponent = registry.get<MeshDynamicComponent>(entity);
@@ -107,7 +108,7 @@ void Layer::render() {
         }
 
         // Render AngelScriptComponent
-        auto angelScriptView = scene->getEntities<AngelScriptComponent>();
+        auto angelScriptView = scene->getEntities<AngelScriptComponent>(entt::exclude<NoRenderTagComponent>);
         for (const auto [entity, angelScriptComponent] : angelScriptView.each()) {
             angelScriptComponent.render();
         }
