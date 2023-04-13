@@ -36,8 +36,6 @@ private:
     PerspectiveViewUBO();
 };
 
-// todo(render): lighting is broken right now? seems like the buffer is being updated properly in renderdoc...
-
 /// Stores lights
 struct LightsUBO final : public UniformBufferObject<((4 * glm::VEC4F_SIZE) * DIRECTIONAL_LIGHT_MAX) +
                                                     ((5 * glm::VEC4F_SIZE) * POINT_LIGHT_MAX) +
