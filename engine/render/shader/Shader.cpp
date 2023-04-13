@@ -26,8 +26,7 @@ void Shader::compile(const nlohmann::json& properties) {
         PerspectiveViewUBO::get().bindToShader(this->handle);
     }
     if (this->lit) {
-        // todo(light)
-        // LightsUBO::get().bindToShader(this->handle);
+        LightsUBO::get().bindToShader(this->handle);
     }
 }
 
