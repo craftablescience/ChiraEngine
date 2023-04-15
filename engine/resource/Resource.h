@@ -25,7 +25,7 @@ public:
 
     virtual ~Resource();
 
-    virtual void compile(const byte /*buffer*/[], std::size_t /*bufferLength*/) {}
+    virtual void compile(const byte /*buffer*/[], std::size_t /*bufferLength*/) = 0;
 
     [[nodiscard]] std::string_view getIdentifier() const {
         return this->identifier;
