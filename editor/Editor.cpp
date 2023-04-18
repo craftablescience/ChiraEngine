@@ -15,7 +15,6 @@
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <i18n/TranslationManager.h>
 #include <ui/IPanel.h>
-#include <ui/Popups.h>
 
 #include <imfilebrowser.h>
 
@@ -142,7 +141,7 @@ public:
     void addResourceFolderSelected() {
         std::string resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(this->modelDialog.GetSelected().string());
         if (resourceFolderPath.empty())
-            return Dialogs::popupError(TR("error.modelviewer.resource_folder_not_valid"));
+            return Device::popupError(TR("error.modelviewer.resource_folder_not_valid"));
 
         bool resourceExists = false;
         for (const auto& fileProvider : Resource::getResourceProviders(FILESYSTEM_PROVIDER_NAME)) {
@@ -154,12 +153,12 @@ public:
         if (!resourceExists)
             Resource::addResourceProvider(new FilesystemResourceProvider{resourceFolderPath});
         else
-            Dialogs::popupError(TR("error.modelviewer.resource_folder_already_registered"));
+            Device::popupError(TR("error.modelviewer.resource_folder_already_registered"));
     }
 
     void convertToModelTypeSelected(const std::string& filepath, const std::string& type) const {
         if (!scene->hasEntity(this->meshId))
-            return Dialogs::popupError(TR("error.modelviewer.no_model_present"));
+            return Device::popupError(TR("error.modelviewer.no_model_present"));
 
         std::ofstream file{filepath, std::ios::binary};
         std::vector<byte> meshData = scene->getEntity(this->meshId)->getComponent<MeshComponent>().getMeshData(type);
@@ -170,14 +169,14 @@ public:
     void convertToOBJSelected() const {
         std::string filepath = this->saveDialogOBJ.GetSelected().string();
         if (filepath.empty())
-            return Dialogs::popupError(TR("error.modelviewer.filename_empty"));
+            return Device::popupError(TR("error.modelviewer.filename_empty"));
         this->convertToModelTypeSelected(filepath, "obj");
     }
 
     void convertToCMDLSelected() const {
         std::string filepath = this->saveDialogCMDL.GetSelected().string();
         if (filepath.empty())
-            return Dialogs::popupError(TR("error.modelviewer.filename_empty"));
+            return Device::popupError(TR("error.modelviewer.filename_empty"));
         this->convertToModelTypeSelected(filepath, "cmdl");
     }
 
@@ -241,7 +240,7 @@ public:
         if (scene->hasEntity(this->meshId) && meshName == scene->getEntity(this->meshId)->getComponent<MeshComponent>().getMeshResource()->getIdentifier())
             return;
         if (!Resource::hasResource(meshName)) {
-            Dialogs::popupError(TRF("error.modelviewer.resource_is_invalid", meshName));
+            Device::popupError(TRF("error.modelviewer.resource_is_invalid", meshName));
             return;
         }
         if (!scene->hasEntity(this->meshId)) {
