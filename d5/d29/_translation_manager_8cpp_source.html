@@ -149,9 +149,9 @@ $(document).ready(function(){initNavTree('d5/d29/_translation_manager_8cpp_sourc
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;std::string TranslationManager::getTranslation(<span class="keyword">const</span> std::string&amp; identifier) { <span class="comment">// NOLINT(misc-no-recursion)</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordflow">if</span> (TranslationManager::languageStrings.count(identifier) &gt; 0)</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordflow">if</span> (TranslationManager::languageStrings.contains(identifier))</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordflow">return</span> TranslationManager::languageStrings[identifier];</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (TranslationManager::languageStrings.count(<span class="stringliteral">&quot;error.translation_manager.missing_translation&quot;</span>) &gt; 0)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (TranslationManager::languageStrings.contains(<span class="stringliteral">&quot;error.translation_manager.missing_translation&quot;</span>))</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        LOG_I18N.error(TRF(<span class="stringliteral">&quot;error.translation_manager.missing_translation&quot;</span>, TranslationManager::getLanguageNameFromCode(ui_language.getValue&lt;std::string&gt;()), identifier));</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">else</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="comment">// Turns out if we&#39;re missing one string, we could be missing all of them! Just default to English</span></div>
