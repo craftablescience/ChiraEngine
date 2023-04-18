@@ -158,7 +158,14 @@ void ConsolePanel::processConsoleMessage(std::string_view message) {
                         LOG_CONSOLE.error("ConVar \"{}\" is read-only!", convar->getName());
                         return;
                     }
-                    convar->setValue(input[1]);
+                    if (input.size() > 2) {
+                        // this will shrink extra spaces between words down to one space... too bad!
+                        // todo: use quotes string globber needed for console arguments here
+                        input.erase(input.begin());
+                        convar->setValue(String::strip(String::join(input, " ")));
+                    } else {
+                        convar->setValue(input[1]);
+                    }
                 }
                 std::string logOutput{convar->getName().data()};
                 logOutput += ": ";
