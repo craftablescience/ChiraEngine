@@ -3,6 +3,7 @@ list(APPEND CHIRA_ENGINE_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/AudioNoiseComponent.h
         ${CMAKE_CURRENT_LIST_DIR}/AudioSfxrComponent.h
         ${CMAKE_CURRENT_LIST_DIR}/AudioSpeechComponent.h
+        ${CMAKE_CURRENT_LIST_DIR}/AudioWavComponent.h
         ${CMAKE_CURRENT_LIST_DIR}/CameraComponent.h
         ${CMAKE_CURRENT_LIST_DIR}/NameComponent.h
         ${CMAKE_CURRENT_LIST_DIR}/LightComponents.h
