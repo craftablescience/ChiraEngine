@@ -26,7 +26,7 @@ struct AngelScriptComponent {
 
     static void onDestroy(entt::registry& registry, entt::entity entity) {
         auto& angelScriptComponent = registry.get<AngelScriptComponent>(entity);
-        angelScriptComponent.script.callFunction<void>("stop");
+        angelScriptComponent.script.callFunction<void>("deinit");
     }
 
 private:
