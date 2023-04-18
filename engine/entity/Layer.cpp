@@ -68,6 +68,19 @@ void Layer::removeAllScenes() {
 
 void Layer::update() {
     for (const auto& [uuid, scene] : this->scenes) {
+        auto& registry = scene->getRegistry();
+
+        // Update AudioSpeechComponent
+        auto audioSpeechView = scene->getEntities<AudioSpeechComponent>();
+        for (auto entity : audioSpeechView) {
+            auto& audioSpeechComponent = registry.get<AudioSpeechComponent>(entity);
+            if (audioSpeechComponent.shouldPlay) {
+                audioSpeechComponent.shouldPlay = false;
+                audioSpeechComponent.speech.setText(audioSpeechComponent.text.c_str());
+                Audio::get().play(audioSpeechComponent.speech);
+            }
+        }
+
         // Update AngelScriptComponent
         auto angelScriptView = scene->getEntities<AngelScriptComponent>();
         for (const auto [entity, angelScriptComponent] : angelScriptView.each()) {
