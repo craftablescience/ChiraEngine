@@ -3,6 +3,7 @@
 #include <core/Assertions.h>
 #include <render/shader/UBO.h>
 #include "component/AngelScriptComponent.h"
+#include "component/AudioSpeechComponent.h"
 #include "component/MeshComponent.h"
 #include "component/MeshDynamicComponent.h"
 #include "component/SkyboxComponent.h"
@@ -78,10 +79,48 @@ void Layer::update() {
 void Layer::render() {
     Renderer::setClearColor({this->backgroundColor, 1.f});
     Renderer::pushFrameBuffer(this->frameBufferHandle);
+
+    // Set up lighting
+    DirectionalLightComponent* directionalLightComponentArray[DIRECTIONAL_LIGHT_MAX] {nullptr};
+    int directionalLightsCount = 0;
+    PointLightComponent* pointLightComponentArray[POINT_LIGHT_MAX] {nullptr};
+    int pointLightsCount = 0;
+    SpotLightComponent* spotLightComponentArray[SPOT_LIGHT_MAX] {nullptr};
+    int spotLightsCount = 0;
+
+    for (const auto& [uuid, scene] : this->scenes) {
+        auto directionalLightsView = scene->getRegistry().view<DirectionalLightComponent>();
+        for (auto [entity, directionalLightComponent] : directionalLightsView.each()) {
+            if (directionalLightsCount < DIRECTIONAL_LIGHT_MAX) {
+                directionalLightComponentArray[directionalLightsCount] = &directionalLightComponent;
+            }
+            directionalLightsCount++;
+        }
+
+        auto pointLightsView = scene->getRegistry().view<PointLightComponent>();
+        for (auto [entity, pointLightComponent] : pointLightsView.each()) {
+            if (pointLightsCount < POINT_LIGHT_MAX) {
+                pointLightComponentArray[pointLightsCount] = &pointLightComponent;
+            }
+            pointLightsCount++;
+        }
+
+        auto spotLightsView = scene->getRegistry().view<SpotLightComponent>();
+        for (auto [entity, spotLightComponent] : spotLightsView.each()) {
+            if (spotLightsCount < SPOT_LIGHT_MAX) {
+                spotLightComponentArray[spotLightsCount] = &spotLightComponent;
+            }
+            spotLightsCount++;
+        }
+    }
+    LightsUBO::get().update(directionalLightComponentArray, pointLightComponentArray, spotLightComponentArray,
+                            {directionalLightsCount, pointLightsCount, spotLightsCount});
+
+    // Render scenes
     for (const auto& [uuid, scene] : this->scenes) {
         auto& registry = scene->getRegistry();
 
-        // Set up camera and lighting
+        // Set up camera
         scene->setupForRender(this->size);
 
         // Render MeshComponent
