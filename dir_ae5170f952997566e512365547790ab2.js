@@ -6,7 +6,5 @@ var dir_ae5170f952997566e512365547790ab2 =
     [ "IPanel.cpp", "de/dbc/_i_panel_8cpp_source.html", null ],
     [ "IPanel.h", "d1/dd2/_i_panel_8h_source.html", null ],
     [ "LayerPanel.cpp", "d7/d33/_layer_panel_8cpp_source.html", null ],
-    [ "LayerPanel.h", "d7/d1c/_layer_panel_8h_source.html", null ],
-    [ "Popups.cpp", "de/dac/_popups_8cpp_source.html", null ],
-    [ "Popups.h", "d7/d01/_popups_8h_source.html", null ]
+    [ "LayerPanel.h", "d7/d1c/_layer_panel_8h_source.html", null ]
 ];

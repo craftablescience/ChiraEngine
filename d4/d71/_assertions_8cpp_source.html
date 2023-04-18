@@ -111,7 +111,7 @@ $(document).ready(function(){initNavTree('d4/d71/_assertions_8cpp_source.html','
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;Logger.h&quot;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">    #include &lt;ui/Popups.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">    #include &lt;render/backend/RenderDevice.h&gt;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">using namespace </span>chira;</div>
@@ -133,7 +133,7 @@ $(document).ready(function(){initNavTree('d4/d71/_assertions_8cpp_source.html','
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    LOG_ASSERT.error(assertMsg);</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordflow">if</span> (!chira::Dialogs::popupChoice(assertMsg + <span class="stringliteral">&quot;\n\nPress Break to break in debugger, Continue to continue.&quot;</span>, <span class="stringliteral">&quot;Assertion Failed&quot;</span>, Dialogs::POPUP_ERROR, <span class="stringliteral">&quot;Continue&quot;</span>, <span class="stringliteral">&quot;Break&quot;</span>)) {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordflow">if</span> (!chira::Device::popupChoice(assertMsg + <span class="stringliteral">&quot;\n\nPress Break to break in debugger, Continue to continue.&quot;</span>, <span class="stringliteral">&quot;Assertion Failed&quot;</span>, chira::Device::POPUP_ERROR, <span class="stringliteral">&quot;Continue&quot;</span>, <span class="stringliteral">&quot;Break&quot;</span>)) {</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        chira::breakInDebugger();</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    }</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#endif</span></div>

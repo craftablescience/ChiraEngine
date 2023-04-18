@@ -16,6 +16,13 @@ var namespaces_dup =
       ] ],
       [ "Device", null, [
         [ "WindowHandle", "d7/d15/structchira_1_1_device_1_1_window_handle.html", "d7/d15/structchira_1_1_device_1_1_window_handle" ],
+        [ "PopupFlags", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1", [
+          [ "POPUP_ERROR", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a683a012a1910f8c59063596ceb557002", null ],
+          [ "POPUP_WARNING", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a5a945e463d4548aa0394a95767e084f0", null ],
+          [ "POPUP_INFO", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1aac0fa77b917d1ff284766ed6a82f4aa0", null ],
+          [ "POPUP_BUTTONS_LEFT_TO_RIGHT", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a2b2c6541dcd235ac723f78506aa1f04b", null ],
+          [ "POPUP_BUTTONS_RIGHT_TO_LEFT", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a740f54deb02ab227d13d0833211560a9", null ]
+        ] ],
         [ "addPanelToWindow", "d2/d6b/_device_g_l_8h.html#a69dfc4c250c05633de6ef8b16eda2885", null ],
         [ "createWindow", "d2/d6b/_device_g_l_8h.html#aa220ad98d6014bcb52e7ca23a751f6b7", null ],
         [ "destroyAllWindows", "d2/d6b/_device_g_l_8h.html#af240697142926c0606e8786ca51e5a8c", null ],
@@ -37,6 +44,14 @@ var namespaces_dup =
         [ "isWindowMinimized", "d2/d6b/_device_g_l_8h.html#a04cd6b9eea3b528bb40169541bbae1c4", null ],
         [ "isWindowVisible", "d2/d6b/_device_g_l_8h.html#a306fb5bc67f682226854c9faebc63fe2", null ],
         [ "minimizeWindow", "d2/d6b/_device_g_l_8h.html#a3df45f5dfebe8e243578bdfb62bcf652", null ],
+        [ "popup", "d2/d6b/_device_g_l_8h.html#acaa15fd412762873eb563a0dddf1f35b", null ],
+        [ "popupChoice", "d2/d6b/_device_g_l_8h.html#a0eead3bcd363309b2f96c4bc772be270", null ],
+        [ "popupError", "d2/d6b/_device_g_l_8h.html#a7019fc69eb11a80f5fbc8e3cfa2521a0", null ],
+        [ "popupErrorChoice", "d2/d6b/_device_g_l_8h.html#a99edffdeebfcfc4c3dc312fa462a9e9a", null ],
+        [ "popupInfo", "d2/d6b/_device_g_l_8h.html#a91ff4ae09690585daab87874961ca67e", null ],
+        [ "popupInfoChoice", "d2/d6b/_device_g_l_8h.html#ad877b603712555e8b9957e07aebb3494", null ],
+        [ "popupWarning", "d2/d6b/_device_g_l_8h.html#ad1aee30a7305690e5790c4a6831fa438", null ],
+        [ "popupWarningChoice", "d2/d6b/_device_g_l_8h.html#aa67973d1c824deb40048529b7d4d3c7a", null ],
         [ "queueDestroyWindow", "d2/d6b/_device_g_l_8h.html#af8851456f39c9f82218836c4c1370b6a", null ],
         [ "refreshWindows", "d2/d6b/_device_g_l_8h.html#ab42aebdaf9bc7d3a0eeb042d2886c1c7", null ],
         [ "removeAllPanelsFromWindow", "d2/d6b/_device_g_l_8h.html#a15b1918aa626d634d1704d0d33e7d011", null ],
@@ -50,23 +65,6 @@ var namespaces_dup =
         [ "setWindowPositionFromCenter", "d2/d6b/_device_g_l_8h.html#a3b97eeaed44e89ae5cd32c8d7870b20b", null ],
         [ "setWindowSize", "d2/d6b/_device_g_l_8h.html#a8a80b0af0ee3e742e0413209ebca8656", null ],
         [ "setWindowVisibility", "d2/d6b/_device_g_l_8h.html#a1c6156f7b05ec8280e2aace862284bb5", null ]
-      ] ],
-      [ "Dialogs", null, [
-        [ "PopupFlags", "d7/d01/_popups_8h.html#aa90e6e7f4c55a00e4a741382198a471b", [
-          [ "POPUP_ERROR", "d7/d01/_popups_8h.html#aa90e6e7f4c55a00e4a741382198a471baf28951801d5e535dc846a4ba73142165", null ],
-          [ "POPUP_WARNING", "d7/d01/_popups_8h.html#aa90e6e7f4c55a00e4a741382198a471bafdb1c933294f3798ca0b475990416822", null ],
-          [ "POPUP_INFO", "d7/d01/_popups_8h.html#aa90e6e7f4c55a00e4a741382198a471ba62c500e5aeb7dbe63f823982b5f5b38e", null ],
-          [ "POPUP_BUTTONS_LEFT_TO_RIGHT", "d7/d01/_popups_8h.html#aa90e6e7f4c55a00e4a741382198a471baef5cce143a5bdb7fe495e5742a6e93b1", null ],
-          [ "POPUP_BUTTONS_RIGHT_TO_LEFT", "d7/d01/_popups_8h.html#aa90e6e7f4c55a00e4a741382198a471bab8f7d4a74fdb42151711bca561c392eb", null ]
-        ] ],
-        [ "popup", "d7/d01/_popups_8h.html#a23333f7c7c06c89e4ae5798a78a5be45", null ],
-        [ "popupChoice", "d7/d01/_popups_8h.html#a36540404d9d282b3ccba79240cdbbf5d", null ],
-        [ "popupError", "d7/d01/_popups_8h.html#a3399ad74d7214a01cf2326700fc37b5a", null ],
-        [ "popupErrorChoice", "d7/d01/_popups_8h.html#add13eb04365ab4bb3437a35d68d53007", null ],
-        [ "popupInfo", "d7/d01/_popups_8h.html#a3524fce0bccd5e97ff93c002bc81e772", null ],
-        [ "popupInfoChoice", "d7/d01/_popups_8h.html#a25aa0a72f1a97a3786b2454576426679", null ],
-        [ "popupWarning", "d7/d01/_popups_8h.html#a76a2e687f0d77fd9aacbc3ef87fdfda0", null ],
-        [ "popupWarningChoice", "d7/d01/_popups_8h.html#af0a3fed7f293aadedd5b797ca0f42304", null ]
       ] ],
       [ "Input", null, [
         [ "Event", "d9/df5/classchira_1_1_input_1_1_event.html", "d9/df5/classchira_1_1_input_1_1_event" ],

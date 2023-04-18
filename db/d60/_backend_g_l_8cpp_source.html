@@ -152,19 +152,19 @@ $(document).ready(function(){initNavTree('db/d60/_backend_g_l_8cpp_source.html',
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;std::map&lt;RenderMode, std::stack&lt;bool&gt;&gt; GL_STATES{</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;std::map&lt;RenderMode, std::stack&lt;bool&gt;&gt; g_GLStates{</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        { RenderMode::CULL_FACE, {}, },</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        { RenderMode::DEPTH_TEST, {}, },</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        { RenderMode::TEXTURE_CUBE_MAP_SEAMLESS, {}, },</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;};</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> initStates() {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    GL_STATES[RenderMode::CULL_FACE].push(<span class="keyword">true</span>);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    GL_STATES[RenderMode::DEPTH_TEST].push(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    g_GLStates[RenderMode::CULL_FACE].push(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    g_GLStates[RenderMode::DEPTH_TEST].push(<span class="keyword">true</span>);</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="comment">// Wiki says modern hardware is fine with this and it looks better</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    GL_STATES[RenderMode::TEXTURE_CUBE_MAP_SEAMLESS].push(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    g_GLStates[RenderMode::TEXTURE_CUBE_MAP_SEAMLESS].push(<span class="keyword">true</span>);</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [renderMode, stack] : GL_STATES) {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [renderMode, stack] : g_GLStates) {</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        changeRenderMode(renderMode, stack.top());</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
@@ -175,8 +175,8 @@ $(document).ready(function(){initNavTree('db/d60/_backend_g_l_8cpp_source.html',
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        initStates();</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        initedStates = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    }</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    runtime_assert(GL_STATES.contains(mode), <span class="stringliteral">&quot;This render mode was not added to initStates()!!&quot;</span>);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">auto</span>&amp; stack = GL_STATES[mode];</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    runtime_assert(g_GLStates.contains(mode), <span class="stringliteral">&quot;This render mode was not added to initStates()!!&quot;</span>);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">auto</span>&amp; stack = g_GLStates[mode];</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">bool</span> current = stack.top();</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    stack.push(enable);</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">if</span> (enable != current) {</div>
@@ -185,10 +185,10 @@ $(document).ready(function(){initNavTree('db/d60/_backend_g_l_8cpp_source.html',
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;}</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> popState(RenderMode mode) {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">if</span>(!GL_STATES.contains(mode) || GL_STATES[mode].size() &lt;= 1) {</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">if</span>(!g_GLStates.contains(mode) || g_GLStates[mode].size() &lt;= 1) {</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        runtime_assert(<span class="keyword">false</span>, <span class="stringliteral">&quot;Attempted to pop render state without a corresponding push!&quot;</span>);</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    }</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">auto</span>&amp; stack = GL_STATES[mode];</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keyword">auto</span>&amp; stack = g_GLStates[mode];</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordtype">bool</span> old = stack.top();</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    stack.pop();</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">if</span> (stack.top() != old) {</div>
@@ -410,7 +410,7 @@ $(document).ready(function(){initNavTree('db/d60/_backend_g_l_8cpp_source.html',
 <div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    glDeleteTextures(1, &amp;handle.handle);</div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;}</div>
 <div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160; </div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;std::stack&lt;Renderer::FrameBufferHandle&gt; GL_FRAMEBUFFERS{};</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;std::stack&lt;Renderer::FrameBufferHandle&gt; g_GLFramebuffers{};</div>
 <div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160; </div>
 <div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;<a class="code" href="../../dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html">Renderer::FrameBufferHandle</a> Renderer::createFrameBuffer(<span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, WrapMode wrapS, WrapMode wrapT, FilterMode filter, <span class="keywordtype">bool</span> hasDepth) {</div>
 <div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    FrameBufferHandle handle{ .hasDepth = hasDepth, .width = width, .height = height, };</div>
@@ -443,19 +443,19 @@ $(document).ready(function(){initNavTree('db/d60/_backend_g_l_8cpp_source.html',
 <div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    }</div>
 <div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160; </div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    glBindFramebuffer(GL_FRAMEBUFFER, GL_FRAMEBUFFERS.empty() ? 0 : GL_FRAMEBUFFERS.top().fboHandle);</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    glBindFramebuffer(GL_FRAMEBUFFER, g_GLFramebuffers.empty() ? 0 : g_GLFramebuffers.top().fboHandle);</div>
 <div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    <span class="keywordflow">return</span> handle;</div>
 <div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;}</div>
 <div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160; </div>
 <div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;<span class="keywordtype">void</span> Renderer::pushFrameBuffer(<a class="code" href="../../dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html">Renderer::FrameBufferHandle</a> handle) {</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    <span class="keyword">auto</span> old = GL_FRAMEBUFFERS.empty() ? 0 : GL_FRAMEBUFFERS.top().fboHandle;</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;    GL_FRAMEBUFFERS.push(handle);</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    <span class="keywordflow">if</span> (old != GL_FRAMEBUFFERS.top().fboHandle) {</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;        glViewport(0, 0, GL_FRAMEBUFFERS.top().width, GL_FRAMEBUFFERS.top().height);</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;        glBindFramebuffer(GL_FRAMEBUFFER, GL_FRAMEBUFFERS.top().fboHandle);</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        pushState(RenderMode::DEPTH_TEST, GL_FRAMEBUFFERS.top().hasDepth);</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    <span class="keyword">auto</span> old = g_GLFramebuffers.empty() ? 0 : g_GLFramebuffers.top().fboHandle;</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;    g_GLFramebuffers.push(handle);</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    <span class="keywordflow">if</span> (old != g_GLFramebuffers.top().fboHandle) {</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;        glViewport(0, 0, g_GLFramebuffers.top().width, g_GLFramebuffers.top().height);</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;        glBindFramebuffer(GL_FRAMEBUFFER, g_GLFramebuffers.top().fboHandle);</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        pushState(RenderMode::DEPTH_TEST, g_GLFramebuffers.top().hasDepth);</div>
 <div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    }</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    <span class="keywordflow">if</span> (GL_FRAMEBUFFERS.top().hasDepth) {</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;    <span class="keywordflow">if</span> (g_GLFramebuffers.top().hasDepth) {</div>
 <div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);</div>
 <div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;        glClear(GL_COLOR_BUFFER_BIT);</div>
@@ -463,14 +463,14 @@ $(document).ready(function(){initNavTree('db/d60/_backend_g_l_8cpp_source.html',
 <div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;}</div>
 <div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160; </div>
 <div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;<span class="keywordtype">void</span> Renderer::popFrameBuffer() {</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    runtime_assert(!GL_FRAMEBUFFERS.empty(), <span class="stringliteral">&quot;Attempted to pop framebuffer without a corresponding push!&quot;</span>);</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;    <span class="keyword">auto</span> old = GL_FRAMEBUFFERS.top().fboHandle;</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    GL_FRAMEBUFFERS.pop();</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    <span class="keywordflow">if</span> (old != (GL_FRAMEBUFFERS.empty() ? 0 : GL_FRAMEBUFFERS.top().fboHandle)) {</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;        <span class="keywordflow">if</span> (!GL_FRAMEBUFFERS.empty()) {</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;            glViewport(0, 0, GL_FRAMEBUFFERS.top().width, GL_FRAMEBUFFERS.top().height);</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    runtime_assert(!g_GLFramebuffers.empty(), <span class="stringliteral">&quot;Attempted to pop framebuffer without a corresponding push!&quot;</span>);</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;    <span class="keyword">auto</span> old = g_GLFramebuffers.top().fboHandle;</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    g_GLFramebuffers.pop();</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    <span class="keywordflow">if</span> (old != (g_GLFramebuffers.empty() ? 0 : g_GLFramebuffers.top().fboHandle)) {</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;        <span class="keywordflow">if</span> (!g_GLFramebuffers.empty()) {</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;            glViewport(0, 0, g_GLFramebuffers.top().width, g_GLFramebuffers.top().height);</div>
 <div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;        }</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;        glBindFramebuffer(GL_FRAMEBUFFER, GL_FRAMEBUFFERS.empty() ? 0 : GL_FRAMEBUFFERS.top().fboHandle);</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;        glBindFramebuffer(GL_FRAMEBUFFER, g_GLFramebuffers.empty() ? 0 : g_GLFramebuffers.top().fboHandle);</div>
 <div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;        popState(RenderMode::DEPTH_TEST);</div>
 <div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    }</div>
 <div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;}</div>
