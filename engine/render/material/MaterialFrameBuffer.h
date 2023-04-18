@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MaterialUntextured.h"
+#include "MaterialFactory.h"
 
 namespace chira {
 
