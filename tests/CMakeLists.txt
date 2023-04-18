@@ -8,5 +8,6 @@ list(APPEND CHIRA_TEST_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/engine/script/AngelScriptHelpersTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/script/AngelScriptHolderTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/ui/debug/ConsolePanelTest.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/engine/utility/Concepts.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/utility/StringTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/utility/UUIDGeneratorTest.cpp)
