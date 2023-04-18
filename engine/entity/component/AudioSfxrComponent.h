@@ -17,7 +17,7 @@ struct AudioSfxrComponent {
 
     explicit AudioSfxrComponent(const std::string& cfgId) {
         auto config = Resource::getUniqueUncachedResource<BinaryResource>(cfgId);
-        this->sfxr.loadParamsMem(const_cast<unsigned char*>(config->getBuffer()), config->getBufferLength(), true, true);
+        this->sfxr.loadParamsMem(const_cast<unsigned char*>(config->getBuffer()), static_cast<unsigned int>(config->getBufferLength()), true, true);
     }
 
 public:
