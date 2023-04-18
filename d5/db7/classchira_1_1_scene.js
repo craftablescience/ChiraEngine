@@ -7,6 +7,7 @@ var classchira_1_1_scene =
     [ "addEntity", "d5/db7/classchira_1_1_scene.html#ac003fce126f4200cd4f0a40b9481b52d", null ],
     [ "addEntity", "d5/db7/classchira_1_1_scene.html#ab0a162562b5af3f3ebe051df53a68143", null ],
     [ "addEntity", "d5/db7/classchira_1_1_scene.html#aa63f69be0c14114a8105a909a58a1cb8", null ],
+    [ "getCamera", "d5/db7/classchira_1_1_scene.html#abd23c3ccc7328448affb17b56a3ba5da", null ],
     [ "getEntities", "d5/db7/classchira_1_1_scene.html#a092b8e1ecf440f30356a20541681f3ab", null ],
     [ "getEntities", "d5/db7/classchira_1_1_scene.html#af3c228fc1f7eaa561c22c2ae1fb7fbac", null ],
     [ "getEntity", "d5/db7/classchira_1_1_scene.html#ac888e3d5a4586f3e6538139d0d9897bc", null ],

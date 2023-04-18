@@ -16,5 +16,11 @@ var searchData=
   ['astypestring_3c_20r_28argtypes_2e_2e_2e_29_3e_13',['asTypeString&lt; R(ArgTypes...)&gt;',['../db/d9f/structchira_1_1as_type_string_3_01_r_07_arg_types_8_8_8_08_4.html',1,'chira']]],
   ['astypestring_3c_20std_3a_3astring_20_3e_14',['asTypeString&lt; std::string &gt;',['../d8/dff/structchira_1_1as_type_string_3_01std_1_1string_01_4.html',1,'chira']]],
   ['astypestring_3c_20t_20_26_20_3e_15',['asTypeString&lt; T &amp; &gt;',['../d0/d4c/structchira_1_1as_type_string_3_01_t_01_6_01_4.html',1,'chira']]],
-  ['astypestring_3c_20t_20_2a_20_3e_16',['asTypeString&lt; T * &gt;',['../d5/d74/structchira_1_1as_type_string_3_01_t_01_5_01_4.html',1,'chira']]]
+  ['astypestring_3c_20t_20_2a_20_3e_16',['asTypeString&lt; T * &gt;',['../d5/d74/structchira_1_1as_type_string_3_01_t_01_5_01_4.html',1,'chira']]],
+  ['audionoisecomponent_17',['AudioNoiseComponent',['../db/d3d/structchira_1_1_audio_noise_component.html',1,'chira']]],
+  ['audioplugin_18',['AudioPlugin',['../da/dfb/struct_audio_plugin.html',1,'']]],
+  ['audiosfxrcomponent_19',['AudioSfxrComponent',['../dd/dd9/structchira_1_1_audio_sfxr_component.html',1,'chira']]],
+  ['audiospeechcomponent_20',['AudioSpeechComponent',['../df/daf/structchira_1_1_audio_speech_component.html',1,'chira']]],
+  ['audiowavcomponent_21',['AudioWavComponent',['../d7/dbe/structchira_1_1_audio_wav_component.html',1,'chira']]],
+  ['audiowavstreamcomponent_22',['AudioWavStreamComponent',['../d5/de9/structchira_1_1_audio_wav_stream_component.html',1,'chira']]]
 ];

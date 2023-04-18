@@ -110,133 +110,175 @@ $(document).ready(function(){initNavTree('df/d7f/_layer_8cpp_source.html','../..
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;core/Assertions.h&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;render/shader/UBO.h&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;component/AngelScriptComponent.h&quot;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;component/MeshComponent.h&quot;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;component/MeshDynamicComponent.h&quot;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;component/SkyboxComponent.h&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;component/TagComponents.h&quot;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;component/TransformComponent.h&quot;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">using namespace </span>chira;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;Layer::Layer(glm::vec2i size_, <a class="code" href="../../d2/df6/structchira_1_1_color_r_g_b.html">ColorRGB</a> backgroundColor_, <span class="keywordtype">bool</span> linearFiltering_)</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        : size(size_)</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        , backgroundColor(backgroundColor_)</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        , linearFiltering(linearFiltering_) {</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    this-&gt;recreateFrameBuffer();</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;}</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>* Layer::addScene() {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">auto</span> uuid = UUIDGenerator::getNewUUID();</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordflow">return</span> this-&gt;addScene(uuid);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>* Layer::addScene(<span class="keyword">const</span> std::string&amp; name) {</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">auto</span>* scene = this-&gt;addScene();</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    scene-&gt;getRegistry().emplace&lt;<a class="code" href="../../d9/d38/structchira_1_1_name_component.html">NameComponent</a>&gt;(scene-&gt;getRawHandle(), name);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordflow">return</span> scene;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>* Layer::addScene(uuids::uuid uuid) {</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    runtime_assert(!this-&gt;scenes.contains(uuid), <span class="stringliteral">&quot;Scene UUID is already present!&quot;</span>);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    this-&gt;scenes[uuid] = std::unique_ptr&lt;Scene&gt;(<span class="keyword">new</span> <a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>{});</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">auto</span>&amp; scene = this-&gt;scenes.at(uuid);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    scene-&gt;getRegistry().get&lt;<a class="code" href="../../d5/d80/structchira_1_1_u_u_i_d_component.html">UUIDComponent</a>&gt;(scene-&gt;getRawHandle()).uuid = uuid;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordflow">return</span> scene.get();</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>* Layer::addScene(uuids::uuid uuid, <span class="keyword">const</span> std::string&amp; name) {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">auto</span>* scene = this-&gt;addScene(uuid);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    scene-&gt;getRegistry().emplace&lt;<a class="code" href="../../d9/d38/structchira_1_1_name_component.html">NameComponent</a>&gt;(scene-&gt;getRawHandle(), name);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordflow">return</span> scene;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>* Layer::getScene(uuids::uuid sceneID) {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">if</span> (this-&gt;hasScene(sceneID)) {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordflow">return</span> this-&gt;scenes.at(sceneID).get();</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keywordtype">bool</span> Layer::hasScene(uuids::uuid sceneID) {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">return</span> this-&gt;scenes.contains(sceneID);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keywordtype">void</span> Layer::removeScene(uuids::uuid sceneID) {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    runtime_assert(this-&gt;hasScene(sceneID), <span class="stringliteral">&quot;Trying to remove a scene with a UUID that doesn&#39;t exist!&quot;</span>);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    this-&gt;scenes.erase(sceneID);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keywordtype">void</span> Layer::removeAllScenes() {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [uuid, scene] : this-&gt;scenes) {</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        this-&gt;removeScene(uuid);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keywordtype">void</span> Layer::update() {</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [uuid, scene] : this-&gt;scenes) {</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">// Update AngelScriptComponent</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keyword">auto</span> angelScriptView = scene-&gt;getEntities&lt;<a class="code" href="../../dc/d7f/structchira_1_1_angel_script_component.html">AngelScriptComponent</a>&gt;();</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> [entity, angelScriptComponent] : angelScriptView.each()) {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            angelScriptComponent.update();</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        }</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keywordtype">void</span> Layer::render() {</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    Renderer::setClearColor({this-&gt;backgroundColor, 1.f});</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    Renderer::pushFrameBuffer(this-&gt;frameBufferHandle);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [uuid, scene] : this-&gt;scenes) {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keyword">auto</span>&amp; registry = scene-&gt;getRegistry();</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="comment">// Set up camera and lighting</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        scene-&gt;setupForRender(this-&gt;size);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="comment">// Render MeshComponent</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">auto</span> meshView = scene-&gt;getEntities&lt;<a class="code" href="../../d6/d8e/structchira_1_1_mesh_component.html">MeshComponent</a>&gt;(entt::exclude&lt;NoRenderTagComponent&gt;);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> entity : meshView) {</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <span class="keyword">auto</span>&amp; transformComponent = registry.get&lt;<a class="code" href="../../d3/de7/structchira_1_1_transform_component.html">TransformComponent</a>&gt;(entity);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <span class="keyword">auto</span>&amp; meshComponent = registry.get&lt;<a class="code" href="../../d6/d8e/structchira_1_1_mesh_component.html">MeshComponent</a>&gt;(entity);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            meshComponent.getMeshResource()-&gt;render(transformComponent.getTransform());</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        }</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="comment">// Render MeshDynamicComponent</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keyword">auto</span> meshDynamicView = scene-&gt;getEntities&lt;<a class="code" href="../../d8/dec/structchira_1_1_mesh_dynamic_component.html">MeshDynamicComponent</a>&gt;(entt::exclude&lt;NoRenderTagComponent&gt;);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> entity : meshDynamicView) {</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <span class="keyword">auto</span>&amp; transformComponent = registry.get&lt;<a class="code" href="../../d3/de7/structchira_1_1_transform_component.html">TransformComponent</a>&gt;(entity);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="keyword">auto</span>&amp; meshDynamicComponent = registry.get&lt;<a class="code" href="../../d8/dec/structchira_1_1_mesh_dynamic_component.html">MeshDynamicComponent</a>&gt;(entity);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            meshDynamicComponent.meshBuilder.render(transformComponent.getTransform());</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        }</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="comment">// Render SkyboxComponent</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keyword">auto</span> skyboxView = registry.view&lt;<a class="code" href="../../d3/d21/structchira_1_1_skybox_component.html">SkyboxComponent</a>&gt;();</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="keywordflow">if</span> (!skyboxView.empty()) {</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            <span class="keyword">auto</span>&amp; skyboxComponent = skyboxView.get&lt;<a class="code" href="../../d3/d21/structchira_1_1_skybox_component.html">SkyboxComponent</a>&gt;(skyboxView.front());</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            skyboxComponent.skybox.render(glm::identity&lt;glm::mat4&gt;());</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        }</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="comment">// Render AngelScriptComponent</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="keyword">auto</span> angelScriptView = scene-&gt;getEntities&lt;<a class="code" href="../../dc/d7f/structchira_1_1_angel_script_component.html">AngelScriptComponent</a>&gt;(entt::exclude&lt;NoRenderTagComponent&gt;);</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> [entity, angelScriptComponent] : angelScriptView.each()) {</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            angelScriptComponent.render();</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;component/AudioSpeechComponent.h&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;component/MeshComponent.h&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;component/MeshDynamicComponent.h&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;component/SkyboxComponent.h&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;component/TagComponents.h&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;component/TransformComponent.h&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">using namespace </span>chira;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;Layer::Layer(glm::vec2i size_, <a class="code" href="../../d2/df6/structchira_1_1_color_r_g_b.html">ColorRGB</a> backgroundColor_, <span class="keywordtype">bool</span> linearFiltering_)</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        : size(size_)</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        , backgroundColor(backgroundColor_)</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        , linearFiltering(linearFiltering_) {</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    this-&gt;recreateFrameBuffer();</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>* Layer::addScene() {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">auto</span> uuid = UUIDGenerator::getNewUUID();</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">return</span> this-&gt;addScene(uuid);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>* Layer::addScene(<span class="keyword">const</span> std::string&amp; name) {</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">auto</span>* scene = this-&gt;addScene();</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    scene-&gt;getRegistry().emplace&lt;<a class="code" href="../../d9/d38/structchira_1_1_name_component.html">NameComponent</a>&gt;(scene-&gt;getRawHandle(), name);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">return</span> scene;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>* Layer::addScene(uuids::uuid uuid) {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    runtime_assert(!this-&gt;scenes.contains(uuid), <span class="stringliteral">&quot;Scene UUID is already present!&quot;</span>);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    this-&gt;scenes[uuid] = std::unique_ptr&lt;Scene&gt;(<span class="keyword">new</span> <a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>{});</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">auto</span>&amp; scene = this-&gt;scenes.at(uuid);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    scene-&gt;getRegistry().get&lt;<a class="code" href="../../d5/d80/structchira_1_1_u_u_i_d_component.html">UUIDComponent</a>&gt;(scene-&gt;getRawHandle()).uuid = uuid;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">return</span> scene.get();</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>* Layer::addScene(uuids::uuid uuid, <span class="keyword">const</span> std::string&amp; name) {</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">auto</span>* scene = this-&gt;addScene(uuid);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    scene-&gt;getRegistry().emplace&lt;<a class="code" href="../../d9/d38/structchira_1_1_name_component.html">NameComponent</a>&gt;(scene-&gt;getRawHandle(), name);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">return</span> scene;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="../../d5/db7/classchira_1_1_scene.html">Scene</a>* Layer::getScene(uuids::uuid sceneID) {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">if</span> (this-&gt;hasScene(sceneID)) {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">return</span> this-&gt;scenes.at(sceneID).get();</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">bool</span> Layer::hasScene(uuids::uuid sceneID) {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">return</span> this-&gt;scenes.contains(sceneID);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">void</span> Layer::removeScene(uuids::uuid sceneID) {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    runtime_assert(this-&gt;hasScene(sceneID), <span class="stringliteral">&quot;Trying to remove a scene with a UUID that doesn&#39;t exist!&quot;</span>);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    this-&gt;scenes.erase(sceneID);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keywordtype">void</span> Layer::removeAllScenes() {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [uuid, scene] : this-&gt;scenes) {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        this-&gt;removeScene(uuid);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    }</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keywordtype">void</span> Layer::update() {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [uuid, scene] : this-&gt;scenes) {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="comment">// Update AngelScriptComponent</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keyword">auto</span> angelScriptView = scene-&gt;getEntities&lt;<a class="code" href="../../dc/d7f/structchira_1_1_angel_script_component.html">AngelScriptComponent</a>&gt;();</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> [entity, angelScriptComponent] : angelScriptView.each()) {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            angelScriptComponent.update();</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keywordtype">void</span> Layer::render() {</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    Renderer::setClearColor({this-&gt;backgroundColor, 1.f});</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    Renderer::pushFrameBuffer(this-&gt;frameBufferHandle);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">// Set up lighting</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="../../d1/de2/structchira_1_1_directional_light_component.html">DirectionalLightComponent</a>* directionalLightComponentArray[DIRECTIONAL_LIGHT_MAX] {<span class="keyword">nullptr</span>};</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">int</span> directionalLightsCount = 0;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="../../df/d2a/structchira_1_1_point_light_component.html">PointLightComponent</a>* pointLightComponentArray[POINT_LIGHT_MAX] {<span class="keyword">nullptr</span>};</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">int</span> pointLightsCount = 0;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="../../df/d16/structchira_1_1_spot_light_component.html">SpotLightComponent</a>* spotLightComponentArray[SPOT_LIGHT_MAX] {<span class="keyword">nullptr</span>};</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordtype">int</span> spotLightsCount = 0;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [uuid, scene] : this-&gt;scenes) {</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keyword">auto</span> directionalLightsView = scene-&gt;getRegistry().view&lt;<a class="code" href="../../d1/de2/structchira_1_1_directional_light_component.html">DirectionalLightComponent</a>&gt;();</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> [entity, directionalLightComponent] : directionalLightsView.each()) {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <span class="keywordflow">if</span> (directionalLightsCount &lt; DIRECTIONAL_LIGHT_MAX) {</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                directionalLightComponentArray[directionalLightsCount] = &amp;directionalLightComponent;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            directionalLightsCount++;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        }</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keyword">auto</span> pointLightsView = scene-&gt;getRegistry().view&lt;<a class="code" href="../../df/d2a/structchira_1_1_point_light_component.html">PointLightComponent</a>&gt;();</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> [entity, pointLightComponent] : pointLightsView.each()) {</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;            <span class="keywordflow">if</span> (pointLightsCount &lt; POINT_LIGHT_MAX) {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                pointLightComponentArray[pointLightsCount] = &amp;pointLightComponent;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            }</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            pointLightsCount++;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        }</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="keyword">auto</span> spotLightsView = scene-&gt;getRegistry().view&lt;<a class="code" href="../../df/d16/structchira_1_1_spot_light_component.html">SpotLightComponent</a>&gt;();</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> [entity, spotLightComponent] : spotLightsView.each()) {</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            <span class="keywordflow">if</span> (spotLightsCount &lt; SPOT_LIGHT_MAX) {</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                spotLightComponentArray[spotLightsCount] = &amp;spotLightComponent;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            }</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            spotLightsCount++;</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        }</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    }</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    Renderer::popFrameBuffer();</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;}</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    LightsUBO::get().update(directionalLightComponentArray, pointLightComponentArray, spotLightComponentArray,</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                            {directionalLightsCount, pointLightsCount, spotLightsCount});</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="keywordtype">void</span> Layer::recreateFrameBuffer() {</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordflow">if</span> (this-&gt;frameBufferHandle) {</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        Renderer::destroyFrameBuffer(this-&gt;frameBufferHandle);</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    }</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    this-&gt;frameBufferHandle = Renderer::createFrameBuffer(this-&gt;size.x, this-&gt;size.y, WrapMode::REPEAT, WrapMode::REPEAT,</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                                                          this-&gt;linearFiltering ? FilterMode::LINEAR : FilterMode::NEAREST, <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;}</div>
-<div class="ttc" id="aclasschira_1_1_scene_html"><div class="ttname"><a href="../../d5/db7/classchira_1_1_scene.html">chira::Scene</a></div><div class="ttdef"><b>Definition:</b> <a href="../../de/d56/_scene_8h_source.html#l00015">Scene.h:15</a></div></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="comment">// Render scenes</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [uuid, scene] : this-&gt;scenes) {</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="keyword">auto</span>&amp; registry = scene-&gt;getRegistry();</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="comment">// Set up camera</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        scene-&gt;setupForRender(this-&gt;size);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="comment">// Render MeshComponent</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <span class="keyword">auto</span> meshView = scene-&gt;getEntities&lt;<a class="code" href="../../d6/d8e/structchira_1_1_mesh_component.html">MeshComponent</a>&gt;(entt::exclude&lt;NoRenderTagComponent&gt;);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> entity : meshView) {</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            <span class="keyword">auto</span>&amp; transformComponent = registry.get&lt;<a class="code" href="../../d3/de7/structchira_1_1_transform_component.html">TransformComponent</a>&gt;(entity);</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            <span class="keyword">auto</span>&amp; meshComponent = registry.get&lt;<a class="code" href="../../d6/d8e/structchira_1_1_mesh_component.html">MeshComponent</a>&gt;(entity);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            meshComponent.getMeshResource()-&gt;render(transformComponent.getTransform());</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        }</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="comment">// Render MeshDynamicComponent</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="keyword">auto</span> meshDynamicView = scene-&gt;getEntities&lt;<a class="code" href="../../d8/dec/structchira_1_1_mesh_dynamic_component.html">MeshDynamicComponent</a>&gt;(entt::exclude&lt;NoRenderTagComponent&gt;);</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> entity : meshDynamicView) {</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            <span class="keyword">auto</span>&amp; transformComponent = registry.get&lt;<a class="code" href="../../d3/de7/structchira_1_1_transform_component.html">TransformComponent</a>&gt;(entity);</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;            <span class="keyword">auto</span>&amp; meshDynamicComponent = registry.get&lt;<a class="code" href="../../d8/dec/structchira_1_1_mesh_dynamic_component.html">MeshDynamicComponent</a>&gt;(entity);</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            meshDynamicComponent.meshBuilder.render(transformComponent.getTransform());</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        }</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160; </div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        <span class="comment">// Render SkyboxComponent</span></div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        <span class="keyword">auto</span> skyboxView = registry.view&lt;<a class="code" href="../../d3/d21/structchira_1_1_skybox_component.html">SkyboxComponent</a>&gt;();</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <span class="keywordflow">if</span> (!skyboxView.empty()) {</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;            <span class="keyword">auto</span>&amp; skyboxComponent = skyboxView.get&lt;<a class="code" href="../../d3/d21/structchira_1_1_skybox_component.html">SkyboxComponent</a>&gt;(skyboxView.front());</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;            skyboxComponent.skybox.render(glm::identity&lt;glm::mat4&gt;());</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        }</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        <span class="comment">// Render AngelScriptComponent</span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        <span class="keyword">auto</span> angelScriptView = scene-&gt;getEntities&lt;<a class="code" href="../../dc/d7f/structchira_1_1_angel_script_component.html">AngelScriptComponent</a>&gt;(entt::exclude&lt;NoRenderTagComponent&gt;);</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> [entity, angelScriptComponent] : angelScriptView.each()) {</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;            angelScriptComponent.render();</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        }</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    }</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    Renderer::popFrameBuffer();</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;}</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="keywordtype">void</span> Layer::recreateFrameBuffer() {</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordflow">if</span> (this-&gt;frameBufferHandle) {</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        Renderer::destroyFrameBuffer(this-&gt;frameBufferHandle);</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    }</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    this-&gt;frameBufferHandle = Renderer::createFrameBuffer(this-&gt;size.x, this-&gt;size.y, WrapMode::REPEAT, WrapMode::REPEAT,</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;                                                          this-&gt;linearFiltering ? FilterMode::LINEAR : FilterMode::NEAREST, <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;}</div>
+<div class="ttc" id="aclasschira_1_1_scene_html"><div class="ttname"><a href="../../d5/db7/classchira_1_1_scene.html">chira::Scene</a></div><div class="ttdef"><b>Definition:</b> <a href="../../de/d56/_scene_8h_source.html#l00016">Scene.h:16</a></div></div>
 <div class="ttc" id="astructchira_1_1_angel_script_component_html"><div class="ttname"><a href="../../dc/d7f/structchira_1_1_angel_script_component.html">chira::AngelScriptComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d7/d1a/_angel_script_component_8h_source.html#l00008">AngelScriptComponent.h:8</a></div></div>
 <div class="ttc" id="astructchira_1_1_color_r_g_b_html"><div class="ttname"><a href="../../d2/df6/structchira_1_1_color_r_g_b.html">chira::ColorRGB</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d9/df8/_color_8h_source.html#l00031">Color.h:31</a></div></div>
+<div class="ttc" id="astructchira_1_1_directional_light_component_html"><div class="ttname"><a href="../../d1/de2/structchira_1_1_directional_light_component.html">chira::DirectionalLightComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d3/da0/_light_components_8h_source.html#l00012">LightComponents.h:12</a></div></div>
 <div class="ttc" id="astructchira_1_1_mesh_component_html"><div class="ttname"><a href="../../d6/d8e/structchira_1_1_mesh_component.html">chira::MeshComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d3/dce/_mesh_component_8h_source.html#l00008">MeshComponent.h:8</a></div></div>
 <div class="ttc" id="astructchira_1_1_mesh_dynamic_component_html"><div class="ttname"><a href="../../d8/dec/structchira_1_1_mesh_dynamic_component.html">chira::MeshDynamicComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d42/_mesh_dynamic_component_8h_source.html#l00008">MeshDynamicComponent.h:8</a></div></div>
 <div class="ttc" id="astructchira_1_1_name_component_html"><div class="ttname"><a href="../../d9/d38/structchira_1_1_name_component.html">chira::NameComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d1/d26/_name_component_8h_source.html#l00007">NameComponent.h:7</a></div></div>
+<div class="ttc" id="astructchira_1_1_point_light_component_html"><div class="ttname"><a href="../../df/d2a/structchira_1_1_point_light_component.html">chira::PointLightComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d3/da0/_light_components_8h_source.html#l00019">LightComponents.h:19</a></div></div>
 <div class="ttc" id="astructchira_1_1_skybox_component_html"><div class="ttname"><a href="../../d3/d21/structchira_1_1_skybox_component.html">chira::SkyboxComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../db/d43/_skybox_component_8h_source.html#l00008">SkyboxComponent.h:8</a></div></div>
+<div class="ttc" id="astructchira_1_1_spot_light_component_html"><div class="ttname"><a href="../../df/d16/structchira_1_1_spot_light_component.html">chira::SpotLightComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d3/da0/_light_components_8h_source.html#l00028">LightComponents.h:28</a></div></div>
 <div class="ttc" id="astructchira_1_1_transform_component_html"><div class="ttname"><a href="../../d3/de7/structchira_1_1_transform_component.html">chira::TransformComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d94/_transform_component_8h_source.html#l00011">TransformComponent.h:11</a></div></div>
 <div class="ttc" id="astructchira_1_1_u_u_i_d_component_html"><div class="ttname"><a href="../../d5/d80/structchira_1_1_u_u_i_d_component.html">chira::UUIDComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d6/d5c/_u_u_i_d_component_8h_source.html#l00007">UUIDComponent.h:7</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

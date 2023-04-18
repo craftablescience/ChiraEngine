@@ -28,6 +28,11 @@ var annotated_dup =
       [ "Logger", "d5/df6/classchira_1_1_logger.html", "d5/df6/classchira_1_1_logger" ],
       [ "LogChannel", "da/d25/classchira_1_1_log_channel.html", "da/d25/classchira_1_1_log_channel" ],
       [ "AngelScriptComponent", "dc/d7f/structchira_1_1_angel_script_component.html", "dc/d7f/structchira_1_1_angel_script_component" ],
+      [ "AudioNoiseComponent", "db/d3d/structchira_1_1_audio_noise_component.html", "db/d3d/structchira_1_1_audio_noise_component" ],
+      [ "AudioSfxrComponent", "dd/dd9/structchira_1_1_audio_sfxr_component.html", "dd/dd9/structchira_1_1_audio_sfxr_component" ],
+      [ "AudioSpeechComponent", "df/daf/structchira_1_1_audio_speech_component.html", "df/daf/structchira_1_1_audio_speech_component" ],
+      [ "AudioWavComponent", "d7/dbe/structchira_1_1_audio_wav_component.html", "d7/dbe/structchira_1_1_audio_wav_component" ],
+      [ "AudioWavStreamComponent", "d5/de9/structchira_1_1_audio_wav_stream_component.html", "d5/de9/structchira_1_1_audio_wav_stream_component" ],
       [ "CameraComponent", "dd/dae/structchira_1_1_camera_component.html", "dd/dae/structchira_1_1_camera_component" ],
       [ "DirectionalLightComponent", "d1/de2/structchira_1_1_directional_light_component.html", "d1/de2/structchira_1_1_directional_light_component" ],
       [ "PointLightComponent", "df/d2a/structchira_1_1_point_light_component.html", "df/d2a/structchira_1_1_point_light_component" ],
@@ -113,6 +118,7 @@ var annotated_dup =
         [ "GameOverlayActivated", "db/daa/structsteam_1_1_callbacks_1_1_game_overlay_activated.html", "db/daa/structsteam_1_1_callbacks_1_1_game_overlay_activated" ]
       ] ]
     ] ],
+    [ "AudioPlugin", "da/dfb/struct_audio_plugin.html", "da/dfb/struct_audio_plugin" ],
     [ "DiscordPlugin", "d2/d98/struct_discord_plugin.html", "d2/d98/struct_discord_plugin" ],
     [ "IPlugin", "d5/d64/struct_i_plugin.html", "d5/d64/struct_i_plugin" ],
     [ "ModelViewerPanel", "d6/dd8/class_model_viewer_panel.html", "d6/dd8/class_model_viewer_panel" ],

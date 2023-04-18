@@ -1,6 +1,9 @@
 var namespaces_dup =
 [
     [ "chira", null, [
+      [ "Audio", null, [
+        [ "get", "d2/d81/_audio_8h.html#a36b794870dcb867326e1380ee108557e", null ]
+      ] ],
       [ "CommandLine", null, [
         [ "get", "d3/d6b/_command_line_8h.html#ab81fc2eb2db8499fbcd3126886b190f1", null ],
         [ "getProgramName", "d3/d6b/_command_line_8h.html#a899cb966f00b0e1d667a600b89956c66", null ],
@@ -109,8 +112,10 @@ var namespaces_dup =
         [ "contains", "db/db5/_string_8h.html#a507d47df93a6482615a0a84b46ddf19c", null ],
         [ "endsWith", "db/db5/_string_8h.html#aa77ff5637e71a0c798e685b096ad265a", null ],
         [ "endsWith", "db/db5/_string_8h.html#a484fb3ee0f1eceb77d607f4e73dbc8ce", null ],
+        [ "join", "db/db5/_string_8h.html#a5c1268c64766fcbbbe5e1b3a31811c39", null ],
         [ "remove", "db/db5/_string_8h.html#a86bff969f0f2e821967f0dab8ab7e563", null ],
         [ "replace", "db/db5/_string_8h.html#a834fdef66326bc95e4167c281204f4a1", null ],
+        [ "requires", "db/db5/_string_8h.html#a75c3169356a19748aa73fe089a5bf7fe", null ],
         [ "split", "db/db5/_string_8h.html#a47b4950611a6d548d485fd47c7954e02", null ],
         [ "startsWith", "db/db5/_string_8h.html#a37dfcad09bf249ab18821b2c1593859a", null ],
         [ "startsWith", "db/db5/_string_8h.html#aa973713ecac4cf0025a6d640fead5c5b", null ],
@@ -138,6 +143,11 @@ var namespaces_dup =
       [ "Logger", "d5/df6/classchira_1_1_logger.html", "d5/df6/classchira_1_1_logger" ],
       [ "LogChannel", "da/d25/classchira_1_1_log_channel.html", "da/d25/classchira_1_1_log_channel" ],
       [ "AngelScriptComponent", "dc/d7f/structchira_1_1_angel_script_component.html", "dc/d7f/structchira_1_1_angel_script_component" ],
+      [ "AudioNoiseComponent", "db/d3d/structchira_1_1_audio_noise_component.html", "db/d3d/structchira_1_1_audio_noise_component" ],
+      [ "AudioSfxrComponent", "dd/dd9/structchira_1_1_audio_sfxr_component.html", "dd/dd9/structchira_1_1_audio_sfxr_component" ],
+      [ "AudioSpeechComponent", "df/daf/structchira_1_1_audio_speech_component.html", "df/daf/structchira_1_1_audio_speech_component" ],
+      [ "AudioWavComponent", "d7/dbe/structchira_1_1_audio_wav_component.html", "d7/dbe/structchira_1_1_audio_wav_component" ],
+      [ "AudioWavStreamComponent", "d5/de9/structchira_1_1_audio_wav_stream_component.html", "d5/de9/structchira_1_1_audio_wav_stream_component" ],
       [ "CameraComponent", "dd/dae/structchira_1_1_camera_component.html", "dd/dae/structchira_1_1_camera_component" ],
       [ "DirectionalLightComponent", "d1/de2/structchira_1_1_directional_light_component.html", "d1/de2/structchira_1_1_directional_light_component" ],
       [ "PointLightComponent", "df/d2a/structchira_1_1_point_light_component.html", "df/d2a/structchira_1_1_point_light_component" ],

@@ -17,6 +17,11 @@ var hierarchy =
     [ "chira::asTypeString< R(ArgTypes...)>", "db/d9f/structchira_1_1as_type_string_3_01_r_07_arg_types_8_8_8_08_4.html", [
       [ "chira::asTypeString< R(*)(ArgTypes...)>", "d2/d86/structchira_1_1as_type_string_3_01_r_07_5_08_07_arg_types_8_8_8_08_4.html", null ]
     ] ],
+    [ "chira::AudioNoiseComponent", "db/d3d/structchira_1_1_audio_noise_component.html", null ],
+    [ "chira::AudioSfxrComponent", "dd/dd9/structchira_1_1_audio_sfxr_component.html", null ],
+    [ "chira::AudioSpeechComponent", "df/daf/structchira_1_1_audio_speech_component.html", null ],
+    [ "chira::AudioWavComponent", "d7/dbe/structchira_1_1_audio_wav_component.html", null ],
+    [ "chira::AudioWavStreamComponent", "d5/de9/structchira_1_1_audio_wav_stream_component.html", null ],
     [ "chira::CameraComponent", "dd/dae/structchira_1_1_camera_component.html", null ],
     [ "chira::ChiraMeshHeader", "d4/db5/structchira_1_1_chira_mesh_header.html", null ],
     [ "chira::ColorR", "db/d16/structchira_1_1_color_r.html", null ],
@@ -117,10 +122,12 @@ var hierarchy =
     [ "chira::Vertex", "d6/df6/structchira_1_1_vertex.html", null ],
     [ "chira::Input::Event< T, U, CallbackArgs... >", "d9/df5/classchira_1_1_input_1_1_event.html", null ],
     [ "IPlugin", "d5/d64/struct_i_plugin.html", [
+      [ "AudioPlugin", "da/dfb/struct_audio_plugin.html", null ],
       [ "DiscordPlugin", "d2/d98/struct_discord_plugin.html", null ],
       [ "SteamPlugin", "da/d3d/struct_steam_plugin.html", null ]
     ] ],
     [ "PluginRegistry", "d6/d20/class_plugin_registry.html", null ],
+    [ "chira::SharedPointer< chira::BinaryResource >", "d4/d08/classchira_1_1_shared_pointer.html", null ],
     [ "chira::SharedPointer< chira::Font >", "d4/d08/classchira_1_1_shared_pointer.html", null ],
     [ "chira::SharedPointer< chira::Image >", "d4/d08/classchira_1_1_shared_pointer.html", null ],
     [ "chira::SharedPointer< chira::IMaterial >", "d4/d08/classchira_1_1_shared_pointer.html", null ],
