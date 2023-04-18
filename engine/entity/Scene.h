@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <entt/entt.hpp>
 #include <math/Types.h>
+#include "component/CameraComponent.h"
 #include "component/NameComponent.h"
 #include "component/UUIDComponent.h"
 
@@ -46,6 +47,8 @@ public:
     [[nodiscard]] bool hasEntity(uuids::uuid entityID);
 
     void removeEntity(uuids::uuid entityID);
+
+    CameraComponent* getCamera();
 
     void setupForRender(glm::vec2i size);
 

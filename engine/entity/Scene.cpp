@@ -3,8 +3,6 @@
 #include <core/Assertions.h>
 #include <render/shader/UBO.h>
 #include "component/AngelScriptComponent.h"
-#include "component/CameraComponent.h"
-#include "component/LightComponents.h"
 #include "component/TagComponents.h"
 #include "component/TransformComponent.h"
 #include "Entity.h"
@@ -73,16 +71,18 @@ void Scene::removeEntity(uuids::uuid entityID) {
     this->entities.erase(entityID);
 }
 
-void Scene::setupForRender(glm::vec2i size) {
-    const CameraComponent* camera = nullptr;
-
+CameraComponent* Scene::getCamera() {
     auto cameraView = this->getRegistry().view<CameraComponent>();
     for (auto [entity, cameraComponent] : cameraView.each()) {
         if (cameraComponent.active) {
-            camera = &cameraComponent;
-            break;
+            return &cameraComponent;
         }
     }
+    return nullptr;
+}
+
+void Scene::setupForRender(glm::vec2i size) {
+    const auto* camera = this->getCamera();
     if (!camera)
         return;
 
@@ -92,36 +92,6 @@ void Scene::setupForRender(glm::vec2i size) {
             camera->getView(),
             transform->getPosition(),
             transform->getFrontVector());
-
-    DirectionalLightComponent* directionalLightComponentArray[DIRECTIONAL_LIGHT_MAX] {nullptr};
-    auto directionalLightsView = this->getRegistry().view<DirectionalLightComponent>();
-    int directionalLightsCount = 0;
-    for (auto [entity, directionalLightComponent] : directionalLightsView.each()) {
-        if (directionalLightsCount < DIRECTIONAL_LIGHT_MAX) {
-            directionalLightComponentArray[directionalLightsCount] = &directionalLightComponent;
-        }
-        directionalLightsCount++;
-    }
-    PointLightComponent* pointLightComponentArray[POINT_LIGHT_MAX] {nullptr};
-    auto pointLightsView = this->getRegistry().view<PointLightComponent>();
-    int pointLightsCount = 0;
-    for (auto [entity, pointLightComponent] : pointLightsView.each()) {
-        if (pointLightsCount < POINT_LIGHT_MAX) {
-            pointLightComponentArray[pointLightsCount] = &pointLightComponent;
-        }
-        pointLightsCount++;
-    }
-    SpotLightComponent* spotLightComponentArray[SPOT_LIGHT_MAX] {nullptr};
-    auto spotLightsView = this->getRegistry().view<SpotLightComponent>();
-    int spotLightsCount = 0;
-    for (auto [entity, spotLightComponent] : spotLightsView.each()) {
-        if (spotLightsCount < SPOT_LIGHT_MAX) {
-            spotLightComponentArray[spotLightsCount] = &spotLightComponent;
-        }
-        spotLightsCount++;
-    }
-    LightsUBO::get().update(directionalLightComponentArray, pointLightComponentArray, spotLightComponentArray,
-                            {directionalLightsCount, pointLightsCount, spotLightsCount});
 }
 
 entt::registry& Scene::getRegistry() {
