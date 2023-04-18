@@ -118,6 +118,11 @@ add_library(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/addons)
 
+# Compile with DLL exports
+if(MSVC AND BUILD_SHARED_LIBS)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC ANGELSCRIPT_DLL_LIBRARY_IMPORT)
+endif()
+
 # Compile MSVC x64 ASM
 if(MSVC AND "${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
     add_custom_command(
