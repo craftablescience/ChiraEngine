@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sstream>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -49,5 +50,31 @@ std::string stripRight(const std::string& s, char c);
 std::string strip(const std::string& s, char c);
 
 void replace(std::string& s, std::string_view from, std::string_view to);
+
+template<typename T>
+requires requires (T t) {
+    std::begin(t);
+    std::end(t);
+}
+std::string join(T& vector, std::string_view separator, std::string_view end = "") {
+    auto first = std::begin(vector);
+    auto last = std::end(vector);
+    if (first == last) {
+        return end.data();
+    }
+
+    std::stringstream ss;
+    ss << *first;
+    ++first;
+
+    while (first != last) {
+        ss << separator;
+        ss << *first;
+        ++first;
+    }
+    ss << end;
+
+    return ss.str();
+}
 
 } // namespace chira::String

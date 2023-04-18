@@ -4,7 +4,7 @@
 
 using namespace chira;
 
-TEST(StringContains, startsWith) {
+TEST(String, startsWith) {
     std::string test = "StartEnd";
     EXPECT_TRUE(String::startsWith(test, "Start"));
     EXPECT_TRUE(String::startsWith(test, 'S'));
@@ -12,7 +12,7 @@ TEST(StringContains, startsWith) {
     EXPECT_FALSE(String::startsWith(test, 'x'));
 }
 
-TEST(StringContains, endsWith) {
+TEST(String, endsWith) {
     std::string test = "StartEnd";
     EXPECT_TRUE(String::endsWith(test, "End"));
     EXPECT_TRUE(String::endsWith(test, 'd'));
@@ -20,7 +20,7 @@ TEST(StringContains, endsWith) {
     EXPECT_FALSE(String::endsWith(test, 'x'));
 }
 
-TEST(StringContains, contains) {
+TEST(String, contains) {
     std::string test = "StartEnd";
     EXPECT_TRUE(String::contains(test, "tEn"));
     EXPECT_TRUE(String::contains(test, 'E'));
@@ -28,7 +28,7 @@ TEST(StringContains, contains) {
     EXPECT_FALSE(String::contains(test, 'x'));
 }
 
-TEST(StringRemove, remove) {
+TEST(String, remove) {
     std::string test1 = "Test String", test2 = "Test String", test3 = "Test String";
     String::remove(test1, 'S');
     String::remove(test2, 't');
@@ -38,7 +38,7 @@ TEST(StringRemove, remove) {
     EXPECT_STREQ(test3.c_str(), "Tet String");
 }
 
-TEST(StringSplit, splitString) {
+TEST(String, split) {
     auto vec1 = String::split("TestString1:TestString2:TestString3", ':');
     ASSERT_EQ(vec1.size(), 3);
     EXPECT_STREQ(vec1[0].c_str(), "TestString1");
@@ -58,26 +58,47 @@ TEST(String, changeCase) {
     EXPECT_STREQ(String::toUpper(test).c_str(), "HOWDY, I'M MIXED-CASE!");
 }
 
-TEST(StringStrip, stripWhitespace) {
+TEST(String, stripWhitespace) {
+    // Whitespace
     EXPECT_STREQ(String::stripLeft("\t\n\r\v\f test").c_str(), "test");
     EXPECT_STREQ(String::stripRight("test \t\n\r\v\f").c_str(), "test");
     EXPECT_STREQ(String::strip("\t\n\r\v\f test \t\n\r\v\f").c_str(), "test");
-}
 
-TEST(StringStrip, stripString) {
+    // Manually specified
     EXPECT_STREQ(String::stripLeft(" test", " ").c_str(), "test");
     EXPECT_STREQ(String::stripRight("test ", " ").c_str(), "test");
     EXPECT_STREQ(String::strip(" test ", " ").c_str(), "test");
 }
 
-TEST(StringReplace, replaceString) {
-    std::string test{"Mary had a little lamb"};
-    String::replace(test, "little", "ginormous");
-    EXPECT_STREQ(test.c_str(), "Mary had a ginormous lamb");
+TEST(String, replace) {
+    // Single instance
+    {
+        std::string test{"Mary had a little lamb"};
+        String::replace(test, "little", "ginormous");
+        EXPECT_STREQ(test.c_str(), "Mary had a ginormous lamb");
+    }
+
+    // Multiple instances
+    {
+        std::string test{"Mary's little lamb was very little"};
+        String::replace(test, "little", "big");
+        EXPECT_STREQ(test.c_str(), "Mary's big lamb was very big");
+    }
 }
 
-TEST(StringReplace, replaceStrings) {
-    std::string test{"Mary's little lamb was very little"};
-    String::replace(test, "little", "big");
-    EXPECT_STREQ(test.c_str(), "Mary's big lamb was very big");
+TEST(String, join) {
+    std::vector<int> empty{};
+    std::vector<int> ints{0, 2, 8, 42};
+    std::vector<float> floats{0.f, 2.5f, 42.f};
+    std::vector<std::string_view> strings{"i", "am", "a", "lot", "of", "strings"};
+
+    EXPECT_STREQ(String::join(empty, ", ").c_str(), "");
+    EXPECT_STREQ(String::join(ints, ", ").c_str(), "0, 2, 8, 42");
+    EXPECT_STREQ(String::join(floats, ", ").c_str(), "0, 2.5, 42");
+    EXPECT_STREQ(String::join(strings, ", ").c_str(), "i, am, a, lot, of, strings");
+
+    EXPECT_STREQ(String::join(empty, ", ", " end").c_str(), " end");
+    EXPECT_STREQ(String::join(ints, " : ", " end").c_str(), "0 : 2 : 8 : 42 end");
+    EXPECT_STREQ(String::join(floats, " : ", " end").c_str(), "0 : 2.5 : 42 end");
+    EXPECT_STREQ(String::join(strings, " : ", " end").c_str(), "i : am : a : lot : of : strings end");
 }
