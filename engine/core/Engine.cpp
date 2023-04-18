@@ -133,9 +133,9 @@ void Engine::run() {
 
     LOG_ENGINE.info("Exiting...");
 
-    PluginRegistry::deinitAll();
-
     Device::destroyBackend();
+
+    PluginRegistry::deinitAll();
 
     Resource::discardAll();
 
