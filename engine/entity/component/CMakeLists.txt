@@ -1,5 +1,6 @@
 list(APPEND CHIRA_ENGINE_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/AngelScriptComponent.h
+        ${CMAKE_CURRENT_LIST_DIR}/AudioSfxrComponent.h
         ${CMAKE_CURRENT_LIST_DIR}/AudioSpeechComponent.h
         ${CMAKE_CURRENT_LIST_DIR}/CameraComponent.h
         ${CMAKE_CURRENT_LIST_DIR}/NameComponent.h
