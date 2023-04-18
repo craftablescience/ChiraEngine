@@ -536,3 +536,75 @@ void Device::removeAllPanelsFromWindow(WindowHandle* handle) {
     }
     handle->panels.clear();
 }
+
+void Device::popup(std::string_view message, std::string_view title, unsigned int popupFlags, std::string_view ok) {
+    SDL_MessageBoxButtonData buttons[] {
+            {
+                    .flags = SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT,
+                    .buttonid = 0,
+                    .text = ok.data(),
+            },
+    };
+    SDL_MessageBoxData data{
+            .flags = popupFlags,
+            .window = nullptr,
+            .title = title.data(),
+            .message = message.data(),
+            .numbuttons = 1,
+            .buttons = buttons,
+            .colorScheme = nullptr,
+    };
+    int buttonID;
+    SDL_ShowMessageBox(&data, &buttonID);
+}
+
+void Device::popupInfo(std::string_view message, std::string_view title) {
+    Device::popup(message, title, POPUP_INFO);
+}
+
+void Device::popupWarning(std::string_view message, std::string_view title) {
+    Device::popup(message, title, POPUP_WARNING);
+}
+
+void Device::popupError(std::string_view message, std::string_view title) {
+    Device::popup(message, title, POPUP_ERROR);
+}
+
+bool Device::popupChoice(std::string_view message, std::string_view title, unsigned int popupFlags, std::string_view ok, std::string_view cancel) {
+    SDL_MessageBoxButtonData buttons[] {
+            {
+                    .flags = SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT,
+                    .buttonid = 1,
+                    .text = ok.data(),
+            },
+            {
+                    .flags = SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT,
+                    .buttonid = 0,
+                    .text = cancel.data(),
+            }
+    };
+    SDL_MessageBoxData data{
+            .flags = popupFlags,
+            .window = nullptr,
+            .title = title.data(),
+            .message = message.data(),
+            .numbuttons = 2,
+            .buttons = buttons,
+            .colorScheme = nullptr,
+    };
+    int buttonID;
+    SDL_ShowMessageBox(&data, &buttonID);
+    return buttonID;
+}
+
+bool Device::popupInfoChoice(std::string_view message, std::string_view title) {
+    return Device::popupChoice(message, title, POPUP_INFO);
+}
+
+bool Device::popupWarningChoice(std::string_view message, std::string_view title) {
+    return Device::popupChoice(message, title, POPUP_WARNING);
+}
+
+bool Device::popupErrorChoice(std::string_view message, std::string_view title) {
+    return Device::popupChoice(message, title, POPUP_ERROR);
+}

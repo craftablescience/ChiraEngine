@@ -4,7 +4,7 @@
 #include "Logger.h"
 
 #ifdef DEBUG
-    #include <ui/Popups.h>
+    #include <render/backend/RenderDevice.h>
 #endif
 
 using namespace chira;
@@ -26,7 +26,7 @@ void runtime_assert_internal(bool shouldAssert, std::string_view message, const 
     LOG_ASSERT.error(assertMsg);
 
 #ifdef DEBUG
-    if (!chira::Dialogs::popupChoice(assertMsg + "\n\nPress Break to break in debugger, Continue to continue.", "Assertion Failed", Dialogs::POPUP_ERROR, "Continue", "Break")) {
+    if (!chira::Device::popupChoice(assertMsg + "\n\nPress Break to break in debugger, Continue to continue.", "Assertion Failed", chira::Device::POPUP_ERROR, "Continue", "Break")) {
         chira::breakInDebugger();
     }
 #endif
