@@ -31,3 +31,7 @@ AngelScriptHolder::AngelScriptHolder(std::string identifier_) : identifier(std::
     this->context = scriptEngine->CreateContext();
     this->module = scriptEngine->GetModule(this->identifier.c_str());
 }
+
+AngelScriptHolder::~AngelScriptHolder() {
+    this->context->Release();
+}

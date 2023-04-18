@@ -6,7 +6,8 @@
 namespace chira {
 
 struct AngelScriptComponent {
-public:
+    static constexpr auto in_place_delete = true;
+
     explicit AngelScriptComponent(const std::string& scriptID)
             : script(scriptID) {}
 
