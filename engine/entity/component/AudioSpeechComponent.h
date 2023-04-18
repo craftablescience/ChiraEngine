@@ -10,18 +10,10 @@ namespace chira {
 struct AudioSpeechComponent {
     static constexpr auto in_place_delete = true;
 
-    AudioSpeechComponent(std::string text_, bool autoplay_)
-            : text(std::move(text_))
-            , shouldPlay(autoplay_) {}
+    AudioSpeechComponent() = default;
 
 public:
     TransformComponent* transform = nullptr;
-    std::string text;
-    bool shouldPlay;
-
-private:
-    friend class Layer;
-
     SoLoud::Speech speech;
 };
 
