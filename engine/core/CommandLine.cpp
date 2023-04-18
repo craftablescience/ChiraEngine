@@ -11,12 +11,12 @@ CHIRA_CREATE_LOG(COMMANDLINE);
 
 // todo(cmd): glob string values like "hello there" into one value minus quotes
 
-std::vector<std::string_view> arguments{""};
+std::vector<std::string_view> g_Arguments{""};
 
 static inline void processFlag(int& start, int argc, const char* const argv[]) {
-    arguments.emplace_back(argv[start++]);
+    g_Arguments.emplace_back(argv[start++]);
     if (start < argc) {
-        arguments.emplace_back(argv[start++]);
+        g_Arguments.emplace_back(argv[start++]);
     }
 }
 
@@ -57,7 +57,7 @@ void CommandLine::init(int argc, const char* const argv[]) {
     if (!argc) {
         return;
     }
-    arguments[0] = argv[0];
+    g_Arguments[0] = argv[0];
 
     for (int i = 1; i < argc; i++) {
         std::string_view arg{argv[i]};
@@ -70,21 +70,21 @@ void CommandLine::init(int argc, const char* const argv[]) {
 }
 
 bool CommandLine::has(std::string_view argument) {
-    if (arguments.size() <= 1) {
+    if (g_Arguments.size() <= 1) {
         return false;
     }
-    return std::find(arguments.begin() + 1, arguments.end(), argument) != arguments.end();
+    return std::find(g_Arguments.begin() + 1, g_Arguments.end(), argument) != g_Arguments.end();
 }
 
 std::string_view CommandLine::get(std::string_view argument) {
-    for (int i = 0; i < arguments.size() - 1; i++) {
-        if (argument == arguments.at(i)) {
-            return arguments.at(i + 1);
+    for (int i = 0; i < g_Arguments.size() - 1; i++) {
+        if (argument == g_Arguments.at(i)) {
+            return g_Arguments.at(i + 1);
         }
     }
     return "";
 }
 
 std::string_view CommandLine::getProgramName() {
-    return arguments.at(0);
+    return g_Arguments.at(0);
 }
