@@ -46,19 +46,19 @@ static void changeRenderMode(RenderMode mode, bool enable) {
 }
 
 /// State controller to avoid redundant state changes: each state is false by default
-std::map<RenderMode, std::stack<bool>> GL_STATES{
+std::map<RenderMode, std::stack<bool>> g_GLStates{
         { RenderMode::CULL_FACE, {}, },
         { RenderMode::DEPTH_TEST, {}, },
         { RenderMode::TEXTURE_CUBE_MAP_SEAMLESS, {}, },
 };
 static void initStates() {
-    GL_STATES[RenderMode::CULL_FACE].push(true);
-    GL_STATES[RenderMode::DEPTH_TEST].push(true);
+    g_GLStates[RenderMode::CULL_FACE].push(true);
+    g_GLStates[RenderMode::DEPTH_TEST].push(true);
 
     // Wiki says modern hardware is fine with this and it looks better
-    GL_STATES[RenderMode::TEXTURE_CUBE_MAP_SEAMLESS].push(true);
+    g_GLStates[RenderMode::TEXTURE_CUBE_MAP_SEAMLESS].push(true);
 
-    for (const auto& [renderMode, stack] : GL_STATES) {
+    for (const auto& [renderMode, stack] : g_GLStates) {
         changeRenderMode(renderMode, stack.top());
     }
 }
@@ -69,8 +69,8 @@ static void pushState(RenderMode mode, bool enable) {
         initStates();
         initedStates = true;
     }
-    runtime_assert(GL_STATES.contains(mode), "This render mode was not added to initStates()!!");
-    auto& stack = GL_STATES[mode];
+    runtime_assert(g_GLStates.contains(mode), "This render mode was not added to initStates()!!");
+    auto& stack = g_GLStates[mode];
     bool current = stack.top();
     stack.push(enable);
     if (enable != current) {
@@ -79,10 +79,10 @@ static void pushState(RenderMode mode, bool enable) {
 }
 
 static void popState(RenderMode mode) {
-    if(!GL_STATES.contains(mode) || GL_STATES[mode].size() <= 1) {
+    if(!g_GLStates.contains(mode) || g_GLStates[mode].size() <= 1) {
         runtime_assert(false, "Attempted to pop render state without a corresponding push!");
     }
-    auto& stack = GL_STATES[mode];
+    auto& stack = g_GLStates[mode];
     bool old = stack.top();
     stack.pop();
     if (stack.top() != old) {
@@ -304,7 +304,7 @@ void Renderer::destroyTexture(Renderer::TextureHandle handle) {
     glDeleteTextures(1, &handle.handle);
 }
 
-std::stack<Renderer::FrameBufferHandle> GL_FRAMEBUFFERS{};
+std::stack<Renderer::FrameBufferHandle> g_GLFramebuffers{};
 
 Renderer::FrameBufferHandle Renderer::createFrameBuffer(int width, int height, WrapMode wrapS, WrapMode wrapT, FilterMode filter, bool hasDepth) {
     FrameBufferHandle handle{ .hasDepth = hasDepth, .width = width, .height = height, };
@@ -337,19 +337,19 @@ Renderer::FrameBufferHandle Renderer::createFrameBuffer(int width, int height, W
     }
 #endif
 
-    glBindFramebuffer(GL_FRAMEBUFFER, GL_FRAMEBUFFERS.empty() ? 0 : GL_FRAMEBUFFERS.top().fboHandle);
+    glBindFramebuffer(GL_FRAMEBUFFER, g_GLFramebuffers.empty() ? 0 : g_GLFramebuffers.top().fboHandle);
     return handle;
 }
 
 void Renderer::pushFrameBuffer(Renderer::FrameBufferHandle handle) {
-    auto old = GL_FRAMEBUFFERS.empty() ? 0 : GL_FRAMEBUFFERS.top().fboHandle;
-    GL_FRAMEBUFFERS.push(handle);
-    if (old != GL_FRAMEBUFFERS.top().fboHandle) {
-        glViewport(0, 0, GL_FRAMEBUFFERS.top().width, GL_FRAMEBUFFERS.top().height);
-        glBindFramebuffer(GL_FRAMEBUFFER, GL_FRAMEBUFFERS.top().fboHandle);
-        pushState(RenderMode::DEPTH_TEST, GL_FRAMEBUFFERS.top().hasDepth);
+    auto old = g_GLFramebuffers.empty() ? 0 : g_GLFramebuffers.top().fboHandle;
+    g_GLFramebuffers.push(handle);
+    if (old != g_GLFramebuffers.top().fboHandle) {
+        glViewport(0, 0, g_GLFramebuffers.top().width, g_GLFramebuffers.top().height);
+        glBindFramebuffer(GL_FRAMEBUFFER, g_GLFramebuffers.top().fboHandle);
+        pushState(RenderMode::DEPTH_TEST, g_GLFramebuffers.top().hasDepth);
     }
-    if (GL_FRAMEBUFFERS.top().hasDepth) {
+    if (g_GLFramebuffers.top().hasDepth) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     } else {
         glClear(GL_COLOR_BUFFER_BIT);
@@ -357,14 +357,14 @@ void Renderer::pushFrameBuffer(Renderer::FrameBufferHandle handle) {
 }
 
 void Renderer::popFrameBuffer() {
-    runtime_assert(!GL_FRAMEBUFFERS.empty(), "Attempted to pop framebuffer without a corresponding push!");
-    auto old = GL_FRAMEBUFFERS.top().fboHandle;
-    GL_FRAMEBUFFERS.pop();
-    if (old != (GL_FRAMEBUFFERS.empty() ? 0 : GL_FRAMEBUFFERS.top().fboHandle)) {
-        if (!GL_FRAMEBUFFERS.empty()) {
-            glViewport(0, 0, GL_FRAMEBUFFERS.top().width, GL_FRAMEBUFFERS.top().height);
+    runtime_assert(!g_GLFramebuffers.empty(), "Attempted to pop framebuffer without a corresponding push!");
+    auto old = g_GLFramebuffers.top().fboHandle;
+    g_GLFramebuffers.pop();
+    if (old != (g_GLFramebuffers.empty() ? 0 : g_GLFramebuffers.top().fboHandle)) {
+        if (!g_GLFramebuffers.empty()) {
+            glViewport(0, 0, g_GLFramebuffers.top().width, g_GLFramebuffers.top().height);
         }
-        glBindFramebuffer(GL_FRAMEBUFFER, GL_FRAMEBUFFERS.empty() ? 0 : GL_FRAMEBUFFERS.top().fboHandle);
+        glBindFramebuffer(GL_FRAMEBUFFER, g_GLFramebuffers.empty() ? 0 : g_GLFramebuffers.top().fboHandle);
         popState(RenderMode::DEPTH_TEST);
     }
 }
