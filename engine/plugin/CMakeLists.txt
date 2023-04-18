@@ -1,7 +1,6 @@
 if(CHIRA_USE_DISCORD)
     list(APPEND CHIRA_ENGINE_HEADERS
             ${CMAKE_CURRENT_LIST_DIR}/DiscordRPC.h)
-
     list(APPEND CHIRA_ENGINE_SOURCES
             ${CMAKE_CURRENT_LIST_DIR}/DiscordRPC.cpp)
 endif()
@@ -9,7 +8,12 @@ endif()
 if(CHIRA_USE_STEAMWORKS)
     list(APPEND CHIRA_ENGINE_HEADERS
             ${CMAKE_CURRENT_LIST_DIR}/SteamAPI.h)
-
     list(APPEND CHIRA_ENGINE_SOURCES
             ${CMAKE_CURRENT_LIST_DIR}/SteamAPI.cpp)
 endif()
+
+list(APPEND CHIRA_ENGINE_HEADERS
+        ${CMAKE_CURRENT_LIST_DIR}/Audio.h)
+
+list(APPEND CHIRA_ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/Audio.cpp)
