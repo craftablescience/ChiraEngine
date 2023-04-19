@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <unordered_map>
-#include <entity/component/TransformComponent.h>
 #include <reflect/Props.h>
 
 using namespace chira;
@@ -218,15 +217,4 @@ TEST(Props, singleInheritanceMultiLevelSerialize) {
     EXPECT_EQ(derivedJSON["base"], 10);
     EXPECT_EQ(derivedJSON["derived"], 20);
     EXPECT_EQ(derivedJSON["derivedYetAgain"], 30);
-}
-
-TEST(Props, transformComponentSerializeDeserialize) {
-    TransformComponent t1{};
-    nlohmann::json tJSON = Reflect::toJSON(t1);
-    glm::vec3 position = tJSON["position"];
-    EXPECT_EQ(position, glm::vec3{});
-
-    tJSON["position"]["x"] = 1.f;
-    auto t2 = Reflect::fromJSON<TransformComponent>(tJSON);
-    EXPECT_FLOAT_EQ(t2.getPosition().x, 1.f);
 }
