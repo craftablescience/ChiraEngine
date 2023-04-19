@@ -17,7 +17,7 @@ TextureCubemap::~TextureCubemap() {
 }
 
 void TextureCubemap::compile(const nlohmann::json& properties) {
-    Serialize::fromJSON(this, properties);
+    Reflect::fromJSON(this, properties);
 
     auto fileFD = Resource::getResource<Image>(this->imageFD, this->verticalFlipFD);
     auto fileBK = Resource::getResource<Image>(this->imageBK, this->verticalFlipBK);

@@ -3,7 +3,7 @@
 using namespace chira;
 
 void MaterialTextured::compile(const nlohmann::json& properties) {
-    Serialize::fromJSON(this, properties);
+    Reflect::fromJSON(this, properties);
 }
 
 void MaterialTextured::use() const {

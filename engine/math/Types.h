@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <nlohmann/json.hpp>
 
 // Defined outside the chira namespace so it looks better in headers
 using byte = std::uint8_t;
@@ -28,5 +30,25 @@ using vec4d = vec<4, double>;
 
 constexpr const std::size_t VEC4F_SIZE = sizeof(vec4f);
 constexpr const std::size_t MAT4_SIZE = sizeof(mat4);
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec2b, x, y)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec2i, x, y)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec2u, x, y)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec2f, x, y)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec2d, x, y)
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec3b, x, y, z)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec3i, x, y, z)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec3u, x, y, z)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec3f, x, y, z)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec3d, x, y, z)
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec4b, x, y, z, w)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec4i, x, y, z, w)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec4u, x, y, z, w)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec4f, x, y, z, w)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(vec4d, x, y, z, w)
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(quat, x, y, z, w)
 
 } // namespace glm

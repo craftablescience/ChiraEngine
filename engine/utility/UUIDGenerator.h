@@ -24,3 +24,15 @@ private:
 };
 
 } // namespace chira
+
+namespace uuids {
+
+inline void to_json(nlohmann::json& j, const uuid& u) {
+    j = {to_string(u)};
+}
+
+inline void from_json(const nlohmann::json& j, uuid& u) {
+    u = *uuid::from_string(j.get<std::string>());
+}
+
+} // namespace uuids

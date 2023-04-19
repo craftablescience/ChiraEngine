@@ -5,7 +5,7 @@ using namespace chira;
 IMaterial::IMaterial(std::string identifier_) : PropertiesResource(std::move(identifier_)) {}
 
 void IMaterial::compile(const nlohmann::json& properties) {
-    Serialize::fromJSON(this, properties);
+    Reflect::fromJSON(this, properties);
 }
 
 void IMaterial::use() const {

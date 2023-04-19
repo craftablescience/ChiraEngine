@@ -2,8 +2,8 @@
 
 #include <vector>
 #include <unordered_map>
-
-#include <resource/Properties.h>
+#include <entity/component/TransformComponent.h>
+#include <reflect/Props.h>
 
 using namespace chira;
 
@@ -21,8 +21,8 @@ struct SimpleStructWithProps {
     );
 };
 
-TEST(Properties, simpleDeserialize) {
-    auto test = Serialize::fromJSON<SimpleStructWithProps>(nlohmann::json::parse(R"({
+TEST(Props, simpleDeserialize) {
+    auto test = Reflect::fromJSON<SimpleStructWithProps>(nlohmann::json::parse(R"({
         "x": -45,
         "y": 0,
         "z": "no",
@@ -38,9 +38,9 @@ TEST(Properties, simpleDeserialize) {
     EXPECT_FALSE(test.b);
 }
 
-TEST(Properties, simpleSerialize) {
+TEST(Props, simpleSerialize) {
     SimpleStructWithProps test{};
-    nlohmann::json testJson = Serialize::toJSON(test);
+    nlohmann::json testJson = Reflect::toJSON(test);
 
     EXPECT_EQ(testJson["x"], 0);
     EXPECT_EQ(testJson["y"], 12);
@@ -51,9 +51,9 @@ TEST(Properties, simpleSerialize) {
 
 struct ComplexStructWithProps {
     std::vector<int> list{1, 2, 5, 6};
-    std::unordered_map<std::string,bool> dict{ // python 👍
-            {"first", true},
-            {"second", false}
+    std::unordered_map<std::string, bool> dict{ // python 👍
+        {"first", true},
+        {"second", false}
     };
 
     CHIRA_PROPS(
@@ -62,8 +62,8 @@ struct ComplexStructWithProps {
     );
 };
 
-TEST(Properties, complexDeserialize) {
-    auto test = Serialize::fromJSON<ComplexStructWithProps>(nlohmann::json::parse(R"({
+TEST(Props, complexDeserialize) {
+    auto test = Reflect::fromJSON<ComplexStructWithProps>(nlohmann::json::parse(R"({
         "list": [18, 34, -89],
         "dict": {"first": false, "third": true}
     })"));
@@ -79,9 +79,9 @@ TEST(Properties, complexDeserialize) {
     EXPECT_TRUE(test.dict["third"]);
 }
 
-TEST(Properties, complexSerialize) {
+TEST(Props, complexSerialize) {
     ComplexStructWithProps test{};
-    nlohmann::json testJson = Serialize::toJSON(test);
+    nlohmann::json testJson = Reflect::toJSON(test);
 
     ASSERT_TRUE(testJson.contains("list"));
     ASSERT_EQ(testJson["list"].size(), 4);
@@ -131,16 +131,16 @@ struct StructWithGettersAndSettersForProps {
     );
 };
 
-TEST(Properties, gettersAndSetters) {
+TEST(Props, gettersAndSetters) {
     StructWithGettersAndSettersForProps test1{};
-    nlohmann::json testJson = Serialize::toJSON(test1);
+    nlohmann::json testJson = Reflect::toJSON(test1);
     EXPECT_TRUE(test1.aWasGot);
     EXPECT_EQ(testJson["a"], 5);
     EXPECT_TRUE(testJson["b"]);
     EXPECT_TRUE(test1.cWasGot);
     EXPECT_STREQ(testJson["c"].get<std::string>().c_str(), "hello getter");
 
-    auto test2 = Serialize::fromJSON<StructWithGettersAndSettersForProps>(nlohmann::json::parse(R"({
+    auto test2 = Reflect::fromJSON<StructWithGettersAndSettersForProps>(nlohmann::json::parse(R"({
         "a": 2,
         "b": true,
         "c": "inside"
@@ -176,13 +176,13 @@ struct StructWithPropsInheritedYetAgain : public StructWithPropsInherited {
     );
 };
 
-TEST(Properties, singleInheritanceSingleLevelDeserialize) {
-    auto base = Serialize::fromJSON<StructWithPropsBase>(nlohmann::json::parse(R"({
+TEST(Props, singleInheritanceSingleLevelDeserialize) {
+    auto base = Reflect::fromJSON<StructWithPropsBase>(nlohmann::json::parse(R"({
         "base": -45
     })"));
     EXPECT_EQ(base.base, -45);
 
-    auto derived = Serialize::fromJSON<StructWithPropsInherited>(nlohmann::json::parse(R"({
+    auto derived = Reflect::fromJSON<StructWithPropsInherited>(nlohmann::json::parse(R"({
         "base": -5,
         "derived": 10
     })"));
@@ -190,19 +190,19 @@ TEST(Properties, singleInheritanceSingleLevelDeserialize) {
     EXPECT_EQ(derived.derived, 10);
 }
 
-TEST(Properties, singleInheritanceSingleLevelSerialize) {
+TEST(Props, singleInheritanceSingleLevelSerialize) {
     StructWithPropsBase base{};
-    nlohmann::json baseJSON = Serialize::toJSON(base);
+    nlohmann::json baseJSON = Reflect::toJSON(base);
     EXPECT_EQ(baseJSON["base"], 10);
 
     StructWithPropsInherited derived{};
-    nlohmann::json derivedJSON = Serialize::toJSON(derived);
+    nlohmann::json derivedJSON = Reflect::toJSON(derived);
     EXPECT_EQ(derivedJSON["base"], 10);
     EXPECT_EQ(derivedJSON["derived"], 20);
 }
 
-TEST(Properties, singleInheritanceMultiLevelDeserialize) {
-    auto derived = Serialize::fromJSON<StructWithPropsInheritedYetAgain>(nlohmann::json::parse(R"({
+TEST(Props, singleInheritanceMultiLevelDeserialize) {
+    auto derived = Reflect::fromJSON<StructWithPropsInheritedYetAgain>(nlohmann::json::parse(R"({
         "base": -5,
         "derived": 10,
         "derivedYetAgain": 15
@@ -212,10 +212,21 @@ TEST(Properties, singleInheritanceMultiLevelDeserialize) {
     EXPECT_EQ(derived.derivedYetAgain, 15);
 }
 
-TEST(Properties, singleInheritanceMultiLevelSerialize) {
+TEST(Props, singleInheritanceMultiLevelSerialize) {
     StructWithPropsInheritedYetAgain derived{};
-    nlohmann::json derivedJSON = Serialize::toJSON(derived);
+    nlohmann::json derivedJSON = Reflect::toJSON(derived);
     EXPECT_EQ(derivedJSON["base"], 10);
     EXPECT_EQ(derivedJSON["derived"], 20);
     EXPECT_EQ(derivedJSON["derivedYetAgain"], 30);
+}
+
+TEST(Props, transformComponentSerializeDeserialize) {
+    TransformComponent t1{};
+    nlohmann::json tJSON = Reflect::toJSON(t1);
+    glm::vec3 position = tJSON["position"];
+    EXPECT_EQ(position, glm::vec3{});
+
+    tJSON["position"]["x"] = 1.f;
+    auto t2 = Reflect::fromJSON<TransformComponent>(tJSON);
+    EXPECT_FLOAT_EQ(t2.getPosition().x, 1.f);
 }

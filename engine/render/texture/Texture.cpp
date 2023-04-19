@@ -17,7 +17,7 @@ Texture::~Texture() {
 }
 
 void Texture::compile(const nlohmann::json& properties) {
-    Serialize::fromJSON(this, properties);
+    Reflect::fromJSON(this, properties);
 
     auto imageFile = Resource::getResource<Image>(this->filePath, this->verticalFlip);
 

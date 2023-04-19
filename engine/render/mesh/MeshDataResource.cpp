@@ -10,7 +10,7 @@ using namespace chira;
 CHIRA_CREATE_LOG(MESHDATARESOURCE);
 
 void MeshDataResource::compile(const nlohmann::json& properties) {
-    Serialize::fromJSON(this, properties);
+    Reflect::fromJSON(this, properties);
     if (!this->materialSetInCode) {
         this->material = CHIRA_GET_MATERIAL(this->materialType, this->materialPath);
     }

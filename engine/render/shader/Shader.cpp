@@ -14,7 +14,7 @@ CHIRA_CREATE_LOG(SHADER);
 Shader::Shader(std::string identifier_) : PropertiesResource(std::move(identifier_)) {}
 
 void Shader::compile(const nlohmann::json& properties) {
-    Serialize::fromJSON(this, properties);
+    Reflect::fromJSON(this, properties);
 
     const auto shaderModuleVertString = Resource::getUniqueUncachedResource<StringResource>(this->vertexPath);
     const auto shaderModuleVertData = replaceMacros(shaderModuleVertString->getIdentifier().data(), shaderModuleVertString->getString());

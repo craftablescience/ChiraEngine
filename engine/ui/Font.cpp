@@ -5,7 +5,7 @@
 using namespace chira;
 
 void Font::compile(const nlohmann::json& properties) {
-    Serialize::fromJSON(this, properties);
+    Reflect::fromJSON(this, properties);
     ImGuiIO& io = ImGui::GetIO();
     this->range = Font::getRangeFromString(this->rangeStr);
     std::string path = FilesystemResourceProvider::getResourceAbsolutePath(this->fontPath);

@@ -3,7 +3,7 @@
 using namespace chira;
 
 void MaterialFrameBuffer::compile(const nlohmann::json& properties) {
-    Serialize::fromJSON(this, properties);
+    Reflect::fromJSON(this, properties);
     this->shader->use();
     this->shader->setUniform("texture0", 0);
 }

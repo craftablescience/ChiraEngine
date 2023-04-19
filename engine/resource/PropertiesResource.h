@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Properties.h"
+#include <reflect/Props.h>
 #include "Resource.h"
 
 namespace chira {
