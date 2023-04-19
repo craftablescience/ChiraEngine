@@ -124,7 +124,7 @@ $(document).ready(function(){initNavTree('da/d26/_texture_8cpp_source.html','../
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keywordtype">void</span> Texture::compile(<span class="keyword">const</span> nlohmann::json&amp; properties) {</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    Serialize::fromJSON(<span class="keyword">this</span>, properties);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    Reflect::fromJSON(<span class="keyword">this</span>, properties);</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">auto</span> imageFile = Resource::getResource&lt;Image&gt;(this-&gt;filePath, this-&gt;verticalFlip);</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>

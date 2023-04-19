@@ -112,7 +112,7 @@ $(document).ready(function(){initNavTree('de/dd1/_font_8cpp_source.html','../../
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">using namespace </span>chira;</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keywordtype">void</span> Font::compile(<span class="keyword">const</span> nlohmann::json&amp; properties) {</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    Serialize::fromJSON(<span class="keyword">this</span>, properties);</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    Reflect::fromJSON(<span class="keyword">this</span>, properties);</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    ImGuiIO&amp; io = ImGui::GetIO();</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    this-&gt;range = Font::getRangeFromString(this-&gt;rangeStr);</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    std::string path = <a class="code" href="../../de/de0/classchira_1_1_filesystem_resource_provider.html#abd0b09c051bde588c4db1362f8b43843">FilesystemResourceProvider::getResourceAbsolutePath</a>(this-&gt;fontPath);</div>

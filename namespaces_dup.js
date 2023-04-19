@@ -96,15 +96,15 @@ var namespaces_dup =
           [ "NOT_APPLICABLE", "da/d09/_input_manager_8h.html#a306db1221ee360954d2f7cbfd496ab91aeb7295999e22b161fe9136ac2a60c0d5", null ]
         ] ]
       ] ],
-      [ "Renderer", "d5/d36/namespacechira_1_1_renderer.html", "d5/d36/namespacechira_1_1_renderer" ],
-      [ "Serialize", null, [
-        [ "Property", "d2/d81/structchira_1_1_serialize_1_1_property.html", "d2/d81/structchira_1_1_serialize_1_1_property" ],
-        [ "createProperty", "d4/d91/_properties_8h.html#a16e18cdca81d0f279bad872f3e77ee98", null ],
-        [ "fromJSON", "d4/d91/_properties_8h.html#a2dd2da794230f4c175dc19a9d59a0f11", null ],
-        [ "fromJSON", "d4/d91/_properties_8h.html#ae3eee1dad8ecc78985d678f40aca290f", null ],
-        [ "toJSON", "d4/d91/_properties_8h.html#a2cffd4b0ade1c45b7ffd8b82a06245be", null ],
-        [ "toJSON", "d4/d91/_properties_8h.html#a23c2d5b801d277f99fb2fe499faeafa4", null ]
+      [ "Reflect", null, [
+        [ "Property", "d6/d39/structchira_1_1_reflect_1_1_property.html", "d6/d39/structchira_1_1_reflect_1_1_property" ],
+        [ "createProperty", "df/de2/_props_8h.html#a8456b58c69b21e8112a5e5e931e04fd9", null ],
+        [ "fromJSON", "df/de2/_props_8h.html#a150b54e612f1e5eb7c483b416aa16b75", null ],
+        [ "fromJSON", "df/de2/_props_8h.html#a08dd639ae1d24857596f80c192b5a63b", null ],
+        [ "toJSON", "df/de2/_props_8h.html#a61bfac99add9251c42c7c9e50dd3c0a3", null ],
+        [ "toJSON", "df/de2/_props_8h.html#af442c721a7d4356522d6ae164a8b9e3e", null ]
       ] ],
+      [ "Renderer", "d5/d36/namespacechira_1_1_renderer.html", "d5/d36/namespacechira_1_1_renderer" ],
       [ "String", null, [
         [ "contains", "db/db5/_string_8h.html#ab21f704364f7fca62e5a92d58b2b8b7e", null ],
         [ "contains", "db/db5/_string_8h.html#a507d47df93a6482615a0a84b46ddf19c", null ],
@@ -517,5 +517,9 @@ var namespaces_dup =
         [ "INSUFFICIENT_FUNDS", "d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299aed37ceb30665ea11467e944311ffe598", null ],
         [ "TOO_MANY_PENDING", "d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a34c92d56a548194bca45515b30044122", null ]
       ] ]
+    ] ],
+    [ "uuids", null, [
+      [ "from_json", "d6/d99/_u_u_i_d_generator_8h.html#a9b0397bcac2855ea028cb38364849dde", null ],
+      [ "to_json", "d6/d99/_u_u_i_d_generator_8h.html#ad15084ec87fb74aee6a2637846f1beaa", null ]
     ] ]
 ];

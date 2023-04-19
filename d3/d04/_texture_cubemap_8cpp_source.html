@@ -124,7 +124,7 @@ $(document).ready(function(){initNavTree('d3/d04/_texture_cubemap_8cpp_source.ht
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keywordtype">void</span> TextureCubemap::compile(<span class="keyword">const</span> nlohmann::json&amp; properties) {</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    Serialize::fromJSON(<span class="keyword">this</span>, properties);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    Reflect::fromJSON(<span class="keyword">this</span>, properties);</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">auto</span> fileFD = Resource::getResource&lt;Image&gt;(this-&gt;imageFD, this-&gt;verticalFlipFD);</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">auto</span> fileBK = Resource::getResource&lt;Image&gt;(this-&gt;imageBK, this-&gt;verticalFlipBK);</div>

@@ -7,6 +7,9 @@ var annotated_dup =
       [ "Input", null, [
         [ "Event", "d9/df5/classchira_1_1_input_1_1_event.html", "d9/df5/classchira_1_1_input_1_1_event" ]
       ] ],
+      [ "Reflect", null, [
+        [ "Property", "d6/d39/structchira_1_1_reflect_1_1_property.html", "d6/d39/structchira_1_1_reflect_1_1_property" ]
+      ] ],
       [ "Renderer", "d5/d36/namespacechira_1_1_renderer.html", [
         [ "TextureHandle", "dd/d4f/structchira_1_1_renderer_1_1_texture_handle.html", "dd/d4f/structchira_1_1_renderer_1_1_texture_handle" ],
         [ "FrameBufferHandle", "dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html", "dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle" ],
@@ -14,9 +17,6 @@ var annotated_dup =
         [ "ShaderHandle", "d8/db3/structchira_1_1_renderer_1_1_shader_handle.html", "d8/db3/structchira_1_1_renderer_1_1_shader_handle" ],
         [ "UniformBufferHandle", "df/d5c/structchira_1_1_renderer_1_1_uniform_buffer_handle.html", "df/d5c/structchira_1_1_renderer_1_1_uniform_buffer_handle" ],
         [ "MeshHandle", "d4/d52/structchira_1_1_renderer_1_1_mesh_handle.html", "d4/d52/structchira_1_1_renderer_1_1_mesh_handle" ]
-      ] ],
-      [ "Serialize", null, [
-        [ "Property", "d2/d81/structchira_1_1_serialize_1_1_property.html", "d2/d81/structchira_1_1_serialize_1_1_property" ]
       ] ],
       [ "ConEntry", "dc/dd3/classchira_1_1_con_entry.html", "dc/dd3/classchira_1_1_con_entry" ],
       [ "ConCommand", "d0/d61/classchira_1_1_con_command.html", "d0/d61/classchira_1_1_con_command" ],

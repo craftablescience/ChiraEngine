@@ -121,7 +121,7 @@ $(document).ready(function(){initNavTree('d5/d16/_shader_8cpp_source.html','../.
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;Shader::Shader(std::string identifier_) : <a class="code" href="../../d4/d5a/classchira_1_1_properties_resource.html">PropertiesResource</a>(std::move(identifier_)) {}</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keywordtype">void</span> Shader::compile(<span class="keyword">const</span> nlohmann::json&amp; properties) {</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    Serialize::fromJSON(<span class="keyword">this</span>, properties);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    Reflect::fromJSON(<span class="keyword">this</span>, properties);</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> shaderModuleVertString = Resource::getUniqueUncachedResource&lt;StringResource&gt;(this-&gt;vertexPath);</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> shaderModuleVertData = replaceMacros(shaderModuleVertString-&gt;getIdentifier().data(), shaderModuleVertString-&gt;getString());</div>
