@@ -28,6 +28,8 @@
 // Need to register phong material!
 #include <render/material/MaterialPhong.h>
 
+#include "InspectorPanel.h"
+
 using namespace chira;
 
 static void setupKeybinds(TransformComponent& cameraTransform) {
@@ -296,6 +298,8 @@ int main(int argc, const char* const argv[]) {
 
     auto* scene = layer->addScene();
     Device::addPanelToWindow(Engine::getMainWindow(), new ModelViewerPanel{scene});
+    Device::addPanelToWindow(Engine::getMainWindow(), new InspectorPanel());
+
 
     Engine::run();
 }
