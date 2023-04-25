@@ -1,7 +1,6 @@
 {
   "ui.window.title": "Chira Editor",
 
-  "ui.engineview.title": "Engine View",
   "ui.entities": "Entities",
 
   "ui.menubar.open_model": "Open Model...",
