@@ -7,17 +7,18 @@ using namespace chira;
 CHIRA_CREATE_LOG(INSPECTOR);
 
 InspectorPanel::InspectorPanel()
-	: IPanel("Inspector", true) {
+	    : IPanel("Inspector", true)
+        , curEnt(nullptr) {
 	this->flags |=
 		ImGuiWindowFlags_None;
 }
 
-void InspectorPanel::setEntity(Entity *newEnt) {
+void InspectorPanel::setEntity(Entity* newEnt) {
 	curEnt = newEnt;
 }
 
-Entity *InspectorPanel::getEntity() {
-	return curEnt;
+Entity* InspectorPanel::getEntity() const {
+	return this->curEnt;
 }
 
 void InspectorPanel::renderContents() {
