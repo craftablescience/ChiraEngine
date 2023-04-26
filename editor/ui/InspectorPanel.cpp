@@ -1,20 +1,13 @@
 #include "InspectorPanel.h"
 
-#include <core/Logger.h>
-
 using namespace chira;
-
-CHIRA_CREATE_LOG(INSPECTOR);
 
 InspectorPanel::InspectorPanel()
 	    : IPanel("Inspector", true)
-        , curEnt(nullptr) {
-	this->flags |=
-		ImGuiWindowFlags_None;
-}
+        , curEnt(nullptr) {}
 
 void InspectorPanel::setEntity(Entity* newEnt) {
-	curEnt = newEnt;
+	this->curEnt = newEnt;
 }
 
 Entity* InspectorPanel::getEntity() const {
@@ -22,24 +15,21 @@ Entity* InspectorPanel::getEntity() const {
 }
 
 void InspectorPanel::renderContents() {
-	ImGui::Text("Entity Name");
+    if (!this->curEnt)
+        return;
+
+	ImGui::Text("%s", this->curEnt->getName().c_str());
 	ImGui::Separator();
 
 	// testing
-	if (ImGui::CollapsingHeader("Transform")) {
-		const float   f32_zero = 0.f, f32_one = 1.f;
-		
-		static glm::vec3f position;
+	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
+        auto pos = this->curEnt->getTransform().getPosition();
+        auto rot = this->curEnt->getTransform().getRotationEuler();
 
-		ImGui::Text("Position");
-		ImGui::Separator();
-		ImGui::DragScalar("X", ImGuiDataType_Float,  &position.x, 0.005f,  &f32_zero, &f32_one, "%f");
-		ImGui::DragScalar("Y", ImGuiDataType_Float,  &position.y, 0.005f,  &f32_zero, &f32_one, "%f");
-		ImGui::DragScalar("Z", ImGuiDataType_Float,  &position.z, 0.005f,  &f32_zero, &f32_one, "%f");
-	}
+		ImGui::DragFloat3("Position", &pos.x, 0.05f);
+        ImGui::DragFloat3("Rotation", &rot.x, 0.05f);
 
-	if (ImGui::CollapsingHeader("Mesh")) {
-		ImGui::Text("TODO: This");
-		ImGui::Separator();
+        this->curEnt->getTransform().setPosition(pos);
+        this->curEnt->getTransform().setRotation(rot);
 	}
 }
