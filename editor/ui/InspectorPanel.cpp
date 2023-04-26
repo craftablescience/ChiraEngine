@@ -41,7 +41,7 @@ void InspectorPanel::renderContents() {
 
     if (ImGui::BeginPopupContextItem("add_component")) {
         // TODO: replace this predefined list with a list of registered components
-        std::string complist[18] = [
+        std::string complist[18] = {
             "AngelScript",
             "Audio Noise",
             "Audio Sfxr",
@@ -59,7 +59,7 @@ void InspectorPanel::renderContents() {
             "No Render Tag",
             "Scene Tag",
             "Transform"
-        ];
+        };
 
         for (std::string compname : complist) {
             ImGui::Selectable("%s Component", compname.c_str());
@@ -93,7 +93,7 @@ void InspectorPanel::renderContents() {
                 scriptDialog.Open();
             }
 
-            ImGui::Text("%s", scriptComp->script->identifier.c_str());
+            ImGui::Text("%s", scriptComp->getScript()->identifier.c_str());
         }
 
         // Model Dialog specific logic

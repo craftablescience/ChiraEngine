@@ -29,6 +29,10 @@ struct AngelScriptComponent {
         angelScriptComponent.script.callFunction<void>("deinit");
     }
 
+    AngelScriptHolder* getScript() {
+        return &this->script;
+    }
+
 private:
     AngelScriptHolder script;
 };
