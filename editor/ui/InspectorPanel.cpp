@@ -93,13 +93,13 @@ void InspectorPanel::renderContents() {
                 scriptDialog.Open();
             }
 
-            ImGui::Text("%s", scriptComp->getScript()->identifier.c_str());
+            ImGui::Text("%s", scriptComp->getScript()->getIdentifier().c_str());
         }
 
         // Model Dialog specific logic
         scriptDialog.Display();
         if (scriptDialog.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(this->modelDialog.GetSelected().string());
+            std::string path = FilesystemResourceProvider::getResourceIdentifier(modelDialog.GetSelected().string());
             if (!path.empty()) {
                 this->curEnt->tryRemoveComponent<AngelScriptComponent>();
                 this->curEnt->addComponent<AngelScriptComponent>(path);
