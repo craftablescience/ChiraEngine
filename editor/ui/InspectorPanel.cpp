@@ -21,6 +21,8 @@ void InspectorPanel::renderContents() {
     if (!this->curEnt)
         return;
 
+    static ImGui::FileBrowser filePicker{ImGuiFileBrowserFlags_CloseOnEsc};
+
     char nameBuf[512] {0};
     if (!this->curEnt->getName().empty()) {
         memcpy(nameBuf, this->curEnt->getName().c_str(), std::clamp(this->curEnt->getName().size(), 0ull, 512ull - 1ull));
@@ -36,13 +38,14 @@ void InspectorPanel::renderContents() {
         }
     }
 
-    // we always want to show the uuid since 2+ entities can share a name.
+    // we always want to show the uuid since 2+ entities can share a name
     ImGui::TextDisabled("%s", uuids::to_string(this->curEnt->getUUID()).c_str());
 
 	ImGui::Separator();
 
     if (ImGui::BeginPopupContextItem("Add Component")) {
-        // todo: replace this predefined list with a list of registered components
+        // todo(editor): replace this predefined list with a component registry
+        // Name and UUID are excluded because they are already viewable/editable above this
         std::string components[] = {
             "AngelScript",
             "Audio Noise",
@@ -56,12 +59,16 @@ void InspectorPanel::renderContents() {
             "Spot Light",
             "Mesh",
             "Mesh Dynamic",
-            "Name",
             "Skybox",
             "Transform"
         };
         for (const auto& component : components) {
-            ImGui::Selectable(component.c_str());
+            if (ImGui::Selectable(component.c_str())) {
+                if (component == "AngelScript") {
+                    this->curEnt->tryRemoveComponent<AngelScriptComponent>();
+                    this->curEnt->addComponent<AngelScriptComponent>("file://scripts/empty.as");
+                }
+            }
         }
         ImGui::EndPopup();
     }
@@ -86,26 +93,22 @@ void InspectorPanel::renderContents() {
 	}
 
     if (auto scriptComp = this->curEnt->tryGetComponent<AngelScriptComponent>()) {
-        static ImGui::FileBrowser scriptDialog{ImGuiFileBrowserFlags_CloseOnEsc};
-
-        if (ImGui::CollapsingHeader("Script")) {
+        if (ImGui::CollapsingHeader("AngelScript", ImGuiTreeNodeFlags_DefaultOpen)) {
             if (ImGui::Button("Pick Script")) {
-                scriptDialog.Open();
+                filePicker.Open();
             }
 
             ImGui::Text("%s", scriptComp->getScript()->getIdentifier().data());
         }
 
-        // Model Dialog specific logic
-        scriptDialog.Display();
-        if (scriptDialog.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(scriptDialog.GetSelected().string());
+        filePicker.Display();
+        if (filePicker.HasSelected()) {
+            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
             if (!path.empty()) {
                 this->curEnt->tryRemoveComponent<AngelScriptComponent>();
                 this->curEnt->addComponent<AngelScriptComponent>(path);
             }
-
-            scriptDialog.ClearSelected();
+            filePicker.ClearSelected();
         }
     }
 }
