@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/IPanel.h>
+#include <ui/ILayerPanel.h>
 #include <utility/UUIDGenerator.h>
 
 #include <imfilebrowser.h>
@@ -36,9 +36,12 @@ public:
 
     [[nodiscard]] uuids::uuid getMeshId() const;
 
+    void setSelected(Entity* selected_);
+
 private:
     Scene* scene;
     Entity* grid;
+    Entity* selected;
     std::string loadedFile;
     uuids::uuid meshId;
     bool showGrid = true;
