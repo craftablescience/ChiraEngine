@@ -56,6 +56,7 @@ next to the executable. Check the GitHub Actions script to see which DLLs need c
 - GLAD (OpenGL 4.1 Core / OpenGL 4.3 Core)
 - GLM v0.9.9
 - ImGui Filebrowser
+- ImGuizmo v1.89
 - LibLoader
 - magic_enum v0.8.2
 - nlohmann_json v3.11.2
