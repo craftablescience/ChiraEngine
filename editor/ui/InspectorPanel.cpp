@@ -39,8 +39,36 @@ void InspectorPanel::renderContents() {
 
 	ImGui::Separator();
 
-    ImGui::Button("+");
+    if (ImGui::BeginPopupContextItem("add_component")) {
+        // TODO: replace this predefined list with a list of registered components
+        std::string complist[18] = [
+            "AngelScript",
+            "Audio Noise",
+            "Audio Sfxr",
+            "Audio Speech",
+            "Audio Wav",
+            "Audio Wav Stream",
+            "Camera",
+            "Directional Light",
+            "Point Light",
+            "Spot Light"
+            "Mesh",
+            "Mesh Dynamic",
+            "Name",
+            "Skybox",
+            "No Render Tag",
+            "Scene Tag",
+            "Transform"
+        ];
 
+        for (std::string compname : complist) {
+            ImGui::Selectable("%s Component", compname.c_str());
+        }
+        ImGui::EndPopup();
+    }
+
+    if (ImGui::Button("+"))
+        ImGui::OpenPopup("add_component");
 
 	// testing
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
