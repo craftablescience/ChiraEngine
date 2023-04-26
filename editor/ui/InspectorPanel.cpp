@@ -18,7 +18,23 @@ void InspectorPanel::renderContents() {
     if (!this->curEnt)
         return;
 
-	ImGui::Text("%s", this->curEnt->getName().c_str());
+    char buf[256];
+    buf = this->curEnt->getName().c_str(); // side effect: This will show the uuid if no name component is present \
+                                              is that okay?
+
+    ImGui::InputText("##Name", buf, sizeof(buf));
+
+    if (strcmp(buf, this->curEnt->getName().c_str()) != 0) {
+        if (auto nameComponent = this->curEnt->tryGetComponent<NameComponent>()) {
+            nameComponent->name = std::string(buf);
+        } else { // if we don't have the component add it using the contents of buf as the name
+            this->curEnt->addComponent<NameComponent>(std::string(buf));
+        }
+    }
+
+    // we always want to show the uuid since 2+ entities can share a name.
+    ImGui::TextDisabled("%s", uuids::to_string(this->curEnt->getUUID()));
+
 	ImGui::Separator();
 
 	// testing
