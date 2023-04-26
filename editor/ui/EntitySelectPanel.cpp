@@ -22,6 +22,9 @@ void EntitySelectPanel::renderContents() {
                 ImGui::PushID(++id);
                 if (ImGui::Button("X")) {
                     scene->removeEntity(entityID);
+                    // todo(editor): only unselect if its currently selected
+                    this->editor->setSelected(nullptr);
+                    this->inspector->setSelected(nullptr);
                     ImGui::PopID();
                     break;
                 }
