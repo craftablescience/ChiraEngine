@@ -1,15 +1,15 @@
-#include "LayerPanel.h"
+#include "ILayerPanel.h"
 
 #include <entity/Layer.h>
 
 using namespace chira;
 
-LayerPanel::LayerPanel(const std::string& title_, Layer* layer_, bool startVisible, ImVec2 windowSize, bool enforceSize)
+ILayerPanel::ILayerPanel(const std::string& title_, Layer* layer_, bool startVisible, ImVec2 windowSize, bool enforceSize)
     : IPanel(title_, startVisible, windowSize, enforceSize)
     , layer(layer_)
     , currentSize(windowSize.x, windowSize.y) {}
 
-void LayerPanel::renderContents() {
+void ILayerPanel::renderContents() {
     if (ImGui::BeginChild("__internal_frame__")) {
         ImVec2 guiSize = ImGui::GetWindowSize();
         glm::vec2i size{guiSize.x, guiSize.y};
@@ -18,6 +18,7 @@ void LayerPanel::renderContents() {
             this->currentSize = size;
         }
         ImGui::Image(Renderer::getImGuiFrameBufferHandle(*this->layer->getRawHandle()), guiSize, ImVec2(0, 1), ImVec2(1, 0));
+        this->renderLayerContents();
     }
     ImGui::EndChild();
 }

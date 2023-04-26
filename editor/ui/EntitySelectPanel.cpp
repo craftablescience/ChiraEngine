@@ -1,13 +1,15 @@
 #include "EntitySelectPanel.h"
 
 #include <entity/Layer.h>
+#include "ModelViewerPanel.h"
 #include "InspectorPanel.h"
 
 using namespace chira;
 
-EntitySelectPanel::EntitySelectPanel(Layer* layer_, InspectorPanel* inspector_)
+EntitySelectPanel::EntitySelectPanel(Layer* layer_, ModelViewerPanel* editor_, InspectorPanel* inspector_)
         : IPanel("Entity Select", true)
         , layer(layer_)
+        , editor(editor_)
         , inspector(inspector_) {}
 
 void EntitySelectPanel::renderContents() {
@@ -26,7 +28,8 @@ void EntitySelectPanel::renderContents() {
                 ImGui::SameLine();
                 ImGui::PushID(++id);
                 if (ImGui::Button(entity->getName().c_str())) {
-                    this->inspector->setEntity(entity.get());
+                    this->editor->setSelected(entity.get());
+                    this->inspector->setSelected(entity.get());
                 }
                 ImGui::PopID();
             }

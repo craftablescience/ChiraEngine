@@ -4,6 +4,7 @@
 #include <type_traits>
 
 #include <glm/glm.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/quaternion.hpp>
 
 namespace chira {
@@ -24,13 +25,13 @@ struct TransformComponent {
             , useEulerAngles(false)
             , dirty(true) {}
 
-    [[nodiscard]] glm::mat4 getTransform() { // NOLINT(misc-no-recursion)
+    [[nodiscard]] glm::mat4 getMatrix() { // NOLINT(misc-no-recursion)
         if (this->parent) {
-            return this->parent->getTransform() * this->getTransformLocal();
+            return this->parent->getMatrix() * this->getMatrixLocal();
         }
-        return this->getTransformLocal();
+        return this->getMatrixLocal();
     }
-    [[nodiscard]] const glm::mat4& getTransformLocal() {
+    [[nodiscard]] const glm::mat4& getMatrixLocal() {
         if (dirty) {
             this->transform = TransformComponent::createTransformMatrix(
                     glm::identity<glm::mat4>(),
@@ -41,6 +42,13 @@ struct TransformComponent {
             this->dirty = false;
         }
         return this->transform;
+    }
+    void setMatrixLocal(const glm::mat4& transform_) {
+        glm::vec3 skew;
+        glm::vec4 perspective;
+        glm::decompose(transform_, this->scale, this->rotationQuat, this->position, skew, perspective);
+        // Fix euler angles
+        this->setRotation(this->rotationQuat);
     }
 
     [[nodiscard]] glm::vec3 getPosition() const { // NOLINT(misc-no-recursion)

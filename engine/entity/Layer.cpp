@@ -128,7 +128,7 @@ void Layer::render() {
         for (auto entity : meshView) {
             auto& transformComponent = registry.get<TransformComponent>(entity);
             auto& meshComponent = registry.get<MeshComponent>(entity);
-            meshComponent.getMeshResource()->render(transformComponent.getTransform());
+            meshComponent.getMeshResource()->render(transformComponent.getMatrix());
         }
 
         // Render MeshDynamicComponent
@@ -136,7 +136,7 @@ void Layer::render() {
         for (auto entity : meshDynamicView) {
             auto& transformComponent = registry.get<TransformComponent>(entity);
             auto& meshDynamicComponent = registry.get<MeshDynamicComponent>(entity);
-            meshDynamicComponent.meshBuilder.render(transformComponent.getTransform());
+            meshDynamicComponent.meshBuilder.render(transformComponent.getMatrix());
         }
 
         // Render SkyboxComponent

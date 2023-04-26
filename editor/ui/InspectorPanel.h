@@ -12,11 +12,10 @@ public:
 
     void renderContents() override;
 
-    void setEntity(Entity* newEnt);
-    [[nodiscard]] Entity* getEntity() const;
+    void setSelected(Entity* selected_);
 
 private:
-    Entity* curEnt;
+    Entity* selected;
 };
 
 } // namespace chira

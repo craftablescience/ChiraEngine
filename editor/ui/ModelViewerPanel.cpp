@@ -1,7 +1,7 @@
 #include "ModelViewerPanel.h"
 
 #include <fstream>
-
+#include <ImGuizmo.h>
 #include <core/Engine.h>
 #include <entity/component/CameraComponent.h>
 #include <entity/component/MeshComponent.h>
@@ -77,7 +77,8 @@ static void setupKeybinds(TransformComponent& cameraTransform) {
 
 ModelViewerPanel::ModelViewerPanel(Layer* layer)
         : IPanel("Model Viewer", true)
-        , scene(layer->addScene("Model Viewer")) {
+        , scene(layer->addScene("Model Viewer"))
+        , selected(nullptr) {
     this->flags |=
             ImGuiWindowFlags_NoTitleBar   |
             ImGuiWindowFlags_NoDecoration |
@@ -216,6 +217,34 @@ void ModelViewerPanel::renderContents() {
         this->grid->setVisible(this->showGrid);
     }
     ImGui::Text("%s", this->loadedFile.c_str());
+
+    if (!this->selected)
+        return;
+
+    static ImGuizmo::OPERATION currentGizmoOperation(ImGuizmo::TRANSLATE);
+    static ImGuizmo::MODE currentGizmoMode(ImGuizmo::WORLD);
+    static bool useSnap = false;
+    static float snap[3] = { 1.f, 1.f, 1.f };
+
+    ImGui::RadioButton("Translate", (int*) &currentGizmoOperation, ImGuizmo::TRANSLATE);
+    ImGui::RadioButton("Rotate", (int*) &currentGizmoOperation, ImGuizmo::ROTATE);
+    ImGui::RadioButton("Scale", (int*) &currentGizmoOperation, ImGuizmo::SCALE);
+    ImGui::Separator();
+    ImGui::RadioButton("Local", (int*) &currentGizmoMode, ImGuizmo::LOCAL);
+    ImGui::RadioButton("World", (int*) &currentGizmoMode, ImGuizmo::WORLD);
+    ImGui::Checkbox("Snap", &useSnap);
+    ImGui::InputFloat3("Snap", snap);
+
+    const auto view = this->scene->getCamera()->getView();
+    // todo(editor): HACK HACK HACK
+    const auto proj = this->scene->getCamera()->getProjection(Device::getWindowSize(Engine::getMainWindow()));
+    glm::mat4 matrix = this->selected->getTransform().getMatrix();
+
+    ImGuizmo::BeginFrame();
+    ImGuizmo::SetRect(0, 0, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
+    ImGuizmo::Manipulate(&view[0][0], &proj[0][0], currentGizmoOperation, currentGizmoMode, &matrix[0][0], useSnap ? snap : nullptr);
+
+    this->selected->getTransform().setMatrixLocal(matrix);
 }
 
 void ModelViewerPanel::setLoadedFile(const std::string& meshName) {
@@ -238,4 +267,8 @@ void ModelViewerPanel::setLoadedFile(const std::string& meshName) {
 
 [[nodiscard]] uuids::uuid ModelViewerPanel::getMeshId() const {
     return this->meshId;
+}
+
+void ModelViewerPanel::setSelected(Entity* selected_) {
+    this->selected = selected_;
 }

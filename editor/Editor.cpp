@@ -51,11 +51,13 @@ int main(int argc, const char* const argv[]) {
     auto* layer = Device::getWindowLayer(Engine::getMainWindow());
     layer->setBackgroundColor({0.15f});
 
-    Device::addPanelToWindow(Engine::getMainWindow(), new ModelViewerPanel{layer});
+    auto editor = new ModelViewerPanel{layer};
+    Device::addPanelToWindow(Engine::getMainWindow(), editor);
 
     auto inspector = new InspectorPanel{};
     Device::addPanelToWindow(Engine::getMainWindow(), inspector);
-    Device::addPanelToWindow(Engine::getMainWindow(), new EntitySelectPanel{layer, inspector});
+
+    Device::addPanelToWindow(Engine::getMainWindow(), new EntitySelectPanel{layer, editor, inspector});
 
     Engine::run();
 }

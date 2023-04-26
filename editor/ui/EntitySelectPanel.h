@@ -4,12 +4,13 @@
 
 namespace chira {
 
+class ModelViewerPanel;
 class InspectorPanel;
 class Layer;
 
 class EntitySelectPanel : public IPanel {
 public:
-    EntitySelectPanel(Layer* layer_, InspectorPanel* inspector_);
+    EntitySelectPanel(Layer* layer_, ModelViewerPanel* editor_, InspectorPanel* inspector_);
 
     void renderContents() override;
 
@@ -18,6 +19,7 @@ public:
 
 private:
     Layer* layer;
+    ModelViewerPanel* editor;
     InspectorPanel* inspector;
 };
 
