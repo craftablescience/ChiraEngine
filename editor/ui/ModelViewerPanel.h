@@ -34,16 +34,14 @@ public:
 
     void setLoadedFile(const std::string& meshName);
 
-    [[nodiscard]] uuids::uuid getMeshId() const;
-
     void setSelected(Entity* selected_);
 
 private:
     Scene* scene;
-    Entity* grid;
     Entity* selected;
     std::string loadedFile;
-    uuids::uuid meshId;
+    uuids::uuid gridID;
+    uuids::uuid previewID;
     bool showGrid = true;
     ImGui::FileBrowser modelDialog{ImGuiFileBrowserFlags_CloseOnEsc};
     ImGui::FileBrowser folderDialog{ImGuiFileBrowserFlags_CloseOnEsc | ImGuiFileBrowserFlags_SelectDirectory};

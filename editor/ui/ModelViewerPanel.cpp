@@ -91,8 +91,7 @@ ModelViewerPanel::ModelViewerPanel(Layer* layer)
 
     this->folderDialog.SetTitle("Add Resource Folder");
 
-    auto* camera = this->scene->addEntity();
-    camera->addComponent<NameComponent>("Camera");
+    auto* camera = this->scene->addEntity("Camera");
     camera->addComponent<CameraComponent>(CameraComponent::ProjectionMode::PERSPECTIVE);
 
     auto& cameraTransform = camera->getTransform();
@@ -100,9 +99,9 @@ ModelViewerPanel::ModelViewerPanel(Layer* layer)
     cameraTransform.setPitch(glm::radians(-30.f));
     cameraTransform.setYaw(glm::radians(270.f));
 
-    this->grid = this->scene->addEntity();
-    this->grid->addComponent<NameComponent>("Grid");
-    auto& gridMesh = this->grid->addComponent<MeshDynamicComponent>();
+    auto* grid = this->scene->addEntity("Grid");
+    this->gridID = grid->getUUID();
+    auto& gridMesh = grid->addComponent<MeshDynamicComponent>();
     gridMesh.meshBuilder.setMaterial(CHIRA_GET_MATERIAL("MaterialUntextured", "file://materials/unlit.json"));
     for (int i = -5; i <= 5; i++) {
         gridMesh.meshBuilder.addCube(Vertex{{i, 0, 0}}, {0.025f, 0.025f, 10.025f});
@@ -140,11 +139,11 @@ void ModelViewerPanel::addResourceFolderSelected() {
 }
 
 void ModelViewerPanel::convertToModelTypeSelected(const std::string& filepath, const std::string& type) const {
-    if (!scene->hasEntity(this->meshId))
+    if (!scene->hasEntity(this->previewID))
         return Device::popupError(TR("error.modelviewer.no_model_present"));
 
     std::ofstream file{filepath, std::ios::binary};
-    std::vector<byte> meshData = scene->getEntity(this->meshId)->getComponent<MeshComponent>().getMeshData(type);
+    std::vector<byte> meshData = scene->getEntity(this->previewID)->getComponent<MeshComponent>().getMeshData(type);
     file.write(reinterpret_cast<const char*>(meshData.data()), static_cast<std::streamsize>(meshData.size()));
     file.close();
 }
@@ -212,11 +211,13 @@ void ModelViewerPanel::preRenderContents() {
 }
 
 void ModelViewerPanel::renderContents() {
-    ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
-    if (this->grid) {
-        this->grid->setVisible(this->showGrid);
+    if (this->scene->hasEntity(this->gridID)) {
+        ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
+        this->scene->getEntity(this->gridID)->setVisible(this->showGrid);
     }
-    ImGui::Text("%s", this->loadedFile.c_str());
+    if (this->scene->hasEntity(this->previewID)) {
+        ImGui::Text("%s", this->loadedFile.c_str());
+    }
 
     if (!this->selected)
         return;
@@ -235,38 +236,35 @@ void ModelViewerPanel::renderContents() {
     ImGui::Checkbox("Snap", &useSnap);
     ImGui::InputFloat3("Snap", snap);
 
-    const auto view = this->scene->getCamera()->getView();
-    // todo(editor): HACK HACK HACK
-    const auto proj = this->scene->getCamera()->getProjection(Device::getWindowSize(Engine::getMainWindow()));
-    glm::mat4 matrix = this->selected->getTransform().getMatrix();
+    if (auto* camera = this->scene->getCamera()) {
+        const auto view = camera->getView();
+        // todo(editor): HACK HACK HACK
+        const auto proj = camera->getProjection(Device::getWindowSize(Engine::getMainWindow()));
+        glm::mat4 matrix = this->selected->getTransform().getMatrix();
 
-    ImGuizmo::BeginFrame();
-    ImGuizmo::SetRect(0, 0, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
-    ImGuizmo::Manipulate(&view[0][0], &proj[0][0], currentGizmoOperation, currentGizmoMode, &matrix[0][0], useSnap ? snap : nullptr);
+        ImGuizmo::BeginFrame();
+        ImGuizmo::SetRect(0, 0, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
+        ImGuizmo::Manipulate(&view[0][0], &proj[0][0], currentGizmoOperation, currentGizmoMode, &matrix[0][0], useSnap ? snap : nullptr);
 
-    this->selected->getTransform().setMatrixLocal(matrix);
+        this->selected->getTransform().setMatrixLocal(matrix);
+    }
 }
 
 void ModelViewerPanel::setLoadedFile(const std::string& meshName) {
-    if (scene->hasEntity(this->meshId) && meshName == scene->getEntity(this->meshId)->getComponent<MeshComponent>().getMeshResource()->getIdentifier())
+    if (auto preview = scene->getEntity(this->previewID); preview && meshName == preview->getComponent<MeshComponent>().getMeshResource()->getIdentifier())
         return;
     if (!Resource::hasResource(meshName)) {
         Device::popupError(TRF("error.modelviewer.resource_is_invalid", meshName));
         return;
     }
-    if (!scene->hasEntity(this->meshId)) {
-        auto* entity = scene->addEntity();
-        entity->addComponent<NameComponent>("Preview");
-        this->meshId = entity->getUUID();
+    if (!scene->hasEntity(this->previewID)) {
+        auto* entity = scene->addEntity("Preview");
+        this->previewID = entity->getUUID();
     }
-    auto* entity = scene->getEntity(this->meshId);
+    auto* entity = scene->getEntity(this->previewID);
     entity->tryRemoveComponent<MeshComponent>();
     entity->addComponent<MeshComponent>(meshName);
     this->loadedFile = meshName;
-}
-
-[[nodiscard]] uuids::uuid ModelViewerPanel::getMeshId() const {
-    return this->meshId;
 }
 
 void ModelViewerPanel::setSelected(Entity* selected_) {
