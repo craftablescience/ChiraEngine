@@ -18,21 +18,23 @@ struct DirectionalLightComponent {
 
 struct PointLightComponent {
     TransformComponent* transform;
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
+    glm::vec3 ambient{0.1f};
+    glm::vec3 diffuse{0.8f};
+    glm::vec3 specular{0.1f};
     // x: constant, y: linear, z: quadratic
-    glm::vec3 falloff;
+    // default is 100 units
+    glm::vec3 falloff{1.f, 0.045f, 0.0075f};
 };
 
 struct SpotLightComponent {
     TransformComponent* transform;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
+    glm::vec3 diffuse{0.8f};
+    glm::vec3 specular{0.1f};
     // x: constant, y: linear, z: quadratic
-    glm::vec3 falloff;
+    // default is 100 units
+    glm::vec3 falloff{1.f, 0.045f, 0.0075f};
     // x: inner cutoff angle, y: outer cutoff angle
-    glm::vec2 cutoff;
+    glm::vec2 cutoff{glm::radians(45.f), glm::radians(60.f)};
 };
 
 } // namespace chira

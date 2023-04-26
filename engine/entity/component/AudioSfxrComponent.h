@@ -11,7 +11,7 @@ namespace chira {
 struct AudioSfxrComponent {
     static constexpr auto in_place_delete = true;
 
-    explicit AudioSfxrComponent(int preset, int seed = 0) {
+    explicit AudioSfxrComponent(int preset = SoLoud::Sfxr::SFXR_PRESETS::COIN, int seed = 0) {
         this->sfxr.loadPreset(preset, seed);
     }
 

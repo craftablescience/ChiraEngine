@@ -10,7 +10,7 @@ namespace chira {
 struct AudioNoiseComponent {
     static constexpr auto in_place_delete = true;
 
-    explicit AudioNoiseComponent(SoLoud::Noise::NOISETYPES noise) {
+    explicit AudioNoiseComponent(SoLoud::Noise::NOISETYPES noise = SoLoud::Noise::NOISETYPES::WHITE) {
         this->noise.setType(noise);
     }
 
