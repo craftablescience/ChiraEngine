@@ -26,7 +26,7 @@ void InspectorPanel::renderContents() {
         but for some reason codacy REFUSES to accept this and as such \
         I have to do this stupid waste of time for this to actually work.
     if (this->curEnt && this->curEnt->getName()
-        && sizeof(this->curEnt->getName()) < sizeof(buf))
+        && sizeof(this->curEnt->getName()).c_str() < sizeof(buf))
         strncpy(buf, this->curEnt->getName().c_str(), sizeof(buf) - 1);
 
     ImGui::InputText("##Name", buf, sizeof(buf));
