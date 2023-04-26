@@ -19,7 +19,7 @@ void InspectorPanel::renderContents() {
         return;
 
     char buf[256];
-    strncpy(buf, this->curEnt->getName().c_str(), sizeof(buf));
+    strncpy(buf, this->curEnt->getName().c_str(), sizeof(buf) - 1);
 
     ImGui::InputText("##Name", buf, sizeof(buf));
 
