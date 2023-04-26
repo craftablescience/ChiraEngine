@@ -7,6 +7,7 @@
 #include <entity/component/AudioSpeechComponent.h>
 #include <entity/component/AudioWavComponent.h>
 #include <entity/component/AudioWavStreamComponent.h>
+#include <entity/component/BillboardComponent.h>
 #include <entity/component/CameraComponent.h>
 #include <entity/component/LightComponents.h>
 #include <entity/component/MeshComponent.h>
@@ -63,12 +64,13 @@ void InspectorPanel::renderContents() {
             "Audio Speech",
             "Audio Wav",
             "Audio Wav Stream",
+            "Billboard",
             "Camera",
             "Directional Light",
             "Point Light",
             "Spot Light",
             "Mesh",
-            "Mesh Dynamic"
+            "Mesh Dynamic",
         };
         for (const auto& component : components) {
             if (ImGui::Selectable(component.c_str())) {
@@ -90,6 +92,9 @@ void InspectorPanel::renderContents() {
                 } else if (component == "Audio Wav Stream") {
                     this->selected->tryRemoveComponent<AudioWavStreamComponent>();
                     this->selected->addComponent<AudioWavStreamComponent>();
+                } else if (component == "Billboard") {
+                    this->selected->tryRemoveComponent<BillboardComponent>();
+                    this->selected->addComponent<BillboardComponent>();
                 } else if (component == "Camera") {
                     this->selected->tryRemoveComponent<CameraComponent>();
                     this->selected->addComponent<CameraComponent>();
@@ -199,6 +204,17 @@ void InspectorPanel::renderContents() {
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Wav Stream", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("todo...");
+        }
+    }
+    if (auto component = this->selected->tryGetComponent<BillboardComponent>()) {
+        if (ImGui::Button("X")) {
+            this->selected->tryRemoveComponent<AudioWavStreamComponent>();
+        }
+        ImGui::SameLine();
+        if (ImGui::CollapsingHeader("Billboard", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::Checkbox("X Axis", &component->x);
+            ImGui::Checkbox("Y Axis", &component->y);
+            ImGui::Checkbox("Z Axis", &component->z);
         }
     }
     if (auto component = this->selected->tryGetComponent<CameraComponent>()) {

@@ -4,6 +4,7 @@
 #include <render/shader/UBO.h>
 #include "component/AngelScriptComponent.h"
 #include "component/AudioSpeechComponent.h"
+#include "component/BillboardComponent.h"
 #include "component/MeshComponent.h"
 #include "component/MeshDynamicComponent.h"
 #include "component/SkyboxComponent.h"
@@ -68,6 +69,19 @@ void Layer::removeAllScenes() {
 
 void Layer::update() {
     for (const auto& [uuid, scene] : this->scenes) {
+        if (auto* camera = scene->getCamera()) {
+            // Update BillboardComponent
+            auto billboardView = scene->getEntities<BillboardComponent>();
+            for (const auto [entity, billboardComponent] : billboardView.each()) {
+                if (billboardComponent.x)
+                    billboardComponent.transform->setPitch(camera->transform->getPitch());
+                if (billboardComponent.y)
+                    billboardComponent.transform->setYaw(camera->transform->getYaw());
+                if (billboardComponent.z)
+                    billboardComponent.transform->setRoll(camera->transform->getRoll());
+            }
+        }
+
         // Update AngelScriptComponent
         auto angelScriptView = scene->getEntities<AngelScriptComponent>();
         for (const auto [entity, angelScriptComponent] : angelScriptView.each()) {
