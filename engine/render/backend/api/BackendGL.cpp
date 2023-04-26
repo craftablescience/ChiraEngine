@@ -729,9 +729,9 @@ void Renderer::initImGui(SDL_Window* window, void* context) {
     ImGui_ImplOpenGL3_Init(GL_VERSION_STRING.data());
 }
 
-void Renderer::startImGuiFrame(SDL_Window* window) {
+void Renderer::startImGuiFrame() {
     ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplSDL2_NewFrame(window);
+    ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_PassthruCentralNode);
 }

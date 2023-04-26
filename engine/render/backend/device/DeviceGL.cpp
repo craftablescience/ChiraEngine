@@ -229,7 +229,7 @@ void Device::refreshWindows() {
         setImGuiConfigPath();
 
         Renderer::pushFrameBuffer(*handle.layer->getRawHandle());
-        Renderer::startImGuiFrame(handle.window);
+        Renderer::startImGuiFrame();
 
         handle.layer->update();
         handle.layer->render();

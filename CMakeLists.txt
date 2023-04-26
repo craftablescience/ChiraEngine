@@ -188,6 +188,7 @@ list(APPEND IMGUI_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_draw.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_tables.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_widgets.cpp)
+list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_DISABLE_OBSOLETE_FUNCTIONS)
 
 
 # Figure out what render backend and device backend we are using
