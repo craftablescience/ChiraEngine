@@ -19,12 +19,12 @@ void InspectorPanel::renderContents() {
         return;
 
     // I wish imgui used std::string holy shit
-    char *buf;
+    char buf[2048];
 
-    if (sizeof(this->curEnt->getName().c_str()) < 2048)
-        strncpy(buf, this->curEnt->getName().c_str(), 2048);
+    if (sizeof(this->curEnt->getName().c_str()) < sizeof(buf))
+        strncpy(buf, this->curEnt->getName().c_str(), sizeof(buf));
 
-    ImGui::InputText("##Name", buf, 2048);
+    ImGui::InputText("##Name", buf, sizeof(buf));
 
     if (strcmp(buf, this->curEnt->getName().c_str()) != 0) {
         if (auto nameComponent = this->curEnt->tryGetComponent<NameComponent>()) {
@@ -38,6 +38,9 @@ void InspectorPanel::renderContents() {
     ImGui::TextDisabled("%s", uuids::to_string(this->curEnt->getUUID()).c_str());
 
 	ImGui::Separator();
+
+    ImGui::Button("+");
+
 
 	// testing
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -53,4 +56,28 @@ void InspectorPanel::renderContents() {
         this->curEnt->getTransform().setRotation(rot);
         this->curEnt->getTransform().setScale(scl);
 	}
+
+    if (auto scriptComp = this->curEnt->tryGetComponent<AngelScriptComponent>()) {
+        static ImGui::FileBrowser scriptDialog{ImGuiFileBrowserFlags_CloseOnEsc};
+
+        if (ImGui::CollapsingHeader("Script")) {
+            if (ImGui::Button("Pick Script")) {
+                scriptDialog.Open();
+            }
+
+            ImGui::Text("%s", scriptComp->script->identifier.c_str());
+        }
+
+        // Model Dialog specific logic
+        scriptDialog.Display();
+        if (scriptDialog.HasSelected()) {
+            std::string path = FilesystemResourceProvider::getResourceIdentifier(this->modelDialog.GetSelected().string());
+            if (!path.empty()) {
+                this->curEnt->tryRemoveComponent<AngelScriptComponent>();
+                this->curEnt->addComponent<AngelScriptComponent>(path);
+            }
+
+            scriptDialog.ClearSelected();
+        }
+    }
 }
