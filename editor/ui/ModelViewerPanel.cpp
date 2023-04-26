@@ -77,7 +77,7 @@ static void setupKeybinds(TransformComponent& cameraTransform) {
 
 ModelViewerPanel::ModelViewerPanel(Layer* layer)
         : IPanel("Model Viewer", true)
-        , scene(layer->addScene()) {
+        , scene(layer->addScene("Model Viewer")) {
     this->flags |=
             ImGuiWindowFlags_NoTitleBar   |
             ImGuiWindowFlags_NoDecoration |
@@ -90,7 +90,8 @@ ModelViewerPanel::ModelViewerPanel(Layer* layer)
 
     this->folderDialog.SetTitle("Add Resource Folder");
 
-    auto* camera = scene->addEntity();
+    auto* camera = this->scene->addEntity();
+    camera->addComponent<NameComponent>("Camera");
     camera->addComponent<CameraComponent>(CameraComponent::ProjectionMode::PERSPECTIVE);
 
     auto& cameraTransform = camera->getTransform();
@@ -98,7 +99,8 @@ ModelViewerPanel::ModelViewerPanel(Layer* layer)
     cameraTransform.setPitch(glm::radians(-30.f));
     cameraTransform.setYaw(glm::radians(270.f));
 
-    this->grid = scene->addEntity();
+    this->grid = this->scene->addEntity();
+    this->grid->addComponent<NameComponent>("Grid");
     auto& gridMesh = this->grid->addComponent<MeshDynamicComponent>();
     gridMesh.meshBuilder.setMaterial(CHIRA_GET_MATERIAL("MaterialUntextured", "file://materials/unlit.json"));
     for (int i = -5; i <= 5; i++) {
@@ -225,6 +227,7 @@ void ModelViewerPanel::setLoadedFile(const std::string& meshName) {
     }
     if (!scene->hasEntity(this->meshId)) {
         auto* entity = scene->addEntity();
+        entity->addComponent<NameComponent>("Preview");
         this->meshId = entity->getUUID();
     }
     auto* entity = scene->getEntity(this->meshId);
