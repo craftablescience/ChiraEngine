@@ -81,10 +81,10 @@ void InspectorPanel::renderContents() {
                     this->curEnt->addComponent<AngelScriptComponent>();
                 } else if (component == "Audio Noise") {
                     this->curEnt->tryRemoveComponent<AudioNoiseComponent>();
-                    this->curEnt->addComponent<AudioNoiseComponent>(SoLoud::Noise::NOISETYPES::WHITE);
+                    this->curEnt->addComponent<AudioNoiseComponent>();
                 } else if (component == "Audio Sfxr") {
                     this->curEnt->tryRemoveComponent<AudioSfxrComponent>();
-                    this->curEnt->addComponent<AudioSfxrComponent>(SoLoud::Sfxr::SFXR_PRESETS::COIN);
+                    this->curEnt->addComponent<AudioSfxrComponent>();
                 } else if (component == "Audio Speech") {
                     this->curEnt->tryRemoveComponent<AudioSpeechComponent>();
                     this->curEnt->addComponent<AudioSpeechComponent>();
@@ -192,9 +192,9 @@ void InspectorPanel::renderContents() {
                 }
                 ImGui::EndCombo();
             }
-            ImGui::DragFloat("FOV", &component->fov, 0.05f, 0.f, M_PI * 2.f);
-            ImGui::DragFloat("Near Distance", &component->nearDistance, 0.05f, 0.001f);
-            ImGui::DragFloat("Far Distance", &component->farDistance, 0.05f, 0.001f);
+            ImGui::DragFloat("FOV", &component->fov, 0.05f, 0.f, static_cast<float>(M_PI * 2));
+            ImGui::DragFloat("Near Distance", &component->nearDistance, 0.05f);
+            ImGui::DragFloat("Far Distance", &component->farDistance, 0.05f);
             ImGui::DragFloat("Ortho Size", &component->orthoSize, 0.05f, 0.001f);
             ImGui::Checkbox("Active", &component->active);
         }
