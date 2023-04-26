@@ -68,6 +68,7 @@ bool Scene::hasEntity(uuids::uuid entityID) {
 
 void Scene::removeEntity(uuids::uuid entityID) {
     runtime_assert(this->hasEntity(entityID), "Trying to remove an entity with a UUID that doesn't exist!");
+    this->getRegistry().destroy(this->getEntity(entityID)->getRawHandle());
     this->entities.erase(entityID);
 }
 
