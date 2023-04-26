@@ -208,7 +208,7 @@ void InspectorPanel::renderContents() {
     }
     if (auto component = this->selected->tryGetComponent<BillboardComponent>()) {
         if (ImGui::Button("X")) {
-            this->selected->tryRemoveComponent<AudioWavStreamComponent>();
+            this->selected->tryRemoveComponent<BillboardComponent>();
         }
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Billboard", ImGuiTreeNodeFlags_DefaultOpen)) {
