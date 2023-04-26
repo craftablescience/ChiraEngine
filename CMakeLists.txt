@@ -181,13 +181,26 @@ list(APPEND IMGUI_HEADERS
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imstb_textedit.h
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imstb_truetype.h
         # Plus ImGui-Filebrowser for convenience
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser/imfilebrowser.h)
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser/imfilebrowser.h
+        # Plus ImGuizmo for convenience
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imguizmo/GraphEditor.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imguizmo/ImCurveEdit.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imguizmo/ImGradient.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imguizmo/ImGuizmo.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imguizmo/ImSequencer.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imguizmo/ImZoomSlider.h)
 list(APPEND IMGUI_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_demo.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_draw.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_tables.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_widgets.cpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/imgui_widgets.cpp
+        # Plus ImGuizmo for convenience
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imguizmo/GraphEditor.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imguizmo/ImCurveEdit.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imguizmo/ImGradient.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imguizmo/ImGuizmo.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imguizmo/ImSequencer.cpp)
 list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_DISABLE_OBSOLETE_FUNCTIONS)
 
 
@@ -240,7 +253,8 @@ target_link_libraries(imgui PRIVATE ${IMGUI_LINK_LIBRARIES})
 
 list(APPEND CHIRA_ENGINE_INCLUDE_DIRS
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui
-        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser)
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui-filebrowser
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imguizmo)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES imgui)
 
 
