@@ -25,11 +25,14 @@ void InspectorPanel::renderContents() {
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
         auto pos = this->curEnt->getTransform().getPosition();
         auto rot = this->curEnt->getTransform().getRotationEuler();
+        auto scl = this->curEnt->getTransform().getScale();
 
 		ImGui::DragFloat3("Position", &pos.x, 0.05f);
         ImGui::DragFloat3("Rotation", &rot.x, 0.05f);
+        ImGui::DragFloat3("Scale",    &scl.x, 0.05f);
 
         this->curEnt->getTransform().setPosition(pos);
         this->curEnt->getTransform().setRotation(rot);
+        this->curEnt->getTransform().setScale(scl);
 	}
 }
