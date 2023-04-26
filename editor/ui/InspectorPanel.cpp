@@ -33,7 +33,7 @@ void InspectorPanel::renderContents() {
     }
 
     // we always want to show the uuid since 2+ entities can share a name.
-    ImGui::TextDisabled("%s", uuids::to_string(this->curEnt->getUUID()));
+    ImGui::TextDisabled(uuids::to_string(this->curEnt->getUUID()));
 
 	ImGui::Separator();
 
