@@ -18,18 +18,13 @@ void InspectorPanel::renderContents() {
     if (!this->curEnt)
         return;
 
-    char buf[256];
+    // I wish imgui used std::string holy shit
+    char *buf;
 
-    // getName should NEVER be null. I know this for a fact. \
-        because if it was EVER null then that means the entity has no uuid \
-        or name component which is an error in other places as well. \
-        but for some reason codacy REFUSES to accept this and as such \
-        I have to do this stupid waste of time for this to actually work.
-    if (this->curEnt && this->curEnt->getName()
-        && sizeof(this->curEnt->getName()).c_str() < sizeof(buf))
-        strncpy(buf, this->curEnt->getName().c_str(), sizeof(buf) - 1);
+    if (sizeof(this->curEnt->getName().c_str()) < 2048)
+        strncpy(buf, this->curEnt->getName().c_str(), 2048);
 
-    ImGui::InputText("##Name", buf, sizeof(buf));
+    ImGui::InputText("##Name", buf, 2048);
 
     if (strcmp(buf, this->curEnt->getName().c_str()) != 0) {
         if (auto nameComponent = this->curEnt->tryGetComponent<NameComponent>()) {
