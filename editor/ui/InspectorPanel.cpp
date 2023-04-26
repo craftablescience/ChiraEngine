@@ -138,6 +138,10 @@ void InspectorPanel::renderContents() {
 	}
 
     if (auto component = this->curEnt->tryGetComponent<AngelScriptComponent>()) {
+        if (ImGui::Button("X")) {
+            this->curEnt->tryRemoveComponent<AngelScriptComponent>();
+        }
+        ImGui::SameLine();
         if (ImGui::CollapsingHeader("AngelScript", ImGuiTreeNodeFlags_DefaultOpen)) {
             if (ImGui::Button("Pick Script")) {
                 filePicker.Open();
@@ -157,31 +161,55 @@ void InspectorPanel::renderContents() {
         }
     }
     if ([[maybe_unused]] auto component = this->curEnt->tryGetComponent<AudioNoiseComponent>()) {
+        if (ImGui::Button("X")) {
+            this->curEnt->tryRemoveComponent<AudioNoiseComponent>();
+        }
+        ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Noise", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("todo...");
         }
     }
     if ([[maybe_unused]] auto component = this->curEnt->tryGetComponent<AudioSfxrComponent>()) {
+        if (ImGui::Button("X")) {
+            this->curEnt->tryRemoveComponent<AudioSfxrComponent>();
+        }
+        ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Sfxr", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("todo...");
         }
     }
     if ([[maybe_unused]] auto component = this->curEnt->tryGetComponent<AudioSpeechComponent>()) {
+        if (ImGui::Button("X")) {
+            this->curEnt->tryRemoveComponent<AudioSpeechComponent>();
+        }
+        ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Speech", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("todo...");
         }
     }
     if ([[maybe_unused]] auto component = this->curEnt->tryGetComponent<AudioWavComponent>()) {
+        if (ImGui::Button("X")) {
+            this->curEnt->tryRemoveComponent<AudioWavComponent>();
+        }
+        ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Wav", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("todo...");
         }
     }
     if ([[maybe_unused]] auto component = this->curEnt->tryGetComponent<AudioWavStreamComponent>()) {
+        if (ImGui::Button("X")) {
+            this->curEnt->tryRemoveComponent<AudioWavStreamComponent>();
+        }
+        ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Wav Stream", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("todo...");
         }
     }
     if (auto component = this->curEnt->tryGetComponent<CameraComponent>()) {
+        if (ImGui::Button("X")) {
+            this->curEnt->tryRemoveComponent<CameraComponent>();
+        }
+        ImGui::SameLine();
         if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen)) {
             if (ImGui::BeginCombo("Projection Mode", magic_enum::enum_name(component->projectionMode).data())) {
                 if (ImGui::Selectable(magic_enum::enum_name(CameraComponent::ProjectionMode::PERSPECTIVE).data())) {
@@ -200,6 +228,10 @@ void InspectorPanel::renderContents() {
         }
     }
     if (auto component = this->curEnt->tryGetComponent<DirectionalLightComponent>()) {
+        if (ImGui::Button("X")) {
+            this->curEnt->tryRemoveComponent<DirectionalLightComponent>();
+        }
+        ImGui::SameLine();
         if (ImGui::CollapsingHeader("Directional Light", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::ColorEdit3("Ambient", &component->ambient.x);
             ImGui::ColorEdit3("Diffuse", &component->diffuse.x);
@@ -207,6 +239,10 @@ void InspectorPanel::renderContents() {
         }
     }
     if (auto component = this->curEnt->tryGetComponent<PointLightComponent>()) {
+        if (ImGui::Button("X")) {
+            this->curEnt->tryRemoveComponent<PointLightComponent>();
+        }
+        ImGui::SameLine();
         if (ImGui::CollapsingHeader("Point Light", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::ColorEdit3("Ambient", &component->ambient.x);
             ImGui::ColorEdit3("Diffuse", &component->diffuse.x);
@@ -215,6 +251,10 @@ void InspectorPanel::renderContents() {
         }
     }
     if (auto component = this->curEnt->tryGetComponent<SpotLightComponent>()) {
+        if (ImGui::Button("X")) {
+            this->curEnt->tryRemoveComponent<SpotLightComponent>();
+        }
+        ImGui::SameLine();
         if (ImGui::CollapsingHeader("Spot Light", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::ColorEdit3("Diffuse", &component->diffuse.x);
             ImGui::ColorEdit3("Specular", &component->specular.x);
@@ -223,6 +263,10 @@ void InspectorPanel::renderContents() {
         }
     }
     if (auto component = this->curEnt->tryGetComponent<MeshComponent>()) {
+        if (ImGui::Button("X")) {
+            this->curEnt->tryRemoveComponent<MeshComponent>();
+        }
+        ImGui::SameLine();
         if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
             if (ImGui::Button("Pick Mesh")) {
                 filePicker.Open();
@@ -242,6 +286,10 @@ void InspectorPanel::renderContents() {
         }
     }
     if ([[maybe_unused]] auto component = this->curEnt->tryGetComponent<MeshDynamicComponent>()) {
+        if (ImGui::Button("X")) {
+            this->curEnt->tryRemoveComponent<MeshDynamicComponent>();
+        }
+        ImGui::SameLine();
         if (ImGui::CollapsingHeader("Mesh Dynamic", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("todo...");
         }
