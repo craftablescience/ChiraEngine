@@ -44,6 +44,10 @@ public:
         return this->getRegistry().view<T...>(exclude);
     }
 
+    [[nodiscard]] const auto& getEntities() const {
+        return this->entities;
+    }
+
     [[nodiscard]] bool hasEntity(uuids::uuid entityID);
 
     void removeEntity(uuids::uuid entityID);

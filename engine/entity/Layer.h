@@ -19,6 +19,10 @@ public:
 
     [[nodiscard]] Scene* getScene(uuids::uuid sceneID);
 
+    [[nodiscard]] const auto& getScenes() const {
+        return this->scenes;
+    }
+
     [[nodiscard]] bool hasScene(uuids::uuid sceneID);
 
     void removeScene(uuids::uuid sceneID);
