@@ -17,6 +17,13 @@ void EntitySelectPanel::renderContents() {
         ImGui::PushID(++id);
         if (ImGui::CollapsingHeader(scene->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
             for (const auto& [entityID, entity] : scene->getEntities()) {
+                std::string buttonid = "X##";
+                buttonid += entity->getName();
+                if (ImGui::Button(buttonid.c_str())) {
+                    scene->removeEntity(entityID);
+                    break;
+                }
+                ImGui::SameLine();
                 ImGui::PushID(++id);
                 if (ImGui::Button(entity->getName().c_str())) {
                     this->inspector->setEntity(entity.get());
