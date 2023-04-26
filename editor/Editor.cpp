@@ -19,6 +19,7 @@
 // Need to register phong material!
 #include <render/material/MaterialPhong.h>
 
+#include "ui/EntitySelectPanel.h"
 #include "ui/InspectorPanel.h"
 #include "ui/ModelViewerPanel.h"
 
@@ -51,8 +52,10 @@ int main(int argc, const char* const argv[]) {
     layer->setBackgroundColor({0.15f});
 
     Device::addPanelToWindow(Engine::getMainWindow(), new ModelViewerPanel{layer});
-    Device::addPanelToWindow(Engine::getMainWindow(), new InspectorPanel{});
 
+    auto inspector = new InspectorPanel{};
+    Device::addPanelToWindow(Engine::getMainWindow(), inspector);
+    Device::addPanelToWindow(Engine::getMainWindow(), new EntitySelectPanel{layer, inspector});
 
     Engine::run();
 }

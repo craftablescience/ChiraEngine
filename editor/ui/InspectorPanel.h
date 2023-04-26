@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ui/IPanel.h>
 #include <entity/Entity.h>
+#include <ui/IPanel.h>
 
 namespace chira {
 
