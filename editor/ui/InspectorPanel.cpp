@@ -1,5 +1,8 @@
 #include "InspectorPanel.h"
 
+#include <algorithm>
+#include <resource/provider/FilesystemResourceProvider.h>
+
 using namespace chira;
 
 InspectorPanel::InspectorPanel()
@@ -18,19 +21,18 @@ void InspectorPanel::renderContents() {
     if (!this->curEnt)
         return;
 
-    // I wish imgui used std::string holy shit
-    char buf[2048];
+    char nameBuf[512] {0};
+    if (!this->curEnt->getName().empty()) {
+        memcpy(nameBuf, this->curEnt->getName().c_str(), std::clamp(this->curEnt->getName().size(), 0ull, 512ull - 1ull));
+    }
 
-    if (sizeof(this->curEnt->getName().c_str()) < sizeof(buf))
-        strncpy(buf, this->curEnt->getName().c_str(), sizeof(buf));
+    ImGui::InputText("##Name", nameBuf, sizeof(nameBuf), ImGuiInputTextFlags_EnterReturnsTrue);
 
-    ImGui::InputText("##Name", buf, sizeof(buf));
-
-    if (strcmp(buf, this->curEnt->getName().c_str()) != 0) {
+    if (nameBuf[0] && strcmp(nameBuf, this->curEnt->getName().c_str()) != 0) {
         if (auto nameComponent = this->curEnt->tryGetComponent<NameComponent>()) {
-            nameComponent->name = std::string(buf);
-        } else { // if we don't have the component add it using the contents of buf as the name
-            this->curEnt->addComponent<NameComponent>(std::string(buf));
+            nameComponent->name = nameBuf;
+        } else {
+            this->curEnt->addComponent<NameComponent>(nameBuf);
         }
     }
 
@@ -39,9 +41,9 @@ void InspectorPanel::renderContents() {
 
 	ImGui::Separator();
 
-    if (ImGui::BeginPopupContextItem("add_component")) {
-        // TODO: replace this predefined list with a list of registered components
-        std::string complist[18] = {
+    if (ImGui::BeginPopupContextItem("Add Component")) {
+        // todo: replace this predefined list with a list of registered components
+        std::string components[] = {
             "AngelScript",
             "Audio Noise",
             "Audio Sfxr",
@@ -56,19 +58,17 @@ void InspectorPanel::renderContents() {
             "Mesh Dynamic",
             "Name",
             "Skybox",
-            "No Render Tag",
-            "Scene Tag",
             "Transform"
         };
-
-        for (std::string compname : complist) {
-            ImGui::Selectable("%s Component", compname.c_str());
+        for (const auto& component : components) {
+            ImGui::Selectable(component.c_str());
         }
         ImGui::EndPopup();
     }
 
-    if (ImGui::Button("+"))
-        ImGui::OpenPopup("add_component");
+    if (ImGui::Button("+")) {
+        ImGui::OpenPopup("Add Component");
+    }
 
 	// testing
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -93,13 +93,13 @@ void InspectorPanel::renderContents() {
                 scriptDialog.Open();
             }
 
-            ImGui::Text("%s", scriptComp->getScript()->getIdentifier().c_str());
+            ImGui::Text("%s", scriptComp->getScript()->getIdentifier().data());
         }
 
         // Model Dialog specific logic
         scriptDialog.Display();
         if (scriptDialog.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(modelDialog.GetSelected().string());
+            std::string path = FilesystemResourceProvider::getResourceIdentifier(scriptDialog.GetSelected().string());
             if (!path.empty()) {
                 this->curEnt->tryRemoveComponent<AngelScriptComponent>();
                 this->curEnt->addComponent<AngelScriptComponent>(path);
