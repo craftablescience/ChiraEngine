@@ -51,7 +51,7 @@ void InspectorPanel::renderContents() {
             "Camera",
             "Directional Light",
             "Point Light",
-            "Spot Light"
+            "Spot Light",
             "Mesh",
             "Mesh Dynamic",
             "Name",
