@@ -11,7 +11,7 @@ namespace chira {
 struct AudioWavComponent {
     static constexpr auto in_place_delete = true;
 
-    explicit AudioWavComponent(const std::string& wavId) {
+    explicit AudioWavComponent(const std::string& wavId = "file://sounds/missing.wav") {
         this->wavFile = Resource::getResource<BinaryResource>(wavId);
         this->wav.loadMem(const_cast<unsigned char*>(this->wavFile->getBuffer()), static_cast<unsigned int>(this->wavFile->getBufferLength()), false, false);
     }

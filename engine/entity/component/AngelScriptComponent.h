@@ -8,7 +8,7 @@ namespace chira {
 struct AngelScriptComponent {
     static constexpr auto in_place_delete = true;
 
-    explicit AngelScriptComponent(const std::string& scriptID)
+    explicit AngelScriptComponent(const std::string& scriptID = "file://scripts/empty.as")
             : script(scriptID) {}
 
     void update() const {

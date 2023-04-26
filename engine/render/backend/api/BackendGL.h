@@ -128,7 +128,7 @@ void drawMesh(MeshHandle handle, MeshDepthFunction depthFunction, MeshCullType c
 void destroyMesh(MeshHandle handle);
 
 void initImGui(SDL_Window* window, void* context);
-void startImGuiFrame(SDL_Window* window);
+void startImGuiFrame();
 void endImGuiFrame();
 void destroyImGui();
 
