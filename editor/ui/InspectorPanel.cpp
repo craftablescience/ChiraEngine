@@ -19,8 +19,7 @@ void InspectorPanel::renderContents() {
         return;
 
     char buf[256];
-    buf = this->curEnt->getName().c_str(); // side effect: This will show the uuid if no name component is present \
-                                              is that okay?
+    strncpy(buf, this->curEnt->getName().c_str(), sizeof(buf));
 
     ImGui::InputText("##Name", buf, sizeof(buf));
 
