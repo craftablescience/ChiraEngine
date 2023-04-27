@@ -1,12 +1,12 @@
 #include "EntitySelectPanel.h"
 
 #include <entity/Layer.h>
-#include "EditorPanel.h"
+#include "ControlsPanel.h"
 #include "InspectorPanel.h"
 
 using namespace chira;
 
-EntitySelectPanel::EntitySelectPanel(Layer* layer_, EditorPanel* editor_, InspectorPanel* inspector_)
+EntitySelectPanel::EntitySelectPanel(Layer* layer_, ControlsPanel* editor_, InspectorPanel* inspector_)
         : IPanel("Entity Select", true)
         , layer(layer_)
         , editor(editor_)

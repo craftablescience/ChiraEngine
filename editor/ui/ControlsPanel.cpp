@@ -1,4 +1,4 @@
-#include "EditorPanel.h"
+#include "ControlsPanel.h"
 
 #include <fstream>
 #include <ImGuizmo.h>
@@ -75,17 +75,10 @@ static void setupKeybinds(TransformComponent& cameraTransform) {
     });
 }
 
-EditorPanel::EditorPanel(Layer* layer)
-        : IPanel("Editor", true)
+ControlsPanel::ControlsPanel(Layer* layer)
+        : IPanel("Controls", true)
         , scene(layer->addScene("Editor"))
         , selected(nullptr) {
-    this->flags |=
-            ImGuiWindowFlags_NoTitleBar   |
-            ImGuiWindowFlags_NoDecoration |
-            ImGuiWindowFlags_NoResize     |
-            ImGuiWindowFlags_NoBringToFrontOnFocus |
-            ImGuiWindowFlags_NoBackground ;
-
     this->modelDialog.SetTitle("Open Resource");
     this->modelDialog.SetTypeFilters({".json"});
 
@@ -114,13 +107,13 @@ EditorPanel::EditorPanel(Layer* layer)
     setupKeybinds(cameraTransform);
 }
 
-void EditorPanel::addModelSelected() {
+void ControlsPanel::addModelSelected() {
     std::string path = FilesystemResourceProvider::getResourceIdentifier(this->modelDialog.GetSelected().string());
     if (!path.empty())
         this->setLoadedFile(path);
 }
 
-void EditorPanel::addResourceFolderSelected() {
+void ControlsPanel::addResourceFolderSelected() {
     std::string resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(this->modelDialog.GetSelected().string());
     if (resourceFolderPath.empty())
         return Device::popupError(TR("error.modelviewer.resource_folder_not_valid"));
@@ -138,7 +131,7 @@ void EditorPanel::addResourceFolderSelected() {
         Device::popupError(TR("error.modelviewer.resource_folder_already_registered"));
 }
 
-void EditorPanel::convertToModelTypeSelected(const std::string& filepath, const std::string& type) const {
+void ControlsPanel::convertToModelTypeSelected(const std::string& filepath, const std::string& type) const {
     if (!scene->hasEntity(this->previewID))
         return Device::popupError(TR("error.modelviewer.no_model_present"));
 
@@ -148,21 +141,21 @@ void EditorPanel::convertToModelTypeSelected(const std::string& filepath, const 
     file.close();
 }
 
-void EditorPanel::convertToOBJSelected() const {
+void ControlsPanel::convertToOBJSelected() const {
     std::string filepath = this->saveDialogOBJ.GetSelected().string();
     if (filepath.empty())
         return Device::popupError(TR("error.modelviewer.filename_empty"));
     this->convertToModelTypeSelected(filepath, "obj");
 }
 
-void EditorPanel::convertToCMDLSelected() const {
+void ControlsPanel::convertToCMDLSelected() const {
     std::string filepath = this->saveDialogCMDL.GetSelected().string();
     if (filepath.empty())
         return Device::popupError(TR("error.modelviewer.filename_empty"));
     this->convertToModelTypeSelected(filepath, "cmdl");
 }
 
-void EditorPanel::preRenderContents() {
+void ControlsPanel::preRenderContents() {
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
             if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) // Open Model...
@@ -205,42 +198,36 @@ void EditorPanel::preRenderContents() {
         this->convertToCMDLSelected();
         this->saveDialogCMDL.ClearSelected();
     }
-
-    ImGui::SetNextWindowPos(ImVec2{0, ImGui::GetFrameHeight()});
-    ImGui::SetNextWindowSize(ImVec2{ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y - ImGui::GetFrameHeight()});
 }
 
-void EditorPanel::renderContents() {
+void ControlsPanel::renderContents() {
     static ImGuizmo::OPERATION currentGizmoOperation(ImGuizmo::TRANSLATE);
     static ImGuizmo::MODE currentGizmoMode(ImGuizmo::WORLD);
     static bool useSnap = false;
     static float snap[3] = { 1.f, 1.f, 1.f };
 
-    if (ImGui::BeginChild("Controls", ImVec2(300, ImGui::GetWindowHeight()))) {
-        if (ImGui::CollapsingHeader("View")) {
-            if (this->scene->hasEntity(this->gridID)) {
-                ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
-                this->scene->getEntity(this->gridID)->setVisible(this->showGrid);
-            }
-            if (this->scene->hasEntity(this->previewID)) {
-                ImGui::Text("%s", this->loadedFile.c_str());
-            }
+    if (ImGui::CollapsingHeader("View")) {
+        if (this->scene->hasEntity(this->gridID)) {
+            ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
+            this->scene->getEntity(this->gridID)->setVisible(this->showGrid);
         }
-
-        if (this->selected) {
-            if (ImGui::CollapsingHeader("Gizmo")) {
-                ImGui::RadioButton("Translate", (int*) &currentGizmoOperation, ImGuizmo::TRANSLATE);
-                ImGui::RadioButton("Rotate", (int*) &currentGizmoOperation, ImGuizmo::ROTATE);
-                ImGui::RadioButton("Scale", (int*) &currentGizmoOperation, ImGuizmo::SCALE);
-                ImGui::Separator();
-                ImGui::RadioButton("Local", (int*) &currentGizmoMode, ImGuizmo::LOCAL);
-                ImGui::RadioButton("World", (int*) &currentGizmoMode, ImGuizmo::WORLD);
-                ImGui::Checkbox("Snap", &useSnap);
-                ImGui::InputFloat3("Snap", snap);
-            }
+        if (this->scene->hasEntity(this->previewID)) {
+            ImGui::Text("%s", this->loadedFile.c_str());
         }
     }
-    ImGui::EndChild();
+
+    if (this->selected) {
+        if (ImGui::CollapsingHeader("Gizmo")) {
+            ImGui::RadioButton("Translate", (int*) &currentGizmoOperation, ImGuizmo::TRANSLATE);
+            ImGui::RadioButton("Rotate", (int*) &currentGizmoOperation, ImGuizmo::ROTATE);
+            ImGui::RadioButton("Scale", (int*) &currentGizmoOperation, ImGuizmo::SCALE);
+            ImGui::Separator();
+            ImGui::RadioButton("Local", (int*) &currentGizmoMode, ImGuizmo::LOCAL);
+            ImGui::RadioButton("World", (int*) &currentGizmoMode, ImGuizmo::WORLD);
+            ImGui::Checkbox("Snap", &useSnap);
+            ImGui::InputFloat3("Snap", snap);
+        }
+    }
 
     if (!this->selected)
         return;
@@ -251,7 +238,6 @@ void EditorPanel::renderContents() {
         const auto proj = camera->getProjection(Device::getWindowSize(Engine::getMainWindow()));
         glm::mat4 matrix = this->selected->getTransform().getMatrix();
 
-        ImGuizmo::BeginFrame();
         ImGuizmo::SetRect(0, 0, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
         ImGuizmo::Manipulate(&view[0][0], &proj[0][0], currentGizmoOperation, currentGizmoMode, &matrix[0][0], useSnap ? snap : nullptr);
 
@@ -259,7 +245,7 @@ void EditorPanel::renderContents() {
     }
 }
 
-void EditorPanel::setLoadedFile(const std::string& meshName) {
+void ControlsPanel::setLoadedFile(const std::string& meshName) {
     if (auto preview = scene->getEntity(this->previewID); preview && meshName == preview->getComponent<MeshComponent>().getMeshResource()->getIdentifier())
         return;
     if (!Resource::hasResource(meshName)) {
@@ -276,6 +262,6 @@ void EditorPanel::setLoadedFile(const std::string& meshName) {
     this->loadedFile = meshName;
 }
 
-void EditorPanel::setSelected(Entity* selected_) {
+void ControlsPanel::setSelected(Entity* selected_) {
     this->selected = selected_;
 }

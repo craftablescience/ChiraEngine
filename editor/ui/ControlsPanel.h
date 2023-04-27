@@ -11,9 +11,9 @@ class Layer;
 class Scene;
 class Entity;
 
-class EditorPanel : public IPanel {
+class ControlsPanel : public IPanel {
 public:
-    EditorPanel(Layer* layer);
+    explicit ControlsPanel(Layer* layer);
 
     /// Opens a file dialog used to select a model definition
     void addModelSelected();
