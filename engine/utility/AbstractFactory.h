@@ -6,7 +6,7 @@
 
 namespace chira {
 
-// check render/material/MaterialFactory.h L21 for example usage
+// check render/material/MaterialFactory.h:L21 for example usage
 
 template<typename ReturnType>
 class AbstractFactory {

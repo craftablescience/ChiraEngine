@@ -12,7 +12,7 @@
 #include <entity/component/LightComponents.h>
 #include <entity/component/MeshComponent.h>
 #include <entity/component/MeshDynamicComponent.h>
-#include <entity/component/SpriteMeshComponent.h>
+#include <entity/component/MeshSpriteComponent.h>
 #include <entity/component/NameComponent.h>
 #include <entity/component/UUIDComponent.h>
 #include <resource/provider/FilesystemResourceProvider.h>
@@ -90,7 +90,7 @@ void InspectorPanel::renderContents() {
             "Spot Light",
             "Mesh",
             "Mesh Dynamic",
-            "Sprite Mesh"
+            "Mesh Sprite",
         };
         for (const auto& component : components) {
             if (ImGui::Selectable(component.c_str())) {
@@ -133,9 +133,9 @@ void InspectorPanel::renderContents() {
                 } else if (component == "Mesh Dynamic") {
                     this->selected->tryRemoveComponent<MeshDynamicComponent>();
                     this->selected->addComponent<MeshDynamicComponent>();
-                } else if (component == "Sprite Mesh") {
-                    this->selected->tryRemoveComponent<SpriteMeshComponent>();
-                    this->selected->addComponent<SpriteMeshComponent>();
+                } else if (component == "Mesh Sprite") {
+                    this->selected->tryRemoveComponent<MeshSpriteComponent>();
+                    this->selected->addComponent<MeshSpriteComponent>();
                 }
             }
         }
@@ -306,11 +306,26 @@ void InspectorPanel::renderContents() {
             ImGui::Text("todo...");
         }
     }
-    if ([[maybe_unused]] auto component = this->selected->tryGetComponent<SpriteMeshComponent>()) {
-        REMOVE_BUTTON(SpriteMeshComponent);
+    if (auto component = this->selected->tryGetComponent<MeshSpriteComponent>()) {
+        REMOVE_BUTTON(MeshSpriteComponent);
         ImGui::SameLine();
-        if (ImGui::CollapsingHeader("Sprite Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("todo...");
+        if (ImGui::CollapsingHeader("Mesh Sprite", ImGuiTreeNodeFlags_DefaultOpen)) {
+            if (ImGui::Button("Pick Material")) {
+                filePicker.Open();
+            }
+
+            ImGui::Text("%s", component->sprite.getMaterial()->getIdentifier().data());
+        }
+
+        filePicker.Display();
+        if (filePicker.HasSelected()) {
+            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            if (!path.empty()) {
+                const auto size = component->size;
+                this->selected->tryRemoveComponent<MeshSpriteComponent>();
+                this->selected->addComponent<MeshSpriteComponent>(size, path);
+            }
+            filePicker.ClearSelected();
         }
     }
 }
