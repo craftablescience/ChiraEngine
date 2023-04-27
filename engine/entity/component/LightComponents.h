@@ -11,9 +11,9 @@ constexpr int SPOT_LIGHT_MAX = 16;
 
 struct DirectionalLightComponent {
     TransformComponent* transform;
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
+    glm::vec3 ambient{0.1f};
+    glm::vec3 diffuse{0.8f};
+    glm::vec3 specular{0.1f};
 };
 
 struct PointLightComponent {
