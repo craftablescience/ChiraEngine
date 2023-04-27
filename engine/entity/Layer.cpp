@@ -10,6 +10,7 @@
 #include "component/SkyboxComponent.h"
 #include "component/TagComponents.h"
 #include "component/TransformComponent.h"
+#include "component/SpriteMeshComponent.h"
 
 using namespace chira;
 
@@ -164,6 +165,14 @@ void Layer::render() {
         auto angelScriptView = scene->getEntities<AngelScriptComponent>(entt::exclude<NoRenderTagComponent>);
         for (const auto [entity, angelScriptComponent] : angelScriptView.each()) {
             angelScriptComponent.render();
+        }
+
+        // Render SpriteMeshComponent
+        auto spriteView = scene->getEntities<SpriteMeshComponent>(ent::excluse<NoRenderTagComponent>);
+        for (auto entity : spriteView) {
+            auto& transformComponent = registry.get<TransformComponent>(entity);
+            auto& spriteMeshComponent = registry.get<SpriteMeshComponent>(entity);
+            spriteMeshComponent.meshBuilder.render(transformComponent.getMatrix());
         }
     }
     Renderer::popFrameBuffer();

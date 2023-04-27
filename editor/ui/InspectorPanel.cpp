@@ -12,6 +12,7 @@
 #include <entity/component/LightComponents.h>
 #include <entity/component/MeshComponent.h>
 #include <entity/component/MeshDynamicComponent.h>
+#include <entity/component/SpriteMeshComponent.h>
 #include <entity/component/NameComponent.h>
 #include <entity/component/UUIDComponent.h>
 #include <resource/provider/FilesystemResourceProvider.h>
@@ -89,6 +90,7 @@ void InspectorPanel::renderContents() {
             "Spot Light",
             "Mesh",
             "Mesh Dynamic",
+            "Sprite Mesh"
         };
         for (const auto& component : components) {
             if (ImGui::Selectable(component.c_str())) {
@@ -131,6 +133,9 @@ void InspectorPanel::renderContents() {
                 } else if (component == "Mesh Dynamic") {
                     this->selected->tryRemoveComponent<MeshDynamicComponent>();
                     this->selected->addComponent<MeshDynamicComponent>();
+                } else if (component == "Sprite Mesh") {
+                    this->selected->tryRemoveComponent<SpriteMeshComponent>();
+                    this->selected->addComponent<SpriteMeshComponent>();
                 }
             }
         }
@@ -298,6 +303,13 @@ void InspectorPanel::renderContents() {
         REMOVE_BUTTON(MeshDynamicComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Mesh Dynamic", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::Text("todo...");
+        }
+    }
+    if ([[maybe_unused]] auto component = this->selected->tryGetComponent<SpriteMeshComponent>()) {
+        REMOVE_BUTTON(SpriteMeshComponent);
+        ImGui::SameLine();
+        if (ImGui::CollapsingHeader("Sprite Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("todo...");
         }
     }
