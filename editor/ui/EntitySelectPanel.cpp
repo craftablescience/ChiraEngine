@@ -19,6 +19,7 @@ void EntitySelectPanel::renderContents() {
         ImGui::PushID(++id);
         if (ImGui::CollapsingHeader(scene->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
             for (const auto& [entityID, entity] : scene->getEntities()) {
+                static int selected = -1;
                 ImGui::PushID(++id);
                 if (ImGui::Button("X")) {
                     scene->removeEntity(entityID);
@@ -29,9 +30,10 @@ void EntitySelectPanel::renderContents() {
                     break;
                 }
                 ImGui::SameLine();
-                if (ImGui::Button(entity->getName().c_str())) {
+                if (ImGui::Selectable(entity->getName().c_str(), selected == id)) {
                     this->editor->setSelected(entity.get());
                     this->inspector->setSelected(entity.get());
+                    selected = id;
                 }
                 ImGui::PopID();
             }
