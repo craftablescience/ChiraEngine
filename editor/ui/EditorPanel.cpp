@@ -1,4 +1,4 @@
-#include "ModelViewerPanel.h"
+#include "EditorPanel.h"
 
 #include <fstream>
 #include <ImGuizmo.h>
@@ -75,9 +75,9 @@ static void setupKeybinds(TransformComponent& cameraTransform) {
     });
 }
 
-ModelViewerPanel::ModelViewerPanel(Layer* layer)
-        : IPanel("Model Viewer", true)
-        , scene(layer->addScene("Model Viewer"))
+EditorPanel::EditorPanel(Layer* layer)
+        : IPanel("Editor", true)
+        , scene(layer->addScene("Editor"))
         , selected(nullptr) {
     this->flags |=
             ImGuiWindowFlags_NoTitleBar   |
@@ -114,13 +114,13 @@ ModelViewerPanel::ModelViewerPanel(Layer* layer)
     setupKeybinds(cameraTransform);
 }
 
-void ModelViewerPanel::addModelSelected() {
+void EditorPanel::addModelSelected() {
     std::string path = FilesystemResourceProvider::getResourceIdentifier(this->modelDialog.GetSelected().string());
     if (!path.empty())
         this->setLoadedFile(path);
 }
 
-void ModelViewerPanel::addResourceFolderSelected() {
+void EditorPanel::addResourceFolderSelected() {
     std::string resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(this->modelDialog.GetSelected().string());
     if (resourceFolderPath.empty())
         return Device::popupError(TR("error.modelviewer.resource_folder_not_valid"));
@@ -138,7 +138,7 @@ void ModelViewerPanel::addResourceFolderSelected() {
         Device::popupError(TR("error.modelviewer.resource_folder_already_registered"));
 }
 
-void ModelViewerPanel::convertToModelTypeSelected(const std::string& filepath, const std::string& type) const {
+void EditorPanel::convertToModelTypeSelected(const std::string& filepath, const std::string& type) const {
     if (!scene->hasEntity(this->previewID))
         return Device::popupError(TR("error.modelviewer.no_model_present"));
 
@@ -148,21 +148,21 @@ void ModelViewerPanel::convertToModelTypeSelected(const std::string& filepath, c
     file.close();
 }
 
-void ModelViewerPanel::convertToOBJSelected() const {
+void EditorPanel::convertToOBJSelected() const {
     std::string filepath = this->saveDialogOBJ.GetSelected().string();
     if (filepath.empty())
         return Device::popupError(TR("error.modelviewer.filename_empty"));
     this->convertToModelTypeSelected(filepath, "obj");
 }
 
-void ModelViewerPanel::convertToCMDLSelected() const {
+void EditorPanel::convertToCMDLSelected() const {
     std::string filepath = this->saveDialogCMDL.GetSelected().string();
     if (filepath.empty())
         return Device::popupError(TR("error.modelviewer.filename_empty"));
     this->convertToModelTypeSelected(filepath, "cmdl");
 }
 
-void ModelViewerPanel::preRenderContents() {
+void EditorPanel::preRenderContents() {
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
             if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) // Open Model...
@@ -210,14 +210,13 @@ void ModelViewerPanel::preRenderContents() {
     ImGui::SetNextWindowSize(ImVec2{ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y - ImGui::GetFrameHeight()});
 }
 
-void ModelViewerPanel::renderContents() {
+void EditorPanel::renderContents() {
     static ImGuizmo::OPERATION currentGizmoOperation(ImGuizmo::TRANSLATE);
     static ImGuizmo::MODE currentGizmoMode(ImGuizmo::WORLD);
     static bool useSnap = false;
     static float snap[3] = { 1.f, 1.f, 1.f };
 
-    if (ImGui::BeginChild("evopt_holder", ImVec2(300, ImGui::GetWindowHeight()))) {
-        
+    if (ImGui::BeginChild("Controls", ImVec2(300, ImGui::GetWindowHeight()))) {
         if (ImGui::CollapsingHeader("View")) {
             if (this->scene->hasEntity(this->gridID)) {
                 ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
@@ -240,10 +239,9 @@ void ModelViewerPanel::renderContents() {
                 ImGui::InputFloat3("Snap", snap);
             }
         }
-
-        ImGui::EndChild();
     }
-    
+    ImGui::EndChild();
+
     if (!this->selected)
         return;
 
@@ -261,7 +259,7 @@ void ModelViewerPanel::renderContents() {
     }
 }
 
-void ModelViewerPanel::setLoadedFile(const std::string& meshName) {
+void EditorPanel::setLoadedFile(const std::string& meshName) {
     if (auto preview = scene->getEntity(this->previewID); preview && meshName == preview->getComponent<MeshComponent>().getMeshResource()->getIdentifier())
         return;
     if (!Resource::hasResource(meshName)) {
@@ -278,6 +276,6 @@ void ModelViewerPanel::setLoadedFile(const std::string& meshName) {
     this->loadedFile = meshName;
 }
 
-void ModelViewerPanel::setSelected(Entity* selected_) {
+void EditorPanel::setSelected(Entity* selected_) {
     this->selected = selected_;
 }

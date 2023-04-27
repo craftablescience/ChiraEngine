@@ -140,11 +140,11 @@ void Device::destroyBackend() {
     SDL_GL_DeleteContext(g_GLContext);
 }
 
-std::array<Device::WindowHandle, 256> WINDOWS{};
+std::array<Device::WindowHandle, 256> g_Windows{};
 
 static int findFreeWindow() {
-    for (int i = 0; i < WINDOWS.size(); i++) {
-        if (!WINDOWS.at(i))
+    for (int i = 0; i < g_Windows.size(); i++) {
+        if (!g_Windows.at(i))
             return i;
     }
     return -1;
@@ -155,8 +155,8 @@ static int findFreeWindow() {
     if (freeWindow == -1)
         return nullptr;
 
-    WINDOWS[freeWindow] = WindowHandle{};
-    WindowHandle& handle = WINDOWS.at(freeWindow);
+    g_Windows[freeWindow] = WindowHandle{};
+    WindowHandle& handle = g_Windows.at(freeWindow);
 
     handle.width = width;
     handle.height = height;
@@ -208,7 +208,7 @@ static int findFreeWindow() {
 
 void Device::refreshWindows() {
     // Render each window
-    for (auto& handle : WINDOWS) {
+    for (auto& handle : g_Windows) {
         if (!handle)
             continue;
 
@@ -265,7 +265,7 @@ void Device::refreshWindows() {
 
         switch (event.type) {
             case SDL_QUIT:
-                for (auto& windowHandle : WINDOWS) {
+                for (auto& windowHandle : g_Windows) {
                     if (windowHandle) {
                         Device::queueDestroyWindow(&windowHandle, true);
                     }
@@ -347,7 +347,7 @@ void Device::refreshWindows() {
 
 [[nodiscard]] int Device::getWindowCount() {
     int count = 0;
-    for (const auto& handle : WINDOWS) {
+    for (const auto& handle : g_Windows) {
         count += static_cast<bool>(handle);
     }
     return count;
@@ -499,7 +499,7 @@ void Device::destroyWindow(WindowHandle* handle) {
 }
 
 void Device::destroyAllWindows() {
-    for (auto& handle : WINDOWS) {
+    for (auto& handle : g_Windows) {
         if (handle) {
             Device::destroyWindow(&handle);
         }

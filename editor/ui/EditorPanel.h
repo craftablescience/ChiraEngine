@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/ILayerPanel.h>
+#include <ui/IPanel.h>
 #include <utility/UUIDGenerator.h>
 
 #include <imfilebrowser.h>
@@ -11,9 +11,9 @@ class Layer;
 class Scene;
 class Entity;
 
-class ModelViewerPanel : public IPanel {
+class EditorPanel : public IPanel {
 public:
-    explicit ModelViewerPanel(Layer* layer);
+    EditorPanel(Layer* layer);
 
     /// Opens a file dialog used to select a model definition
     void addModelSelected();
