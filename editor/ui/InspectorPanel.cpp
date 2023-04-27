@@ -27,7 +27,7 @@ if (ImGui::BeginPopupModal("Remove Component?##" #comptype, NULL, ImGuiWindowFla
     ImGui::Separator();\
 \
     if (ImGui::Button("OK", ImVec2(120, 0))) { \
-        this->selected->tryRemoveComponent<##comptype>();\
+        this->selected->tryRemoveComponent<comptype>();\
         ImGui::CloseCurrentPopup();\
     } \
     ImGui::SetItemDefaultFocus();\
