@@ -21,7 +21,7 @@
 
 #include "ui/EntitySelectPanel.h"
 #include "ui/InspectorPanel.h"
-#include "ui/ModelViewerPanel.h"
+#include "ui/EditorPanel.h"
 
 using namespace chira;
 
@@ -51,7 +51,7 @@ int main(int argc, const char* const argv[]) {
     auto* layer = Device::getWindowLayer(Engine::getMainWindow());
     layer->setBackgroundColor({0.15f});
 
-    auto editor = new ModelViewerPanel{layer};
+    auto editor = new EditorPanel{layer};
     Device::addPanelToWindow(Engine::getMainWindow(), editor);
 
     auto inspector = new InspectorPanel{};
