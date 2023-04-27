@@ -8,6 +8,7 @@ namespace chira {
 class MeshDataBuilder : public MeshData {
 public:
     MeshDataBuilder();
+
     void addTriangle(Vertex v1, Vertex v2, Vertex v3, bool addDuplicate = false);
     /// Vertex v4 forms a face with vertex v1 and v3.
     void addSquare(Vertex v1, Vertex v2, Vertex v3, Vertex v4, bool addDuplicate = false);
@@ -16,6 +17,7 @@ public:
     void update();
     /// Does not call update().
     void clear();
+
 protected:
     Index currentIndex = 0;
     /// Pass true to addDuplicate if you don't want to scan the entire vertex vector to calculate the index.
