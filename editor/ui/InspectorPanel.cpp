@@ -18,6 +18,24 @@
 
 using namespace chira;
 
+#define REMOVE_BUTTON(comptype) if (ImGui::Button("X")) {\
+    ImGui::OpenPopup("Remove Component?##" #comptype);\
+} \
+if (ImGui::BeginPopupModal("Remove Component?##" #comptype, NULL, ImGuiWindowFlags_AlwaysAutoResize))\
+{\
+    ImGui::Text("This component will be removed.\nThis operation cannot be undone!");\
+    ImGui::Separator();\
+\
+    if (ImGui::Button("OK", ImVec2(120, 0))) { \
+        this->selected->tryRemoveComponent<##comptype>();\
+        ImGui::CloseCurrentPopup();\
+    } \
+    ImGui::SetItemDefaultFocus();\
+    ImGui::SameLine();\
+    if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }\
+    ImGui::EndPopup();\
+}\
+
 InspectorPanel::InspectorPanel()
 	    : IPanel("Inspector", true)
         , selected(nullptr) {}
@@ -139,6 +157,7 @@ void InspectorPanel::renderContents() {
 	}
 
     if (auto component = this->selected->tryGetComponent<AngelScriptComponent>()) {
+        REMOVE_BUTTON(AngelScriptComponent);
         if (ImGui::Button("X")) {
             this->selected->tryRemoveComponent<AngelScriptComponent>();
         }
@@ -162,54 +181,42 @@ void InspectorPanel::renderContents() {
         }
     }
     if ([[maybe_unused]] auto component = this->selected->tryGetComponent<AudioNoiseComponent>()) {
-        if (ImGui::Button("X")) {
-            this->selected->tryRemoveComponent<AudioNoiseComponent>();
-        }
+        REMOVE_BUTTON(AudioNoiseComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Noise", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("todo...");
         }
     }
     if ([[maybe_unused]] auto component = this->selected->tryGetComponent<AudioSfxrComponent>()) {
-        if (ImGui::Button("X")) {
-            this->selected->tryRemoveComponent<AudioSfxrComponent>();
-        }
+        REMOVE_BUTTON(AudioSfxrComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Sfxr", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("todo...");
         }
     }
     if ([[maybe_unused]] auto component = this->selected->tryGetComponent<AudioSpeechComponent>()) {
-        if (ImGui::Button("X")) {
-            this->selected->tryRemoveComponent<AudioSpeechComponent>();
-        }
+        REMOVE_BUTTON(AudioSpeechComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Speech", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("todo...");
         }
     }
     if ([[maybe_unused]] auto component = this->selected->tryGetComponent<AudioWavComponent>()) {
-        if (ImGui::Button("X")) {
-            this->selected->tryRemoveComponent<AudioWavComponent>();
-        }
+        REMOVE_BUTTON(AudioWavComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Wav", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("todo...");
         }
     }
     if ([[maybe_unused]] auto component = this->selected->tryGetComponent<AudioWavStreamComponent>()) {
-        if (ImGui::Button("X")) {
-            this->selected->tryRemoveComponent<AudioWavStreamComponent>();
-        }
+        REMOVE_BUTTON(AudioWavStreamComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Wav Stream", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("todo...");
         }
     }
     if (auto component = this->selected->tryGetComponent<BillboardComponent>()) {
-        if (ImGui::Button("X")) {
-            this->selected->tryRemoveComponent<BillboardComponent>();
-        }
+        REMOVE_BUTTON(BillboardComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Billboard", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Checkbox("X Axis", &component->x);
@@ -218,9 +225,7 @@ void InspectorPanel::renderContents() {
         }
     }
     if (auto component = this->selected->tryGetComponent<CameraComponent>()) {
-        if (ImGui::Button("X")) {
-            this->selected->tryRemoveComponent<CameraComponent>();
-        }
+        REMOVE_BUTTON(CameraComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen)) {
             if (ImGui::BeginCombo("Projection Mode", magic_enum::enum_name(component->projectionMode).data())) {
@@ -240,9 +245,7 @@ void InspectorPanel::renderContents() {
         }
     }
     if (auto component = this->selected->tryGetComponent<DirectionalLightComponent>()) {
-        if (ImGui::Button("X")) {
-            this->selected->tryRemoveComponent<DirectionalLightComponent>();
-        }
+        REMOVE_BUTTON(DirectionalLightComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Directional Light", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::ColorEdit3("Ambient", &component->ambient.x);
@@ -251,9 +254,7 @@ void InspectorPanel::renderContents() {
         }
     }
     if (auto component = this->selected->tryGetComponent<PointLightComponent>()) {
-        if (ImGui::Button("X")) {
-            this->selected->tryRemoveComponent<PointLightComponent>();
-        }
+        REMOVE_BUTTON(PointLightComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Point Light", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::ColorEdit3("Ambient", &component->ambient.x);
@@ -263,9 +264,7 @@ void InspectorPanel::renderContents() {
         }
     }
     if (auto component = this->selected->tryGetComponent<SpotLightComponent>()) {
-        if (ImGui::Button("X")) {
-            this->selected->tryRemoveComponent<SpotLightComponent>();
-        }
+        REMOVE_BUTTON(SpotLightComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Spot Light", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::ColorEdit3("Diffuse", &component->diffuse.x);
@@ -275,9 +274,7 @@ void InspectorPanel::renderContents() {
         }
     }
     if (auto component = this->selected->tryGetComponent<MeshComponent>()) {
-        if (ImGui::Button("X")) {
-            this->selected->tryRemoveComponent<MeshComponent>();
-        }
+        REMOVE_BUTTON(MeshComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
             if (ImGui::Button("Pick Mesh")) {
@@ -298,9 +295,7 @@ void InspectorPanel::renderContents() {
         }
     }
     if ([[maybe_unused]] auto component = this->selected->tryGetComponent<MeshDynamicComponent>()) {
-        if (ImGui::Button("X")) {
-            this->selected->tryRemoveComponent<MeshDynamicComponent>();
-        }
+        REMOVE_BUTTON(MeshDynamicComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Mesh Dynamic", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("todo...");
