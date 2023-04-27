@@ -211,30 +211,41 @@ void ModelViewerPanel::preRenderContents() {
 }
 
 void ModelViewerPanel::renderContents() {
-    if (this->scene->hasEntity(this->gridID)) {
-        ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
-        this->scene->getEntity(this->gridID)->setVisible(this->showGrid);
-    }
-    if (this->scene->hasEntity(this->previewID)) {
-        ImGui::Text("%s", this->loadedFile.c_str());
-    }
-
-    if (!this->selected)
-        return;
-
     static ImGuizmo::OPERATION currentGizmoOperation(ImGuizmo::TRANSLATE);
     static ImGuizmo::MODE currentGizmoMode(ImGuizmo::WORLD);
     static bool useSnap = false;
     static float snap[3] = { 1.f, 1.f, 1.f };
 
-    ImGui::RadioButton("Translate", (int*) &currentGizmoOperation, ImGuizmo::TRANSLATE);
-    ImGui::RadioButton("Rotate", (int*) &currentGizmoOperation, ImGuizmo::ROTATE);
-    ImGui::RadioButton("Scale", (int*) &currentGizmoOperation, ImGuizmo::SCALE);
-    ImGui::Separator();
-    ImGui::RadioButton("Local", (int*) &currentGizmoMode, ImGuizmo::LOCAL);
-    ImGui::RadioButton("World", (int*) &currentGizmoMode, ImGuizmo::WORLD);
-    ImGui::Checkbox("Snap", &useSnap);
-    ImGui::InputFloat3("Snap", snap);
+    if (ImGui::BeginChild("evopt_holder", ImVec2(300, ImGui::GetWindowHeight()))) {
+        
+        if (ImGui::CollapsingHeader("View")) {
+            if (this->scene->hasEntity(this->gridID)) {
+                ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
+                this->scene->getEntity(this->gridID)->setVisible(this->showGrid);
+            }
+            if (this->scene->hasEntity(this->previewID)) {
+                ImGui::Text("%s", this->loadedFile.c_str());
+            }
+        }
+
+        if (this->selected) {
+            if (ImGui::CollapsingHeader("Gizmo")) {
+                ImGui::RadioButton("Translate", (int*) &currentGizmoOperation, ImGuizmo::TRANSLATE);
+                ImGui::RadioButton("Rotate", (int*) &currentGizmoOperation, ImGuizmo::ROTATE);
+                ImGui::RadioButton("Scale", (int*) &currentGizmoOperation, ImGuizmo::SCALE);
+                ImGui::Separator();
+                ImGui::RadioButton("Local", (int*) &currentGizmoMode, ImGuizmo::LOCAL);
+                ImGui::RadioButton("World", (int*) &currentGizmoMode, ImGuizmo::WORLD);
+                ImGui::Checkbox("Snap", &useSnap);
+                ImGui::InputFloat3("Snap", snap);
+            }
+        }
+
+        ImGui::EndChild();
+    }
+    
+    if (!this->selected)
+        return;
 
     if (auto* camera = this->scene->getCamera()) {
         const auto view = camera->getView();
