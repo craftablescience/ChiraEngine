@@ -19,23 +19,27 @@
 
 using namespace chira;
 
-#define REMOVE_BUTTON(comptype) if (ImGui::Button("X")) {\
-    ImGui::OpenPopup("Remove Component?##" #comptype);\
-} \
-if (ImGui::BeginPopupModal("Remove Component?##" #comptype, NULL, ImGuiWindowFlags_AlwaysAutoResize))\
-{\
-    ImGui::Text("This component will be removed.\nThis operation cannot be undone!");\
-    ImGui::Separator();\
-\
-    if (ImGui::Button("OK", ImVec2(120, 0))) { \
-        this->selected->tryRemoveComponent<comptype>();\
-        ImGui::CloseCurrentPopup();\
-    } \
-    ImGui::SetItemDefaultFocus();\
-    ImGui::SameLine();\
-    if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }\
-    ImGui::EndPopup();\
-}\
+#define REMOVE_BUTTON(component)                                                                                 \
+    do {                                                                                                         \
+        if (ImGui::Button("X")) {                                                                                \
+            ImGui::OpenPopup("Remove Component?##" #component);                                                  \
+        }                                                                                                        \
+        if (ImGui::BeginPopupModal("Remove Component?##" #component, NULL, ImGuiWindowFlags_AlwaysAutoResize)) { \
+            ImGui::Text("This component will be removed.\nThis operation cannot be undone!");                    \
+            ImGui::Separator();                                                                                  \
+            if (ImGui::Button("OK", ImVec2(120, 0))) {                                                           \
+                this->selected->tryRemoveComponent<component>();                                                 \
+                ImGui::CloseCurrentPopup();                                                                      \
+                ImGui::EndPopup();                                                                               \
+                return;                                                                                          \
+            }                                                                                                    \
+            ImGui::SetItemDefaultFocus();                                                                        \
+            ImGui::SameLine();                                                                                   \
+            if (ImGui::Button("Cancel", ImVec2(120, 0)))                                                         \
+                ImGui::CloseCurrentPopup();                                                                      \
+            ImGui::EndPopup();                                                                                   \
+        }                                                                                                        \
+    } while (0)
 
 InspectorPanel::InspectorPanel()
 	    : IPanel("Inspector", true)
@@ -206,18 +210,54 @@ void InspectorPanel::renderContents() {
             ImGui::Text("todo...");
         }
     }
-    if ([[maybe_unused]] auto component = this->selected->tryGetComponent<AudioWavComponent>()) {
+    if (auto component = this->selected->tryGetComponent<AudioWavComponent>()) {
         REMOVE_BUTTON(AudioWavComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Wav", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("todo...");
+            ImGui::Text("%s", component->wavFile->getIdentifier().data());
+
+            if (ImGui::Button("Pick Audio")) {
+                filePicker.Open();
+            }
+
+            if (ImGui::Button("Preview Audio")) {
+                Audio::get().play(component->wav);
+            }
+        }
+
+        filePicker.Display();
+        if (filePicker.HasSelected()) {
+            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            if (!path.empty()) {
+                this->selected->tryRemoveComponent<AudioWavComponent>();
+                this->selected->addComponent<AudioWavComponent>(path);
+            }
+            filePicker.ClearSelected();
         }
     }
-    if ([[maybe_unused]] auto component = this->selected->tryGetComponent<AudioWavStreamComponent>()) {
+    if (auto component = this->selected->tryGetComponent<AudioWavStreamComponent>()) {
         REMOVE_BUTTON(AudioWavStreamComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Wav Stream", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("todo...");
+            ImGui::Text("%s", component->wavFile->getIdentifier().data());
+
+            if (ImGui::Button("Pick Audio")) {
+                filePicker.Open();
+            }
+
+            if (ImGui::Button("Preview Audio")) {
+                Audio::get().play(component->wavStream);
+            }
+        }
+
+        filePicker.Display();
+        if (filePicker.HasSelected()) {
+            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            if (!path.empty()) {
+                this->selected->tryRemoveComponent<AudioWavStreamComponent>();
+                this->selected->addComponent<AudioWavStreamComponent>(path);
+            }
+            filePicker.ClearSelected();
         }
     }
     if (auto component = this->selected->tryGetComponent<BillboardComponent>()) {
@@ -282,11 +322,11 @@ void InspectorPanel::renderContents() {
         REMOVE_BUTTON(MeshComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::Text("%s", component->getMeshResource()->getIdentifier().data());
+
             if (ImGui::Button("Pick Mesh")) {
                 filePicker.Open();
             }
-
-            ImGui::Text("%s", component->getMeshResource()->getIdentifier().data());
         }
 
         filePicker.Display();
@@ -303,18 +343,18 @@ void InspectorPanel::renderContents() {
         REMOVE_BUTTON(MeshDynamicComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Mesh Dynamic", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("todo...");
+            ImGui::Text("This component is only editable in code.");
         }
     }
     if (auto component = this->selected->tryGetComponent<MeshSpriteComponent>()) {
         REMOVE_BUTTON(MeshSpriteComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Mesh Sprite", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::Text("%s", component->sprite.getMaterial()->getIdentifier().data());
+
             if (ImGui::Button("Pick Material")) {
                 filePicker.Open();
             }
-
-            ImGui::Text("%s", component->sprite.getMaterial()->getIdentifier().data());
         }
 
         filePicker.Display();
