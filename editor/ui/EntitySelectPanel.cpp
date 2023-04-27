@@ -26,6 +26,7 @@ void EntitySelectPanel::renderContents() {
                     // todo(editor): only unselect if its currently selected
                     this->editor->setSelected(nullptr);
                     this->inspector->setSelected(nullptr);
+                    selected = -1;
                     ImGui::PopID();
                     break;
                 }
