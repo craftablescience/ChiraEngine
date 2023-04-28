@@ -78,7 +78,7 @@ int main(int argc, const char* const argv[]) {
     SharedPointer<MeshDataResource> mesh = Resource::getResource<MeshDataResource>(if_path.filename());
 
     std::ofstream file{outputFile, std::ios::binary};
-    std::vector<byte> meshData = mesh.getMeshData("cmdl");
+    std::vector<byte> meshData = mesh->getMeshData("cmdl");
     file.write(reinterpret_cast<const char*>(meshData.data()), static_cast<std::streamsize>(meshData.size()));
     file.close();
 
