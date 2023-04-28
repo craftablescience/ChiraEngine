@@ -411,6 +411,14 @@ if(CHIRA_BUILD_EDITOR)
     endif()
 endif()
 
+# TOOLS
+
+# CMDLTOOL
+include(${CMAKE_CURRENT_SOURCE_DIR}/tools/cmdltool/CMakeLists.txt)
+add_executable(CMDLTool ${CMDLTOOL_SOURCES})
+target_link_libraries(CMDLTool PRIVATE ${PROJECT_NAME})
+target_include_directories(CMDLTool PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tools/cmdltool)
+
 
 # CHIRATEST
 if(CHIRA_BUILD_TESTS)
