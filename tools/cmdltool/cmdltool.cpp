@@ -75,7 +75,7 @@ int main(int argc, const char* const argv[]) {
     std::filesystem::path if_path = std::filesystem::path(inputFile);
     Resource::addResourceProvider(new FilesystemResourceProvider{if_path.remove_filename().string()});
 
-    SharedPointer<MeshDataResource> mesh = Resource::getResource<MeshDataResource>(if_path.filename());
+    SharedPointer<MeshDataResource> mesh = Resource::getResource<MeshDataResource>(if_path.filename().string());
 
     std::ofstream file{outputFile, std::ios::binary};
     std::vector<byte> meshData = mesh->getMeshData("cmdl");
