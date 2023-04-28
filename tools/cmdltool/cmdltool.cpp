@@ -3,6 +3,7 @@
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <render/mesh/MeshDataResource.h>
 #include <filesystem>
+#include <fstream>
 
 #define VERSION "1.0"
 
@@ -30,6 +31,9 @@ int main(int argc, const char* const argv[]) {
 
     if (argc == 0) {
         dispHelp();
+        // make sure we actually discard resources.
+        // we don't ever call Engine::run() so we never do the proper shutdown
+        // and have to manually call this
         Resource::discardAll();
         return 0;
     }
@@ -37,15 +41,20 @@ int main(int argc, const char* const argv[]) {
     std::string inputFile;
     std::string outputFile;
 
-    int idx = 0;
-    for (auto param : argv) {
+    for (int i = 0; i < argc; i++) {
+        auto param = argv[i];
+
+        if (strcmp(param, "-h") == 0) {
+            dispHelp();
+            Resource::discardAll();
+            return 0;
+        }
+
         if (strcmp(param, "-i") == 0)
-            inputFile = std::string(argv[idx + 1]);
+            inputFile = std::string(argv[i + 1]);
 
         if (strcmp(param, "-o") == 0)
-            outputFile = std::string(argv[idx + 1]);
-
-        idx++;
+            outputFile = std::string(argv[i + 1]);
     }
 
     if (inputFile.empty()) {
@@ -66,7 +75,7 @@ int main(int argc, const char* const argv[]) {
     std::filesystem::path if_path = std::filesystem::path(inputFile);
     Resource::addResourceProvider(new FilesystemResourceProvider{if_path.remove_filename().string()});
 
-    MeshDataResource mesh = Resource::getResource<MeshDataResource>(if_path.filename);
+    SharedPointer<MeshDataResource> mesh = Resource::getResource<MeshDataResource>(if_path.filename());
 
     std::ofstream file{outputFile, std::ios::binary};
     std::vector<byte> meshData = mesh.getMeshData("cmdl");
@@ -74,4 +83,5 @@ int main(int argc, const char* const argv[]) {
     file.close();
 
     Resource::discardAll();
+    return 0;
 }
