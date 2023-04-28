@@ -1,0 +1,2 @@
+list(APPEND CMDLTOOL_SOURCES
+    ${CMAKE_CURRENT_LIST_DIR}/cmdltool.cpp)
