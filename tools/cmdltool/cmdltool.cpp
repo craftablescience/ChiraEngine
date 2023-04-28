@@ -75,12 +75,15 @@ int main(int argc, const char* const argv[]) {
     std::filesystem::path if_path = std::filesystem::path(inputFile);
     Resource::addResourceProvider(new FilesystemResourceProvider{if_path.remove_filename().string()});
 
+    LOG_CMDLTOOL.info("Attempting to convert mesh file '%s'", if_path.filename().string());
     SharedPointer<MeshDataResource> mesh = Resource::getResource<MeshDataResource>(if_path.filename().string());
 
     std::ofstream file{outputFile, std::ios::binary};
     std::vector<byte> meshData = mesh->getMeshData("cmdl");
+    LOG_CMDLTOOL.info("Writing converted data to '%s'", outputFile);
     file.write(reinterpret_cast<const char*>(meshData.data()), static_cast<std::streamsize>(meshData.size()));
     file.close();
+    LOG_CMDLTOOL.info("Conversion Complete");
 
     Resource::discardAll();
     return 0;
