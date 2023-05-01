@@ -30,7 +30,7 @@ TEST(Runner, launchEngineDLL) {
         &si,
         &pi);
 
-    EXPECT_TRUE(proessResult);
+    EXPECT_TRUE(processResult);
 
     WaitForSingleObject(pi.hProcess, INFINITE);
 
