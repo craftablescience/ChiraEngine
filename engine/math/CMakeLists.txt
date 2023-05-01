@@ -10,7 +10,7 @@ list(APPEND CHIRA_MATH_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/Color.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Vertex.cpp)
 
-add_library(mathlib SHARED CHIRA_MATH_SOURCES)
+add_library(mathlib SHARED ${CHIRA_MATH_SOURCES})
 target_link_libraries(mathlib PUBLIC nlohmann_json::nlohmann_json glm)
 
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES mathlib)
