@@ -1,3 +1,7 @@
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/math)
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS
+        ${CMAKE_CURRENT_SOURCE_DIR}/engine/math)
+
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/config/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/core/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/CMakeLists.txt)
@@ -5,7 +9,6 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/engine/event/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/i18n/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/input/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/loader/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/math/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/plugin/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/reflect/CMakeLists.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/render/CMakeLists.txt)
