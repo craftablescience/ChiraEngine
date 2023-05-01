@@ -65,6 +65,7 @@ void Engine::preInit(int argc, const char* const argv[]) {
 void Engine::init(bool visibleSplashScreen /*= true*/) {
     Engine::started = true;
 
+    // TODO: Initialize this in preinit to allow the runner to display visual message boxes on errors and show a splash the whole startup time.
     if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER)) {
         LOG_ENGINE.error("SDL2 failed to initialize: {}", SDL_GetError());
         exit(EXIT_FAILURE);
@@ -84,6 +85,7 @@ void Engine::init(bool visibleSplashScreen /*= true*/) {
     // Start up some auto-registered stuff (order is random!)
     PluginRegistry::initAll();
 
+    // TODO: Register these so adding them can be automated
     IMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     IMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
 

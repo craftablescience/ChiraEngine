@@ -11,3 +11,5 @@ list(APPEND CHIRA_TEST_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/engine/utility/Concepts.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/utility/StringTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/utility/UUIDGeneratorTest.cpp)
+
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/runner)

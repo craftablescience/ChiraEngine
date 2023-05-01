@@ -6,6 +6,7 @@
 #include <core/Engine.h>
 #include <core/Logger.h>
 #include <core/Platform.h>
+#include <render/backend/RenderDevice.h>
 
 #ifdef CHIRA_PLATFORM_WINDOWS
     #include <windows.h>
@@ -16,14 +17,18 @@ namespace fs = std::filesystem;
 
 CHIRA_CREATE_LOG(RUNNER);
 
+// TODO: Figure out how to do dll stuff under Linux and macOS
+// TODO: create a list of command line parameters that the runner uses then strip them out of the list before preinit
+
 int main(int argc, const char* const argv[]) {
     // initialize the engine
     Engine::preInit(argc, argv);
 
+    bool test_mode = false
+
     if (argc == 0) {
         LOG_RUNNER.error("No arguments provided! Quitting...");
-        Resource::DiscardAll();
-        return 0;
+        exit(EXIT_SUCCESS);
     }
 
     fs::path gamePath;
@@ -31,23 +36,25 @@ int main(int argc, const char* const argv[]) {
     for (int i = 0; i < argc; i++) {
         auto param = argv[i];
 
-        COMMAND_LINE_PARAM("game", {
+        COMMAND_LINE_PARAM("game") {
             gamePath = fs::path(argv[i + 1]);
-        });
+        }
+        COMMAND_LINE_PARAM("testmode") {
+            // tells the runner to mark the window for deletion before executing Engine::Run()
+            test_mode = true;
+        }
     }
 
     // make sure we aren't about to load an invalid game folder
     if (!fs::exists(gamePath)) {
         LOG_RUNNER.error("Couldn't find gamePath '%s'", gamePath.string());
-        Resource::DiscardAll();
-        return 0;
+        exit(EXIT_FAILURE);
     }
 
     fs::path gameDLLPath{gamePath/"bin/game.dll"};
     if (!fs::exists(gameDLLPath)) {
         LOG_RUNNER.error("Couldn't find game DLL in '%s/bin'", gamePath.string());
-        Resource::DiscardAll();
-        return 0;
+        exit(EXIT_FAILURE);
     }
 
     // load the dll
@@ -64,19 +71,17 @@ int main(int argc, const char* const argv[]) {
     
         if (NULL == gamePreInit) {
             LOG_RUNNER.error("FATAL: Unable to locate game_preInit in game DLL!");
-            Resource::DiscardAll();
-            return 0;
+            exit(2);
         }
 
         if (NULL == gameInit) {
             LOG_RUNNER.error("FATAL: Unable to locate game_init in game DLL!");
-            Resource::DiscardAll();
-            return 0;
+            exit(2);
         }
     }
 #endif
 
-    // TODO: implement gameinfo stuff for auto adding resources and the like
+    // TODO: implement gameinfo stuff for auto adding resources and the like automatically
 
 #ifdef CHIRA_PLATFORM_WINDOWS
     (gamePreInit);
@@ -88,12 +93,17 @@ int main(int argc, const char* const argv[]) {
     (gameInit);
 #endif
 
+    // TODO: we should really handle most of this within the test game shouldn't we.
+    if (test_mode)
+        Device::queueDestroyWindow(Engine::getMainWindow(), true);
     Engine::Run();
 
 #ifdef CHIRA_PLATFORM_WINDOWS
     // free dll
     fFreeResult = FreeLibrary(hinstgameLib);
     if (!fFreeResult)
-        printf("[RUNNER] Failed to free game libary? Something went horribly wrong!");
+        // this should never happen. If this happens that means we most likely
+        // failed to load the game DLL which would trigger an error much earlier.
+        printf("[RUNNER] Failed to free game module. This should not be possible?");
 #endif
 }
