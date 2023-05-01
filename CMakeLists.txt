@@ -368,7 +368,7 @@ if(CHIRA_BUILD_EDITOR)
                 MACOSX_FRAMEWORK_IDENTIFIER info.craftablescience.ChiraEditor
                 BUNDLE "${CHIRA_APPLE_BUNDLE_FILES}")
     endif()
-    target_link_libraries(ChiraEditor PRIVATE ${PROJECT_NAME})
+    target_link_libraries(ChiraEditor PRIVATE mathlib ${PROJECT_NAME})
     target_include_directories(ChiraEditor PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/editor)
 
     if(CHIRA_BUILD_EDITOR_INSTALLER)
@@ -396,11 +396,19 @@ if(CHIRA_BUILD_EDITOR)
     endif()
 endif()
 
+# TOOLS
+
+# CMDLTOOL
+include(${CMAKE_CURRENT_SOURCE_DIR}/tools/cmdltool/CMakeLists.txt)
+add_executable(CMDLTool ${CMDLTOOL_SOURCES})
+target_link_libraries(CMDLTool PRIVATE mathlib ${PROJECT_NAME})
+target_include_directories(CMDLTool PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tools/cmdltool)
+
 
 # CHIRATEST
 if(CHIRA_BUILD_TESTS)
     add_executable(ChiraTest ${CHIRA_TEST_SOURCES})
-    target_link_libraries(ChiraTest PUBLIC ${PROJECT_NAME} gtest_main)
+    target_link_libraries(ChiraTest PUBLIC mathlib ${PROJECT_NAME} gtest_main)
     target_include_directories(ChiraTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tests)
     include(GoogleTest)
     gtest_discover_tests(ChiraTest)
