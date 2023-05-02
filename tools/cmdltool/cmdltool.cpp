@@ -1,90 +1,87 @@
-#include <core/Engine.h>
-#include <core/Logger.h>
-#include <resource/provider/FilesystemResourceProvider.h>
-#include <render/mesh/MeshDataResource.h>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 
-#define VERSION "1.0"
+#include <core/CommandLine.h>
+#include <core/Engine.h>
+#include <core/Logger.h>
+#include <loader/mesh/ChiraMeshLoader.h>
+#include <loader/mesh/OBJMeshLoader.h>
+#include <render/mesh/MeshData.h>
+#include <resource/provider/FilesystemResourceProvider.h>
 
 using namespace chira;
 
 CHIRA_CREATE_LOG(CMDLTOOL);
 
-void dispHelp() {
-    std::string helpLines[] = {
-        "Usage:",
-        "-h   display help message",
-        "-i <input-file>   file to convert",
-        "-o <output-file>   destination for converted file"
-    };
+#define VERSION "1.0"
 
-    for (auto line : helpLines) {
-        LOG_CMDLTOOL.info(line);
-    }
+static void printHelp() {
+    LOG_CMDLTOOL.infoImportant() <<                                    "\n"
+        "CMDLTOOL v" VERSION                                           "\n"
+        "Usage:"                                                       "\n"
+        "-h               : Display this help message"                 "\n"
+        "-i <input file>  : Path of the file to convert"               "\n"
+        "-s <type>        : Type of the input file (cmdl, obj, etc.)"  "\n"
+        "-t <type>        : Type of the output file (cmdl, obj, etc.)" "\n"
+        "                   The default is cmdl"                       "\n"
+        "-o <output file> : Destination for the converted file"        "\n";
 }
 
 int main(int argc, const char* const argv[]) {
     Engine::preInit(argc, argv);
 
-    LOG_CMDLTOOL.info("CMDLTool v%s", VERSION);
+    // make sure we actually discard resources. we don't ever call Engine::run()
+    // so we never do the proper shutdown and have to manually call this
+    std::atexit(Resource::discardAll);
 
     if (argc == 0) {
-        dispHelp();
-        // make sure we actually discard resources.
-        // we don't ever call Engine::run() so we never do the proper shutdown
-        // and have to manually call this
-        Resource::discardAll();
-        return 0;
+        printHelp();
+        return EXIT_FAILURE;
     }
 
-    std::string inputFile;
-    std::string outputFile;
-
-    for (int i = 0; i < argc; i++) {
-        auto param = argv[i];
-
-        if (strcmp(param, "-h") == 0) {
-            dispHelp();
-            Resource::discardAll();
-            return 0;
-        }
-
-        if (strcmp(param, "-i") == 0)
-            inputFile = std::string(argv[i + 1]);
-
-        if (strcmp(param, "-o") == 0)
-            outputFile = std::string(argv[i + 1]);
+    std::filesystem::path inputPath;
+    if (auto input = CommandLine::get("-i"); !input.empty()) {
+        inputPath = input;
+    } else {
+        LOG_CMDLTOOL.error("No input file provided!\n");
+        printHelp();
+        return EXIT_FAILURE;
     }
 
-    if (inputFile.empty()) {
-        LOG_CMDLTOOL.error("No input file provided.");
-        dispHelp();
-        Resource::discardAll();
-        return 0;
+    std::string inputType = CommandLine::get("-s").data();
+    if (inputType.empty()) {
+        LOG_CMDLTOOL.error("No input type provided!\n");
+        printHelp();
+        return EXIT_FAILURE;
     }
 
-    if (outputFile.empty()) {
-        LOG_CMDLTOOL.error("No output file provided.");
-        dispHelp();
-        Resource::discardAll();
-        return 0;
+    std::string outputType = CommandLine::getOr("-t", "cmdl").data();
+
+    std::filesystem::path outputPath;
+    if (auto output = CommandLine::get("-o"); !output.empty()) {
+        outputPath = output;
+    } else {
+        LOG_CMDLTOOL.error("No output file provided!\n");
+        printHelp();
+        return EXIT_FAILURE;
     }
 
-    // path of input is added to provider
-    std::filesystem::path if_path = std::filesystem::path(inputFile);
-    Resource::addResourceProvider(new FilesystemResourceProvider{if_path.remove_filename().string()});
+    // todo: populate these through some kind of registry
+    IMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
+    IMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
 
-    LOG_CMDLTOOL.info("Attempting to convert mesh file '%s'", if_path.filename().string());
-    SharedPointer<MeshDataResource> mesh = Resource::getResource<MeshDataResource>(if_path.filename().string());
+    LOG_CMDLTOOL.info("Attempting to convert mesh file \"{}\"...", inputPath.filename().string());
 
-    std::ofstream file{outputFile, std::ios::binary};
-    std::vector<byte> meshData = mesh->getMeshData("cmdl");
-    LOG_CMDLTOOL.info("Writing converted data to '%s'", outputFile);
+    MeshData mesh{};
+    Resource::addResourceProvider(new FilesystemResourceProvider{inputPath.remove_filename().string()});
+    mesh.appendMeshData(inputType, FilesystemResourceProvider::getResourceIdentifier(inputPath.string()));
+
+    std::ofstream file{outputPath.string(), std::ios::binary};
+    std::vector<byte> meshData = mesh.getMeshData(outputType);
     file.write(reinterpret_cast<const char*>(meshData.data()), static_cast<std::streamsize>(meshData.size()));
     file.close();
-    LOG_CMDLTOOL.info("Conversion Complete");
+    LOG_CMDLTOOL.infoImportant("Conversion complete! File written to \"{}\"", outputPath.string());
 
-    Resource::discardAll();
-    return 0;
+    return EXIT_SUCCESS;
 }
