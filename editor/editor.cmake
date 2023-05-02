@@ -12,17 +12,18 @@ if(APPLE)
     list(APPEND CHIRA_EDITOR_SOURCES ${CHIRA_APPLE_BUNDLE_FILES})
 endif()
 
-add_executable(ChiraEditor ${CHIRA_EDITOR_SOURCES})
-apply_optimizations(ChiraEditor)
+set(CHIRA_EDITOR_NAME "editor")
+add_executable(${CHIRA_EDITOR_NAME} ${CHIRA_EDITOR_SOURCES})
+apply_optimizations(${CHIRA_EDITOR_NAME})
 
 if(APPLE)
-    set_target_properties(ChiraEditor PROPERTIES
+    set_target_properties(${CHIRA_EDITOR_NAME} PROPERTIES
             MACOSX_BUNDLE TRUE
             MACOSX_FRAMEWORK_IDENTIFIER info.craftablescience.ChiraEngine
             BUNDLE "${CHIRA_APPLE_BUNDLE_FILES}")
 endif()
-target_link_libraries(ChiraEditor PRIVATE ${PROJECT_NAME})
-target_include_directories(ChiraEditor PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/editor)
+target_link_libraries(${CHIRA_EDITOR_NAME} PRIVATE ${CHIRA_ENGINE_NAME})
+target_include_directories(${CHIRA_EDITOR_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 
 if(CHIRA_BUILD_EDITOR_INSTALLER)
     set(CPACK_PACKAGE_VENDOR "Chira Engine Developers" CACHE STRING "" FORCE)

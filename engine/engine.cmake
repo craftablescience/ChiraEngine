@@ -180,16 +180,17 @@ include(${CMAKE_CURRENT_LIST_DIR}/utility/CMakeLists.txt)
 list(APPEND CHIRA_ENGINE_SOURCES ${CHIRA_ENGINE_HEADERS})
 list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR})
 
-add_library(${PROJECT_NAME} STATIC ${CHIRA_ENGINE_SOURCES})
-apply_optimizations(${PROJECT_NAME})
+set(CHIRA_ENGINE_NAME "engine")
+add_library(${CHIRA_ENGINE_NAME} STATIC ${CHIRA_ENGINE_SOURCES})
+apply_optimizations(${CHIRA_ENGINE_NAME})
 
 if(CHIRA_BUILD_WITH_PCH)
-    target_precompile_headers(${PROJECT_NAME} PRIVATE ${CHIRA_ENGINE_HEADERS})
+    target_precompile_headers(${CHIRA_ENGINE_NAME} PRIVATE ${CHIRA_ENGINE_HEADERS})
 endif()
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC
+target_compile_definitions(${CHIRA_ENGINE_NAME} PUBLIC
         ${CHIRA_ENGINE_DEFINITIONS})
-target_include_directories(${PROJECT_NAME} PUBLIC
+target_include_directories(${CHIRA_ENGINE_NAME} PUBLIC
         ${CHIRA_ENGINE_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PUBLIC
+target_link_libraries(${CHIRA_ENGINE_NAME} PUBLIC
         ${CHIRA_ENGINE_LINK_LIBRARIES})

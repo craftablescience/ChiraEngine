@@ -141,33 +141,33 @@ function(apply_optimizations TARGET)
 endfunction()
 
 # CHIRAENGINE
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/CMakeLists.txt)
+include(${CMAKE_CURRENT_SOURCE_DIR}/engine/engine.cmake)
 
 if(CHIRA_BUILD_EDITOR)
     # CHIRAEDITOR
-    include(${CMAKE_CURRENT_SOURCE_DIR}/editor/CMakeLists.txt)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/editor/editor.cmake)
 endif()
 
 if(CHIRA_BUILD_TESTS)
     # CHIRATEST
-    include(${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/tests/tests.cmake)
 endif()
 
 if(CHIRA_BUILD_TOOLS)
     # Helper function to handle tools
     function(add_tool_executable NAME)
-        cmake_parse_arguments(PARSE_ARGV 1 IN "" "" "SOURCES;DEPS")
+        cmake_parse_arguments(PARSE_ARGV 1 IN "" "" "SOURCES;DEPS;INCLUDE_PATHS")
         add_executable(${NAME} ${IN_SOURCES})
         apply_optimizations(${NAME})
-        target_link_libraries(${NAME} PRIVATE ${PROJECT_NAME} ${IN_DEPS})
-        target_include_directories(${NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tools)
+        target_link_libraries(${NAME} PRIVATE ${CHIRA_ENGINE_NAME} ${IN_DEPS})
+        target_include_directories(${NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tools/${NAME} ${IN_INCLUDE_PATHS})
     endfunction()
 
     # CMDLTOOL
-    include(${CMAKE_CURRENT_SOURCE_DIR}/tools/cmdltool/CMakeLists.txt)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/tools/cmdltool/cmdltool.cmake)
 endif()
 
 # Copy resources
-add_custom_target(${PROJECT_NAME}CopyResources
+add_custom_target(CopyResources
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/resources)
-add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}CopyResources)
+add_dependencies(${CHIRA_ENGINE_NAME} CopyResources)
