@@ -85,6 +85,13 @@ std::string_view CommandLine::get(std::string_view argument) {
     return "";
 }
 
+[[nodiscard]] std::string_view CommandLine::getOr(std::string_view argument, std::string_view default_) {
+    auto value = get(argument);
+    if (value.empty())
+        return default_;
+    return value;
+}
+
 std::string_view CommandLine::getProgramName() {
     return g_Arguments.at(0);
 }
