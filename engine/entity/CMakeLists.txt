@@ -1,4 +1,4 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/component/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/component/CMakeLists.txt)
 
 list(APPEND CHIRA_ENGINE_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/Entity.h

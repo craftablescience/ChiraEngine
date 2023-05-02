@@ -1,4 +1,4 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/resource/provider/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/provider/CMakeLists.txt)
 
 list(APPEND CHIRA_ENGINE_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/BinaryResource.h
