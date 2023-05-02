@@ -1,7 +1,5 @@
 #include "Engine.h"
 
-#include <SDL.h>
-
 #include <config/ConEntry.h>
 #include <event/Events.h>
 #include <i18n/TranslationManager.h>
@@ -51,10 +49,6 @@ void Engine::preInit(int argc, const char* const argv[]) {
     // Enable colored text in Windows console by setting encoding to UTF-8
     // #define CP_UTF8 65001 in Windows.h
     system("chcp 65001 > nul");
-
-    // Force enable DPI awareness because the manifest method didn't work
-    SDL_SetHintWithPriority(SDL_HINT_WINDOWS_DPI_SCALING, "0", SDL_HINT_OVERRIDE);
-    SDL_SetHintWithPriority(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitorv2", SDL_HINT_OVERRIDE);
 #endif
     CommandLine::init(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
@@ -64,11 +58,6 @@ void Engine::preInit(int argc, const char* const argv[]) {
 
 void Engine::init(bool visibleSplashScreen /*= true*/) {
     Engine::started = true;
-
-    if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER)) {
-        LOG_ENGINE.error("SDL2 failed to initialize: {}", SDL_GetError());
-        exit(EXIT_FAILURE);
-    }
 
     if (!Device::initBackendAndCreateSplashscreen(visibleSplashScreen)) {
         LOG_ENGINE.error("Failed to initialize graphics!");
@@ -122,7 +111,7 @@ void Engine::init(bool visibleSplashScreen /*= true*/) {
 void Engine::run() {
     do {
         Engine::lastTime = Engine::currentTime;
-        Engine::currentTime = SDL_GetTicks64();
+        Engine::currentTime = Device::getTicks();
 
         Device::refreshWindows();
 
@@ -139,7 +128,6 @@ void Engine::run() {
 
     Resource::discardAll();
 
-    SDL_Quit();
     exit(EXIT_SUCCESS);
 }
 
