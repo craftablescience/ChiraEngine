@@ -8,6 +8,7 @@ namespace chira::CommandLine {
 void init(int argc, const char* const argv[]);
 [[nodiscard]] bool has(std::string_view argument);
 [[nodiscard]] std::string_view get(std::string_view argument);
+[[nodiscard]] std::string_view getOr(std::string_view argument, std::string_view default_);
 [[nodiscard]] std::string_view getProgramName();
 
 } // namespace chira::CommandLine
