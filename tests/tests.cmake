@@ -20,9 +20,10 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 enable_testing()
 
-add_executable(ChiraTest ${CHIRA_TEST_SOURCES})
-target_link_libraries(ChiraTest PUBLIC ${PROJECT_NAME} gtest_main)
-target_include_directories(ChiraTest PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+set(CHIRA_TEST_NAME "ChiraTest")
+add_executable(${CHIRA_TEST_NAME} ${CHIRA_TEST_SOURCES})
+target_link_libraries(${CHIRA_TEST_NAME} PUBLIC ${CHIRA_ENGINE_NAME} gtest_main)
+target_include_directories(${CHIRA_TEST_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 
 include(GoogleTest)
-gtest_discover_tests(ChiraTest)
+gtest_discover_tests(${CHIRA_TEST_NAME})
