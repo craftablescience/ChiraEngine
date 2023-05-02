@@ -54,17 +54,18 @@ static void processConEntry(int& i, int argc, const char* const argv[]) {
 }
 
 void CommandLine::init(int argc, const char* const argv[]) {
-    if (!argc) {
+    if (!argc)
         return;
-    }
     g_Arguments[0] = argv[0];
 
-    for (int i = 1; i < argc; i++) {
+    for (int i = 1; i < argc;) {
         std::string_view arg{argv[i]};
         if (arg.starts_with('-')) {
             processFlag(i, argc, argv);
         } else if (arg.starts_with('+')) {
             processConEntry(i, argc, argv);
+        } else {
+            i++;
         }
     }
 }
