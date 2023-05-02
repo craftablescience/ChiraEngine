@@ -148,7 +148,7 @@ void ControlsPanel::renderContents() {
     static ImGuizmo::MODE currentGizmoMode(ImGuizmo::WORLD);
     static bool useSnap = false;
 
-    if (ImGui::CollapsingHeader("View")) {
+    if (ImGui::CollapsingHeader("View", ImGuiTreeNodeFlags_DefaultOpen)) {
         if (this->scene->hasEntity(this->gridID)) {
             ImGui::Checkbox(TRC("ui.editor.show_grid"), &this->showGrid);
             this->scene->getEntity(this->gridID)->setVisible(this->showGrid);
@@ -164,7 +164,7 @@ void ControlsPanel::renderContents() {
     if (auto* camera = this->scene->getCamera()) {
         static float snap[3] = { 1.f, 1.f, 1.f };
 
-        if (ImGui::CollapsingHeader("Gizmo")) {
+        if (ImGui::CollapsingHeader("Gizmo", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::RadioButton("Translate", (int*) &currentGizmoOperation, ImGuizmo::TRANSLATE);
             ImGui::RadioButton("Rotate", (int*) &currentGizmoOperation, ImGuizmo::ROTATE);
             ImGui::RadioButton("Scale", (int*) &currentGizmoOperation, ImGuizmo::SCALE);
