@@ -6,6 +6,7 @@
 #include <glad/gl.h>
 #include <glad/glversion.h>
 #include <imgui.h>
+#define SDL_MAIN_HANDLED
 #include <SDL.h>
 
 #include <config/Config.h>
@@ -54,6 +55,19 @@ bool Device::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
     if (alreadyRan)
         return false;
     alreadyRan = true;
+
+    SDL_SetMainReady();
+
+#ifdef CHIRA_PLATFORM_WINDOWS
+    // Force enable DPI awareness because the manifest method didn't work
+    SDL_SetHintWithPriority(SDL_HINT_WINDOWS_DPI_SCALING, "0", SDL_HINT_OVERRIDE);
+    SDL_SetHintWithPriority(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitorv2", SDL_HINT_OVERRIDE);
+#endif
+
+    if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER)) {
+        LOG_WINDOW.error("SDL2 failed to initialize: {}", SDL_GetError());
+        return false;
+    }
 
     int windowFlags =
             SDL_WINDOW_OPENGL |
@@ -138,6 +152,11 @@ void Device::destroyBackend() {
     Renderer::destroyImGui();
     Device::destroyAllWindows();
     SDL_GL_DeleteContext(g_GLContext);
+    SDL_Quit();
+}
+
+std::uint64_t Device::getTicks() {
+    return SDL_GetTicks64();
 }
 
 std::array<Device::WindowHandle, 256> g_Windows{};

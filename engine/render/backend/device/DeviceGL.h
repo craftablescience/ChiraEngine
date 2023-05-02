@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -46,6 +47,8 @@ struct WindowHandle {
 [[nodiscard]] bool initBackendAndCreateSplashscreen(bool splashScreenVisible);
 void destroySplashscreen();
 void destroyBackend();
+
+std::uint64_t getTicks();
 
 /// Note: If an icon image is present, it must be RGBA8888
 [[nodiscard]] WindowHandle* createWindow(int width, int height, std::string_view title, Layer* layer);
