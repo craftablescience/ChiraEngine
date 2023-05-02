@@ -40,6 +40,11 @@ int main(int argc, const char* const argv[]) {
         return EXIT_FAILURE;
     }
 
+    if (CommandLine::has("-h")) {
+        printHelp();
+        return EXIT_SUCCESS;
+    }
+
     std::filesystem::path inputPath;
     if (auto input = CommandLine::get("-i"); !input.empty()) {
         inputPath = input;
