@@ -78,11 +78,9 @@ static void setupKeybinds(TransformComponent& cameraTransform) {
 ControlsPanel::ControlsPanel(Layer* layer)
         : IPanel("Controls", true)
         , scene(layer->addScene("Editor"))
-        , selected(nullptr) {
-    this->modelDialog.SetTitle("Open Resource");
-    this->modelDialog.SetTypeFilters({".json"});
-
-    this->folderDialog.SetTitle("Add Resource Folder");
+        , selectedEntity(nullptr)
+        , selectedScene(nullptr) {
+    this->folderDialog.SetTitle("Select Folder...");
 
     auto* camera = this->scene->addEntity("Camera");
     camera->addComponent<CameraComponent>(CameraComponent::ProjectionMode::PERSPECTIVE);
@@ -107,14 +105,8 @@ ControlsPanel::ControlsPanel(Layer* layer)
     setupKeybinds(cameraTransform);
 }
 
-void ControlsPanel::addModelSelected() {
-    std::string path = FilesystemResourceProvider::getResourceIdentifier(this->modelDialog.GetSelected().string());
-    if (!path.empty())
-        this->setLoadedFile(path);
-}
-
 void ControlsPanel::addResourceFolderSelected() {
-    std::string resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(this->modelDialog.GetSelected().string());
+    std::string resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(this->folderDialog.GetSelected().string());
     if (resourceFolderPath.empty())
         return Device::popupError(TR("error.modelviewer.resource_folder_not_valid"));
 
@@ -131,35 +123,9 @@ void ControlsPanel::addResourceFolderSelected() {
         Device::popupError(TR("error.modelviewer.resource_folder_already_registered"));
 }
 
-void ControlsPanel::convertToModelTypeSelected(const std::string& filepath, const std::string& type) const {
-    if (!scene->hasEntity(this->previewID))
-        return Device::popupError(TR("error.modelviewer.no_model_present"));
-
-    std::ofstream file{filepath, std::ios::binary};
-    std::vector<byte> meshData = scene->getEntity(this->previewID)->getComponent<MeshComponent>().getMeshData(type);
-    file.write(reinterpret_cast<const char*>(meshData.data()), static_cast<std::streamsize>(meshData.size()));
-    file.close();
-}
-
-void ControlsPanel::convertToOBJSelected() const {
-    std::string filepath = this->saveDialogOBJ.GetSelected().string();
-    if (filepath.empty())
-        return Device::popupError(TR("error.modelviewer.filename_empty"));
-    this->convertToModelTypeSelected(filepath, "obj");
-}
-
-void ControlsPanel::convertToCMDLSelected() const {
-    std::string filepath = this->saveDialogCMDL.GetSelected().string();
-    if (filepath.empty())
-        return Device::popupError(TR("error.modelviewer.filename_empty"));
-    this->convertToModelTypeSelected(filepath, "cmdl");
-}
-
 void ControlsPanel::preRenderContents() {
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
-            if (ImGui::MenuItem(TRC("ui.menubar.open_model"))) // Open Model...
-                this->modelDialog.Open();
             if (ImGui::MenuItem(TRC("ui.menubar.add_resource_folder"))) // Add Resource Folder...
                 this->folderDialog.Open();
             ImGui::Separator();
@@ -167,36 +133,13 @@ void ControlsPanel::preRenderContents() {
                 Device::queueDestroyWindow(Engine::getMainWindow(), true);
             ImGui::EndMenu();
         }
-        if (ImGui::BeginMenu(TRC("ui.menubar.convert"))) { // Convert
-            if (ImGui::MenuItem(TRC("ui.menubar.convert_to_obj"))) // Convert to OBJ...
-                this->saveDialogOBJ.Open();
-            if (ImGui::MenuItem(TRC("ui.menubar.convert_to_cmdl"))) // Convert to CMDL...
-                this->saveDialogCMDL.Open();
-            ImGui::EndMenu();
-        }
         ImGui::EndMainMenuBar();
     }
 
-    // Model Dialog specific logic
-    this->modelDialog.Display();
-    if (this->modelDialog.HasSelected()) {
-        this->addModelSelected();
-        this->modelDialog.ClearSelected();
-    }
     this->folderDialog.Display();
     if (this->folderDialog.HasSelected()) {
         this->addResourceFolderSelected();
         this->folderDialog.ClearSelected();
-    }
-    this->saveDialogOBJ.Display();
-    if (this->saveDialogOBJ.HasSelected()) {
-        this->convertToOBJSelected();
-        this->saveDialogOBJ.ClearSelected();
-    }
-    this->saveDialogCMDL.Display();
-    if (this->saveDialogCMDL.HasSelected()) {
-        this->convertToCMDLSelected();
-        this->saveDialogCMDL.ClearSelected();
     }
 }
 
@@ -216,7 +159,10 @@ void ControlsPanel::renderContents() {
         }
     }
 
-    if (this->selected) {
+    if (!this->selectedEntity)
+        return;
+
+    if (auto* camera = this->scene->getCamera()) {
         if (ImGui::CollapsingHeader("Gizmo")) {
             ImGui::RadioButton("Translate", (int*) &currentGizmoOperation, ImGuizmo::TRANSLATE);
             ImGui::RadioButton("Rotate", (int*) &currentGizmoOperation, ImGuizmo::ROTATE);
@@ -227,41 +173,25 @@ void ControlsPanel::renderContents() {
             ImGui::Checkbox("Snap", &useSnap);
             ImGui::InputFloat3("Snap", snap);
         }
-    }
 
-    if (!this->selected)
-        return;
+        auto& transform = this->selectedEntity->getTransform();
 
-    if (auto* camera = this->scene->getCamera()) {
         const auto view = camera->getView();
         // todo(editor): HACK HACK HACK
         const auto proj = camera->getProjection(Device::getWindowSize(Engine::getMainWindow()));
-        glm::mat4 matrix = this->selected->getTransform().getMatrix();
+        glm::mat4 matrix = transform.getMatrix();
 
         ImGuizmo::SetRect(0, 0, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
         ImGuizmo::Manipulate(&view[0][0], &proj[0][0], currentGizmoOperation, currentGizmoMode, &matrix[0][0], useSnap ? snap : nullptr);
 
-        this->selected->getTransform().setMatrixLocal(matrix);
+        transform.setMatrixLocal(matrix);
     }
 }
 
-void ControlsPanel::setLoadedFile(const std::string& meshName) {
-    if (auto preview = scene->getEntity(this->previewID); preview && meshName == preview->getComponent<MeshComponent>().getMeshResource()->getIdentifier())
-        return;
-    if (!Resource::hasResource(meshName)) {
-        Device::popupError(TRF("error.modelviewer.resource_is_invalid", meshName));
-        return;
-    }
-    if (!scene->hasEntity(this->previewID)) {
-        auto* entity = scene->addEntity("Preview");
-        this->previewID = entity->getUUID();
-    }
-    auto* entity = scene->getEntity(this->previewID);
-    entity->tryRemoveComponent<MeshComponent>();
-    entity->addComponent<MeshComponent>(meshName);
-    this->loadedFile = meshName;
+void ControlsPanel::setSelectedEntity(Entity* selected) {
+    this->selectedEntity = selected;
 }
 
-void ControlsPanel::setSelected(Entity* selected_) {
-    this->selected = selected_;
+void ControlsPanel::setSelectedScene(Scene* selected) {
+    this->selectedScene = selected;
 }
