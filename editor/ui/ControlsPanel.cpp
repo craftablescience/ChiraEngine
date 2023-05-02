@@ -147,7 +147,6 @@ void ControlsPanel::renderContents() {
     static ImGuizmo::OPERATION currentGizmoOperation(ImGuizmo::TRANSLATE);
     static ImGuizmo::MODE currentGizmoMode(ImGuizmo::WORLD);
     static bool useSnap = false;
-    static float snap[3] = { 1.f, 1.f, 1.f };
 
     if (ImGui::CollapsingHeader("View")) {
         if (this->scene->hasEntity(this->gridID)) {
@@ -163,6 +162,8 @@ void ControlsPanel::renderContents() {
         return;
 
     if (auto* camera = this->scene->getCamera()) {
+        static float snap[3] = { 1.f, 1.f, 1.f };
+
         if (ImGui::CollapsingHeader("Gizmo")) {
             ImGui::RadioButton("Translate", (int*) &currentGizmoOperation, ImGuizmo::TRANSLATE);
             ImGui::RadioButton("Rotate", (int*) &currentGizmoOperation, ImGuizmo::ROTATE);
