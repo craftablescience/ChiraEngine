@@ -1,5 +1,6 @@
 #include "EntitySelectPanel.h"
 
+#include <entity/Entity.h>
 #include <entity/Layer.h>
 #include "ControlsPanel.h"
 #include "InspectorPanel.h"
@@ -16,25 +17,46 @@ void EntitySelectPanel::renderContents() {
     int id = 0;
 
     for (const auto& [sceneID, scene] : this->layer->getScenes()) {
+        static uuids::uuid selectedID;
+
         ImGui::PushID(++id);
+        if (ImGui::Button("X")) {
+            this->layer->removeScene(sceneID);
+            // todo(editor): only unselect if its currently selected
+            this->editor->setSelectedEntity(nullptr);
+            this->editor->setSelectedScene(nullptr);
+            this->inspector->setSelected(nullptr);
+            selectedID = {};
+            ImGui::PopID();
+            break;
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("S")) {
+            this->editor->setSelectedEntity(nullptr);
+            this->editor->setSelectedScene(scene.get());
+            this->inspector->setSelected(nullptr);
+            selectedID = sceneID;
+        }
+        ImGui::SameLine();
         if (ImGui::CollapsingHeader(scene->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
             for (const auto& [entityID, entity] : scene->getEntities()) {
-                static int selected = -1;
                 ImGui::PushID(++id);
                 if (ImGui::Button("X")) {
                     scene->removeEntity(entityID);
                     // todo(editor): only unselect if its currently selected
-                    this->editor->setSelected(nullptr);
+                    this->editor->setSelectedEntity(nullptr);
+                    this->editor->setSelectedScene(nullptr);
                     this->inspector->setSelected(nullptr);
-                    selected = -1;
+                    selectedID = {};
                     ImGui::PopID();
                     break;
                 }
                 ImGui::SameLine();
-                if (ImGui::Selectable(entity->getName().c_str(), selected == id)) {
-                    this->editor->setSelected(entity.get());
+                if (ImGui::Selectable(entity->getName().c_str(), entityID == selectedID)) {
+                    this->editor->setSelectedEntity(entity.get());
+                    this->editor->setSelectedScene(nullptr);
                     this->inspector->setSelected(entity.get());
-                    selected = id;
+                    selectedID = entityID;
                 }
                 ImGui::PopID();
             }

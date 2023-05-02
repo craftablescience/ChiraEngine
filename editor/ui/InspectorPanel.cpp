@@ -1,5 +1,6 @@
 #include "InspectorPanel.h"
 
+#include <imfilebrowser.h>
 #include <magic_enum.hpp>
 #include <entity/component/AngelScriptComponent.h>
 #include <entity/component/AudioNoiseComponent.h>

@@ -19,9 +19,9 @@
 // Need to register phong material!
 #include <render/material/MaterialPhong.h>
 
+#include "ui/ControlsPanel.h"
 #include "ui/EntitySelectPanel.h"
 #include "ui/InspectorPanel.h"
-#include "ui/ControlsPanel.h"
 
 using namespace chira;
 

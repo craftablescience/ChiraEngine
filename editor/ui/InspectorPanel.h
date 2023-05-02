@@ -2,7 +2,6 @@
 
 #include <entity/Entity.h>
 #include <ui/IPanel.h>
-#include <imfilebrowser.h>
 
 namespace chira {
 
