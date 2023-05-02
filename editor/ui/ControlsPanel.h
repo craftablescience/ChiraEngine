@@ -23,6 +23,13 @@ public:
     void setSelectedEntity(Entity* selected);
     void setSelectedScene(Scene* selected);
 
+    [[nodiscard]] const Scene* getEditorScene() const {
+        return this->scene;
+    }
+    [[nodiscard]] Scene* getEditorScene() {
+        return this->scene;
+    }
+
 private:
     Scene* scene;
     Entity* selectedEntity;

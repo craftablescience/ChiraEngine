@@ -48,16 +48,17 @@ int main(int argc, const char* const argv[]) {
 
     Engine::init();
 
-    auto* layer = Device::getWindowLayer(Engine::getMainWindow());
+    auto* window = Engine::getMainWindow();
+    auto* layer = Device::getWindowLayer(window);
     layer->setBackgroundColor({0.15f});
 
     auto editor = new ControlsPanel{layer};
-    Device::addPanelToWindow(Engine::getMainWindow(), editor);
+    Device::addPanelToWindow(window, editor);
 
     auto inspector = new InspectorPanel{};
-    Device::addPanelToWindow(Engine::getMainWindow(), inspector);
+    Device::addPanelToWindow(window, inspector);
 
-    Device::addPanelToWindow(Engine::getMainWindow(), new EntitySelectPanel{layer, editor, inspector});
+    Device::addPanelToWindow(window, new EntitySelectPanel{layer, editor, inspector});
 
     Engine::run();
 }
