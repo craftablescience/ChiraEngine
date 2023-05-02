@@ -1,3 +1,3 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/loader/image/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/loader/mesh/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/loader/settings/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/image/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/mesh/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/settings/CMakeLists.txt)

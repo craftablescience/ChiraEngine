@@ -1,15 +1,195 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/config/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/core/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/entity/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/event/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/i18n/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/input/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/loader/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/math/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/plugin/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/reflect/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/render/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/resource/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/script/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/ui/CMakeLists.txt)
-include(${CMAKE_CURRENT_SOURCE_DIR}/engine/utility/CMakeLists.txt)
+# Add OS-specific libraries
+if(APPLE)
+    find_library(CORE_LIB CoreFoundation)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES ${CORE_LIB})
+endif()
+
+# Basic ImGui sources
+list(APPEND IMGUI_HEADERS
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imconfig.h
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imgui.h
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imgui_internal.h
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imstb_rectpack.h
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imstb_textedit.h
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imstb_truetype.h
+        # Plus ImGui-Filebrowser for convenience
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui-filebrowser/imfilebrowser.h
+        # Plus ImGuizmo for convenience
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo/GraphEditor.h
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo/ImCurveEdit.h
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo/ImGradient.h
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo/ImGuizmo.h
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo/ImSequencer.h
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo/ImZoomSlider.h)
+list(APPEND IMGUI_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imgui.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imgui_demo.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imgui_draw.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imgui_tables.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imgui_widgets.cpp
+        # Plus ImGuizmo for convenience
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo/GraphEditor.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo/ImCurveEdit.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo/ImGradient.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo/ImGuizmo.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo/ImSequencer.cpp)
+list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_DISABLE_OBSOLETE_FUNCTIONS)
+
+# Figure out what render backend and device backend we are using
+if(CHIRA_BUILD_HEADLESS)
+    #todo(render): implement a headless mode for testing
+    #list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_BUILD_HEADLESS)
+    message(FATAL_ERROR "Headless mode is not implemented yet!")
+else()
+    # The graphics API we use varies based on platform
+    # macOS: OpenGL 4.1
+    # Windows and Linux: OpenGL 4.3
+    if(APPLE)
+        set(GLAD_USE_GL_41 ON CACHE BOOL "" FORCE)
+        list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_41)
+    else()
+        set(GLAD_USE_GL_41 OFF CACHE BOOL "" FORCE)
+        list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_43)
+    endif()
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/glad)
+    list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_IMPL_OPENGL_LOADER_GLAD2)
+    list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/glad/include)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glad)
+
+    # SDL2
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sdl2)
+    list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/sdl2/include)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES SDL2::SDL2)
+
+    # Add ImGui platform
+    list(APPEND IMGUI_HEADERS
+            ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/backends/imgui_impl_sdl2.h
+            ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/backends/imgui_impl_opengl3.h)
+    list(APPEND IMGUI_SOURCES
+            ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/backends/imgui_impl_sdl2.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/backends/imgui_impl_opengl3.cpp)
+    list(APPEND IMGUI_INCLUDE_DIRS
+            ${CMAKE_CURRENT_LIST_DIR}/thirdparty/sdl2/include)
+    list(APPEND IMGUI_LINK_LIBRARIES SDL2::SDL2)
+endif()
+
+# IMGUI
+list(APPEND IMGUI_SOURCES ${IMGUI_HEADERS})
+add_library(imgui STATIC ${IMGUI_SOURCES})
+target_include_directories(imgui PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui
+        ${IMGUI_INCLUDE_DIRS})
+target_link_libraries(imgui PRIVATE ${IMGUI_LINK_LIBRARIES})
+
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui-filebrowser
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES imgui)
+
+# ANGELSCRIPT
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/angelscript)
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/angelscript/addons
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/angelscript/include)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES angelscript)
+
+# DISCORD
+if(CHIRA_USE_DISCORD)
+    set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/discord)
+    list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_DISCORD)
+    list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/discord/include)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES discord-rpc)
+endif()
+
+# FMT
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/fmt)
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/fmt/include)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES fmt::fmt)
+
+# EnTT
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/entt)
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/entt/src)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES EnTT::EnTT)
+
+# GLM
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/glm)
+target_compile_definitions(glm INTERFACE GLM_FORCE_SILENT_WARNINGS)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glm)
+
+# LIBLOADER
+set(LIBLOADER_BUILD_TEST OFF CACHE BOOL "" FORCE)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/libloader)
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/libloader/include)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES LibLoader)
+
+# MAGIC_ENUM
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/magic_enum)
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/magic_enum/include)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES magic_enum)
+
+# NLOHMANN_JSON
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/json)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES nlohmann_json::nlohmann_json)
+
+# SOLOUD
+if(BUILD_SHARED_LIBS)
+    set(SOLOUD_LIBMODPLUG_SUPPORT ON CACHE BOOL "" FORCE)
+else()
+    set(SOLOUD_LIBMODPLUG_SUPPORT_STATIC ON CACHE BOOL "" FORCE)
+endif()
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soloud/contrib)
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/soloud/include)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES soloud)
+
+# STB
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/stb)
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/stb)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES stb)
+
+# STEAMWORKS
+if(CHIRA_USE_STEAMWORKS)
+    list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_STEAMWORKS)
+endif()
+
+# STDUUID
+set(UUID_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/stduuid)
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/stduuid/include)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES stduuid)
+
+# CHIRAENGINE
+include(${CMAKE_CURRENT_LIST_DIR}/config/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/core/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/entity/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/event/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/i18n/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/input/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/loader/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/math/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/plugin/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/reflect/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/render/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/resource/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/script/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/ui/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/utility/CMakeLists.txt)
+
+list(APPEND CHIRA_ENGINE_SOURCES ${CHIRA_ENGINE_HEADERS})
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR})
+
+add_library(${PROJECT_NAME} STATIC ${CHIRA_ENGINE_SOURCES})
+apply_optimizations(${PROJECT_NAME})
+
+if(CHIRA_BUILD_WITH_PCH)
+    target_precompile_headers(${PROJECT_NAME} PRIVATE ${CHIRA_ENGINE_HEADERS})
+endif()
+
+target_compile_definitions(${PROJECT_NAME} PUBLIC
+        ${CHIRA_ENGINE_DEFINITIONS})
+target_include_directories(${PROJECT_NAME} PUBLIC
+        ${CHIRA_ENGINE_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PUBLIC
+        ${CHIRA_ENGINE_LINK_LIBRARIES})
