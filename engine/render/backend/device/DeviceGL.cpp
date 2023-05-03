@@ -12,6 +12,7 @@
 #include <config/Config.h>
 #include <config/ConEntry.h>
 #include <event/Events.h>
+#include <i18n/TranslationManager.h>
 #include <input/InputManager.h>
 #include <loader/image/Image.h>
 #include <resource/provider/FilesystemResourceProvider.h>
@@ -222,7 +223,7 @@ static int findFreeWindow() {
     if (!bakedFonts) {
         bakedFonts = true;
 
-        auto defaultFont = Resource::getUniqueUncachedResource<Font>("file://fonts/default.json");
+        auto defaultFont = Resource::getUniqueUncachedResource<Font>(TR("resource.font.default"));
         io.FontDefault = defaultFont->getFont();
         io.Fonts->Build();
     }
