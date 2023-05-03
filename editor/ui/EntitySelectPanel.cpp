@@ -1,16 +1,15 @@
 #include "EntitySelectPanel.h"
 
-#include <entity/Entity.h>
 #include <entity/Layer.h>
 #include "ControlsPanel.h"
 #include "InspectorPanel.h"
 
 using namespace chira;
 
-EntitySelectPanel::EntitySelectPanel(Layer* layer_, ControlsPanel* editor_, InspectorPanel* inspector_)
+EntitySelectPanel::EntitySelectPanel(Layer* layer_, ControlsPanel* controls_, InspectorPanel* inspector_)
         : IPanel("Entity Select", true)
         , layer(layer_)
-        , editor(editor_)
+        , controls(controls_)
         , inspector(inspector_) {}
 
 void EntitySelectPanel::renderContents() {
@@ -20,7 +19,7 @@ void EntitySelectPanel::renderContents() {
         static uuids::uuid selectedID;
 
         // Don't list the editor scene
-        if (sceneID == this->editor->getEditorScene()->getUUID()) {
+        if (sceneID == this->controls->getEditorScene()->getUUID()) {
             continue;
         }
 
@@ -28,8 +27,8 @@ void EntitySelectPanel::renderContents() {
         if (ImGui::Button("X")) {
             this->layer->removeScene(sceneID);
             // todo(editor): only unselect if its currently selected
-            this->editor->setSelectedEntity(nullptr);
-            this->editor->setSelectedScene(nullptr);
+            this->controls->setSelectedEntity(nullptr);
+            this->controls->setSelectedScene(nullptr);
             this->inspector->setSelected(nullptr);
             selectedID = {};
             ImGui::PopID();
@@ -37,8 +36,8 @@ void EntitySelectPanel::renderContents() {
         }
         ImGui::SameLine();
         if (ImGui::Button("S")) {
-            this->editor->setSelectedEntity(nullptr);
-            this->editor->setSelectedScene(scene.get());
+            this->controls->setSelectedEntity(nullptr);
+            this->controls->setSelectedScene(scene.get());
             this->inspector->setSelected(nullptr);
             selectedID = sceneID;
         }
@@ -49,8 +48,8 @@ void EntitySelectPanel::renderContents() {
                 if (ImGui::Button("X")) {
                     scene->removeEntity(entityID);
                     // todo(editor): only unselect if its currently selected
-                    this->editor->setSelectedEntity(nullptr);
-                    this->editor->setSelectedScene(nullptr);
+                    this->controls->setSelectedEntity(nullptr);
+                    this->controls->setSelectedScene(nullptr);
                     this->inspector->setSelected(nullptr);
                     selectedID = {};
                     ImGui::PopID();
@@ -58,8 +57,8 @@ void EntitySelectPanel::renderContents() {
                 }
                 ImGui::SameLine();
                 if (ImGui::Selectable(entity->getName().c_str(), entityID == selectedID)) {
-                    this->editor->setSelectedEntity(entity.get());
-                    this->editor->setSelectedScene(nullptr);
+                    this->controls->setSelectedEntity(entity.get());
+                    this->controls->setSelectedScene(nullptr);
                     this->inspector->setSelected(entity.get());
                     selectedID = entityID;
                 }

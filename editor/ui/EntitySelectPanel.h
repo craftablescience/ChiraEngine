@@ -10,7 +10,7 @@ class Layer;
 
 class EntitySelectPanel : public IPanel {
 public:
-    EntitySelectPanel(Layer* layer_, ControlsPanel* editor_, InspectorPanel* inspector_);
+    EntitySelectPanel(Layer* layer_, ControlsPanel* controls_, InspectorPanel* inspector_);
 
     void renderContents() override;
 
@@ -19,7 +19,7 @@ public:
 
 private:
     Layer* layer;
-    ControlsPanel* editor;
+    ControlsPanel* controls;
     InspectorPanel* inspector;
 };
 
