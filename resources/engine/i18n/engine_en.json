@@ -1,4 +1,5 @@
 {
+  "resource.font.default": "file://fonts/default_en.json",
   "resource.font.console": "file://fonts/console_en.json",
 
   "ui.window.title": "Chira Engine",
