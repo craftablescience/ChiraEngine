@@ -218,9 +218,14 @@ static int findFreeWindow() {
 
     Renderer::initImGui(handle.window, g_GLContext);
 
-    auto defaultFont = Resource::getUniqueUncachedResource<Font>("file://fonts/default.json");
-    io.FontDefault = defaultFont->getFont();
-    io.Fonts->Build();
+    static bool bakedFonts = false;
+    if (!bakedFonts) {
+        bakedFonts = true;
+
+        auto defaultFont = Resource::getUniqueUncachedResource<Font>("file://fonts/default.json");
+        io.FontDefault = defaultFont->getFont();
+        io.Fonts->Build();
+    }
 
     return &handle;
 }

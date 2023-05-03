@@ -5,9 +5,8 @@
 
 namespace chira {
 
-/// IMPORTANT: All font resources MUST be created before Engine::init() is called!
-/// Using Resource::precacheResource before init is recommended.1
-/// After this function, the fonts will be baked, and there will be cake.
+/// IMPORTANT: All font resources MUST be created before Device::createWindow is called!
+/// After this, the fonts will be baked, and there will be cake.
 class Font : public PropertiesResource {
 public:
     explicit Font(const std::string& identifier_) : PropertiesResource(identifier_) {}
