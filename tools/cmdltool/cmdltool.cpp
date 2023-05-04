@@ -19,7 +19,7 @@ CHIRA_CREATE_LOG(CMDLTOOL);
 static void printHelp() {
     LOG_CMDLTOOL.infoImportant() <<                                    "\n"
         "CMDLTOOL v" VERSION                                           "\n"
-        "Usage:"                                                       "\n"
+        "Parameters:"                                                  "\n"
         "-h               : Display this help message"                 "\n"
         "-i <input file>  : Path of the file to convert"               "\n"
         "-s <type>        : Type of the input file (cmdl, obj, etc.)"  "\n"
