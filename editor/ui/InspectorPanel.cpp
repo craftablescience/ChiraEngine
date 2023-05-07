@@ -23,13 +23,13 @@ using namespace chira;
 
 #define REMOVE_BUTTON(component)                                                                                    \
     do {                                                                                                            \
-        if (ImGui::Button("X")) {                                                                                   \
+        if (ImGui::Button("X##" #component)) {                                                                      \
             ImGui::OpenPopup("Remove Component?##" #component);                                                     \
         }                                                                                                           \
         if (ImGui::BeginPopupModal("Remove Component?##" #component, nullptr, ImGuiWindowFlags_AlwaysAutoResize)) { \
             ImGui::Text("This component will be removed.\nThis operation cannot be undone!");                       \
             ImGui::Separator();                                                                                     \
-            if (ImGui::Button("OK", ImVec2(120, 0))) {                                                              \
+            if (ImGui::Button("OK##" #component, ImVec2(120, 0))) {                                                 \
                 this->selectedEntity->tryRemoveComponent<component>();                                              \
                 ImGui::CloseCurrentPopup();                                                                         \
                 ImGui::EndPopup();                                                                                  \
@@ -37,7 +37,7 @@ using namespace chira;
             }                                                                                                       \
             ImGui::SetItemDefaultFocus();                                                                           \
             ImGui::SameLine();                                                                                      \
-            if (ImGui::Button("Cancel", ImVec2(120, 0)))                                                            \
+            if (ImGui::Button("Cancel##" #component, ImVec2(120, 0)))                                               \
                 ImGui::CloseCurrentPopup();                                                                         \
             ImGui::EndPopup();                                                                                      \
         }                                                                                                           \
