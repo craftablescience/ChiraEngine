@@ -69,6 +69,6 @@ inline void breakInDebugger() {
     __assume(false);
 #endif
 }
-#define CHIRA_NO_DEFAULT default: unreachable("Hit the default case in a NO_DEFAULT switch!"); break
+#define CHIRA_NO_DEFAULT default: chira::unreachable("Hit the default case in a NO_DEFAULT switch!"); break
 
 } // namespace chira
