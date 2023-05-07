@@ -136,12 +136,51 @@ template&lt;typename... T&gt; </td></tr>
 template&lt;typename... T&gt; </td></tr>
 <tr class="memitem:af3c228fc1f7eaa561c22c2ae1fb7fbac"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>getEntities</b> (auto &amp;&amp;exclude) const</td></tr>
 <tr class="separator:af3c228fc1f7eaa561c22c2ae1fb7fbac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08073b095fdb5c3519616c82674e80e0"><td class="memItemLeft" align="right" valign="top"><a id="a08073b095fdb5c3519616c82674e80e0"></a>
+const auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getEntities</b> () const</td></tr>
+<tr class="separator:a08073b095fdb5c3519616c82674e80e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c1cf66a7457dfc77d392902537cc2cd"><td class="memItemLeft" align="right" valign="top"><a id="a4c1cf66a7457dfc77d392902537cc2cd"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasEntity</b> (uuids::uuid entityID)</td></tr>
 <tr class="separator:a4c1cf66a7457dfc77d392902537cc2cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62ae645c1306ec10d5aa443d168b4e44"><td class="memItemLeft" align="right" valign="top"><a id="a62ae645c1306ec10d5aa443d168b4e44"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>removeEntity</b> (uuids::uuid entityID)</td></tr>
 <tr class="separator:a62ae645c1306ec10d5aa443d168b4e44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af67caca7867178547d4eb965e90ab452"><td class="memTemplParams" colspan="2"><a id="af67caca7867178547d4eb965e90ab452"></a>
+template&lt;typename T , typename... Args&gt; </td></tr>
+<tr class="memitem:af67caca7867178547d4eb965e90ab452"><td class="memTemplItemLeft" align="right" valign="top">T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>addComponent</b> (Args &amp;&amp;...args)</td></tr>
+<tr class="separator:af67caca7867178547d4eb965e90ab452"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7efafa31d5abed44b91a25a8046ae4fd"><td class="memTemplParams" colspan="2"><a id="a7efafa31d5abed44b91a25a8046ae4fd"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a7efafa31d5abed44b91a25a8046ae4fd"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>addTagComponent</b> ()</td></tr>
+<tr class="separator:a7efafa31d5abed44b91a25a8046ae4fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab16c1691ef96df20fc9c00ccbf27f08d"><td class="memTemplParams" colspan="2"><a id="ab16c1691ef96df20fc9c00ccbf27f08d"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ab16c1691ef96df20fc9c00ccbf27f08d"><td class="memTemplItemLeft" align="right" valign="top">T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>getComponent</b> ()</td></tr>
+<tr class="separator:ab16c1691ef96df20fc9c00ccbf27f08d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26846733dd3528078b377676f0e1bbf7"><td class="memTemplParams" colspan="2"><a id="a26846733dd3528078b377676f0e1bbf7"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a26846733dd3528078b377676f0e1bbf7"><td class="memTemplItemLeft" align="right" valign="top">const T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>getComponent</b> () const</td></tr>
+<tr class="separator:a26846733dd3528078b377676f0e1bbf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeadc6b50e65cc4d00b546697f809fecc"><td class="memTemplParams" colspan="2"><a id="aeadc6b50e65cc4d00b546697f809fecc"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aeadc6b50e65cc4d00b546697f809fecc"><td class="memTemplItemLeft" align="right" valign="top">T *&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tryGetComponent</b> ()</td></tr>
+<tr class="separator:aeadc6b50e65cc4d00b546697f809fecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27be5b55153b0b952feaee3e0bc5a5c2"><td class="memTemplParams" colspan="2"><a id="a27be5b55153b0b952feaee3e0bc5a5c2"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a27be5b55153b0b952feaee3e0bc5a5c2"><td class="memTemplItemLeft" align="right" valign="top">const T *&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tryGetComponent</b> () const</td></tr>
+<tr class="separator:a27be5b55153b0b952feaee3e0bc5a5c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d66cfb79b2b62ed46b3a61babbdf950"><td class="memTemplParams" colspan="2"><a id="a2d66cfb79b2b62ed46b3a61babbdf950"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a2d66cfb79b2b62ed46b3a61babbdf950"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>hasComponent</b> () const</td></tr>
+<tr class="separator:a2d66cfb79b2b62ed46b3a61babbdf950"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0062d885ceffa334a2e6e0c84b6fc9b1"><td class="memTemplParams" colspan="2"><a id="a0062d885ceffa334a2e6e0c84b6fc9b1"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a0062d885ceffa334a2e6e0c84b6fc9b1"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>tryRemoveComponent</b> ()</td></tr>
+<tr class="separator:a0062d885ceffa334a2e6e0c84b6fc9b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98ef29440194ec6f6f3a18fed3c95b01"><td class="memTemplParams" colspan="2"><a id="a98ef29440194ec6f6f3a18fed3c95b01"></a>
+template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a98ef29440194ec6f6f3a18fed3c95b01"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>removeComponent</b> ()</td></tr>
+<tr class="separator:a98ef29440194ec6f6f3a18fed3c95b01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd23c3ccc7328448affb17b56a3ba5da"><td class="memItemLeft" align="right" valign="top"><a id="abd23c3ccc7328448affb17b56a3ba5da"></a>
 <a class="el" href="../../dd/dae/structchira_1_1_camera_component.html">CameraComponent</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getCamera</b> ()</td></tr>
 <tr class="separator:abd23c3ccc7328448affb17b56a3ba5da"><td class="memSeparator" colspan="2">&#160;</td></tr>

@@ -33,12 +33,14 @@ var annotated_dup =
       [ "AudioSpeechComponent", "df/daf/structchira_1_1_audio_speech_component.html", "df/daf/structchira_1_1_audio_speech_component" ],
       [ "AudioWavComponent", "d7/dbe/structchira_1_1_audio_wav_component.html", "d7/dbe/structchira_1_1_audio_wav_component" ],
       [ "AudioWavStreamComponent", "d5/de9/structchira_1_1_audio_wav_stream_component.html", "d5/de9/structchira_1_1_audio_wav_stream_component" ],
+      [ "BillboardComponent", "d4/d76/structchira_1_1_billboard_component.html", "d4/d76/structchira_1_1_billboard_component" ],
       [ "CameraComponent", "dd/dae/structchira_1_1_camera_component.html", "dd/dae/structchira_1_1_camera_component" ],
       [ "DirectionalLightComponent", "d1/de2/structchira_1_1_directional_light_component.html", "d1/de2/structchira_1_1_directional_light_component" ],
       [ "PointLightComponent", "df/d2a/structchira_1_1_point_light_component.html", "df/d2a/structchira_1_1_point_light_component" ],
       [ "SpotLightComponent", "df/d16/structchira_1_1_spot_light_component.html", "df/d16/structchira_1_1_spot_light_component" ],
       [ "MeshComponent", "d6/d8e/structchira_1_1_mesh_component.html", "d6/d8e/structchira_1_1_mesh_component" ],
       [ "MeshDynamicComponent", "d8/dec/structchira_1_1_mesh_dynamic_component.html", "d8/dec/structchira_1_1_mesh_dynamic_component" ],
+      [ "MeshSpriteComponent", "da/d14/structchira_1_1_mesh_sprite_component.html", "da/d14/structchira_1_1_mesh_sprite_component" ],
       [ "NameComponent", "d9/d38/structchira_1_1_name_component.html", "d9/d38/structchira_1_1_name_component" ],
       [ "SkyboxComponent", "d3/d21/structchira_1_1_skybox_component.html", "d3/d21/structchira_1_1_skybox_component" ],
       [ "NoRenderTagComponent", "d5/d45/structchira_1_1_no_render_tag_component.html", null ],
@@ -102,12 +104,15 @@ var annotated_dup =
       [ "ConsolePanel", "de/d17/classchira_1_1_console_panel.html", "de/d17/classchira_1_1_console_panel" ],
       [ "ResourceUsageTrackerPanel", "d5/dc8/classchira_1_1_resource_usage_tracker_panel.html", "d5/dc8/classchira_1_1_resource_usage_tracker_panel" ],
       [ "Font", "db/d45/classchira_1_1_font.html", "db/d45/classchira_1_1_font" ],
+      [ "ILayerPanel", "dc/de3/classchira_1_1_i_layer_panel.html", "dc/de3/classchira_1_1_i_layer_panel" ],
       [ "IPanel", "df/dde/classchira_1_1_i_panel.html", "df/dde/classchira_1_1_i_panel" ],
-      [ "LayerPanel", "d0/d76/classchira_1_1_layer_panel.html", "d0/d76/classchira_1_1_layer_panel" ],
       [ "AbstractFactory", "d6/dfd/classchira_1_1_abstract_factory.html", "d6/dfd/classchira_1_1_abstract_factory" ],
       [ "SharedPointerMetadata", "d9/d83/structchira_1_1_shared_pointer_metadata.html", "d9/d83/structchira_1_1_shared_pointer_metadata" ],
       [ "SharedPointer", "d4/d08/classchira_1_1_shared_pointer.html", "d4/d08/classchira_1_1_shared_pointer" ],
-      [ "UUIDGenerator", "db/d04/classchira_1_1_u_u_i_d_generator.html", null ]
+      [ "UUIDGenerator", "db/d04/classchira_1_1_u_u_i_d_generator.html", null ],
+      [ "ControlsPanel", "d8/d79/classchira_1_1_controls_panel.html", "d8/d79/classchira_1_1_controls_panel" ],
+      [ "EntitySelectPanel", "d3/da2/classchira_1_1_entity_select_panel.html", "d3/da2/classchira_1_1_entity_select_panel" ],
+      [ "InspectorPanel", "d6/df2/classchira_1_1_inspector_panel.html", "d6/df2/classchira_1_1_inspector_panel" ]
     ] ],
     [ "steam", null, [
       [ "CallbackMessage", "d0/d89/structsteam_1_1_callback_message.html", "d0/d89/structsteam_1_1_callback_message" ],
@@ -121,7 +126,6 @@ var annotated_dup =
     [ "AudioPlugin", "da/dfb/struct_audio_plugin.html", "da/dfb/struct_audio_plugin" ],
     [ "DiscordPlugin", "d2/d98/struct_discord_plugin.html", "d2/d98/struct_discord_plugin" ],
     [ "IPlugin", "d5/d64/struct_i_plugin.html", "d5/d64/struct_i_plugin" ],
-    [ "ModelViewerPanel", "d6/dd8/class_model_viewer_panel.html", "d6/dd8/class_model_viewer_panel" ],
     [ "PluginRegistry", "d6/d20/class_plugin_registry.html", "d6/d20/class_plugin_registry" ],
     [ "SteamPlugin", "da/d3d/struct_steam_plugin.html", "da/d3d/struct_steam_plugin" ]
 ];

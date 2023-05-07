@@ -107,70 +107,75 @@ $(document).ready(function(){initNavTree('d7/dd3/_config_8cpp_source.html','../.
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;Config.h&quot;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;core/Platform.h&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#ifdef CHIRA_PLATFORM_WINDOWS</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">    #define WIN32_LEAN_AND_MEAN</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">    #include &lt;Windows.h&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">    #include &lt;shellapi.h&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#else </span><span class="comment">// Should work on any other platform besides Windows? macOS and Linux work at least</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">    #include &lt;sys/types.h&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">    #include &lt;unistd.h&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">    #include &lt;pwd.h&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;cstdlib&gt;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;ConEntry.h&quot;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">using namespace </span>chira;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;[[maybe_unused]]</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<a class="code" href="../../d0/d61/classchira_1_1_con_command.html">ConCommand</a> open_config_dir{<span class="stringliteral">&quot;open_config_dir&quot;</span>, <span class="stringliteral">&quot;Opens the config directory in the OS&#39;s graphical file browser.&quot;</span>, [] {</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    std::string dir = Config::getConfigDirectory().data();</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#if defined(CHIRA_PLATFORM_WINDOWS)</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    ShellExecute(<span class="keyword">nullptr</span>, <span class="stringliteral">&quot;open&quot;</span>, dir.c_str(), <span class="keyword">nullptr</span>, <span class="keyword">nullptr</span>, SW_SHOWNORMAL);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#elif defined(CHIRA_PLATFORM_APPLE)</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    dir = <span class="stringliteral">&quot;open &quot;</span> + dir;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    system(dir.c_str());</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#elif defined(CHIRA_PLATFORM_LINUX)</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    dir = <span class="stringliteral">&quot;xdg-open &quot;</span> + dir;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    system(dir.c_str());</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">    #error &quot;fixme: need code for specific platform!&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;}};</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;std::string_view Config::getConfigDirectory() {</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="comment">// e.g. &quot;C:\Users&lt;User&gt;\AppData\Local\ChiraEngine\&quot;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="comment">// this will not change while the program is running (or ever for that matter)</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">static</span> std::string pathString;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">if</span> (!pathString.empty())</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordflow">return</span> pathString;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#ifndef CHIRA_PLATFORM_WINDOWS</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* homePath = getenv(<span class="stringliteral">&quot;HOME&quot;</span>);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">if</span> (!homePath) {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordflow">if</span> (passwd* pwd = getpwuid(getuid()))</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            homePath = pwd-&gt;pw_dir;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    }</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    pathString.append(homePath);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#if defined(CHIRA_PLATFORM_APPLE)</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    pathString.append(<span class="stringliteral">&quot;/Library/Application Support/ChiraEngine/&quot;</span>);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#elif defined(CHIRA_PLATFORM_LINUX)</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    pathString.append(<span class="stringliteral">&quot;/.local/ChiraEngine/&quot;</span>);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">    #error &quot;fixme: need code for specific platform!&quot;</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#else </span><span class="comment">// We are on Windows</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">// Get the environment variable for the user on Windows</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    pathString = getenv(<span class="stringliteral">&quot;USERPROFILE&quot;</span>);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    pathString.append(R<span class="stringliteral">&quot;(\AppData\Local\ChiraEngine\)&quot;);</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="stringliteral"></span><span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">return</span> pathString;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;std::string Config::getConfigFile(std::string_view file) {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">return</span> std::string{Config::getConfigDirectory()} + file.data();</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#if defined(CHIRA_PLATFORM_APPLE) || defined(CHIRA_PLATFORM_LINUX)</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;    <span class="comment">// Using std::ignore to absorb system()&#39;s return value</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">    #include &lt;tuple&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;core/Platform.h&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#ifdef CHIRA_PLATFORM_WINDOWS</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">    #define WIN32_LEAN_AND_MEAN</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">    #include &lt;Windows.h&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">    #include &lt;shellapi.h&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#else </span><span class="comment">// Should work on any other platform besides Windows? macOS and Linux work at least</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">    #include &lt;sys/types.h&gt;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">    #include &lt;unistd.h&gt;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">    #include &lt;pwd.h&gt;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &lt;cstdlib&gt;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &quot;ConEntry.h&quot;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">using namespace </span>chira;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;[[maybe_unused]]</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<a class="code" href="../../d0/d61/classchira_1_1_con_command.html">ConCommand</a> open_config_dir{<span class="stringliteral">&quot;open_config_dir&quot;</span>, <span class="stringliteral">&quot;Opens the config directory in the OS&#39;s graphical file browser.&quot;</span>, [] {</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    std::string dir = Config::getConfigDirectory().data();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#if defined(CHIRA_PLATFORM_WINDOWS)</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    ShellExecute(<span class="keyword">nullptr</span>, <span class="stringliteral">&quot;open&quot;</span>, dir.c_str(), <span class="keyword">nullptr</span>, <span class="keyword">nullptr</span>, SW_SHOWNORMAL);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#elif defined(CHIRA_PLATFORM_APPLE)</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    dir = <span class="stringliteral">&quot;open &quot;</span> + dir;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    std::ignore = system(dir.c_str());</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#elif defined(CHIRA_PLATFORM_LINUX)</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    dir = <span class="stringliteral">&quot;xdg-open &quot;</span> + dir;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    std::ignore = system(dir.c_str());</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">    #error &quot;fixme: need code for specific platform!&quot;</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}};</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;std::string_view Config::getConfigDirectory() {</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="comment">// e.g. &quot;C:\Users&lt;User&gt;\AppData\Local\ChiraEngine\&quot;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="comment">// this will not change while the program is running (or ever for that matter)</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">static</span> std::string pathString;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">if</span> (!pathString.empty())</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordflow">return</span> pathString;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#ifndef CHIRA_PLATFORM_WINDOWS</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span>* homePath = getenv(<span class="stringliteral">&quot;HOME&quot;</span>);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">if</span> (!homePath) {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keywordflow">if</span> (passwd* pwd = getpwuid(getuid()))</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            homePath = pwd-&gt;pw_dir;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    pathString.append(homePath);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#if defined(CHIRA_PLATFORM_APPLE)</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    pathString.append(<span class="stringliteral">&quot;/Library/Application Support/ChiraEngine/&quot;</span>);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#elif defined(CHIRA_PLATFORM_LINUX)</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    pathString.append(<span class="stringliteral">&quot;/.local/ChiraEngine/&quot;</span>);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">    #error &quot;fixme: need code for specific platform!&quot;</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#else </span><span class="comment">// We are on Windows</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="comment">// Get the environment variable for the user on Windows</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    pathString = getenv(<span class="stringliteral">&quot;USERPROFILE&quot;</span>);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    pathString.append(R<span class="stringliteral">&quot;(\AppData\Local\ChiraEngine\)&quot;);</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="stringliteral"></span><span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordflow">return</span> pathString;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;std::string Config::getConfigFile(std::string_view file) {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">return</span> std::string{Config::getConfigDirectory()} + file.data();</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}</div>
 <div class="ttc" id="aclasschira_1_1_con_command_html"><div class="ttname"><a href="../../d0/d61/classchira_1_1_con_command.html">chira::ConCommand</a></div><div class="ttdef"><b>Definition:</b> <a href="../../dd/df9/_con_entry_8h_source.html#l00039">ConEntry.h:39</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

@@ -1,6 +1,6 @@
 <map id="chira::PropertiesResource" name="chira::PropertiesResource">
 <area shape="rect" id="node1" title=" " alt="" coords="176,259,364,285"/>
-<area shape="rect" id="node3" href="$db/d45/classchira_1_1_font.html" title="IMPORTANT: All font resources MUST be created before Engine::init() is called! Using Resource::precac..." alt="" coords="475,107,565,133"/>
+<area shape="rect" id="node3" href="$db/d45/classchira_1_1_font.html" title="IMPORTANT: All font resources MUST be created before Device::createWindow is called!..." alt="" coords="475,107,565,133"/>
 <area shape="rect" id="node4" href="$df/d5f/classchira_1_1_i_material.html" title=" " alt="" coords="460,157,580,184"/>
 <area shape="rect" id="node10" href="$da/dcb/classchira_1_1_i_texture.html" title=" " alt="" coords="463,233,577,260"/>
 <area shape="rect" id="node13" href="$de/de7/classchira_1_1_mesh_data_resource.html" title=" " alt="" coords="426,284,614,311"/>

@@ -108,31 +108,49 @@ $(document).ready(function(){initNavTree('d8/d2a/_audio_noise_component_8h_sourc
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;soloud_noise.h&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;plugin/Audio.h&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;TransformComponent.h&quot;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span>chira {</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="../../db/d3d/structchira_1_1_audio_noise_component.html">   10</a></span>&#160;<span class="keyword">struct </span><a class="code" href="../../db/d3d/structchira_1_1_audio_noise_component.html">AudioNoiseComponent</a> {</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">static</span> constexpr <span class="keyword">auto</span> in_place_delete = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../db/d3d/structchira_1_1_audio_noise_component.html">AudioNoiseComponent</a>(SoLoud::Noise::NOISETYPES noise) {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        this-&gt;noise.setType(noise);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    }</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="../../db/d3d/structchira_1_1_audio_noise_component.html">AudioNoiseComponent</a>(<span class="keywordtype">float</span> o0, <span class="keywordtype">float</span> o1, <span class="keywordtype">float</span> o2, <span class="keywordtype">float</span> o3, <span class="keywordtype">float</span> o4, <span class="keywordtype">float</span> o5, <span class="keywordtype">float</span> o6, <span class="keywordtype">float</span> o7, <span class="keywordtype">float</span> o8, <span class="keywordtype">float</span> o9) {</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        this-&gt;noise.setOctaveScale(o0, o1, o2, o3, o4, o5, o6, o7, o8, o9);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    }</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="../../d3/de7/structchira_1_1_transform_component.html">TransformComponent</a>* transform = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    SoLoud::Noise noise;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;} <span class="comment">// namespace chira</span></div>
-<div class="ttc" id="astructchira_1_1_audio_noise_component_html"><div class="ttname"><a href="../../db/d3d/structchira_1_1_audio_noise_component.html">chira::AudioNoiseComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d2a/_audio_noise_component_8h_source.html#l00010">AudioNoiseComponent.h:10</a></div></div>
-<div class="ttc" id="astructchira_1_1_transform_component_html"><div class="ttname"><a href="../../d3/de7/structchira_1_1_transform_component.html">chira::TransformComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d94/_transform_component_8h_source.html#l00011">TransformComponent.h:11</a></div></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;string_view&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;soloud_noise.h&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;plugin/Audio.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;TransformComponent.h&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">namespace </span>chira {</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="../../db/d3d/structchira_1_1_audio_noise_component.html">   11</a></span>&#160;<span class="keyword">struct </span><a class="code" href="../../db/d3d/structchira_1_1_audio_noise_component.html">AudioNoiseComponent</a> {</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keyword">static</span> constexpr <span class="keyword">auto</span> in_place_delete = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../db/d3d/structchira_1_1_audio_noise_component.html">AudioNoiseComponent</a>(SoLoud::Noise::NOISETYPES noise = SoLoud::Noise::NOISETYPES::WHITE)</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;            : <a class="code" href="../../db/d3d/structchira_1_1_audio_noise_component.html#a9a77baf256110251a29731188e376528">noiseType</a>(noise) {</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        this-&gt;noise.setType(noise);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    }</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="../../db/d3d/structchira_1_1_audio_noise_component.html">AudioNoiseComponent</a>(<span class="keywordtype">float</span> o0, <span class="keywordtype">float</span> o1, <span class="keywordtype">float</span> o2, <span class="keywordtype">float</span> o3, <span class="keywordtype">float</span> o4, <span class="keywordtype">float</span> o5, <span class="keywordtype">float</span> o6, <span class="keywordtype">float</span> o7, <span class="keywordtype">float</span> o8, <span class="keywordtype">float</span> o9)</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;            : <a class="code" href="../../db/d3d/structchira_1_1_audio_noise_component.html#a9a77baf256110251a29731188e376528">noiseType</a>(<span class="keyword">static_cast&lt;</span>SoLoud::Noise::NOISETYPES<span class="keyword">&gt;</span>(-1)) {</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        this-&gt;noise.setOctaveScale(o0, o1, o2, o3, o4, o5, o6, o7, o8, o9);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    }</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    [[nodiscard]] SoLoud::Noise::NOISETYPES getNoiseType()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keywordflow">return</span> this-&gt;<a class="code" href="../../db/d3d/structchira_1_1_audio_noise_component.html#a9a77baf256110251a29731188e376528">noiseType</a>;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    }</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">void</span> setNoiseType(SoLoud::Noise::NOISETYPES noiseType_) {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordflow">if</span> (noiseType_ &gt;= 0) {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            this-&gt;noise.setType(noiseType_);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        }</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        this-&gt;<a class="code" href="../../db/d3d/structchira_1_1_audio_noise_component.html#a9a77baf256110251a29731188e376528">noiseType</a> = noiseType_;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    }</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="../../d3/de7/structchira_1_1_transform_component.html">TransformComponent</a>* transform = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    SoLoud::Noise noise;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="../../db/d3d/structchira_1_1_audio_noise_component.html#a9a77baf256110251a29731188e376528">   41</a></span>&#160;    SoLoud::Noise::NOISETYPES <a class="code" href="../../db/d3d/structchira_1_1_audio_noise_component.html#a9a77baf256110251a29731188e376528">noiseType</a>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;} <span class="comment">// namespace chira</span></div>
+<div class="ttc" id="astructchira_1_1_audio_noise_component_html"><div class="ttname"><a href="../../db/d3d/structchira_1_1_audio_noise_component.html">chira::AudioNoiseComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d2a/_audio_noise_component_8h_source.html#l00011">AudioNoiseComponent.h:11</a></div></div>
+<div class="ttc" id="astructchira_1_1_audio_noise_component_html_a9a77baf256110251a29731188e376528"><div class="ttname"><a href="../../db/d3d/structchira_1_1_audio_noise_component.html#a9a77baf256110251a29731188e376528">chira::AudioNoiseComponent::noiseType</a></div><div class="ttdeci">SoLoud::Noise::NOISETYPES noiseType</div><div class="ttdoc">Can be -1 to indicate a custom noise setup.</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d2a/_audio_noise_component_8h_source.html#l00041">AudioNoiseComponent.h:41</a></div></div>
+<div class="ttc" id="astructchira_1_1_transform_component_html"><div class="ttname"><a href="../../d3/de7/structchira_1_1_transform_component.html">chira::TransformComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d94/_transform_component_8h_source.html#l00012">TransformComponent.h:12</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

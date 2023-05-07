@@ -52,11 +52,12 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d3/dd9/_render_types_8h.html#a0ba8394daab18eec326b1be77c0aab44aecaa8fe8cb0e85372f4cc76728c7cf3c",
-"d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a26ea43df48bbd22d76b981a45f1d0fa3",
-"d6/d8c/_audio_wav_stream_component_8h_source.html",
-"da/d25/classchira_1_1_log_channel.html#a876a451e71205770cd707858fe7bbd29",
-"dd/db2/md_docs_pages_filespec_filespec.html#autotoc_md11"
+"d3/dd9/_render_types_8h.html#a0ba8394daab18eec326b1be77c0aab44abac953e88f6d79514b0b6fc42eb6f3b7",
+"d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a0ae7b658b5c2f84b686ef68ed8583b98",
+"d6/d7f/classchira_1_1_layer.html#a4d59e3ada92fd14d2c1c159f6b93daf7",
+"da/d09/_input_manager_8h.html#a306db1221ee360954d2f7cbfd496ab91",
+"dd/d6f/classchira_1_1_image.html#a4d16e1c2f3bc0b75f2a3e7c2efd6ed95",
+"dir_15fc65921b8713fb556d30e882510e5d.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

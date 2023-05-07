@@ -113,9 +113,9 @@ $(document).ready(function(){initNavTree('d3/dce/_mesh_component_8h_source.html'
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span>chira {</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
 <div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="../../d6/d8e/structchira_1_1_mesh_component.html">    8</a></span>&#160;<span class="keyword">struct </span><a class="code" href="../../d6/d8e/structchira_1_1_mesh_component.html">MeshComponent</a> {</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../d6/d8e/structchira_1_1_mesh_component.html">MeshComponent</a>(<span class="keyword">const</span> std::string&amp; meshId)</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;            : mesh(Resource::getResource&lt;MeshDataResource&gt;(meshId))</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;            , transform(<span class="keyword">nullptr</span>) {}</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../d6/d8e/structchira_1_1_mesh_component.html">MeshComponent</a>(<span class="keyword">const</span> std::string&amp; meshId = <span class="stringliteral">&quot;file://meshes/missing.json&quot;</span>)</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;            : transform(<span class="keyword">nullptr</span>)</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;            , mesh(Resource::getResource&lt;MeshDataResource&gt;(meshId)) {}</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    [[nodiscard]] <a class="code" href="../../d4/d08/classchira_1_1_shared_pointer.html">SharedPointer&lt;MeshDataResource&gt;</a> getMeshResource()<span class="keyword"> const </span>{</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keywordflow">return</span> this-&gt;mesh;</div>
@@ -133,7 +133,7 @@ $(document).ready(function(){initNavTree('d3/dce/_mesh_component_8h_source.html'
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;} <span class="comment">// namespace chira</span></div>
 <div class="ttc" id="aclasschira_1_1_shared_pointer_html"><div class="ttname"><a href="../../d4/d08/classchira_1_1_shared_pointer.html">chira::SharedPointer</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d6/d47/_shared_pointer_8h_source.html#l00031">SharedPointer.h:31</a></div></div>
 <div class="ttc" id="astructchira_1_1_mesh_component_html"><div class="ttname"><a href="../../d6/d8e/structchira_1_1_mesh_component.html">chira::MeshComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d3/dce/_mesh_component_8h_source.html#l00008">MeshComponent.h:8</a></div></div>
-<div class="ttc" id="astructchira_1_1_transform_component_html"><div class="ttname"><a href="../../d3/de7/structchira_1_1_transform_component.html">chira::TransformComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d94/_transform_component_8h_source.html#l00011">TransformComponent.h:11</a></div></div>
+<div class="ttc" id="astructchira_1_1_transform_component_html"><div class="ttname"><a href="../../d3/de7/structchira_1_1_transform_component.html">chira::TransformComponent</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d94/_transform_component_8h_source.html#l00012">TransformComponent.h:12</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

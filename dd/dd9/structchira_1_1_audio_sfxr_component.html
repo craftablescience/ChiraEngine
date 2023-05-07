@@ -105,6 +105,7 @@ $(document).ready(function(){initNavTree('dd/dd9/structchira_1_1_audio_sfxr_comp
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="../../de/de7/structchira_1_1_audio_sfxr_component-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">chira::AudioSfxrComponent Struct Reference</div>  </div>
@@ -115,19 +116,36 @@ Collaboration diagram for chira::AudioSfxrComponent:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../d4/d1b/structchira_1_1_audio_sfxr_component__coll__graph.png" border="0" usemap="#achira_1_1_audio_sfxr_component_coll__map" alt="Collaboration graph"/></div>
 <map name="achira_1_1_audio_sfxr_component_coll__map" id="achira_1_1_audio_sfxr_component_coll__map">
-<area shape="rect" title=" " alt="" coords="7,95,207,121"/>
-<area shape="rect" href="../../d3/de7/structchira_1_1_transform_component.html" title=" " alt="" coords="5,5,208,32"/>
+<area shape="rect" title=" " alt="" coords="125,185,325,212"/>
+<area shape="rect" href="../../d3/de7/structchira_1_1_transform_component.html" title=" " alt="" coords="5,96,208,123"/>
+<area shape="rect" title=" " alt="" coords="303,96,390,123"/>
+<area shape="rect" title=" " alt="" coords="277,5,416,47"/>
 </map>
 <center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aba23e07da4ffd985bd252eb137c7e3f2"><td class="memItemLeft" align="right" valign="top"><a id="aba23e07da4ffd985bd252eb137c7e3f2"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AudioSfxrComponent</b> (int preset, int seed=0)</td></tr>
-<tr class="separator:aba23e07da4ffd985bd252eb137c7e3f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62d0490c6ee94c95bbd923d647c5c2e7"><td class="memItemLeft" align="right" valign="top"><a id="a62d0490c6ee94c95bbd923d647c5c2e7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AudioSfxrComponent</b> (const std::string &amp;cfgId)</td></tr>
-<tr class="separator:a62d0490c6ee94c95bbd923d647c5c2e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a074a34f96f786f3c2dafd6ce546a907d"><td class="memItemLeft" align="right" valign="top"><a id="a074a34f96f786f3c2dafd6ce546a907d"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>AudioSfxrComponent</b> (SoLoud::Sfxr::SFXR_PRESETS preset=SoLoud::Sfxr::SFXR_PRESETS::COIN, int seed_=0)</td></tr>
+<tr class="separator:a074a34f96f786f3c2dafd6ce546a907d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad25c90acdcce313cfcc0a3b094c0f634"><td class="memItemLeft" align="right" valign="top"><a id="ad25c90acdcce313cfcc0a3b094c0f634"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>AudioSfxrComponent</b> (std::string cfgId)</td></tr>
+<tr class="separator:ad25c90acdcce313cfcc0a3b094c0f634"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a040b76e1309ed33692b20dc84c520686"><td class="memItemLeft" align="right" valign="top"><a id="a040b76e1309ed33692b20dc84c520686"></a>
+SoLoud::Sfxr::SFXR_PRESETS&#160;</td><td class="memItemRight" valign="bottom"><b>getSfxrPreset</b> () const</td></tr>
+<tr class="separator:a040b76e1309ed33692b20dc84c520686"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a603ea437ed21d1821a5387bd6e67eaa1"><td class="memItemLeft" align="right" valign="top"><a id="a603ea437ed21d1821a5387bd6e67eaa1"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getSfxrSeed</b> () const</td></tr>
+<tr class="separator:a603ea437ed21d1821a5387bd6e67eaa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a753fad205ac02e9af8dc6dd2a90747dc"><td class="memItemLeft" align="right" valign="top"><a id="a753fad205ac02e9af8dc6dd2a90747dc"></a>
+std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>getSfxrConfigID</b> () const</td></tr>
+<tr class="separator:a753fad205ac02e9af8dc6dd2a90747dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d1971a3ae28483a189b662167bf1998"><td class="memItemLeft" align="right" valign="top"><a id="a5d1971a3ae28483a189b662167bf1998"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setSfxrFromPreset</b> (SoLoud::Sfxr::SFXR_PRESETS sfxrPreset_, int seed_=0)</td></tr>
+<tr class="separator:a5d1971a3ae28483a189b662167bf1998"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ca06331b51a9ff8cce3378d8738bdc5"><td class="memItemLeft" align="right" valign="top"><a id="a8ca06331b51a9ff8cce3378d8738bdc5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setSfxrFromConfig</b> (std::string cfgId)</td></tr>
+<tr class="separator:a8ca06331b51a9ff8cce3378d8738bdc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -143,10 +161,23 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a3bc09b879daca185e899491f6eb2c376"><td class="memItemLeft" align="right" valign="top"><a id="a3bc09b879daca185e899491f6eb2c376"></a>
 static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>in_place_delete</b> = true</td></tr>
 <tr class="separator:a3bc09b879daca185e899491f6eb2c376"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a2145e94bfa1de39e00fce1ae322c7886"><td class="memItemLeft" align="right" valign="top"><a id="a2145e94bfa1de39e00fce1ae322c7886"></a>
+SoLoud::Sfxr::SFXR_PRESETS&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dd9/structchira_1_1_audio_sfxr_component.html#a2145e94bfa1de39e00fce1ae322c7886">sfxrPreset</a></td></tr>
+<tr class="memdesc:a2145e94bfa1de39e00fce1ae322c7886"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be -1 to indicate it's loaded from a config file. <br /></td></tr>
+<tr class="separator:a2145e94bfa1de39e00fce1ae322c7886"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add2135c7dfc181d0ec18052941e701b3"><td class="memItemLeft" align="right" valign="top"><a id="add2135c7dfc181d0ec18052941e701b3"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>seed</b> = 0</td></tr>
+<tr class="separator:add2135c7dfc181d0ec18052941e701b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57302181663041a87bf3098493b3f93f"><td class="memItemLeft" align="right" valign="top"><a id="a57302181663041a87bf3098493b3f93f"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>cfgFile</b></td></tr>
+<tr class="separator:a57302181663041a87bf3098493b3f93f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="../../d7/d58/_audio_sfxr_component_8h_source.html#l00011">11</a> of file <a class="el" href="../../d7/d58/_audio_sfxr_component_8h_source.html">AudioSfxrComponent.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/d58/_audio_sfxr_component_8h_source.html#l00012">12</a> of file <a class="el" href="../../d7/d58/_audio_sfxr_component_8h_source.html">AudioSfxrComponent.h</a>.</p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>engine/entity/component/<a class="el" href="../../d7/d58/_audio_sfxr_component_8h_source.html">AudioSfxrComponent.h</a></li>
 </ul>

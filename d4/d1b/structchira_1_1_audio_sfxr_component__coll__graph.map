@@ -1,4 +1,6 @@
 <map id="chira::AudioSfxrComponent" name="chira::AudioSfxrComponent">
-<area shape="rect" id="node1" title=" " alt="" coords="7,95,207,121"/>
-<area shape="rect" id="node2" href="$d3/de7/structchira_1_1_transform_component.html" title=" " alt="" coords="5,5,208,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="125,185,325,212"/>
+<area shape="rect" id="node2" href="$d3/de7/structchira_1_1_transform_component.html" title=" " alt="" coords="5,96,208,123"/>
+<area shape="rect" id="node3" title=" " alt="" coords="303,96,390,123"/>
+<area shape="rect" id="node4" title=" " alt="" coords="277,5,416,47"/>
 </map>

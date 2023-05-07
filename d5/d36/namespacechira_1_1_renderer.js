@@ -49,7 +49,7 @@ var namespacechira_1_1_renderer =
     [ "setShaderUniform4m", "d5/d36/namespacechira_1_1_renderer.html#a77cce94bf111ba21b4885fa730da5211", null ],
     [ "setShaderUniform4u", "d5/d36/namespacechira_1_1_renderer.html#ac4cb231551be0fb21f546669285f5e2b", null ],
     [ "setupForDebugging", "d5/d36/namespacechira_1_1_renderer.html#a53006d28baff6a109de63fa1ae168cb9", null ],
-    [ "startImGuiFrame", "d5/d36/namespacechira_1_1_renderer.html#a0d63e7cdf57d40bdc96a94e28c2f4b6d", null ],
+    [ "startImGuiFrame", "d5/d36/namespacechira_1_1_renderer.html#a76f9975c9dd47cea6805596d42e81ba2", null ],
     [ "updateMesh", "d5/d36/namespacechira_1_1_renderer.html#a3309a512472cc5eb22bd41bd9c1449d8", null ],
     [ "updateUniformBuffer", "d5/d36/namespacechira_1_1_renderer.html#a23d545d5f247057b24ba92cfe334e80f", null ],
     [ "updateUniformBufferPart", "d5/d36/namespacechira_1_1_renderer.html#a016a5cb0804c14cf75a854605af82f49", null ],

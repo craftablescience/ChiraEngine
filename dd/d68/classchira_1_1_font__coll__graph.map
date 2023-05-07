@@ -1,5 +1,5 @@
 <map id="chira::Font" name="chira::Font">
-<area shape="rect" id="node1" title="IMPORTANT: All font resources MUST be created before Engine::init() is called! Using Resource::precac..." alt="" coords="1472,197,1563,223"/>
+<area shape="rect" id="node1" title="IMPORTANT: All font resources MUST be created before Device::createWindow is called!..." alt="" coords="1472,197,1563,223"/>
 <area shape="rect" id="node2" href="$d4/d5a/classchira_1_1_properties_resource.html" title=" " alt="" coords="1235,197,1423,223"/>
 <area shape="rect" id="node3" href="$d8/d5c/classchira_1_1_resource.html" title="A chunk of data, usually a file. Is typically cached and shared." alt="" coords="1063,197,1185,223"/>
 <area shape="rect" id="node4" title=" " alt="" coords="681,5,858,76"/>

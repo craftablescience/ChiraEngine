@@ -22,6 +22,7 @@ var hierarchy =
     [ "chira::AudioSpeechComponent", "df/daf/structchira_1_1_audio_speech_component.html", null ],
     [ "chira::AudioWavComponent", "d7/dbe/structchira_1_1_audio_wav_component.html", null ],
     [ "chira::AudioWavStreamComponent", "d5/de9/structchira_1_1_audio_wav_stream_component.html", null ],
+    [ "chira::BillboardComponent", "d4/d76/structchira_1_1_billboard_component.html", null ],
     [ "chira::CameraComponent", "dd/dae/structchira_1_1_camera_component.html", null ],
     [ "chira::ChiraMeshHeader", "d4/db5/structchira_1_1_chira_mesh_header.html", null ],
     [ "chira::ColorR", "db/d16/structchira_1_1_color_r.html", null ],
@@ -48,9 +49,11 @@ var hierarchy =
     ] ],
     [ "chira::Input::Event< T, U, CallbackArgs >", "d9/df5/classchira_1_1_input_1_1_event.html", null ],
     [ "chira::IPanel", "df/dde/classchira_1_1_i_panel.html", [
-      [ "ModelViewerPanel", "d6/dd8/class_model_viewer_panel.html", null ],
       [ "chira::ConsolePanel", "de/d17/classchira_1_1_console_panel.html", null ],
-      [ "chira::LayerPanel", "d0/d76/classchira_1_1_layer_panel.html", null ],
+      [ "chira::ControlsPanel", "d8/d79/classchira_1_1_controls_panel.html", null ],
+      [ "chira::EntitySelectPanel", "d3/da2/classchira_1_1_entity_select_panel.html", null ],
+      [ "chira::ILayerPanel", "dc/de3/classchira_1_1_i_layer_panel.html", null ],
+      [ "chira::InspectorPanel", "d6/df2/classchira_1_1_inspector_panel.html", null ],
       [ "chira::ResourceUsageTrackerPanel", "d5/dc8/classchira_1_1_resource_usage_tracker_panel.html", null ]
     ] ],
     [ "chira::IResourceProvider", "dc/da5/classchira_1_1_i_resource_provider.html", [
@@ -68,6 +71,7 @@ var hierarchy =
       [ "chira::MeshDataResource", "de/de7/classchira_1_1_mesh_data_resource.html", null ]
     ] ],
     [ "chira::MeshDynamicComponent", "d8/dec/structchira_1_1_mesh_dynamic_component.html", null ],
+    [ "chira::MeshSpriteComponent", "da/d14/structchira_1_1_mesh_sprite_component.html", null ],
     [ "chira::NameComponent", "d9/d38/structchira_1_1_name_component.html", null ],
     [ "chira::NoRenderTagComponent", "d5/d45/structchira_1_1_no_render_tag_component.html", null ],
     [ "chira::PointLightComponent", "df/d2a/structchira_1_1_point_light_component.html", null ],
