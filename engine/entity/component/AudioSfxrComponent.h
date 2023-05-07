@@ -20,8 +20,8 @@ struct AudioSfxrComponent {
 
     explicit AudioSfxrComponent(std::string cfgId)
             : sfxrPreset(static_cast<SoLoud::Sfxr::SFXR_PRESETS>(-1))
-            , cfgFile(std::move(cfgId))
-            , seed(0) {
+            , seed(0)
+            , cfgFile(std::move(cfgId)) {
         this->setSfxrFromConfig(this->cfgFile);
     }
 
