@@ -33,6 +33,15 @@ public:
 
     void render();
 
+    [[nodiscard]] CameraComponent* getCamera() const {
+        for (const auto& [uuid, scene] : this->scenes) {
+            if (auto* camera = scene->getCamera()) {
+                return camera;
+            }
+        }
+        return nullptr;
+    }
+
     [[nodiscard]] ColorRGB getBackgroundColor() const {
         return this->backgroundColor;
     }
