@@ -42,7 +42,7 @@ struct LightsUBO final : public UniformBufferObject<((4 * glm::VEC4F_SIZE) * DIR
                                                     ((6 * glm::VEC4F_SIZE) * SPOT_LIGHT_MAX) +
                                                     glm::VEC4F_SIZE> {
     static LightsUBO& get();
-    void update(DirectionalLightComponent* directionalLights[], PointLightComponent* pointLights[], SpotLightComponent* spotLights[], glm::vec3 numberOfLights) const;
+    void update(DirectionalLightComponent* directionalLights[], PointLightComponent* pointLights[], SpotLightComponent* spotLights[], glm::vec3i numberOfLights) const;
 private:
     LightsUBO();
 };
