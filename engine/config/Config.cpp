@@ -1,5 +1,10 @@
 #include "Config.h"
 
+#if defined(CHIRA_PLATFORM_APPLE) || defined(CHIRA_PLATFORM_LINUX)
+    // Using std::ignore to absorb system()'s return value
+    #include <tuple>
+#endif
+
 #include <core/Platform.h>
 #ifdef CHIRA_PLATFORM_WINDOWS
     #define WIN32_LEAN_AND_MEAN
@@ -23,10 +28,10 @@ ConCommand open_config_dir{"open_config_dir", "Opens the config directory in the
     ShellExecute(nullptr, "open", dir.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 #elif defined(CHIRA_PLATFORM_APPLE)
     dir = "open " + dir;
-    system(dir.c_str());
+    std::ignore = system(dir.c_str());
 #elif defined(CHIRA_PLATFORM_LINUX)
     dir = "xdg-open " + dir;
-    system(dir.c_str());
+    std::ignore = system(dir.c_str());
 #else
     #error "fixme: need code for specific platform!"
 #endif

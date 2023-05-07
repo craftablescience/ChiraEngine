@@ -34,6 +34,7 @@ cmake_dependent_option(CHIRA_BUILD_WITH_LTO "Build Chira Engine with Link-Time O
 # Precompiled headers seem to make compilation slower when not using MSVC
 cmake_dependent_option(CHIRA_BUILD_WITH_PCH "Build Chira Engine with precompiled headers" ON "CHIRA_COMPILER_MSVC" OFF)
 option(CHIRA_BUILD_WITH_WARNINGS "Build Chira Engine with warnings enabled" ON)
+option(CHIRA_ENABLE_CRT_SECURE_NO_WARNINGS "Disable the _CRT_SECURE_NO_WARNINGS warning" ON)
 option(CHIRA_TREAT_WARNINGS_AS_ERRORS "Build Chira Engine with warnings treated as errors" OFF)
 
 option(CHIRA_BUILD_HEADLESS "Build Chira Engine without any visible window(s). Zero reliance on SDL. Primarily for testing purposes." OFF)
@@ -49,6 +50,7 @@ message(STATUS "  CHIRA_BUILD_WITH_ASSERTS: ${CHIRA_BUILD_WITH_ASSERTS}")
 message(STATUS "  CHIRA_BUILD_WITH_LTO: ${CHIRA_BUILD_WITH_LTO}")
 message(STATUS "  CHIRA_BUILD_WITH_PCH: ${CHIRA_BUILD_WITH_PCH}")
 message(STATUS "  CHIRA_BUILD_WITH_WARNINGS: ${CHIRA_BUILD_WITH_WARNINGS}")
+message(STATUS "  CHIRA_ENABLE_CRT_SECURE_NO_WARNINGS: ${CHIRA_ENABLE_CRT_SECURE_NO_WARNINGS}")
 message(STATUS "  CHIRA_TREAT_WARNINGS_AS_ERRORS: ${CHIRA_TREAT_WARNINGS_AS_ERRORS}")
 message(STATUS "  CHIRA_BUILD_HEADLESS: ${CHIRA_BUILD_HEADLESS}")
 message(STATUS "  CHIRA_USE_DISCORD: ${CHIRA_USE_DISCORD}")
@@ -129,6 +131,10 @@ function(apply_optimizations TARGET)
         elseif(CHIRA_COMPILER_MSVC)
             target_compile_options(${TARGET} PRIVATE /W4) # not all, because MSVC has loads of idiotic errors
         endif()
+    endif()
+
+    if(CHIRA_ENABLE_CRT_SECURE_NO_WARNINGS)
+        target_compile_definitions(${TARGET} PRIVATE -D_CRT_SECURE_NO_WARNINGS)
     endif()
 
     if(CHIRA_TREAT_WARNINGS_AS_ERRORS)

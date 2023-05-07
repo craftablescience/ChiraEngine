@@ -18,8 +18,8 @@ class Entity {
 
 protected:
     explicit Entity(Scene* scene_)
-            : handle(scene_->getRegistry().create())
-            , scene(scene_) {
+            : scene(scene_)
+            , handle(scene_->getRegistry().create()) {
         this->addComponent<TransformComponent>();
     }
 

@@ -7,8 +7,8 @@ namespace chira {
 
 struct MeshComponent {
     explicit MeshComponent(const std::string& meshId = "file://meshes/missing.json")
-            : mesh(Resource::getResource<MeshDataResource>(meshId))
-            , transform(nullptr) {}
+            : transform(nullptr)
+            , mesh(Resource::getResource<MeshDataResource>(meshId)) {}
 
     [[nodiscard]] SharedPointer<MeshDataResource> getMeshResource() const {
         return this->mesh;
