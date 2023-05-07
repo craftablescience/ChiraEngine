@@ -70,7 +70,7 @@ void Layer::removeAllScenes() {
 
 void Layer::update() {
     for (const auto& [uuid, scene] : this->scenes) {
-        if (auto* camera = scene->getCamera()) {
+        if (auto* camera = this->getCamera()) {
             // Update BillboardComponent
             auto billboardView = scene->getEntities<BillboardComponent>();
             for (const auto [entity, billboardComponent] : billboardView.each()) {
