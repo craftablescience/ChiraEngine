@@ -15,6 +15,7 @@
 #include <entity/component/MeshDynamicComponent.h>
 #include <entity/component/MeshSpriteComponent.h>
 #include <entity/component/NameComponent.h>
+#include <entity/component/SkyboxComponent.h>
 #include <entity/component/UUIDComponent.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 
@@ -29,7 +30,7 @@ using namespace chira;
             ImGui::Text("This component will be removed.\nThis operation cannot be undone!");                       \
             ImGui::Separator();                                                                                     \
             if (ImGui::Button("OK", ImVec2(120, 0))) {                                                              \
-                this->selected->tryRemoveComponent<component>();                                                    \
+                this->selectedEntity->tryRemoveComponent<component>();                                              \
                 ImGui::CloseCurrentPopup();                                                                         \
                 ImGui::EndPopup();                                                                                  \
                 return;                                                                                             \
@@ -44,35 +45,44 @@ using namespace chira;
 
 InspectorPanel::InspectorPanel()
 	    : IPanel("Inspector", true)
-        , selected(nullptr) {}
+        , selectedEntity(nullptr)
+        , selectedScene(nullptr) {}
 
-void InspectorPanel::setSelected(Entity* selected_) {
-	this->selected = selected_;
+void InspectorPanel::setSelectedEntity(Entity* selected) {
+	this->selectedEntity = selected;
+}
+
+void InspectorPanel::setSelectedScene(Scene* selected) {
+    this->selectedScene = selected;
 }
 
 void InspectorPanel::renderContents() {
-    if (!this->selected)
-        return;
+    if (this->selectedEntity)
+        this->renderContentsForSelectedEntity();
+    else if (this->selectedScene)
+        this->renderContentsForSelectedScene();
+}
 
+void InspectorPanel::renderContentsForSelectedEntity() {
     static ImGui::FileBrowser filePicker{ImGuiFileBrowserFlags_CloseOnEsc};
 
     char nameBuf[512] {0};
-    if (!this->selected->getName().empty()) {
-        memcpy(nameBuf, this->selected->getName().c_str(), this->selected->getName().size() > 511 ? 511 : this->selected->getName().size());
+    if (!this->selectedEntity->getName().empty()) {
+        memcpy(nameBuf, this->selectedEntity->getName().c_str(), this->selectedEntity->getName().size() > 511 ? 511 : this->selectedEntity->getName().size());
     }
 
     ImGui::InputText("##Name", nameBuf, sizeof(nameBuf), ImGuiInputTextFlags_EnterReturnsTrue);
 
-    if (nameBuf[0] && strcmp(nameBuf, this->selected->getName().c_str()) != 0) {
-        if (auto nameComponent = this->selected->tryGetComponent<NameComponent>()) {
+    if (nameBuf[0] && strcmp(nameBuf, this->selectedEntity->getName().c_str()) != 0) {
+        if (auto nameComponent = this->selectedEntity->tryGetComponent<NameComponent>()) {
             nameComponent->name = nameBuf;
         } else {
-            this->selected->addComponent<NameComponent>(nameBuf);
+            this->selectedEntity->addComponent<NameComponent>(nameBuf);
         }
     }
 
     // we always want to show the uuid since 2+ entities can share a name
-    ImGui::TextDisabled("%s", uuids::to_string(this->selected->getUUID()).c_str());
+    ImGui::TextDisabled("%s", uuids::to_string(this->selectedEntity->getUUID()).c_str());
 
 	ImGui::Separator();
 
@@ -102,47 +112,47 @@ void InspectorPanel::renderContents() {
         for (const auto& component : components) {
             if (ImGui::Selectable(component.c_str())) {
                 if (component == "AngelScript") {
-                    this->selected->tryRemoveComponent<AngelScriptComponent>();
-                    this->selected->addComponent<AngelScriptComponent>();
+                    this->selectedEntity->tryRemoveComponent<AngelScriptComponent>();
+                    this->selectedEntity->addComponent<AngelScriptComponent>();
                 } else if (component == "Audio Noise") {
-                    this->selected->tryRemoveComponent<AudioNoiseComponent>();
-                    this->selected->addComponent<AudioNoiseComponent>();
+                    this->selectedEntity->tryRemoveComponent<AudioNoiseComponent>();
+                    this->selectedEntity->addComponent<AudioNoiseComponent>();
                 } else if (component == "Audio Sfxr") {
-                    this->selected->tryRemoveComponent<AudioSfxrComponent>();
-                    this->selected->addComponent<AudioSfxrComponent>();
+                    this->selectedEntity->tryRemoveComponent<AudioSfxrComponent>();
+                    this->selectedEntity->addComponent<AudioSfxrComponent>();
                 } else if (component == "Audio Speech") {
-                    this->selected->tryRemoveComponent<AudioSpeechComponent>();
-                    this->selected->addComponent<AudioSpeechComponent>();
+                    this->selectedEntity->tryRemoveComponent<AudioSpeechComponent>();
+                    this->selectedEntity->addComponent<AudioSpeechComponent>();
                 } else if (component == "Audio Wav") {
-                    this->selected->tryRemoveComponent<AudioWavComponent>();
-                    this->selected->addComponent<AudioWavComponent>();
+                    this->selectedEntity->tryRemoveComponent<AudioWavComponent>();
+                    this->selectedEntity->addComponent<AudioWavComponent>();
                 } else if (component == "Audio Wav Stream") {
-                    this->selected->tryRemoveComponent<AudioWavStreamComponent>();
-                    this->selected->addComponent<AudioWavStreamComponent>();
+                    this->selectedEntity->tryRemoveComponent<AudioWavStreamComponent>();
+                    this->selectedEntity->addComponent<AudioWavStreamComponent>();
                 } else if (component == "Billboard") {
-                    this->selected->tryRemoveComponent<BillboardComponent>();
-                    this->selected->addComponent<BillboardComponent>();
+                    this->selectedEntity->tryRemoveComponent<BillboardComponent>();
+                    this->selectedEntity->addComponent<BillboardComponent>();
                 } else if (component == "Camera") {
-                    this->selected->tryRemoveComponent<CameraComponent>();
-                    this->selected->addComponent<CameraComponent>();
+                    this->selectedEntity->tryRemoveComponent<CameraComponent>();
+                    this->selectedEntity->addComponent<CameraComponent>();
                 } else if (component == "Directional Light") {
-                    this->selected->tryRemoveComponent<DirectionalLightComponent>();
-                    this->selected->addComponent<DirectionalLightComponent>();
+                    this->selectedEntity->tryRemoveComponent<DirectionalLightComponent>();
+                    this->selectedEntity->addComponent<DirectionalLightComponent>();
                 } else if (component == "Point Light") {
-                    this->selected->tryRemoveComponent<PointLightComponent>();
-                    this->selected->addComponent<PointLightComponent>();
+                    this->selectedEntity->tryRemoveComponent<PointLightComponent>();
+                    this->selectedEntity->addComponent<PointLightComponent>();
                 } else if (component == "Spot Light") {
-                    this->selected->tryRemoveComponent<SpotLightComponent>();
-                    this->selected->addComponent<SpotLightComponent>();
+                    this->selectedEntity->tryRemoveComponent<SpotLightComponent>();
+                    this->selectedEntity->addComponent<SpotLightComponent>();
                 } else if (component == "Mesh") {
-                    this->selected->tryRemoveComponent<MeshComponent>();
-                    this->selected->addComponent<MeshComponent>();
+                    this->selectedEntity->tryRemoveComponent<MeshComponent>();
+                    this->selectedEntity->addComponent<MeshComponent>();
                 } else if (component == "Mesh Dynamic") {
-                    this->selected->tryRemoveComponent<MeshDynamicComponent>();
-                    this->selected->addComponent<MeshDynamicComponent>();
+                    this->selectedEntity->tryRemoveComponent<MeshDynamicComponent>();
+                    this->selectedEntity->addComponent<MeshDynamicComponent>();
                 } else if (component == "Mesh Sprite") {
-                    this->selected->tryRemoveComponent<MeshSpriteComponent>();
-                    this->selected->addComponent<MeshSpriteComponent>();
+                    this->selectedEntity->tryRemoveComponent<MeshSpriteComponent>();
+                    this->selectedEntity->addComponent<MeshSpriteComponent>();
                 }
             }
         }
@@ -154,20 +164,20 @@ void InspectorPanel::renderContents() {
     }
 
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
-        auto pos = this->selected->getTransform().getPosition();
-        auto rot = this->selected->getTransform().getRotationEuler();
-        auto scl = this->selected->getTransform().getScale();
+        auto pos = this->selectedEntity->getTransform().getPosition();
+        auto rot = this->selectedEntity->getTransform().getRotationEuler();
+        auto scl = this->selectedEntity->getTransform().getScale();
 
 		ImGui::DragFloat3("Position", &pos.x, 0.05f);
         ImGui::DragFloat3("Rotation", &rot.x, 0.05f);
         ImGui::DragFloat3("Scale",    &scl.x, 0.05f);
 
-        this->selected->getTransform().setPosition(pos);
-        this->selected->getTransform().setRotation(rot);
-        this->selected->getTransform().setScale(scl);
+        this->selectedEntity->getTransform().setPosition(pos);
+        this->selectedEntity->getTransform().setRotation(rot);
+        this->selectedEntity->getTransform().setScale(scl);
 	}
 
-    if (auto component = this->selected->tryGetComponent<AngelScriptComponent>()) {
+    if (auto component = this->selectedEntity->tryGetComponent<AngelScriptComponent>()) {
         REMOVE_BUTTON(AngelScriptComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("AngelScript", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -182,13 +192,13 @@ void InspectorPanel::renderContents() {
         if (filePicker.HasSelected()) {
             std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
             if (!path.empty()) {
-                this->selected->tryRemoveComponent<AngelScriptComponent>();
-                this->selected->addComponent<AngelScriptComponent>(path);
+                this->selectedEntity->tryRemoveComponent<AngelScriptComponent>();
+                this->selectedEntity->addComponent<AngelScriptComponent>(path);
             }
             filePicker.ClearSelected();
         }
     }
-    if (auto component = this->selected->tryGetComponent<AudioNoiseComponent>()) {
+    if (auto component = this->selectedEntity->tryGetComponent<AudioNoiseComponent>()) {
         REMOVE_BUTTON(AudioNoiseComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Noise", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -228,7 +238,7 @@ void InspectorPanel::renderContents() {
             }
         }
     }
-    if ([[maybe_unused]] auto component = this->selected->tryGetComponent<AudioSfxrComponent>()) {
+    if ([[maybe_unused]] auto component = this->selectedEntity->tryGetComponent<AudioSfxrComponent>()) {
         REMOVE_BUTTON(AudioSfxrComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Sfxr", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -278,13 +288,13 @@ void InspectorPanel::renderContents() {
         if (filePicker.HasSelected()) {
             std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
             if (!path.empty()) {
-                this->selected->tryRemoveComponent<AudioSfxrComponent>();
-                this->selected->addComponent<AudioSfxrComponent>(path);
+                this->selectedEntity->tryRemoveComponent<AudioSfxrComponent>();
+                this->selectedEntity->addComponent<AudioSfxrComponent>(path);
             }
             filePicker.ClearSelected();
         }
     }
-    if (auto component = this->selected->tryGetComponent<AudioSpeechComponent>()) {
+    if (auto component = this->selectedEntity->tryGetComponent<AudioSpeechComponent>()) {
         REMOVE_BUTTON(AudioSpeechComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Speech", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -300,7 +310,7 @@ void InspectorPanel::renderContents() {
             }
         }
     }
-    if (auto component = this->selected->tryGetComponent<AudioWavComponent>()) {
+    if (auto component = this->selectedEntity->tryGetComponent<AudioWavComponent>()) {
         REMOVE_BUTTON(AudioWavComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Wav", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -319,13 +329,13 @@ void InspectorPanel::renderContents() {
         if (filePicker.HasSelected()) {
             std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
             if (!path.empty()) {
-                this->selected->tryRemoveComponent<AudioWavComponent>();
-                this->selected->addComponent<AudioWavComponent>(path);
+                this->selectedEntity->tryRemoveComponent<AudioWavComponent>();
+                this->selectedEntity->addComponent<AudioWavComponent>(path);
             }
             filePicker.ClearSelected();
         }
     }
-    if (auto component = this->selected->tryGetComponent<AudioWavStreamComponent>()) {
+    if (auto component = this->selectedEntity->tryGetComponent<AudioWavStreamComponent>()) {
         REMOVE_BUTTON(AudioWavStreamComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Wav Stream", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -344,13 +354,13 @@ void InspectorPanel::renderContents() {
         if (filePicker.HasSelected()) {
             std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
             if (!path.empty()) {
-                this->selected->tryRemoveComponent<AudioWavStreamComponent>();
-                this->selected->addComponent<AudioWavStreamComponent>(path);
+                this->selectedEntity->tryRemoveComponent<AudioWavStreamComponent>();
+                this->selectedEntity->addComponent<AudioWavStreamComponent>(path);
             }
             filePicker.ClearSelected();
         }
     }
-    if (auto component = this->selected->tryGetComponent<BillboardComponent>()) {
+    if (auto component = this->selectedEntity->tryGetComponent<BillboardComponent>()) {
         REMOVE_BUTTON(BillboardComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Billboard", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -359,7 +369,7 @@ void InspectorPanel::renderContents() {
             ImGui::Checkbox("Z Axis", &component->z);
         }
     }
-    if (auto component = this->selected->tryGetComponent<CameraComponent>()) {
+    if (auto component = this->selectedEntity->tryGetComponent<CameraComponent>()) {
         REMOVE_BUTTON(CameraComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -379,7 +389,7 @@ void InspectorPanel::renderContents() {
             ImGui::Checkbox("Active", &component->active);
         }
     }
-    if (auto component = this->selected->tryGetComponent<DirectionalLightComponent>()) {
+    if (auto component = this->selectedEntity->tryGetComponent<DirectionalLightComponent>()) {
         REMOVE_BUTTON(DirectionalLightComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Directional Light", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -388,7 +398,7 @@ void InspectorPanel::renderContents() {
             ImGui::ColorEdit3("Specular", &component->specular.x);
         }
     }
-    if (auto component = this->selected->tryGetComponent<PointLightComponent>()) {
+    if (auto component = this->selectedEntity->tryGetComponent<PointLightComponent>()) {
         REMOVE_BUTTON(PointLightComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Point Light", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -398,7 +408,7 @@ void InspectorPanel::renderContents() {
             ImGui::DragFloat3("Falloff", &component->falloff.x);
         }
     }
-    if (auto component = this->selected->tryGetComponent<SpotLightComponent>()) {
+    if (auto component = this->selectedEntity->tryGetComponent<SpotLightComponent>()) {
         REMOVE_BUTTON(SpotLightComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Spot Light", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -408,7 +418,7 @@ void InspectorPanel::renderContents() {
             ImGui::DragFloat2("Cutoff", &component->cutoff.x);
         }
     }
-    if (auto component = this->selected->tryGetComponent<MeshComponent>()) {
+    if (auto component = this->selectedEntity->tryGetComponent<MeshComponent>()) {
         REMOVE_BUTTON(MeshComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -423,20 +433,20 @@ void InspectorPanel::renderContents() {
         if (filePicker.HasSelected()) {
             std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
             if (!path.empty()) {
-                this->selected->tryRemoveComponent<MeshComponent>();
-                this->selected->addComponent<MeshComponent>(path);
+                this->selectedEntity->tryRemoveComponent<MeshComponent>();
+                this->selectedEntity->addComponent<MeshComponent>(path);
             }
             filePicker.ClearSelected();
         }
     }
-    if ([[maybe_unused]] auto component = this->selected->tryGetComponent<MeshDynamicComponent>()) {
+    if ([[maybe_unused]] auto component = this->selectedEntity->tryGetComponent<MeshDynamicComponent>()) {
         REMOVE_BUTTON(MeshDynamicComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Mesh Dynamic", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("This component is only editable in code.");
         }
     }
-    if (auto component = this->selected->tryGetComponent<MeshSpriteComponent>()) {
+    if (auto component = this->selectedEntity->tryGetComponent<MeshSpriteComponent>()) {
         REMOVE_BUTTON(MeshSpriteComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Mesh Sprite", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -452,8 +462,54 @@ void InspectorPanel::renderContents() {
             std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
             if (!path.empty()) {
                 const auto size = component->size;
-                this->selected->tryRemoveComponent<MeshSpriteComponent>();
-                this->selected->addComponent<MeshSpriteComponent>(size, path);
+                this->selectedEntity->tryRemoveComponent<MeshSpriteComponent>();
+                this->selectedEntity->addComponent<MeshSpriteComponent>(size, path);
+            }
+            filePicker.ClearSelected();
+        }
+    }
+}
+
+void InspectorPanel::renderContentsForSelectedScene() {
+    static ImGui::FileBrowser filePicker{ImGuiFileBrowserFlags_CloseOnEsc};
+
+    if (ImGui::BeginPopupContextItem("Add Component")) {
+        // Scene-specific components
+        std::string components[] = {
+                "Skybox",
+        };
+        for (const auto &component: components) {
+            if (ImGui::Selectable(component.c_str())) {
+                if (component == "Skybox") {
+                    this->selectedScene->tryRemoveComponent<SkyboxComponent>();
+                    this->selectedScene->addComponent<SkyboxComponent>();
+                }
+            }
+        }
+        ImGui::EndPopup();
+    }
+
+    if (ImGui::Button("Add Component...")) {
+        ImGui::OpenPopup("Add Component");
+    }
+
+    if (auto component = this->selectedScene->tryGetComponent<SkyboxComponent>()) {
+        REMOVE_BUTTON(SkyboxComponent);
+        ImGui::SameLine();
+        if (ImGui::CollapsingHeader("Skybox", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::Text("%s", component->skybox.getMaterial()->getIdentifier().data());
+
+            if (ImGui::Button("Pick Skybox")) {
+                filePicker.Open();
+            }
+        }
+
+        filePicker.Display();
+        if (filePicker.HasSelected()) {
+            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            if (!path.empty()) {
+                this->selectedScene->tryRemoveComponent<SkyboxComponent>();
+                this->selectedScene->addComponent<SkyboxComponent>(path);
             }
             filePicker.ClearSelected();
         }

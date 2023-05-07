@@ -11,10 +11,15 @@ public:
 
     void renderContents() override;
 
-    void setSelected(Entity* selected_);
+    void setSelectedEntity(Entity* selected);
+    void setSelectedScene(Scene* selected);
 
 private:
-    Entity* selected;
+    Entity* selectedEntity;
+    Scene* selectedScene;
+
+    void renderContentsForSelectedEntity();
+    void renderContentsForSelectedScene();
 };
 
 } // namespace chira

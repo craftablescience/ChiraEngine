@@ -29,16 +29,18 @@ void EntitySelectPanel::renderContents() {
             // todo(editor): only unselect if its currently selected
             this->controls->setSelectedEntity(nullptr);
             this->controls->setSelectedScene(nullptr);
-            this->inspector->setSelected(nullptr);
+            this->inspector->setSelectedEntity(nullptr);
+            this->inspector->setSelectedScene(nullptr);
             selectedID = {};
             ImGui::PopID();
             break;
         }
         ImGui::SameLine();
-        if (ImGui::Button("S")) {
+        if (ImGui::Button("$")) {
             this->controls->setSelectedEntity(nullptr);
             this->controls->setSelectedScene(scene.get());
-            this->inspector->setSelected(nullptr);
+            this->inspector->setSelectedEntity(nullptr);
+            this->inspector->setSelectedScene(scene.get());
             selectedID = sceneID;
         }
         ImGui::SameLine();
@@ -50,7 +52,8 @@ void EntitySelectPanel::renderContents() {
                     // todo(editor): only unselect if its currently selected
                     this->controls->setSelectedEntity(nullptr);
                     this->controls->setSelectedScene(nullptr);
-                    this->inspector->setSelected(nullptr);
+                    this->inspector->setSelectedEntity(nullptr);
+                    this->inspector->setSelectedScene(nullptr);
                     selectedID = {};
                     ImGui::PopID();
                     break;
@@ -59,7 +62,8 @@ void EntitySelectPanel::renderContents() {
                 if (ImGui::Selectable(entity->getName().c_str(), entityID == selectedID)) {
                     this->controls->setSelectedEntity(entity.get());
                     this->controls->setSelectedScene(nullptr);
-                    this->inspector->setSelected(entity.get());
+                    this->inspector->setSelectedEntity(entity.get());
+                    this->inspector->setSelectedScene(nullptr);
                     selectedID = entityID;
                 }
                 ImGui::PopID();
