@@ -27,7 +27,7 @@ LightsUBO& LightsUBO::get() {
     return singleton;
 }
 
-void LightsUBO::update(DirectionalLightComponent* directionalLights[], PointLightComponent* pointLights[], SpotLightComponent* spotLights[], glm::vec3 numberOfLights) const {
+void LightsUBO::update(DirectionalLightComponent* directionalLights[], PointLightComponent* pointLights[], SpotLightComponent* spotLights[], glm::vec3i numberOfLights) const {
     // todo: minimize the number of buffer writes
     unsigned int position = 0;
     int nullLights;
