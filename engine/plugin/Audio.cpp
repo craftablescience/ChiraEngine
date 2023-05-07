@@ -9,7 +9,6 @@ SoLoud::Soloud g_SoundEngine;
 bool g_SoundEngineHasStarted = false;
 
 struct AudioPlugin final : public IPlugin {
-    // Discord should be initialized manually before Engine::init
     void init() override {
         if (g_SoundEngineHasStarted)
             return;
