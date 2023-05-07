@@ -494,8 +494,27 @@ void InspectorPanel::renderContentsForSelectedScene() {
     }
 
     if (auto component = this->selectedScene->tryGetComponent<SkyboxComponent>()) {
-        REMOVE_BUTTON(SkyboxComponent);
+        if (ImGui::Button("X")) {
+            ImGui::OpenPopup("Remove Component?##" "SkyboxComponent");
+        }
+        if (ImGui::BeginPopupModal("Remove Component?##" "SkyboxComponent", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+            ImGui::Text("This component will be removed.\nThis operation cannot be undone!");
+            ImGui::Separator();
+            if (ImGui::Button("OK", ImVec2(120, 0))) {
+                this->selectedScene->tryRemoveComponent<SkyboxComponent>();
+                ImGui::CloseCurrentPopup();
+                ImGui::EndPopup();
+                return;
+            }
+            ImGui::SetItemDefaultFocus();
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel", ImVec2(120, 0)))
+                ImGui::CloseCurrentPopup();
+            ImGui::EndPopup();
+        }
+
         ImGui::SameLine();
+
         if (ImGui::CollapsingHeader("Skybox", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Text("%s", component->skybox.getMaterial()->getIdentifier().data());
 
