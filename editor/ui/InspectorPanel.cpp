@@ -147,11 +147,10 @@ void InspectorPanel::renderContents() {
         ImGui::EndPopup();
     }
 
-    if (ImGui::Button("+")) {
+    if (ImGui::Button("Add Component...")) {
         ImGui::OpenPopup("Add Component");
     }
 
-	// testing
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
         auto pos = this->selected->getTransform().getPosition();
         auto rot = this->selected->getTransform().getRotationEuler();
@@ -168,9 +167,6 @@ void InspectorPanel::renderContents() {
 
     if (auto component = this->selected->tryGetComponent<AngelScriptComponent>()) {
         REMOVE_BUTTON(AngelScriptComponent);
-        if (ImGui::Button("X")) {
-            this->selected->tryRemoveComponent<AngelScriptComponent>();
-        }
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("AngelScript", ImGuiTreeNodeFlags_DefaultOpen)) {
             if (ImGui::Button("Pick Script")) {
