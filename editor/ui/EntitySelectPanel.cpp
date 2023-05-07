@@ -35,7 +35,9 @@ void EntitySelectPanel::renderContents() {
             ImGui::PopID();
             break;
         }
+
         ImGui::SameLine();
+
         if (ImGui::Button("$")) {
             this->controls->setSelectedEntity(nullptr);
             this->controls->setSelectedScene(scene.get());
@@ -43,7 +45,9 @@ void EntitySelectPanel::renderContents() {
             this->inspector->setSelectedScene(scene.get());
             selectedID = sceneID;
         }
+
         ImGui::SameLine();
+
         if (ImGui::CollapsingHeader(scene->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
             for (const auto& [entityID, entity] : scene->getEntities()) {
                 ImGui::PushID(++id);
@@ -58,7 +62,17 @@ void EntitySelectPanel::renderContents() {
                     ImGui::PopID();
                     break;
                 }
+
                 ImGui::SameLine();
+
+                if (entity->hasComponent<NoRenderTagComponent>() && ImGui::Button("S")) {
+                    entity->removeComponent<NoRenderTagComponent>();
+                } else if (!entity->hasComponent<NoRenderTagComponent>() && ImGui::Button("H")) {
+                    entity->addTagComponent<NoRenderTagComponent>();
+                }
+
+                ImGui::SameLine();
+
                 if (ImGui::Selectable(entity->getName().c_str(), entityID == selectedID)) {
                     this->controls->setSelectedEntity(entity.get());
                     this->controls->setSelectedScene(nullptr);
