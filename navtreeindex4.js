@@ -1,5 +1,16 @@
 var NAVTREEINDEX4 =
 {
+"d9/df5/classchira_1_1_input_1_1_event.html":[6,0,0,1,0],
+"d9/df5/classchira_1_1_input_1_1_event.html#a0590f9bb78d6cafaf4a00cf562895de7":[6,0,0,1,0,0],
+"d9/df5/classchira_1_1_input_1_1_event.html#a389e6d5f1ff6035fdb462163de81cd22":[6,0,0,1,0,2],
+"d9/df5/classchira_1_1_input_1_1_event.html#a3ce33493fc11ce03774ff812c14d6188":[6,0,0,1,0,6],
+"d9/df5/classchira_1_1_input_1_1_event.html#a50bc02f360d76b45fbfae21a98041f0f":[6,0,0,1,0,5],
+"d9/df5/classchira_1_1_input_1_1_event.html#a956ec733893242e8ebc0434b8e55dfc1":[6,0,0,1,0,1],
+"d9/df5/classchira_1_1_input_1_1_event.html#acb1275dbc469802751fcafb8cbbb5064":[6,0,0,1,0,4],
+"d9/df5/classchira_1_1_input_1_1_event.html#afb612180b9160ad07d30e9bbd6fcd58e":[6,0,0,1,0,3],
+"d9/df8/_color_8h_source.html":[7,0,1,7,2],
+"da/d01/_chira_mesh_loader_8cpp_source.html":[7,0,1,6,1,0],
+"da/d09/_input_manager_8h.html#a15ab4f1e75101db321420d76bb64b67e":[5,0,0,4,1],
 "da/d09/_input_manager_8h.html#a306db1221ee360954d2f7cbfd496ab91":[5,0,0,4,9],
 "da/d09/_input_manager_8h.html#a306db1221ee360954d2f7cbfd496ab91aeb7295999e22b161fe9136ac2a60c0d5":[5,0,0,4,9,0],
 "da/d09/_input_manager_8h.html#a31c65cf88227afc387ee0881b02d5923":[5,0,0,4,2],
@@ -238,16 +249,5 @@ var NAVTREEINDEX4 =
 "dd/d3e/classchira_1_1_events.html":[6,0,0,36],
 "dd/d48/_translation_file_resource_8h_source.html":[7,0,1,4,1],
 "dd/d4f/structchira_1_1_renderer_1_1_texture_handle.html":[6,0,0,3,0],
-"dd/d4f/structchira_1_1_renderer_1_1_texture_handle.html#a319abf1d85ae7216c5b544f96e6e967e":[6,0,0,3,0,1],
-"dd/d4f/structchira_1_1_renderer_1_1_texture_handle.html#a50ea046741634e9119cf2a1b812847b7":[6,0,0,3,0,0],
-"dd/d4f/structchira_1_1_renderer_1_1_texture_handle.html#a9d33d0a87e3856a76fa979f1002a935b":[6,0,0,3,0,2],
-"dd/d4f/structchira_1_1_renderer_1_1_texture_handle.html#a9ebe9234d4b59c4ff7c4980c8f37c19b":[6,0,0,3,0,3],
-"dd/d5e/_translation_file_resource_8cpp_source.html":[7,0,1,4,0],
-"dd/d6f/_vertex_8cpp_source.html":[7,0,1,7,5],
-"dd/d6f/classchira_1_1_image.html":[6,0,0,39],
-"dd/d6f/classchira_1_1_image.html#a15468d1f0847f84f91cb372318610902":[6,0,0,39,10],
-"dd/d6f/classchira_1_1_image.html#a22c88c898555756b4c3c04e24eb92db8":[6,0,0,39,14],
-"dd/d6f/classchira_1_1_image.html#a39f16ae6a1d2f51eb39d95941ef68cb4":[6,0,0,39,9],
-"dd/d6f/classchira_1_1_image.html#a3dbe94441cf6cc46996f609062d2e327":[6,0,0,39,16],
-"dd/d6f/classchira_1_1_image.html#a44439952208e31c96ea0ad737311a7ae":[6,0,0,39,15]
+"dd/d4f/structchira_1_1_renderer_1_1_texture_handle.html#a319abf1d85ae7216c5b544f96e6e967e":[6,0,0,3,0,1]
 };
