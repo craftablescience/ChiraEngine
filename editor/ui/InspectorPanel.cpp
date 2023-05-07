@@ -78,6 +78,8 @@ void InspectorPanel::renderContents() {
 
     if (ImGui::BeginPopupContextItem("Add Component")) {
         // todo(editor): replace this predefined list with a component registry
+        // todo(editor): don't show components that are already on the entity
+
         // Name, UUID, Transform are excluded because they are already viewable/editable above this
         // Skybox can only be added to scene entities (literally entities that are scenes)
         // Also don't include tags, there should be a dedicated interface for tags
@@ -186,25 +188,116 @@ void InspectorPanel::renderContents() {
             filePicker.ClearSelected();
         }
     }
-    if ([[maybe_unused]] auto component = this->selected->tryGetComponent<AudioNoiseComponent>()) {
+    if (auto component = this->selected->tryGetComponent<AudioNoiseComponent>()) {
         REMOVE_BUTTON(AudioNoiseComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Noise", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("todo...");
+            if (ImGui::BeginCombo("Noise Type", component->getNoiseType() >= 0 ? magic_enum::enum_name(component->getNoiseType()).data() : "CUSTOM")) {
+                if (ImGui::Selectable(magic_enum::enum_name(SoLoud::Noise::NOISETYPES::WHITE).data())) {
+                    component->setNoiseType(SoLoud::Noise::NOISETYPES::WHITE);
+                }
+                if (ImGui::Selectable(magic_enum::enum_name(SoLoud::Noise::NOISETYPES::PINK).data())) {
+                    component->setNoiseType(SoLoud::Noise::NOISETYPES::PINK);
+                }
+                if (ImGui::Selectable(magic_enum::enum_name(SoLoud::Noise::NOISETYPES::BLUEISH).data())) {
+                    component->setNoiseType(SoLoud::Noise::NOISETYPES::BLUEISH);
+                }
+                if (ImGui::Selectable(magic_enum::enum_name(SoLoud::Noise::NOISETYPES::BROWNISH).data())) {
+                    component->setNoiseType(SoLoud::Noise::NOISETYPES::BROWNISH);
+                }
+                if (ImGui::Selectable("CUSTOM")) {
+                    component->setNoiseType(static_cast<SoLoud::Noise::NOISETYPES>(-1));
+                }
+                ImGui::EndCombo();
+            }
+            if (component->getNoiseType() < 0) {
+                ImGui::DragFloat("Octave 0", &component->noise.mOctaveScale[0]);
+                ImGui::DragFloat("Octave 1", &component->noise.mOctaveScale[1]);
+                ImGui::DragFloat("Octave 2", &component->noise.mOctaveScale[2]);
+                ImGui::DragFloat("Octave 3", &component->noise.mOctaveScale[3]);
+                ImGui::DragFloat("Octave 4", &component->noise.mOctaveScale[4]);
+                ImGui::DragFloat("Octave 5", &component->noise.mOctaveScale[5]);
+                ImGui::DragFloat("Octave 6", &component->noise.mOctaveScale[6]);
+                ImGui::DragFloat("Octave 7", &component->noise.mOctaveScale[7]);
+                ImGui::DragFloat("Octave 8", &component->noise.mOctaveScale[8]);
+                ImGui::DragFloat("Octave 9", &component->noise.mOctaveScale[9]);
+            }
+            if (ImGui::Button("Preview Audio")) {
+                auto handle = Audio::get().play(component->noise);
+                Audio::get().scheduleStop(handle, 2.0);
+            }
         }
     }
     if ([[maybe_unused]] auto component = this->selected->tryGetComponent<AudioSfxrComponent>()) {
         REMOVE_BUTTON(AudioSfxrComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Sfxr", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("todo...");
+            int seed = component->getSfxrSeed();
+            if (ImGui::BeginCombo("Preset", component->getSfxrPreset() >= 0 ? magic_enum::enum_name(component->getSfxrPreset()).data() : "CUSTOM")) {
+                if (ImGui::Selectable(magic_enum::enum_name(SoLoud::Sfxr::SFXR_PRESETS::COIN).data())) {
+                    component->setSfxrFromPreset(SoLoud::Sfxr::SFXR_PRESETS::COIN);
+                }
+                if (ImGui::Selectable(magic_enum::enum_name(SoLoud::Sfxr::SFXR_PRESETS::LASER).data())) {
+                    component->setSfxrFromPreset(SoLoud::Sfxr::SFXR_PRESETS::LASER);
+                }
+                if (ImGui::Selectable(magic_enum::enum_name(SoLoud::Sfxr::SFXR_PRESETS::EXPLOSION).data())) {
+                    component->setSfxrFromPreset(SoLoud::Sfxr::SFXR_PRESETS::EXPLOSION);
+                }
+                if (ImGui::Selectable(magic_enum::enum_name(SoLoud::Sfxr::SFXR_PRESETS::POWERUP).data())) {
+                    component->setSfxrFromPreset(SoLoud::Sfxr::SFXR_PRESETS::POWERUP);
+                }
+                if (ImGui::Selectable(magic_enum::enum_name(SoLoud::Sfxr::SFXR_PRESETS::HURT).data())) {
+                    component->setSfxrFromPreset(SoLoud::Sfxr::SFXR_PRESETS::HURT);
+                }
+                if (ImGui::Selectable(magic_enum::enum_name(SoLoud::Sfxr::SFXR_PRESETS::JUMP).data())) {
+                    component->setSfxrFromPreset(SoLoud::Sfxr::SFXR_PRESETS::JUMP);
+                }
+                if (ImGui::Selectable(magic_enum::enum_name(SoLoud::Sfxr::SFXR_PRESETS::BLIP).data())) {
+                    component->setSfxrFromPreset(SoLoud::Sfxr::SFXR_PRESETS::BLIP);
+                }
+                if (ImGui::Selectable("CUSTOM")) {
+                    component->setSfxrFromPreset(static_cast<SoLoud::Sfxr::SFXR_PRESETS>(-1), seed);
+                }
+                ImGui::EndCombo();
+            }
+            if (component->getSfxrPreset() >= 0) {
+                ImGui::InputInt("Seed", &seed);
+                component->setSfxrFromPreset(component->getSfxrPreset(), seed);
+            } else {
+                ImGui::Text("%s", component->getSfxrConfigID().size() > 0 ? component->getSfxrConfigID().data() : "No config file selected.");
+                if (ImGui::Button("Pick Audio")) {
+                    filePicker.Open();
+                }
+            }
+            if (ImGui::Button("Preview Audio")) {
+                Audio::get().play(component->sfxr);
+            }
+        }
+
+        filePicker.Display();
+        if (filePicker.HasSelected()) {
+            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            if (!path.empty()) {
+                this->selected->tryRemoveComponent<AudioSfxrComponent>();
+                this->selected->addComponent<AudioSfxrComponent>(path);
+            }
+            filePicker.ClearSelected();
         }
     }
-    if ([[maybe_unused]] auto component = this->selected->tryGetComponent<AudioSpeechComponent>()) {
+    if (auto component = this->selected->tryGetComponent<AudioSpeechComponent>()) {
         REMOVE_BUTTON(AudioSpeechComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Speech", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("todo...");
+            char buf[2048] {0};
+            if (!component->getSpeechText().empty()) {
+                memcpy(buf, component->getSpeechText().data(), component->getSpeechText().size() > 2047 ? 2047 : component->getSpeechText().size());
+            }
+            ImGui::InputTextMultiline("Voice Line", buf, sizeof(buf) - 1);
+            component->setSpeechText(buf);
+
+            if (ImGui::Button("Preview Audio")) {
+                Audio::get().play(component->speech);
+            }
         }
     }
     if (auto component = this->selected->tryGetComponent<AudioWavComponent>()) {
