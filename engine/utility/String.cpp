@@ -5,36 +5,12 @@
 
 using namespace chira;
 
-bool String::startsWith(std::string_view str, char beginning) {
-    return (str.length() >= 1) && (str.at(0) == beginning);
-}
-
-bool String::startsWith(std::string_view str, std::string_view beginning) {
-    return (str.length() >= beginning.length()) && (str.compare(0, beginning.length(), beginning) == 0);
-}
-
-bool String::endsWith(std::string_view str, char end) {
-    return (str.length() >= 1) && (str.at(str.length() - 1) == end);
-}
-
-bool String::endsWith(std::string_view str, std::string_view end) {
-    return (str.length() >= end.length()) && (str.compare(str.length() - end.length(), end.length(), end) == 0);
-}
-
-bool String::contains(std::string_view str, char sub) {
-    return (str.length() >= 1) && (str.find(sub) != std::string::npos);
-}
-
-bool String::contains(std::string_view str, std::string_view substr) {
-    return (str.length() >= substr.length()) && (str.find(substr) != std::string::npos);
-}
-
 void String::remove(std::string& input, char charToRemove) {
     input.erase(std::remove(input.begin(), input.end(), charToRemove), input.end());
 }
 
-std::vector<std::string> String::split(const std::string& input, char delimiter) {
-    std::stringstream ss{input};
+std::vector<std::string> String::split(std::string_view input, char delimiter) {
+    std::stringstream ss{input.data()};
     std::vector<std::string> out;
     std::string token;
     while (std::getline(ss, token, delimiter))

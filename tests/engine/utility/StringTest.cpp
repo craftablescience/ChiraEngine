@@ -86,6 +86,24 @@ TEST(String, replace) {
     }
 }
 
+TEST(String, getExtension) {
+    std::string regular = "file.txt";
+    std::string broken1 = "file.";
+    std::string working = ".gitignore";
+    std::string broken2 = "no-extension";
+    std::string withdir = "Documents/code.cpp";
+    std::string dirdot1 = ".git/index.s";
+    std::string dirdot2 = ".git/index_no_extension";
+
+    EXPECT_STREQ(String::getExtension(regular).data(), "txt");
+    EXPECT_STREQ(String::getExtension(broken1).data(), "");
+    EXPECT_STREQ(String::getExtension(working).data(), "gitignore");
+    EXPECT_STREQ(String::getExtension(broken2).data(), "");
+    EXPECT_STREQ(String::getExtension(withdir).data(), "cpp");
+    EXPECT_STREQ(String::getExtension(dirdot1).data(), "s");
+    EXPECT_STREQ(String::getExtension(dirdot2).data(), "");
+}
+
 TEST(String, join) {
     std::vector<int> empty{};
     std::vector<int> ints{0, 2, 8, 42};
