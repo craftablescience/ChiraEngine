@@ -18,10 +18,12 @@ void EntitySelectPanel::renderContents() {
     for (const auto& [sceneID, scene] : this->layer->getScenes()) {
         static uuids::uuid selectedID;
 
+#ifndef DEBUG
         // Don't list the editor scene
         if (sceneID == this->controls->getEditorScene()->getUUID()) {
             continue;
         }
+#endif
 
         ImGui::PushID(++id);
         if (ImGui::Button("X")) {
