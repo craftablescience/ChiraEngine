@@ -529,7 +529,7 @@ $(document).ready(function(){initNavTree('de/da1/_inspector_panel_8cpp_source.ht
 <div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;        REMOVE_BUTTON(<a class="code" href="../../d6/d8e/structchira_1_1_mesh_component.html">MeshComponent</a>);</div>
 <div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;        ImGui::SameLine();</div>
 <div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;        <span class="keywordflow">if</span> (ImGui::CollapsingHeader(<span class="stringliteral">&quot;Mesh&quot;</span>, ImGuiTreeNodeFlags_DefaultOpen)) {</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;            ImGui::Text(<span class="stringliteral">&quot;%s&quot;</span>, component-&gt;getMeshResource()-&gt;getIdentifier().data());</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;            ImGui::Text(<span class="stringliteral">&quot;%s&quot;</span>, component-&gt;mesh-&gt;getIdentifier().data());</div>
 <div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160; </div>
 <div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;            <span class="keywordflow">if</span> (ImGui::Button(<span class="stringliteral">&quot;Pick Mesh&quot;</span>)) {</div>
 <div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;                filePicker.Open();</div>

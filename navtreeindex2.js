@@ -1,16 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"d5/d36/namespacechira_1_1_renderer.html#af9afe4e8eae9431a0a6e677934d86f77":[5,0,0,6,36],
-"d5/d36/namespacechira_1_1_renderer.html#afdd7eb54a593733ee8e33357e040ef9f":[5,0,0,6,10],
-"d5/d36/namespacechira_1_1_renderer.html#afed5f1d426ad0e94dd0ed8f21fccfdb2":[5,0,0,6,13],
-"d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299":[5,0,2,4],
-"d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a02f213bdd27066f5ca5716dd53b1b940":[5,0,2,4,32],
-"d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a031450236028a5f782ed0cb7745935b3":[5,0,2,4,34],
-"d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a0372ab654976309df4e639490f947d84":[5,0,2,4,16],
-"d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a055c1a591abb0e8cd86dc969727bcc0b":[5,0,2,4,78],
-"d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a070a0fb40f6c308ab544b227660aadff":[5,0,2,4,14],
-"d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a08ebe310d9976b3674da4e358041d3f3":[5,0,2,4,22],
-"d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a0a44d0146392f32f68935a3c3e0eecf7":[5,0,2,4,93],
 "d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a0ae7b658b5c2f84b686ef68ed8583b98":[5,0,2,4,37],
 "d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a0ca794fba045828afc0c748a6fe720f1":[5,0,2,4,79],
 "d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a0cb707127aebaa0023eb38363993843a":[5,0,2,4,49],
@@ -249,5 +238,16 @@ var NAVTREEINDEX2 =
 "d6/d75/classchira_1_1_texture_cubemap.html#ac12457e5b4cf8b55dbd078f3d79b2105":[6,0,0,69,14],
 "d6/d75/classchira_1_1_texture_cubemap.html#ac4d905b770ce009e6e681798a1741836":[6,0,0,69,8],
 "d6/d75/classchira_1_1_texture_cubemap.html#acff9519579efad52d0e0ee4007bfa2bb":[6,0,0,69,24],
-"d6/d75/classchira_1_1_texture_cubemap.html#af248c22c2271e94de70b09d0c8291e4b":[6,0,0,69,2]
+"d6/d75/classchira_1_1_texture_cubemap.html#af248c22c2271e94de70b09d0c8291e4b":[6,0,0,69,2],
+"d6/d75/classchira_1_1_texture_cubemap.html#af286739cd8b7b036d91bcc844965da21":[6,0,0,69,1],
+"d6/d75/classchira_1_1_texture_cubemap.html#af3d064683b0580dca942fbe3bae4f032":[6,0,0,69,17],
+"d6/d75/classchira_1_1_texture_cubemap.html#af95b1d31099432c8b0ea98c5aa50bd84":[6,0,0,69,11],
+"d6/d75/classchira_1_1_texture_cubemap.html#affa5d7eed6312bf122f0870a3261d5b9":[6,0,0,69,22],
+"d6/d7f/classchira_1_1_layer.html":[6,0,0,34],
+"d6/d7f/classchira_1_1_layer.html#a12628671afa81275e325fbe9d7a3eb83":[6,0,0,34,0],
+"d6/d7f/classchira_1_1_layer.html#a1cb8286d59d65f43ade667162242668a":[6,0,0,34,3],
+"d6/d7f/classchira_1_1_layer.html#a27d09e26a94b1a836c99f91a4c36f6ab":[6,0,0,34,18],
+"d6/d7f/classchira_1_1_layer.html#a299a9be557c5b8b88befe1f15ce0ed47":[6,0,0,34,8],
+"d6/d7f/classchira_1_1_layer.html#a3b0819710602eb7053f310ddaefb5b0f":[6,0,0,34,14],
+"d6/d7f/classchira_1_1_layer.html#a4243d1a4b059eb7433cbfe7cdfc2c191":[6,0,0,34,19]
 };
