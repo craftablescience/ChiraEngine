@@ -48,7 +48,7 @@ struct WindowHandle {
 void destroySplashscreen();
 void destroyBackend();
 
-std::uint64_t getTicks();
+[[nodiscard]] std::uint64_t getTicks();
 
 /// Note: If an icon image is present, it must be RGBA8888
 [[nodiscard]] WindowHandle* createWindow(int width, int height, std::string_view title, Layer* layer);

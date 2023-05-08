@@ -55,7 +55,18 @@ option(CHIRA_BUILD_WITH_WARNINGS "Build Chira Engine with warnings enabled" ON)
 option(CHIRA_ENABLE_CRT_SECURE_NO_WARNINGS "Disable the _CRT_SECURE_NO_WARNINGS warning" ON)
 option(CHIRA_TREAT_WARNINGS_AS_ERRORS "Build Chira Engine with warnings treated as errors" OFF)
 
-option(CHIRA_BUILD_HEADLESS "Build Chira Engine without any visible window(s). Zero reliance on SDL. Primarily for testing purposes." OFF)
+# Options:
+# - AUTO
+# - GL41
+# - GL43
+set(CHIRA_RENDER_BACKEND "AUTO" CACHE STRING "Override the render backend. If not specified, will choose the best backend for the current platform.")
+
+# todo(render): get rid of this variable, compile all backend types and run headless wth command line arg
+# Options:
+# - SDL
+# - HEADLESS
+set(CHIRA_RENDER_DEVICE "SDL" CACHE STRING "Change the device backend from SDL.")
+
 option(CHIRA_USE_DISCORD "Build Chira Engine with Discord rich presence features if possible" ON)
 option(CHIRA_USE_STEAMWORKS "Build Chira Engine with Steamworks API features if possible" ON)
 
@@ -71,7 +82,8 @@ message(STATUS "  CHIRA_BUILD_WITH_STATIC_MSVC_RUNTIME_LIBRARY: ${CHIRA_BUILD_WI
 message(STATUS "  CHIRA_BUILD_WITH_WARNINGS: ${CHIRA_BUILD_WITH_WARNINGS}")
 message(STATUS "  CHIRA_ENABLE_CRT_SECURE_NO_WARNINGS: ${CHIRA_ENABLE_CRT_SECURE_NO_WARNINGS}")
 message(STATUS "  CHIRA_TREAT_WARNINGS_AS_ERRORS: ${CHIRA_TREAT_WARNINGS_AS_ERRORS}")
-message(STATUS "  CHIRA_BUILD_HEADLESS: ${CHIRA_BUILD_HEADLESS}")
+message(STATUS "  CHIRA_RENDER_BACKEND: ${CHIRA_RENDER_BACKEND}")
+message(STATUS "  CHIRA_RENDER_DEVICE: ${CHIRA_RENDER_DEVICE}")
 message(STATUS "  CHIRA_USE_DISCORD: ${CHIRA_USE_DISCORD}")
 message(STATUS "  CHIRA_USE_STEAMWORKS: ${CHIRA_USE_STEAMWORKS}")
 
