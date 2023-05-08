@@ -422,7 +422,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
         REMOVE_BUTTON(MeshComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("%s", component->getMeshResource()->getIdentifier().data());
+            ImGui::Text("%s", component->mesh->getIdentifier().data());
 
             if (ImGui::Button("Pick Mesh")) {
                 filePicker.Open();

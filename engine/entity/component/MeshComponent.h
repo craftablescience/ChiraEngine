@@ -10,14 +10,6 @@ struct MeshComponent {
             : transform(nullptr)
             , mesh(Resource::getResource<MeshDataResource>(meshId)) {}
 
-    [[nodiscard]] SharedPointer<MeshDataResource> getMeshResource() const {
-        return this->mesh;
-    }
-
-    [[nodiscard]] std::vector<byte> getMeshData(const std::string& meshLoader) const {
-        return this->mesh->getMeshData(meshLoader);
-    }
-
 public:
     TransformComponent* transform;
     SharedPointer<MeshDataResource> mesh;

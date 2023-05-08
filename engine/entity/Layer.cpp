@@ -143,7 +143,7 @@ void Layer::render() {
         for (auto entity : meshView) {
             auto& transformComponent = registry.get<TransformComponent>(entity);
             auto& meshComponent = registry.get<MeshComponent>(entity);
-            meshComponent.getMeshResource()->render(transformComponent.getMatrix());
+            meshComponent.mesh->render(transformComponent.getMatrix());
         }
 
         // Render MeshDynamicComponent
