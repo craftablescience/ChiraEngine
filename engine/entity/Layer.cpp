@@ -7,6 +7,7 @@
 #include "component/BillboardComponent.h"
 #include "component/MeshComponent.h"
 #include "component/MeshDynamicComponent.h"
+#include "component/PhysicsRigidBodyComponent.h"
 #include "component/SkyboxComponent.h"
 #include "component/TagComponents.h"
 #include "component/TransformComponent.h"
@@ -70,6 +71,8 @@ void Layer::removeAllScenes() {
 
 void Layer::update() {
     for (const auto& [uuid, scene] : this->scenes) {
+        auto& registry = scene->getRegistry();
+
         if (auto* camera = this->getCamera()) {
             // Update BillboardComponent
             auto billboardView = scene->getEntities<BillboardComponent>();
@@ -81,6 +84,17 @@ void Layer::update() {
                 if (billboardComponent.z)
                     billboardComponent.transform->setRoll(camera->transform->getRoll());
             }
+        }
+
+        // Update PhysicsRigidBodyComponent
+        auto physicsRigidBodyView = scene->getEntities<PhysicsRigidBodyComponent>(entt::exclude<NoRenderTagComponent>);
+        for (auto entity : physicsRigidBodyView) {
+            auto& transformComponent = registry.get<TransformComponent>(entity);
+            auto& physicsRigidBodyComponent = registry.get<PhysicsRigidBodyComponent>(entity);
+
+            JPH::BodyInterface& bodyInterface = Physics::get().GetBodyInterface();
+            const auto mat = bodyInterface.GetCenterOfMassTransform(physicsRigidBodyComponent.sphere);
+            transformComponent.setMatrixLocal(JPH::toGLM(mat));
         }
 
         // Update AngelScriptComponent
@@ -160,6 +174,14 @@ void Layer::render() {
             auto& transformComponent = registry.get<TransformComponent>(entity);
             auto& meshSpriteComponent = registry.get<MeshSpriteComponent>(entity);
             meshSpriteComponent.sprite.render(transformComponent.getMatrix());
+        }
+
+        // todo: dont
+        auto mmeshView = scene->getEntities<PhysicsRigidBodyComponent>(entt::exclude<NoRenderTagComponent>);
+        for (auto entity : mmeshView) {
+            auto& transformComponent = registry.get<TransformComponent>(entity);
+            auto& meshComponent = registry.get<PhysicsRigidBodyComponent>(entity);
+            meshComponent.mesh->render(transformComponent.getMatrix());
         }
 
         // Render SkyboxComponent
