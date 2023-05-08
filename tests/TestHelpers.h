@@ -6,11 +6,11 @@
 
 #define PREINIT_ENGINE() \
     const char* const argv[] = {"ChiraTest"}; \
-    chira::Engine::preInit(sizeof argv / sizeof(argv[0]), argv); \
+    chira::Engine::preInit(sizeof(argv) / sizeof(argv[0]), argv); \
     chira::Resource::addResourceProvider(new chira::FilesystemResourceProvider{"tests"})
 
 #define PREINIT_ENGINE_WITH_ARGS(argv) \
-    chira::Engine::preInit(sizeof argv / sizeof(argv[0]), argv); \
+    chira::Engine::preInit(sizeof(argv) / sizeof((argv)[0]), argv); \
     chira::Resource::addResourceProvider(new chira::FilesystemResourceProvider{"tests"})
 
 #define LOG_BEGIN() \
@@ -42,7 +42,7 @@
     [&] { \
         bool exists = false; \
         for (const auto& type : logMessageTypes) { \
-            if (type == t) exists = true; \
+            if (type == (t)) exists = true; \
         } \
         return exists; \
     }()
@@ -51,7 +51,7 @@
     [&] { \
         bool exists = false; \
         for (const auto& src : logMessageSources) { \
-            if (src == s) exists = true; \
+            if (src == (s)) exists = true; \
         } \
         return exists; \
     }()
@@ -60,7 +60,7 @@
     [&] { \
         bool exists = false; \
         for (const auto& msg : logMessageMessages) { \
-            if (msg == m) exists = true; \
+            if (msg == (m)) exists = true; \
         } \
         return exists; \
     }()
