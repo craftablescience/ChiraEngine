@@ -95,20 +95,16 @@ jobs:
 
       - name: Copy Necessary DLLs (mingw64)
         if: ${{ matrix.sys == 'mingw64' }}
-        run: |
-          cp /mingw64/bin/libgcc_s_seh-1.dll '${{env.BUILD_DIR}}/libgcc_s_seh-1.dll'
-          cp /mingw64/bin/libstdc++-6.dll    '${{env.BUILD_DIR}}/libstdc++-6.dll'
+        run: cp /mingw64/bin/libstdc++-6.dll '${{env.BUILD_DIR}}/libstdc++-6.dll'
 
       - name: Copy Necessary DLLs (clang64)
         if: ${{ matrix.sys == 'clang64' }}
-        run: |
-          cp /clang64/bin/libc++.dll    '${{env.BUILD_DIR}}/libc++.dll'
-          cp /clang64/bin/libunwind.dll '${{env.BUILD_DIR}}/libunwind.dll'
+        run: cp /clang64/bin/libc++.dll '${{env.BUILD_DIR}}/libc++.dll'
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ChiraEngine-Windows-mingw64-${{matrix.build_type}}
+          name: ChiraEngine-Windows-${{matrix.sys}}-${{matrix.build_type}}
           path: |
             ${{env.BUILD_DIR}}/editor.exe
             ${{env.BUILD_DIR}}/*.dll
