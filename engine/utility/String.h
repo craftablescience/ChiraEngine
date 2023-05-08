@@ -21,42 +21,71 @@ namespace chira::String {
     return in;
 }
 
-bool startsWith(std::string_view str, char beginning);
-bool startsWith(std::string_view str, std::string_view beginning);
+[[nodiscard]] constexpr bool startsWith(std::string_view str, char beginning) {
+    return (str.length() >= 1) && (str.at(0) == beginning);
+}
 
-bool endsWith(std::string_view str, char end);
-bool endsWith(std::string_view str, std::string_view end);
+[[nodiscard]] constexpr bool startsWith(std::string_view str, std::string_view beginning) {
+    return (str.length() >= beginning.length()) && (str.compare(0, beginning.length(), beginning) == 0);
+}
 
-bool contains(std::string_view str, char sub);
-bool contains(std::string_view str, std::string_view substr);
+[[nodiscard]] constexpr bool endsWith(std::string_view str, char end) {
+    return (str.length() >= 1) && (str.at(str.length() - 1) == end);
+}
+
+[[nodiscard]] constexpr bool endsWith(std::string_view str, std::string_view end) {
+    return (str.length() >= end.length()) && (str.compare(str.length() - end.length(), end.length(), end) == 0);
+}
+
+[[nodiscard]] constexpr bool contains(std::string_view str, char sub) {
+    return (str.length() >= 1) && (str.find(sub) != std::string::npos);
+}
+
+[[nodiscard]] constexpr bool contains(std::string_view str, std::string_view substr) {
+    return (str.length() >= substr.length()) && (str.find(substr) != std::string::npos);
+}
 
 void remove(std::string& input, char charToRemove);
 
-std::vector<std::string> split(const std::string& input, char delimiter);
+[[nodiscard]] std::vector<std::string> split(std::string_view input, char delimiter);
 
-std::string toLower(std::string_view str);
-std::string toUpper(std::string_view str);
+[[nodiscard]] std::string toLower(std::string_view str);
+[[nodiscard]] std::string toUpper(std::string_view str);
 
-std::string stripLeft(const std::string& s);
-std::string stripRight(const std::string& s);
-std::string strip(const std::string& s);
+[[nodiscard]] std::string stripLeft(const std::string& s);
+[[nodiscard]] std::string stripRight(const std::string& s);
+[[nodiscard]] std::string strip(const std::string& s);
 
-std::string stripLeft(const std::string& s, std::string_view c);
-std::string stripRight(const std::string& s, std::string_view c);
-std::string strip(const std::string& s, std::string_view c);
+[[nodiscard]] std::string stripLeft(const std::string& s, std::string_view c);
+[[nodiscard]] std::string stripRight(const std::string& s, std::string_view c);
+[[nodiscard]] std::string strip(const std::string& s, std::string_view c);
 
-std::string stripLeft(const std::string& s, char c);
-std::string stripRight(const std::string& s, char c);
-std::string strip(const std::string& s, char c);
+[[nodiscard]] std::string stripLeft(const std::string& s, char c);
+[[nodiscard]] std::string stripRight(const std::string& s, char c);
+[[nodiscard]] std::string strip(const std::string& s, char c);
 
 void replace(std::string& s, std::string_view from, std::string_view to);
+
+[[nodiscard]] constexpr std::string_view getExtension(std::string_view filename) {
+    auto dot = filename.find_last_of('.');
+    auto sls = filename.find_last_of('/');
+#ifdef CHIRA_PLATFORM_WINDOWS
+    if (auto sls2 = filename.find_last_of('\\'); sls2 != std::string_view::npos && (sls == std::string_view::npos || sls2 > sls)) {
+        sls = sls2;
+    }
+#endif
+    if (dot != std::string_view::npos && (sls == std::string_view::npos || dot > sls) && dot < filename.size() - 1) {
+        return filename.substr(dot + 1);
+    }
+    return "";
+}
 
 template<typename T>
 requires requires (T t) {
     std::begin(t);
     std::end(t);
 }
-std::string join(T& vector, std::string_view separator, std::string_view end = "") {
+[[nodiscard]] std::string join(T& vector, std::string_view separator, std::string_view end = "") {
     auto first = std::begin(vector);
     auto last = std::end(vector);
     if (first == last) {
