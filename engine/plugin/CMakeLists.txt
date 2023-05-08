@@ -13,7 +13,9 @@ if(CHIRA_USE_STEAMWORKS)
 endif()
 
 list(APPEND CHIRA_ENGINE_HEADERS
-        ${CMAKE_CURRENT_LIST_DIR}/Audio.h)
+        ${CMAKE_CURRENT_LIST_DIR}/Audio.h
+        ${CMAKE_CURRENT_LIST_DIR}/Physics.h)
 
 list(APPEND CHIRA_ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/Audio.cpp)
+        ${CMAKE_CURRENT_LIST_DIR}/Audio.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/Physics.cpp)

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Jolt/Jolt.h>
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -7,6 +8,28 @@
 
 // Defined outside the chira namespace so it looks better in headers
 using byte = std::uint8_t;
+
+JPH_NAMESPACE_BEGIN
+
+inline glm::vec3 toGLM(RVec3 vec3) {
+    return {static_cast<float>(vec3.GetX()), static_cast<float>(vec3.GetY()), static_cast<float>(vec3.GetZ())};
+}
+
+inline glm::vec4 toGLM(Vec4 vec4) {
+    return {vec4.GetX(), vec4.GetY(), vec4.GetZ(), vec4.GetW()};
+}
+
+inline glm::mat4 toGLM(RMat44 mat44) {
+    glm::mat4 out;
+    auto mat4 = mat44.ToMat44();
+    out[0] = toGLM(mat4.GetColumn4(0));
+    out[1] = toGLM(mat4.GetColumn4(1));
+    out[2] = toGLM(mat4.GetColumn4(2));
+    out[3] = toGLM(mat4.GetColumn4(3));
+    return out;
+}
+
+JPH_NAMESPACE_END
 
 namespace glm {
 

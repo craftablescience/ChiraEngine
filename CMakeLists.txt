@@ -67,6 +67,8 @@ set(CHIRA_RENDER_BACKEND "AUTO" CACHE STRING "Override the render backend. If no
 # - HEADLESS
 set(CHIRA_RENDER_DEVICE "SDL" CACHE STRING "Change the device backend from SDL.")
 
+option(CHIRA_BUILD_WITH_DETERMINISTIC_PHYSICS "Build Chira Engine with deterministic physics. Makes the physics simulation ~8% slower" OFF)
+option(CHIRA_BUILD_WITH_PRECISE_PHYSICS "Build Chira Engine with physics simulations using doubles instead of floats. Can make the physics simulation up to ~50% slower" OFF)
 option(CHIRA_USE_DISCORD "Build Chira Engine with Discord rich presence features if possible" ON)
 option(CHIRA_USE_STEAMWORKS "Build Chira Engine with Steamworks API features if possible" ON)
 
@@ -84,6 +86,8 @@ message(STATUS "  CHIRA_ENABLE_CRT_SECURE_NO_WARNINGS: ${CHIRA_ENABLE_CRT_SECURE
 message(STATUS "  CHIRA_TREAT_WARNINGS_AS_ERRORS: ${CHIRA_TREAT_WARNINGS_AS_ERRORS}")
 message(STATUS "  CHIRA_RENDER_BACKEND: ${CHIRA_RENDER_BACKEND}")
 message(STATUS "  CHIRA_RENDER_DEVICE: ${CHIRA_RENDER_DEVICE}")
+message(STATUS "  CHIRA_BUILD_WITH_DETERMINISTIC_PHYSICS: ${CHIRA_BUILD_WITH_DETERMINISTIC_PHYSICS}")
+message(STATUS "  CHIRA_BUILD_WITH_PRECISE_PHYSICS: ${CHIRA_BUILD_WITH_PRECISE_PHYSICS}")
 message(STATUS "  CHIRA_USE_DISCORD: ${CHIRA_USE_DISCORD}")
 message(STATUS "  CHIRA_USE_STEAMWORKS: ${CHIRA_USE_STEAMWORKS}")
 

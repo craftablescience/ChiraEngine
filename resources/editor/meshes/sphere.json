@@ -1,0 +1,6 @@
+{
+  "materialType": "MaterialTextured",
+  "material": "file://materials/unlitTextured.json",
+  "model": "file://meshes/sphere.obj",
+  "loader": "obj"
+}

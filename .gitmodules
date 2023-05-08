@@ -43,3 +43,6 @@
 [submodule "engine/thirdparty/imguizmo"]
 	path = engine/thirdparty/imguizmo
 	url = https://github.com/CedricGuillemet/ImGuizmo
+[submodule "engine/thirdparty/jolt"]
+	path = engine/thirdparty/jolt
+	url = https://github.com/jrouwe/JoltPhysics

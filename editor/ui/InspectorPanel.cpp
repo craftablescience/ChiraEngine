@@ -15,6 +15,7 @@
 #include <entity/component/MeshDynamicComponent.h>
 #include <entity/component/MeshSpriteComponent.h>
 #include <entity/component/NameComponent.h>
+#include <entity/component/PhysicsRigidBodyComponent.h>
 #include <entity/component/SkyboxComponent.h>
 #include <entity/component/UUIDComponent.h>
 #include <resource/provider/FilesystemResourceProvider.h>
@@ -108,6 +109,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
             "Mesh",
             "Mesh Dynamic",
             "Mesh Sprite",
+            "Physics RigidBody",
         };
         for (const auto& component : components) {
             if (ImGui::Selectable(component.c_str())) {
@@ -153,6 +155,9 @@ void InspectorPanel::renderContentsForSelectedEntity() {
                 } else if (component == "Mesh Sprite") {
                     this->selectedEntity->tryRemoveComponent<MeshSpriteComponent>();
                     this->selectedEntity->addComponent<MeshSpriteComponent>();
+                } else if (component == "Physics RigidBody") {
+                    this->selectedEntity->tryRemoveComponent<PhysicsRigidBodyComponent>();
+                    this->selectedEntity->addComponent<PhysicsRigidBodyComponent>();
                 }
             }
         }
@@ -466,6 +471,13 @@ void InspectorPanel::renderContentsForSelectedEntity() {
                 this->selectedEntity->addComponent<MeshSpriteComponent>(size, path);
             }
             filePicker.ClearSelected();
+        }
+    }
+    if ([[maybe_unused]] auto component = this->selectedEntity->tryGetComponent<PhysicsRigidBodyComponent>()) {
+        REMOVE_BUTTON(PhysicsRigidBodyComponent);
+        ImGui::SameLine();
+        if (ImGui::CollapsingHeader("Physics RigidBody", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::Text("wip");
         }
     }
 }
