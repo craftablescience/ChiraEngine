@@ -22,8 +22,3 @@ void MeshDataResource::setDepthFunction(std::string depthFuncStr_) {
     this->depthFuncStr = std::move(depthFuncStr_);
     this->depthFunction = getMeshDepthFunctionFromString(this->depthFuncStr);
 }
-
-void MeshDataResource::setCullType(std::string cullTypeStr_) {
-    this->cullTypeStr = std::move(cullTypeStr_);
-    this->cullType = getMeshCullTypeFromString(this->cullTypeStr);
-}

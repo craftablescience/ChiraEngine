@@ -11,14 +11,12 @@ namespace chira {
 class MeshData {
 public:
     MeshData() = default;
-    void render(glm::mat4 model);
+    void render(glm::mat4 model, MeshCullType cullType = MeshCullType::BACK);
     virtual ~MeshData();
     [[nodiscard]] SharedPointer<IMaterial> getMaterial() const;
     void setMaterial(SharedPointer<IMaterial> newMaterial);
     [[nodiscard]] MeshDepthFunction getDepthFunction() const;
     void setDepthFunction(MeshDepthFunction function);
-    [[nodiscard]] MeshCullType getCullType() const;
-    void setCullType(MeshCullType type);
     [[nodiscard]] std::vector<byte> getMeshData(const std::string& meshLoader) const;
     void appendMeshData(const std::string& loader, const std::string& identifier);
 protected:
@@ -26,7 +24,6 @@ protected:
     Renderer::MeshHandle handle{};
     MeshDrawMode drawMode = MeshDrawMode::STATIC;
     MeshDepthFunction depthFunction = MeshDepthFunction::LEQUAL;
-    MeshCullType cullType = MeshCullType::BACK;
     SharedPointer<IMaterial> material;
     std::vector<Vertex> vertices;
     std::vector<Index> indices;

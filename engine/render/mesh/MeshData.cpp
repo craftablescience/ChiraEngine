@@ -18,7 +18,7 @@ void MeshData::updateMeshData() {
     Renderer::updateMesh(&this->handle, this->vertices, this->indices, this->drawMode);
 }
 
-void MeshData::render(glm::mat4 model) {
+void MeshData::render(glm::mat4 model, MeshCullType cullType /*= MeshCullType::BACK*/) {
     if (!this->initialized)
         this->setupForRendering();
     if (this->material) {
@@ -26,7 +26,7 @@ void MeshData::render(glm::mat4 model) {
         if (this->material->getShader()->usesModelMatrix())
             this->material->getShader()->setUniform("m", model);
     }
-    Renderer::drawMesh(this->handle, this->depthFunction, this->cullType);
+    Renderer::drawMesh(this->handle, this->depthFunction, cullType);
 }
 
 MeshData::~MeshData() {
@@ -49,14 +49,6 @@ MeshDepthFunction MeshData::getDepthFunction() const {
 
 void MeshData::setDepthFunction(MeshDepthFunction function) {
     this->depthFunction = function;
-}
-
-MeshCullType MeshData::getCullType() const {
-    return this->cullType;
-}
-
-void MeshData::setCullType(MeshCullType type) {
-    this->cullType = type;
 }
 
 std::vector<byte> MeshData::getMeshData(const std::string& meshLoader) const {

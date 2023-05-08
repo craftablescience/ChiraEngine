@@ -11,7 +11,6 @@ public:
     explicit MeshDataResource(std::string identifier_) : PropertiesResource(std::move(identifier_)), MeshData() {}
     void compile(const nlohmann::json& properties) override;
     void setDepthFunction(std::string depthFuncStr_);
-    void setCullType(std::string cullTypeStr_);
 private:
     bool materialSetInCode = false;
     std::string materialType{"MaterialTextured"};
@@ -19,7 +18,6 @@ private:
     std::string modelPath{"file://meshes/missing.cmdl"};
     std::string modelLoader{"cmdl"};
     std::string depthFuncStr{"LESS"};
-    std::string cullTypeStr{"BACK"};
 public:
     CHIRA_PROPS(
             CHIRA_PROP(MeshDataResource, materialSetInCode),
@@ -27,8 +25,7 @@ public:
             CHIRA_PROP_NAMED(MeshDataResource, materialPath, material),
             CHIRA_PROP_NAMED(MeshDataResource, modelPath, model),
             CHIRA_PROP_NAMED(MeshDataResource, modelLoader, loader),
-            CHIRA_PROP_NAMED_SET(MeshDataResource, depthFuncStr, depthFunc, setDepthFunction),
-            CHIRA_PROP_NAMED_SET(MeshDataResource, cullTypeStr, cullType, setCullType)
+            CHIRA_PROP_NAMED_SET(MeshDataResource, depthFuncStr, depthFunc, setDepthFunction)
     );
 
 private:
