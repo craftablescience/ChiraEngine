@@ -1,8 +1,7 @@
 #pragma once
 
-#ifndef CHIRA_BUILD_HEADLESS
+#ifdef CHIRA_USE_RENDER_BACKEND_GL
     #include "device/DeviceGL.h"
 #else
-    //todo(render): implement a headless mode for testing
-    #error "Headless mode is not implemented yet."
+    #error "No render device present!"
 #endif

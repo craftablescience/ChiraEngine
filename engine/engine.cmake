@@ -35,42 +35,74 @@ list(APPEND IMGUI_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo/ImSequencer.cpp)
 list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_DISABLE_OBSOLETE_FUNCTIONS)
 
-# Figure out what render backend and device backend we are using
-if(CHIRA_BUILD_HEADLESS)
-    #todo(render): implement a headless mode for testing
-    #list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_BUILD_HEADLESS)
+# Add device backends
+if(CHIRA_RENDER_DEVICE STREQUAL "SDL")
+    # SDL2
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/sdl2)
+    list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/sdl2/include)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES SDL2::SDL2)
+
+    list(APPEND IMGUI_HEADERS
+            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_sdl2.h)
+    list(APPEND IMGUI_SOURCES
+            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_sdl2.cpp)
+    list(APPEND IMGUI_INCLUDE_DIRS
+            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/sdl2/include)
+    list(APPEND IMGUI_LINK_LIBRARIES SDL2::SDL2)
+elseif(CHIRA_RENDER_DEVICE STREQUAL "HEADLESS")
+    # todo(render): headless mode
     message(FATAL_ERROR "Headless mode is not implemented yet!")
 else()
-    # The graphics API we use varies based on platform
-    # macOS: OpenGL 4.1
-    # Windows and Linux: OpenGL 4.3
-    if(APPLE)
-        set(GLAD_USE_GL_41 ON CACHE BOOL "" FORCE)
-        list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_41)
-    else()
-        set(GLAD_USE_GL_41 OFF CACHE BOOL "" FORCE)
-        list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_GL_43)
-    endif()
-    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/glad)
-    list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_IMPL_OPENGL_LOADER_GLAD2)
-    list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/glad/include)
-    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glad)
+    message(FATAL_ERROR "Unrecognized render device ${CHIRA_RENDER_DEVICE}!")
+endif()
 
-    # SDL2
-    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sdl2)
-    list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/sdl2/include)
-    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES SDL2::SDL2)
+# Figure out what render backend we are using
+if(CHIRA_RENDER_BACKEND STREQUAL "AUTO")
+    if(WIN32 OR UNIX)
+        set(CHIRA_RENDER_BACKEND "GL43" CACHE STRING "" FORCE)
+    elseif(APPLE)
+        set(CHIRA_RENDER_BACKEND "GL41" CACHE STRING "" FORCE)
+    else()
+        message(WARNING "Current platform has no default render backend! Defaulting to GL41 for max compatability...")
+        set(CHIRA_RENDER_BACKEND "GL41" CACHE STRING "" FORCE)
+    endif()
+endif()
+message(STATUS "Setting render backend to ${CHIRA_RENDER_BACKEND}.")
+
+# Set up that backend
+if((CHIRA_RENDER_BACKEND STREQUAL "GL41") OR (CHIRA_RENDER_BACKEND STREQUAL "GL43"))
+    # macOS: OpenGL 4.1
+    # Windows and Linux: OpenGL 4.1 or OpenGL 4.3
+    list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_RENDER_BACKEND_GL)
+    if(APPLE AND CHIRA_RENDER_BACKEND STREQUAL "GL43")
+        message(WARNING "GL43 is not supported on Apple! Falling back to GL41...")
+        set(CHIRA_RENDER_BACKEND "GL41")
+    endif()
+
+    if(CHIRA_RENDER_BACKEND STREQUAL "GL43")
+        set(GLAD_USE_GL_41 OFF CACHE BOOL "" FORCE)
+        list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_RENDER_BACKEND_GL43)
+    else()
+        set(GLAD_USE_GL_41 ON CACHE BOOL "" FORCE)
+        list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_RENDER_BACKEND_GL41)
+    endif()
+
+    # OPENGL
+    find_package(OpenGL REQUIRED)
+
+    # GLAD
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad)
+    list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_IMPL_OPENGL_LOADER_GLAD2)
+    list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad/include)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES glad)
 
     # Add ImGui platform
     list(APPEND IMGUI_HEADERS
-            ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/backends/imgui_impl_sdl2.h
-            ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/backends/imgui_impl_opengl3.h)
+            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_opengl3.h)
     list(APPEND IMGUI_SOURCES
-            ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/backends/imgui_impl_sdl2.cpp
-            ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/backends/imgui_impl_opengl3.cpp)
-    list(APPEND IMGUI_INCLUDE_DIRS
-            ${CMAKE_CURRENT_LIST_DIR}/thirdparty/sdl2/include)
-    list(APPEND IMGUI_LINK_LIBRARIES SDL2::SDL2)
+            ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_opengl3.cpp)
+else()
+    message(FATAL_ERROR "Unrecognized render backend ${CHIRA_RENDER_BACKEND_OVERRIDE}")
 endif()
 
 # IMGUI
