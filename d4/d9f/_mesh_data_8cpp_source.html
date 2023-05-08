@@ -125,7 +125,7 @@ $(document).ready(function(){initNavTree('d4/d9f/_mesh_data_8cpp_source.html','.
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    Renderer::updateMesh(&amp;this-&gt;handle, this-&gt;vertices, this-&gt;indices, this-&gt;drawMode);</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;}</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keywordtype">void</span> MeshData::render(glm::mat4 model) {</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keywordtype">void</span> MeshData::render(glm::mat4 model, MeshCullType cullType <span class="comment">/*= MeshCullType::BACK*/</span>) {</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordflow">if</span> (!this-&gt;initialized)</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        this-&gt;<a class="code" href="../../d7/de1/classchira_1_1_mesh_data.html#adc5e83207957d0c5088373dcff906aa8">setupForRendering</a>();</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">if</span> (this-&gt;material) {</div>
@@ -133,7 +133,7 @@ $(document).ready(function(){initNavTree('d4/d9f/_mesh_data_8cpp_source.html','.
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordflow">if</span> (this-&gt;material-&gt;getShader()-&gt;usesModelMatrix())</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;            this-&gt;material-&gt;getShader()-&gt;setUniform(<span class="stringliteral">&quot;m&quot;</span>, model);</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    }</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    Renderer::drawMesh(this-&gt;handle, this-&gt;depthFunction, this-&gt;cullType);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    Renderer::drawMesh(this-&gt;handle, this-&gt;depthFunction, cullType);</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;MeshData::~MeshData() {</div>
@@ -158,29 +158,21 @@ $(document).ready(function(){initNavTree('d4/d9f/_mesh_data_8cpp_source.html','.
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    this-&gt;depthFunction = <span class="keyword">function</span>;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;MeshCullType MeshData::getCullType()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">return</span> this-&gt;cullType;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;std::vector&lt;byte&gt; MeshData::getMeshData(<span class="keyword">const</span> std::string&amp; meshLoader)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">return</span> IMeshLoader::getMeshLoader(meshLoader)-&gt;createMesh(this-&gt;vertices, this-&gt;indices);</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">void</span> MeshData::setCullType(MeshCullType type) {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    this-&gt;cullType = type;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">void</span> MeshData::appendMeshData(<span class="keyword">const</span> std::string&amp; loader, <span class="keyword">const</span> std::string&amp; identifier) {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    IMeshLoader::getMeshLoader(loader)-&gt;loadMesh(identifier, this-&gt;vertices, this-&gt;indices);</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;std::vector&lt;byte&gt; MeshData::getMeshData(<span class="keyword">const</span> std::string&amp; meshLoader)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">return</span> IMeshLoader::getMeshLoader(meshLoader)-&gt;createMesh(this-&gt;vertices, this-&gt;indices);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keywordtype">void</span> MeshData::appendMeshData(<span class="keyword">const</span> std::string&amp; loader, <span class="keyword">const</span> std::string&amp; identifier) {</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    IMeshLoader::getMeshLoader(loader)-&gt;loadMesh(identifier, this-&gt;vertices, this-&gt;indices);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="../../d7/de1/classchira_1_1_mesh_data.html#afed6c0e0f4c16416dceb614297677fb6">   70</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="../../d7/de1/classchira_1_1_mesh_data.html#afed6c0e0f4c16416dceb614297677fb6">MeshData::clearMeshData</a>() {</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    this-&gt;vertices.clear();</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    this-&gt;indices.clear();</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}</div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="../../d7/de1/classchira_1_1_mesh_data.html#afed6c0e0f4c16416dceb614297677fb6">   62</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="../../d7/de1/classchira_1_1_mesh_data.html#afed6c0e0f4c16416dceb614297677fb6">MeshData::clearMeshData</a>() {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    this-&gt;vertices.clear();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    this-&gt;indices.clear();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
 <div class="ttc" id="aclasschira_1_1_mesh_data_html_a53541d5ff2a01c9d351f1a842ce3f37c"><div class="ttname"><a href="../../d7/de1/classchira_1_1_mesh_data.html#a53541d5ff2a01c9d351f1a842ce3f37c">chira::MeshData::updateMeshData</a></div><div class="ttdeci">void updateMeshData()</div><div class="ttdoc">Updates the vertex buffers with the current mesh data.</div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d9f/_mesh_data_8cpp_source.html#l00015">MeshData.cpp:15</a></div></div>
 <div class="ttc" id="aclasschira_1_1_mesh_data_html_adc5e83207957d0c5088373dcff906aa8"><div class="ttname"><a href="../../d7/de1/classchira_1_1_mesh_data.html#adc5e83207957d0c5088373dcff906aa8">chira::MeshData::setupForRendering</a></div><div class="ttdeci">void setupForRendering()</div><div class="ttdoc">Establishes the vertex buffers and copies the current mesh data into them.</div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d9f/_mesh_data_8cpp_source.html#l00010">MeshData.cpp:10</a></div></div>
-<div class="ttc" id="aclasschira_1_1_mesh_data_html_afed6c0e0f4c16416dceb614297677fb6"><div class="ttname"><a href="../../d7/de1/classchira_1_1_mesh_data.html#afed6c0e0f4c16416dceb614297677fb6">chira::MeshData::clearMeshData</a></div><div class="ttdeci">void clearMeshData()</div><div class="ttdoc">Does not call updateMeshData().</div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d9f/_mesh_data_8cpp_source.html#l00070">MeshData.cpp:70</a></div></div>
+<div class="ttc" id="aclasschira_1_1_mesh_data_html_afed6c0e0f4c16416dceb614297677fb6"><div class="ttname"><a href="../../d7/de1/classchira_1_1_mesh_data.html#afed6c0e0f4c16416dceb614297677fb6">chira::MeshData::clearMeshData</a></div><div class="ttdeci">void clearMeshData()</div><div class="ttdoc">Does not call updateMeshData().</div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d9f/_mesh_data_8cpp_source.html#l00062">MeshData.cpp:62</a></div></div>
 <div class="ttc" id="aclasschira_1_1_shared_pointer_html"><div class="ttname"><a href="../../d4/d08/classchira_1_1_shared_pointer.html">chira::SharedPointer</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d6/d47/_shared_pointer_8h_source.html#l00031">SharedPointer.h:31</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

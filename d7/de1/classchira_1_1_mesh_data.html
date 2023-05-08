@@ -138,9 +138,9 @@ Collaboration diagram for chira::MeshData:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a51b35744c3ae2c1a229f6b04f25d301e"><td class="memItemLeft" align="right" valign="top"><a id="a51b35744c3ae2c1a229f6b04f25d301e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>render</b> (glm::mat4 model)</td></tr>
-<tr class="separator:a51b35744c3ae2c1a229f6b04f25d301e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebc6dc4498c6cba3494bf8f98899e300"><td class="memItemLeft" align="right" valign="top"><a id="aebc6dc4498c6cba3494bf8f98899e300"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>render</b> (glm::mat4 model, MeshCullType cullType=MeshCullType::BACK)</td></tr>
+<tr class="separator:aebc6dc4498c6cba3494bf8f98899e300"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d013bd3054ec2eb55b9b995e9bc0859"><td class="memItemLeft" align="right" valign="top"><a id="a3d013bd3054ec2eb55b9b995e9bc0859"></a>
 <a class="el" href="../../d4/d08/classchira_1_1_shared_pointer.html">SharedPointer</a>&lt; <a class="el" href="../../df/d5f/classchira_1_1_i_material.html">IMaterial</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getMaterial</b> () const</td></tr>
 <tr class="separator:a3d013bd3054ec2eb55b9b995e9bc0859"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,12 +153,6 @@ MeshDepthFunction&#160;</td><td class="memItemRight" valign="bottom"><b>getDepth
 <tr class="memitem:a67bcb734c8aca7abcb7764b1038c2b9f"><td class="memItemLeft" align="right" valign="top"><a id="a67bcb734c8aca7abcb7764b1038c2b9f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setDepthFunction</b> (MeshDepthFunction function)</td></tr>
 <tr class="separator:a67bcb734c8aca7abcb7764b1038c2b9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42307b6a28465fcc3f38eea095e67039"><td class="memItemLeft" align="right" valign="top"><a id="a42307b6a28465fcc3f38eea095e67039"></a>
-MeshCullType&#160;</td><td class="memItemRight" valign="bottom"><b>getCullType</b> () const</td></tr>
-<tr class="separator:a42307b6a28465fcc3f38eea095e67039"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeabbdadada31322b7676a770df617be3"><td class="memItemLeft" align="right" valign="top"><a id="aeabbdadada31322b7676a770df617be3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setCullType</b> (MeshCullType type)</td></tr>
-<tr class="separator:aeabbdadada31322b7676a770df617be3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a182c92733e4b2921b1596f3d0d6065"><td class="memItemLeft" align="right" valign="top"><a id="a7a182c92733e4b2921b1596f3d0d6065"></a>
 std::vector&lt; byte &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getMeshData</b> (const std::string &amp;meshLoader) const</td></tr>
 <tr class="separator:a7a182c92733e4b2921b1596f3d0d6065"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -195,9 +189,6 @@ MeshDrawMode&#160;</td><td class="memItemRight" valign="bottom"><b>drawMode</b> 
 <tr class="memitem:aaf06f0727e4011097fb817f7acee03c6"><td class="memItemLeft" align="right" valign="top"><a id="aaf06f0727e4011097fb817f7acee03c6"></a>
 MeshDepthFunction&#160;</td><td class="memItemRight" valign="bottom"><b>depthFunction</b> = MeshDepthFunction::LEQUAL</td></tr>
 <tr class="separator:aaf06f0727e4011097fb817f7acee03c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab724b3729be336aa04c3a8ead2a3cf55"><td class="memItemLeft" align="right" valign="top"><a id="ab724b3729be336aa04c3a8ead2a3cf55"></a>
-MeshCullType&#160;</td><td class="memItemRight" valign="bottom"><b>cullType</b> = MeshCullType::BACK</td></tr>
-<tr class="separator:ab724b3729be336aa04c3a8ead2a3cf55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a029f347245a961f0057fe1b3f59d656b"><td class="memItemLeft" align="right" valign="top"><a id="a029f347245a961f0057fe1b3f59d656b"></a>
 <a class="el" href="../../d4/d08/classchira_1_1_shared_pointer.html">SharedPointer</a>&lt; <a class="el" href="../../df/d5f/classchira_1_1_i_material.html">IMaterial</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>material</b></td></tr>
 <tr class="separator:a029f347245a961f0057fe1b3f59d656b"><td class="memSeparator" colspan="2">&#160;</td></tr>
