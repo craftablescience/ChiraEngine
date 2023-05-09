@@ -46,7 +46,7 @@ jobs:
             ${{env.BUILD_DIR}}/editor.exe
             ${{env.BUILD_DIR}}/*.dll
             ${{env.BUILD_DIR}}/resources/
-          retention-days: 1
+          retention-days: 7
 
       - name: Test
         working-directory: ${{env.BUILD_DIR}}
@@ -109,7 +109,7 @@ jobs:
             ${{env.BUILD_DIR}}/editor.exe
             ${{env.BUILD_DIR}}/*.dll
             ${{env.BUILD_DIR}}/resources/
-          retention-days: 1
+          retention-days: 7
 
       - name: Test
         if: ${{ matrix.sys == 'mingw64' }} # Clang crashes trying to link ChiraTest target, probably not my fault
@@ -161,7 +161,7 @@ jobs:
             ${{env.BUILD_DIR}}/editor
             ${{env.BUILD_DIR}}/*.so*
             ${{env.BUILD_DIR}}/resources/
-          retention-days: 1
+          retention-days: 7
 
       - name: Test
         working-directory: ${{env.BUILD_DIR}}
@@ -198,7 +198,7 @@ jobs:
             ${{env.BUILD_DIR}}/editor.app
             ${{env.BUILD_DIR}}/*.dylib*
             ${{env.BUILD_DIR}}/resources/
-          retention-days: 1
+          retention-days: 7
 
       - name: Test
         working-directory: ${{env.BUILD_DIR}}
