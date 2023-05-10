@@ -79,7 +79,7 @@ int main(int argc, const char* const argv[]) {
     LOG_CMDLTOOL.info("Attempting to convert mesh file \"{}\"...", inputPath.filename().string());
 
     MeshData mesh{};
-    Resource::addResourceProvider(new FilesystemResourceProvider{inputPath.remove_filename().string()});
+    Resource::addResourceProvider(new FilesystemResourceProvider{inputPath.parent_path().string()});
     mesh.appendMeshData(inputType, FilesystemResourceProvider::getResourceIdentifier(inputPath.string()));
 
     std::ofstream file{outputPath.string(), std::ios::binary};
