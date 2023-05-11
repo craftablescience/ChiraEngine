@@ -1,3 +1,8 @@
 {
-  "image": "file://textures/missing.png"
+  "verticalFlip": true,
+  "mipmaps": true,
+  "image": "file://textures/missing.png",
+  "wrapModeS": "REPEAT",
+  "wrapModeT": "REPEAT",
+  "filterMode": "LINEAR"
 }

@@ -4,8 +4,14 @@
 
 using namespace chira;
 
-void MaterialPhong::compile(const nlohmann::json& properties) {
-    Reflect::fromJSON(this, properties);
+void MaterialPhong::compile(const byte buffer[], std::size_t bufferLength) {
+    Serial::loadFromBuffer(this, buffer, bufferLength);
+
+    this->shader = Resource::getResource<Shader>(this->shaderPath);
+    this->setTextureDiffuse(this->diffusePath);
+    this->setTextureSpecular(this->specularPath);
+    this->setShininess(this->shininess);
+    this->setLambertFactor(this->lambertFactor);
 }
 
 void MaterialPhong::use() const {

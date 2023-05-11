@@ -4,17 +4,18 @@
 #include <entity/component/LightComponents.h>
 #include <math/Types.h>
 #include <render/backend/RenderBackend.h>
-#include <resource/PropertiesResource.h>
+#include <resource/Resource.h>
+#include <utility/Serial.h>
 
 namespace chira {
 
 constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_PREFIX = "#";
 constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_SUFFIX = "#";
 
-class Shader : public PropertiesResource {
+class Shader : public Resource {
 public:
     explicit Shader(std::string identifier_);
-    void compile(const nlohmann::json& properties) override;
+    void compile(const byte buffer[], std::size_t bufferLength) override;
     void use() const;
     ~Shader() override;
 
@@ -83,6 +84,7 @@ public:
     static void addPreprocessorSymbol(const std::string& name, const std::string& value);
     static void setPreprocessorPrefix(const std::string& prefix);
     static void setPreprocessorSuffix(const std::string& suffix);
+
 private:
     static inline std::unordered_map<std::string, std::string> preprocessorSymbols{
             {"DIRECTIONAL_LIGHT_MAX", std::to_string(DIRECTIONAL_LIGHT_MAX)},
@@ -100,14 +102,18 @@ private:
     bool lit = true;
     std::string vertexPath{"file://shaders/unlitTextured.vsh"};
     std::string fragmentPath{"file://shaders/unlitTextured.fsh"};
+
 public:
-    CHIRA_PROPS(
-            CHIRA_PROP(Shader, usesPV),
-            CHIRA_PROP(Shader, usesM),
-            CHIRA_PROP(Shader, lit),
-            CHIRA_PROP_NAMED(Shader, vertexPath, vertex),
-            CHIRA_PROP_NAMED(Shader, fragmentPath, fragment)
-    );
+    template<typename Archive>
+    void serialize(Archive& ar) {
+        ar(
+                cereal::make_nvp("usesPV", this->usesPV),
+                cereal::make_nvp("usesM", this->usesM),
+                cereal::make_nvp("lit", this->lit),
+                cereal::make_nvp("vertex", this->vertexPath),
+                cereal::make_nvp("fragment", this->fragmentPath)
+        );
+    }
 };
 
 } // namespace chira

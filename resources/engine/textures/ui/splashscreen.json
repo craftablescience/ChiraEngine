@@ -1,3 +1,8 @@
 {
-  "image": "file://textures/ui/splashscreen.png"
+  "verticalFlip": true,
+  "mipmaps": false,
+  "image": "file://textures/ui/splashscreen.png",
+  "wrapModeS": "REPEAT",
+  "wrapModeT": "REPEAT",
+  "filterMode": "LINEAR"
 }

@@ -2,7 +2,6 @@
 
 #include <regex>
 #include <core/Logger.h>
-#include <i18n/TranslationManager.h>
 #include <resource/StringResource.h>
 #include <utility/String.h>
 #include "UBO.h"
@@ -11,10 +10,11 @@ using namespace chira;
 
 CHIRA_CREATE_LOG(SHADER);
 
-Shader::Shader(std::string identifier_) : PropertiesResource(std::move(identifier_)) {}
+Shader::Shader(std::string identifier_)
+        : Resource(std::move(identifier_)) {}
 
-void Shader::compile(const nlohmann::json& properties) {
-    Reflect::fromJSON(this, properties);
+void Shader::compile(const byte buffer[], std::size_t bufferLength) {
+    Serial::loadFromBuffer(this, buffer, bufferLength);
 
     const auto shaderModuleVertString = Resource::getUniqueUncachedResource<StringResource>(this->vertexPath);
     const auto shaderModuleVertData = replaceMacros(shaderModuleVertString->getIdentifier().data(), shaderModuleVertString->getString());
@@ -60,7 +60,7 @@ std::string Shader::replaceMacros(const std::string& ignoredInclude, const std::
                                      std::regex_constants::icase | std::regex_constants::optimize};
     // Add the include as a macro to be expanded
     // This has the positive side effect of caching previously used includes
-    for (std::sregex_iterator it{data.begin(), data.end(), includes}; it != std::sregex_iterator{}; it++) {
+    for (std::sregex_iterator it{data.begin(), data.end(), includes}; it != std::sregex_iterator{}; ++it) {
         if (it->str(2) != ignoredInclude && !Shader::preprocessorSymbols.count(it->str(2))) {
             auto contents = Resource::getUniqueUncachedResource<StringResource>(it->str(2));
             Shader::addPreprocessorSymbol(it->str(1), replaceMacros(it->str(2), contents->getString()));

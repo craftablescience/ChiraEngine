@@ -4,8 +4,11 @@
 
 using namespace chira;
 
-void MaterialCubemap::compile(const nlohmann::json& properties) {
-    Reflect::fromJSON(this, properties);
+void MaterialCubemap::compile(const byte buffer[], std::size_t bufferLength) {
+    Serial::loadFromBuffer(this, buffer, bufferLength);
+
+    this->shader = Resource::getResource<Shader>(this->shaderPath);
+    this->setTextureCubemap(this->cubemapPath);
 }
 
 void MaterialCubemap::use() const {

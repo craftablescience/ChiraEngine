@@ -20,12 +20,17 @@ class Resource {
     // To view resource data
     friend class ResourceUsageTrackerPanel;
 public:
-    explicit Resource(std::string identifier_) : identifier(std::move(identifier_)) {}
+    explicit Resource(std::string identifier_)
+            : identifier(std::move(identifier_)) {}
+
     virtual ~Resource();
+
     virtual void compile(const byte /*buffer*/[], std::size_t /*bufferLength*/) {}
+
     [[nodiscard]] std::string_view getIdentifier() const {
         return this->identifier;
     }
+
 protected:
     std::string identifier;
 
@@ -45,7 +50,7 @@ public:
         auto id = Resource::splitResourceIdentifier(identifier);
         const std::string& provider = id.first, name = id.second;
         if (Resource::resources[provider].count(name) > 0) {
-            return Resource::resources[provider][name].castAssert<ResourceType>();
+            return Resource::resources[provider][name].template cast<ResourceType>();
         }
         return Resource::getUniqueResource<ResourceType>(identifier, std::forward<Params>(params)...);
     }
@@ -75,7 +80,7 @@ public:
         auto id = Resource::splitResourceIdentifier(identifier);
         const std::string& provider = id.first, name = id.second;
         if (Resource::resources[provider].count(name) > 0) {
-            return Resource::resources[provider][name].castAssert<ResourceType>();
+            return Resource::resources[provider][name].cast<ResourceType>();
         }
         Resource::logResourceError("error.resource.cached_resource_not_found", identifier);
         if (Resource::hasDefaultResource<ResourceType>())
@@ -91,7 +96,7 @@ public:
             if ((*i)->hasResource(name)) {
                 Resource::resources[provider][name] = SharedPointer<Resource>(new ResourceType{identifier, std::forward<Params>(params)...});
                 (*i)->compileResource(name, Resource::resources[provider][name].get());
-                return Resource::resources[provider][name].castAssert<ResourceType>();
+                return Resource::resources[provider][name].template cast<ResourceType>();
             }
         }
         Resource::logResourceError("error.resource.resource_not_found", identifier);
@@ -145,7 +150,7 @@ public:
     template<typename ResourceType>
     static bool registerDefaultResource(const std::string& identifier) {
         Resource::getDefaultResourceConstructors()[typeHash<ResourceType>()] = [identifier] {
-            Resource::defaultResources[typeHash<ResourceType>()] = Resource::getUniqueResource<ResourceType>(identifier).template castAssert<Resource>();
+            Resource::defaultResources[typeHash<ResourceType>()] = Resource::getUniqueResource<ResourceType>(identifier).template cast<Resource>();
         };
         return true;
     }
@@ -157,7 +162,7 @@ public:
 
     template<typename ResourceType>
     static SharedPointer<ResourceType> getDefaultResource() {
-        return Resource::defaultResources[typeHash<ResourceType>()].template castAssert<ResourceType>();
+        return Resource::defaultResources[typeHash<ResourceType>()].template cast<ResourceType>();
     }
 
     static void createDefaultResources() {

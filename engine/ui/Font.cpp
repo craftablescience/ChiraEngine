@@ -4,8 +4,9 @@
 
 using namespace chira;
 
-void Font::compile(const nlohmann::json& properties) {
-    Reflect::fromJSON(this, properties);
+void Font::compile(const byte buffer[], std::size_t bufferLength) {
+    Serial::loadFromBuffer(this, buffer, bufferLength);
+
     ImGuiIO& io = ImGui::GetIO();
     this->range = Font::getRangeFromString(this->rangeStr);
     std::string path = FilesystemResourceProvider::getResourceAbsolutePath(this->fontPath);
@@ -40,6 +41,7 @@ const ImWchar* Font::getRangeFromString(std::string_view input) {
         return io.Fonts->GetGlyphRangesThai();
     else if (input == "vietnamese")
         return io.Fonts->GetGlyphRangesVietnamese();
-    else
+    else if (input == "english")
         return io.Fonts->GetGlyphRangesDefault();
+    return io.Fonts->GetGlyphRangesDefault();
 }

@@ -1,4 +1,8 @@
 {
+  "verticalFlip": false,
+  "mipmaps": false,
   "image": "file://textures/ui/icon.png",
-  "verticalFlip": false
+  "wrapModeS": "REPEAT",
+  "wrapModeT": "REPEAT",
+  "filterMode": "LINEAR"
 }

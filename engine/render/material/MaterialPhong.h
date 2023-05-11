@@ -8,7 +8,7 @@ namespace chira {
 class MaterialPhong final : public IMaterial {
 public:
     explicit MaterialPhong(std::string identifier_) : IMaterial(std::move(identifier_)) {}
-    void compile(const nlohmann::json& properties) override;
+    void compile(const byte buffer[], std::size_t bufferLength) override;
     void use() const override;
     [[nodiscard]] SharedPointer<Texture> getTextureDiffuse() const;
     void setTextureDiffuse(std::string path);
@@ -18,6 +18,7 @@ public:
     void setShininess(float shininess);
     [[nodiscard]] float getLambertFactor() const;
     void setLambertFactor(float lambertFactor);
+
 protected:
     SharedPointer<Texture> diffuse;
     std::string diffusePath{"file://textures/missing.json"};
@@ -25,13 +26,19 @@ protected:
     std::string specularPath{"file://textures/missing.json"};
     float shininess = 32.f;
     float lambertFactor = 1.f;
+
 public:
-    CHIRA_PROPS_INHERITED(IMaterial) (
-            CHIRA_PROP_NAMED_SET(MaterialPhong, diffusePath, diffuse, setTextureDiffuse),
-            CHIRA_PROP_NAMED_SET(MaterialPhong, specularPath, specular, setTextureSpecular),
-            CHIRA_PROP_SET(MaterialPhong, shininess, setShininess),
-            CHIRA_PROP_SET(MaterialPhong, lambertFactor, setLambertFactor)
-    );
+    template<typename Archive>
+    void serialize(Archive& ar) {
+        ar(
+                cereal::make_nvp("shader", this->shaderPath),
+                cereal::make_nvp("diffuse", this->diffusePath),
+                cereal::make_nvp("specular", this->specularPath),
+                cereal::make_nvp("shininess", this->shininess),
+                cereal::make_nvp("lambertFactor", this->lambertFactor)
+        );
+    }
+
 private:
     CHIRA_REGISTER_MATERIAL_TYPE(MaterialPhong);
 };

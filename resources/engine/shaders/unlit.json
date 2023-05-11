@@ -1,5 +1,7 @@
 {
   "vertex": "file://shaders/unlit.vsh",
   "fragment": "file://shaders/unlit.fsh",
+  "usesPV": true,
+  "usesM": true,
   "lit": false
 }
