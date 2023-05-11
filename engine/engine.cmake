@@ -12,6 +12,8 @@ list(APPEND IMGUI_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imstb_rectpack.h
         ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imstb_textedit.h
         ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imstb_truetype.h
+        # Plus ImGuiColorTextEdit for convenience
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui-colortextedit/TextEditor.h
         # Plus ImGui-Filebrowser for convenience
         ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui-filebrowser/imfilebrowser.h
         # Plus ImGuizmo for convenience
@@ -27,6 +29,8 @@ list(APPEND IMGUI_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imgui_draw.cpp
         ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imgui_tables.cpp
         ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui/imgui_widgets.cpp
+        # Plus ImGuiColorTextEdit for convenience
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui-colortextedit/TextEditor.cpp
         # Plus ImGuizmo for convenience
         ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo/GraphEditor.cpp
         ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo/ImCurveEdit.cpp
@@ -127,6 +131,7 @@ target_link_libraries(imgui PRIVATE ${IMGUI_LINK_LIBRARIES})
 
 list(APPEND CHIRA_ENGINE_INCLUDE_DIRS
         ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui
+        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui-colortextedit
         ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imgui-filebrowser
         ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES imgui)
