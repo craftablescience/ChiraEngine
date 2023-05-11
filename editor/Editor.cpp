@@ -22,6 +22,7 @@
 #include "ui/ControlsPanel.h"
 #include "ui/EntitySelectPanel.h"
 #include "ui/InspectorPanel.h"
+#include "ui/ScriptEditorPanel.h"
 
 using namespace chira;
 
@@ -52,13 +53,16 @@ int main(int argc, const char* const argv[]) {
     auto* layer = Device::getWindowLayer(window);
     layer->setBackgroundColor({0.15f});
 
-    auto editor = new ControlsPanel{layer};
-    Device::addPanelToWindow(window, editor);
+    auto controls = new ControlsPanel{layer};
+    Device::addPanelToWindow(window, controls);
 
     auto inspector = new InspectorPanel{};
     Device::addPanelToWindow(window, inspector);
 
-    Device::addPanelToWindow(window, new EntitySelectPanel{layer, editor, inspector});
+    auto scriptEditor = new ScriptEditorPanel{};
+    Device::addPanelToWindow(window, scriptEditor);
+
+    Device::addPanelToWindow(window, new EntitySelectPanel{layer, controls, inspector});
 
     Engine::run();
 }
