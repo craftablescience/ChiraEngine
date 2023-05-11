@@ -125,7 +125,7 @@ bool Device::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
 
     MeshDataBuilder plane;
     plane.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-    plane.setMaterial(Resource::getResource<MaterialTextured>("file://materials/splashscreen.json").castAssert<IMaterial>());
+    plane.setMaterial(Resource::getResource<MaterialTextured>("file://materials/splashscreen.json").cast<IMaterial>());
     plane.render(glm::identity<glm::mat4>());
 
     glDisable(GL_DEPTH_TEST);
@@ -133,7 +133,7 @@ bool Device::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
 
     MeshDataBuilder windowSurface;
     windowSurface.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-    windowSurface.setMaterial(Resource::getResource<MaterialFrameBuffer>("file://materials/window.json", &g_WindowFramebufferHandle).castAssert<IMaterial>());
+    windowSurface.setMaterial(Resource::getResource<MaterialFrameBuffer>("file://materials/window.json", &g_WindowFramebufferHandle).cast<IMaterial>());
     windowSurface.render(glm::identity<glm::mat4>());
 
     glEnable(GL_DEPTH_TEST);
@@ -270,7 +270,7 @@ void Device::refreshWindows() {
 
         MeshDataBuilder surface;
         surface.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-        surface.setMaterial(Resource::getUniqueUncachedResource<MaterialFrameBuffer>("file://materials/window.json", handle.layer->getRawHandle()).castAssert<IMaterial>());
+        surface.setMaterial(Resource::getUniqueUncachedResource<MaterialFrameBuffer>("file://materials/window.json", handle.layer->getRawHandle()).cast<IMaterial>());
         surface.render(glm::identity<glm::mat4>());
 
         glEnable(GL_DEPTH_TEST);
