@@ -43,3 +43,6 @@
 [submodule "engine/thirdparty/imguizmo"]
 	path = engine/thirdparty/imguizmo
 	url = https://github.com/CedricGuillemet/ImGuizmo
+[submodule "engine/thirdparty/imgui-colortextedit"]
+	path = engine/thirdparty/imgui-colortextedit
+	url = https://github.com/BalazsJako/ImGuiColorTextEdit
