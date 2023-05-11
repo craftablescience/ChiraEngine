@@ -10,14 +10,11 @@
 #endif
 
 // Have to do this crap pile because std::source_location can be unimplemented even if the header exists
-#ifdef __has_include
-    // Broken up for portability
-    #if __has_include(<source_location>)
-        #include <source_location>
-        // This macro is defined in <source_location> if its implemented
-        #ifdef __cpp_lib_source_location
-            #define CHIRA_USE_SOURCE_LOCATION
-        #endif
+#if __has_include(<source_location>)
+    #include <source_location>
+    // This macro is defined in <source_location> if its implemented
+    #ifdef __cpp_lib_source_location
+        #define CHIRA_USE_SOURCE_LOCATION
     #endif
 #endif
 
