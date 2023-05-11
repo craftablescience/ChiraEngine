@@ -46,3 +46,6 @@
 [submodule "engine/thirdparty/imgui-colortextedit"]
 	path = engine/thirdparty/imgui-colortextedit
 	url = https://github.com/BalazsJako/ImGuiColorTextEdit
+[submodule "engine/thirdparty/cereal"]
+	path = engine/thirdparty/cereal
+	url = https://github.com/craftablescience/cereal
