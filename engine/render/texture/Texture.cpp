@@ -16,8 +16,8 @@ Texture::~Texture() {
         Renderer::destroyTexture(this->handle);
 }
 
-void Texture::compile(const nlohmann::json& properties) {
-    Reflect::fromJSON(this, properties);
+void Texture::compile(const byte buffer[], std::size_t bufferLength) {
+    Serial::loadFromBuffer(this, buffer, bufferLength);
 
     auto imageFile = Resource::getResource<Image>(this->filePath, this->verticalFlip);
 
@@ -34,19 +34,4 @@ void Texture::use() const {
 
 void Texture::use(TextureUnit activeTextureUnit) const {
     Renderer::useTexture(this->handle, activeTextureUnit);
-}
-
-void Texture::setFilterMode(std::string filterModeStr_) {
-    this->filterModeStr = std::move(filterModeStr_);
-    this->filterMode = getFilterModeFromString(this->filterModeStr);
-}
-
-void Texture::setWrapModeS(std::string wrapModeSStr_) {
-    this->wrapModeSStr = std::move(wrapModeSStr_);
-    this->wrapModeS = getWrapModeFromString(this->wrapModeSStr);
-}
-
-void Texture::setWrapModeT(std::string wrapModeTStr_) {
-    this->wrapModeTStr = std::move(wrapModeTStr_);
-    this->wrapModeT = getWrapModeFromString(this->wrapModeTStr);
 }

@@ -1,4 +1,7 @@
 {
   "vertex": "file://shaders/phonglit.vsh",
-  "fragment": "file://shaders/phonglit.fsh"
+  "fragment": "file://shaders/phonglit.fsh",
+  "usesPV": true,
+  "usesM": true,
+  "lit": true
 }

@@ -1,5 +1,6 @@
 {
   "name": "DejaVu Sans Mono",
   "size": 18.0,
+  "range": "english",
   "font": "file://fonts/dejavu_sans_mono/DejaVuSansMono.ttf"
 }

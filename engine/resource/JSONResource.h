@@ -1,13 +1,12 @@
 #pragma once
 
-#include <reflect/Props.h>
 #include "Resource.h"
 
 namespace chira {
 
-class PropertiesResource : public Resource {
+class JSONResource : public Resource {
 public:
-    explicit PropertiesResource(std::string identifier_) : Resource(std::move(identifier_)) {}
+    explicit JSONResource(std::string identifier_) : Resource(std::move(identifier_)) {}
     void compile(const byte buffer[], std::size_t bufferLength) final;
     virtual void compile(const nlohmann::json& properties) = 0;
 

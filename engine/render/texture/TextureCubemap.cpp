@@ -16,8 +16,8 @@ TextureCubemap::~TextureCubemap() {
         Renderer::destroyTexture(this->handle);
 }
 
-void TextureCubemap::compile(const nlohmann::json& properties) {
-    Reflect::fromJSON(this, properties);
+void TextureCubemap::compile(const byte buffer[], std::size_t bufferLength) {
+    Serial::loadFromBuffer(this, buffer, bufferLength);
 
     auto fileFD = Resource::getResource<Image>(this->imageFD, this->verticalFlipFD);
     auto fileBK = Resource::getResource<Image>(this->imageBK, this->verticalFlipBK);
@@ -37,24 +37,4 @@ void TextureCubemap::use() const {
 
 void TextureCubemap::use(TextureUnit activeTextureUnit) const {
     Renderer::useTexture(this->handle, activeTextureUnit);
-}
-
-void TextureCubemap::setFilterMode(std::string filterModeStr_) {
-    this->filterModeStr = std::move(filterModeStr_);
-    this->filterMode = getFilterModeFromString(this->filterModeStr);
-}
-
-void TextureCubemap::setWrapModeS(std::string wrapModeSStr_) {
-    this->wrapModeSStr = std::move(wrapModeSStr_);
-    this->wrapModeS = getWrapModeFromString(this->wrapModeSStr);
-}
-
-void TextureCubemap::setWrapModeT(std::string wrapModeTStr_) {
-    this->wrapModeTStr = std::move(wrapModeTStr_);
-    this->wrapModeT = getWrapModeFromString(this->wrapModeTStr);
-}
-
-void TextureCubemap::setWrapModeR(std::string wrapModeRStr_) {
-    this->wrapModeRStr = std::move(wrapModeRStr_);
-    this->wrapModeR = getWrapModeFromString(this->wrapModeRStr);
 }

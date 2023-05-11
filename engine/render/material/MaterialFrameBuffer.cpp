@@ -2,8 +2,10 @@
 
 using namespace chira;
 
-void MaterialFrameBuffer::compile(const nlohmann::json& properties) {
-    Reflect::fromJSON(this, properties);
+void MaterialFrameBuffer::compile(const byte buffer[], std::size_t bufferLength) {
+    IMaterial::compile(buffer, bufferLength);
+
+    this->shader = Resource::getResource<Shader>(this->shaderPath);
     this->shader->use();
     this->shader->setUniform("texture0", 0);
 }

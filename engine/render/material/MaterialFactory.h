@@ -2,26 +2,31 @@
 
 #include <functional>
 #include <string>
-#include <resource/PropertiesResource.h>
 #include <render/shader/Shader.h>
+#include <resource/Resource.h>
 #include <utility/AbstractFactory.h>
+#include <utility/Serial.h>
 
 namespace chira {
 
-class IMaterial : public PropertiesResource {
+class IMaterial : public Resource {
 public:
     explicit IMaterial(std::string identifier_);
-    void compile(const nlohmann::json& properties) override;
+    void compile(const byte buffer[], std::size_t bufferLength) override;
     virtual void use() const;
     [[nodiscard]] SharedPointer<Shader> getShader() const;
-    void setShader(std::string path);
+
 protected:
     SharedPointer<Shader> shader;
     std::string shaderPath{"file://shaders/unlitTextured.json"};
+
 public:
-    CHIRA_PROPS(
-            CHIRA_PROP_NAMED_SET(IMaterial, shaderPath, shader, setShader)
-    );
+    template<typename Archive>
+    void serialize(Archive& ar) {
+        ar(
+                cereal::make_nvp("shader", this->shaderPath)
+        );
+    }
 };
 
 using MaterialFactory = AbstractFactory<SharedPointer<IMaterial>>;
@@ -34,7 +39,7 @@ using MaterialFactory = AbstractFactory<SharedPointer<IMaterial>>;
             #ResourceClassName,                                                              \
             [](const std::string& materialId) -> chira::SharedPointer<chira::IMaterial> {    \
                 return chira::Resource::getResource<ResourceClassName>(materialId)           \
-                       .castAssert<chira::IMaterial>();                                      \
+                       .cast<chira::IMaterial>();                                            \
             }                                                                                \
         )
 

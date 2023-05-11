@@ -1,6 +1,8 @@
 {
+  "materialSetInCode": false,
   "materialType": "MaterialTextured",
   "material": "file://materials/unlitTextured.json",
   "model": "file://meshes/missing.cmdl",
-  "loader": "cmdl"
+  "modelLoader": "cmdl",
+  "depthFunction": "LESS"
 }
