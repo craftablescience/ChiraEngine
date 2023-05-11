@@ -38,30 +38,32 @@ public:
         }
     }
     SharedPointer<T>& operator=(const SharedPointer<T>& other) noexcept {
-        if (this != &other) {
-            if ((this->data) && (this->data->refCount <= this->data->holderAmountForDelete)) {
-                delete this->ptr;
-                delete this->data;
-            }
-            this->ptr = other.ptr;
-            this->data = other.data;
-            if (this->data) {
-                this->data->refCount++;
-            }
+        if (this == &other)
+            return *this;
+
+        if ((this->data) && (this->data->refCount <= this->data->holderAmountForDelete)) {
+            delete this->ptr;
+            delete this->data;
+        }
+        this->ptr = other.ptr;
+        this->data = other.data;
+        if (this->data) {
+            this->data->refCount++;
         }
         return *this;
     }
     SharedPointer(const SharedPointer<T>& other) noexcept {
-        if (this != &other) {
-            if ((this->data) && (this->data->refCount <= this->data->holderAmountForDelete)) {
-                delete this->ptr;
-                delete this->data;
-            }
-            this->ptr = other.ptr;
-            this->data = other.data;
-            if (this->data) {
-                this->data->refCount++;
-            }
+        if (this == &other)
+            return;
+
+        if ((this->data) && (this->data->refCount <= this->data->holderAmountForDelete)) {
+            delete this->ptr;
+            delete this->data;
+        }
+        this->ptr = other.ptr;
+        this->data = other.data;
+        if (this->data) {
+            this->data->refCount++;
         }
     }
     SharedPointer<T>& operator=(SharedPointer<T>&& other) noexcept {
@@ -141,7 +143,7 @@ public:
         return SharedPointer<U>(reinterpret_cast<U*>(this->ptr), this->data);
     }
     template<typename U>
-    SharedPointer<U> cast(CastType type) const {
+    SharedPointer<U> cast(CastType type = CastType::ASSERT_CAST) const {
         switch (type) {
             using enum CastType;
             case STATIC_CAST:
@@ -154,6 +156,7 @@ public:
                 return this->castAssert<U>();
             case C_CAST:
                 return SharedPointer<U>((U*)(this->ptr), this->data);
+            CHIRA_NO_DEFAULT;
         }
     }
 protected:
