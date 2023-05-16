@@ -4,6 +4,14 @@
     #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #endif
 
+// Use the best available GPU on Windows
+#if defined(CHIRA_PLATFORM_WINDOWS)
+extern "C" {
+[[maybe_unused]] __declspec(dllexport) unsigned long NvOptimusEnablement = 0x01;
+[[maybe_unused]] __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 0x01;
+}
+#endif
+
 #include <config/ConEntry.h>
 #include <core/Engine.h>
 #include <i18n/TranslationManager.h>
