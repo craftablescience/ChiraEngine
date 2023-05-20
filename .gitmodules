@@ -43,3 +43,6 @@
 [submodule "engine/thirdparty/imguizmo"]
 	path = engine/thirdparty/imguizmo
 	url = https://github.com/CedricGuillemet/ImGuizmo
+[submodule "engine/thirdparty/DirectXTK"]
+	path = engine/thirdparty/DirectXTK
+	url = https://github.com/microsoft/DirectXTK
