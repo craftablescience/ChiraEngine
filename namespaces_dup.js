@@ -18,14 +18,31 @@ var namespaces_dup =
       [ "Device", null, [
         [ "WindowHandle", "d7/d15/structchira_1_1_device_1_1_window_handle.html", "d7/d15/structchira_1_1_device_1_1_window_handle" ],
         [ "PopupFlags", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1", [
-          [ "POPUP_ERROR", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a683a012a1910f8c59063596ceb557002", null ],
-          [ "POPUP_WARNING", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a5a945e463d4548aa0394a95767e084f0", null ],
-          [ "POPUP_INFO", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1aac0fa77b917d1ff284766ed6a82f4aa0", null ],
-          [ "POPUP_BUTTONS_LEFT_TO_RIGHT", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a2b2c6541dcd235ac723f78506aa1f04b", null ],
-          [ "POPUP_BUTTONS_RIGHT_TO_LEFT", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a740f54deb02ab227d13d0833211560a9", null ]
+          [ "POPUP_ERROR", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a8d90db2638b77a227ee8cd1f076198ca", null ],
+          [ "POPUP_WARNING", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a2bd21a5d4b580b9e9bf8b2141d54a1bc", null ],
+          [ "POPUP_INFO", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1ac73376ccf08e23b940ba19f56ecc4d0f", null ],
+          [ "POPUP_BUTTONS_LEFT_TO_RIGHT", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a2f22ffff644b6ae439ec0414376c48bd", null ],
+          [ "POPUP_BUTTONS_RIGHT_TO_LEFT", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a1bb7c3c5a2757554855fbeb2bb4129af", null ],
+          [ "POPUP_ERROR", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a8d90db2638b77a227ee8cd1f076198ca", null ],
+          [ "POPUP_WARNING", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a2bd21a5d4b580b9e9bf8b2141d54a1bc", null ],
+          [ "POPUP_INFO", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1ac73376ccf08e23b940ba19f56ecc4d0f", null ],
+          [ "POPUP_BUTTONS_LEFT_TO_RIGHT", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a2f22ffff644b6ae439ec0414376c48bd", null ],
+          [ "POPUP_BUTTONS_RIGHT_TO_LEFT", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a1bb7c3c5a2757554855fbeb2bb4129af", null ]
+        ] ],
+        [ "PopupFlags", "d1/d06/_device_s_d_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1", [
+          [ "POPUP_ERROR", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a8d90db2638b77a227ee8cd1f076198ca", null ],
+          [ "POPUP_WARNING", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a2bd21a5d4b580b9e9bf8b2141d54a1bc", null ],
+          [ "POPUP_INFO", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1ac73376ccf08e23b940ba19f56ecc4d0f", null ],
+          [ "POPUP_BUTTONS_LEFT_TO_RIGHT", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a2f22ffff644b6ae439ec0414376c48bd", null ],
+          [ "POPUP_BUTTONS_RIGHT_TO_LEFT", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a1bb7c3c5a2757554855fbeb2bb4129af", null ],
+          [ "POPUP_ERROR", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a8d90db2638b77a227ee8cd1f076198ca", null ],
+          [ "POPUP_WARNING", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a2bd21a5d4b580b9e9bf8b2141d54a1bc", null ],
+          [ "POPUP_INFO", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1ac73376ccf08e23b940ba19f56ecc4d0f", null ],
+          [ "POPUP_BUTTONS_LEFT_TO_RIGHT", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a2f22ffff644b6ae439ec0414376c48bd", null ],
+          [ "POPUP_BUTTONS_RIGHT_TO_LEFT", "d2/d6b/_device_g_l_8h.html#aefa099a21c9c546fd970a9ce53a569c1a1bb7c3c5a2757554855fbeb2bb4129af", null ]
         ] ],
         [ "addPanelToWindow", "d2/d6b/_device_g_l_8h.html#a69dfc4c250c05633de6ef8b16eda2885", null ],
-        [ "createWindow", "d2/d6b/_device_g_l_8h.html#aa220ad98d6014bcb52e7ca23a751f6b7", null ],
+        [ "createWindow", "d2/d6b/_device_g_l_8h.html#a83f2a7449ead46dc45c21315af17796e", null ],
         [ "destroyAllWindows", "d2/d6b/_device_g_l_8h.html#af240697142926c0606e8786ca51e5a8c", null ],
         [ "destroyBackend", "d2/d6b/_device_g_l_8h.html#a5f4e2f2e3fd80058784d1323b399f08c", null ],
         [ "destroySplashscreen", "d2/d6b/_device_g_l_8h.html#abf4fc86426a4a3201ec600f4f5aef364", null ],

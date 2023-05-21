@@ -202,7 +202,7 @@ $(document).ready(function(){initNavTree('db/d60/_backend_g_l_8cpp_source.html',
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keywordtype">bool</span> Renderer::setupForDebugging() {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#ifdef CHIRA_USE_GL_41</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#if defined(CHIRA_USE_RENDER_BACKEND_GL41) || defined(CHIRA_USE_RENDER_BACKEND_GL40)</span></div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">if</span> (!SDL_GL_ExtensionSupported(<span class="stringliteral">&quot;GL_KHR_debug&quot;</span>))</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#endif</span></div>
@@ -476,7 +476,7 @@ $(document).ready(function(){initNavTree('db/d60/_backend_g_l_8cpp_source.html',
 <div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    }</div>
 <div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;}</div>
 <div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160; </div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;<span class="keywordtype">void</span> Renderer::useFrameBufferTexture(<a class="code" href="../../dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html">Renderer::FrameBufferHandle</a> handle, TextureUnit activeTextureUnit) {</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;<span class="keywordtype">void</span> Renderer::useFrameBufferTexture(<span class="keyword">const</span> <a class="code" href="../../dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html">Renderer::FrameBufferHandle</a> handle, TextureUnit activeTextureUnit) {</div>
 <div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    <span class="keywordflow">if</span> (handle.colorHandle != 0) {</div>
 <div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;        glActiveTexture(GL_TEXTURE0 + <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(activeTextureUnit));</div>
 <div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;        glBindTexture(GL_TEXTURE_2D, handle.colorHandle);</div>
