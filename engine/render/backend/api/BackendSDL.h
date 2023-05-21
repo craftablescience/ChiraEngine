@@ -90,7 +90,7 @@ void destroyTexture(TextureHandle handle);
 void recreateFrameBuffer(Renderer::FrameBufferHandle* handle, int width, int height, WrapMode wrapS, WrapMode wrapT, FilterMode filter, bool hasDepth);
 void pushFrameBuffer(FrameBufferHandle handle);
 void popFrameBuffer();
-void useFrameBufferTexture(FrameBufferHandle handle, TextureUnit activeTextureUnit);
+void useFrameBufferTexture(const FrameBufferHandle handle, TextureUnit activeTextureUnit);
 [[nodiscard]] void* getImGuiFrameBufferHandle(FrameBufferHandle handle);
 void destroyFrameBuffer(FrameBufferHandle handle);
 [[nodiscard]] int getFrameBufferWidth(FrameBufferHandle handle);
