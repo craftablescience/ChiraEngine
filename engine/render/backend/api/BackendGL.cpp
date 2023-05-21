@@ -96,7 +96,7 @@ std::string_view Renderer::getHumanName() {
 }
 
 bool Renderer::setupForDebugging() {
-#ifdef CHIRA_USE_GL_41
+#ifdef CHIRA_USE_RENDER_BACKEND_GL41 || CHIRA_USE_RENDER_BACKEND_GL40
     if (!SDL_GL_ExtensionSupported("GL_KHR_debug"))
         return false;
 #endif

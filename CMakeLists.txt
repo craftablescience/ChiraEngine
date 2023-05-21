@@ -57,8 +57,10 @@ option(CHIRA_TREAT_WARNINGS_AS_ERRORS "Build Chira Engine with warnings treated 
 
 # Options:
 # - AUTO
+# - GL40
 # - GL41
 # - GL43
+# - SDLRENDERER
 set(CHIRA_RENDER_BACKEND "AUTO" CACHE STRING "Override the render backend. If not specified, will choose the best backend for the current platform.")
 
 # todo(render): get rid of this variable, compile all backend types and run headless wth command line arg
