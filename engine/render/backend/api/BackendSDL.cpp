@@ -249,7 +249,7 @@ void Renderer::popFrameBuffer() {
     }
 }
 
-void Renderer::useFrameBufferTexture(Renderer::FrameBufferHandle handle, TextureUnit activeTextureUnit) {
+void Renderer::useFrameBufferTexture(const Renderer::FrameBufferHandle handle, TextureUnit activeTextureUnit) {
     STUBFUNC(useFrameBufferTexture);
 }
 

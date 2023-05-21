@@ -96,7 +96,7 @@ std::string_view Renderer::getHumanName() {
 }
 
 bool Renderer::setupForDebugging() {
-#ifdef CHIRA_USE_RENDER_BACKEND_GL41 || CHIRA_USE_RENDER_BACKEND_GL40
+#if defined(CHIRA_USE_RENDER_BACKEND_GL41) || defined(CHIRA_USE_RENDER_BACKEND_GL40)
     if (!SDL_GL_ExtensionSupported("GL_KHR_debug"))
         return false;
 #endif
@@ -370,7 +370,7 @@ void Renderer::popFrameBuffer() {
     }
 }
 
-void Renderer::useFrameBufferTexture(Renderer::FrameBufferHandle handle, TextureUnit activeTextureUnit) {
+void Renderer::useFrameBufferTexture(const Renderer::FrameBufferHandle handle, TextureUnit activeTextureUnit) {
     if (handle.colorHandle != 0) {
         glActiveTexture(GL_TEXTURE0 + static_cast<int>(activeTextureUnit));
         glBindTexture(GL_TEXTURE_2D, handle.colorHandle);
