@@ -15,7 +15,7 @@ class IPanel;
 
 } // namespace chira
 
-// OpenGL 4.1 (or 4.3) SDL backend
+// OpenGL SDL backend
 namespace chira::Device {
 
 // Copied from SDL
