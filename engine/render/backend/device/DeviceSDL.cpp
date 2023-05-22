@@ -9,7 +9,6 @@
 
 #include <config/Config.h>
 #include <config/ConEntry.h>
-#include <event/Events.h>
 #include <i18n/TranslationManager.h>
 #include <input/InputManager.h>
 #include <loader/image/Image.h>
