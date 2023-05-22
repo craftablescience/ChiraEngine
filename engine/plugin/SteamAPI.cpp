@@ -4,7 +4,6 @@
 #include <libloader.hpp>
 #include <config/ConEntry.h>
 #include <core/Logger.h>
-#include <event/Events.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <utility/String.h>
 #include "Plugin.h"
@@ -104,10 +103,11 @@ void SteamAPI::Client::runCallbacks() {
         switch (static_cast<CallbackMessageType>(callback.callbackType)) {
             using enum CallbackMessageType;
             case GAME_OVERLAY_ACTIVATED:
-                Events::createEvent("chira::steam::game_overlay_activated", static_cast<bool>(reinterpret_cast<Callbacks::GameOverlayActivated*>(callback.callback)->active));
+                // todo(events): add game overlay enable/disable event
+                //Events::createEvent("chira::steam::game_overlay_activated", static_cast<bool>(reinterpret_cast<Callbacks::GameOverlayActivated*>(callback.callback)->active));
                 break;
             case COMPLETED: {
-                void* callbackResult = malloc(callback.callbackSize);
+                void* callbackResult = std::malloc(callback.callbackSize);
                 if (bool failed = false; steamFunctionWrapper<bool>(
                         "SteamAPI_ManualDispatch_GetAPICallResult",
                         false,
@@ -122,14 +122,16 @@ void SteamAPI::Client::runCallbacks() {
                     // Dispatch the call result to the registered handler(s) for the
                     // call identified by pCallCompleted->m_hAsyncCall
                 }
-                free(callbackResult);
+                std::free(callbackResult);
                 break;
             }
             case DLC_INSTALLED:
-                Events::createEvent("chira::steam::dlc_installed", static_cast<std::uint32_t>(reinterpret_cast<Callbacks::DLCInstalled*>(callback.callback)->appID));
+                // todo(events): add dlc installed event
+                //Events::createEvent("chira::steam::dlc_installed", static_cast<std::uint32_t>(reinterpret_cast<Callbacks::DLCInstalled*>(callback.callback)->appID));
                 break;
             case FILE_DETAILS_RESULT:
-                Events::createEvent("chira::steam::file_details_result", *reinterpret_cast<Callbacks::FileDetailsResult*>(callback.callback));
+                // todo(events): add file details callback event
+                //Events::createEvent("chira::steam::file_details_result", *reinterpret_cast<Callbacks::FileDetailsResult*>(callback.callback));
                 break;
         }
         SteamAPI::get().call<void>("SteamAPI_ManualDispatch_FreeLastCallback", steamPipe);

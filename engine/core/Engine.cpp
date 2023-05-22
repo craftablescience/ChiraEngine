@@ -1,7 +1,6 @@
 #include "Engine.h"
 
 #include <config/ConEntry.h>
-#include <event/Events.h>
 #include <i18n/TranslationManager.h>
 #include <input/InputManager.h>
 #include <loader/mesh/OBJMeshLoader.h>
@@ -82,9 +81,6 @@ void Engine::init(bool visibleSplashScreen /*= true*/) {
     // Create default resources
     Resource::createDefaultResources();
 
-    // Any events fired?
-    Events::update();
-
     Device::destroySplashscreen();
 
     Engine::mainWindow = Device::createWindow(win_width.getValue<int>(), win_height.getValue<int>(), TR("ui.window.title"), nullptr);
@@ -117,7 +113,6 @@ void Engine::run() {
 
         PluginRegistry::updateAll();
 
-        Events::update();
     } while (!Device::isWindowAboutToBeDestroyed(Engine::mainWindow));
 
     LOG_ENGINE.info("Exiting...");
