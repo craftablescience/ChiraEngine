@@ -74,9 +74,9 @@ endif()
 message(STATUS "Setting render backend to ${CHIRA_RENDER_BACKEND}.")
 
 # Set up that backend
-if((CHIRA_RENDER_BACKEND STREQUAL "GL41") OR (CHIRA_RENDER_BACKEND STREQUAL "GL43") OR (CHIRA_RENDER_BACKEND STREQUAL "GL40"))
-    # macOS: OpenGL 4.1 or OpenGL 4.0
-    # Windows and Linux: OpenGL 4.0-4.3
+if((CHIRA_RENDER_BACKEND STREQUAL "GL40") OR (CHIRA_RENDER_BACKEND STREQUAL "GL41") OR (CHIRA_RENDER_BACKEND STREQUAL "GL43"))
+    # macOS: OpenGL 4.0, 4.1
+    # Windows and Linux: OpenGL 4.0, 4.1, 4.3
     list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_RENDER_BACKEND_GL)
     if(APPLE AND CHIRA_RENDER_BACKEND STREQUAL "GL43")
         message(WARNING "GL43 is not supported on Apple! Falling back to GL41...")
@@ -94,9 +94,6 @@ if((CHIRA_RENDER_BACKEND STREQUAL "GL41") OR (CHIRA_RENDER_BACKEND STREQUAL "GL4
         list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_RENDER_BACKEND_GL40)
     endif()
 
-    # OPENGL
-    find_package(OpenGL REQUIRED)
-
     # GLAD
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/glad)
     list(APPEND CHIRA_ENGINE_DEFINITIONS IMGUI_IMPL_OPENGL_LOADER_GLAD2)
@@ -109,9 +106,9 @@ if((CHIRA_RENDER_BACKEND STREQUAL "GL41") OR (CHIRA_RENDER_BACKEND STREQUAL "GL4
     list(APPEND IMGUI_SOURCES
             ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_opengl3.cpp)
 elseif(CHIRA_RENDER_BACKEND STREQUAL "SDLRENDERER")
-    message(WARNING "Render backend set to SDLRENDERER. Many rendering features will be unavailable! Only use this if neccessary!")
+    message(WARNING "Render backend set to SDLRENDERER. Many rendering features will be unavailable! Only use this if necessary!")
     list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_USE_RENDER_BACKEND_SDLRENDERER)
-    
+
     # Add ImGui platform
     list(APPEND IMGUI_HEADERS
             ${CMAKE_CURRENT_SOURCE_DIR}/engine/thirdparty/imgui/backends/imgui_impl_sdlrenderer.h)
