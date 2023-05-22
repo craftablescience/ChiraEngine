@@ -109,19 +109,19 @@ $(document).ready(function(){initNavTree('d5/d16/_shader_8cpp_source.html','../.
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;regex&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;core/Logger.h&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;i18n/TranslationManager.h&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;resource/StringResource.h&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;utility/String.h&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;UBO.h&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">using namespace </span>chira;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;CHIRA_CREATE_LOG(SHADER);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;Shader::Shader(std::string identifier_) : <a class="code" href="../../d4/d5a/classchira_1_1_properties_resource.html">PropertiesResource</a>(std::move(identifier_)) {}</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;resource/StringResource.h&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;utility/String.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;UBO.h&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">using namespace </span>chira;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;CHIRA_CREATE_LOG(SHADER);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;Shader::Shader(std::string identifier_)</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        : <a class="code" href="../../d8/d5c/classchira_1_1_resource.html">Resource</a>(std::move(identifier_)) {}</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keywordtype">void</span> Shader::compile(<span class="keyword">const</span> nlohmann::json&amp; properties) {</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    Reflect::fromJSON(<span class="keyword">this</span>, properties);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keywordtype">void</span> Shader::compile(<span class="keyword">const</span> <span class="keywordtype">byte</span> buffer[], std::size_t bufferLength) {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    Serial::loadFromBuffer(<span class="keyword">this</span>, buffer, bufferLength);</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> shaderModuleVertString = Resource::getUniqueUncachedResource&lt;StringResource&gt;(this-&gt;vertexPath);</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> shaderModuleVertData = replaceMacros(shaderModuleVertString-&gt;getIdentifier().data(), shaderModuleVertString-&gt;getString());</div>
@@ -167,7 +167,7 @@ $(document).ready(function(){initNavTree('d5/d16/_shader_8cpp_source.html','../.
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;                                     std::regex_constants::icase | std::regex_constants::optimize};</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="comment">// Add the include as a macro to be expanded</span></div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="comment">// This has the positive side effect of caching previously used includes</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">for</span> (std::sregex_iterator it{data.begin(), data.end(), includes}; it != std::sregex_iterator{}; it++) {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">for</span> (std::sregex_iterator it{data.begin(), data.end(), includes}; it != std::sregex_iterator{}; ++it) {</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordflow">if</span> (it-&gt;str(2) != ignoredInclude &amp;&amp; !Shader::preprocessorSymbols.count(it-&gt;str(2))) {</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            <span class="keyword">auto</span> contents = Resource::getUniqueUncachedResource&lt;StringResource&gt;(it-&gt;str(2));</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            Shader::addPreprocessorSymbol(it-&gt;str(1), replaceMacros(it-&gt;str(2), contents-&gt;getString()));</div>
@@ -184,7 +184,7 @@ $(document).ready(function(){initNavTree('d5/d16/_shader_8cpp_source.html','../.
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordflow">return</span> out;</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;}</div>
-<div class="ttc" id="aclasschira_1_1_properties_resource_html"><div class="ttname"><a href="../../d4/d5a/classchira_1_1_properties_resource.html">chira::PropertiesResource</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d18/_properties_resource_8h_source.html#l00008">PropertiesResource.h:8</a></div></div>
+<div class="ttc" id="aclasschira_1_1_resource_html"><div class="ttname"><a href="../../d8/d5c/classchira_1_1_resource.html">chira::Resource</a></div><div class="ttdoc">A chunk of data, usually a file. Is typically cached and shared.</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/db4/_resource_8h_source.html#l00019">Resource.h:19</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

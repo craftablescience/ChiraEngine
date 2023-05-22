@@ -114,15 +114,22 @@ $(document).ready(function(){initNavTree('d1/dcd/_material_untextured_8h_source.
 <div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="../../d9/d2f/classchira_1_1_material_untextured.html">    7</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d9/d2f/classchira_1_1_material_untextured.html">MaterialUntextured</a> final : <span class="keyword">public</span> <a class="code" href="../../df/d5f/classchira_1_1_i_material.html">IMaterial</a> {</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../d9/d2f/classchira_1_1_material_untextured.html">MaterialUntextured</a>(std::string identifier_) : <a class="code" href="../../df/d5f/classchira_1_1_i_material.html">IMaterial</a>(std::move(identifier_)) {}</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keywordtype">void</span> compile(<span class="keyword">const</span> nlohmann::json&amp; properties) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    CHIRA_PROPS_INHERITED(<a class="code" href="../../df/d5f/classchira_1_1_i_material.html">IMaterial</a>) ();</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    CHIRA_REGISTER_MATERIAL_TYPE(<a class="code" href="../../d9/d2f/classchira_1_1_material_untextured.html">MaterialUntextured</a>);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;};</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;} <span class="comment">// namespace chira</span></div>
-<div class="ttc" id="aclasschira_1_1_i_material_html"><div class="ttname"><a href="../../df/d5f/classchira_1_1_i_material.html">chira::IMaterial</a></div><div class="ttdef"><b>Definition:</b> <a href="../../db/de2/_material_factory_8h_source.html#l00011">MaterialFactory.h:11</a></div></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keywordtype">void</span> compile(<span class="keyword">const</span> <span class="keywordtype">byte</span> buffer[], std::size_t bufferLength) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Archive&gt;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">void</span> serialize(Archive&amp; ar) {</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        ar(</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                cereal::make_nvp(<span class="stringliteral">&quot;shader&quot;</span>, this-&gt;shaderPath)</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        );</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    }</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    CHIRA_REGISTER_MATERIAL_TYPE(<a class="code" href="../../d9/d2f/classchira_1_1_material_untextured.html">MaterialUntextured</a>);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;};</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;} <span class="comment">// namespace chira</span></div>
+<div class="ttc" id="aclasschira_1_1_i_material_html"><div class="ttname"><a href="../../df/d5f/classchira_1_1_i_material.html">chira::IMaterial</a></div><div class="ttdef"><b>Definition:</b> <a href="../../db/de2/_material_factory_8h_source.html#l00012">MaterialFactory.h:12</a></div></div>
 <div class="ttc" id="aclasschira_1_1_material_untextured_html"><div class="ttname"><a href="../../d9/d2f/classchira_1_1_material_untextured.html">chira::MaterialUntextured</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d1/dcd/_material_untextured_8h_source.html#l00007">MaterialUntextured.h:7</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

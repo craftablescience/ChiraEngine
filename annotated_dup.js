@@ -7,9 +7,6 @@ var annotated_dup =
       [ "Input", null, [
         [ "Event", "d9/df5/classchira_1_1_input_1_1_event.html", "d9/df5/classchira_1_1_input_1_1_event" ]
       ] ],
-      [ "Reflect", null, [
-        [ "Property", "d6/d39/structchira_1_1_reflect_1_1_property.html", "d6/d39/structchira_1_1_reflect_1_1_property" ]
-      ] ],
       [ "Renderer", "d5/d36/namespacechira_1_1_renderer.html", [
         [ "TextureHandle", "dd/d4f/structchira_1_1_renderer_1_1_texture_handle.html", "dd/d4f/structchira_1_1_renderer_1_1_texture_handle" ],
         [ "FrameBufferHandle", "dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html", "dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle" ],
@@ -50,7 +47,6 @@ var annotated_dup =
       [ "Entity", "de/dca/classchira_1_1_entity.html", "de/dca/classchira_1_1_entity" ],
       [ "Layer", "d6/d7f/classchira_1_1_layer.html", "d6/d7f/classchira_1_1_layer" ],
       [ "Scene", "d5/db7/classchira_1_1_scene.html", "d5/db7/classchira_1_1_scene" ],
-      [ "Events", "dd/d3e/classchira_1_1_events.html", null ],
       [ "TranslationFileResource", "d7/d6b/classchira_1_1_translation_file_resource.html", "d7/d6b/classchira_1_1_translation_file_resource" ],
       [ "TranslationManager", "dc/d59/classchira_1_1_translation_manager.html", null ],
       [ "Image", "dd/d6f/classchira_1_1_image.html", "dd/d6f/classchira_1_1_image" ],
@@ -85,7 +81,7 @@ var annotated_dup =
       [ "Texture", "d4/d36/classchira_1_1_texture.html", "d4/d36/classchira_1_1_texture" ],
       [ "TextureCubemap", "d6/d75/classchira_1_1_texture_cubemap.html", "d6/d75/classchira_1_1_texture_cubemap" ],
       [ "BinaryResource", "dd/dba/classchira_1_1_binary_resource.html", "dd/dba/classchira_1_1_binary_resource" ],
-      [ "PropertiesResource", "d4/d5a/classchira_1_1_properties_resource.html", "d4/d5a/classchira_1_1_properties_resource" ],
+      [ "JSONResource", "d4/daa/classchira_1_1_j_s_o_n_resource.html", "d4/daa/classchira_1_1_j_s_o_n_resource" ],
       [ "FilesystemResourceProvider", "de/de0/classchira_1_1_filesystem_resource_provider.html", "de/de0/classchira_1_1_filesystem_resource_provider" ],
       [ "IResourceProvider", "dc/da5/classchira_1_1_i_resource_provider.html", "dc/da5/classchira_1_1_i_resource_provider" ],
       [ "Resource", "d8/d5c/classchira_1_1_resource.html", "d8/d5c/classchira_1_1_resource" ],
@@ -112,7 +108,8 @@ var annotated_dup =
       [ "UUIDGenerator", "db/d04/classchira_1_1_u_u_i_d_generator.html", null ],
       [ "ControlsPanel", "d8/d79/classchira_1_1_controls_panel.html", "d8/d79/classchira_1_1_controls_panel" ],
       [ "EntitySelectPanel", "d3/da2/classchira_1_1_entity_select_panel.html", "d3/da2/classchira_1_1_entity_select_panel" ],
-      [ "InspectorPanel", "d6/df2/classchira_1_1_inspector_panel.html", "d6/df2/classchira_1_1_inspector_panel" ]
+      [ "InspectorPanel", "d6/df2/classchira_1_1_inspector_panel.html", "d6/df2/classchira_1_1_inspector_panel" ],
+      [ "ScriptEditorPanel", "dd/d1d/classchira_1_1_script_editor_panel.html", "dd/d1d/classchira_1_1_script_editor_panel" ]
     ] ],
     [ "steam", null, [
       [ "CallbackMessage", "d0/d89/structsteam_1_1_callback_message.html", "d0/d89/structsteam_1_1_callback_message" ],

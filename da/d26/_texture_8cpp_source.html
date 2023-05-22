@@ -123,8 +123,8 @@ $(document).ready(function(){initNavTree('da/d26/_texture_8cpp_source.html','../
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        Renderer::destroyTexture(this-&gt;handle);</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keywordtype">void</span> Texture::compile(<span class="keyword">const</span> nlohmann::json&amp; properties) {</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    Reflect::fromJSON(<span class="keyword">this</span>, properties);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keywordtype">void</span> Texture::compile(<span class="keyword">const</span> <span class="keywordtype">byte</span> buffer[], std::size_t bufferLength) {</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    Serial::loadFromBuffer(<span class="keyword">this</span>, buffer, bufferLength);</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">auto</span> imageFile = Resource::getResource&lt;Image&gt;(this-&gt;filePath, this-&gt;verticalFlip);</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
@@ -142,21 +142,6 @@ $(document).ready(function(){initNavTree('da/d26/_texture_8cpp_source.html','../
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">void</span> Texture::use(TextureUnit activeTextureUnit)<span class="keyword"> const </span>{</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    Renderer::useTexture(this-&gt;handle, activeTextureUnit);</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keywordtype">void</span> Texture::setFilterMode(std::string filterModeStr_) {</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    this-&gt;filterModeStr = std::move(filterModeStr_);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    this-&gt;filterMode = getFilterModeFromString(this-&gt;filterModeStr);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keywordtype">void</span> Texture::setWrapModeS(std::string wrapModeSStr_) {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    this-&gt;wrapModeSStr = std::move(wrapModeSStr_);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    this-&gt;wrapModeS = getWrapModeFromString(this-&gt;wrapModeSStr);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keywordtype">void</span> Texture::setWrapModeT(std::string wrapModeTStr_) {</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    this-&gt;wrapModeTStr = std::move(wrapModeTStr_);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    this-&gt;wrapModeT = getWrapModeFromString(this-&gt;wrapModeTStr);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
 <div class="ttc" id="aclasschira_1_1_i_texture_html"><div class="ttname"><a href="../../da/dcb/classchira_1_1_i_texture.html">chira::ITexture</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d3/db6/_i_texture_8h_source.html#l00011">ITexture.h:11</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

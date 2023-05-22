@@ -109,25 +109,27 @@ $(document).ready(function(){initNavTree('d3/db6/_i_texture_8h_source.html','../
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;resource/PropertiesResource.h&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;resource/Resource.h&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;render/backend/RenderBackend.h&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;render/backend/RenderTypes.h&gt;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">namespace </span>chira {</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="../../da/dcb/classchira_1_1_i_texture.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../da/dcb/classchira_1_1_i_texture.html">ITexture</a> : <span class="keyword">public</span> <a class="code" href="../../d4/d5a/classchira_1_1_properties_resource.html">PropertiesResource</a> {</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="../../da/dcb/classchira_1_1_i_texture.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../da/dcb/classchira_1_1_i_texture.html">ITexture</a> : <span class="keyword">public</span> <a class="code" href="../../d8/d5c/classchira_1_1_resource.html">Resource</a> {</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../da/dcb/classchira_1_1_i_texture.html">ITexture</a>(std::string identifier_) : <a class="code" href="../../d4/d5a/classchira_1_1_properties_resource.html">PropertiesResource</a>(std::move(identifier_)) {}</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> use() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> use(TextureUnit activeTextureUnit) <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="../../dd/d4f/structchira_1_1_renderer_1_1_texture_handle.html">Renderer::TextureHandle</a> handle{};</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;};</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;} <span class="comment">// namespace chira</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../da/dcb/classchira_1_1_i_texture.html">ITexture</a>(std::string identifier_)</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;            : <a class="code" href="../../d8/d5c/classchira_1_1_resource.html">Resource</a>(std::move(identifier_)) {}</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> use() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> use(TextureUnit activeTextureUnit) <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="../../dd/d4f/structchira_1_1_renderer_1_1_texture_handle.html">Renderer::TextureHandle</a> handle{};</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;};</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;} <span class="comment">// namespace chira</span></div>
 <div class="ttc" id="aclasschira_1_1_i_texture_html"><div class="ttname"><a href="../../da/dcb/classchira_1_1_i_texture.html">chira::ITexture</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d3/db6/_i_texture_8h_source.html#l00011">ITexture.h:11</a></div></div>
-<div class="ttc" id="aclasschira_1_1_properties_resource_html"><div class="ttname"><a href="../../d4/d5a/classchira_1_1_properties_resource.html">chira::PropertiesResource</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d18/_properties_resource_8h_source.html#l00008">PropertiesResource.h:8</a></div></div>
+<div class="ttc" id="aclasschira_1_1_resource_html"><div class="ttname"><a href="../../d8/d5c/classchira_1_1_resource.html">chira::Resource</a></div><div class="ttdoc">A chunk of data, usually a file. Is typically cached and shared.</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/db4/_resource_8h_source.html#l00019">Resource.h:19</a></div></div>
 <div class="ttc" id="astructchira_1_1_renderer_1_1_texture_handle_html"><div class="ttname"><a href="../../dd/d4f/structchira_1_1_renderer_1_1_texture_handle.html">chira::Renderer::TextureHandle</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d26/_backend_g_l_8h_source.html#l00016">BackendGL.h:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

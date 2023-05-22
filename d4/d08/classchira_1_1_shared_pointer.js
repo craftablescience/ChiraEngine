@@ -6,7 +6,7 @@ var classchira_1_1_shared_pointer =
     [ "SharedPointer", "d4/d08/classchira_1_1_shared_pointer.html#ae7442c7f3a82b6a55a29cd8c22b24d2b", null ],
     [ "SharedPointer", "d4/d08/classchira_1_1_shared_pointer.html#aa63cc3f9bcc62b1d404cf6fd6e75f596", null ],
     [ "~SharedPointer", "d4/d08/classchira_1_1_shared_pointer.html#a7701249baa64b33f98210630c0825510", null ],
-    [ "cast", "d4/d08/classchira_1_1_shared_pointer.html#a042c23228d4c5c9ed7df53a33b7fe8d8", null ],
+    [ "cast", "d4/d08/classchira_1_1_shared_pointer.html#a2893970bb75fbcecd227f860b673cc4c", null ],
     [ "castAssert", "d4/d08/classchira_1_1_shared_pointer.html#a5b3aa6168a7d3a88a7825517fd1fd07e", null ],
     [ "castDynamic", "d4/d08/classchira_1_1_shared_pointer.html#a4ffb881cac8cb72557373c3ebb64a27e", null ],
     [ "castReinterpret", "d4/d08/classchira_1_1_shared_pointer.html#a131dbdf0642f68ba0032464289852507", null ],

@@ -42,7 +42,6 @@ var hierarchy =
     [ "chira::DiscordRPC", "d7/dc6/classchira_1_1_discord_r_p_c.html", null ],
     [ "chira::Engine", "d6/d8e/classchira_1_1_engine.html", null ],
     [ "chira::Entity", "de/dca/classchira_1_1_entity.html", null ],
-    [ "chira::Events", "dd/d3e/classchira_1_1_events.html", null ],
     [ "chira::IMeshLoader", "dd/dec/classchira_1_1_i_mesh_loader.html", [
       [ "chira::ChiraMeshLoader", "d7/d5f/classchira_1_1_chira_mesh_loader.html", null ],
       [ "chira::OBJMeshLoader", "dd/d84/classchira_1_1_o_b_j_mesh_loader.html", null ]
@@ -54,7 +53,8 @@ var hierarchy =
       [ "chira::EntitySelectPanel", "d3/da2/classchira_1_1_entity_select_panel.html", null ],
       [ "chira::ILayerPanel", "dc/de3/classchira_1_1_i_layer_panel.html", null ],
       [ "chira::InspectorPanel", "d6/df2/classchira_1_1_inspector_panel.html", null ],
-      [ "chira::ResourceUsageTrackerPanel", "d5/dc8/classchira_1_1_resource_usage_tracker_panel.html", null ]
+      [ "chira::ResourceUsageTrackerPanel", "d5/dc8/classchira_1_1_resource_usage_tracker_panel.html", null ],
+      [ "chira::ScriptEditorPanel", "dd/d1d/classchira_1_1_script_editor_panel.html", null ]
     ] ],
     [ "chira::IResourceProvider", "dc/da5/classchira_1_1_i_resource_provider.html", [
       [ "chira::FilesystemResourceProvider", "de/de0/classchira_1_1_filesystem_resource_provider.html", null ]
@@ -75,7 +75,6 @@ var hierarchy =
     [ "chira::NameComponent", "d9/d38/structchira_1_1_name_component.html", null ],
     [ "chira::NoRenderTagComponent", "d5/d45/structchira_1_1_no_render_tag_component.html", null ],
     [ "chira::PointLightComponent", "df/d2a/structchira_1_1_point_light_component.html", null ],
-    [ "chira::Reflect::Property< C, T >", "d6/d39/structchira_1_1_reflect_1_1_property.html", null ],
     [ "chira::Renderer::FrameBufferHandle", "dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html", null ],
     [ "chira::Renderer::MeshHandle", "d4/d52/structchira_1_1_renderer_1_1_mesh_handle.html", null ],
     [ "chira::Renderer::ShaderHandle", "d8/db3/structchira_1_1_renderer_1_1_shader_handle.html", null ],
@@ -84,24 +83,24 @@ var hierarchy =
     [ "chira::Renderer::UniformBufferHandle", "df/d5c/structchira_1_1_renderer_1_1_uniform_buffer_handle.html", null ],
     [ "chira::Resource", "d8/d5c/classchira_1_1_resource.html", [
       [ "chira::BinaryResource", "dd/dba/classchira_1_1_binary_resource.html", null ],
+      [ "chira::Font", "db/d45/classchira_1_1_font.html", null ],
+      [ "chira::IMaterial", "df/d5f/classchira_1_1_i_material.html", [
+        [ "chira::MaterialCubemap", "dc/d74/classchira_1_1_material_cubemap.html", null ],
+        [ "chira::MaterialFrameBuffer", "d3/d3c/classchira_1_1_material_frame_buffer.html", null ],
+        [ "chira::MaterialPhong", "d8/da4/classchira_1_1_material_phong.html", null ],
+        [ "chira::MaterialTextured", "d6/d69/classchira_1_1_material_textured.html", null ],
+        [ "chira::MaterialUntextured", "d9/d2f/classchira_1_1_material_untextured.html", null ]
+      ] ],
+      [ "chira::ITexture", "da/dcb/classchira_1_1_i_texture.html", [
+        [ "chira::Texture", "d4/d36/classchira_1_1_texture.html", null ],
+        [ "chira::TextureCubemap", "d6/d75/classchira_1_1_texture_cubemap.html", null ]
+      ] ],
       [ "chira::Image", "dd/d6f/classchira_1_1_image.html", null ],
-      [ "chira::PropertiesResource", "d4/d5a/classchira_1_1_properties_resource.html", [
-        [ "chira::Font", "db/d45/classchira_1_1_font.html", null ],
-        [ "chira::IMaterial", "df/d5f/classchira_1_1_i_material.html", [
-          [ "chira::MaterialCubemap", "dc/d74/classchira_1_1_material_cubemap.html", null ],
-          [ "chira::MaterialFrameBuffer", "d3/d3c/classchira_1_1_material_frame_buffer.html", null ],
-          [ "chira::MaterialPhong", "d8/da4/classchira_1_1_material_phong.html", null ],
-          [ "chira::MaterialTextured", "d6/d69/classchira_1_1_material_textured.html", null ],
-          [ "chira::MaterialUntextured", "d9/d2f/classchira_1_1_material_untextured.html", null ]
-        ] ],
-        [ "chira::ITexture", "da/dcb/classchira_1_1_i_texture.html", [
-          [ "chira::Texture", "d4/d36/classchira_1_1_texture.html", null ],
-          [ "chira::TextureCubemap", "d6/d75/classchira_1_1_texture_cubemap.html", null ]
-        ] ],
-        [ "chira::MeshDataResource", "de/de7/classchira_1_1_mesh_data_resource.html", null ],
-        [ "chira::Shader", "d2/d71/classchira_1_1_shader.html", null ],
+      [ "chira::JSONResource", "d4/daa/classchira_1_1_j_s_o_n_resource.html", [
         [ "chira::TranslationFileResource", "d7/d6b/classchira_1_1_translation_file_resource.html", null ]
       ] ],
+      [ "chira::MeshDataResource", "de/de7/classchira_1_1_mesh_data_resource.html", null ],
+      [ "chira::Shader", "d2/d71/classchira_1_1_shader.html", null ],
       [ "chira::StringResource", "d3/d87/classchira_1_1_string_resource.html", null ]
     ] ],
     [ "chira::Scene", "d5/db7/classchira_1_1_scene.html", null ],

@@ -108,48 +108,47 @@ $(document).ready(function(){initNavTree('de/dbf/_texture_8h_source.html','../..
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;loader/image/Image.h&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;ITexture.h&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span>chira {</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="../../d4/d36/classchira_1_1_texture.html">    8</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d4/d36/classchira_1_1_texture.html">Texture</a> final : <span class="keyword">public</span> <a class="code" href="../../da/dcb/classchira_1_1_i_texture.html">ITexture</a> {</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../d4/d36/classchira_1_1_texture.html">Texture</a>(std::string identifier_, <span class="keywordtype">bool</span> cacheTexture = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    ~<a class="code" href="../../d4/d36/classchira_1_1_texture.html">Texture</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keywordtype">void</span> compile(<span class="keyword">const</span> nlohmann::json&amp; properties) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keywordtype">void</span> use() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">void</span> use(TextureUnit activeTextureUnit) <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="code" href="../../d4/d08/classchira_1_1_shared_pointer.html">SharedPointer&lt;Image&gt;</a> file;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    std::string filePath{<span class="stringliteral">&quot;file://textures/missing.png&quot;</span>};</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    WrapMode wrapModeS = WrapMode::REPEAT;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    std::string wrapModeSStr{<span class="stringliteral">&quot;REPEAT&quot;</span>};</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    WrapMode wrapModeT = WrapMode::REPEAT;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    std::string wrapModeTStr{<span class="stringliteral">&quot;REPEAT&quot;</span>};</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;utility/Serial.h&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;ITexture.h&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>chira {</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="../../d4/d36/classchira_1_1_texture.html">    9</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d4/d36/classchira_1_1_texture.html">Texture</a> final : <span class="keyword">public</span> <a class="code" href="../../da/dcb/classchira_1_1_i_texture.html">ITexture</a> {</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../d4/d36/classchira_1_1_texture.html">Texture</a>(std::string identifier_, <span class="keywordtype">bool</span> cacheTexture = <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    ~<a class="code" href="../../d4/d36/classchira_1_1_texture.html">Texture</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keywordtype">void</span> compile(<span class="keyword">const</span> <span class="keywordtype">byte</span> buffer[], std::size_t bufferLength) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">void</span> use() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordtype">void</span> use(TextureUnit activeTextureUnit) <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="../../d4/d08/classchira_1_1_shared_pointer.html">SharedPointer&lt;Image&gt;</a> file;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    std::string filePath{<span class="stringliteral">&quot;file://textures/missing.png&quot;</span>};</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    WrapMode wrapModeS = WrapMode::REPEAT;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    WrapMode wrapModeT = WrapMode::REPEAT;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    FilterMode filterMode = FilterMode::LINEAR;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    std::string filterModeStr{<span class="stringliteral">&quot;LINEAR&quot;</span>};</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">bool</span> mipmaps = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">bool</span> verticalFlip = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">bool</span> cache;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">void</span> setFilterMode(std::string filterModeStr_);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">void</span> setWrapModeS(std::string wrapModeSStr_);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> setWrapModeT(std::string wrapModeTStr_);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    CHIRA_PROPS(</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            CHIRA_PROP(<a class="code" href="../../d4/d36/classchira_1_1_texture.html">Texture</a>, verticalFlip),</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;            CHIRA_PROP(<a class="code" href="../../d4/d36/classchira_1_1_texture.html">Texture</a>, mipmaps),</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            CHIRA_PROP_NAMED(<a class="code" href="../../d4/d36/classchira_1_1_texture.html">Texture</a>, filePath, image),</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            CHIRA_PROP_NAMED_SET(<a class="code" href="../../d4/d36/classchira_1_1_texture.html">Texture</a>, wrapModeSStr, wrapModeS, setWrapModeS),</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            CHIRA_PROP_NAMED_SET(<a class="code" href="../../d4/d36/classchira_1_1_texture.html">Texture</a>, wrapModeTStr, wrapModeT, setWrapModeT),</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            CHIRA_PROP_NAMED_SET(<a class="code" href="../../d4/d36/classchira_1_1_texture.html">Texture</a>, filterModeStr, filterMode, setFilterMode)</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    );</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;};</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;} <span class="comment">// namespace chira</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">bool</span> mipmaps = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">bool</span> verticalFlip = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">bool</span> cache;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Archive&gt;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">void</span> serialize(Archive&amp; ar) {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        ar(</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                cereal::make_nvp(<span class="stringliteral">&quot;verticalFlip&quot;</span>, this-&gt;verticalFlip),</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                cereal::make_nvp(<span class="stringliteral">&quot;mipmaps&quot;</span>, this-&gt;mipmaps),</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                cereal::make_nvp(<span class="stringliteral">&quot;image&quot;</span>, this-&gt;filePath),</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                cereal::make_nvp(<span class="stringliteral">&quot;wrapModeS&quot;</span>, this-&gt;wrapModeS),</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                cereal::make_nvp(<span class="stringliteral">&quot;wrapModeT&quot;</span>, this-&gt;wrapModeT),</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                cereal::make_nvp(<span class="stringliteral">&quot;filterMode&quot;</span>, this-&gt;filterMode)</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        );</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    }</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;};</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;} <span class="comment">// namespace chira</span></div>
 <div class="ttc" id="aclasschira_1_1_i_texture_html"><div class="ttname"><a href="../../da/dcb/classchira_1_1_i_texture.html">chira::ITexture</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d3/db6/_i_texture_8h_source.html#l00011">ITexture.h:11</a></div></div>
 <div class="ttc" id="aclasschira_1_1_shared_pointer_html"><div class="ttname"><a href="../../d4/d08/classchira_1_1_shared_pointer.html">chira::SharedPointer</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d6/d47/_shared_pointer_8h_source.html#l00031">SharedPointer.h:31</a></div></div>
-<div class="ttc" id="aclasschira_1_1_texture_html"><div class="ttname"><a href="../../d4/d36/classchira_1_1_texture.html">chira::Texture</a></div><div class="ttdef"><b>Definition:</b> <a href="../../de/dbf/_texture_8h_source.html#l00008">Texture.h:8</a></div></div>
+<div class="ttc" id="aclasschira_1_1_texture_html"><div class="ttname"><a href="../../d4/d36/classchira_1_1_texture.html">chira::Texture</a></div><div class="ttdef"><b>Definition:</b> <a href="../../de/dbf/_texture_8h_source.html#l00009">Texture.h:9</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

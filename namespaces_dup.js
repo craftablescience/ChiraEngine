@@ -115,15 +115,10 @@ var namespaces_dup =
           [ "NOT_APPLICABLE", "da/d09/_input_manager_8h.html#a306db1221ee360954d2f7cbfd496ab91aeb7295999e22b161fe9136ac2a60c0d5", null ]
         ] ]
       ] ],
-      [ "Reflect", null, [
-        [ "Property", "d6/d39/structchira_1_1_reflect_1_1_property.html", "d6/d39/structchira_1_1_reflect_1_1_property" ],
-        [ "createProperty", "df/de2/_props_8h.html#a8456b58c69b21e8112a5e5e931e04fd9", null ],
-        [ "fromJSON", "df/de2/_props_8h.html#a150b54e612f1e5eb7c483b416aa16b75", null ],
-        [ "fromJSON", "df/de2/_props_8h.html#a08dd639ae1d24857596f80c192b5a63b", null ],
-        [ "toJSON", "df/de2/_props_8h.html#a61bfac99add9251c42c7c9e50dd3c0a3", null ],
-        [ "toJSON", "df/de2/_props_8h.html#af442c721a7d4356522d6ae164a8b9e3e", null ]
-      ] ],
       [ "Renderer", "d5/d36/namespacechira_1_1_renderer.html", "d5/d36/namespacechira_1_1_renderer" ],
+      [ "Serial", null, [
+        [ "loadFromBuffer", "d7/d9a/_serial_8h.html#ad8d2d2d9bfb41c36eccac158759b6d4e", null ]
+      ] ],
       [ "String", null, [
         [ "contains", "db/db5/_string_8h.html#ab21f704364f7fca62e5a92d58b2b8b7e", null ],
         [ "contains", "db/db5/_string_8h.html#a507d47df93a6482615a0a84b46ddf19c", null ],
@@ -182,7 +177,6 @@ var namespaces_dup =
       [ "Entity", "de/dca/classchira_1_1_entity.html", "de/dca/classchira_1_1_entity" ],
       [ "Layer", "d6/d7f/classchira_1_1_layer.html", "d6/d7f/classchira_1_1_layer" ],
       [ "Scene", "d5/db7/classchira_1_1_scene.html", "d5/db7/classchira_1_1_scene" ],
-      [ "Events", "dd/d3e/classchira_1_1_events.html", null ],
       [ "TranslationFileResource", "d7/d6b/classchira_1_1_translation_file_resource.html", "d7/d6b/classchira_1_1_translation_file_resource" ],
       [ "TranslationManager", "dc/d59/classchira_1_1_translation_manager.html", null ],
       [ "Image", "dd/d6f/classchira_1_1_image.html", "dd/d6f/classchira_1_1_image" ],
@@ -217,7 +211,7 @@ var namespaces_dup =
       [ "Texture", "d4/d36/classchira_1_1_texture.html", "d4/d36/classchira_1_1_texture" ],
       [ "TextureCubemap", "d6/d75/classchira_1_1_texture_cubemap.html", "d6/d75/classchira_1_1_texture_cubemap" ],
       [ "BinaryResource", "dd/dba/classchira_1_1_binary_resource.html", "dd/dba/classchira_1_1_binary_resource" ],
-      [ "PropertiesResource", "d4/d5a/classchira_1_1_properties_resource.html", "d4/d5a/classchira_1_1_properties_resource" ],
+      [ "JSONResource", "d4/daa/classchira_1_1_j_s_o_n_resource.html", "d4/daa/classchira_1_1_j_s_o_n_resource" ],
       [ "FilesystemResourceProvider", "de/de0/classchira_1_1_filesystem_resource_provider.html", "de/de0/classchira_1_1_filesystem_resource_provider" ],
       [ "IResourceProvider", "dc/da5/classchira_1_1_i_resource_provider.html", "dc/da5/classchira_1_1_i_resource_provider" ],
       [ "Resource", "d8/d5c/classchira_1_1_resource.html", "d8/d5c/classchira_1_1_resource" ],
@@ -245,6 +239,7 @@ var namespaces_dup =
       [ "ControlsPanel", "d8/d79/classchira_1_1_controls_panel.html", "d8/d79/classchira_1_1_controls_panel" ],
       [ "EntitySelectPanel", "d3/da2/classchira_1_1_entity_select_panel.html", "d3/da2/classchira_1_1_entity_select_panel" ],
       [ "InspectorPanel", "d6/df2/classchira_1_1_inspector_panel.html", "d6/df2/classchira_1_1_inspector_panel" ],
+      [ "ScriptEditorPanel", "dd/d1d/classchira_1_1_script_editor_panel.html", "dd/d1d/classchira_1_1_script_editor_panel" ],
       [ "Index", "d8/dcb/_vertex_8h.html#a2eba80b13a0654ce06a86ea8b6c7aaad", null ],
       [ "MaterialFactory", "db/de2/_material_factory_8h.html#af84afcccb5784060ba0b91aa433c8112", null ],
       [ "Axis", "db/d57/_axis_8h.html#ad54d73d261f79c58cef4b27a32995d9a", [

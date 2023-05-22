@@ -111,25 +111,28 @@ $(document).ready(function(){initNavTree('de/d09/_material_cubemap_8cpp_source.h
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">using namespace </span>chira;</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keywordtype">void</span> MaterialCubemap::compile(<span class="keyword">const</span> nlohmann::json&amp; properties) {</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    Reflect::fromJSON(<span class="keyword">this</span>, properties);</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;}</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keywordtype">void</span> MaterialCubemap::use()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    IMaterial::use();</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    this-&gt;cubemap-&gt;use();</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;}</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<a class="code" href="../../d4/d08/classchira_1_1_shared_pointer.html">SharedPointer&lt;TextureCubemap&gt;</a> MaterialCubemap::getTextureCubemap()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">return</span> this-&gt;cubemap;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;}</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keywordtype">void</span> MaterialCubemap::setTextureCubemap(std::string path) {</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    this-&gt;cubemapPath = std::move(path);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    this-&gt;cubemap = Resource::getResource&lt;TextureCubemap&gt;(this-&gt;cubemapPath);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    this-&gt;shader-&gt;use();</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    this-&gt;shader-&gt;setUniform(<span class="stringliteral">&quot;cubemap&quot;</span>, 0);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keywordtype">void</span> MaterialCubemap::compile(<span class="keyword">const</span> <span class="keywordtype">byte</span> buffer[], std::size_t bufferLength) {</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    Serial::loadFromBuffer(<span class="keyword">this</span>, buffer, bufferLength);</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    this-&gt;shader = Resource::getResource&lt;Shader&gt;(this-&gt;shaderPath);</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    this-&gt;setTextureCubemap(this-&gt;cubemapPath);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;}</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keywordtype">void</span> MaterialCubemap::use()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    IMaterial::use();</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    this-&gt;cubemap-&gt;use();</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<a class="code" href="../../d4/d08/classchira_1_1_shared_pointer.html">SharedPointer&lt;TextureCubemap&gt;</a> MaterialCubemap::getTextureCubemap()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordflow">return</span> this-&gt;cubemap;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;}</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keywordtype">void</span> MaterialCubemap::setTextureCubemap(std::string path) {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    this-&gt;cubemapPath = std::move(path);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    this-&gt;cubemap = Resource::getResource&lt;TextureCubemap&gt;(this-&gt;cubemapPath);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    this-&gt;shader-&gt;use();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    this-&gt;shader-&gt;setUniform(<span class="stringliteral">&quot;cubemap&quot;</span>, 0);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;}</div>
 <div class="ttc" id="aclasschira_1_1_shared_pointer_html"><div class="ttname"><a href="../../d4/d08/classchira_1_1_shared_pointer.html">chira::SharedPointer</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d6/d47/_shared_pointer_8h_source.html#l00031">SharedPointer.h:31</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

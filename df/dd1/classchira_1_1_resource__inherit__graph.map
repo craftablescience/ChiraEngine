@@ -1,20 +1,20 @@
 <map id="chira::Resource" name="chira::Resource">
-<area shape="rect" id="node1" title="A chunk of data, usually a file. Is typically cached and shared." alt="" coords="5,233,128,260"/>
-<area shape="rect" id="node2" href="$dd/dba/classchira_1_1_binary_resource.html" title=" " alt="" coords="188,157,352,184"/>
-<area shape="rect" id="node3" href="$dd/d6f/classchira_1_1_image.html" title=" " alt="" coords="219,208,321,235"/>
-<area shape="rect" id="node4" href="$d4/d5a/classchira_1_1_properties_resource.html" title=" " alt="" coords="176,259,364,285"/>
-<area shape="rect" id="node18" href="$d3/d87/classchira_1_1_string_resource.html" title=" " alt="" coords="190,309,350,336"/>
-<area shape="rect" id="node5" href="$db/d45/classchira_1_1_font.html" title="IMPORTANT: All font resources MUST be created before Device::createWindow is called!..." alt="" coords="475,107,565,133"/>
-<area shape="rect" id="node6" href="$df/d5f/classchira_1_1_i_material.html" title=" " alt="" coords="460,157,580,184"/>
-<area shape="rect" id="node12" href="$da/dcb/classchira_1_1_i_texture.html" title=" " alt="" coords="463,233,577,260"/>
-<area shape="rect" id="node15" href="$de/de7/classchira_1_1_mesh_data_resource.html" title=" " alt="" coords="426,284,614,311"/>
-<area shape="rect" id="node16" href="$d2/d71/classchira_1_1_shader.html" title=" " alt="" coords="467,335,573,361"/>
-<area shape="rect" id="node17" href="$d7/d6b/classchira_1_1_translation_file_resource.html" title=" " alt="" coords="412,385,628,412"/>
-<area shape="rect" id="node7" href="$dc/d74/classchira_1_1_material_cubemap.html" title=" " alt="" coords="685,5,863,32"/>
-<area shape="rect" id="node8" href="$d3/d3c/classchira_1_1_material_frame_buffer.html" title=" " alt="" coords="676,56,872,83"/>
-<area shape="rect" id="node9" href="$d8/da4/classchira_1_1_material_phong.html" title=" " alt="" coords="696,107,852,133"/>
-<area shape="rect" id="node10" href="$d6/d69/classchira_1_1_material_textured.html" title=" " alt="" coords="688,157,860,184"/>
-<area shape="rect" id="node11" href="$d9/d2f/classchira_1_1_material_untextured.html" title=" " alt="" coords="679,208,869,235"/>
-<area shape="rect" id="node13" href="$d4/d36/classchira_1_1_texture.html" title=" " alt="" coords="719,259,829,285"/>
-<area shape="rect" id="node14" href="$d6/d75/classchira_1_1_texture_cubemap.html" title=" " alt="" coords="688,309,860,336"/>
+<area shape="rect" id="node1" title="A chunk of data, usually a file. Is typically cached and shared." alt="" coords="5,296,128,323"/>
+<area shape="rect" id="node2" href="$dd/dba/classchira_1_1_binary_resource.html" title=" " alt="" coords="188,81,352,108"/>
+<area shape="rect" id="node3" href="$db/d45/classchira_1_1_font.html" title="IMPORTANT: All font resources MUST be created before Device::createWindow is called!..." alt="" coords="225,132,315,159"/>
+<area shape="rect" id="node4" href="$df/d5f/classchira_1_1_i_material.html" title=" " alt="" coords="210,183,330,209"/>
+<area shape="rect" id="node10" href="$da/dcb/classchira_1_1_i_texture.html" title=" " alt="" coords="213,245,327,272"/>
+<area shape="rect" id="node13" href="$dd/d6f/classchira_1_1_image.html" title=" " alt="" coords="219,296,321,323"/>
+<area shape="rect" id="node14" href="$d4/daa/classchira_1_1_j_s_o_n_resource.html" title=" " alt="" coords="193,347,347,373"/>
+<area shape="rect" id="node16" href="$de/de7/classchira_1_1_mesh_data_resource.html" title=" " alt="" coords="176,397,364,424"/>
+<area shape="rect" id="node17" href="$d2/d71/classchira_1_1_shader.html" title=" " alt="" coords="217,448,323,475"/>
+<area shape="rect" id="node18" href="$d3/d87/classchira_1_1_string_resource.html" title=" " alt="" coords="190,499,350,525"/>
+<area shape="rect" id="node5" href="$dc/d74/classchira_1_1_material_cubemap.html" title=" " alt="" coords="431,5,609,32"/>
+<area shape="rect" id="node6" href="$d3/d3c/classchira_1_1_material_frame_buffer.html" title=" " alt="" coords="422,56,618,83"/>
+<area shape="rect" id="node7" href="$d8/da4/classchira_1_1_material_phong.html" title=" " alt="" coords="442,107,598,133"/>
+<area shape="rect" id="node8" href="$d6/d69/classchira_1_1_material_textured.html" title=" " alt="" coords="434,157,606,184"/>
+<area shape="rect" id="node9" href="$d9/d2f/classchira_1_1_material_untextured.html" title=" " alt="" coords="425,208,615,235"/>
+<area shape="rect" id="node11" href="$d4/d36/classchira_1_1_texture.html" title=" " alt="" coords="465,259,575,285"/>
+<area shape="rect" id="node12" href="$d6/d75/classchira_1_1_texture_cubemap.html" title=" " alt="" coords="434,309,606,336"/>
+<area shape="rect" id="node15" href="$d7/d6b/classchira_1_1_translation_file_resource.html" title=" " alt="" coords="412,360,628,387"/>
 </map>

@@ -116,19 +116,15 @@ $(document).ready(function(){initNavTree('d5/de8/_mesh_data_resource_8cpp_source
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;CHIRA_CREATE_LOG(MESHDATARESOURCE);</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keywordtype">void</span> MeshDataResource::compile(<span class="keyword">const</span> nlohmann::json&amp; properties) {</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    Reflect::fromJSON(<span class="keyword">this</span>, properties);</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordflow">if</span> (!this-&gt;materialSetInCode) {</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        this-&gt;material = CHIRA_GET_MATERIAL(this-&gt;materialType, this-&gt;materialPath);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    }</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    this-&gt;appendMeshData(this-&gt;modelLoader, this-&gt;modelPath);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    this-&gt;<a class="code" href="../../d7/de1/classchira_1_1_mesh_data.html#adc5e83207957d0c5088373dcff906aa8">setupForRendering</a>();</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;}</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keywordtype">void</span> MeshDataResource::setDepthFunction(std::string depthFuncStr_) {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    this-&gt;depthFuncStr = std::move(depthFuncStr_);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    this-&gt;depthFunction = getMeshDepthFunctionFromString(this-&gt;depthFuncStr);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keywordtype">void</span> MeshDataResource::compile(<span class="keyword">const</span> <span class="keywordtype">byte</span> buffer[], std::size_t bufferLength) {</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    Serial::loadFromBuffer(<span class="keyword">this</span>, buffer, bufferLength);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordflow">if</span> (!this-&gt;materialSetInCode) {</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        this-&gt;material = CHIRA_GET_MATERIAL(this-&gt;materialType, this-&gt;materialPath);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    }</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    this-&gt;appendMeshData(this-&gt;modelLoader, this-&gt;modelPath);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    this-&gt;<a class="code" href="../../d7/de1/classchira_1_1_mesh_data.html#adc5e83207957d0c5088373dcff906aa8">setupForRendering</a>();</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
 <div class="ttc" id="aclasschira_1_1_mesh_data_html_adc5e83207957d0c5088373dcff906aa8"><div class="ttname"><a href="../../d7/de1/classchira_1_1_mesh_data.html#adc5e83207957d0c5088373dcff906aa8">chira::MeshData::setupForRendering</a></div><div class="ttdeci">void setupForRendering()</div><div class="ttdoc">Establishes the vertex buffers and copies the current mesh data into them.</div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d9f/_mesh_data_8cpp_source.html#l00010">MeshData.cpp:10</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

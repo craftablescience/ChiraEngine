@@ -118,16 +118,23 @@ $(document).ready(function(){initNavTree('df/d23/_material_frame_buffer_8h_sourc
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <a class="code" href="../../d3/d3c/classchira_1_1_material_frame_buffer.html">MaterialFrameBuffer</a>(std::string identifier_, <a class="code" href="../../dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html">Renderer::FrameBufferHandle</a>* handle_)</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        : <a class="code" href="../../df/d5f/classchira_1_1_i_material.html">IMaterial</a>(std::move(identifier_))</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        , handle(handle_) {}</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">void</span> compile(<span class="keyword">const</span> nlohmann::json&amp; properties) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">void</span> compile(<span class="keyword">const</span> <span class="keywordtype">byte</span> buffer[], std::size_t bufferLength) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordtype">void</span> use() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="../../dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html">Renderer::FrameBufferHandle</a>* handle;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    CHIRA_PROPS_INHERITED(<a class="code" href="../../df/d5f/classchira_1_1_i_material.html">IMaterial</a>) ();</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;};</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;} <span class="comment">// namespace chira</span></div>
-<div class="ttc" id="aclasschira_1_1_i_material_html"><div class="ttname"><a href="../../df/d5f/classchira_1_1_i_material.html">chira::IMaterial</a></div><div class="ttdef"><b>Definition:</b> <a href="../../db/de2/_material_factory_8h_source.html#l00011">MaterialFactory.h:11</a></div></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="../../dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html">Renderer::FrameBufferHandle</a>* handle;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> Archive&gt;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> serialize(Archive&amp; ar) {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        ar(</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;                cereal::make_nvp(<span class="stringliteral">&quot;shader&quot;</span>, this-&gt;shaderPath)</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        );</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    }</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;};</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;} <span class="comment">// namespace chira</span></div>
+<div class="ttc" id="aclasschira_1_1_i_material_html"><div class="ttname"><a href="../../df/d5f/classchira_1_1_i_material.html">chira::IMaterial</a></div><div class="ttdef"><b>Definition:</b> <a href="../../db/de2/_material_factory_8h_source.html#l00012">MaterialFactory.h:12</a></div></div>
 <div class="ttc" id="aclasschira_1_1_material_frame_buffer_html"><div class="ttname"><a href="../../d3/d3c/classchira_1_1_material_frame_buffer.html">chira::MaterialFrameBuffer</a></div><div class="ttdef"><b>Definition:</b> <a href="../../df/d23/_material_frame_buffer_8h_source.html#l00009">MaterialFrameBuffer.h:9</a></div></div>
 <div class="ttc" id="astructchira_1_1_renderer_1_1_frame_buffer_handle_html"><div class="ttname"><a href="../../dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html">chira::Renderer::FrameBufferHandle</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d26/_backend_g_l_8h_source.html#l00025">BackendGL.h:25</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

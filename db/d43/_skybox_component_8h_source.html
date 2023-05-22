@@ -116,7 +116,7 @@ $(document).ready(function(){initNavTree('db/d43/_skybox_component_8h_source.htm
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../d3/d21/structchira_1_1_skybox_component.html">SkyboxComponent</a>(<span class="keyword">const</span> std::string&amp; cubemapId = <span class="stringliteral">&quot;file://materials/skybox.json&quot;</span>) {</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        this-&gt;skybox.addCube({}, {1, 1, 1}, <span class="keyword">false</span>);</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        this-&gt;skybox.update();</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        this-&gt;skybox.setMaterial(Resource::getResource&lt;MaterialCubemap&gt;(cubemapId).castAssert&lt;IMaterial&gt;());</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        this-&gt;skybox.setMaterial(Resource::getResource&lt;MaterialCubemap&gt;(cubemapId).cast&lt;IMaterial&gt;());</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    }</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">public</span>:</div>

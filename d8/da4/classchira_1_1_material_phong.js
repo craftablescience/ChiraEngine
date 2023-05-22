@@ -1,12 +1,12 @@
 var classchira_1_1_material_phong =
 [
     [ "MaterialPhong", "d8/da4/classchira_1_1_material_phong.html#add32512043df46a45466970a61365e4a", null ],
-    [ "compile", "d8/da4/classchira_1_1_material_phong.html#a3e053e70b9f9fcc58970ab501b98bdd1", null ],
+    [ "compile", "d8/da4/classchira_1_1_material_phong.html#ab115b1cbccf9fe787752124fe542ac91", null ],
     [ "getLambertFactor", "d8/da4/classchira_1_1_material_phong.html#ab8cb3310a644e185a073425e3601d05f", null ],
     [ "getShininess", "d8/da4/classchira_1_1_material_phong.html#aef6dc961eca3cd08795ee932725c859d", null ],
     [ "getTextureDiffuse", "d8/da4/classchira_1_1_material_phong.html#a9a21478889984d42ba89b7cf8db805d3", null ],
     [ "getTextureSpecular", "d8/da4/classchira_1_1_material_phong.html#a8dd34326440d7ac83977a0613ed7c1f4", null ],
-    [ "IMaterial", "d8/da4/classchira_1_1_material_phong.html#ae489ebecc4387c9587290e9a09dffa3e", null ],
+    [ "serialize", "d8/da4/classchira_1_1_material_phong.html#a6f25bf676c54a9fd0133151aeca0d962", null ],
     [ "setLambertFactor", "d8/da4/classchira_1_1_material_phong.html#a2a4fe673e69554f84c15122c9e0e37ce", null ],
     [ "setShininess", "d8/da4/classchira_1_1_material_phong.html#a9b8332ecdb48043aace8ccc0b96f7165", null ],
     [ "setTextureDiffuse", "d8/da4/classchira_1_1_material_phong.html#a4eac3d0876ee1762f7d1ffc89076371d", null ],

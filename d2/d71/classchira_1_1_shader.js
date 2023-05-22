@@ -2,9 +2,9 @@ var classchira_1_1_shader =
 [
     [ "Shader", "d2/d71/classchira_1_1_shader.html#ab20640f202578673526260f4d3e8d6f9", null ],
     [ "~Shader", "d2/d71/classchira_1_1_shader.html#ad3825ce04340dcb4c3fe7eea5a1c46d2", null ],
-    [ "CHIRA_PROPS", "d2/d71/classchira_1_1_shader.html#aea4600af1de568f46c5131e81f7e50e2", null ],
-    [ "compile", "d2/d71/classchira_1_1_shader.html#a55df30f2344cb813e884f9e44aff8aa6", null ],
+    [ "compile", "d2/d71/classchira_1_1_shader.html#acbb2d3f39f43c0267258cb37e50b7a61", null ],
     [ "isLit", "d2/d71/classchira_1_1_shader.html#a414ad8f8dcb44aff70c60a3f7e5202ed", null ],
+    [ "serialize", "d2/d71/classchira_1_1_shader.html#a67e002772cd95064e6d62e5c4b10d663", null ],
     [ "setUniform", "d2/d71/classchira_1_1_shader.html#ab371690fe281ff32cbfb647d875a5716", null ],
     [ "setUniform", "d2/d71/classchira_1_1_shader.html#a6c31ebc0e1cda914ee4ba398439b3f9e", null ],
     [ "setUniform", "d2/d71/classchira_1_1_shader.html#a47885281eef6b87318a728ca1a246b7b", null ],

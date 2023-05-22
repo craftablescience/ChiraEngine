@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['preinit_339',['preInit',['../d6/d8e/classchira_1_1_engine.html#acba9a34eb8c7e5cc71bf4e692d5c54c0',1,'chira::Engine']]]
+  ['removeresource_334',['removeResource',['../d8/d5c/classchira_1_1_resource.html#a1974972c478a169f10e22ed1c84c94cb',1,'chira::Resource']]]
 ];

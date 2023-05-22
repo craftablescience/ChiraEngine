@@ -1,7 +1,6 @@
 <map id="chira::ITexture" name="chira::ITexture">
-<area shape="rect" id="node1" title=" " alt="" coords="86,155,201,181"/>
-<area shape="rect" id="node4" href="$d4/d36/classchira_1_1_texture.html" title=" " alt="" coords="5,229,116,256"/>
-<area shape="rect" id="node5" href="$d6/d75/classchira_1_1_texture_cubemap.html" title=" " alt="" coords="140,229,312,256"/>
-<area shape="rect" id="node2" href="$d4/d5a/classchira_1_1_properties_resource.html" title=" " alt="" coords="49,80,237,107"/>
-<area shape="rect" id="node3" href="$d8/d5c/classchira_1_1_resource.html" title="A chunk of data, usually a file. Is typically cached and shared." alt="" coords="82,5,205,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="86,80,201,107"/>
+<area shape="rect" id="node3" href="$d4/d36/classchira_1_1_texture.html" title=" " alt="" coords="5,155,116,181"/>
+<area shape="rect" id="node4" href="$d6/d75/classchira_1_1_texture_cubemap.html" title=" " alt="" coords="140,155,312,181"/>
+<area shape="rect" id="node2" href="$d8/d5c/classchira_1_1_resource.html" title="A chunk of data, usually a file. Is typically cached and shared." alt="" coords="82,5,205,32"/>
 </map>
