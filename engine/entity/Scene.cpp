@@ -2,7 +2,6 @@
 
 #include <core/Assertions.h>
 #include <render/shader/UBO.h>
-#include "component/AngelScriptComponent.h"
 #include "component/TagComponents.h"
 #include "component/TransformComponent.h"
 #include "Entity.h"
@@ -14,8 +13,8 @@ Scene::Scene()
     this->getRegistry().emplace<UUIDComponent>(this->handle);
     this->getRegistry().emplace<SceneTagComponent>(this->handle);
 
-    this->getRegistry().on_construct<AngelScriptComponent>().connect<&AngelScriptComponent::onConstruct>();
-    this->getRegistry().on_destroy<AngelScriptComponent>().connect<&AngelScriptComponent::onDestroy>();
+    //this->getRegistry().on_construct<AngelScriptComponent>().connect<&AngelScriptComponent::onConstruct>();
+    //this->getRegistry().on_destroy<AngelScriptComponent>().connect<&AngelScriptComponent::onDestroy>();
 }
 
 Scene::Scene(const std::string& name)
@@ -26,8 +25,8 @@ Scene::Scene(const std::string& name)
 Scene::~Scene() {
     this->getRegistry().clear();
 
-    this->getRegistry().on_construct<AngelScriptComponent>().disconnect<&AngelScriptComponent::onConstruct>();
-    this->getRegistry().on_destroy<AngelScriptComponent>().disconnect<&AngelScriptComponent::onDestroy>();
+    //this->getRegistry().on_construct<AngelScriptComponent>().disconnect<&AngelScriptComponent::onConstruct>();
+    //this->getRegistry().on_destroy<AngelScriptComponent>().disconnect<&AngelScriptComponent::onDestroy>();
 }
 
 Entity* Scene::addEntity() {

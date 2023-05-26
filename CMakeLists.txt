@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
+include(FetchContent)
 
 # Must set some Apple options before creating the project
 if(APPLE)

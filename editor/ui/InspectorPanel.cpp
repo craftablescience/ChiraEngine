@@ -2,7 +2,6 @@
 
 #include <imfilebrowser.h>
 #include <magic_enum.hpp>
-#include <entity/component/AngelScriptComponent.h>
 #include <entity/component/AudioNoiseComponent.h>
 #include <entity/component/AudioSfxrComponent.h>
 #include <entity/component/AudioSpeechComponent.h>
@@ -94,7 +93,6 @@ void InspectorPanel::renderContentsForSelectedEntity() {
         // Skybox can only be added to scene entities (literally entities that are scenes)
         // Also don't include tags, there should be a dedicated interface for tags
         std::string components[] = {
-            "AngelScript",
             "Audio Noise",
             "Audio Sfxr",
             "Audio Speech",
@@ -111,10 +109,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
         };
         for (const auto& component : components) {
             if (ImGui::Selectable(component.c_str())) {
-                if (component == "AngelScript") {
-                    this->selectedEntity->tryRemoveComponent<AngelScriptComponent>();
-                    this->selectedEntity->addComponent<AngelScriptComponent>();
-                } else if (component == "Audio Noise") {
+                if (component == "Audio Noise") {
                     this->selectedEntity->tryRemoveComponent<AudioNoiseComponent>();
                     this->selectedEntity->addComponent<AudioNoiseComponent>();
                 } else if (component == "Audio Sfxr") {
@@ -177,6 +172,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
         this->selectedEntity->getTransform().setScale(scl);
 	}
 
+#if 0
     if (auto component = this->selectedEntity->tryGetComponent<AngelScriptComponent>()) {
         REMOVE_BUTTON(AngelScriptComponent);
         ImGui::SameLine();
@@ -198,6 +194,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
             filePicker.ClearSelected();
         }
     }
+#endif
     if (auto component = this->selectedEntity->tryGetComponent<AudioNoiseComponent>()) {
         REMOVE_BUTTON(AudioNoiseComponent);
         ImGui::SameLine();

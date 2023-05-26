@@ -3,7 +3,7 @@
 #include <string>
 #include <sstream>
 #include <core/Platform.h>
-#include <utility/Concepts.h>
+#include <utility/ConceptsTest.h>
 
 #if defined(CHIRA_COMPILER_GNU) || defined(CHIRA_COMPILER_CLANG)
     #include <cxxabi.h>
@@ -18,9 +18,9 @@
 
 namespace chira {
 
-struct asSimpleTypeString {
+struct TypeStringBase {
     std::string name, prefix, suffix;
-    explicit asSimpleTypeString(const std::string& name_) {
+    explicit TypeStringBase(const std::string& name_) {
         this->name = name_;
     }
     std::string operator()() const {
@@ -32,14 +32,14 @@ struct asSimpleTypeString {
         return os.str();
     }
     [[nodiscard]] virtual std::string type() const = 0;
-    virtual asSimpleTypeString& as_param() {
+    virtual TypeStringBase& as_param() {
         return *this;
     }
 };
 
 template<typename T>
-struct asTypeString : asSimpleTypeString {
-    explicit asTypeString(const std::string& name_ = "") : asSimpleTypeString(name_) {}
+struct TypeString : TypeStringBase {
+    explicit TypeString(const std::string& name_ = "") : TypeStringBase(name_) {}
     [[nodiscard]] std::string type() const override {
         std::string type = typeid(T).name();
 #ifdef CHIRA_AS_USE_DEMANGLED_NAMES
@@ -55,51 +55,51 @@ struct asTypeString : asSimpleTypeString {
 };
 
 template<typename T>
-struct asTypeString<const T> : asTypeString<T> {
-    explicit asTypeString(const std::string& name_ = "") : asTypeString<T>(name_) {
+struct TypeString<const T> : TypeString<T> {
+    explicit TypeString(const std::string& name_ = "") : TypeString<T>(name_) {
         this->prefix = "const";
     }
-    asTypeString& as_param() {
+    TypeString& as_param() {
         return *this;
     }
 };
 
 template<CArithmetic T>
-struct asTypeString<T*> : asTypeString<T> {
-    explicit asTypeString(const std::string& name_ = "") : asTypeString<T>(name_) {
+struct TypeString<T*> : TypeString<T> {
+    explicit TypeString(const std::string& name_ = "") : TypeString<T>(name_) {
         this->suffix = "&";
     }
-    asTypeString& as_param() {
+    TypeString& as_param() {
         this->suffix = "&out";
         return *this;
     }
 };
 
 template<CNonArithmetic T>
-struct asTypeString<T*> : asTypeString<T> {
-    explicit asTypeString(const std::string& name_ = "") : asTypeString<T>(name_) {
+struct TypeString<T*> : TypeString<T> {
+    explicit TypeString(const std::string& name_ = "") : TypeString<T>(name_) {
         this->suffix = "@";
     }
 };
 
 template<typename T>
-struct asTypeString<T&> : asTypeString<T> {
-    explicit asTypeString(const std::string& name_ = "") : asTypeString<T>(name_) {
+struct TypeString<T&> : TypeString<T> {
+    explicit TypeString(const std::string& name_ = "") : TypeString<T>(name_) {
         this->suffix = "&";
     }
-    asTypeString& as_param() {
+    TypeString& as_param() {
         this->suffix = "&out";
         return *this;
     }
 };
 
 template<typename T>
-struct asTypeString<const T&> : asTypeString<T> {
-    explicit asTypeString(const std::string& name_ = "") : asTypeString<T>(name_) {
+struct TypeString<const T&> : TypeString<T> {
+    explicit TypeString(const std::string& name_ = "") : TypeString<T>(name_) {
         this->prefix = "const";
         this->suffix = "&";
     }
-    asTypeString& as_param() {
+    TypeString& as_param() {
         this->suffix = "&in";
         return *this;
     }
@@ -107,24 +107,24 @@ struct asTypeString<const T&> : asTypeString<T> {
 
 // Specialize string type
 template<>
-struct asTypeString<std::string> : asSimpleTypeString {
-    explicit asTypeString(const std::string& name_ = "") : asSimpleTypeString(name_) {}
+struct TypeString<std::string> : TypeStringBase {
+    explicit TypeString(const std::string& name_ = "") : TypeStringBase(name_) {}
     [[nodiscard]] std::string type() const override {
         return "string";
     }
 };
 
 template<typename R, typename... ArgTypes>
-struct asTypeString<R(ArgTypes...)> {
+struct TypeString<R(ArgTypes...)> {
     std::string name;
-    explicit asTypeString(const std::string& name_) {
+    explicit TypeString(const std::string& name_) {
         this->name = name_;
     }
     std::string operator()() const {
         std::ostringstream os;
-        os << asTypeString<R>()() << ' ' << this->name << '(';
+        os << TypeString<R>()() << ' ' << this->name << '(';
         if constexpr (sizeof...(ArgTypes) > 0) {
-            ((os << asTypeString<ArgTypes>().as_param()() << ","), ...);
+            ((os << TypeString<ArgTypes>().as_param()() << ","), ...);
             os.seekp(-1, std::stringstream::cur);
         }
         os << ")";
@@ -134,8 +134,8 @@ struct asTypeString<R(ArgTypes...)> {
 
 // Cool template black magic
 template<typename R, typename... ArgTypes>
-struct asTypeString<R(*)(ArgTypes...)> : asTypeString<R(ArgTypes...)> {
-    explicit asTypeString(const std::string& name_) : asTypeString<R(ArgTypes...)>(name_) {}
+struct TypeString<R(*)(ArgTypes...)> : TypeString<R(ArgTypes...)> {
+    explicit TypeString(const std::string& name_) : TypeString<R(ArgTypes...)>(name_) {}
 };
 
 } // namespace chira
