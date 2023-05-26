@@ -2,7 +2,6 @@
 
 #include <core/Assertions.h>
 #include <render/shader/UBO.h>
-#include "component/AngelScriptComponent.h"
 #include "component/AudioSpeechComponent.h"
 #include "component/BillboardComponent.h"
 #include "component/MeshComponent.h"
@@ -83,11 +82,13 @@ void Layer::update() {
             }
         }
 
+#if 0
         // Update AngelScriptComponent
         auto angelScriptView = scene->getEntities<AngelScriptComponent>();
         for (const auto [entity, angelScriptComponent] : angelScriptView.each()) {
             angelScriptComponent.update();
         }
+#endif
     }
 }
 
@@ -169,11 +170,13 @@ void Layer::render() {
             skyboxComponent.skybox.render(glm::identity<glm::mat4>());
         }
 
+#if 0
         // Render AngelScriptComponent
         auto angelScriptView = scene->getEntities<AngelScriptComponent>(entt::exclude<NoRenderTagComponent>);
         for (const auto [entity, angelScriptComponent] : angelScriptView.each()) {
             angelScriptComponent.render();
         }
+#endif
     }
     Renderer::popFrameBuffer();
 }

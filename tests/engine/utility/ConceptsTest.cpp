@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <utility/Concepts.h>
+#include <utility/ConceptsTest.h>
 
 using namespace chira;
 

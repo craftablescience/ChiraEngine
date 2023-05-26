@@ -133,13 +133,6 @@ list(APPEND CHIRA_ENGINE_INCLUDE_DIRS
         ${CMAKE_CURRENT_LIST_DIR}/thirdparty/imguizmo)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES imgui)
 
-# ANGELSCRIPT
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/angelscript)
-list(APPEND CHIRA_ENGINE_INCLUDE_DIRS
-        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/angelscript/addons
-        ${CMAKE_CURRENT_LIST_DIR}/thirdparty/angelscript/include)
-list(APPEND CHIRA_ENGINE_LINK_LIBRARIES angelscript)
-
 # CEREAL
 set(JUST_INSTALL_CEREAL ON CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/cereal)

@@ -3,7 +3,6 @@
 #include <core/Engine.h>
 #include <core/Logger.h>
 #include <resource/provider/FilesystemResourceProvider.h>
-#include <script/AngelScriptVM.h>
 
 #define PREINIT_ENGINE() \
     const char* const argv[] = {"ChiraTest"}; \
@@ -13,8 +12,6 @@
 #define PREINIT_ENGINE_WITH_ARGS(argv) \
     chira::Engine::preInit(sizeof argv / sizeof(argv[0]), argv); \
     chira::Resource::addResourceProvider(new chira::FilesystemResourceProvider{"tests"})
-
-#define SETUP_ANGELSCRIPT() chira::AngelScriptVM::init()
 
 #define LOG_BEGIN() \
     std::vector<chira::LogType> logMessageTypes; \
