@@ -157,18 +157,7 @@ $(document).ready(function(){initNavTree('d2/dc9/_platform_8h_source.html','../.
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">    #error &quot;A CHIRA_XXBIT macro must be set!&quot;</span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">inline</span> T swapEndian(T t) {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">union </span>{</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        T t;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordtype">byte</span> u8[<span class="keyword">sizeof</span>(T)];</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    } source{}, dest{};</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    source.t = t;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> k = 0; k &lt; <span class="keyword">sizeof</span>(T); k++)</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        dest.u8[k] = source.u8[<span class="keyword">sizeof</span>(T) - k - 1];</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordflow">return</span> dest.t;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;} <span class="comment">// namespace chira</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;} <span class="comment">// namespace chira</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

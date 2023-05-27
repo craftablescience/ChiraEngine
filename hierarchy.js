@@ -1,22 +1,6 @@
 var hierarchy =
 [
     [ "chira::AbstractFactory< ReturnType >", "d6/dfd/classchira_1_1_abstract_factory.html", null ],
-    [ "chira::AngelScriptComponent", "dc/d7f/structchira_1_1_angel_script_component.html", null ],
-    [ "chira::AngelScriptHolder", "d8/da5/classchira_1_1_angel_script_holder.html", null ],
-    [ "chira::AngelScriptVM", "dd/dc3/classchira_1_1_angel_script_v_m.html", null ],
-    [ "chira::asSimpleTypeString", "d3/d4e/structchira_1_1as_simple_type_string.html", [
-      [ "chira::asTypeString< T >", "d0/d64/structchira_1_1as_type_string.html", [
-        [ "chira::asTypeString< T & >", "d0/d4c/structchira_1_1as_type_string_3_01_t_01_6_01_4.html", null ],
-        [ "chira::asTypeString< T * >", "d5/d74/structchira_1_1as_type_string_3_01_t_01_5_01_4.html", null ],
-        [ "chira::asTypeString< T * >", "d5/d74/structchira_1_1as_type_string_3_01_t_01_5_01_4.html", null ],
-        [ "chira::asTypeString< const T & >", "d2/d2b/structchira_1_1as_type_string_3_01const_01_t_01_6_01_4.html", null ],
-        [ "chira::asTypeString< const T >", "d8/dc4/structchira_1_1as_type_string_3_01const_01_t_01_4.html", null ]
-      ] ],
-      [ "chira::asTypeString< std::string >", "d8/dff/structchira_1_1as_type_string_3_01std_1_1string_01_4.html", null ]
-    ] ],
-    [ "chira::asTypeString< R(ArgTypes...)>", "db/d9f/structchira_1_1as_type_string_3_01_r_07_arg_types_8_8_8_08_4.html", [
-      [ "chira::asTypeString< R(*)(ArgTypes...)>", "d2/d86/structchira_1_1as_type_string_3_01_r_07_5_08_07_arg_types_8_8_8_08_4.html", null ]
-    ] ],
     [ "chira::AudioNoiseComponent", "db/d3d/structchira_1_1_audio_noise_component.html", null ],
     [ "chira::AudioSfxrComponent", "dd/dd9/structchira_1_1_audio_sfxr_component.html", null ],
     [ "chira::AudioSpeechComponent", "df/daf/structchira_1_1_audio_speech_component.html", null ],
@@ -119,6 +103,19 @@ var hierarchy =
     [ "chira::SteamAPI::Utils", "d5/d45/structchira_1_1_steam_a_p_i_1_1_utils.html", null ],
     [ "chira::TransformComponent", "d3/de7/structchira_1_1_transform_component.html", null ],
     [ "chira::TranslationManager", "dc/d59/classchira_1_1_translation_manager.html", null ],
+    [ "chira::TypeString< R(ArgTypes...)>", "d5/d1d/structchira_1_1_type_string_3_01_r_07_arg_types_8_8_8_08_4.html", [
+      [ "chira::TypeString< R(*)(ArgTypes...)>", "df/dd9/structchira_1_1_type_string_3_01_r_07_5_08_07_arg_types_8_8_8_08_4.html", null ]
+    ] ],
+    [ "chira::TypeStringBase", "de/d6e/structchira_1_1_type_string_base.html", [
+      [ "chira::TypeString< T >", "d6/d8d/structchira_1_1_type_string.html", [
+        [ "chira::TypeString< T & >", "d9/dda/structchira_1_1_type_string_3_01_t_01_6_01_4.html", null ],
+        [ "chira::TypeString< T * >", "d9/dc3/structchira_1_1_type_string_3_01_t_01_5_01_4.html", null ],
+        [ "chira::TypeString< T * >", "d9/dc3/structchira_1_1_type_string_3_01_t_01_5_01_4.html", null ],
+        [ "chira::TypeString< const T & >", "d7/db0/structchira_1_1_type_string_3_01const_01_t_01_6_01_4.html", null ],
+        [ "chira::TypeString< const T >", "d9/dcd/structchira_1_1_type_string_3_01const_01_t_01_4.html", null ]
+      ] ],
+      [ "chira::TypeString< std::string >", "da/d69/structchira_1_1_type_string_3_01std_1_1string_01_4.html", null ]
+    ] ],
     [ "chira::UniformBufferObject< Size >", "dd/db8/classchira_1_1_uniform_buffer_object.html", null ],
     [ "chira::UUIDComponent", "d5/d80/structchira_1_1_u_u_i_d_component.html", null ],
     [ "chira::UUIDGenerator", "db/d04/classchira_1_1_u_u_i_d_generator.html", null ],
