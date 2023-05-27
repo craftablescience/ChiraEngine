@@ -7,6 +7,7 @@
 #include <loader/mesh/ChiraMeshLoader.h>
 #include <plugin/Plugin.h>
 #include <resource/provider/FilesystemResourceProvider.h>
+#include <script/Lua.h>
 #include <ui/debug/ConsolePanel.h>
 #include <ui/debug/ResourceUsageTrackerPanel.h>
 #include "CommandLine.h"
@@ -76,6 +77,9 @@ void Engine::init(bool visibleSplashScreen /*= true*/) {
 
     // Create default resources
     Resource::createDefaultResources();
+
+    // Start scripting VM
+    Lua::init();
 
     Device::destroySplashscreen();
 

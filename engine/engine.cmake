@@ -169,6 +169,10 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/libloader)
 list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/libloader/include)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES LibLoader)
 
+# LUA
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/lua)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES lua::lua)
+
 # MAGIC_ENUM
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/magic_enum)
 list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/magic_enum/include)
@@ -178,6 +182,11 @@ list(APPEND CHIRA_ENGINE_LINK_LIBRARIES magic_enum)
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/json)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES nlohmann_json::nlohmann_json)
+
+# SOL2
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sol2)
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/sol2/include)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES sol2::sol2)
 
 # SOLOUD
 if(BUILD_SHARED_LIBS)
