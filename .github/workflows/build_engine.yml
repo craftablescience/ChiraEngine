@@ -13,6 +13,7 @@ env:
 jobs:
   build-msvc:
     strategy:
+      fail-fast: false
       matrix:
         build_type: [Debug, Release]
     runs-on: windows-latest
@@ -122,7 +123,7 @@ jobs:
       matrix:
         build_type: [Debug, Release]
         compiler: [gcc, clang]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -172,7 +173,7 @@ jobs:
       fail-fast: false
       matrix:
         build_type: [Debug, Release]
-        generator: [Makefiles] # [Makefiles, Xcode]
+        compiler: [brew-clang] #, apple-clang]
     runs-on: macos-latest
     steps:
       - name: Checkout Repository
@@ -180,15 +181,29 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install LLVM from Homebrew
-        run: brew install llvm
+      - name: Install Homebrew Libraries
+        if: ${{ matrix.compiler == 'brew-clang' }}
+        run: |
+          brew install ninja
+          brew install llvm
 
-      - name: Configure CMake
-        run: ${{github.workspace}}/cmake_configure_macos.sh ${{matrix.generator}}
+      - name: Configure CMake (Homebrew Clang)
+        if: ${{ matrix.compiler == 'brew-clang' }}
+        run: cmake -G "Ninja" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_BUILD_WITH_PCH=ON -DCMAKE_C_COMPILER="/usr/local/opt/llvm/bin/clang" -DCMAKE_CXX_COMPILER="/usr/local/opt/llvm/bin/clang++"
 
-      - name: Build
+      - name: Configure CMake (Apple Clang)
+        if: ${{ matrix.compiler == 'apple-clang' }}
+        run: cmake -G "Xcode" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_BUILD_WITH_PCH=ON
+
+      - name: Build (Homebrew Clang)
+        if: ${{ matrix.compiler == 'brew-clang' }}
         working-directory: ${{env.BUILD_DIR}}
-        run: cmake --build . --config ${{matrix.build_type}} -t editor -- -j$(nproc)
+        run: cmake --build . --config ${{matrix.build_type}} -t editor -- -j$(sysctl -n hw.logicalcpu)
+
+      - name: Build (Apple Clang)
+        if: ${{ matrix.compiler == 'apple-clang' }}
+        working-directory: ${{env.BUILD_DIR}}
+        run: cmake --build . --config ${{matrix.build_type}} -t editor
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
@@ -200,6 +215,10 @@ jobs:
             ${{env.BUILD_DIR}}/resources/
           retention-days: 7
 
-      - name: Test
+      - name: Test (Homebrew Clang)
         working-directory: ${{env.BUILD_DIR}}
-        run: cmake --build . --config ${{matrix.build_type}} -t ChiraTest -- -j$(nproc) && ctest -C ${{matrix.build_type}}
+        run: cmake --build . --config ${{matrix.build_type}} -t ChiraTest -- -j$(sysctl -n hw.logicalcpu) && ctest -C ${{matrix.build_type}}
+
+      - name: Test (Apple Clang)
+        working-directory: ${{env.BUILD_DIR}}
+        run: cmake --build . --config ${{matrix.build_type}} -t ChiraTest && ctest -C ${{matrix.build_type}}
