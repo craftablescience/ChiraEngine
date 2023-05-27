@@ -49,3 +49,9 @@
 [submodule "engine/thirdparty/cereal"]
 	path = engine/thirdparty/cereal
 	url = https://github.com/craftablescience/cereal
+[submodule "engine/thirdparty/lua"]
+	path = engine/thirdparty/lua
+	url = https://github.com/craftablescience/lua
+[submodule "engine/thirdparty/sol2"]
+	path = engine/thirdparty/sol2
+	url = https://github.com/ThePhD/sol2
