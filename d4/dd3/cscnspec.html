@@ -106,18 +106,18 @@ $(document).ready(function(){initNavTree('d4/dd3/cscnspec.html','../../'); initR
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md19">Format</a></li>
-<li class="level1"><a href="#autotoc_md20">Example scene file</a></li>
-<li class="level1"><a href="#autotoc_md21">SceneInfo</a></li>
-<li class="level1"><a href="#autotoc_md22">Entities</a></li>
+<ul><li class="level1"><a href="#autotoc_md20">Format</a></li>
+<li class="level1"><a href="#autotoc_md21">Example scene file</a></li>
+<li class="level1"><a href="#autotoc_md22">SceneInfo</a></li>
+<li class="level1"><a href="#autotoc_md23">Entities</a></li>
 </ul>
 </div>
 <div class="textblock"><p><a class="anchor" id="md_docs_pages_filespec_spec_scene"></a>This file explains in detail exactly how the ChiraEngine Scene files (<code>.cscn</code>) work and what most if not all fields do and what their possible values (if applicable) are.</p>
-<h1><a class="anchor" id="autotoc_md19"></a>
+<h1><a class="anchor" id="autotoc_md20"></a>
 Format</h1>
 <p>The Scene file itself is written in JSON meaning it's quite easy to parse. Allowing the creation of external editors for game specific tools (EX. No Return's Bismuth Editor) to be easier than most. only needing a JSON parser to actually read data out of the file.</p>
 <p>How this data is used is left entirely up to the creator of the tool or game as most values are stored in the most basic manner possible to allow for maximum amount of ease in creating other tools.</p>
-<h1><a class="anchor" id="autotoc_md20"></a>
+<h1><a class="anchor" id="autotoc_md21"></a>
 Example scene file</h1>
 <p>Here is an example of a scene file that contains a simple blue sky environment and a single cube object on a static plane.<br  />
  Due to the simplicity of this example this doesn't show off a good chunk of the values that exist. This is only to be used as a basic example to visually see how these files are structured.</p>
@@ -143,10 +143,10 @@ Example scene file</h1>
 <div class="line">        },</div>
 <div class="line">     ]</div>
 <div class="line">}</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md21"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md22"></a>
 SceneInfo</h1>
 <p><code>TODO: Implement these values as support is added</code></p>
-<h1><a class="anchor" id="autotoc_md22"></a>
+<h1><a class="anchor" id="autotoc_md23"></a>
 Entities</h1>
 <p>The Entities property is used to store a hierarchical, order respecting list of entities inside of a scene. Each entity is placed into the list at the exact position that it's placed inside of the Editor's visual entities dock.</p>
 <p>The list below details the structure that makes up a given entity.</p>

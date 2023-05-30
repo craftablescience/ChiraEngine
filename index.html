@@ -108,92 +108,125 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="textblock"><p><a class="anchor" id="md_README"></a> </p><div align="center"> <img src="https://github.com/craftablescience/ChiraEngine/blob/main/branding/github/readme_banner.png?raw=true" alt="Chira Engine" width="400px" class="inline"/></div><div align="center"> <a href="https://app.codacy.com/gh/craftablescience/ChiraEngine?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=craftablescience/ChiraEngine&amp;utm_campaign=Badge_Grade_Settings"><img src="https://api.codacy.com/project/badge/Grade/5c8b0a7eba614cc8bc44d7d54789cf51" alt="Codacy Badge" class="inline"/></a> <img src="https://img.shields.io/github/actions/workflow/status/craftablescience/ChiraEngine/build_engine.yml?branch=main&amp;label=builds%20and%20tests" alt="Workflow Status" class="inline"/> <img src="https://img.shields.io/github/license/craftablescience/ChiraEngine?label=license" alt="License" class="inline"/> <img src="https://img.shields.io/discord/678074864346857482?label=discord&amp;logo=Discord&amp;logoColor=%23FFFFFF" alt="Discord" class="inline"/></div><div align="center"> A fully customizable (and heavily work-in-progress) MIT-licensed game engine, written in C++20. </div><h2><a class="anchor" id="autotoc_md0"></a>
 Features</h2>
 <p>To summarize the major features:</p><ul>
-<li>Native Windows, Linux, and macOS support (OpenGL 4.1)</li>
+<li>Native Windows, Linux, and macOS support</li>
 <li>As extensible as possible: register custom logging hooks, resource types and providers, etc.</li>
 <li>Custom preprocessing of GLSL shaders, with macros and #include directives</li>
-<li>Robust resource loading and management to facilitate sharing of congruent data</li>
-<li>Data-oriented design, using entities as building blocks</li>
+<li>Cached resource loading and management</li>
+<li>Data-oriented design, using an ECS framework</li>
+<li>Supports multiple simultaneous windows</li>
 <li>Hassle-free Discord Rich Presence and Steamworks API wrappers</li>
 <li>Inline text localization</li>
-<li>Event queue to communicate between entities (or other parts of the engine)</li>
 <li>Console commands to run actions on the fly, with the ability to pass arguments</li>
 <li>Variables modifiable from the console, with support for caching between sessions</li>
 <li>Logger built-in with colored text and hooks</li>
+<li>Multipurpose game editor</li>
 </ul>
 <p>The goal of the engine is to have as much customization as possible, while still maintaining ease of use.</p>
 <h2><a class="anchor" id="autotoc_md1"></a>
 Supported Platforms</h2>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Platform   </th><th class="markdownTableHeadNone">Graphics API    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Windows   </td><td class="markdownTableBodyNone">OpenGL 4.3    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Linux   </td><td class="markdownTableBodyNone">OpenGL 4.3    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">macOS   </td><td class="markdownTableBodyNone">OpenGL 4.1   </td></tr>
-</table>
-<h2><a class="anchor" id="autotoc_md2"></a>
+<ul>
+<li>Windows 7+</li>
+<li>Linux</li>
+<li>macOS 11.0+</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md2"></a>
+Planned:</h3>
+<ul>
+<li>Android</li>
+<li>Web (HTML5)</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md3"></a>
 Supported Compilers</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Compiler (Latest)   </th><th class="markdownTableHeadNone">Windows   </th><th class="markdownTableHeadNone">Linux   </th><th class="markdownTableHeadNone">macOS    </th></tr>
+<th class="markdownTableHeadNone">Platform   </th><th class="markdownTableHeadCenter">GCC   </th><th class="markdownTableHeadCenter">Clang   </th><th class="markdownTableHeadCenter">MSVC    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">GCC   </td><td class="markdownTableBodyNone">Supported (MinGW)*   </td><td class="markdownTableBodyNone">Supported   </td><td class="markdownTableBodyNone">Unsupported    </td></tr>
+<td class="markdownTableBodyNone">Windows   </td><td class="markdownTableBodyCenter">✔*   </td><td class="markdownTableBodyCenter">✔*   </td><td class="markdownTableBodyCenter">✔    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Clang   </td><td class="markdownTableBodyNone">Supported (MinGW)*   </td><td class="markdownTableBodyNone">Supported   </td><td class="markdownTableBodyNone">Supported (Homebrew)**    </td></tr>
+<td class="markdownTableBodyNone">Linux   </td><td class="markdownTableBodyCenter">✔   </td><td class="markdownTableBodyCenter">✔   </td><td class="markdownTableBodyCenter">-    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">MSVC   </td><td class="markdownTableBodyNone">Supported   </td><td class="markdownTableBodyNone">N/A   </td><td class="markdownTableBodyNone">N/A    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Clang-CL   </td><td class="markdownTableBodyNone">Supported   </td><td class="markdownTableBodyNone">N/A   </td><td class="markdownTableBodyNone">N/A   </td></tr>
+<td class="markdownTableBodyNone">macOS   </td><td class="markdownTableBodyCenter">❌   </td><td class="markdownTableBodyCenter">✔**   </td><td class="markdownTableBodyCenter">-   </td></tr>
 </table>
-<p>(*) MinGW builds on Windows will work, but running the application outside your IDE will require you to copy some DLLs next to the executable. Check the GitHub Actions script to see which DLLs need copied from the MinGW bin directory.</p>
-<p>(**) Homebrew LLVM/Clang is required because Apple Clang as of this time does not support certain C++20 features that are used inside the engine.</p>
-<h2><a class="anchor" id="autotoc_md3"></a>
+<p>(*) Supported with MinGW. Packaging a build of the application will require you to copy a DLL from the MinGW bin directory next to the executable. Check the GitHub Actions script to see the path to the DLL.</p>
+<p>(**) Homebrew LLVM/Clang is required. Some C++ features used in this project are not supported by Apple's version of Clang.</p>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Supported Rendering APIs</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Platform   </th><th class="markdownTableHeadCenter">OpenGL 4.0   </th><th class="markdownTableHeadCenter">OpenGL 4.1   </th><th class="markdownTableHeadCenter">OpenGL 4.3   </th><th class="markdownTableHeadCenter">D3D11   </th><th class="markdownTableHeadCenter">Software    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Windows   </td><td class="markdownTableBodyCenter">✔   </td><td class="markdownTableBodyCenter">✔   </td><td class="markdownTableBodyCenter">✔   </td><td class="markdownTableBodyCenter">Planned   </td><td class="markdownTableBodyCenter">✔*    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Linux   </td><td class="markdownTableBodyCenter">✔   </td><td class="markdownTableBodyCenter">✔   </td><td class="markdownTableBodyCenter">✔   </td><td class="markdownTableBodyCenter">❌   </td><td class="markdownTableBodyCenter">✔*    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">macOS   </td><td class="markdownTableBodyCenter">✔   </td><td class="markdownTableBodyCenter">✔   </td><td class="markdownTableBodyCenter">❌   </td><td class="markdownTableBodyCenter">❌   </td><td class="markdownTableBodyCenter">✔*   </td></tr>
+</table>
+<p>(*) SDL software renderer implementation is incomplete and will likely never work perfectly with 3D. It exists to make it easier to port to new platforms.</p>
+<h2><a class="anchor" id="autotoc_md5"></a>
 Bundled Dependencies</h2>
 <ul>
-<li>AngelScript v2.35.1</li>
-<li>Dear ImGui v1.89.5</li>
-<li>Discord RPC</li>
-<li>entt v3.11.1</li>
-<li>{fmt} v9.1.0</li>
-<li>GLAD (OpenGL 4.1 Core / OpenGL 4.3 Core)</li>
-<li>GLM v0.9.9</li>
-<li>ImGui Filebrowser</li>
-<li>ImGuizmo v1.89</li>
-<li>LibLoader</li>
-<li>magic_enum v0.8.2</li>
-<li>nlohmann_json v3.11.2</li>
-<li>SDL v2.26.5</li>
-<li>SoLoud</li>
-<li>stb_image v2.27</li>
-<li>stduuid v1.1</li>
+<li>Docs:<ul>
+<li><a href="https://github.com/jothepro/doxygen-awesome-css">doxygen-awesome-css</a></li>
 </ul>
-<p><a href="https://github.com/jothepro/doxygen-awesome-css">doxygen-awesome-css</a> is used in the Doxygen documentation.</p>
-<h2><a class="anchor" id="autotoc_md4"></a>
-Development (Windows)</h2>
-<ul>
-<li><b>CLion</b>: The project will compile without any prior configuration, but you will most likely need to install the Windows SDK (see below).</li>
-<li><b>Visual Studio 2022</b>: You will need to install (most of) the following components. Some are not required, like the AddressSanitizer and Just-In-Time debugger. This is an old screenshot, make any upgrades to the versions of these components that you see fit. <img src="https://user-images.githubusercontent.com/26600014/128105644-cfa92f30-dc96-4476-a4c9-8d8b5f3ce129.png" alt="image" class="inline"/></li>
+</li>
+<li>Engine:<ul>
+<li><a href="https://github.com/craftablescience/cereal">cereal</a> v1.3.2</li>
+<li><a href="https://github.com/ocornut/imgui">Dear ImGui</a> v1.89.5</li>
+<li><a href="https://github.com/craftablescience/discord-rpc-clean">Discord RPC</a></li>
+<li><a href="https://github.com/skypjack/entt">entt</a> v3.11.1</li>
+<li><a href="https://github.com/fmtlib/fmt">{fmt}</a> v9.1.0</li>
+<li><a href="https://gen.glad.sh/">glad</a> v2.0.4</li>
+<li><a href="https://github.com/g-truc/glm">glm</a> v0.9.9</li>
+<li><a href="https://github.com/BalazsJako/ImGuiColorTextEdit">ImGuiColorTextEdit</a></li>
+<li><a href="https://github.com/AirGuanZ/imgui-filebrowser">ImGui Filebrowser</a></li>
+<li><a href="https://github.com/CedricGuillemet/ImGuizmo">ImGuizmo</a> v1.89</li>
+<li><a href="https://github.com/craftablescience/LibLoader">LibLoader</a></li>
+<li><a href="https://github.com/craftablescience/lua">lua</a> v5.4.6</li>
+<li><a href="https://github.com/Neargye/magic_enum">magic_enum</a> v0.8.2</li>
+<li><a href="https://github.com/nlohmann/json">nlohmann_json</a> v3.11.2</li>
+<li><a href="https://github.com/libsdl-org/SDL">sdl</a> v2.26.5</li>
+<li><a href="https://github.com/ThePhD/sol2">sol2</a> v3.3.0</li>
+<li><a href="https://github.com/craftablescience/soloud">soloud</a></li>
+<li><a href="https://github.com/nothings/stb">stb_image</a> v2.27</li>
+<li><a href="https://github.com/mariusbancila/stduuid">stduuid</a> v1.1</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md5"></a>
-Development (Linux)</h2>
-<ul>
-<li><p class="startli"><b>CLion (recommended)</b>: The project will compile without any prior configuration, but you will need to install a few things first.</p>
-<p class="startli">On Debian-based distros, run:</p>
-<p class="startli"><code>sudo apt update &amp;&amp; sudo apt install cmake build-essential xorg-dev mesa-common-dev mesa-utils</code></p>
 </li>
 </ul>
 <h2><a class="anchor" id="autotoc_md6"></a>
-Development (macOS)</h2>
+Development (Windows)</h2>
 <ul>
-<li><b>Required</b>: You must install llvm from homebrew as the default Apple Clang does not work properly. use the command <code>brew install llvm</code>.</li>
-<li><b>Using Cmake/Terminal</b>: Run <code>cmake_configure_macos.sh Makefiles</code> to configure cmake to use Unix Makefiles. To build ChiraEngine run <code>cmake --build build --config Debug</code></li>
-<li><b>XCode</b>: Run <code>cmake_configure_macos.sh Xcode</code> to configure cmake to use Xcode Projects. You will find the ChiraEngine project under <code>build</code>. <em><b>Building under Xcode is currently unsupported due to issues with trying to use a custom compiler.</b></em></li>
+<li><b>CLion</b>: The project will compile without any prior configuration as long as a compiler is installed, but you will need to install the Windows SDK from the Visual Studio Installer.</li>
+<li><b>Visual Studio 2022</b>: You will need to install the Windows SDK (any version should work) and the CMake integration component. If you do not have any other compilers, you will need MSVC as well.</li>
+<li>If compiling with WSL without using any IDE integrations, skip to the Linux section.</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md7"></a>
-Usage</h2>
-<p>I recommend adding this repository as a submodule to your project. Make sure if you add a new resource folder, copy it to the <code>resources</code> folder in the executable directory in your buildscript, or the program will fail at runtime due to missing assets. </p>
+Development (Linux)</h2>
+<p>The project will compile without any prior configuration in your IDE of choice (or the terminal), but you will need to install a few things first. On Debian-based distros, run:</p>
+<div class="fragment"><div class="line">sudo apt update &amp;&amp; sudo apt install cmake build-essential xorg-dev mesa-common-dev mesa-utils</div>
+</div><!-- fragment --><p>Installing Ninja is optional but recommended:</p>
+<div class="fragment"><div class="line">sudo apt install ninja</div>
+</div><!-- fragment --><p>You will also need to install dev versions of sound libraries to support each of these sound backends when compiling. If you are compiling the project for your personal use, you only have to install the one you need:</p>
+<div class="fragment"><div class="line">sudo apt install libasound2-dev libpulse-dev libjack-dev</div>
+</div><!-- fragment --><p>If you are not using an IDE, the project can be compiled using the following commands:</p>
+<div class="fragment"><div class="line">cmake -G &quot;Unix Makefiles&quot; -B build -DCMAKE_BUILD_TYPE=Debug -- -j$(nproc)</div>
+<div class="line">cmake --build build</div>
+</div><!-- fragment --><ul>
+<li>Replace <code>"Unix Makefiles"</code> with <code>"Ninja"</code> if you installed Ninja earlier.</li>
+<li>Replace <code>"Debug"</code> with <code>"Release"</code> if you want to compile a release build.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md8"></a>
+Development (macOS)</h2>
+<p>You must install LLVM from Homebrew, as the default Apple Clang compilers do not work properly:</p>
+<div class="fragment"><div class="line">brew install llvm</div>
+</div><!-- fragment --><p>Installing Ninja is optional but recommended:</p>
+<div class="fragment"><div class="line">brew install ninja</div>
+</div><!-- fragment --><p>If you are not using an IDE, the project can be compiled using the following commands:</p>
+<div class="fragment"><div class="line">cmake -G &quot;Unix Makefiles&quot; -B build -DCMAKE_C_COMPILER=&quot;/usr/local/opt/llvm/bin/clang&quot; -DCMAKE_CXX_COMPILER=&quot;/usr/local/opt/llvm/bin/clang++&quot; -DCMAKE_BUILD_TYPE=Debug -- -j$(sysctl -n hw.logicalcpu)</div>
+<div class="line">cmake --build build</div>
+</div><!-- fragment --><ul>
+<li>Replace <code>"Unix Makefiles"</code> with <code>"Ninja"</code> if you installed Ninja earlier.</li>
+<li>Replace <code>"Debug"</code> with <code>"Release"</code> if you want to compile a release build. </li>
+</ul>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->

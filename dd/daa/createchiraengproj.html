@@ -106,16 +106,16 @@ $(document).ready(function(){initNavTree('dd/daa/createchiraengproj.html','../..
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md26">Prerequisites:</a><ul><li class="level2"><a href="#autotoc_md27">macOS Dependencies:</a></li>
-<li class="level2"><a href="#autotoc_md28">Linux Dependencies</a></li>
-<li class="level2"><a href="#autotoc_md29">Windows Dependencies</a></li>
+<ul><li class="level1"><a href="#autotoc_md27">Prerequisites:</a><ul><li class="level2"><a href="#autotoc_md28">macOS Dependencies:</a></li>
+<li class="level2"><a href="#autotoc_md29">Linux Dependencies</a></li>
+<li class="level2"><a href="#autotoc_md30">Windows Dependencies</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#autotoc_md30">Creating the base project</a></li>
+<li class="level1"><a href="#autotoc_md31">Creating the base project</a></li>
 </ul>
 </div>
 <div class="textblock"><p><a class="anchor" id="md_docs_pages_tutorial_setup"></a>This guide will teach you how to setup a project using Chira Engine.</p>
-<h1><a class="anchor" id="autotoc_md26"></a>
+<h1><a class="anchor" id="autotoc_md27"></a>
 Prerequisites:</h1>
 <p>You'll need a proper development environment setup in order to build a game using Chira Engine. This usually consists of an IDE, git, and a compiler.</p>
 <p>CLion is recommended as the IDE for Chira Engine Projects as it compiles out of the box with little/no configuration as long as you have the dependencies installed.</p>
@@ -126,17 +126,17 @@ Prerequisites:</h1>
 <blockquote class="doxtable">
 <p>*NOTE: The version of Clang Apple provides with XCode has been found to be problematic. If Chira Engine doesn't compile using XCode's Clang see [Using Homebrew LLVM (macOS)]() </p>
 </blockquote>
-<h2><a class="anchor" id="autotoc_md27"></a>
+<h2><a class="anchor" id="autotoc_md28"></a>
 macOS Dependencies:</h2>
 <p>XCode provides most if not all missing dependencies and even the compiler</p>
-<h2><a class="anchor" id="autotoc_md28"></a>
+<h2><a class="anchor" id="autotoc_md29"></a>
 Linux Dependencies</h2>
 <p>On Debian systems run the following: </p><div class="fragment"><div class="line">sudo apt update &amp;&amp; sudo apt install cmake build-essential xorg-dev mesa-common-dev mesa-utils</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md29"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md30"></a>
 Windows Dependencies</h2>
 <p>On Windows you will need to install (most of) the following components of Visual Studio regardless of your IDE choice. Some are not required, like the AddressSanitizer and Just-In-Time debugger. This is an old screenshot, make any upgrades to the versions of these components that you see fit.</p>
 <p><img src="https://user-images.githubusercontent.com/26600014/128105644-cfa92f30-dc96-4476-a4c9-8d8b5f3ce129.png" alt="image" class="inline"/></p>
-<h1><a class="anchor" id="autotoc_md30"></a>
+<h1><a class="anchor" id="autotoc_md31"></a>
 Creating the base project</h1>
 <p>Now that we've taken care of the basics we can now get started on actually setting up our ChiraEngine project.</p>
 <p>Start out by creating a new folder. For this guide we'll be using <code>MyProject</code></p>
