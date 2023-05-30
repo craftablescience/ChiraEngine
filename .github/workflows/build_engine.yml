@@ -13,7 +13,6 @@ env:
 jobs:
   build-msvc:
     strategy:
-      fail-fast: false
       matrix:
         build_type: [Debug, Release]
     runs-on: windows-latest
@@ -53,12 +52,11 @@ jobs:
         working-directory: ${{env.BUILD_DIR}}
         run: cmake --build . --config ${{matrix.build_type}} -t ChiraTest -- -j%NUMBER_OF_PROCESSORS% && ctest -C ${{matrix.build_type}}
 
-  build-mingw:
+
+  build-mingw-gcc:
     strategy:
-      fail-fast: false
       matrix:
         build_type: [Debug, Release]
-        sys: [mingw64, clang64]
     runs-on: windows-latest
     defaults:
       run:
@@ -72,7 +70,7 @@ jobs:
       - name: Install MSYS2
         uses: msys2/setup-msys2@v2
         with:
-          msystem: ${{matrix.sys}}
+          msystem: mingw64
           update: true
           install: >-
             git
@@ -82,30 +80,20 @@ jobs:
             cmake:p
             ninja:p
 
-      - name: Configure CMake (mingw64)
-        if: ${{ matrix.sys == 'mingw64' }}
+      - name: Configure CMake
         run: cmake -G "Ninja" -B '${{env.BUILD_DIR}}' -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_BUILD_WITH_PCH=ON -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
-
-      - name: Configure CMake (clang64)
-        if: ${{ matrix.sys == 'clang64' }}
-        run: cmake -G "Ninja" -B '${{env.BUILD_DIR}}' -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_BUILD_WITH_PCH=ON -DCMAKE_C_COMPILER="/clang64/bin/clang.exe" -DCMAKE_CXX_COMPILER="/clang64/bin/clang++.exe"
 
       - name: Build
         working-directory: ${{env.BUILD_DIR}}
         run: cmake --build . --config ${{matrix.build_type}} -t editor -- -j$(nproc)
 
-      - name: Copy Necessary DLLs (mingw64)
-        if: ${{ matrix.sys == 'mingw64' }}
+      - name: Copy libstdc++ DLL
         run: cp /mingw64/bin/libstdc++-6.dll '${{env.BUILD_DIR}}/libstdc++-6.dll'
-
-      - name: Copy Necessary DLLs (clang64)
-        if: ${{ matrix.sys == 'clang64' }}
-        run: cp /clang64/bin/libc++.dll '${{env.BUILD_DIR}}/libc++.dll'
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ChiraEngine-Windows-${{matrix.sys}}-${{matrix.build_type}}
+          name: ChiraEngine-Windows-mingw64-${{matrix.build_type}}
           path: |
             ${{env.BUILD_DIR}}/editor.exe
             ${{env.BUILD_DIR}}/*.dll
@@ -113,9 +101,62 @@ jobs:
           retention-days: 7
 
       - name: Test
-        if: ${{ matrix.sys == 'mingw64' }} # Clang crashes trying to link ChiraTest target, probably not my fault
         working-directory: ${{env.BUILD_DIR}}
         run: cmake --build . --config ${{matrix.build_type}} -t ChiraTest -- -j$(nproc) && ctest -C ${{matrix.build_type}}
+
+
+  build-mingw-clang:
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: clang64
+          update: true
+          install: >-
+            git
+            make
+          pacboy: >-
+            toolchain:p
+            cmake:p
+            ninja:p
+
+      - name: Configure CMake
+        run: cmake -G "Ninja" -B '${{env.BUILD_DIR}}' -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_BUILD_WITH_PCH=ON -DCMAKE_C_COMPILER="/clang64/bin/clang.exe" -DCMAKE_CXX_COMPILER="/clang64/bin/clang++.exe"
+
+      - name: Build
+        working-directory: ${{env.BUILD_DIR}}
+        run: cmake --build . --config ${{matrix.build_type}} -t editor -- -j$(nproc)
+
+      - name: Copy libc++ DLL
+        run: cp /clang64/bin/libc++.dll '${{env.BUILD_DIR}}/libc++.dll'
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ChiraEngine-Windows-clang64-${{matrix.build_type}}
+          path: |
+            ${{env.BUILD_DIR}}/editor.exe
+            ${{env.BUILD_DIR}}/*.dll
+            ${{env.BUILD_DIR}}/resources/
+          retention-days: 7
+
+# Clang crashes trying to link ChiraTest target, probably not my fault
+#      - name: Test
+#        working-directory: ${{env.BUILD_DIR}}
+#        run: cmake --build . --config ${{matrix.build_type}} -t ChiraTest -- -j$(nproc) && ctest -C ${{matrix.build_type}}
+
 
   build-linux:
     strategy:
@@ -168,12 +209,11 @@ jobs:
         working-directory: ${{env.BUILD_DIR}}
         run: cmake --build . --config ${{matrix.build_type}} -t ChiraTest -- -j$(nproc) && ctest -C ${{matrix.build_type}}
 
-  build-macos:
+
+  build-macos-brew:
     strategy:
-      fail-fast: false
       matrix:
         build_type: [Debug, Release]
-        compiler: [brew-clang] #, apple-clang]
     runs-on: macos-latest
     steps:
       - name: Checkout Repository
@@ -182,43 +222,60 @@ jobs:
           submodules: recursive
 
       - name: Install Homebrew Libraries
-        if: ${{ matrix.compiler == 'brew-clang' }}
         run: |
           brew install ninja
           brew install llvm
 
-      - name: Configure CMake (Homebrew Clang)
-        if: ${{ matrix.compiler == 'brew-clang' }}
+      - name: Configure CMake
         run: cmake -G "Ninja" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_BUILD_WITH_PCH=ON -DCMAKE_C_COMPILER="/usr/local/opt/llvm/bin/clang" -DCMAKE_CXX_COMPILER="/usr/local/opt/llvm/bin/clang++"
 
-      - name: Configure CMake (Apple Clang)
-        if: ${{ matrix.compiler == 'apple-clang' }}
-        run: cmake -G "Xcode" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_BUILD_WITH_PCH=ON
-
-      - name: Build (Homebrew Clang)
-        if: ${{ matrix.compiler == 'brew-clang' }}
+      - name: Build
         working-directory: ${{env.BUILD_DIR}}
         run: cmake --build . --config ${{matrix.build_type}} -t editor -- -j$(sysctl -n hw.logicalcpu)
-
-      - name: Build (Apple Clang)
-        if: ${{ matrix.compiler == 'apple-clang' }}
-        working-directory: ${{env.BUILD_DIR}}
-        run: cmake --build . --config ${{matrix.build_type}} -t editor
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ChiraEngine-macOS-${{matrix.generator}}-${{matrix.build_type}}
+          name: ChiraEngine-macOS-brew-${{matrix.build_type}}
           path: |
             ${{env.BUILD_DIR}}/editor.app
             ${{env.BUILD_DIR}}/*.dylib*
             ${{env.BUILD_DIR}}/resources/
           retention-days: 7
 
-      - name: Test (Homebrew Clang)
+      - name: Test
         working-directory: ${{env.BUILD_DIR}}
         run: cmake --build . --config ${{matrix.build_type}} -t ChiraTest -- -j$(sysctl -n hw.logicalcpu) && ctest -C ${{matrix.build_type}}
 
-      - name: Test (Apple Clang)
-        working-directory: ${{env.BUILD_DIR}}
-        run: cmake --build . --config ${{matrix.build_type}} -t ChiraTest && ctest -C ${{matrix.build_type}}
+
+#  build-macos-apple:
+#    strategy:
+#      matrix:
+#        build_type: [Debug, Release]
+#    runs-on: macos-latest
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#        with:
+#          submodules: recursive
+#
+#      - name: Configure CMake
+#        run: cmake -G "Xcode" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_BUILD_WITH_PCH=ON
+#
+#      - name: Build
+#        working-directory: ${{env.BUILD_DIR}}
+#        run: cmake --build . --config ${{matrix.build_type}} -t editor
+#
+#      - name: Upload Artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: ChiraEngine-macOS-apple-${{matrix.build_type}}
+#          path: |
+#            ${{env.BUILD_DIR}}/editor.app
+#            ${{env.BUILD_DIR}}/*.dylib*
+#            ${{env.BUILD_DIR}}/resources/
+#          retention-days: 7
+#
+#      - name: Test
+#        working-directory: ${{env.BUILD_DIR}}
+#        run: cmake --build . --config ${{matrix.build_type}} -t ChiraTest && ctest -C ${{matrix.build_type}}

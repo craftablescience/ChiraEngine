@@ -123,11 +123,12 @@ sudo apt install libasound2-dev libpulse-dev libjack-dev
 If you are not using an IDE, the project can be compiled using the following commands:
 
 ```shell
-cmake -G "Unix Makefiles" -S . -B build -DCMAKE_BUILD_TYPE=Debug  # Change this to Release for release builds
+cmake -G "Unix Makefiles" -B build -DCMAKE_BUILD_TYPE=Debug -- -j$(nproc)
 cmake --build build
 ```
 
-Replace `"Unix Makefiles"` with `"Ninja"` if you installed Ninja earlier.
+- Replace `"Unix Makefiles"` with `"Ninja"` if you installed Ninja earlier.
+- Replace `"Debug"` with `"Release"` if you want to compile a release build.
 
 ## Development (macOS)
 
@@ -146,8 +147,9 @@ brew install ninja
 If you are not using an IDE, the project can be compiled using the following commands:
 
 ```shell
-cmake -G "Unix Makefiles" -S . -B build -DCMAKE_C_COMPILER="/usr/local/opt/llvm/bin/clang" -DCMAKE_CXX_COMPILER="/usr/local/opt/llvm/bin/clang++" -DCMAKE_BUILD_TYPE=Debug  # Change this to Release for release builds
+cmake -G "Unix Makefiles" -B build -DCMAKE_C_COMPILER="/usr/local/opt/llvm/bin/clang" -DCMAKE_CXX_COMPILER="/usr/local/opt/llvm/bin/clang++" -DCMAKE_BUILD_TYPE=Debug -- -j$(sysctl -n hw.logicalcpu)
 cmake --build build
 ```
 
-Replace `"Unix Makefiles"` with `"Ninja"` if you installed Ninja earlier.
+- Replace `"Unix Makefiles"` with `"Ninja"` if you installed Ninja earlier.
+- Replace `"Debug"` with `"Release"` if you want to compile a release build.
