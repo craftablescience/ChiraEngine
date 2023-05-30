@@ -10,83 +10,144 @@
 </div>
 
 ## Features
+
 To summarize the major features:
-- Native Windows, Linux, and macOS support (OpenGL 4.1)
+- Native Windows, Linux, and macOS support
 - As extensible as possible: register custom logging hooks, resource types and providers, etc.
 - Custom preprocessing of GLSL shaders, with macros and #include directives
-- Robust resource loading and management to facilitate sharing of congruent data
-- Data-oriented design, using entities as building blocks
+- Cached resource loading and management
+- Data-oriented design, using an ECS framework
+- Supports multiple simultaneous windows
 - Hassle-free Discord Rich Presence and Steamworks API wrappers
 - Inline text localization
-- Event queue to communicate between entities (or other parts of the engine)
 - Console commands to run actions on the fly, with the ability to pass arguments
 - Variables modifiable from the console, with support for caching between sessions
 - Logger built-in with colored text and hooks
+- Multipurpose game editor
 
 The goal of the engine is to have as much customization as possible, while still maintaining ease of use.
 
 ## Supported Platforms
 
-| Platform          | Graphics API |
-|-------------------|--------------|
-| Windows           | OpenGL 4.3   |
-| Linux             | OpenGL 4.3   |
-| macOS             | OpenGL 4.1   |
+- Windows 7+
+- Linux
+- macOS 11.0+
+
+### Planned:
+
+- Android
+- Web (HTML5)
 
 ## Supported Compilers
 
-| Compiler (Latest) | Windows             | Linux     | macOS                    |
-|-------------------|---------------------|-----------|--------------------------|
-| GCC               | Supported (MinGW)\* | Supported | Unsupported              |
-| Clang             | Supported (MinGW)\* | Supported | Supported (Homebrew)\*\* |
-| MSVC              | Supported           | N/A       | N/A                      |
-| Clang-CL          | Supported           | N/A       | N/A                      |
+| Platform | GCC | Clang | MSVC |
+|----------|:---:|:-----:|:----:|
+| Windows  | ✔\* |  ✔\*  |  ✔   |
+| Linux    |  ✔  |   ✔   |  -   |
+| macOS    |  ❌  | ✔\*\* |  -   |
 
-(\*) MinGW builds on Windows will work, but running the application outside your IDE will require you to copy some DLLs
-next to the executable. Check the GitHub Actions script to see which DLLs need copied from the MinGW bin directory.
+(\*) Supported with MinGW. Packaging a build of the application will require you to copy a DLL
+from the MinGW bin directory next to the executable. Check the GitHub Actions script to see the path to the DLL.
 
-(\*\*) Homebrew LLVM/Clang is required because Apple Clang as of this time does not support certain C++20 features that are used inside the engine.
+(\*\*) Homebrew LLVM/Clang is required. Some C++ features used in this project are not supported
+by Apple's version of Clang.
+
+## Supported Rendering APIs
+
+| Platform          | OpenGL 4.0 | OpenGL 4.1 | OpenGL 4.3 |  D3D11  | Software |
+|-------------------|:----------:|:----------:|:----------:|:-------:|:--------:|
+| Windows           |     ✔      |     ✔      |     ✔      | Planned |   ✔\*    |
+| Linux             |     ✔      |     ✔      |     ✔      |    ❌    |   ✔\*    |
+| macOS             |     ✔      |     ✔      |     ❌      |    ❌    |   ✔\*    |
+
+(\*) SDL software renderer implementation is incomplete and will likely never work perfectly with 3D.
+It exists to make it easier to port to new platforms.
 
 ## Bundled Dependencies
-- AngelScript v2.35.1
-- Dear ImGui v1.89.5
-- Discord RPC
-- entt v3.11.1
-- {fmt} v9.1.0
-- GLAD (OpenGL 4.1 Core / OpenGL 4.3 Core)
-- GLM v0.9.9
-- ImGui Filebrowser
-- ImGuizmo v1.89
-- LibLoader
-- magic_enum v0.8.2
-- nlohmann_json v3.11.2
-- SDL v2.26.5
-- SoLoud
-- stb_image v2.27
-- stduuid v1.1
 
-[doxygen-awesome-css](https://github.com/jothepro/doxygen-awesome-css) is used in the Doxygen documentation.
+- Docs:
+  - [doxygen-awesome-css](https://github.com/jothepro/doxygen-awesome-css)
+- Engine:
+  - [cereal](https://github.com/craftablescience/cereal) v1.3.2
+  - [Dear ImGui](https://github.com/ocornut/imgui) v1.89.5
+  - [Discord RPC](https://github.com/craftablescience/discord-rpc-clean)
+  - [entt](https://github.com/skypjack/entt) v3.11.1
+  - [{fmt}](https://github.com/fmtlib/fmt) v9.1.0
+  - [glad](https://gen.glad.sh/) v2.0.4
+  - [glm](https://github.com/g-truc/glm) v0.9.9
+  - [ImGuiColorTextEdit](https://github.com/BalazsJako/ImGuiColorTextEdit)
+  - [ImGui Filebrowser](https://github.com/AirGuanZ/imgui-filebrowser)
+  - [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo) v1.89
+  - [LibLoader](https://github.com/craftablescience/LibLoader)
+  - [lua](https://github.com/craftablescience/lua) v5.4.6
+  - [magic_enum](https://github.com/Neargye/magic_enum) v0.8.2
+  - [nlohmann_json](https://github.com/nlohmann/json) v3.11.2
+  - [sdl](https://github.com/libsdl-org/SDL) v2.26.5
+  - [sol2](https://github.com/ThePhD/sol2) v3.3.0
+  - [soloud](https://github.com/craftablescience/soloud)
+  - [stb_image](https://github.com/nothings/stb) v2.27
+  - [stduuid](https://github.com/mariusbancila/stduuid) v1.1
 
 ## Development (Windows)
-- **CLion**: The project will compile without any prior configuration, but you will most likely need to install the Windows SDK (see below).
 
-- **Visual Studio 2022**: You will need to install (most of) the following components. Some are not required, like the AddressSanitizer and Just-In-Time debugger. This is an old screenshot, make any upgrades to the versions of these components that you see fit.
-  ![image](https://user-images.githubusercontent.com/26600014/128105644-cfa92f30-dc96-4476-a4c9-8d8b5f3ce129.png)
+- **CLion**: The project will compile without any prior configuration as long as a compiler is installed,
+  but you will need to install the Windows SDK from the Visual Studio Installer.
+
+- **Visual Studio 2022**: You will need to install the Windows SDK (any version should work) and the CMake
+  integration component. If you do not have any other compilers, you will need MSVC as well.
+
+- If compiling with WSL without using any IDE integrations, skip to the Linux section.
 
 ## Development (Linux)
-- **CLion (recommended)**: The project will compile without any prior configuration, but you will need to install a few things first.
 
-  On Debian-based distros, run:
-  
-  `sudo apt update && sudo apt install cmake build-essential xorg-dev mesa-common-dev mesa-utils`
+The project will compile without any prior configuration in your IDE of choice (or the terminal),
+but you will need to install a few things first. On Debian-based distros, run:
+
+```shell
+sudo apt update && sudo apt install cmake build-essential xorg-dev mesa-common-dev mesa-utils
+```
+
+Installing Ninja is optional but recommended:
+
+```shell
+sudo apt install ninja
+```
+
+You will also need to install dev versions of sound libraries to support each of these sound backends when compiling.
+If you are compiling the project for your personal use, you only have to install the one you need:
+
+```shell
+sudo apt install libasound2-dev libpulse-dev libjack-dev
+```
+
+If you are not using an IDE, the project can be compiled using the following commands:
+
+```shell
+cmake -G "Unix Makefiles" -S . -B build -DCMAKE_BUILD_TYPE=Debug  # Change this to Release for release builds
+cmake --build build
+```
+
+Replace `"Unix Makefiles"` with `"Ninja"` if you installed Ninja earlier.
 
 ## Development (macOS)
-- **Required**: You must install llvm from homebrew as the default Apple Clang does not work properly. use the command `brew install llvm`.
-    
-- **Using Cmake/Terminal**: Run `cmake_configure_macos.sh Makefiles` to configure cmake to use Unix Makefiles. To build ChiraEngine run `cmake --build build --config Debug`
-        
-- **XCode**: Run `cmake_configure_macos.sh Xcode` to configure cmake to use Xcode Projects. You will find the ChiraEngine project under `build`. ***Building under Xcode is currently unsupported due to issues with trying to use a custom compiler.***
 
-## Usage
-I recommend adding this repository as a submodule to your project.
-Make sure if you add a new resource folder, copy it to the `resources` folder in the executable directory in your buildscript, or the program will fail at runtime due to missing assets.
+You must install LLVM from Homebrew, as the default Apple Clang compilers do not work properly:
+
+```shell
+brew install llvm
+```
+
+Installing Ninja is optional but recommended:
+
+```shell
+brew install ninja
+```
+
+If you are not using an IDE, the project can be compiled using the following commands:
+
+```shell
+cmake -G "Unix Makefiles" -S . -B build -DCMAKE_C_COMPILER="/usr/local/opt/llvm/bin/clang" -DCMAKE_CXX_COMPILER="/usr/local/opt/llvm/bin/clang++" -DCMAKE_BUILD_TYPE=Debug  # Change this to Release for release builds
+cmake --build build
+```
+
+Replace `"Unix Makefiles"` with `"Ninja"` if you installed Ninja earlier.
