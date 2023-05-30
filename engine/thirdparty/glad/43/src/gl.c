@@ -39,6 +39,7 @@ int GLAD_GL_VERSION_4_0 = 0;
 int GLAD_GL_VERSION_4_1 = 0;
 int GLAD_GL_VERSION_4_2 = 0;
 int GLAD_GL_VERSION_4_3 = 0;
+int GLAD_GL_KHR_debug = 0;
 
 
 
@@ -1164,6 +1165,20 @@ static void glad_gl_load_GL_VERSION_4_3( GLADuserptrloadfunc load, void* userptr
     glad_glVertexAttribLFormat = (PFNGLVERTEXATTRIBLFORMATPROC) load(userptr, "glVertexAttribLFormat");
     glad_glVertexBindingDivisor = (PFNGLVERTEXBINDINGDIVISORPROC) load(userptr, "glVertexBindingDivisor");
 }
+static void glad_gl_load_GL_KHR_debug( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_KHR_debug) return;
+    glad_glDebugMessageCallback = (PFNGLDEBUGMESSAGECALLBACKPROC) load(userptr, "glDebugMessageCallback");
+    glad_glDebugMessageControl = (PFNGLDEBUGMESSAGECONTROLPROC) load(userptr, "glDebugMessageControl");
+    glad_glDebugMessageInsert = (PFNGLDEBUGMESSAGEINSERTPROC) load(userptr, "glDebugMessageInsert");
+    glad_glGetDebugMessageLog = (PFNGLGETDEBUGMESSAGELOGPROC) load(userptr, "glGetDebugMessageLog");
+    glad_glGetObjectLabel = (PFNGLGETOBJECTLABELPROC) load(userptr, "glGetObjectLabel");
+    glad_glGetObjectPtrLabel = (PFNGLGETOBJECTPTRLABELPROC) load(userptr, "glGetObjectPtrLabel");
+    glad_glGetPointerv = (PFNGLGETPOINTERVPROC) load(userptr, "glGetPointerv");
+    glad_glObjectLabel = (PFNGLOBJECTLABELPROC) load(userptr, "glObjectLabel");
+    glad_glObjectPtrLabel = (PFNGLOBJECTPTRLABELPROC) load(userptr, "glObjectPtrLabel");
+    glad_glPopDebugGroup = (PFNGLPOPDEBUGGROUPPROC) load(userptr, "glPopDebugGroup");
+    glad_glPushDebugGroup = (PFNGLPUSHDEBUGGROUPPROC) load(userptr, "glPushDebugGroup");
+}
 
 
 
@@ -1271,7 +1286,7 @@ static int glad_gl_find_extensions_gl( int version) {
     char **exts_i = NULL;
     if (!glad_gl_get_extensions(version, &exts, &num_exts_i, &exts_i)) return 0;
 
-    GLAD_UNUSED(glad_gl_has_extension);
+    GLAD_GL_KHR_debug = glad_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_KHR_debug");
 
     glad_gl_free_extensions(exts_i, num_exts_i);
 
@@ -1348,6 +1363,7 @@ int gladLoadGLUserPtr( GLADuserptrloadfunc load, void *userptr) {
     glad_gl_load_GL_VERSION_4_3(load, userptr);
 
     if (!glad_gl_find_extensions_gl(version)) return 0;
+    glad_gl_load_GL_KHR_debug(load, userptr);
 
 
 
