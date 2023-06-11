@@ -170,7 +170,7 @@ static int findFreeWindow() {
 }
 
 [[nodiscard]] Device::WindowHandle* Device::createWindow(int width, int height, std::string_view title, Layer* layer) {
-    unsigned int freeWindow = findFreeWindow();
+    int freeWindow = findFreeWindow();
     if (freeWindow == -1)
         return nullptr;
 
