@@ -162,15 +162,15 @@ std::uint64_t Device::getTicks() {
 std::array<Device::WindowHandle, 256> g_Windows{};
 
 static int findFreeWindow() {
-    for (int i = 0; i < g_Windows.size(); i++) {
+    for (unsigned int i = 0; i < g_Windows.size(); i++) {
         if (!g_Windows.at(i))
-            return i;
+            return static_cast<int>(i);
     }
     return -1;
 }
 
 [[nodiscard]] Device::WindowHandle* Device::createWindow(int width, int height, std::string_view title, Layer* layer) {
-    int freeWindow = findFreeWindow();
+    unsigned int freeWindow = findFreeWindow();
     if (freeWindow == -1)
         return nullptr;
 
