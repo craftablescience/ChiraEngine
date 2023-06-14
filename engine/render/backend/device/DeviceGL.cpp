@@ -169,7 +169,7 @@ static int findFreeWindow() {
     return -1;
 }
 
-[[nodiscard]] Device::WindowHandle* Device::createWindow(int width, int height, std::string_view title, Layer* layer) {
+Device::WindowHandle* Device::createWindow(int width, int height, std::string_view title, Layer* layer) {
     int freeWindow = findFreeWindow();
     if (freeWindow == -1)
         return nullptr;
@@ -369,7 +369,7 @@ void Device::refreshWindows() {
     }
 }
 
-[[nodiscard]] int Device::getWindowCount() {
+int Device::getWindowCount() {
     int count = 0;
     for (const auto& handle : g_Windows) {
         count += static_cast<bool>(handle);
@@ -377,7 +377,7 @@ void Device::refreshWindows() {
     return count;
 }
 
-[[nodiscard]] Layer* Device::getWindowLayer(WindowHandle* handle) {
+Layer* Device::getWindowLayer(WindowHandle* handle) {
     return handle->layer;
 }
 
@@ -393,7 +393,7 @@ void Device::setWindowMaximized(WindowHandle* handle, bool maximize) {
     handle->layer->setSize({handle->width, handle->height});
 }
 
-[[nodiscard]] bool Device::isWindowMaximized(WindowHandle* handle) {
+bool Device::isWindowMaximized(WindowHandle* handle) {
     return SDL_GetWindowFlags(handle->window) & SDL_WINDOW_MAXIMIZED;
 }
 
@@ -405,7 +405,7 @@ void Device::minimizeWindow(WindowHandle* handle, bool minimize) {
     }
 }
 
-[[nodiscard]] bool Device::isWindowMinimized(WindowHandle* handle) {
+bool Device::isWindowMinimized(WindowHandle* handle) {
     return SDL_GetWindowFlags(handle->window) & SDL_WINDOW_MINIMIZED;
 }
 
@@ -413,7 +413,7 @@ void Device::setWindowFullscreen(WindowHandle* handle, bool fullscreen) {
     SDL_SetWindowFullscreen(handle->window, fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
 }
 
-[[nodiscard]] bool Device::isWindowFullscreen(WindowHandle* handle) {
+bool Device::isWindowFullscreen(WindowHandle* handle) {
     return SDL_GetWindowFlags(handle->window) & SDL_WINDOW_FULLSCREEN_DESKTOP;
 }
 
@@ -426,7 +426,7 @@ void Device::setWindowVisibility(WindowHandle* handle, bool visible) {
     handle->hidden = visible;
 }
 
-[[nodiscard]] bool Device::isWindowVisible(WindowHandle* handle) {
+bool Device::isWindowVisible(WindowHandle* handle) {
     return !handle->hidden;
 }
 
@@ -437,7 +437,7 @@ void Device::setWindowSize(WindowHandle* handle, int width, int height) {
     SDL_SetWindowSize(handle->window, width, height);
 }
 
-[[nodiscard]] glm::vec2i Device::getWindowSize(WindowHandle* handle) {
+glm::vec2i Device::getWindowSize(WindowHandle* handle) {
     glm::vec2i dims;
     SDL_GetWindowSize(handle->window, &dims.x, &dims.y);
     return dims;
@@ -457,7 +457,7 @@ void Device::setWindowPositionFromCenter(WindowHandle* handle, int width, int he
     SDL_SetWindowPosition(handle->window, (rect.w / 2) + width, (rect.h / 2) + height);
 }
 
-[[nodiscard]] glm::vec2i Device::getWindowPosition(WindowHandle* handle) {
+glm::vec2i Device::getWindowPosition(WindowHandle* handle) {
     glm::vec2i pos;
     SDL_GetWindowPosition(handle->window, &pos.x, &pos.y);
     return pos;
@@ -471,13 +471,13 @@ void Device::setMousePositionInWindow(WindowHandle* handle, int x, int y) {
     SDL_WarpMouseInWindow(handle->window, x, y);
 }
 
-[[nodiscard]] glm::vec2i Device::getMousePositionGlobal() {
+glm::vec2i Device::getMousePositionGlobal() {
     glm::vec2i pos{-1, -1};
     SDL_GetGlobalMouseState(&pos.x, &pos.y);
     return pos;
 }
 
-[[nodiscard]] glm::vec2i Device::getMousePositionInFocusedWindow() {
+glm::vec2i Device::getMousePositionInFocusedWindow() {
     glm::vec2i pos{-1, -1};
     SDL_GetMouseState(&pos.x, &pos.y);
     return pos;
@@ -498,7 +498,7 @@ void Device::setMouseCapturedWindow(WindowHandle* handle, bool captured) {
     handle->mouseCaptured = captured;
 }
 
-[[nodiscard]] bool Device::isMouseCapturedWindow(WindowHandle* handle) {
+bool Device::isMouseCapturedWindow(WindowHandle* handle) {
     return handle->mouseCaptured;
 }
 
@@ -507,7 +507,7 @@ void Device::queueDestroyWindow(WindowHandle* handle, bool free) {
     handle->shouldClose = free;
 }
 
-[[nodiscard]] bool Device::isWindowAboutToBeDestroyed(WindowHandle* handle) {
+bool Device::isWindowAboutToBeDestroyed(WindowHandle* handle) {
     return handle->shouldClose;
 }
 
