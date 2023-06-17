@@ -3,7 +3,7 @@ include(FetchContent)
 
 # Must set some Apple options before creating the project
 if(APPLE)
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum OSX deployment version")
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OSX deployment version")
     if(CMAKE_GENERATOR STREQUAL Xcode)
         set(CMAKE_XCODE_ATTRIBUTE_CC ${CMAKE_C_COMPILER})
         set(CMAKE_XCODE_ATTRIBUTE_CXX ${CMAKE_CXX_COMPILER})
