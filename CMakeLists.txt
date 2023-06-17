@@ -66,9 +66,9 @@ set(CHIRA_RENDER_BACKEND "AUTO" CACHE STRING "Override the render backend. If no
 
 # todo(render): get rid of this variable, compile all backend types and run headless wth command line arg
 # Options:
-# - SDL
+# - SDL2
 # - HEADLESS
-set(CHIRA_RENDER_DEVICE "SDL" CACHE STRING "Change the device backend from SDL.")
+set(CHIRA_RENDER_DEVICE "SDL2" CACHE STRING "Override the device backend.")
 
 option(CHIRA_USE_DISCORD "Build Chira Engine with Discord rich presence features if possible" ON)
 option(CHIRA_USE_STEAMWORKS "Build Chira Engine with Steamworks API features if possible" ON)
