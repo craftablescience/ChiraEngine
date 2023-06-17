@@ -82,6 +82,7 @@ It exists to make it easier to port to new platforms.
   - [lua](https://github.com/craftablescience/lua) v5.4.6
   - [magic_enum](https://github.com/Neargye/magic_enum) v0.8.2
   - [nlohmann_json](https://github.com/nlohmann/json) v3.11.2
+  - [physfs](https://github.com/icculus/physfs) v3.2.0
   - [sdl](https://github.com/libsdl-org/SDL) v2.26.5
   - [sol2](https://github.com/ThePhD/sol2) v3.3.0
   - [soloud](https://github.com/craftablescience/soloud)

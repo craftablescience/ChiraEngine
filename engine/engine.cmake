@@ -153,7 +153,7 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/fmt)
 list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/fmt/include)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES fmt::fmt)
 
-# EnTT
+# ENTT
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/entt)
 list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/entt/src)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES EnTT::EnTT)
@@ -182,6 +182,23 @@ list(APPEND CHIRA_ENGINE_LINK_LIBRARIES magic_enum)
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/json)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES nlohmann_json::nlohmann_json)
+
+# PHYSFS
+set(PHYSFS_BUILD_TEST OFF CACHE INTERNAL "")
+set(PHYSFS_DISABLE_INSTALL OFF CACHE INTERNAL "")
+set(PHYSFS_BUILD_DOCS OFF CACHE INTERNAL "")
+if(BUILD_SHARED_LIBS)
+    set(PHYSFS_BUILD_STATIC OFF CACHE INTERNAL "")
+    set(PHYSFS_BUILD_SHARED ON CACHE INTERNAL "")
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/physfs)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES PhysFS::PhysFS)
+else()
+    set(PHYSFS_BUILD_STATIC ON CACHE INTERNAL "")
+    set(PHYSFS_BUILD_SHARED OFF CACHE INTERNAL "")
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/physfs)
+    list(APPEND CHIRA_ENGINE_LINK_LIBRARIES PhysFS::PhysFS-static)
+endif()
+list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/physfs/src)
 
 # SOL2
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sol2)

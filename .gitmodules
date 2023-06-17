@@ -52,3 +52,6 @@
 [submodule "engine/thirdparty/sol2"]
 	path = engine/thirdparty/sol2
 	url = https://github.com/ThePhD/sol2
+[submodule "engine/thirdparty/physfs"]
+	path = engine/thirdparty/physfs
+	url = https://github.com/craftablescience/physfs
