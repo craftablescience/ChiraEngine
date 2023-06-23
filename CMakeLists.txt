@@ -39,6 +39,17 @@ if(CHIRA_COMPILER_ID MATCHES "clang")
     endif()
 endif()
 
+# Helper for enum options (pick between certain strings)
+macro(option_enum)
+    cmake_parse_arguments(IN "" "NAME;DEFAULT;DESCRIPTION" "OPTIONS" ${ARGN})
+    set(${IN_NAME}_OPTIONS ${IN_OPTIONS})
+    set(${IN_NAME} ${IN_DEFAULT} CACHE STRING ${IN_DESCRIPTION})
+    set_property(CACHE ${IN_NAME} PROPERTY STRINGS ${IN_NAME}_OPTIONS)
+    if(NOT ${IN_NAME} IN_LIST ${IN_NAME}_OPTIONS)
+        message(FATAL_ERROR "${IN_NAME} (currently ${${IN_NAME}}) must be one of the following values: ${${IN_NAME}_OPTIONS}")
+    endif()
+endmacro()
+
 # Options
 include(CMakeDependentOption)
 option(CHIRA_BUILD_EDITOR "Build the editor GUI application" ON)
@@ -56,39 +67,41 @@ option(CHIRA_BUILD_WITH_WARNINGS "Build Chira Engine with warnings enabled" ON)
 option(CHIRA_ENABLE_CRT_SECURE_NO_WARNINGS "Disable the _CRT_SECURE_NO_WARNINGS warning" ON)
 option(CHIRA_TREAT_WARNINGS_AS_ERRORS "Build Chira Engine with warnings treated as errors" OFF)
 
-# Options:
-# - AUTO
-# - GL40
-# - GL41
-# - GL43
-# - SDLRENDERER
-set(CHIRA_RENDER_BACKEND "AUTO" CACHE STRING "Override the render backend. If not specified, will choose the best backend for the current platform.")
-
-# todo(render): get rid of this variable, compile all backend types and run headless wth command line arg
-# Options:
-# - SDL2
-# - HEADLESS
-set(CHIRA_RENDER_DEVICE "SDL2" CACHE STRING "Override the device backend.")
+option_enum(
+        NAME "CHIRA_RENDER_BACKEND"
+        DESCRIPTION "Override the default render backend. If set to AUTO, will choose the best backend for the current platform."
+        DEFAULT "AUTO"
+        OPTIONS "AUTO" "GL40" "GL41" "GL43" "SDLRENDERER")
+option_enum(
+        NAME "CHIRA_RENDER_DEVICE"
+        DESCRIPTION "Override the default device backend."
+        DEFAULT "SDL2"
+        OPTIONS "SDL2" "HEADLESS")
 
 option(CHIRA_USE_DISCORD "Build Chira Engine with Discord rich presence features if possible" ON)
 option(CHIRA_USE_STEAMWORKS "Build Chira Engine with Steamworks API features if possible" ON)
 
+# Helper macro for printing a variable
+macro(print_variable VARIABLE)
+    message(STATUS "  ${VARIABLE}: ${${VARIABLE}}")
+endmacro()
+
 # Print out what is enabled and what isn't
 message(STATUS "Options:")
-message(STATUS "  CHIRA_BUILD_EDITOR: ${CHIRA_BUILD_EDITOR}")
-message(STATUS "  CHIRA_BUILD_EDITOR_INSTALLER: ${CHIRA_BUILD_EDITOR_INSTALLER}")
-message(STATUS "  CHIRA_BUILD_TESTS: ${CHIRA_BUILD_TESTS}")
-message(STATUS "  CHIRA_BUILD_WITH_ASSERTS: ${CHIRA_BUILD_WITH_ASSERTS}")
-message(STATUS "  CHIRA_BUILD_WITH_LTO: ${CHIRA_BUILD_WITH_LTO}")
-message(STATUS "  CHIRA_BUILD_WITH_PCH: ${CHIRA_BUILD_WITH_PCH}")
-message(STATUS "  CHIRA_BUILD_WITH_STATIC_MSVC_RUNTIME_LIBRARY: ${CHIRA_BUILD_WITH_STATIC_MSVC_RUNTIME_LIBRARY}")
-message(STATUS "  CHIRA_BUILD_WITH_WARNINGS: ${CHIRA_BUILD_WITH_WARNINGS}")
-message(STATUS "  CHIRA_ENABLE_CRT_SECURE_NO_WARNINGS: ${CHIRA_ENABLE_CRT_SECURE_NO_WARNINGS}")
-message(STATUS "  CHIRA_TREAT_WARNINGS_AS_ERRORS: ${CHIRA_TREAT_WARNINGS_AS_ERRORS}")
-message(STATUS "  CHIRA_RENDER_BACKEND: ${CHIRA_RENDER_BACKEND}")
-message(STATUS "  CHIRA_RENDER_DEVICE: ${CHIRA_RENDER_DEVICE}")
-message(STATUS "  CHIRA_USE_DISCORD: ${CHIRA_USE_DISCORD}")
-message(STATUS "  CHIRA_USE_STEAMWORKS: ${CHIRA_USE_STEAMWORKS}")
+print_variable(CHIRA_BUILD_EDITOR)
+print_variable(CHIRA_BUILD_EDITOR_INSTALLER)
+print_variable(CHIRA_BUILD_TESTS)
+print_variable(CHIRA_BUILD_WITH_ASSERTS)
+print_variable(CHIRA_BUILD_WITH_LTO)
+print_variable(CHIRA_BUILD_WITH_PCH)
+print_variable(CHIRA_BUILD_WITH_STATIC_MSVC_RUNTIME_LIBRARY)
+print_variable(CHIRA_BUILD_WITH_WARNINGS)
+print_variable(CHIRA_ENABLE_CRT_SECURE_NO_WARNINGS)
+print_variable(CHIRA_TREAT_WARNINGS_AS_ERRORS)
+print_variable(CHIRA_RENDER_BACKEND)
+print_variable(CHIRA_RENDER_DEVICE)
+print_variable(CHIRA_USE_DISCORD)
+print_variable(CHIRA_USE_STEAMWORKS)
 
 # You should add this to your own CMake to load Chira Engine's dependencies in non-Windows environments
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
