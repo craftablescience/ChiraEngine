@@ -42,7 +42,7 @@ endif()
 # Options
 include(CMakeDependentOption)
 option(CHIRA_BUILD_EDITOR "Build the editor GUI application" ON)
-option(CHIRA_BUILD_TOOLS "Build various external tool executables" ON)
+option(CHIRA_BUILD_EXTERNAL_TOOLS "Build various external tool executables" ON)
 cmake_dependent_option(CHIRA_BUILD_EDITOR_INSTALLER "Build an installer for the editor binaries" OFF "CHIRA_BUILD_EDITOR" OFF)
 option(CHIRA_BUILD_TESTS "Run Chira Engine's built-in tests" ON)
 
@@ -195,14 +195,18 @@ if(CHIRA_BUILD_TESTS)
     include(${CMAKE_CURRENT_SOURCE_DIR}/tests/tests.cmake)
 endif()
 
-if(CHIRA_BUILD_TOOLS)
+if(CHIRA_BUILD_EXTERNAL_TOOLS)
+    set(CHIRA_EXTERNAL_TOOLS_NAME "chira_external_tools")
+    add_custom_target(${CHIRA_EXTERNAL_TOOLS_NAME})
+
     # Helper function to handle tools
     function(add_tool_executable NAME)
         cmake_parse_arguments(PARSE_ARGV 1 IN "" "" "SOURCES;DEPS;INCLUDE_PATHS")
-        add_executable(${NAME} ${IN_SOURCES})
+        add_executable(${NAME} ${IN_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/tools/ToolHelpers.h)
         apply_optimizations(${NAME})
         target_link_libraries(${NAME} PRIVATE ${CHIRA_ENGINE_NAME} ${IN_DEPS})
         target_include_directories(${NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tools/${NAME} ${IN_INCLUDE_PATHS})
+        add_dependencies(${CHIRA_EXTERNAL_TOOLS_NAME} ${NAME})
     endfunction()
 
     # CMDLTOOL

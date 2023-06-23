@@ -4,29 +4,23 @@
 
 #include <core/CommandLine.h>
 #include <core/Engine.h>
-#include <core/Logger.h>
 #include <loader/mesh/ChiraMeshLoader.h>
 #include <loader/mesh/OBJMeshLoader.h>
 #include <render/mesh/MeshData.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 
+#include "../ToolHelpers.h"
+
 using namespace chira;
 
-CHIRA_CREATE_LOG(CMDLTOOL);
-
-#define VERSION "1.0"
-
-static void printHelp() {
-    LOG_CMDLTOOL.infoImportant() <<                                    "\n"
-        "CMDLTOOL v" VERSION                                           "\n"
-        "Parameters:"                                                  "\n"
-        "-h               : Display this help message"                 "\n"
-        "-i <input file>  : Path of the file to convert"               "\n"
-        "-s <type>        : Type of the input file (cmdl, obj, etc.)"  "\n"
-        "-t <type>        : Type of the output file (cmdl, obj, etc.)" "\n"
-        "                   The default is cmdl"                       "\n"
-        "-o <output file> : Destination for the converted file"        "\n";
-}
+CHIRA_SETUP_CLI_TOOL(CMDLTOOL, "1.0",
+                     "Parameters:"                                                  "\n"
+                     "-h               : Display this help message"                 "\n"
+                     "-i <input file>  : Path of the file to convert"               "\n"
+                     "-s <type>        : Type of the input file (cmdl, obj, etc.)"  "\n"
+                     "-t <type>        : Type of the output file (cmdl, obj, etc.)" "\n"
+                     "                   The default is cmdl"                       "\n"
+                     "-o <output file> : Destination for the converted file"        "\n");
 
 int main(int argc, const char* const argv[]) {
     Engine::preInit(argc, argv);
