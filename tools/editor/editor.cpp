@@ -1,12 +1,3 @@
-// Use the best available GPU on Windows
-#include <core/Platform.h>
-#ifdef CHIRA_PLATFORM_WINDOWS
-extern "C" {
-    [[maybe_unused]] __declspec(dllexport) unsigned long NvOptimusEnablement = 0x01;
-    [[maybe_unused]] __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 0x01;
-}
-#endif
-
 #include <config/ConEntry.h>
 #include <core/Engine.h>
 #include <i18n/TranslationManager.h>
@@ -27,7 +18,11 @@ extern "C" {
 #include "ui/InspectorPanel.h"
 #include "ui/ScriptEditorPanel.h"
 
+#include "../ToolHelpers.h"
+
 using namespace chira;
+
+CHIRA_SETUP_GUI_TOOL(EDITOR);
 
 int main(int argc, const char* const argv[]) {
     Engine::preInit(argc, argv);
