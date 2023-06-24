@@ -1,6 +1,6 @@
 #include "DeviceGL.h"
 
-#include <array>
+#include <vector>
 
 #include <backends/imgui_impl_sdl2.h>
 #include <glad/gl.h>
@@ -161,7 +161,7 @@ std::uint64_t Device::getTicks() {
 
 std::array<Device::WindowHandle, 256> g_Windows{};
 
-static int findFreeWindow() {
+[[nodiscard]] static int findFreeWindow() {
     for (unsigned int i = 0; i < g_Windows.size(); i++) {
         if (!g_Windows.at(i))
             return static_cast<int>(i);
@@ -379,6 +379,14 @@ int Device::getWindowCount() {
 
 Layer* Device::getWindowLayer(WindowHandle* handle) {
     return handle->layer;
+}
+
+void Device::setWindowTitle(WindowHandle* handle, std::string_view title) {
+    SDL_SetWindowTitle(handle->window, title.data());
+}
+
+std::string_view Device::getWindowTitle(WindowHandle* handle) {
+    return SDL_GetWindowTitle(handle->window);
 }
 
 void Device::setWindowMaximized(WindowHandle* handle, bool maximize) {

@@ -57,6 +57,9 @@ void refreshWindows();
 
 [[nodiscard]] Layer* getWindowLayer(WindowHandle* handle);
 
+void setWindowTitle(WindowHandle* handle, std::string_view title);
+[[nodiscard]] std::string_view getWindowTitle(WindowHandle* handle);
+
 void setWindowMaximized(WindowHandle* handle, bool maximize);
 [[nodiscard]] bool isWindowMaximized(WindowHandle* handle);
 

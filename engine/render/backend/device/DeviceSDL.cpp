@@ -41,7 +41,7 @@ static void setImGuiConfigPath() {
 
 Renderer::FrameBufferHandle g_WindowFramebufferHandle{};
 SDL_Window* g_Splashscreen = nullptr;
-SDL_Renderer* r_Renderer = nullptr;
+SDL_Renderer* g_Renderer = nullptr;
 
 bool Device::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
     static bool alreadyRan = false;
@@ -84,7 +84,7 @@ bool Device::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
         return false;
     }
 
-    if (win_vsync.getValue<bool>() == true) {
+    if (win_vsync.getValue<bool>()) {
         SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
     } else {
         SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
@@ -92,8 +92,8 @@ bool Device::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
 
     // initialize the renderer. if we have any version of opengl period that's better 
     // than nothing but chance is it's not opengl and none of our changes to gl will matter
-    // we're at least hoping you have some form of hardware accelleration though.
-    r_Renderer = SDL_CreateRenderer(g_Splashscreen, -1, SDL_RENDERER_ACCELERATED);
+    // we're at least hoping you have some form of hardware acceleration though.
+    g_Renderer = SDL_CreateRenderer(g_Splashscreen, -1, SDL_RENDERER_ACCELERATED);
 
     int glContextFlags;
     SDL_GL_GetAttribute(SDL_GL_CONTEXT_FLAGS, &glContextFlags);
@@ -103,7 +103,7 @@ bool Device::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
 #endif
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, glContextFlags);
 
-    if (!r_Renderer) {
+    if (!g_Renderer) {
         LOG_WINDOW.error("SDL Renderer failed to initialize! Error: {}", SDL_GetError());
         return false;
     }
@@ -113,10 +113,10 @@ bool Device::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
     viewport.y = 0;
     viewport.w = width;
     viewport.h = height;
-    SDL_RenderSetViewport(r_Renderer, &viewport);
+    SDL_RenderSetViewport(g_Renderer, &viewport);
 
-    SDL_SetRenderDrawColor(r_Renderer, 255, 255, 255, 255);
-    SDL_RenderClear(r_Renderer);
+    SDL_SetRenderDrawColor(g_Renderer, 255, 255, 255, 255);
+    SDL_RenderClear(g_Renderer);
 
     int splashWidth, splashHeight, bitsPerPixel;
     SDL_Surface* sdlSplash;
@@ -124,13 +124,13 @@ bool Device::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
     auto* splash = Image::getUncompressedImage(FilesystemResourceProvider::getResourceAbsolutePath("file://textures/ui/splashscreen.png"), &splashWidth, &splashHeight, &bitsPerPixel, 4, false);
     if (splash) {
         sdlSplash = SDL_CreateRGBSurfaceWithFormatFrom(splash, splashWidth, splashHeight, bitsPerPixel, 8, SDL_PIXELFORMAT_RGBA8888);
-        splashTex = SDL_CreateTextureFromSurface(r_Renderer, sdlSplash);
-        if (SDL_RenderCopy(r_Renderer, splashTex, &viewport, &viewport) != 0) {
+        splashTex = SDL_CreateTextureFromSurface(g_Renderer, sdlSplash);
+        if (SDL_RenderCopy(g_Renderer, splashTex, &viewport, &viewport) != 0) {
             LOG_WINDOW.error("Failed to display splash screen texture! Error: {}", SDL_GetError());
         }
     }
     
-    SDL_RenderPresent(r_Renderer);
+    SDL_RenderPresent(g_Renderer);
 
     SDL_DestroyTexture(splashTex);
     SDL_FreeSurface(sdlSplash);
@@ -142,9 +142,9 @@ bool Device::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
 void Device::destroySplashscreen() {
     if (g_Splashscreen) {
         SDL_DestroyWindow(g_Splashscreen);
-        SDL_DestroyRenderer(r_Renderer);
+        SDL_DestroyRenderer(g_Renderer);
         g_Splashscreen = nullptr;
-        r_Renderer = nullptr;
+        g_Renderer = nullptr;
     }
 }
 
@@ -190,8 +190,8 @@ static int findFreeWindow() {
     }
     SDL_SetWindowData(handle.window, "handle", &handle);
 
-    r_Renderer = SDL_CreateRenderer(handle.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
-    if (!r_Renderer) {
+    g_Renderer = SDL_CreateRenderer(handle.window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+    if (!g_Renderer) {
         LOG_WINDOW.error("Renderer creation failed! Error: {}", SDL_GetError());
     }
 
@@ -218,7 +218,7 @@ static int findFreeWindow() {
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_DockingEnable;
     setImGuiConfigPath();
 
-    Renderer::initImGui(handle.window, r_Renderer);
+    Renderer::initImGui(handle.window, g_Renderer);
 
     static bool bakedFonts = false;
     if (!bakedFonts) {
@@ -253,7 +253,7 @@ void Device::refreshWindows() {
         viewport.y = 0;
         viewport.w = handle.width;
         viewport.h = handle.height;
-        SDL_RenderSetViewport(r_Renderer, &viewport);
+        SDL_RenderSetViewport(g_Renderer, &viewport);
 
         ImGui::SetCurrentContext(handle.imguiContext);
         setImGuiConfigPath();
@@ -271,7 +271,7 @@ void Device::refreshWindows() {
         Renderer::endImGuiFrame();
         Renderer::popFrameBuffer();
 
-        SDL_RenderPresent(r_Renderer);
+        SDL_RenderPresent(g_Renderer);
     }
 
     // Process input
@@ -376,6 +376,14 @@ void Device::refreshWindows() {
 
 [[nodiscard]] Layer* Device::getWindowLayer(WindowHandle* handle) {
     return handle->layer;
+}
+
+void Device::setWindowTitle(WindowHandle* handle, std::string_view title) {
+    SDL_SetWindowTitle(handle->window, title.data());
+}
+
+std::string_view Device::getWindowTitle(WindowHandle* handle) {
+    return SDL_GetWindowTitle(handle->window);
 }
 
 void Device::setWindowMaximized(WindowHandle* handle, bool maximize) {
@@ -515,7 +523,7 @@ void Device::destroyWindow(WindowHandle* handle) {
     Device::removeAllPanelsFromWindow(handle);
     ImGui::DestroyContext(handle->imguiContext);
     handle->imguiContext = nullptr;
-    SDL_DestroyRenderer(r_Renderer);
+    SDL_DestroyRenderer(g_Renderer);
     SDL_DestroyWindow(handle->window);
     handle->window = nullptr;
 }
