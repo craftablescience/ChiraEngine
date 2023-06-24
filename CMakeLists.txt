@@ -52,7 +52,6 @@ endmacro()
 
 # Options
 include(CMakeDependentOption)
-option(CHIRA_BUILD_EDITOR "Build the editor GUI application" ON)
 option(CHIRA_BUILD_EXTERNAL_TOOLS "Build various external tool executables" ON)
 option(CHIRA_BUILD_INSTALLER "Build an installer for the compiled binaries" OFF)
 option(CHIRA_BUILD_TESTS "Run Chira Engine's built-in tests" ON)
@@ -88,7 +87,7 @@ endmacro()
 
 # Print out what is enabled and what isn't
 message(STATUS "Options:")
-print_variable(CHIRA_BUILD_EDITOR)
+print_variable(CHIRA_BUILD_EXTERNAL_TOOLS)
 print_variable(CHIRA_BUILD_INSTALLER)
 print_variable(CHIRA_BUILD_TESTS)
 print_variable(CHIRA_BUILD_WITH_ASSERTS)
@@ -216,6 +215,9 @@ if(CHIRA_BUILD_EXTERNAL_TOOLS)
     # Helper function to handle tools
     function(add_tool_executable NAME)
         cmake_parse_arguments(PARSE_ARGV 1 IN "GUI" "" "SOURCES;DEPS;INCLUDE_PATHS")
+        if(WIN32)
+            list(APPEND IN_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources/engine/platform/windows/app.rc)
+        endif()
         if(IN_GUI AND NOT CHIRA_DEBUG_BUILD)
             add_executable(${NAME} WIN32 ${IN_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/tools/ToolHelpers.h)
             if(WIN32 AND MSVC)
@@ -234,9 +236,7 @@ if(CHIRA_BUILD_EXTERNAL_TOOLS)
     include(${CMAKE_CURRENT_SOURCE_DIR}/tools/cmdltool/cmdltool.cmake)
 
     # EDITOR
-    if(CHIRA_BUILD_EDITOR)
-        include(${CMAKE_CURRENT_SOURCE_DIR}/tools/editor/editor.cmake)
-    endif()
+    include(${CMAKE_CURRENT_SOURCE_DIR}/tools/editor/editor.cmake)
 endif()
 
 # Build installer
