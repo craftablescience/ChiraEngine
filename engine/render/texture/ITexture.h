@@ -16,6 +16,10 @@ public:
     virtual void use() const = 0;
     virtual void use(TextureUnit activeTextureUnit) const = 0;
 
+    [[nodiscard]] void* getImGuiTextureHandle() const {
+        return Renderer::getImGuiTextureHandle(this->handle);
+    }
+
 protected:
     Renderer::TextureHandle handle{};
 };

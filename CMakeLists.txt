@@ -237,6 +237,9 @@ if(CHIRA_BUILD_EXTERNAL_TOOLS)
 
     # EDITOR
     include(${CMAKE_CURRENT_SOURCE_DIR}/tools/editor/editor.cmake)
+
+    # PROJECT_MANAGER
+    include(${CMAKE_CURRENT_SOURCE_DIR}/tools/project_manager/project_manager.cmake)
 endif()
 
 # Build installer
