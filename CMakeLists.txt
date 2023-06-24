@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 include(FetchContent)
 
 # Must set some Apple options before creating the project
@@ -54,7 +54,7 @@ endmacro()
 include(CMakeDependentOption)
 option(CHIRA_BUILD_EDITOR "Build the editor GUI application" ON)
 option(CHIRA_BUILD_EXTERNAL_TOOLS "Build various external tool executables" ON)
-cmake_dependent_option(CHIRA_BUILD_EDITOR_INSTALLER "Build an installer for the editor binaries" OFF "CHIRA_BUILD_EDITOR" OFF)
+option(CHIRA_BUILD_INSTALLER "Build an installer for the compiled binaries" OFF)
 option(CHIRA_BUILD_TESTS "Run Chira Engine's built-in tests" ON)
 
 option(CHIRA_BUILD_WITH_ASSERTS "Build Chira Engine with assertions enabled" ON)
@@ -89,7 +89,7 @@ endmacro()
 # Print out what is enabled and what isn't
 message(STATUS "Options:")
 print_variable(CHIRA_BUILD_EDITOR)
-print_variable(CHIRA_BUILD_EDITOR_INSTALLER)
+print_variable(CHIRA_BUILD_INSTALLER)
 print_variable(CHIRA_BUILD_TESTS)
 print_variable(CHIRA_BUILD_WITH_ASSERTS)
 print_variable(CHIRA_BUILD_WITH_LTO)
@@ -102,6 +102,11 @@ print_variable(CHIRA_RENDER_BACKEND)
 print_variable(CHIRA_RENDER_DEVICE)
 print_variable(CHIRA_USE_DISCORD)
 print_variable(CHIRA_USE_STEAMWORKS)
+
+# Warn if libraries are not static by default
+if(BUILD_SHARED_LIBS)
+    message(WARNING "Building some libraries shared instead of static may cause weird errors. This is untested!")
+endif()
 
 # You should add this to your own CMake to load Chira Engine's dependencies in non-Windows environments
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
@@ -195,27 +200,30 @@ function(apply_optimizations TARGET)
     endif()
 endfunction()
 
-# CHIRAENGINE
+# ENGINE
 include(${CMAKE_CURRENT_SOURCE_DIR}/engine/engine.cmake)
 
-if(CHIRA_BUILD_EDITOR)
-    # CHIRAEDITOR
-    include(${CMAKE_CURRENT_SOURCE_DIR}/editor/editor.cmake)
-endif()
-
+# CHIRATEST
 if(CHIRA_BUILD_TESTS)
-    # CHIRATEST
     include(${CMAKE_CURRENT_SOURCE_DIR}/tests/tests.cmake)
 endif()
 
+# External tools
 if(CHIRA_BUILD_EXTERNAL_TOOLS)
-    set(CHIRA_EXTERNAL_TOOLS_NAME "chira_external_tools")
+    set(CHIRA_EXTERNAL_TOOLS_NAME "external_tools")
     add_custom_target(${CHIRA_EXTERNAL_TOOLS_NAME})
 
     # Helper function to handle tools
     function(add_tool_executable NAME)
-        cmake_parse_arguments(PARSE_ARGV 1 IN "" "" "SOURCES;DEPS;INCLUDE_PATHS")
-        add_executable(${NAME} ${IN_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/tools/ToolHelpers.h)
+        cmake_parse_arguments(PARSE_ARGV 1 IN "GUI" "" "SOURCES;DEPS;INCLUDE_PATHS")
+        if(IN_GUI AND NOT CHIRA_DEBUG_BUILD)
+            add_executable(${NAME} WIN32 ${IN_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/tools/ToolHelpers.h)
+            if(WIN32 AND MSVC)
+                target_link_options(${NAME} PRIVATE "/ENTRY:mainCRTStartup")
+            endif()
+        else()
+            add_executable(${NAME} ${IN_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/tools/ToolHelpers.h)
+        endif()
         apply_optimizations(${NAME})
         target_link_libraries(${NAME} PRIVATE ${CHIRA_ENGINE_NAME} ${IN_DEPS})
         target_include_directories(${NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tools/${NAME} ${IN_INCLUDE_PATHS})
@@ -224,6 +232,37 @@ if(CHIRA_BUILD_EXTERNAL_TOOLS)
 
     # CMDLTOOL
     include(${CMAKE_CURRENT_SOURCE_DIR}/tools/cmdltool/cmdltool.cmake)
+
+    # EDITOR
+    if(CHIRA_BUILD_EDITOR)
+        include(${CMAKE_CURRENT_SOURCE_DIR}/tools/editor/editor.cmake)
+    endif()
+endif()
+
+# Build installer
+if(CHIRA_BUILD_INSTALLER)
+    message(FATAL_ERROR "Installer is not implemented yet!")
+    set(CPACK_PACKAGE_VENDOR "Chira Engine Developers" CACHE STRING "" FORCE)
+    set(CPACK_GENERATOR "TGZ" CACHE STRING "" FORCE)
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An open source game engine for Windows, Linux, and macOS." CACHE STRING "" FORCE)
+    set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/branding/steam/avatars/spider.png" CACHE STRING "" FORCE)
+    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt" CACHE STRING "" FORCE)
+    set(CPACK_MONOLITHIC_INSTALL TRUE CACHE BOOL "" FORCE)
+    if(WIN32)
+        #todo: NSIS or WIX
+        #set(CPACK_GENERATOR "WIX" CACHE STRING "" FORCE)
+        message(FATAL_ERROR "Sorry, no Windows installer is supported yet.")
+    elseif(APPLE)
+        set(CPACK_GENERATOR "Bundle" CACHE STRING "" FORCE)
+        set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_CURRENT_SOURCE_DIR}/branding/github/readme_banner.png" CACHE STRING "" FORCE)
+        set(CPACK_DMG_SLA_USE_RESOURCE_FILE_LICENSE TRUE CACHE BOOL "" FORCE)
+        set(CPACK_BUNDLE_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/resources/editor/platform/macOS/Info.plist CACHE STRING "" FORCE)
+        set(CPACK_BUNDLE_ICON ${CMAKE_CURRENT_SOURCE_DIR}/resources/editor/platform/macOS/AppIcon.icns CACHE STRING "" FORCE)
+    elseif(UNIX)
+        #todo: DEB and/or RPM
+        message(FATAL_ERROR "Sorry, no Linux installer is supported yet.")
+    endif()
+    include(CPack)
 endif()
 
 # Copy resources

@@ -214,7 +214,7 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/stduuid)
 list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/stduuid/include)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES stduuid)
 
-# CHIRAENGINE
+# ENGINE
 include(${CMAKE_CURRENT_LIST_DIR}/config/CMakeLists.txt)
 include(${CMAKE_CURRENT_LIST_DIR}/core/CMakeLists.txt)
 include(${CMAKE_CURRENT_LIST_DIR}/entity/CMakeLists.txt)

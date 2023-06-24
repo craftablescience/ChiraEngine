@@ -1,14 +1,9 @@
-// Disable console window on Windows (MSVC)
-#include <core/Platform.h>
-#if defined(CHIRA_PLATFORM_WINDOWS) && !defined(DEBUG) && defined(CHIRA_COMPILER_MSVC)
-    #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
-#endif
-
 // Use the best available GPU on Windows
-#if defined(CHIRA_PLATFORM_WINDOWS)
+#include <core/Platform.h>
+#ifdef CHIRA_PLATFORM_WINDOWS
 extern "C" {
-[[maybe_unused]] __declspec(dllexport) unsigned long NvOptimusEnablement = 0x01;
-[[maybe_unused]] __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 0x01;
+    [[maybe_unused]] __declspec(dllexport) unsigned long NvOptimusEnablement = 0x01;
+    [[maybe_unused]] __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 0x01;
 }
 #endif
 
