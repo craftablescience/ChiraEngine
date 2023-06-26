@@ -14,7 +14,7 @@
     constexpr std::string_view name##_VERSION = version
 
 #ifndef CHIRA_PLATFORM_WINDOWS
-    #define CHIRA_SETUP_GUI_TOOL(name, version) \
+    #define CHIRA_SETUP_GUI_TOOL(name) \
         CHIRA_CREATE_LOG(name)
 #else
     // Use the best available GPU on Windows
