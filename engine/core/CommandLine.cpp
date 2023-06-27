@@ -78,7 +78,7 @@ bool CommandLine::has(std::string_view argument) {
 }
 
 std::string_view CommandLine::get(std::string_view argument) {
-    for (int i = 0; i < g_Arguments.size() - 1; i++) {
+    for (unsigned int i = 0; i < g_Arguments.size() - 1; i++) {
         if (argument == g_Arguments.at(i)) {
             return g_Arguments.at(i + 1);
         }
