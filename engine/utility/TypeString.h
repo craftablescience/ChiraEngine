@@ -3,7 +3,7 @@
 #include <string>
 #include <sstream>
 #include <core/Platform.h>
-#include <utility/ConceptsTest.h>
+#include <utility/Concepts.h>
 
 #if defined(CHIRA_COMPILER_GNU) || defined(CHIRA_COMPILER_CLANG)
     #include <cxxabi.h>
