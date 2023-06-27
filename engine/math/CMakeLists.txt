@@ -1,6 +1,7 @@
 list(APPEND CHIRA_ENGINE_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/Axis.h
         ${CMAKE_CURRENT_LIST_DIR}/Color.h
+        ${CMAKE_CURRENT_LIST_DIR}/Graph.h
         ${CMAKE_CURRENT_LIST_DIR}/Matrix.h
         ${CMAKE_CURRENT_LIST_DIR}/Types.h
         ${CMAKE_CURRENT_LIST_DIR}/Vertex.h)

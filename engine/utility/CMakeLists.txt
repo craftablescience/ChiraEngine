@@ -2,6 +2,7 @@ list(APPEND CHIRA_ENGINE_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/AbstractFactory.h
         ${CMAKE_CURRENT_LIST_DIR}/Serial.h
         ${CMAKE_CURRENT_LIST_DIR}/Concepts.h
+        ${CMAKE_CURRENT_LIST_DIR}/DependencyGraph.h
         ${CMAKE_CURRENT_LIST_DIR}/SharedPointer.h
         ${CMAKE_CURRENT_LIST_DIR}/String.h
         ${CMAKE_CURRENT_LIST_DIR}/Types.h
