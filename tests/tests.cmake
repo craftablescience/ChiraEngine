@@ -2,9 +2,11 @@ list(APPEND CHIRA_TEST_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/TestHelpers.h
         ${CMAKE_CURRENT_LIST_DIR}/engine/config/ConEntryTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/core/CommandLine.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/engine/math/GraphTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/resource/provider/FilesystemResourceProviderTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/ui/debug/ConsolePanelTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/utility/ConceptsTest.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/engine/utility/DependencyGraphTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/utility/StringTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/utility/TypeStringTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/engine/utility/UUIDGeneratorTest.cpp)
