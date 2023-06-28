@@ -16,6 +16,13 @@ struct IPlugin {
     virtual void update() {};
     virtual void render() {};
     virtual void deinit() {};
+
+    [[nodiscard]] bool isInitialized() const {
+        return this->initialized;
+    }
+
+protected:
+    bool initialized = false;
 };
 
 } // namespace chira
@@ -53,17 +60,17 @@ void deinitAll();
 #define CHIRA_CREATE_PLUGIN(name) \
     struct name##Plugin final : public IPlugin
 
-#define CHIRA_REGISTER_PLUGIN(name)                              \
-    const auto name##GetSingleton = [] {                         \
-        static name##Plugin singleton{};                         \
-        static bool registered = false;                          \
-        if (!registered) {                                       \
-            chira::PluginRegistry::addPlugin(&singleton, #name); \
-            registered = true;                                   \
-        }                                                        \
-        return &singleton;                                       \
-    };                                                           \
-    [[maybe_unused]] name##Plugin* g_##name = name##GetSingleton()
+#define CHIRA_REGISTER_PLUGIN(name)                                    \
+    const auto get##name##PluginSingleton = [] {                       \
+        static name##Plugin singleton##name{};                         \
+        static bool registered = false;                                \
+        if (!registered) {                                             \
+            chira::PluginRegistry::addPlugin(&singleton##name, #name); \
+            registered = true;                                         \
+        }                                                              \
+        return &singleton##name;                                       \
+    };                                                                 \
+    [[maybe_unused]] name##Plugin* g_##name = get##name##PluginSingleton()
 
 #define CHIRA_GET_PLUGIN(name) \
     extern name##Plugin* g_##name

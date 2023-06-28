@@ -20,19 +20,20 @@ CHIRA_CREATE_PLUGIN(Steam) {
     static inline const std::vector<std::string_view> DEPS;
 
     void init() override {
-        if (steam_enable.getValue<bool>() && (!SteamAPI::Client::initialized() && !SteamAPI::Client::initSteam())) {
+        this->initialized = steam_enable.getValue<bool>() && (!SteamAPI::Client::initialized() && !SteamAPI::Client::initSteam());
+        if (!this->initialized) {
             LOG_STEAM.warning("Steam failed to initialize");
         }
     }
 
     void update() override {
-        if (SteamAPI::Client::initialized()) {
+        if (this->initialized) {
             SteamAPI::Client::runCallbacks();
         }
     }
 
     void deinit() override {
-        if (SteamAPI::Client::initialized()) {
+        if (this->initialized) {
             SteamAPI::Client::shutdown();
         }
     }

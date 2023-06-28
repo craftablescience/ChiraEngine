@@ -92,10 +92,6 @@ void DiscordPlugin::deinit() {
     }
 }
 
-bool DiscordPlugin::isInitialized() const {
-    return this->initialized;
-}
-
 void DiscordPlugin::setState(const std::string& state_) {
     runtime_assert(state_.length() < 128, "Discord state length limit exceeded! Max 127 characters");
     this->state = state_;

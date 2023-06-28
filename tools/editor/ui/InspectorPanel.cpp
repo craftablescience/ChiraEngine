@@ -20,6 +20,8 @@
 
 using namespace chira;
 
+CHIRA_GET_PLUGIN(Audio);
+
 #define REMOVE_BUTTON(component)                                                                                    \
     do {                                                                                                            \
         if (ImGui::Button("X##" #component)) {                                                                      \
@@ -230,8 +232,8 @@ void InspectorPanel::renderContentsForSelectedEntity() {
                 ImGui::DragFloat("Octave 9", &component->noise.mOctaveScale[9]);
             }
             if (ImGui::Button("Preview Audio")) {
-                auto handle = Audio::get().play(component->noise);
-                Audio::get().scheduleStop(handle, 2.0);
+                auto handle = g_Audio->get().play(component->noise);
+                g_Audio->get().scheduleStop(handle, 2.0);
             }
         }
     }
@@ -271,13 +273,13 @@ void InspectorPanel::renderContentsForSelectedEntity() {
                 ImGui::InputInt("Seed", &seed);
                 component->setSfxrFromPreset(component->getSfxrPreset(), seed);
             } else {
-                ImGui::Text("%s", component->getSfxrConfigID().size() > 0 ? component->getSfxrConfigID().data() : "No config file selected.");
+                ImGui::Text("%s", !component->getSfxrConfigID().empty() ? component->getSfxrConfigID().data() : "No config file selected.");
                 if (ImGui::Button("Pick Audio")) {
                     filePicker.Open();
                 }
             }
             if (ImGui::Button("Preview Audio")) {
-                Audio::get().play(component->sfxr);
+                g_Audio->get().play(component->sfxr);
             }
         }
 
@@ -303,7 +305,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
             component->setSpeechText(buf);
 
             if (ImGui::Button("Preview Audio")) {
-                Audio::get().play(component->speech);
+                g_Audio->get().play(component->speech);
             }
         }
     }
@@ -318,7 +320,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
             }
 
             if (ImGui::Button("Preview Audio")) {
-                Audio::get().play(component->wav);
+                g_Audio->get().play(component->wav);
             }
         }
 
@@ -343,7 +345,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
             }
 
             if (ImGui::Button("Preview Audio")) {
-                Audio::get().play(component->wavStream);
+                g_Audio->get().play(component->wavStream);
             }
         }
 
