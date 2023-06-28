@@ -16,30 +16,34 @@ CHIRA_CREATE_LOG(STEAM);
 
 ConVar steam_enable{"steam_enable", true, "Initialize Steam API functions.", CON_FLAG_CACHE};
 
-struct SteamPlugin final : public IPlugin {
+CHIRA_CREATE_PLUGIN(Steam) {
+    static inline const std::vector<std::string_view> DEPS;
+
     void init() override {
         if (steam_enable.getValue<bool>() && (!SteamAPI::Client::initialized() && !SteamAPI::Client::initSteam())) {
             LOG_STEAM.warning("Steam failed to initialize");
         }
     }
+
     void update() override {
         if (SteamAPI::Client::initialized()) {
             SteamAPI::Client::runCallbacks();
         }
     }
+
     void deinit() override {
         if (SteamAPI::Client::initialized()) {
             SteamAPI::Client::shutdown();
         }
     }
 };
-CHIRA_REGISTER_PLUGIN(SteamPlugin);
+CHIRA_REGISTER_PLUGIN(Steam);
 
 /// Helper function to stop repeating stuff
 template<typename T, typename U, typename... Params>
 inline T steamFunctionWrapper(const std::string& function, T defaultValue, U steamSingleton, Params... params) {
     if (steamSingleton) {
-        auto out = SteamAPI::get().call<T>(function, steamSingleton, params...);
+        auto out = SteamAPI::get().call<T>(function, steamSingleton, std::forward<Params>(params)...);
         if (!out) {
             return defaultValue;
         }
@@ -52,7 +56,7 @@ inline T steamFunctionWrapper(const std::string& function, T defaultValue, U ste
 template<typename T, typename... Params>
 inline std::string steamFunctionStringWrapper(const std::string& function, const std::string& defaultValue, T steamSingleton, Params... params) {
     if (steamSingleton) {
-        auto out = SteamAPI::get().call<const char*>(function, steamSingleton, params...);
+        auto out = SteamAPI::get().call<const char*>(function, steamSingleton, std::forward<Params>(params)...);
         return out ? std::string{*out} : defaultValue;
     }
     return defaultValue;

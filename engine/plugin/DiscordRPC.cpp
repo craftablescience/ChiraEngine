@@ -1,5 +1,6 @@
 #include "DiscordRPC.h"
 
+#include <cstring>
 #include <discord_rpc.h>
 #include <config/ConEntry.h>
 #include <core/Logger.h>
@@ -12,20 +13,23 @@ CHIRA_CREATE_LOG(DISCORD);
 
 ConVar discord_enable{"discord_enable", true, "Allows applications to use Discord rich presence.", CON_FLAG_CACHE};
 
-struct DiscordPlugin final : public IPlugin {
+CHIRA_CREATE_PLUGIN(Discord) {
+    static inline const std::vector<std::string_view> DEPS;
+
     // Discord should be initialized manually before Engine::init
     void update() override {
         if (DiscordRPC::initialized()) {
             DiscordRPC::updatePresence();
         }
     }
+
     void deinit() override {
         if (DiscordRPC::initialized()) {
             DiscordRPC::shutdown();
         }
     }
 };
-CHIRA_REGISTER_PLUGIN(DiscordPlugin);
+CHIRA_REGISTER_PLUGIN(Discord);
 
 void DiscordRPC::init(std::string_view appId) {
     if (DiscordRPC::isInitialized || !discord_enable.getValue<bool>())
@@ -33,9 +37,13 @@ void DiscordRPC::init(std::string_view appId) {
 
     DiscordEventHandlers handlers;
     memset(&handlers, 0, sizeof(handlers));
-#if DEBUG
+#ifdef DEBUG
     handlers.ready = [](const DiscordUser* connectedUser) {
-        LOG_DISCORD.info(TRF("debug.discord.user_connected", connectedUser->username, connectedUser->discriminator));
+        if (!strcmp(connectedUser->discriminator, "0")) {
+            LOG_DISCORD.info("Discord user {} connected", connectedUser->username);
+        } else {
+            LOG_DISCORD.info("Discord user {}#{} connected", connectedUser->username, connectedUser->discriminator);
+        }
     };
     handlers.disconnected = [](int errcode, const char* message) {
         LOG_DISCORD.warning(TRF("debug.discord.user_disconnected", errcode, message));
@@ -53,30 +61,36 @@ bool DiscordRPC::initialized() {
 }
 
 void DiscordRPC::setState(const std::string& state_) {
+    runtime_assert(state_.length() < 128, "Discord state length limit exceeded! Max 127 characters");
     DiscordRPC::state = state_;
     DiscordRPC::isModifiedSinceLastUpdate = true;
 }
 
 void DiscordRPC::setDetails(const std::string& details_) {
+    runtime_assert(details_.length() < 128, "Discord details length limit exceeded! Max 127 characters");
     DiscordRPC::details = details_;
     DiscordRPC::isModifiedSinceLastUpdate = true;
 }
 
 void DiscordRPC::setLargeImage(const std::string& imageKey) {
+    runtime_assert(imageKey.length() < 32, "Discord large image length limit exceeded! Max 31 characters");
     DiscordRPC::largeImage = imageKey;
     DiscordRPC::isModifiedSinceLastUpdate = true;
 }
 void DiscordRPC::setLargeImageText(const std::string& text) {
+    runtime_assert(text.length() < 128, "Discord large image text length limit exceeded! Max 127 characters");
     DiscordRPC::largeImageText = text;
     DiscordRPC::isModifiedSinceLastUpdate = true;
 }
 
 void DiscordRPC::setSmallImage(const std::string& imageKey) {
+    runtime_assert(imageKey.length() < 32, "Discord small image length limit exceeded! Max 31 characters");
     DiscordRPC::smallImage = imageKey;
     DiscordRPC::isModifiedSinceLastUpdate = true;
 }
 
 void DiscordRPC::setSmallImageText(const std::string& text) {
+    runtime_assert(text.length() < 128, "Discord small image text length limit exceeded! Max 127 characters");
     DiscordRPC::smallImageText = text;
     DiscordRPC::isModifiedSinceLastUpdate = true;
 }
