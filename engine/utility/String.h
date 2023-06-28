@@ -64,6 +64,7 @@ void remove(std::string& input, char charToRemove);
 [[nodiscard]] std::string stripRight(const std::string& s, char c);
 [[nodiscard]] std::string strip(const std::string& s, char c);
 
+void replace(std::string& s, char from, char to);
 void replace(std::string& s, std::string_view from, std::string_view to);
 
 [[nodiscard]] constexpr std::string_view getExtension(std::string_view filename) {
