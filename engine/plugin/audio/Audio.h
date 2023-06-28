@@ -2,7 +2,7 @@
 
 #include <soloud.h>
 
-#include "Plugin.h"
+#include <plugin/Plugin.h>
 
 namespace chira {
 

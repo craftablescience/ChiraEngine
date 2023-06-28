@@ -1,7 +1,6 @@
 #include "Audio.h"
 
 #include <config/ConEntry.h>
-#include "Plugin.h"
 
 using namespace chira;
 

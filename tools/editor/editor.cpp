@@ -4,10 +4,10 @@
 #include <resource/provider/FilesystemResourceProvider.h>
 
 #ifdef CHIRA_USE_DISCORD
-    #include <plugin/Discord.h>
+    #include <plugin/discord/Discord.h>
 #endif
 #ifdef CHIRA_USE_STEAMWORKS
-    #include <plugin/Steam.h>
+    #include <plugin/steam/Steam.h>
 #endif
 
 // Need to register phong material!
