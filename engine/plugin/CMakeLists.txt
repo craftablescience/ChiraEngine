@@ -1,15 +1,15 @@
 if(CHIRA_USE_DISCORD)
     list(APPEND CHIRA_ENGINE_HEADERS
-            ${CMAKE_CURRENT_LIST_DIR}/DiscordRPC.h)
+            ${CMAKE_CURRENT_LIST_DIR}/Discord.h)
     list(APPEND CHIRA_ENGINE_SOURCES
-            ${CMAKE_CURRENT_LIST_DIR}/DiscordRPC.cpp)
+            ${CMAKE_CURRENT_LIST_DIR}/Discord.cpp)
 endif()
 
 if(CHIRA_USE_STEAMWORKS)
     list(APPEND CHIRA_ENGINE_HEADERS
-            ${CMAKE_CURRENT_LIST_DIR}/SteamAPI.h)
+            ${CMAKE_CURRENT_LIST_DIR}/Steam.h)
     list(APPEND CHIRA_ENGINE_SOURCES
-            ${CMAKE_CURRENT_LIST_DIR}/SteamAPI.cpp)
+            ${CMAKE_CURRENT_LIST_DIR}/Steam.cpp)
 endif()
 
 list(APPEND CHIRA_ENGINE_HEADERS

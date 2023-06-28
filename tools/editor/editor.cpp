@@ -4,10 +4,10 @@
 #include <resource/provider/FilesystemResourceProvider.h>
 
 #ifdef CHIRA_USE_DISCORD
-    #include <plugin/DiscordRPC.h>
+    #include <plugin/Discord.h>
 #endif
 #ifdef CHIRA_USE_STEAMWORKS
-    #include <plugin/SteamAPI.h>
+    #include <plugin/Steam.h>
 #endif
 
 // Need to register phong material!
@@ -44,7 +44,7 @@ int main(int argc, const char* const argv[]) {
 #if defined(CHIRA_USE_STEAMWORKS) && defined(DEBUG)
     if (auto* steam_enable = ConEntryRegistry::getConVar("steam_enable"); steam_enable && steam_enable->getValue<bool>()) {
         // Steam API docs say this is bad practice, I say I don't care
-        SteamAPI::generateAppIDFile(1728950);
+        Steam::generateAppIDFile(1728950);
     }
 #endif
 

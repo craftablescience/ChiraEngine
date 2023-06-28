@@ -11,7 +11,7 @@ class library;
 
 } // namespace libloader
 
-namespace steam {
+namespace chira::Steam {
 
 // -- Enums --
 enum class NotificationPosition : int {
@@ -177,107 +177,113 @@ struct Callbacks {
 #pragma pack(pop)
 };
 
-} // namespace steam
+const libloader::library& get();
 
-namespace chira {
+/// For debug use only!
+void generateAppIDFile(unsigned int appID);
 
-struct SteamAPI {
-    static const libloader::library& get();
-    /// For debug use only!
-    static void generateAppIDFile(unsigned int appID);
+namespace Client {
 
-    struct Client {
-        static void* get();
-        static bool  initSteam();
-        static bool  initialized();
-        static void  runCallbacks();
-        static void  shutdown();
-    private:
-        static inline bool isInitialized = false;
-    };
+void* get();
+bool  initSteam();
+void  runCallbacks();
+void  shutdown();
 
-    struct User {
-        static void*         get();
-        static bool          isLoggedOn();
-        static std::uint64_t getSteamID();
-        static bool          isBehindNAT();
-        static int           getGameBadgeLevel(bool foil = false, int series = 1);
-        static int           getPlayerSteamLevel();
-        static bool          isPhoneVerified();
-        static bool          isTwoFactorAuthenticationEnabled();
-        static bool          isPhoneIdentifying();
-        static bool          isPhoneRequiringVerification();
-        static std::uint64_t getMarketEligibility();
-    };
+} // namespace Client
 
-    struct Friends {
-        static void*         get();
-        static std::string   getPersonaName();
-        static std::uint64_t setPersonaName(std::string_view name);
-    };
+namespace User {
 
-    struct Utils {
-        static void*         get();
-        static std::uint32_t getSecondsSinceAppActive();
-        static std::uint32_t getSecondsSinceComputerActive();
-        static std::uint32_t getServerRealTime();
-        static std::string   getIPCountry();
-        static bool          getImageSize(int imageID, std::uint32_t* width, std::uint32_t* height);
-        static bool          getImageRGBA(int imageID, std::uint8_t* imageBuffer, int imageBufferSize);
-        static std::uint8_t  getCurrentBatteryPower();
-        static std::uint32_t getAppID();
-        static void          setOverlayNotificationPosition(steam::NotificationPosition position);
-        static std::uint32_t getIPCCallCount();
-        static bool          isOverlayEnabled();
-        static bool          isRunningInVR();
-        static void          setOverlayNotificationInset(int horizontalInset, int verticalInset);
-        static bool          isBigPictureModeOn();
-        static void          startVRDashboard();
-        static bool          isVRHeadsetStreamingEnabled();
-        static void          setVRHeadsetStreamingEnabled(bool enabled);
-        static bool          isRunningOnSteamDeck();
-        static void          setGameLauncherMode(bool launcherMode);
-    };
+void*         get();
+bool          isLoggedOn();
+std::uint64_t getSteamID();
+bool          isBehindNAT();
+int           getGameBadgeLevel(bool foil = false, int series = 1);
+int           getPlayerSteamLevel();
+bool          isPhoneVerified();
+bool          isTwoFactorAuthenticationEnabled();
+bool          isPhoneIdentifying();
+bool          isPhoneRequiringVerification();
+std::uint64_t getMarketEligibility();
 
-    struct UserStats {
-        static void* get();
-        // todo: implement wrappers + callbacks
-    };
+} // namespace User
 
-    struct Apps {
-        static void*                      get();
-        static bool                       userOwnsThisAppID();
-        static bool                       isLowViolence();
-        static bool                       isCybercafe();
-        static bool                       isVACBanned();
-        static std::string                getCurrentGameLanguage();
-        static std::vector<std::string>   getAvailableGameLanguages();
-        static bool                       isSubscribedApp(std::uint32_t appID);
-        static bool                       isDLCInstalled(std::uint32_t appID);
-        static std::uint32_t              getEarliestPurchaseUnixTime(std::uint32_t appID);
-        static bool                       isSubscribedFromFreeWeekend();
-        static int                        getDLCCount();
-        static bool                       getDLCData(int dlc, std::uint32_t* appID, bool* available, std::string& name);
-        static void                       installDLC(std::uint32_t appID);
-        static void                       uninstallDLC(std::uint32_t appID);
-        static std::string                getCurrentBranch();
-        static bool                       markContentCorrupt(bool missingFilesOnly);
-        static std::vector<std::uint32_t> getInstalledDepots(std::uint32_t appID);
-        static std::string                getAppInstallPath(std::uint32_t appID);
-        static bool                       isAppInstalled(std::uint32_t appID);
-        static std::uint64_t              getAppOwner();
-        static std::string                getLaunchParameter(std::string_view key);
-        static bool                       getDLCDownloadProgress(std::uint32_t appID, std::uint64_t* bytesDownloaded, std::uint64_t* bytesTotal);
-        static int                        getAppBuildID();
-        static std::uint64_t              getFileDetails(std::string_view filename);
-        static bool                       isSubscribedFromFamilySharing();
-        static bool                       isTimedTrial(std::uint32_t* secondsAllowed, std::uint32_t* secondsPlayed);
-    };
+namespace Friends {
 
-    struct UGC {
-        static void* get();
-        // todo: implement wrappers + callbacks
-    };
-};
+void*         get();
+std::string   getPersonaName();
+std::uint64_t setPersonaName(std::string_view name);
 
-} // namespace chira
+} // namespace Friends
+
+namespace Utils {
+
+void*         get();
+std::uint32_t getSecondsSinceAppActive();
+std::uint32_t getSecondsSinceComputerActive();
+std::uint32_t getServerRealTime();
+std::string   getIPCountry();
+bool          getImageSize(int imageID, std::uint32_t* width, std::uint32_t* height);
+bool          getImageRGBA(int imageID, std::uint8_t* imageBuffer, int imageBufferSize);
+std::uint8_t  getCurrentBatteryPower();
+std::uint32_t getAppID();
+void          setOverlayNotificationPosition(NotificationPosition position);
+std::uint32_t getIPCCallCount();
+bool          isOverlayEnabled();
+bool          isRunningInVR();
+void          setOverlayNotificationInset(int horizontalInset, int verticalInset);
+bool          isBigPictureModeOn();
+void          startVRDashboard();
+bool          isVRHeadsetStreamingEnabled();
+void          setVRHeadsetStreamingEnabled(bool enabled);
+bool          isRunningOnSteamDeck();
+void          setGameLauncherMode(bool launcherMode);
+
+} // namespace Utils
+
+namespace UserStats {
+
+void* get();
+// todo: implement wrappers + callbacks
+
+} // namespace UserStats
+
+namespace Apps {
+
+void*                      get();
+bool                       userOwnsThisAppID();
+bool                       isLowViolence();
+bool                       isCybercafe();
+bool                       isVACBanned();
+std::string                getCurrentGameLanguage();
+std::vector<std::string>   getAvailableGameLanguages();
+bool                       isSubscribedApp(std::uint32_t appID);
+bool                       isDLCInstalled(std::uint32_t appID);
+std::uint32_t              getEarliestPurchaseUnixTime(std::uint32_t appID);
+bool                       isSubscribedFromFreeWeekend();
+int                        getDLCCount();
+bool                       getDLCData(int dlc, std::uint32_t* appID, bool* available, std::string& name);
+void                       installDLC(std::uint32_t appID);
+void                       uninstallDLC(std::uint32_t appID);
+std::string                getCurrentBranch();
+bool                       markContentCorrupt(bool missingFilesOnly);
+std::vector<std::uint32_t> getInstalledDepots(std::uint32_t appID);
+std::string                getAppInstallPath(std::uint32_t appID);
+bool                       isAppInstalled(std::uint32_t appID);
+std::uint64_t              getAppOwner();
+std::string                getLaunchParameter(std::string_view key);
+bool                       getDLCDownloadProgress(std::uint32_t appID, std::uint64_t* bytesDownloaded, std::uint64_t* bytesTotal);
+int                        getAppBuildID();
+std::uint64_t              getFileDetails(std::string_view filename);
+bool                       isSubscribedFromFamilySharing();
+bool                       isTimedTrial(std::uint32_t* secondsAllowed, std::uint32_t* secondsPlayed);
+
+} // namespace Apps
+
+namespace UGC {
+
+void* get();
+// todo: implement wrappers + callbacks
+
+} // namespace UGC
+
+} // namespace chira::Steam
