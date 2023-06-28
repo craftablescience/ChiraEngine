@@ -71,6 +71,10 @@ std::string String::strip(const std::string& s, char c) {
     return std::regex_replace(s, std::regex("^[" + std::to_string(c) + "]*|[" + c + "]*$"), "");
 }
 
+void String::replace(std::string& s, char from, char to) {
+    std::replace(s.begin(), s.end(), from, to);
+}
+
 void String::replace(std::string& s, std::string_view from, std::string_view to) {
     s = std::regex_replace(s, std::regex{from.data()}, to.data());
 }

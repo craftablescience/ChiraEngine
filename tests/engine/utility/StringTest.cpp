@@ -71,6 +71,13 @@ TEST(String, stripWhitespace) {
 }
 
 TEST(String, replace) {
+    // Char
+    {
+        std::string test{R"(file\path\and\such)"};
+        String::replace(test, '\\', '/');
+        EXPECT_STREQ(test.c_str(), "file/path/and/such");
+    }
+
     // Single instance
     {
         std::string test{"Mary had a little lamb"};
