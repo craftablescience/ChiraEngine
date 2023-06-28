@@ -1,21 +1,15 @@
+include(${CMAKE_CURRENT_LIST_DIR}/audio/CMakeLists.txt)
+
 if(CHIRA_USE_DISCORD)
-    list(APPEND CHIRA_ENGINE_HEADERS
-            ${CMAKE_CURRENT_LIST_DIR}/Discord.h)
-    list(APPEND CHIRA_ENGINE_SOURCES
-            ${CMAKE_CURRENT_LIST_DIR}/Discord.cpp)
+    include(${CMAKE_CURRENT_LIST_DIR}/discord/CMakeLists.txt)
 endif()
 
 if(CHIRA_USE_STEAMWORKS)
-    list(APPEND CHIRA_ENGINE_HEADERS
-            ${CMAKE_CURRENT_LIST_DIR}/Steam.h)
-    list(APPEND CHIRA_ENGINE_SOURCES
-            ${CMAKE_CURRENT_LIST_DIR}/Steam.cpp)
+    include(${CMAKE_CURRENT_LIST_DIR}/steam/CMakeLists.txt)
 endif()
 
 list(APPEND CHIRA_ENGINE_HEADERS
-        ${CMAKE_CURRENT_LIST_DIR}/Audio.h
         ${CMAKE_CURRENT_LIST_DIR}/Plugin.h)
 
 list(APPEND CHIRA_ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/Audio.cpp
         ${CMAKE_CURRENT_LIST_DIR}/Plugin.cpp)

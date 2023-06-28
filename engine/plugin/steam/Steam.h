@@ -3,6 +3,7 @@
 #include <string>
 #include <string_view>
 #include <vector>
+
 #include <core/Platform.h>
 
 namespace libloader {

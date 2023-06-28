@@ -3,7 +3,7 @@
 #include <string>
 #include <string_view>
 #include <soloud_sfxr.h>
-#include <plugin/Audio.h>
+#include <plugin/audio/Audio.h>
 #include <resource/BinaryResource.h>
 #include "TransformComponent.h"
 

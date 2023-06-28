@@ -4,7 +4,7 @@
 #include <string>
 #include <string_view>
 
-#include "Plugin.h"
+#include <plugin/Plugin.h>
 
 struct DiscordUser;
 
