@@ -26,8 +26,6 @@ CHIRA_CREATE_PLUGIN(Discord) {
 
     void deinit() override;
 
-    [[nodiscard]] bool isInitialized() const;
-
     void setState(const std::string& state_);
     void setDetails(const std::string& details_);
     void setLargeImage(const std::string& imageKey);
@@ -42,7 +40,6 @@ CHIRA_CREATE_PLUGIN(Discord) {
     void resetPresence();
 
 private:
-    bool initialized = false;
     bool dirty = false;
     std::string state;
     std::string details;
