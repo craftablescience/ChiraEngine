@@ -4,6 +4,8 @@
 #include <string>
 #include <string_view>
 
+#include "Plugin.h"
+
 struct DiscordUser;
 
 namespace chira {
@@ -13,38 +15,44 @@ struct DiscordButtonData {
     std::string url;
 };
 
-/// Updates are handled by the engine. All you need to do is run the init() method.
-/// After that, any setter functions will change the status after update().
-class DiscordRPC {
-public:
-    DiscordRPC() = delete;
-    static void init(std::string_view appId);
-    static bool initialized();
-    static void setState(const std::string& state_);
-    static void setDetails(const std::string& details_);
-    static void setLargeImage(const std::string& imageKey);
-    static void setLargeImageText(const std::string& text);
-    static void setSmallImage(const std::string& imageKey);
-    static void setSmallImageText(const std::string& text);
-    static void setStartTimestamp(std::int64_t time);
-    static void setEndTimestamp(std::int64_t time);
-    static void setTopButton(const DiscordButtonData& button);
-    static void setBottomButton(const DiscordButtonData& button);
-    static void updatePresence();
-    static void resetPresence();
-    static void shutdown();
+/// Discord should be initialized manually before Engine::init.
+/// Setter functions will change the status after update().
+CHIRA_CREATE_PLUGIN(Discord) {
+    static inline const std::vector<std::string_view> DEPS;
+
+    void init(std::string_view appId);
+
+    void update() override;
+
+    void deinit() override;
+
+    [[nodiscard]] bool isInitialized() const;
+
+    void setState(const std::string& state_);
+    void setDetails(const std::string& details_);
+    void setLargeImage(const std::string& imageKey);
+    void setLargeImageText(const std::string& text);
+    void setSmallImage(const std::string& imageKey);
+    void setSmallImageText(const std::string& text);
+    void setStartTimestamp(std::int64_t time);
+    void setEndTimestamp(std::int64_t time);
+    void setTopButton(const DiscordButtonData& button);
+    void setBottomButton(const DiscordButtonData& button);
+
+    void resetPresence();
+
 private:
-    static inline bool isInitialized = false;
-    static inline bool isModifiedSinceLastUpdate = false;
-    static inline std::string state;
-    static inline std::string details;
-    static inline std::string largeImage;
-    static inline std::string largeImageText;
-    static inline std::string smallImage;
-    static inline std::string smallImageText;
-    static inline std::int64_t startTimestamp = -1;
-    static inline std::int64_t endTimestamp = -1;
-    static inline DiscordButtonData button1, button2;
+    bool initialized = false;
+    bool dirty = false;
+    std::string state;
+    std::string details;
+    std::string largeImage;
+    std::string largeImageText;
+    std::string smallImage;
+    std::string smallImageText;
+    std::int64_t startTimestamp = -1;
+    std::int64_t endTimestamp = -1;
+    DiscordButtonData button1, button2;
 };
 
 } // namespace chira

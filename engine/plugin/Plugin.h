@@ -64,3 +64,6 @@ void deinitAll();
         return &singleton;                                       \
     };                                                           \
     [[maybe_unused]] name##Plugin* g_##name = name##GetSingleton()
+
+#define CHIRA_GET_PLUGIN(name) \
+    extern name##Plugin* g_##name

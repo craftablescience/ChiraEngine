@@ -24,6 +24,10 @@ using namespace chira;
 
 CHIRA_SETUP_GUI_TOOL(EDITOR);
 
+#ifdef CHIRA_USE_DISCORD
+CHIRA_GET_PLUGIN(Discord);
+#endif
+
 int main(int argc, const char* const argv[]) {
     Engine::preInit(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{"editor"});
@@ -31,11 +35,10 @@ int main(int argc, const char* const argv[]) {
     TranslationManager::addUniversalFile("file://i18n/editor");
 
 #ifdef CHIRA_USE_DISCORD
-    if (auto* discord_enable = ConEntryRegistry::getConVar("discord_enable"); discord_enable && discord_enable->getValue<bool>()) {
-        DiscordRPC::init(TR("editor.discord.application_id"));
-        DiscordRPC::setLargeImage("main_logo");
-        DiscordRPC::setTopButton({"Join Discord", "https://discord.gg/ASgHFkX"});
-    }
+    g_Discord->init(TR("editor.discord.application_id"));
+    g_Discord->setLargeImage("main_logo");
+    g_Discord->setTopButton({"View on GitHub", "https://github.com/craftablescience/ChiraEngine"});
+    g_Discord->setBottomButton({"Join Discord", "https://discord.gg/ASgHFkX"});
 #endif
 
 #if defined(CHIRA_USE_STEAMWORKS) && defined(DEBUG)
