@@ -9,7 +9,7 @@ TEST(UnweightedDirectedGraph, addAndRemoveNodes) {
     UnweightedDirectedGraph graph;
 
     auto* a = graph.addNode("a");
-    auto* b = graph.addNode("b");
+    graph.addNode("b");
     EXPECT_EQ(graph.getNodes().size(), 2);
 
     graph.removeNode(&a);
