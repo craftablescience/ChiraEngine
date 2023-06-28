@@ -5,7 +5,7 @@
 #include <input/InputManager.h>
 #include <loader/mesh/OBJMeshLoader.h>
 #include <loader/mesh/ChiraMeshLoader.h>
-#include <plugin/Plugin.h>
+#include <module/Module.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <script/Lua.h>
 #include <ui/debug/ConsolePanel.h>
@@ -52,8 +52,8 @@ void Engine::preInit(int argc, const char* const argv[]) {
     CommandLine::init(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
     TranslationManager::addTranslationFile("file://i18n/engine");
-    if (!PluginRegistry::preinitAll()) [[unlikely]] {
-        LOG_ENGINE.error("Failed to initialize plugins! Make sure there are no circular dependencies.");
+    if (!ModuleRegistry::preinitAll()) [[unlikely]] {
+        LOG_ENGINE.error("Failed to initialize modules! Make sure there are no circular dependencies.");
         exit(EXIT_FAILURE);
     }
 }
@@ -73,7 +73,7 @@ void Engine::init(bool visibleSplashScreen /*= true*/) {
 #endif
 
     // Start up some auto-registered stuff (order is random!)
-    PluginRegistry::initAll();
+    ModuleRegistry::initAll();
 
     IMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     IMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
@@ -114,7 +114,7 @@ void Engine::run() {
 
         Device::refreshWindows();
 
-        PluginRegistry::updateAll();
+        ModuleRegistry::updateAll();
 
     } while (!Device::isWindowAboutToBeDestroyed(Engine::mainWindow));
 
@@ -122,7 +122,7 @@ void Engine::run() {
 
     Device::destroyBackend();
 
-    PluginRegistry::deinitAll();
+    ModuleRegistry::deinitAll();
 
     Resource::discardAll();
 

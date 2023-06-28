@@ -4,7 +4,7 @@
 #include <libloader.hpp>
 #include <config/ConEntry.h>
 #include <core/Logger.h>
-#include <plugin/Plugin.h>
+#include <module/Module.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 #include <utility/String.h>
 
@@ -13,16 +13,16 @@ using namespace libloader;
 
 CHIRA_CREATE_LOG(STEAM);
 
-ConVar steam_enable{"steam_enable", true, "Initialize Steam API functions.", CON_FLAG_CACHE};
+ConVar steam_enabled{"steam_enabled", true, "Initialize Steam API functions.", CON_FLAG_CACHE};
 
-CHIRA_CREATE_PLUGIN(Steam) {
+CHIRA_CREATE_MODULE(Steam) {
     static inline const std::vector<std::string_view> DEPS;
 
     void init() override {
         if (this->initialized) {
             return;
         }
-        this->initialized = steam_enable.getValue<bool>() && Steam::Client::initSteam();
+        this->initialized = steam_enabled.getValue<bool>() && Steam::Client::initSteam();
         if (!this->initialized) {
             LOG_STEAM.warning("Steam failed to initialize");
         }
@@ -40,7 +40,7 @@ CHIRA_CREATE_PLUGIN(Steam) {
         }
     }
 };
-CHIRA_REGISTER_PLUGIN(Steam);
+CHIRA_REGISTER_MODULE(Steam);
 
 /// Helper function to stop repeating stuff
 template<typename T, typename U, typename... Params>

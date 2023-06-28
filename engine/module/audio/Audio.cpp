@@ -4,7 +4,7 @@
 
 using namespace chira;
 
-CHIRA_REGISTER_PLUGIN(Audio);
+CHIRA_REGISTER_MODULE(Audio);
 
 [[maybe_unused]]
 ConVar snd_volume{"snd_volume", 1.0, "Control the volume of the entire application.", CON_FLAG_CACHE, [](ConVar::CallbackArg arg) {
