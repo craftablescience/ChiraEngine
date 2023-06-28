@@ -9,7 +9,7 @@ if(CHIRA_USE_STEAMWORKS)
 endif()
 
 list(APPEND CHIRA_ENGINE_HEADERS
-        ${CMAKE_CURRENT_LIST_DIR}/Plugin.h)
+        ${CMAKE_CURRENT_LIST_DIR}/Module.h)
 
 list(APPEND CHIRA_ENGINE_SOURCES
-        ${CMAKE_CURRENT_LIST_DIR}/Plugin.cpp)
+        ${CMAKE_CURRENT_LIST_DIR}/Module.cpp)

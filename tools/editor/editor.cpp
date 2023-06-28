@@ -4,10 +4,10 @@
 #include <resource/provider/FilesystemResourceProvider.h>
 
 #ifdef CHIRA_USE_DISCORD
-    #include <plugin/discord/Discord.h>
+    #include <module/discord/Discord.h>
 #endif
 #ifdef CHIRA_USE_STEAMWORKS
-    #include <plugin/steam/Steam.h>
+    #include <module/steam/Steam.h>
 #endif
 
 // Need to register phong material!
@@ -25,7 +25,7 @@ using namespace chira;
 CHIRA_SETUP_GUI_TOOL(EDITOR);
 
 #ifdef CHIRA_USE_DISCORD
-CHIRA_GET_PLUGIN(Discord);
+CHIRA_GET_MODULE(Discord);
 #endif
 
 int main(int argc, const char* const argv[]) {
@@ -42,7 +42,7 @@ int main(int argc, const char* const argv[]) {
 #endif
 
 #if defined(CHIRA_USE_STEAMWORKS) && defined(DEBUG)
-    if (auto* steam_enable = ConEntryRegistry::getConVar("steam_enable"); steam_enable && steam_enable->getValue<bool>()) {
+    if (auto* steam_enabled = ConEntryRegistry::getConVar("steam_enabled"); steam_enabled && steam_enabled->getValue<bool>()) {
         // Steam API docs say this is bad practice, I say I don't care
         Steam::generateAppIDFile(1728950);
     }

@@ -20,7 +20,7 @@
 
 using namespace chira;
 
-CHIRA_GET_PLUGIN(Audio);
+CHIRA_GET_MODULE(Audio);
 
 #define REMOVE_BUTTON(component)                                                                                    \
     do {                                                                                                            \

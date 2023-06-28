@@ -3,7 +3,7 @@
 #include <string>
 #include <string_view>
 #include <soloud_noise.h>
-#include <plugin/audio/Audio.h>
+#include <module/audio/Audio.h>
 #include "TransformComponent.h"
 
 namespace chira {

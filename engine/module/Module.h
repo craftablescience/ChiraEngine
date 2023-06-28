@@ -10,7 +10,7 @@
 
 namespace chira {
 
-struct IPlugin {
+struct IModule {
     virtual void preinit() {};
     virtual void init() {};
     virtual void update() {};
@@ -25,22 +25,18 @@ protected:
     bool initialized = false;
 };
 
-} // namespace chira
-
-namespace chira {
-
 template<typename T>
-concept CPlugin = std::derived_from<T, IPlugin> && requires(T) {
+concept CModule = std::derived_from<T, IModule> && requires(T) {
     {T::DEPS} -> std::same_as<const std::vector<std::string_view>&>;
 };
 
-namespace PluginRegistry {
+namespace ModuleRegistry {
 
-void addPlugin(IPlugin* instance, std::string_view name, const std::vector<std::string_view>& deps);
+void addModule(IModule* instance, std::string_view name, const std::vector<std::string_view>& deps);
 
-template<CPlugin P>
-inline void addPlugin(P* instance, std::string_view name) {
-    addPlugin(instance, name, P::DEPS);
+template<CModule M>
+inline void addModule(M* instance, std::string_view name) {
+    addModule(instance, name, M::DEPS);
 }
 
 [[nodiscard]] bool preinitAll();
@@ -53,24 +49,24 @@ void renderAll();
 
 void deinitAll();
 
-} // namespace PluginRegistry
+} // namespace ModuleRegistry
 
 } // namespace chira
 
-#define CHIRA_CREATE_PLUGIN(name) \
-    struct name##Plugin final : public IPlugin
+#define CHIRA_CREATE_MODULE(name) \
+    struct name##Module final : public IModule
 
-#define CHIRA_REGISTER_PLUGIN(name)                                    \
-    const auto get##name##PluginSingleton = [] {                       \
-        static name##Plugin singleton##name{};                         \
+#define CHIRA_REGISTER_MODULE(name)                                    \
+    const auto get##name##ModuleSingleton = [] {                       \
+        static name##Module singleton##name{};                         \
         static bool registered = false;                                \
         if (!registered) {                                             \
-            chira::PluginRegistry::addPlugin(&singleton##name, #name); \
+            chira::ModuleRegistry::addModule(&singleton##name, #name); \
             registered = true;                                         \
         }                                                              \
         return &singleton##name;                                       \
     };                                                                 \
-    [[maybe_unused]] name##Plugin* g_##name = get##name##PluginSingleton()
+    [[maybe_unused]] name##Module* g_##name = get##name##ModuleSingleton()
 
-#define CHIRA_GET_PLUGIN(name) \
-    extern name##Plugin* g_##name
+#define CHIRA_GET_MODULE(name) \
+    extern name##Module* g_##name

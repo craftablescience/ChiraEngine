@@ -2,11 +2,11 @@
 
 #include <soloud.h>
 
-#include <plugin/Plugin.h>
+#include <module/Module.h>
 
 namespace chira {
 
-CHIRA_CREATE_PLUGIN(Audio) {
+CHIRA_CREATE_MODULE(Audio) {
     static inline const std::vector<std::string_view> DEPS;
 
     void init() override {

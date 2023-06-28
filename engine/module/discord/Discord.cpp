@@ -8,13 +8,13 @@
 
 using namespace chira;
 
-CHIRA_REGISTER_PLUGIN(Discord);
+CHIRA_REGISTER_MODULE(Discord);
 
 CHIRA_CREATE_LOG(DISCORD);
 
 ConVar discord_enabled{"discord_enabled", true, "Allows applications to use Discord rich presence.", CON_FLAG_CACHE};
 
-void DiscordPlugin::init(std::string_view appId) {
+void DiscordModule::init(std::string_view appId) {
     if (this->isInitialized() || !discord_enabled.getValue<bool>())
         return;
 
@@ -40,7 +40,7 @@ void DiscordPlugin::init(std::string_view appId) {
     this->initialized = true;
 }
 
-void DiscordPlugin::update() {
+void DiscordModule::update() {
     if (!this->isInitialized()) {
         return;
     }
@@ -85,68 +85,68 @@ void DiscordPlugin::update() {
     Discord_RunCallbacks();
 }
 
-void DiscordPlugin::deinit() {
+void DiscordModule::deinit() {
     if (this->isInitialized()) {
         Discord_Shutdown();
     }
 }
 
-void DiscordPlugin::setState(const std::string& state_) {
+void DiscordModule::setState(const std::string& state_) {
     runtime_assert(state_.length() < 128, "Discord state length limit exceeded! Max 127 characters");
     this->state = state_;
     this->dirty = true;
 }
 
-void DiscordPlugin::setDetails(const std::string& details_) {
+void DiscordModule::setDetails(const std::string& details_) {
     runtime_assert(details_.length() < 128, "Discord details length limit exceeded! Max 127 characters");
     this->details = details_;
     this->dirty = true;
 }
 
-void DiscordPlugin::setLargeImage(const std::string& imageKey) {
+void DiscordModule::setLargeImage(const std::string& imageKey) {
     runtime_assert(imageKey.length() < 32, "Discord large image length limit exceeded! Max 31 characters");
     this->largeImage = imageKey;
     this->dirty = true;
 }
-void DiscordPlugin::setLargeImageText(const std::string& text) {
+void DiscordModule::setLargeImageText(const std::string& text) {
     runtime_assert(text.length() < 128, "Discord large image text length limit exceeded! Max 127 characters");
     this->largeImageText = text;
     this->dirty = true;
 }
 
-void DiscordPlugin::setSmallImage(const std::string& imageKey) {
+void DiscordModule::setSmallImage(const std::string& imageKey) {
     runtime_assert(imageKey.length() < 32, "Discord small image length limit exceeded! Max 31 characters");
     this->smallImage = imageKey;
     this->dirty = true;
 }
 
-void DiscordPlugin::setSmallImageText(const std::string& text) {
+void DiscordModule::setSmallImageText(const std::string& text) {
     runtime_assert(text.length() < 128, "Discord small image text length limit exceeded! Max 127 characters");
     this->smallImageText = text;
     this->dirty = true;
 }
 
-void DiscordPlugin::setStartTimestamp(std::int64_t time) {
+void DiscordModule::setStartTimestamp(std::int64_t time) {
     this->startTimestamp = time;
     this->dirty = true;
 }
 
-void DiscordPlugin::setEndTimestamp(std::int64_t time) {
+void DiscordModule::setEndTimestamp(std::int64_t time) {
     this->endTimestamp = time;
     this->dirty = true;
 }
 
-void DiscordPlugin::setTopButton(const DiscordButtonData& button) {
+void DiscordModule::setTopButton(const DiscordButtonData& button) {
     this->button1 = button;
     this->dirty = true;
 }
 
-void DiscordPlugin::setBottomButton(const DiscordButtonData& button) {
+void DiscordModule::setBottomButton(const DiscordButtonData& button) {
     this->button2 = button;
     this->dirty = true;
 }
 
-void DiscordPlugin::resetPresence() {
+void DiscordModule::resetPresence() {
     this->state = "";
     this->details = "";
     this->largeImage = "";

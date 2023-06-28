@@ -2,7 +2,7 @@
 
 #include <string>
 #include <soloud_wav.h>
-#include <plugin/audio/Audio.h>
+#include <module/audio/Audio.h>
 #include <resource/BinaryResource.h>
 #include "TransformComponent.h"
 

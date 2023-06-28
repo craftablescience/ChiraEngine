@@ -4,7 +4,7 @@
 #include <string>
 #include <string_view>
 
-#include <plugin/Plugin.h>
+#include <module/Module.h>
 
 struct DiscordUser;
 
@@ -17,7 +17,7 @@ struct DiscordButtonData {
 
 /// Discord should be initialized manually before Engine::init.
 /// Setter functions will change the status after update().
-CHIRA_CREATE_PLUGIN(Discord) {
+CHIRA_CREATE_MODULE(Discord) {
     static inline const std::vector<std::string_view> DEPS;
 
     void init(std::string_view appId);
