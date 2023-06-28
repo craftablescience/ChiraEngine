@@ -22,7 +22,6 @@
 
   "generic.operation.cancelled": "Operation cancelled",
 
-  "debug.discord.user_connected": "Discord user {}#{} connected",
   "debug.discord.user_disconnected": "Discord user disconnected, code {}: {}",
   "debug.discord.generic_error": "Discord error {}: {}",
 

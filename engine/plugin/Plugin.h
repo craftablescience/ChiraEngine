@@ -1,56 +1,66 @@
 #pragma once
 
-#include <type_traits>
-#include <vector>
+#include <concepts>
+#include <string_view>
+#include <unordered_map>
+#include <utility>
+
+#include <core/Assertions.h>
+#include <utility/DependencyGraph.h>
+
+namespace chira {
 
 struct IPlugin {
     virtual void preinit() {};
     virtual void init() {};
     virtual void update() {};
+    virtual void render() {};
     virtual void deinit() {};
 };
 
-/// Systems are sections of the engine that are largely self-contained. They are stored in whatever order
-/// the compiler decides to create them in, so entries should be treated as unordered!
-class PluginRegistry {
-public:
-    PluginRegistry() = delete;
+} // namespace chira
 
-    template<typename P>
-    requires std::is_base_of_v<IPlugin, P>
-    static void addPlugin(P* instance) {
-        PluginRegistry::getPlugins().push_back(instance);
-    }
+namespace chira {
 
-    static void preinitAll() {
-        PluginRegistry::callAllFns(&IPlugin::preinit);
-    }
-    static void initAll() {
-        PluginRegistry::callAllFns(&IPlugin::init);
-    }
-    static void updateAll() {
-        PluginRegistry::callAllFns(&IPlugin::update);
-    }
-    static void deinitAll() {
-        PluginRegistry::callAllFns(&IPlugin::deinit);
-    }
-
-private:
-    static std::vector<IPlugin*>& getPlugins() {
-        static std::vector<IPlugin*> plugins;
-        return plugins;
-    }
-
-    static void callAllFns(void(IPlugin::*fn)()) {
-        for (auto plugin : PluginRegistry::getPlugins()) {
-            (plugin->*fn)();
-        }
-    }
+template<typename T>
+concept CPlugin = std::derived_from<T, IPlugin> && requires(T) {
+    {T::DEPS} -> std::same_as<const std::vector<std::string_view>&>;
 };
 
-#define CHIRA_REGISTER_PLUGIN(clazz) \
-    [[maybe_unused]] const auto clazz##_RegisteredSingleton_Registerer = [] { \
-        static clazz clazz##_RegisteredSingleton{}; \
-        PluginRegistry::addPlugin(&clazz##_RegisteredSingleton); \
-        return true; \
-    } ()
+namespace PluginRegistry {
+
+void addPlugin(IPlugin* instance, std::string_view name, const std::vector<std::string_view>& deps);
+
+template<CPlugin P>
+inline void addPlugin(P* instance, std::string_view name) {
+    addPlugin(instance, name, P::DEPS);
+}
+
+[[nodiscard]] bool preinitAll();
+
+void initAll();
+
+void updateAll();
+
+void renderAll();
+
+void deinitAll();
+
+} // namespace PluginRegistry
+
+} // namespace chira
+
+#define CHIRA_CREATE_PLUGIN(name) \
+    struct name##Plugin final : public IPlugin
+
+#define CHIRA_REGISTER_PLUGIN(name)                              \
+    const auto name##GetSingleton = [] {                         \
+        static name##Plugin singleton{};                         \
+        static bool registered = false;                          \
+        if (!registered) {                                       \
+            chira::PluginRegistry::addPlugin(&singleton, #name); \
+            registered = true;                                   \
+        }                                                        \
+        return &singleton;                                       \
+    };                                                           \
+    [[maybe_unused]] name##Plugin* g_##name = name##GetSingleton()

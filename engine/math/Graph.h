@@ -31,10 +31,19 @@ public:
 
     UnweightedDirectedGraph() = default;
 
-    [[nodiscard]] Node* addNode(const std::string& name) {
+    Node* addNode(const std::string& name) {
         auto node = new Node{name};
         this->nodes.emplace_back(node);
         return node;
+    }
+
+    [[nodiscard]] Node* getNode(const std::string& name) const {
+        if (auto node = std::find_if(this->nodes.begin(), this->nodes.end(), [name](const std::unique_ptr<Node>& item) {
+            return item->name == name;
+        }); node != this->nodes.end()) {
+            return node->get();
+        }
+        return nullptr;
     }
 
     void removeNode(Node** nodeToRemove) {

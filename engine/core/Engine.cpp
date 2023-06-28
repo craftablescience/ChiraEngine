@@ -52,7 +52,10 @@ void Engine::preInit(int argc, const char* const argv[]) {
     CommandLine::init(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
     TranslationManager::addTranslationFile("file://i18n/engine");
-    PluginRegistry::preinitAll();
+    if (!PluginRegistry::preinitAll()) [[unlikely]] {
+        LOG_ENGINE.error("Failed to initialize plugins! Make sure there are no circular dependencies.");
+        exit(EXIT_FAILURE);
+    }
 }
 
 void Engine::init(bool visibleSplashScreen /*= true*/) {
