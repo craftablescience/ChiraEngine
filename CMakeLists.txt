@@ -11,7 +11,7 @@ if(APPLE)
 endif()
 
 # Create the project
-project(ChiraEngine HOMEPAGE_URL "https://github.com/craftablescience/ChiraEngine")
+project(Chira HOMEPAGE_URL "https://github.com/craftablescience/ChiraEngine")
 set(CMAKE_CXX_STANDARD 20)
 
 # If we're not building a debug build just assume it's release
