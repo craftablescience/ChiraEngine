@@ -51,13 +51,13 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"",
-"d3/dd9/_render_types_8h.html#a07d437c53b79f4429880f3a2f7265aa8a7345a249ed5c2f850d85dc1727c24716",
-"d4/ded/_steam_8h.html#a729226c53e89855407cd0179e3fdebb1a240831ece4dd2e1461b7646ca80f45d8",
-"d5/dc8/classchira_1_1_resource_usage_tracker_panel.html#aed70c052c1bb85f2070cb33f86a52866",
-"d8/db3/structchira_1_1_renderer_1_1_shader_handle.html#a7070ffaae7b426e071f65cbfd2a05afd",
-"dc/da5/classchira_1_1_i_resource_provider.html#a74326147aa4905cfb61090169b0d13b8",
-"de/de7/classchira_1_1_mesh_data_resource.html#a5937bc95fec1748b14ac97979a5a54e3"
+"annotated.html",
+"d3/dd9/_render_types_8h.html#a3ce1e5b6da8040c95e123252b35cd4e9afe6f99ef1ec99efbdc19a9786cf1facc",
+"d4/ded/_steam_8h.html#a729226c53e89855407cd0179e3fdebb1a4a0ded5b3a6e8ce7e7c9b78b144bb1ed",
+"d5/dfe/_discord_8h_source.html",
+"d9/d31/_render_device_8h_source.html",
+"dc/dc8/math_2_types_8h.html#adb581872dc9418de1c6359910d4f92b3",
+"df/d5c/structchira_1_1_renderer_1_1_uniform_buffer_handle.html#ae25d5f12512ff76e98dcd086395b9a69"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
