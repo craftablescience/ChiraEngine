@@ -112,7 +112,7 @@ $(document).ready(function(){initNavTree('d4/d68/_engine_8cpp_source.html','../.
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;input/InputManager.h&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;loader/mesh/OBJMeshLoader.h&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;loader/mesh/ChiraMeshLoader.h&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;plugin/Plugin.h&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;module/Module.h&gt;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;resource/provider/FilesystemResourceProvider.h&gt;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;script/Lua.h&gt;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;ui/debug/ConsolePanel.h&gt;</span></div>
@@ -159,93 +159,96 @@ $(document).ready(function(){initNavTree('d4/d68/_engine_8cpp_source.html','../.
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    CommandLine::init(argc, argv);</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    Resource::addResourceProvider(<span class="keyword">new</span> <a class="code" href="../../de/de0/classchira_1_1_filesystem_resource_provider.html">FilesystemResourceProvider</a>{ENGINE_FILESYSTEM_PATH});</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    TranslationManager::addTranslationFile(<span class="stringliteral">&quot;file://i18n/engine&quot;</span>);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    PluginRegistry::preinitAll();</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">void</span> Engine::init(<span class="keywordtype">bool</span> visibleSplashScreen <span class="comment">/*= true*/</span>) {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    Engine::started = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">if</span> (!ModuleRegistry::preinitAll()) [[unlikely]] {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        LOG_ENGINE.error(<span class="stringliteral">&quot;Failed to initialize modules! Make sure there are no circular dependencies.&quot;</span>);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        exit(EXIT_FAILURE);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">if</span> (!Device::initBackendAndCreateSplashscreen(visibleSplashScreen)) {</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        LOG_ENGINE.error(<span class="stringliteral">&quot;Failed to initialize graphics!&quot;</span>);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        exit(EXIT_FAILURE);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    }</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">if</span> (!Renderer::setupForDebugging()) {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        LOG_ENGINE.warning(<span class="stringliteral">&quot;Render backend \&quot;{}\&quot; failed to setup for debugging!&quot;</span>, Renderer::getHumanName());</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    }</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="comment">// Start up some auto-registered stuff (order is random!)</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    PluginRegistry::initAll();</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keywordtype">void</span> Engine::init(<span class="keywordtype">bool</span> visibleSplashScreen <span class="comment">/*= true*/</span>) {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    Engine::started = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">if</span> (!Device::initBackendAndCreateSplashscreen(visibleSplashScreen)) {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        LOG_ENGINE.error(<span class="stringliteral">&quot;Failed to initialize graphics!&quot;</span>);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        exit(EXIT_FAILURE);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    }</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">if</span> (!Renderer::setupForDebugging()) {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        LOG_ENGINE.warning(<span class="stringliteral">&quot;Render backend \&quot;{}\&quot; failed to setup for debugging!&quot;</span>, Renderer::getHumanName());</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    IMeshLoader::addMeshLoader(<span class="stringliteral">&quot;obj&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../dd/d84/classchira_1_1_o_b_j_mesh_loader.html">OBJMeshLoader</a>{});</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    IMeshLoader::addMeshLoader(<span class="stringliteral">&quot;cmdl&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../d7/d5f/classchira_1_1_chira_mesh_loader.html">ChiraMeshLoader</a>{});</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">// Start up some auto-registered stuff (order is random!)</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    ModuleRegistry::initAll();</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">// Create default resources</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    Resource::createDefaultResources();</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    IMeshLoader::addMeshLoader(<span class="stringliteral">&quot;obj&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../dd/d84/classchira_1_1_o_b_j_mesh_loader.html">OBJMeshLoader</a>{});</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    IMeshLoader::addMeshLoader(<span class="stringliteral">&quot;cmdl&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../d7/d5f/classchira_1_1_chira_mesh_loader.html">ChiraMeshLoader</a>{});</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">// Start scripting VM</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    Lua::init();</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">// Create default resources</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    Resource::createDefaultResources();</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    Device::destroySplashscreen();</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    Engine::mainWindow = Device::createWindow(win_width.getValue&lt;<span class="keywordtype">int</span>&gt;(), win_height.getValue&lt;<span class="keywordtype">int</span>&gt;(), TR(<span class="stringliteral">&quot;ui.window.title&quot;</span>), <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">if</span> (!Engine::mainWindow) {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        LOG_ENGINE.error(<span class="stringliteral">&quot;Failed to create main window!&quot;</span>);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        exit(EXIT_FAILURE);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="comment">// Add console UI panel</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">auto</span> consoleID = Device::addPanelToWindow(Engine::mainWindow, <span class="keyword">new</span> <a class="code" href="../../de/d17/classchira_1_1_console_panel.html">ConsolePanel</a>{});</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    Input::KeyEvent::create(Input::Key::SDLK_BACKQUOTE, Input::KeyEventType::PRESSED, [consoleID] {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keyword">auto</span> console = Device::getPanelOnWindow(Engine::mainWindow, consoleID);</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        console-&gt;setVisible(!console-&gt;isVisible());</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    });</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="comment">// Add resource usage tracker UI panel</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keyword">auto</span> resourceUsageTrackerID = Device::addPanelToWindow(Engine::mainWindow, <span class="keyword">new</span> <a class="code" href="../../d5/dc8/classchira_1_1_resource_usage_tracker_panel.html">ResourceUsageTrackerPanel</a>{});</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    Input::KeyEvent::create(Input::Key::SDLK_F1, Input::KeyEventType::PRESSED, [resourceUsageTrackerID] {</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keyword">auto</span> resourceUsageTracker = Device::getPanelOnWindow(Engine::mainWindow, resourceUsageTrackerID);</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        resourceUsageTracker-&gt;setVisible(!resourceUsageTracker-&gt;isVisible());</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    });</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;}</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="keywordtype">void</span> Engine::run() {</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">do</span> {</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        Engine::lastTime = Engine::currentTime;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        Engine::currentTime = Device::getTicks();</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        Device::refreshWindows();</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        PluginRegistry::updateAll();</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    } <span class="keywordflow">while</span> (!Device::isWindowAboutToBeDestroyed(Engine::mainWindow));</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    LOG_ENGINE.info(<span class="stringliteral">&quot;Exiting...&quot;</span>);</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    Device::destroyBackend();</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    PluginRegistry::deinitAll();</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <a class="code" href="../../d8/d5c/classchira_1_1_resource.html#a8560fcaafcda79641bca485e9d4a89c6">Resource::discardAll</a>();</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    exit(EXIT_SUCCESS);</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;}</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// Start scripting VM</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    Lua::init();</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    Device::destroySplashscreen();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    Engine::mainWindow = Device::createWindow(win_width.getValue&lt;<span class="keywordtype">int</span>&gt;(), win_height.getValue&lt;<span class="keywordtype">int</span>&gt;(), TR(<span class="stringliteral">&quot;ui.window.title&quot;</span>), <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">if</span> (!Engine::mainWindow) {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        LOG_ENGINE.error(<span class="stringliteral">&quot;Failed to create main window!&quot;</span>);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        exit(EXIT_FAILURE);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    }</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="comment">// Add console UI panel</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">auto</span> consoleID = Device::addPanelToWindow(Engine::mainWindow, <span class="keyword">new</span> <a class="code" href="../../de/d17/classchira_1_1_console_panel.html">ConsolePanel</a>{});</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    Input::KeyEvent::create(Input::Key::SDLK_BACKQUOTE, Input::KeyEventType::PRESSED, [consoleID] {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keyword">auto</span> console = Device::getPanelOnWindow(Engine::mainWindow, consoleID);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        console-&gt;setVisible(!console-&gt;isVisible());</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    });</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="comment">// Add resource usage tracker UI panel</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">auto</span> resourceUsageTrackerID = Device::addPanelToWindow(Engine::mainWindow, <span class="keyword">new</span> <a class="code" href="../../d5/dc8/classchira_1_1_resource_usage_tracker_panel.html">ResourceUsageTrackerPanel</a>{});</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    Input::KeyEvent::create(Input::Key::SDLK_F1, Input::KeyEventType::PRESSED, [resourceUsageTrackerID] {</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="keyword">auto</span> resourceUsageTracker = Device::getPanelOnWindow(Engine::mainWindow, resourceUsageTrackerID);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        resourceUsageTracker-&gt;setVisible(!resourceUsageTracker-&gt;isVisible());</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    });</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="keywordtype">void</span> Engine::run() {</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordflow">do</span> {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        Engine::lastTime = Engine::currentTime;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        Engine::currentTime = Device::getTicks();</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        Device::refreshWindows();</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        ModuleRegistry::updateAll();</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    } <span class="keywordflow">while</span> (!Device::isWindowAboutToBeDestroyed(Engine::mainWindow));</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    LOG_ENGINE.info(<span class="stringliteral">&quot;Exiting...&quot;</span>);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    Device::destroyBackend();</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    ModuleRegistry::deinitAll();</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <a class="code" href="../../d8/d5c/classchira_1_1_resource.html#a8560fcaafcda79641bca485e9d4a89c6">Resource::discardAll</a>();</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="keywordtype">bool</span> Engine::isStarted() {</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordflow">return</span> Engine::started;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;}</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
-<div class="line"><a name="l00133"></a><span class="lineno"><a class="line" href="../../d6/d8e/classchira_1_1_engine.html#ab2beb02ccd16e2d6b4753dfab809e982">  133</a></span>&#160;uint64_t <a class="code" href="../../d6/d8e/classchira_1_1_engine.html#ab2beb02ccd16e2d6b4753dfab809e982">Engine::getDeltaTicks</a>() {</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordflow">return</span> Engine::currentTime - Engine::lastTime;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;}</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    exit(EXIT_SUCCESS);</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;}</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="keywordtype">bool</span> Engine::isStarted() {</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordflow">return</span> Engine::started;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;}</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
+<div class="line"><a name="l00136"></a><span class="lineno"><a class="line" href="../../d6/d8e/classchira_1_1_engine.html#ab2beb02ccd16e2d6b4753dfab809e982">  136</a></span>&#160;uint64_t <a class="code" href="../../d6/d8e/classchira_1_1_engine.html#ab2beb02ccd16e2d6b4753dfab809e982">Engine::getDeltaTicks</a>() {</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keywordflow">return</span> Engine::currentTime - Engine::lastTime;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;}</div>
 <div class="ttc" id="aclasschira_1_1_chira_mesh_loader_html"><div class="ttname"><a href="../../d7/d5f/classchira_1_1_chira_mesh_loader.html">chira::ChiraMeshLoader</a></div><div class="ttdef"><b>Definition:</b> <a href="../../dd/db2/_chira_mesh_loader_8h_source.html#l00007">ChiraMeshLoader.h:7</a></div></div>
 <div class="ttc" id="aclasschira_1_1_con_command_html"><div class="ttname"><a href="../../d0/d61/classchira_1_1_con_command.html">chira::ConCommand</a></div><div class="ttdef"><b>Definition:</b> <a href="../../dd/df9/_con_entry_8h_source.html#l00039">ConEntry.h:39</a></div></div>
 <div class="ttc" id="aclasschira_1_1_con_var_html"><div class="ttname"><a href="../../db/dc4/classchira_1_1_con_var.html">chira::ConVar</a></div><div class="ttdef"><b>Definition:</b> <a href="../../dd/df9/_con_entry_8h_source.html#l00099">ConEntry.h:99</a></div></div>
 <div class="ttc" id="aclasschira_1_1_console_panel_html"><div class="ttname"><a href="../../de/d17/classchira_1_1_console_panel.html">chira::ConsolePanel</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d7/de0/_console_panel_8h_source.html#l00011">ConsolePanel.h:11</a></div></div>
 <div class="ttc" id="aclasschira_1_1_engine_html_a8d5fee3486fbde2476e434871305e444"><div class="ttname"><a href="../../d6/d8e/classchira_1_1_engine.html#a8d5fee3486fbde2476e434871305e444">chira::Engine::getMainWindow</a></div><div class="ttdeci">static Device::WindowHandle * getMainWindow()</div><div class="ttdoc">Returns a pointer to the main window of the application.</div><div class="ttdef"><b>Definition:</b> <a href="../../de/dcf/_engine_8h_source.html#l00025">Engine.h:25</a></div></div>
-<div class="ttc" id="aclasschira_1_1_engine_html_ab2beb02ccd16e2d6b4753dfab809e982"><div class="ttname"><a href="../../d6/d8e/classchira_1_1_engine.html#ab2beb02ccd16e2d6b4753dfab809e982">chira::Engine::getDeltaTicks</a></div><div class="ttdeci">static uint64_t getDeltaTicks()</div><div class="ttdoc">Only guaranteed to work after run() in a render method.</div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d68/_engine_8cpp_source.html#l00133">Engine.cpp:133</a></div></div>
+<div class="ttc" id="aclasschira_1_1_engine_html_ab2beb02ccd16e2d6b4753dfab809e982"><div class="ttname"><a href="../../d6/d8e/classchira_1_1_engine.html#ab2beb02ccd16e2d6b4753dfab809e982">chira::Engine::getDeltaTicks</a></div><div class="ttdeci">static uint64_t getDeltaTicks()</div><div class="ttdoc">Only guaranteed to work after run() in a render method.</div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d68/_engine_8cpp_source.html#l00136">Engine.cpp:136</a></div></div>
 <div class="ttc" id="aclasschira_1_1_engine_html_acba9a34eb8c7e5cc71bf4e692d5c54c0"><div class="ttname"><a href="../../d6/d8e/classchira_1_1_engine.html#acba9a34eb8c7e5cc71bf4e692d5c54c0">chira::Engine::preInit</a></div><div class="ttdeci">static void preInit(int argc, const char *const argv[])</div><div class="ttdoc">Ran at the very start of your program. Readies the engine for you to add features before init().</div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d68/_engine_8cpp_source.html#l00046">Engine.cpp:46</a></div></div>
 <div class="ttc" id="aclasschira_1_1_filesystem_resource_provider_html"><div class="ttname"><a href="../../de/de0/classchira_1_1_filesystem_resource_provider.html">chira::FilesystemResourceProvider</a></div><div class="ttdef"><b>Definition:</b> <a href="../../dd/dfc/_filesystem_resource_provider_8h_source.html#l00011">FilesystemResourceProvider.h:11</a></div></div>
 <div class="ttc" id="aclasschira_1_1_o_b_j_mesh_loader_html"><div class="ttname"><a href="../../dd/d84/classchira_1_1_o_b_j_mesh_loader.html">chira::OBJMeshLoader</a></div><div class="ttdef"><b>Definition:</b> <a href="../../db/de3/_o_b_j_mesh_loader_8h_source.html#l00007">OBJMeshLoader.h:7</a></div></div>

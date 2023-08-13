@@ -131,7 +131,7 @@ $(document).ready(function(){initNavTree('d8/db4/_resource_8h_source.html','../.
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="../../d8/d5c/classchira_1_1_resource.html">Resource</a>();</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> compile(<span class="keyword">const</span> <span class="keywordtype">byte</span> <span class="comment">/*buffer*/</span>[], std::size_t <span class="comment">/*bufferLength*/</span>) {}</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> compile(<span class="keyword">const</span> <span class="keywordtype">byte</span> <span class="comment">/*buffer*/</span>[], std::size_t <span class="comment">/*bufferLength*/</span>) = 0;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    [[nodiscard]] std::string_view getIdentifier()<span class="keyword"> const </span>{</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordflow">return</span> this-&gt;identifier;</div>

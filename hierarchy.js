@@ -23,22 +23,18 @@ var hierarchy =
     [ "chira::Device::WindowHandle", "d7/d15/structchira_1_1_device_1_1_window_handle.html", null ],
     [ "chira::DirectionalLightComponent", "d1/de2/structchira_1_1_directional_light_component.html", null ],
     [ "chira::DiscordButtonData", "de/d6f/structchira_1_1_discord_button_data.html", null ],
-    [ "chira::DiscordRPC", "d7/dc6/classchira_1_1_discord_r_p_c.html", null ],
     [ "chira::Engine", "d6/d8e/classchira_1_1_engine.html", null ],
     [ "chira::Entity", "de/dca/classchira_1_1_entity.html", null ],
     [ "chira::IMeshLoader", "dd/dec/classchira_1_1_i_mesh_loader.html", [
       [ "chira::ChiraMeshLoader", "d7/d5f/classchira_1_1_chira_mesh_loader.html", null ],
       [ "chira::OBJMeshLoader", "dd/d84/classchira_1_1_o_b_j_mesh_loader.html", null ]
     ] ],
+    [ "chira::IModule", "d7/d77/structchira_1_1_i_module.html", null ],
     [ "chira::Input::Event< T, U, CallbackArgs >", "d9/df5/classchira_1_1_input_1_1_event.html", null ],
     [ "chira::IPanel", "df/dde/classchira_1_1_i_panel.html", [
       [ "chira::ConsolePanel", "de/d17/classchira_1_1_console_panel.html", null ],
-      [ "chira::ControlsPanel", "d8/d79/classchira_1_1_controls_panel.html", null ],
-      [ "chira::EntitySelectPanel", "d3/da2/classchira_1_1_entity_select_panel.html", null ],
       [ "chira::ILayerPanel", "dc/de3/classchira_1_1_i_layer_panel.html", null ],
-      [ "chira::InspectorPanel", "d6/df2/classchira_1_1_inspector_panel.html", null ],
-      [ "chira::ResourceUsageTrackerPanel", "d5/dc8/classchira_1_1_resource_usage_tracker_panel.html", null ],
-      [ "chira::ScriptEditorPanel", "dd/d1d/classchira_1_1_script_editor_panel.html", null ]
+      [ "chira::ResourceUsageTrackerPanel", "d5/dc8/classchira_1_1_resource_usage_tracker_panel.html", null ]
     ] ],
     [ "chira::IResourceProvider", "dc/da5/classchira_1_1_i_resource_provider.html", [
       [ "chira::FilesystemResourceProvider", "de/de0/classchira_1_1_filesystem_resource_provider.html", null ]
@@ -93,14 +89,12 @@ var hierarchy =
     [ "chira::SharedPointerMetadata", "d9/d83/structchira_1_1_shared_pointer_metadata.html", null ],
     [ "chira::SkyboxComponent", "d3/d21/structchira_1_1_skybox_component.html", null ],
     [ "chira::SpotLightComponent", "df/d16/structchira_1_1_spot_light_component.html", null ],
-    [ "chira::SteamAPI", "db/d65/structchira_1_1_steam_a_p_i.html", null ],
-    [ "chira::SteamAPI::Apps", "d0/d48/structchira_1_1_steam_a_p_i_1_1_apps.html", null ],
-    [ "chira::SteamAPI::Client", "da/d73/structchira_1_1_steam_a_p_i_1_1_client.html", null ],
-    [ "chira::SteamAPI::Friends", "d6/d28/structchira_1_1_steam_a_p_i_1_1_friends.html", null ],
-    [ "chira::SteamAPI::UGC", "d5/d1c/structchira_1_1_steam_a_p_i_1_1_u_g_c.html", null ],
-    [ "chira::SteamAPI::User", "d6/d32/structchira_1_1_steam_a_p_i_1_1_user.html", null ],
-    [ "chira::SteamAPI::UserStats", "d3/d22/structchira_1_1_steam_a_p_i_1_1_user_stats.html", null ],
-    [ "chira::SteamAPI::Utils", "d5/d45/structchira_1_1_steam_a_p_i_1_1_utils.html", null ],
+    [ "chira::Steam::CallbackMessage", "db/d2c/structchira_1_1_steam_1_1_callback_message.html", null ],
+    [ "chira::Steam::Callbacks", "d4/d13/structchira_1_1_steam_1_1_callbacks.html", null ],
+    [ "chira::Steam::Callbacks::Completed", "d7/d7f/structchira_1_1_steam_1_1_callbacks_1_1_completed.html", null ],
+    [ "chira::Steam::Callbacks::DLCInstalled", "dc/d84/structchira_1_1_steam_1_1_callbacks_1_1_d_l_c_installed.html", null ],
+    [ "chira::Steam::Callbacks::FileDetailsResult", "df/dae/structchira_1_1_steam_1_1_callbacks_1_1_file_details_result.html", null ],
+    [ "chira::Steam::Callbacks::GameOverlayActivated", "d1/d12/structchira_1_1_steam_1_1_callbacks_1_1_game_overlay_activated.html", null ],
     [ "chira::TransformComponent", "d3/de7/structchira_1_1_transform_component.html", null ],
     [ "chira::TranslationManager", "dc/d59/classchira_1_1_translation_manager.html", null ],
     [ "chira::TypeString< R(ArgTypes...)>", "d5/d1d/structchira_1_1_type_string_3_01_r_07_arg_types_8_8_8_08_4.html", [
@@ -117,16 +111,14 @@ var hierarchy =
       [ "chira::TypeString< std::string >", "da/d69/structchira_1_1_type_string_3_01std_1_1string_01_4.html", null ]
     ] ],
     [ "chira::UniformBufferObject< Size >", "dd/db8/classchira_1_1_uniform_buffer_object.html", null ],
+    [ "chira::UnweightedDirectedGraph", "d5/df9/classchira_1_1_unweighted_directed_graph.html", [
+      [ "chira::DependencyGraph", "d2/d56/classchira_1_1_dependency_graph.html", null ]
+    ] ],
+    [ "chira::UnweightedDirectedGraph::Node", "d1/d30/structchira_1_1_unweighted_directed_graph_1_1_node.html", null ],
     [ "chira::UUIDComponent", "d5/d80/structchira_1_1_u_u_i_d_component.html", null ],
     [ "chira::UUIDGenerator", "db/d04/classchira_1_1_u_u_i_d_generator.html", null ],
     [ "chira::Vertex", "d6/df6/structchira_1_1_vertex.html", null ],
     [ "chira::Input::Event< T, U, CallbackArgs... >", "d9/df5/classchira_1_1_input_1_1_event.html", null ],
-    [ "IPlugin", "d5/d64/struct_i_plugin.html", [
-      [ "AudioPlugin", "da/dfb/struct_audio_plugin.html", null ],
-      [ "DiscordPlugin", "d2/d98/struct_discord_plugin.html", null ],
-      [ "SteamPlugin", "da/d3d/struct_steam_plugin.html", null ]
-    ] ],
-    [ "PluginRegistry", "d6/d20/class_plugin_registry.html", null ],
     [ "chira::SharedPointer< chira::BinaryResource >", "d4/d08/classchira_1_1_shared_pointer.html", null ],
     [ "chira::SharedPointer< chira::Font >", "d4/d08/classchira_1_1_shared_pointer.html", null ],
     [ "chira::SharedPointer< chira::Image >", "d4/d08/classchira_1_1_shared_pointer.html", null ],
@@ -136,12 +128,6 @@ var hierarchy =
     [ "chira::SharedPointer< chira::Shader >", "d4/d08/classchira_1_1_shared_pointer.html", null ],
     [ "chira::SharedPointer< chira::Texture >", "d4/d08/classchira_1_1_shared_pointer.html", null ],
     [ "chira::SharedPointer< chira::TextureCubemap >", "d4/d08/classchira_1_1_shared_pointer.html", null ],
-    [ "steam::CallbackMessage", "d0/d89/structsteam_1_1_callback_message.html", null ],
-    [ "steam::Callbacks", "d9/da3/structsteam_1_1_callbacks.html", null ],
-    [ "steam::Callbacks::Completed", "d7/d58/structsteam_1_1_callbacks_1_1_completed.html", null ],
-    [ "steam::Callbacks::DLCInstalled", "d0/d97/structsteam_1_1_callbacks_1_1_d_l_c_installed.html", null ],
-    [ "steam::Callbacks::FileDetailsResult", "dd/d3a/structsteam_1_1_callbacks_1_1_file_details_result.html", null ],
-    [ "steam::Callbacks::GameOverlayActivated", "db/daa/structsteam_1_1_callbacks_1_1_game_overlay_activated.html", null ],
     [ "chira::UniformBufferObject<((4 *glm::VEC4F_SIZE) *DIRECTIONAL_LIGHT_MAX)+((5 *glm::VEC4F_SIZE) *POINT_LIGHT_MAX)+((6 *glm::VEC4F_SIZE) *SPOT_LIGHT_MAX)+glm::VEC4F_SIZE >", "dd/db8/classchira_1_1_uniform_buffer_object.html", [
       [ "chira::LightsUBO", "da/dad/structchira_1_1_lights_u_b_o.html", null ]
     ] ],

@@ -51,13 +51,13 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"annotated.html",
-"d3/dd9/_render_types_8h.html#a0ba8394daab18eec326b1be77c0aab44aea3495a278957dc58165e48a8945469f",
-"d5/d45/_steam_a_p_i_8h.html#a6d2a5393e83dd4a580229302c127f299a055c1a591abb0e8cd86dc969727bcc0b",
-"d6/d7f/classchira_1_1_layer.html#adb9937c373b979ba9926a5fc83c990f0",
-"da/d09/_input_manager_8h.html#a47e84745a4daa566c9da15582821f5e0a36d9e3a4330b098458b81de2a861cbaa",
-"dd/d5e/_translation_file_resource_8cpp_source.html",
-"df/dde/classchira_1_1_i_panel.html#a9ff7562c7c63ecceac1fe62b4ea30dad"
+"",
+"d3/dd9/_render_types_8h.html#a07d437c53b79f4429880f3a2f7265aa8a7345a249ed5c2f850d85dc1727c24716",
+"d4/ded/_steam_8h.html#a729226c53e89855407cd0179e3fdebb1a240831ece4dd2e1461b7646ca80f45d8",
+"d5/dc8/classchira_1_1_resource_usage_tracker_panel.html#aed70c052c1bb85f2070cb33f86a52866",
+"d8/db3/structchira_1_1_renderer_1_1_shader_handle.html#a7070ffaae7b426e071f65cbfd2a05afd",
+"dc/da5/classchira_1_1_i_resource_provider.html#a74326147aa4905cfb61090169b0d13b8",
+"de/de7/classchira_1_1_mesh_data_resource.html#a5937bc95fec1748b14ac97979a5a54e3"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

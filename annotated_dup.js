@@ -15,6 +15,15 @@ var annotated_dup =
         [ "UniformBufferHandle", "df/d5c/structchira_1_1_renderer_1_1_uniform_buffer_handle.html", "df/d5c/structchira_1_1_renderer_1_1_uniform_buffer_handle" ],
         [ "MeshHandle", "d4/d52/structchira_1_1_renderer_1_1_mesh_handle.html", "d4/d52/structchira_1_1_renderer_1_1_mesh_handle" ]
       ] ],
+      [ "Steam", null, [
+        [ "CallbackMessage", "db/d2c/structchira_1_1_steam_1_1_callback_message.html", "db/d2c/structchira_1_1_steam_1_1_callback_message" ],
+        [ "Callbacks", "d4/d13/structchira_1_1_steam_1_1_callbacks.html", [
+          [ "Completed", "d7/d7f/structchira_1_1_steam_1_1_callbacks_1_1_completed.html", "d7/d7f/structchira_1_1_steam_1_1_callbacks_1_1_completed" ],
+          [ "DLCInstalled", "dc/d84/structchira_1_1_steam_1_1_callbacks_1_1_d_l_c_installed.html", "dc/d84/structchira_1_1_steam_1_1_callbacks_1_1_d_l_c_installed" ],
+          [ "FileDetailsResult", "df/dae/structchira_1_1_steam_1_1_callbacks_1_1_file_details_result.html", "df/dae/structchira_1_1_steam_1_1_callbacks_1_1_file_details_result" ],
+          [ "GameOverlayActivated", "d1/d12/structchira_1_1_steam_1_1_callbacks_1_1_game_overlay_activated.html", "d1/d12/structchira_1_1_steam_1_1_callbacks_1_1_game_overlay_activated" ]
+        ] ]
+      ] ],
       [ "ConEntry", "dc/dd3/classchira_1_1_con_entry.html", "dc/dd3/classchira_1_1_con_entry" ],
       [ "ConCommand", "d0/d61/classchira_1_1_con_command.html", "d0/d61/classchira_1_1_con_command" ],
       [ "ConEntryRegistry", "de/d90/classchira_1_1_con_entry_registry.html", "de/d90/classchira_1_1_con_entry_registry" ],
@@ -59,10 +68,10 @@ var annotated_dup =
       [ "ColorRG", "d5/d75/structchira_1_1_color_r_g.html", "d5/d75/structchira_1_1_color_r_g" ],
       [ "ColorRGB", "d2/df6/structchira_1_1_color_r_g_b.html", "d2/df6/structchira_1_1_color_r_g_b" ],
       [ "ColorRGBA", "d2/dd4/structchira_1_1_color_r_g_b_a.html", "d2/dd4/structchira_1_1_color_r_g_b_a" ],
+      [ "UnweightedDirectedGraph", "d5/df9/classchira_1_1_unweighted_directed_graph.html", "d5/df9/classchira_1_1_unweighted_directed_graph" ],
       [ "Vertex", "d6/df6/structchira_1_1_vertex.html", "d6/df6/structchira_1_1_vertex" ],
       [ "DiscordButtonData", "de/d6f/structchira_1_1_discord_button_data.html", "de/d6f/structchira_1_1_discord_button_data" ],
-      [ "DiscordRPC", "d7/dc6/classchira_1_1_discord_r_p_c.html", "d7/dc6/classchira_1_1_discord_r_p_c" ],
-      [ "SteamAPI", "db/d65/structchira_1_1_steam_a_p_i.html", "db/d65/structchira_1_1_steam_a_p_i" ],
+      [ "IModule", "d7/d77/structchira_1_1_i_module.html", "d7/d77/structchira_1_1_i_module" ],
       [ "MaterialCubemap", "dc/d74/classchira_1_1_material_cubemap.html", "dc/d74/classchira_1_1_material_cubemap" ],
       [ "IMaterial", "df/d5f/classchira_1_1_i_material.html", "df/d5f/classchira_1_1_i_material" ],
       [ "MaterialFrameBuffer", "d3/d3c/classchira_1_1_material_frame_buffer.html", "d3/d3c/classchira_1_1_material_frame_buffer" ],
@@ -91,6 +100,7 @@ var annotated_dup =
       [ "ILayerPanel", "dc/de3/classchira_1_1_i_layer_panel.html", "dc/de3/classchira_1_1_i_layer_panel" ],
       [ "IPanel", "df/dde/classchira_1_1_i_panel.html", "df/dde/classchira_1_1_i_panel" ],
       [ "AbstractFactory", "d6/dfd/classchira_1_1_abstract_factory.html", "d6/dfd/classchira_1_1_abstract_factory" ],
+      [ "DependencyGraph", "d2/d56/classchira_1_1_dependency_graph.html", "d2/d56/classchira_1_1_dependency_graph" ],
       [ "SharedPointerMetadata", "d9/d83/structchira_1_1_shared_pointer_metadata.html", "d9/d83/structchira_1_1_shared_pointer_metadata" ],
       [ "SharedPointer", "d4/d08/classchira_1_1_shared_pointer.html", "d4/d08/classchira_1_1_shared_pointer" ],
       [ "TypeStringBase", "de/d6e/structchira_1_1_type_string_base.html", "de/d6e/structchira_1_1_type_string_base" ],
@@ -102,24 +112,6 @@ var annotated_dup =
       [ "TypeString< std::string >", "da/d69/structchira_1_1_type_string_3_01std_1_1string_01_4.html", "da/d69/structchira_1_1_type_string_3_01std_1_1string_01_4" ],
       [ "TypeString< R(ArgTypes...)>", "d5/d1d/structchira_1_1_type_string_3_01_r_07_arg_types_8_8_8_08_4.html", "d5/d1d/structchira_1_1_type_string_3_01_r_07_arg_types_8_8_8_08_4" ],
       [ "TypeString< R(*)(ArgTypes...)>", "df/dd9/structchira_1_1_type_string_3_01_r_07_5_08_07_arg_types_8_8_8_08_4.html", "df/dd9/structchira_1_1_type_string_3_01_r_07_5_08_07_arg_types_8_8_8_08_4" ],
-      [ "UUIDGenerator", "db/d04/classchira_1_1_u_u_i_d_generator.html", null ],
-      [ "ControlsPanel", "d8/d79/classchira_1_1_controls_panel.html", "d8/d79/classchira_1_1_controls_panel" ],
-      [ "EntitySelectPanel", "d3/da2/classchira_1_1_entity_select_panel.html", "d3/da2/classchira_1_1_entity_select_panel" ],
-      [ "InspectorPanel", "d6/df2/classchira_1_1_inspector_panel.html", "d6/df2/classchira_1_1_inspector_panel" ],
-      [ "ScriptEditorPanel", "dd/d1d/classchira_1_1_script_editor_panel.html", "dd/d1d/classchira_1_1_script_editor_panel" ]
-    ] ],
-    [ "steam", null, [
-      [ "CallbackMessage", "d0/d89/structsteam_1_1_callback_message.html", "d0/d89/structsteam_1_1_callback_message" ],
-      [ "Callbacks", "d9/da3/structsteam_1_1_callbacks.html", [
-        [ "Completed", "d7/d58/structsteam_1_1_callbacks_1_1_completed.html", "d7/d58/structsteam_1_1_callbacks_1_1_completed" ],
-        [ "DLCInstalled", "d0/d97/structsteam_1_1_callbacks_1_1_d_l_c_installed.html", "d0/d97/structsteam_1_1_callbacks_1_1_d_l_c_installed" ],
-        [ "FileDetailsResult", "dd/d3a/structsteam_1_1_callbacks_1_1_file_details_result.html", "dd/d3a/structsteam_1_1_callbacks_1_1_file_details_result" ],
-        [ "GameOverlayActivated", "db/daa/structsteam_1_1_callbacks_1_1_game_overlay_activated.html", "db/daa/structsteam_1_1_callbacks_1_1_game_overlay_activated" ]
-      ] ]
-    ] ],
-    [ "AudioPlugin", "da/dfb/struct_audio_plugin.html", "da/dfb/struct_audio_plugin" ],
-    [ "DiscordPlugin", "d2/d98/struct_discord_plugin.html", "d2/d98/struct_discord_plugin" ],
-    [ "IPlugin", "d5/d64/struct_i_plugin.html", "d5/d64/struct_i_plugin" ],
-    [ "PluginRegistry", "d6/d20/class_plugin_registry.html", "d6/d20/class_plugin_registry" ],
-    [ "SteamPlugin", "da/d3d/struct_steam_plugin.html", "da/d3d/struct_steam_plugin" ]
+      [ "UUIDGenerator", "db/d04/classchira_1_1_u_u_i_d_generator.html", null ]
+    ] ]
 ];
