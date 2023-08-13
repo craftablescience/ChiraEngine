@@ -57,8 +57,8 @@ by Apple's version of Clang.
 | Platform          | OpenGL 4.0 | OpenGL 4.1 | OpenGL 4.3 |  D3D11  | Software |
 |-------------------|:----------:|:----------:|:----------:|:-------:|:--------:|
 | Windows           |     ✔      |     ✔      |     ✔      | Planned |   ✔\*    |
-| Linux             |     ✔      |     ✔      |     ✔      |    ❌    |   ✔\*    |
-| macOS             |     ✔      |     ✔      |     ❌      |    ❌    |   ✔\*    |
+| Linux             |     ✔      |     ✔      |     ✔      |    -    |   ✔\*    |
+| macOS             |     ✔      |     ✔      |     -      |    -    |   ✔\*    |
 
 (\*) SDL software renderer implementation is incomplete and will likely never work perfectly with 3D.
 It exists to make it easier to port to new platforms.
