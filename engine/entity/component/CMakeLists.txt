@@ -13,4 +13,5 @@ list(APPEND CHIRA_ENGINE_HEADERS
         ${CMAKE_CURRENT_LIST_DIR}/TagComponents.h
         ${CMAKE_CURRENT_LIST_DIR}/TransformComponent.h
         ${CMAKE_CURRENT_LIST_DIR}/UUIDComponent.h
-        ${CMAKE_CURRENT_LIST_DIR}/MeshSpriteComponent.h)
+        ${CMAKE_CURRENT_LIST_DIR}/MeshSpriteComponent.h
+        ${CMAKE_CURRENT_LIST_DIR}/LayerComponents.h)

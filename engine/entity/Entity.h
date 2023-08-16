@@ -8,6 +8,7 @@
 #include "component/TagComponents.h"
 #include "component/TransformComponent.h"
 #include "component/UUIDComponent.h"
+#include "component/LayerComponents.h"
 #include "Scene.h"
 
 namespace chira {
@@ -21,6 +22,7 @@ protected:
             : scene(scene_)
             , handle(scene_->getRegistry().create()) {
         this->addComponent<TransformComponent>();
+        this->addTagComponent<Layer0Component>();
     }
 
 public:

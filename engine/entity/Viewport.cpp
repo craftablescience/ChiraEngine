@@ -10,6 +10,7 @@
 #include "component/TagComponents.h"
 #include "component/TransformComponent.h"
 #include "component/MeshSpriteComponent.h"
+#include "component/LayerComponents.h"
 
 using namespace chira;
 
@@ -92,6 +93,16 @@ void Viewport::update() {
     }
 }
 
+template <class Tup, class Func, std::size_t... Is>
+constexpr void static_for_impl(Tup&& t, Func&& f, std::index_sequence<Is...>) {
+    (f(std::integral_constant<std::size_t, Is>{}, std::get<Is>(t)), ...);
+}
+
+template <class... T, class Func >
+constexpr void static_for(std::tuple<T...>& t, Func&& f) {
+    static_for_impl(t, std::forward<Func>(f), std::make_index_sequence<sizeof...(T)>{});
+}
+
 void Viewport::render() {
     Renderer::setClearColor({this->backgroundColor, 1.f});
     Renderer::pushFrameBuffer(this->frameBufferHandle);
@@ -132,36 +143,46 @@ void Viewport::render() {
     LightsUBO::get().update(directionalLightComponentArray, pointLightComponentArray, spotLightComponentArray,
                             {directionalLightsCount, pointLightsCount, spotLightsCount});
 
+    std::tuple<Layer0Component, Layer1Component, Layer2Component, Layer3Component, Layer4Component,
+        Layer5Component, Layer6Component, Layer7Component, Layer8Component, Layer9Component> t{};
+
+    static_for(t, [this](auto index, auto element) {
+        if (this->getCamera()->activeLayers & element.index) {
+            for (const auto& [uuid, scene] : this->scenes) {
+                auto& registry = scene->getRegistry();
+
+                // Set up camera
+                scene->setupForRender(this->size);
+
+                auto meshView = scene->template getEntities<MeshComponent, decltype(element)>(entt::exclude<NoRenderTagComponent>);
+                for (auto entity : meshView) {
+                    auto& transformComponent = registry.get<TransformComponent>(entity);
+                    auto& meshComponent = registry.get<MeshComponent>(entity);
+                    meshComponent.mesh->render(transformComponent.getMatrix());
+                }
+
+                // Render MeshDynamicComponent
+                auto meshDynamicView = scene->template getEntities<MeshDynamicComponent, decltype(element)>(entt::exclude<NoRenderTagComponent>);
+                for (auto entity : meshDynamicView) {
+                    auto& transformComponent = registry.get<TransformComponent>(entity);
+                    auto& meshDynamicComponent = registry.get<MeshDynamicComponent>(entity);
+                    meshDynamicComponent.meshBuilder.render(transformComponent.getMatrix());
+                }
+
+                // Render MeshSpriteComponent
+                auto meshSpriteView = scene->template getEntities<MeshSpriteComponent, decltype(element)>(entt::exclude<NoRenderTagComponent>);
+                for (auto entity : meshSpriteView) {
+                    auto& transformComponent = registry.get<TransformComponent>(entity);
+                    auto& meshSpriteComponent = registry.get<MeshSpriteComponent>(entity);
+                    meshSpriteComponent.sprite.render(transformComponent.getMatrix());
+                }
+            }
+        }
+    });
+
     // Render scenes
     for (const auto& [uuid, scene] : this->scenes) {
         auto& registry = scene->getRegistry();
-
-        // Set up camera
-        scene->setupForRender(this->size);
-
-        // Render MeshComponent
-        auto meshView = scene->getEntities<MeshComponent>(entt::exclude<NoRenderTagComponent>);
-        for (auto entity : meshView) {
-            auto& transformComponent = registry.get<TransformComponent>(entity);
-            auto& meshComponent = registry.get<MeshComponent>(entity);
-            meshComponent.mesh->render(transformComponent.getMatrix());
-        }
-
-        // Render MeshDynamicComponent
-        auto meshDynamicView = scene->getEntities<MeshDynamicComponent>(entt::exclude<NoRenderTagComponent>);
-        for (auto entity : meshDynamicView) {
-            auto& transformComponent = registry.get<TransformComponent>(entity);
-            auto& meshDynamicComponent = registry.get<MeshDynamicComponent>(entity);
-            meshDynamicComponent.meshBuilder.render(transformComponent.getMatrix());
-        }
-
-        // Render MeshSpriteComponent
-        auto meshSpriteView = scene->getEntities<MeshSpriteComponent>(entt::exclude<NoRenderTagComponent>);
-        for (auto entity : meshSpriteView) {
-            auto& transformComponent = registry.get<TransformComponent>(entity);
-            auto& meshSpriteComponent = registry.get<MeshSpriteComponent>(entity);
-            meshSpriteComponent.sprite.render(transformComponent.getMatrix());
-        }
 
         // Render SkyboxComponent
         auto skyboxView = registry.view<SkyboxComponent>();
@@ -169,14 +190,6 @@ void Viewport::render() {
             auto& skyboxComponent = skyboxView.get<SkyboxComponent>(skyboxView.front());
             skyboxComponent.skybox.render(glm::identity<glm::mat4>());
         }
-
-#if 0
-        // Render AngelScriptComponent
-        auto angelScriptView = scene->getEntities<AngelScriptComponent>(entt::exclude<NoRenderTagComponent>);
-        for (const auto [entity, angelScriptComponent] : angelScriptView.each()) {
-            angelScriptComponent.render();
-        }
-#endif
     }
     Renderer::popFrameBuffer();
 }
