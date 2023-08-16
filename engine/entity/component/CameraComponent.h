@@ -68,6 +68,9 @@ public:
     float orthoSize;
 
     bool active;
+
+    // this number is the added values of every layer index.
+    int activeLayers = 1023;
 };
 
 } // namespace chira
