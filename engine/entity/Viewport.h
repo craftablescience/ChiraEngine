@@ -5,9 +5,9 @@
 
 namespace chira {
 
-class Layer {
+class Viewport {
 public:
-    explicit Layer(glm::vec2i size_, ColorRGB backgroundColor_ = {}, bool linearFiltering_ = true);
+    explicit Viewport(glm::vec2i size_, ColorRGB backgroundColor_ = {}, bool linearFiltering_ = true);
 
     Scene* addScene();
 

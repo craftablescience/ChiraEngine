@@ -6,13 +6,13 @@
 
 namespace chira {
 
-class Layer;
+class Viewport;
 class Scene;
 class Entity;
 
 class ControlsPanel : public IPanel {
 public:
-    explicit ControlsPanel(Layer* layer);
+    explicit ControlsPanel(Viewport* viewport);
 
     /// Opens a file dialog used to select a resource folder
     void addResourceFolderSelected();

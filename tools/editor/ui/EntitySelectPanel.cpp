@@ -1,21 +1,21 @@
 #include "EntitySelectPanel.h"
 
-#include <entity/Layer.h>
+#include <entity/Viewport.h>
 #include "ControlsPanel.h"
 #include "InspectorPanel.h"
 
 using namespace chira;
 
-EntitySelectPanel::EntitySelectPanel(Layer* layer_, ControlsPanel* controls_, InspectorPanel* inspector_)
+EntitySelectPanel::EntitySelectPanel(Viewport* layer_, ControlsPanel* controls_, InspectorPanel* inspector_)
         : IPanel("Entity Select", true)
-        , layer(layer_)
+        , viewport(layer_)
         , controls(controls_)
         , inspector(inspector_) {}
 
 void EntitySelectPanel::renderContents() {
     int id = 0;
 
-    for (const auto& [sceneID, scene] : this->layer->getScenes()) {
+    for (const auto& [sceneID, scene] : this->viewport->getScenes()) {
         static uuids::uuid selectedID;
 
 #ifndef DEBUG
@@ -27,7 +27,7 @@ void EntitySelectPanel::renderContents() {
 
         ImGui::PushID(++id);
         if (ImGui::Button("X")) {
-            this->layer->removeScene(sceneID);
+            this->viewport->removeScene(sceneID);
             // todo(editor): only unselect if its currently selected
             this->controls->setSelectedEntity(nullptr);
             this->controls->setSelectedScene(nullptr);
@@ -97,14 +97,14 @@ void EntitySelectPanel::renderContents() {
 
     char sceneName[512] {0};
     if (ImGui::InputText("Add Scene", sceneName, sizeof(sceneName), ImGuiInputTextFlags_EnterReturnsTrue) && sceneName[0]) {
-        this->layer->addScene(sceneName);
+        this->viewport->addScene(sceneName);
     }
 }
 
-void EntitySelectPanel::setLayer(Layer* layer_) {
-    this->layer = layer_;
+void EntitySelectPanel::setViewport(Viewport* viewport_) {
+    this->viewport = viewport_;
 }
 
-Layer* EntitySelectPanel::getLayer() const {
-    return this->layer;
+Viewport* EntitySelectPanel::getViewport() const {
+    return this->viewport;
 }

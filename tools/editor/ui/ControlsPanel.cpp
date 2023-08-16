@@ -75,9 +75,9 @@ static void setupKeybinds(TransformComponent& cameraTransform) {
     });
 }
 
-ControlsPanel::ControlsPanel(Layer* layer)
+ControlsPanel::ControlsPanel(Viewport* viewport)
         : IPanel("Controls", true)
-        , scene(layer->addScene("Editor"))
+        , scene(viewport->addScene("Editor"))
         , selectedEntity(nullptr)
         , selectedScene(nullptr) {
     this->folderDialog.SetTitle("Select Folder...");

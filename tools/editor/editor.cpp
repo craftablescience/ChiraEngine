@@ -51,10 +51,10 @@ int main(int argc, const char* const argv[]) {
     Engine::init();
 
     auto* window = Engine::getMainWindow();
-    auto* layer = Device::getWindowLayer(window);
-    layer->setBackgroundColor({0.15f});
+    auto* viewport = Device::getWindowViewport(window);
+    viewport->setBackgroundColor({0.15f});
 
-    auto controls = new ControlsPanel{layer};
+    auto controls = new ControlsPanel{viewport};
     Device::addPanelToWindow(window, controls);
 
     auto inspector = new InspectorPanel{};
@@ -63,7 +63,7 @@ int main(int argc, const char* const argv[]) {
     auto scriptEditor = new ScriptEditorPanel{};
     Device::addPanelToWindow(window, scriptEditor);
 
-    Device::addPanelToWindow(window, new EntitySelectPanel{layer, controls, inspector});
+    Device::addPanelToWindow(window, new EntitySelectPanel{viewport, controls, inspector});
 
     Engine::run();
 }

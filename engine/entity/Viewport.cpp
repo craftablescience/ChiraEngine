@@ -1,4 +1,4 @@
-#include "Layer.h"
+#include "Viewport.h"
 
 #include <core/Assertions.h>
 #include <render/shader/UBO.h>
@@ -13,25 +13,25 @@
 
 using namespace chira;
 
-Layer::Layer(glm::vec2i size_, ColorRGB backgroundColor_, bool linearFiltering_)
+Viewport::Viewport(glm::vec2i size_, ColorRGB backgroundColor_, bool linearFiltering_)
         : size(size_)
         , backgroundColor(backgroundColor_)
         , linearFiltering(linearFiltering_) {
     this->recreateFrameBuffer();
 }
 
-Scene* Layer::addScene() {
+Scene* Viewport::addScene() {
     auto uuid = UUIDGenerator::getNewUUID();
     return this->addScene(uuid);
 }
 
-Scene* Layer::addScene(const std::string& name) {
+Scene* Viewport::addScene(const std::string& name) {
     auto* scene = this->addScene();
     scene->getRegistry().emplace<NameComponent>(scene->getRawHandle(), name);
     return scene;
 }
 
-Scene* Layer::addScene(uuids::uuid uuid) {
+Scene* Viewport::addScene(uuids::uuid uuid) {
     runtime_assert(!this->scenes.contains(uuid), "Scene UUID is already present!");
     this->scenes[uuid] = std::unique_ptr<Scene>(new Scene{});
     auto& scene = this->scenes.at(uuid);
@@ -39,35 +39,35 @@ Scene* Layer::addScene(uuids::uuid uuid) {
     return scene.get();
 }
 
-Scene* Layer::addScene(uuids::uuid uuid, const std::string& name) {
+Scene* Viewport::addScene(uuids::uuid uuid, const std::string& name) {
     auto* scene = this->addScene(uuid);
     scene->getRegistry().emplace<NameComponent>(scene->getRawHandle(), name);
     return scene;
 }
 
-Scene* Layer::getScene(uuids::uuid sceneID) {
+Scene* Viewport::getScene(uuids::uuid sceneID) {
     if (this->hasScene(sceneID)) {
         return nullptr;
     }
     return this->scenes.at(sceneID).get();
 }
 
-bool Layer::hasScene(uuids::uuid sceneID) {
+bool Viewport::hasScene(uuids::uuid sceneID) {
     return this->scenes.contains(sceneID);
 }
 
-void Layer::removeScene(uuids::uuid sceneID) {
+void Viewport::removeScene(uuids::uuid sceneID) {
     runtime_assert(this->hasScene(sceneID), "Trying to remove a scene with a UUID that doesn't exist!");
     this->scenes.erase(sceneID);
 }
 
-void Layer::removeAllScenes() {
+void Viewport::removeAllScenes() {
     for (const auto& [uuid, scene] : this->scenes) {
         this->removeScene(uuid);
     }
 }
 
-void Layer::update() {
+void Viewport::update() {
     for (const auto& [uuid, scene] : this->scenes) {
         if (auto* camera = this->getCamera()) {
             // Update BillboardComponent
@@ -92,7 +92,7 @@ void Layer::update() {
     }
 }
 
-void Layer::render() {
+void Viewport::render() {
     Renderer::setClearColor({this->backgroundColor, 1.f});
     Renderer::pushFrameBuffer(this->frameBufferHandle);
 
@@ -181,7 +181,7 @@ void Layer::render() {
     Renderer::popFrameBuffer();
 }
 
-void Layer::recreateFrameBuffer() {
+void Viewport::recreateFrameBuffer() {
     if (this->frameBufferHandle) {
         Renderer::destroyFrameBuffer(this->frameBufferHandle);
     }
