@@ -14,7 +14,7 @@ namespace chira {
 class Entity;
 
 class Scene {
-    friend class Layer;
+    friend class Viewport;
 
 protected:
     Scene();

@@ -169,7 +169,7 @@ std::array<Device::WindowHandle, 256> g_Windows{};
     return -1;
 }
 
-Device::WindowHandle* Device::createWindow(int width, int height, std::string_view title, Layer* layer) {
+Device::WindowHandle* Device::createWindow(int width, int height, std::string_view title, Viewport* viewport) {
     int freeWindow = findFreeWindow();
     if (freeWindow == -1)
         return nullptr;
@@ -193,12 +193,12 @@ Device::WindowHandle* Device::createWindow(int width, int height, std::string_vi
     SDL_SetWindowData(handle.window, "handle", &handle);
     SDL_GL_MakeCurrent(handle.window, g_GLContext);
 
-    if (layer) {
-        handle.layer = layer;
-        handle.layerIsSelfOwned = false;
+    if (viewport) {
+        handle.viewport = viewport;
+        handle.viewportIsSelfOwned = false;
     } else {
-        handle.layer = new Layer{{width, height}};
-        handle.layerIsSelfOwned = true;
+        handle.viewport = new Viewport{{width, height}};
+        handle.viewportIsSelfOwned = true;
     }
 
     int iconWidth, iconHeight, bitsPerPixel;
@@ -242,7 +242,7 @@ void Device::refreshWindows() {
         }
 
         if (!Device::isWindowVisible(&handle)) {
-            handle.layer->update();
+            handle.viewport->update();
             continue;
         }
 
@@ -252,11 +252,11 @@ void Device::refreshWindows() {
         ImGui::SetCurrentContext(handle.imguiContext);
         setImGuiConfigPath();
 
-        Renderer::pushFrameBuffer(*handle.layer->getRawHandle());
+        Renderer::pushFrameBuffer(*handle.viewport->getRawHandle());
         Renderer::startImGuiFrame();
 
-        handle.layer->update();
-        handle.layer->render();
+        handle.viewport->update();
+        handle.viewport->render();
 
         for (auto& [uuid, panel] : handle.panels) {
             panel->render();
@@ -269,7 +269,7 @@ void Device::refreshWindows() {
 
         MeshDataBuilder surface;
         surface.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-        surface.setMaterial(Resource::getUniqueUncachedResource<MaterialFrameBuffer>("file://materials/window.json", handle.layer->getRawHandle()).cast<IMaterial>());
+        surface.setMaterial(Resource::getUniqueUncachedResource<MaterialFrameBuffer>("file://materials/window.json", handle.viewport->getRawHandle()).cast<IMaterial>());
         surface.render(glm::identity<glm::mat4>());
 
         glEnable(GL_DEPTH_TEST);
@@ -304,7 +304,7 @@ void Device::refreshWindows() {
                     case SDL_WINDOWEVENT_SIZE_CHANGED:
                     case SDL_WINDOWEVENT_MAXIMIZED:
                         SDL_GetWindowSizeInPixels(handle->window, &handle->width, &handle->height);
-                        handle->layer->setSize({handle->width, handle->height});
+                        handle->viewport->setSize({handle->width, handle->height});
                         break;
                     default:
                         // There's quite a few events we don't care about
@@ -377,8 +377,8 @@ int Device::getWindowCount() {
     return count;
 }
 
-Layer* Device::getWindowLayer(WindowHandle* handle) {
-    return handle->layer;
+Viewport* Device::getWindowViewport(WindowHandle* handle) {
+    return handle->viewport;
 }
 
 void Device::setWindowTitle(WindowHandle* handle, std::string_view title) {
@@ -398,7 +398,7 @@ void Device::setWindowMaximized(WindowHandle* handle, bool maximize) {
         SDL_RestoreWindow(handle->window);
     }
     SDL_GetWindowSize(handle->window, &handle->width, &handle->height);
-    handle->layer->setSize({handle->width, handle->height});
+    handle->viewport->setSize({handle->width, handle->height});
 }
 
 bool Device::isWindowMaximized(WindowHandle* handle) {
@@ -441,7 +441,7 @@ bool Device::isWindowVisible(WindowHandle* handle) {
 void Device::setWindowSize(WindowHandle* handle, int width, int height) {
     handle->width = width;
     handle->height = height;
-    handle->layer->setSize({width, height});
+    handle->viewport->setSize({width, height});
     SDL_SetWindowSize(handle->window, width, height);
 }
 
@@ -520,8 +520,8 @@ bool Device::isWindowAboutToBeDestroyed(WindowHandle* handle) {
 }
 
 void Device::destroyWindow(WindowHandle* handle) {
-    if (handle->layerIsSelfOwned) {
-        delete handle->layer;
+    if (handle->viewportIsSelfOwned) {
+        delete handle->viewport;
     }
     Device::removeAllPanelsFromWindow(handle);
     ImGui::DestroyContext(handle->imguiContext);

@@ -6,19 +6,19 @@ namespace chira {
 
 class ControlsPanel;
 class InspectorPanel;
-class Layer;
+class Viewport;
 
 class EntitySelectPanel : public IPanel {
 public:
-    EntitySelectPanel(Layer* layer_, ControlsPanel* controls_, InspectorPanel* inspector_);
+    EntitySelectPanel(Viewport* layer_, ControlsPanel* controls_, InspectorPanel* inspector_);
 
     void renderContents() override;
 
-    void setLayer(Layer* layer_);
-    [[nodiscard]] Layer* getLayer() const;
+    void setViewport(Viewport* viewport_);
+    [[nodiscard]] Viewport* getViewport() const;
 
 private:
-    Layer* layer;
+    Viewport* viewport;
     ControlsPanel* controls;
     InspectorPanel* inspector;
 };

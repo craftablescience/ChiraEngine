@@ -4,7 +4,7 @@
 #include <string>
 #include <string_view>
 #include <unordered_map>
-#include <entity/Layer.h>
+#include <entity/Viewport.h>
 
 struct SDL_Window;
 struct ImGuiContext;
@@ -37,8 +37,8 @@ struct WindowHandle {
     bool mouseCaptured = false;
     bool shouldClose = false;
 
-    Layer* layer = nullptr;
-    bool layerIsSelfOwned = false;
+    Viewport* viewport = nullptr;
+    bool viewportIsSelfOwned = false;
 
     explicit inline operator bool() const { return window; }
     inline bool operator!() const { return !window; }
@@ -51,11 +51,11 @@ void destroyBackend();
 [[nodiscard]] std::uint64_t getTicks();
 
 /// Note: If an icon image is present, it must be RGBA8888
-[[nodiscard]] WindowHandle* createWindow(int width, int height, std::string_view title, Layer* layer);
+[[nodiscard]] WindowHandle* createWindow(int width, int height, std::string_view title, Viewport* viewport);
 void refreshWindows();
 [[nodiscard]] int getWindowCount();
 
-[[nodiscard]] Layer* getWindowLayer(WindowHandle* handle);
+[[nodiscard]] Viewport* getWindowViewport(WindowHandle* handle);
 
 void setWindowTitle(WindowHandle* handle, std::string_view title);
 [[nodiscard]] std::string_view getWindowTitle(WindowHandle* handle);
