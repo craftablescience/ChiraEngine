@@ -31,5 +31,5 @@ var classchira_1_1_scene =
     [ "tryGetComponent", "d5/db7/classchira_1_1_scene.html#aeadc6b50e65cc4d00b546697f809fecc", null ],
     [ "tryGetComponent", "d5/db7/classchira_1_1_scene.html#a27be5b55153b0b952feaee3e0bc5a5c2", null ],
     [ "tryRemoveComponent", "d5/db7/classchira_1_1_scene.html#a0062d885ceffa334a2e6e0c84b6fc9b1", null ],
-    [ "Layer", "d5/db7/classchira_1_1_scene.html#a834e4e869446be644f61b4b456604f31", null ]
+    [ "Viewport", "d5/db7/classchira_1_1_scene.html#ab3703ea733c8be91191d75b1546bad86", null ]
 ];

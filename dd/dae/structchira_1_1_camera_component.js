@@ -10,6 +10,7 @@ var structchira_1_1_camera_component =
     [ "getView", "dd/dae/structchira_1_1_camera_component.html#af3504a5357c6907d8c95075675182cd9", null ],
     [ "setCurrent", "dd/dae/structchira_1_1_camera_component.html#a0c1aea3580c418fe505a3a9ca0291423", null ],
     [ "active", "dd/dae/structchira_1_1_camera_component.html#a143e45dec066437d256e658a2b1c240d", null ],
+    [ "activeLayers", "dd/dae/structchira_1_1_camera_component.html#aaa5381b12daff9616f2ee2efb3b59b48", null ],
     [ "farDistance", "dd/dae/structchira_1_1_camera_component.html#a887354325e1d2a32246eae704ed2ce5c", null ],
     [ "fov", "dd/dae/structchira_1_1_camera_component.html#af101e40e98dd780e2122f5b3c6e92b35", null ],
     [ "nearDistance", "dd/dae/structchira_1_1_camera_component.html#adf49e0b548827ab7237cb52fd25480cd", null ],

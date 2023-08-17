@@ -51,13 +51,13 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"annotated.html",
-"d3/dd9/_render_types_8h.html#a3ce1e5b6da8040c95e123252b35cd4e9afe6f99ef1ec99efbdc19a9786cf1facc",
-"d4/ded/_steam_8h.html#a729226c53e89855407cd0179e3fdebb1a4a0ded5b3a6e8ce7e7c9b78b144bb1ed",
-"d5/dfe/_discord_8h_source.html",
-"d9/d31/_render_device_8h_source.html",
-"dc/dc8/math_2_types_8h.html#adb581872dc9418de1c6359910d4f92b3",
-"df/d5c/structchira_1_1_renderer_1_1_uniform_buffer_handle.html#ae25d5f12512ff76e98dcd086395b9a69"
+"",
+"d3/dce/_mesh_component_8h_source.html",
+"d4/ded/_steam_8h.html#a729226c53e89855407cd0179e3fdebb1a12daed15e373d11c0e26720525ecc201",
+"d5/db7/classchira_1_1_scene.html#af3c228fc1f7eaa561c22c2ae1fb7fbac",
+"d8/dec/structchira_1_1_mesh_dynamic_component.html#a8870d8207a54573e9c0f175a9fa37ac5",
+"dc/d74/classchira_1_1_material_cubemap.html#a958c1823c07510880448c86d452e9c98",
+"de/dd1/_font_8cpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

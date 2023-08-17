@@ -33,7 +33,7 @@ var hierarchy =
     [ "chira::Input::Event< T, U, CallbackArgs >", "d9/df5/classchira_1_1_input_1_1_event.html", null ],
     [ "chira::IPanel", "df/dde/classchira_1_1_i_panel.html", [
       [ "chira::ConsolePanel", "de/d17/classchira_1_1_console_panel.html", null ],
-      [ "chira::ILayerPanel", "dc/de3/classchira_1_1_i_layer_panel.html", null ],
+      [ "chira::IViewportPanel", "d7/dea/classchira_1_1_i_viewport_panel.html", null ],
       [ "chira::ResourceUsageTrackerPanel", "d5/dc8/classchira_1_1_resource_usage_tracker_panel.html", null ]
     ] ],
     [ "chira::IResourceProvider", "dc/da5/classchira_1_1_i_resource_provider.html", [
@@ -42,7 +42,7 @@ var hierarchy =
     [ "chira::ISettingsLoader", "d0/d1a/classchira_1_1_i_settings_loader.html", [
       [ "chira::JSONSettingsLoader", "d0/dbd/classchira_1_1_j_s_o_n_settings_loader.html", null ]
     ] ],
-    [ "chira::Layer", "d6/d7f/classchira_1_1_layer.html", null ],
+    [ "chira::LayerComponent< LayerIndex >", "d0/dc8/structchira_1_1_layer_component.html", null ],
     [ "chira::LogChannel", "da/d25/classchira_1_1_log_channel.html", null ],
     [ "chira::Logger", "d5/df6/classchira_1_1_logger.html", null ],
     [ "chira::MeshComponent", "d6/d8e/structchira_1_1_mesh_component.html", null ],
@@ -118,6 +118,7 @@ var hierarchy =
     [ "chira::UUIDComponent", "d5/d80/structchira_1_1_u_u_i_d_component.html", null ],
     [ "chira::UUIDGenerator", "db/d04/classchira_1_1_u_u_i_d_generator.html", null ],
     [ "chira::Vertex", "d6/df6/structchira_1_1_vertex.html", null ],
+    [ "chira::Viewport", "db/dcc/classchira_1_1_viewport.html", null ],
     [ "chira::Input::Event< T, U, CallbackArgs... >", "d9/df5/classchira_1_1_input_1_1_event.html", null ],
     [ "chira::SharedPointer< chira::BinaryResource >", "d4/d08/classchira_1_1_shared_pointer.html", null ],
     [ "chira::SharedPointer< chira::Font >", "d4/d08/classchira_1_1_shared_pointer.html", null ],

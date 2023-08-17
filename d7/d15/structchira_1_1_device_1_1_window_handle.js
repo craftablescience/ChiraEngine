@@ -7,11 +7,11 @@ var structchira_1_1_device_1_1_window_handle =
     [ "height", "d7/d15/structchira_1_1_device_1_1_window_handle.html#a77dfeea087dad764950fffcb70425b5c", null ],
     [ "hidden", "d7/d15/structchira_1_1_device_1_1_window_handle.html#ac52b737f33f8aeaf57db79ec17b4f564", null ],
     [ "imguiContext", "d7/d15/structchira_1_1_device_1_1_window_handle.html#a358bb821322821a4af9d0d5fb2cad8a0", null ],
-    [ "layer", "d7/d15/structchira_1_1_device_1_1_window_handle.html#a0b5ce707b30bbc9e4bad7b3bc942f9f3", null ],
-    [ "layerIsSelfOwned", "d7/d15/structchira_1_1_device_1_1_window_handle.html#ae4d4784cd6059831f3fe6b8e73a37712", null ],
     [ "mouseCaptured", "d7/d15/structchira_1_1_device_1_1_window_handle.html#a2f66a22ed1fe4ad6835a043d3a669a06", null ],
     [ "panels", "d7/d15/structchira_1_1_device_1_1_window_handle.html#af3c4ad9255907d7fccc4702891cc7577", null ],
     [ "shouldClose", "d7/d15/structchira_1_1_device_1_1_window_handle.html#a6bb50f7cd4875ff2428b2473bd92d9ff", null ],
+    [ "viewport", "d7/d15/structchira_1_1_device_1_1_window_handle.html#a290f9ff4de20faee23370dcec5430f9d", null ],
+    [ "viewportIsSelfOwned", "d7/d15/structchira_1_1_device_1_1_window_handle.html#a2716446dd99181e2253dc2d8e3d874ee", null ],
     [ "width", "d7/d15/structchira_1_1_device_1_1_window_handle.html#a57835f48dae6dd62328459229b140dff", null ],
     [ "window", "d7/d15/structchira_1_1_device_1_1_window_handle.html#a84a602fc1c38fcb3f2ef49c89e12d88e", null ]
 ];

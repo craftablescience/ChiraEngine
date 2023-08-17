@@ -1,8 +1,8 @@
 <map id="chira::Device::WindowHandle" name="chira::Device::WindowHandle">
-<area shape="rect" id="node1" title=" " alt="" coords="5,393,219,420"/>
-<area shape="rect" id="node2" href="$d6/d7f/classchira_1_1_layer.html" title=" " alt="" coords="9,289,108,316"/>
-<area shape="rect" id="node3" title=" " alt="" coords="132,275,284,331"/>
-<area shape="rect" id="node4" href="$df/dde/classchira_1_1_i_panel.html" title=" " alt="" coords="157,185,259,212"/>
-<area shape="rect" id="node5" title=" " alt="" coords="165,96,251,123"/>
-<area shape="rect" id="node6" title=" " alt="" coords="139,5,277,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="21,393,235,420"/>
+<area shape="rect" id="node2" href="$db/dcc/classchira_1_1_viewport.html" title=" " alt="" coords="5,289,125,316"/>
+<area shape="rect" id="node3" title=" " alt="" coords="149,275,301,331"/>
+<area shape="rect" id="node4" href="$df/dde/classchira_1_1_i_panel.html" title=" " alt="" coords="175,185,276,212"/>
+<area shape="rect" id="node5" title=" " alt="" coords="182,96,269,123"/>
+<area shape="rect" id="node6" title=" " alt="" coords="156,5,295,47"/>
 </map>

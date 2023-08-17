@@ -111,7 +111,7 @@ $(document).ready(function(){initNavTree('d1/d06/_device_s_d_l_8h_source.html','
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;string_view&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;entity/Layer.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;entity/Viewport.h&gt;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">struct </span>SDL_Window;</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">struct </span>ImGuiContext;</div>
@@ -144,8 +144,8 @@ $(document).ready(function(){initNavTree('d1/d06/_device_s_d_l_8h_source.html','
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">bool</span> mouseCaptured = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">bool</span> shouldClose = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    Layer* layer = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">bool</span> layerIsSelfOwned = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    Viewport* viewport = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">bool</span> viewportIsSelfOwned = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">explicit</span> <span class="keyword">inline</span> <span class="keyword">operator</span> bool()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> window; }</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> operator!()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> !window; }</div>
@@ -157,11 +157,11 @@ $(document).ready(function(){initNavTree('d1/d06/_device_s_d_l_8h_source.html','
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;[[nodiscard]] std::uint64_t getTicks();</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;[[nodiscard]] WindowHandle* createWindow(<span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, std::string_view title, Layer* layer);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;[[nodiscard]] WindowHandle* createWindow(<span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, std::string_view title, Viewport* viewport);</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keywordtype">void</span> refreshWindows();</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;[[nodiscard]] <span class="keywordtype">int</span> getWindowCount();</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;[[nodiscard]] Layer* getWindowLayer(WindowHandle* handle);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;[[nodiscard]] Viewport* getWindowViewport(WindowHandle* handle);</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keywordtype">void</span> setWindowTitle(WindowHandle* handle, std::string_view title);</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;[[nodiscard]] std::string_view getWindowTitle(WindowHandle* handle);</div>

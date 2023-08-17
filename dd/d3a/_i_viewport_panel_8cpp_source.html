@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Chira Engine: engine/ui/ILayerPanel.h Source File</title>
+<title>Chira Engine: engine/ui/IViewportPanel.cpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -82,7 +82,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('da/dd4/_i_layer_panel_8h_source.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('dd/d3a/_i_viewport_panel_8cpp_source.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -102,39 +102,44 @@ $(document).ready(function(){initNavTree('da/dd4/_i_layer_panel_8h_source.html',
 
 <div class="header">
   <div class="headertitle">
-<div class="title">ILayerPanel.h</div>  </div>
+<div class="title">IViewportPanel.cpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;IViewportPanel.h&quot;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;math/Types.h&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;IPanel.h&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span>chira {</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">class </span>Layer;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="../../dc/de3/classchira_1_1_i_layer_panel.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../dc/de3/classchira_1_1_i_layer_panel.html">ILayerPanel</a> : <span class="keyword">public</span> <a class="code" href="../../df/dde/classchira_1_1_i_panel.html">IPanel</a> {</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <a class="code" href="../../dc/de3/classchira_1_1_i_layer_panel.html">ILayerPanel</a>(<span class="keyword">const</span> std::string&amp; title_, <a class="code" href="../../d6/d7f/classchira_1_1_layer.html">Layer</a>* layer_, <span class="keywordtype">bool</span> resizeLayer, <span class="keywordtype">bool</span> startVisible, ImVec2 windowSize = {}, <span class="keywordtype">bool</span> enforceSize = <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keywordtype">void</span> renderContents() <span class="keyword">final</span>;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> renderLayerContents() = 0;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="code" href="../../d6/d7f/classchira_1_1_layer.html">Layer</a>* layer;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    glm::vec2i currentSize;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">bool</span> shouldResize;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;};</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;} <span class="comment">// namespace chira</span></div>
-<div class="ttc" id="aclasschira_1_1_i_layer_panel_html"><div class="ttname"><a href="../../dc/de3/classchira_1_1_i_layer_panel.html">chira::ILayerPanel</a></div><div class="ttdef"><b>Definition:</b> <a href="../../da/dd4/_i_layer_panel_8h_source.html#l00010">ILayerPanel.h:10</a></div></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;entity/Viewport.h&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">using namespace </span>chira;</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;IViewportPanel::IViewportPanel(<span class="keyword">const</span> std::string&amp; title_, <a class="code" href="../../db/dcc/classchira_1_1_viewport.html">Viewport</a>* viewport_, <span class="keywordtype">bool</span> resizeLayer_, <span class="keywordtype">bool</span> startVisible, ImVec2 windowSize, <span class="keywordtype">bool</span> enforceSize)</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    : <a class="code" href="../../df/dde/classchira_1_1_i_panel.html">IPanel</a>(title_, startVisible, windowSize, enforceSize)</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    , viewport(viewport_)</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    , currentSize(windowSize.x, windowSize.y)</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    , shouldResize(resizeLayer_) {}</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keywordtype">void</span> IViewportPanel::renderContents() {</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordflow">if</span> (ImGui::BeginChild(<span class="stringliteral">&quot;__internal_frame__&quot;</span>)) {</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        ImVec2 guiSize = ImGui::GetWindowSize();</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        glm::vec2i size{guiSize.x, guiSize.y};</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordflow">if</span> (this-&gt;currentSize != size) {</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;            <span class="keywordflow">if</span> (this-&gt;shouldResize) {</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;                this-&gt;viewport-&gt;setSize(size);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;            }</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;            this-&gt;currentSize = size;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        }</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        ImGui::Image(Renderer::getImGuiFrameBufferHandle(*this-&gt;viewport-&gt;getRawHandle()), guiSize, ImVec2(0, 1), ImVec2(1, 0));</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        this-&gt;renderViewportContents();</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    }</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    ImGui::EndChild();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;}</div>
 <div class="ttc" id="aclasschira_1_1_i_panel_html"><div class="ttname"><a href="../../df/dde/classchira_1_1_i_panel.html">chira::IPanel</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d1/dd2/_i_panel_8h_source.html#l00010">IPanel.h:10</a></div></div>
-<div class="ttc" id="aclasschira_1_1_layer_html"><div class="ttname"><a href="../../d6/d7f/classchira_1_1_layer.html">chira::Layer</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d6/d5a/_layer_8h_source.html#l00008">Layer.h:8</a></div></div>
+<div class="ttc" id="aclasschira_1_1_viewport_html"><div class="ttname"><a href="../../db/dcc/classchira_1_1_viewport.html">chira::Viewport</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d7/d19/_viewport_8h_source.html#l00008">Viewport.h:8</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="../../dir_ae5170f952997566e512365547790ab2.html">ui</a></li><li class="navelem"><b>ILayerPanel.h</b></li>
+    <li class="navelem"><a class="el" href="../../dir_996f45160da62e1a3d7f6046fad68f51.html">engine</a></li><li class="navelem"><a class="el" href="../../dir_ae5170f952997566e512365547790ab2.html">ui</a></li><li class="navelem"><b>IViewportPanel.cpp</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

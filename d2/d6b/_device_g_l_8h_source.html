@@ -111,7 +111,7 @@ $(document).ready(function(){initNavTree('d2/d6b/_device_g_l_8h_source.html','..
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;string_view&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;entity/Layer.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;entity/Viewport.h&gt;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">struct </span>SDL_Window;</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">struct </span>ImGuiContext;</div>
@@ -144,8 +144,8 @@ $(document).ready(function(){initNavTree('d2/d6b/_device_g_l_8h_source.html','..
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">bool</span> mouseCaptured = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">bool</span> shouldClose = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="../../d6/d7f/classchira_1_1_layer.html">Layer</a>* layer = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">bool</span> layerIsSelfOwned = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="../../db/dcc/classchira_1_1_viewport.html">Viewport</a>* viewport = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">bool</span> viewportIsSelfOwned = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">explicit</span> <span class="keyword">inline</span> <span class="keyword">operator</span> bool()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> window; }</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">bool</span> operator!()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> !window; }</div>
@@ -157,11 +157,11 @@ $(document).ready(function(){initNavTree('d2/d6b/_device_g_l_8h_source.html','..
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;[[nodiscard]] std::uint64_t getTicks();</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;[[nodiscard]] <a class="code" href="../../d7/d15/structchira_1_1_device_1_1_window_handle.html">WindowHandle</a>* createWindow(<span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, std::string_view title, <a class="code" href="../../d6/d7f/classchira_1_1_layer.html">Layer</a>* layer);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;[[nodiscard]] <a class="code" href="../../d7/d15/structchira_1_1_device_1_1_window_handle.html">WindowHandle</a>* createWindow(<span class="keywordtype">int</span> width, <span class="keywordtype">int</span> height, std::string_view title, <a class="code" href="../../db/dcc/classchira_1_1_viewport.html">Viewport</a>* viewport);</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keywordtype">void</span> refreshWindows();</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;[[nodiscard]] <span class="keywordtype">int</span> getWindowCount();</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;[[nodiscard]] <a class="code" href="../../d6/d7f/classchira_1_1_layer.html">Layer</a>* getWindowLayer(<a class="code" href="../../d7/d15/structchira_1_1_device_1_1_window_handle.html">WindowHandle</a>* handle);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;[[nodiscard]] <a class="code" href="../../db/dcc/classchira_1_1_viewport.html">Viewport</a>* getWindowViewport(<a class="code" href="../../d7/d15/structchira_1_1_device_1_1_window_handle.html">WindowHandle</a>* handle);</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keywordtype">void</span> setWindowTitle(<a class="code" href="../../d7/d15/structchira_1_1_device_1_1_window_handle.html">WindowHandle</a>* handle, std::string_view title);</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;[[nodiscard]] std::string_view getWindowTitle(<a class="code" href="../../d7/d15/structchira_1_1_device_1_1_window_handle.html">WindowHandle</a>* handle);</div>
@@ -215,7 +215,7 @@ $(document).ready(function(){initNavTree('d2/d6b/_device_g_l_8h_source.html','..
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;} <span class="comment">// namespace chira::Device</span></div>
 <div class="ttc" id="aclasschira_1_1_i_panel_html"><div class="ttname"><a href="../../df/dde/classchira_1_1_i_panel.html">chira::IPanel</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d1/dd2/_i_panel_8h_source.html#l00010">IPanel.h:10</a></div></div>
-<div class="ttc" id="aclasschira_1_1_layer_html"><div class="ttname"><a href="../../d6/d7f/classchira_1_1_layer.html">chira::Layer</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d6/d5a/_layer_8h_source.html#l00008">Layer.h:8</a></div></div>
+<div class="ttc" id="aclasschira_1_1_viewport_html"><div class="ttname"><a href="../../db/dcc/classchira_1_1_viewport.html">chira::Viewport</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d7/d19/_viewport_8h_source.html#l00008">Viewport.h:8</a></div></div>
 <div class="ttc" id="astructchira_1_1_device_1_1_window_handle_html"><div class="ttname"><a href="../../d7/d15/structchira_1_1_device_1_1_window_handle.html">chira::Device::WindowHandle</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d2/d6b/_device_g_l_8h_source.html#l00030">DeviceGL.h:30</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
