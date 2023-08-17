@@ -69,7 +69,7 @@ public:
 
     bool active;
 
-    // this number is the added values of every layer index.
+    // The combined values of every layer index (2^10 - 1)
     int activeLayers = 1023;
 };
 
