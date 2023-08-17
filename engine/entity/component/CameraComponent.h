@@ -3,6 +3,8 @@
 #include <entt/entt.hpp>
 #include <core/Assertions.h>
 #include <math/Types.h>
+#include <utility/Types.h>
+#include "LayerComponents.h"
 #include "TransformComponent.h"
 
 namespace chira {
@@ -17,11 +19,16 @@ struct CameraComponent {
                              float nearDistance_ = 0.1f, float farDistance_ = 1024.f, float orthoSize_ = 10.f,
                              bool active_ = true)
             : projectionMode(mode)
+            , activeLayers(0)
             , fov(fov_)
             , nearDistance(nearDistance_)
             , farDistance(farDistance_)
             , orthoSize(orthoSize_)
-            , active(active_) {}
+            , active(active_) {
+        foreach(LAYER_COMPONENTS, [&](auto layer) {
+            this->activeLayers += decltype(layer)::index;
+        });
+    }
 
     [[nodiscard]] glm::mat4 getProjection(glm::vec2i size) const {
         size.x = std::max(size.x, 1);
@@ -61,6 +68,9 @@ public:
     TransformComponent* transform = nullptr;
     ProjectionMode projectionMode;
 
+    // The combined values of every layer index
+    std::size_t activeLayers;
+
     float fov;
     float nearDistance;
     float farDistance;
@@ -68,9 +78,6 @@ public:
     float orthoSize;
 
     bool active;
-
-    // The combined values of every layer index (2^10 - 1)
-    int activeLayers = 1023;
 };
 
 } // namespace chira
