@@ -16,6 +16,7 @@
 #include <entity/component/NameComponent.h>
 #include <entity/component/SkyboxComponent.h>
 #include <entity/component/UUIDComponent.h>
+#include <entity/component/LayerComponents.h>
 #include <resource/provider/FilesystemResourceProvider.h>
 
 using namespace chira;
@@ -44,6 +45,38 @@ CHIRA_GET_MODULE(Audio);
         }                                                                                                           \
     } while (0)
 
+#define CHANGE_LAYER_COMPONENT(component)                                   \
+    do {                                                                    \
+        this->selectedEntity->tryRemoveComponent<Layer0Component>();        \
+        this->selectedEntity->tryRemoveComponent<Layer1Component>();        \
+        this->selectedEntity->tryRemoveComponent<Layer2Component>();        \
+        this->selectedEntity->tryRemoveComponent<Layer3Component>();        \
+        this->selectedEntity->tryRemoveComponent<Layer4Component>();        \
+        this->selectedEntity->tryRemoveComponent<Layer5Component>();        \
+        this->selectedEntity->tryRemoveComponent<Layer6Component>();        \
+        this->selectedEntity->tryRemoveComponent<Layer7Component>();        \
+        this->selectedEntity->tryRemoveComponent<Layer8Component>();        \
+        this->selectedEntity->tryRemoveComponent<Layer9Component>();        \
+                                                                            \
+        this->selectedEntity->addTagComponent<component>();                 \
+    } while (0)
+
+#define ACTIVE_LAYER_CHECKBOX(number)                                                   \
+    do {                                                                                \
+        bool valueActive = ((component->activeLayers) & (1 << number)) ? true : false;  \
+        bool newValue = valueActive;                                                    \
+        ImGui::Checkbox("Layer " #number, &newValue);                                   \
+                                                                                        \
+        if (valueActive != newValue) {                                                  \
+            if (newValue)                                                               \
+                component->activeLayers = component->activeLayers | (1 << number);      \
+            else                                                                        \
+                component->activeLayers = component->activeLayers & ~(1 << number);     \
+        }                                                                               \
+    } while (0)
+    
+
+
 InspectorPanel::InspectorPanel()
 	    : IPanel("Inspector", true)
         , selectedEntity(nullptr)
@@ -64,6 +97,16 @@ void InspectorPanel::renderContents() {
         this->renderContentsForSelectedScene();
 }
 
+template <class Tup, class Func, std::size_t... Is>
+constexpr void static_for_impl(Tup&& t, Func&& f, std::index_sequence<Is...>) {
+    (f(std::integral_constant<std::size_t, Is>{}, std::get<Is>(t)), ...);
+}
+
+template <class... T, class Func >
+constexpr void static_for(std::tuple<T...>& t, Func&& f) {
+    static_for_impl(t, std::forward<Func>(f), std::make_index_sequence<sizeof...(T)>{});
+}
+
 void InspectorPanel::renderContentsForSelectedEntity() {
     static ImGui::FileBrowser filePicker{ImGuiFileBrowserFlags_CloseOnEsc};
 
@@ -73,6 +116,54 @@ void InspectorPanel::renderContentsForSelectedEntity() {
     }
 
     ImGui::InputText("##Name", nameBuf, sizeof(nameBuf), ImGuiInputTextFlags_EnterReturnsTrue);
+    
+    // TODO: there's probably a much better way to do this
+    int currentLayer;
+
+    std::tuple<Layer0Component, Layer1Component, Layer2Component, Layer3Component, Layer4Component,
+        Layer5Component, Layer6Component, Layer7Component, Layer8Component, Layer9Component> t{};
+
+    static_for(t, [&currentLayer, this](auto index, auto element) {
+        if (this->selectedEntity->hasComponent<decltype(element)>()) {
+            currentLayer = index;
+        }
+    });
+
+    if (ImGui::BeginCombo("Object Layer", fmt::format("Layer {}", currentLayer).c_str())) {
+
+        if (ImGui::Selectable("Layer 0")) {
+            CHANGE_LAYER_COMPONENT(Layer0Component);
+        }
+        if (ImGui::Selectable("Layer 1")) {
+            CHANGE_LAYER_COMPONENT(Layer1Component);
+        }
+        if (ImGui::Selectable("Layer 2")) {
+            CHANGE_LAYER_COMPONENT(Layer2Component);
+        }
+        if (ImGui::Selectable("Layer 3")) {
+            CHANGE_LAYER_COMPONENT(Layer3Component);
+        }
+        if (ImGui::Selectable("Layer 4")) {
+            CHANGE_LAYER_COMPONENT(Layer4Component);
+        }
+        if (ImGui::Selectable("Layer 5")) {
+            CHANGE_LAYER_COMPONENT(Layer5Component);
+        }
+        if (ImGui::Selectable("Layer 6")) {
+            CHANGE_LAYER_COMPONENT(Layer6Component);
+        }
+        if (ImGui::Selectable("Layer 7")) {
+            CHANGE_LAYER_COMPONENT(Layer7Component);
+        }
+        if (ImGui::Selectable("Layer 8")) {
+            CHANGE_LAYER_COMPONENT(Layer8Component);
+        }
+        if (ImGui::Selectable("Layer 9")) {
+            CHANGE_LAYER_COMPONENT(Layer9Component);
+        }
+
+        ImGui::EndCombo();
+    }
 
     if (nameBuf[0] && strcmp(nameBuf, this->selectedEntity->getName().c_str()) != 0) {
         if (auto nameComponent = this->selectedEntity->tryGetComponent<NameComponent>()) {
@@ -386,6 +477,21 @@ void InspectorPanel::renderContentsForSelectedEntity() {
             ImGui::DragFloat("Far Distance", &component->farDistance, 0.05f);
             ImGui::DragFloat("Ortho Size", &component->orthoSize, 0.05f, 0.001f);
             ImGui::Checkbox("Active", &component->active);
+
+            if (ImGui::BeginCombo("##active_layers_combo", "Active Layers")) {
+                ACTIVE_LAYER_CHECKBOX(0);
+                ACTIVE_LAYER_CHECKBOX(1);
+                ACTIVE_LAYER_CHECKBOX(2);
+                ACTIVE_LAYER_CHECKBOX(3);
+                ACTIVE_LAYER_CHECKBOX(4);
+                ACTIVE_LAYER_CHECKBOX(5);
+                ACTIVE_LAYER_CHECKBOX(6);
+                ACTIVE_LAYER_CHECKBOX(7);
+                ACTIVE_LAYER_CHECKBOX(8);
+                ACTIVE_LAYER_CHECKBOX(9);
+
+                ImGui::EndCombo();
+            }
         }
     }
     if (auto component = this->selectedEntity->tryGetComponent<DirectionalLightComponent>()) {
