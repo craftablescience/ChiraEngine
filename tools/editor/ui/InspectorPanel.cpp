@@ -1,5 +1,6 @@
 #include "InspectorPanel.h"
 
+#include <fmt/core.h>
 #include <imfilebrowser.h>
 #include <magic_enum.hpp>
 #include <entity/component/AudioNoiseComponent.h>
@@ -61,21 +62,19 @@ CHIRA_GET_MODULE(Audio);
         this->selectedEntity->addTagComponent<component>();                 \
     } while (0)
 
-#define ACTIVE_LAYER_CHECKBOX(number)                                                   \
-    do {                                                                                \
-        bool valueActive = ((component->activeLayers) & (1 << number)) ? true : false;  \
-        bool newValue = valueActive;                                                    \
-        ImGui::Checkbox("Layer " #number, &newValue);                                   \
-                                                                                        \
-        if (valueActive != newValue) {                                                  \
-            if (newValue)                                                               \
-                component->activeLayers = component->activeLayers | (1 << number);      \
-            else                                                                        \
-                component->activeLayers = component->activeLayers & ~(1 << number);     \
-        }                                                                               \
+#define ACTIVE_LAYER_CHECKBOX(number)                                                    \
+    do {                                                                                 \
+        bool valueActive = static_cast<bool>((component->activeLayers) & (1 << number)); \
+        bool newValue = valueActive;                                                     \
+        ImGui::Checkbox("Layer " #number, &newValue);                                    \
+                                                                                         \
+        if (valueActive != newValue) {                                                   \
+            if (newValue)                                                                \
+                component->activeLayers = component->activeLayers | (1 << number);       \
+            else                                                                         \
+                component->activeLayers = component->activeLayers & ~(1 << number);      \
+        }                                                                                \
     } while (0)
-    
-
 
 InspectorPanel::InspectorPanel()
 	    : IPanel("Inspector", true)
@@ -97,16 +96,6 @@ void InspectorPanel::renderContents() {
         this->renderContentsForSelectedScene();
 }
 
-template <class Tup, class Func, std::size_t... Is>
-constexpr void static_for_impl(Tup&& t, Func&& f, std::index_sequence<Is...>) {
-    (f(std::integral_constant<std::size_t, Is>{}, std::get<Is>(t)), ...);
-}
-
-template <class... T, class Func >
-constexpr void static_for(std::tuple<T...>& t, Func&& f) {
-    static_for_impl(t, std::forward<Func>(f), std::make_index_sequence<sizeof...(T)>{});
-}
-
 void InspectorPanel::renderContentsForSelectedEntity() {
     static ImGui::FileBrowser filePicker{ImGuiFileBrowserFlags_CloseOnEsc};
 
@@ -116,21 +105,16 @@ void InspectorPanel::renderContentsForSelectedEntity() {
     }
 
     ImGui::InputText("##Name", nameBuf, sizeof(nameBuf), ImGuiInputTextFlags_EnterReturnsTrue);
-    
-    // TODO: there's probably a much better way to do this
+
+    // todo(editor): there's probably a much better way to do this
     int currentLayer;
-
-    std::tuple<Layer0Component, Layer1Component, Layer2Component, Layer3Component, Layer4Component,
-        Layer5Component, Layer6Component, Layer7Component, Layer8Component, Layer9Component> t{};
-
-    static_for(t, [&currentLayer, this](auto index, auto element) {
-        if (this->selectedEntity->hasComponent<decltype(element)>()) {
+    enumerate(LAYER_COMPONENTS, [this, &currentLayer](auto index, auto layer) {
+        if (this->selectedEntity->hasComponent<decltype(layer)>()) {
             currentLayer = index;
         }
     });
 
     if (ImGui::BeginCombo("Object Layer", fmt::format("Layer {}", currentLayer).c_str())) {
-
         if (ImGui::Selectable("Layer 0")) {
             CHANGE_LAYER_COMPONENT(Layer0Component);
         }
@@ -161,7 +145,6 @@ void InspectorPanel::renderContentsForSelectedEntity() {
         if (ImGui::Selectable("Layer 9")) {
             CHANGE_LAYER_COMPONENT(Layer9Component);
         }
-
         ImGui::EndCombo();
     }
 
