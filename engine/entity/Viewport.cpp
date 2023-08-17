@@ -134,7 +134,7 @@ void Viewport::render() {
     LightsUBO::get().update(directionalLightComponentArray, pointLightComponentArray, spotLightComponentArray,
                             {directionalLightsCount, pointLightsCount, spotLightsCount});
 
-    enumerate(LAYER_COMPONENTS, [&](auto index, auto layer) {
+    foreach(LAYER_COMPONENTS, [&](auto layer) {
         if (!(this->getCamera()->activeLayers & layer.index)) {
             return;
         }

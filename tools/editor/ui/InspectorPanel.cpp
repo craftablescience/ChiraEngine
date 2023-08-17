@@ -46,36 +46,6 @@ CHIRA_GET_MODULE(Audio);
         }                                                                                                           \
     } while (0)
 
-#define CHANGE_LAYER_COMPONENT(component)                                   \
-    do {                                                                    \
-        this->selectedEntity->tryRemoveComponent<Layer0Component>();        \
-        this->selectedEntity->tryRemoveComponent<Layer1Component>();        \
-        this->selectedEntity->tryRemoveComponent<Layer2Component>();        \
-        this->selectedEntity->tryRemoveComponent<Layer3Component>();        \
-        this->selectedEntity->tryRemoveComponent<Layer4Component>();        \
-        this->selectedEntity->tryRemoveComponent<Layer5Component>();        \
-        this->selectedEntity->tryRemoveComponent<Layer6Component>();        \
-        this->selectedEntity->tryRemoveComponent<Layer7Component>();        \
-        this->selectedEntity->tryRemoveComponent<Layer8Component>();        \
-        this->selectedEntity->tryRemoveComponent<Layer9Component>();        \
-                                                                            \
-        this->selectedEntity->addTagComponent<component>();                 \
-    } while (0)
-
-#define ACTIVE_LAYER_CHECKBOX(number)                                                    \
-    do {                                                                                 \
-        bool valueActive = static_cast<bool>((component->activeLayers) & (1 << number)); \
-        bool newValue = valueActive;                                                     \
-        ImGui::Checkbox("Layer " #number, &newValue);                                    \
-                                                                                         \
-        if (valueActive != newValue) {                                                   \
-            if (newValue)                                                                \
-                component->activeLayers = component->activeLayers | (1 << number);       \
-            else                                                                         \
-                component->activeLayers = component->activeLayers & ~(1 << number);      \
-        }                                                                                \
-    } while (0)
-
 InspectorPanel::InspectorPanel()
 	    : IPanel("Inspector", true)
         , selectedEntity(nullptr)
@@ -106,45 +76,22 @@ void InspectorPanel::renderContentsForSelectedEntity() {
 
     ImGui::InputText("##Name", nameBuf, sizeof(nameBuf), ImGuiInputTextFlags_EnterReturnsTrue);
 
-    // todo(editor): there's probably a much better way to do this
     int currentLayer;
-    enumerate(LAYER_COMPONENTS, [this, &currentLayer](auto index, auto layer) {
+    enumerate(LAYER_COMPONENTS, [this, &currentLayer](std::size_t index, auto layer) {
         if (this->selectedEntity->hasComponent<decltype(layer)>()) {
-            currentLayer = index;
+            currentLayer = static_cast<int>(index);
         }
     });
 
     if (ImGui::BeginCombo("Object Layer", fmt::format("Layer {}", currentLayer).c_str())) {
-        if (ImGui::Selectable("Layer 0")) {
-            CHANGE_LAYER_COMPONENT(Layer0Component);
-        }
-        if (ImGui::Selectable("Layer 1")) {
-            CHANGE_LAYER_COMPONENT(Layer1Component);
-        }
-        if (ImGui::Selectable("Layer 2")) {
-            CHANGE_LAYER_COMPONENT(Layer2Component);
-        }
-        if (ImGui::Selectable("Layer 3")) {
-            CHANGE_LAYER_COMPONENT(Layer3Component);
-        }
-        if (ImGui::Selectable("Layer 4")) {
-            CHANGE_LAYER_COMPONENT(Layer4Component);
-        }
-        if (ImGui::Selectable("Layer 5")) {
-            CHANGE_LAYER_COMPONENT(Layer5Component);
-        }
-        if (ImGui::Selectable("Layer 6")) {
-            CHANGE_LAYER_COMPONENT(Layer6Component);
-        }
-        if (ImGui::Selectable("Layer 7")) {
-            CHANGE_LAYER_COMPONENT(Layer7Component);
-        }
-        if (ImGui::Selectable("Layer 8")) {
-            CHANGE_LAYER_COMPONENT(Layer8Component);
-        }
-        if (ImGui::Selectable("Layer 9")) {
-            CHANGE_LAYER_COMPONENT(Layer9Component);
-        }
+        enumerate(LAYER_COMPONENTS, [&](std::size_t index, auto layer) {
+            if (ImGui::Selectable(fmt::format("Layer {}", index).c_str())) {
+                foreach(LAYER_COMPONENTS, [&](auto layer) {
+                    this->selectedEntity->template tryRemoveComponent<decltype(layer)>();
+                });
+                this->selectedEntity->template addTagComponent<decltype(layer)>();
+            }
+        });
         ImGui::EndCombo();
     }
 
@@ -462,17 +409,19 @@ void InspectorPanel::renderContentsForSelectedEntity() {
             ImGui::Checkbox("Active", &component->active);
 
             if (ImGui::BeginCombo("##active_layers_combo", "Active Layers")) {
-                ACTIVE_LAYER_CHECKBOX(0);
-                ACTIVE_LAYER_CHECKBOX(1);
-                ACTIVE_LAYER_CHECKBOX(2);
-                ACTIVE_LAYER_CHECKBOX(3);
-                ACTIVE_LAYER_CHECKBOX(4);
-                ACTIVE_LAYER_CHECKBOX(5);
-                ACTIVE_LAYER_CHECKBOX(6);
-                ACTIVE_LAYER_CHECKBOX(7);
-                ACTIVE_LAYER_CHECKBOX(8);
-                ACTIVE_LAYER_CHECKBOX(9);
+                for (int i = 0; i < MAX_LAYER_COMPONENTS; i++) {
+                    bool valueActive = static_cast<bool>((component->activeLayers) & (1 << i));
+                    bool newValue = valueActive;
+                    ImGui::Checkbox(fmt::format("Layer {}", i).c_str(), &newValue);
 
+                    if (valueActive != newValue) {
+                        if (newValue) {
+                            component->activeLayers = component->activeLayers | (1 << i);
+                        } else {
+                            component->activeLayers = component->activeLayers & ~(1 << i);
+                        }
+                    }
+                }
                 ImGui::EndCombo();
             }
         }

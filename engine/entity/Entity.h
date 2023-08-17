@@ -22,7 +22,7 @@ protected:
             : scene(scene_)
             , handle(scene_->getRegistry().create()) {
         this->addComponent<TransformComponent>();
-        this->addTagComponent<Layer0Component>();
+        this->addTagComponent<LayerComponent<0>>();
     }
 
 public:
