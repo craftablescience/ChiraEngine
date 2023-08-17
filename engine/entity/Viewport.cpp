@@ -148,24 +148,24 @@ void Viewport::render() {
 
             auto meshView = scene->template getEntities<MeshComponent, CurrentLayer>(entt::exclude<NoRenderTagComponent>);
             for (auto entity : meshView) {
-                auto& transformComponent = registry.get<TransformComponent>(entity);
-                auto& meshComponent = registry.get<MeshComponent>(entity);
+                auto& transformComponent = registry.template get<TransformComponent>(entity);
+                auto& meshComponent = registry.template get<MeshComponent>(entity);
                 meshComponent.mesh->render(transformComponent.getMatrix());
             }
 
             // Render MeshDynamicComponent
             auto meshDynamicView = scene->template getEntities<MeshDynamicComponent, CurrentLayer>(entt::exclude<NoRenderTagComponent>);
             for (auto entity : meshDynamicView) {
-                auto& transformComponent = registry.get<TransformComponent>(entity);
-                auto& meshDynamicComponent = registry.get<MeshDynamicComponent>(entity);
+                auto& transformComponent = registry.template get<TransformComponent>(entity);
+                auto& meshDynamicComponent = registry.template get<MeshDynamicComponent>(entity);
                 meshDynamicComponent.meshBuilder.render(transformComponent.getMatrix());
             }
 
             // Render MeshSpriteComponent
             auto meshSpriteView = scene->template getEntities<MeshSpriteComponent, CurrentLayer>(entt::exclude<NoRenderTagComponent>);
             for (auto entity : meshSpriteView) {
-                auto& transformComponent = registry.get<TransformComponent>(entity);
-                auto& meshSpriteComponent = registry.get<MeshSpriteComponent>(entity);
+                auto& transformComponent = registry.template get<TransformComponent>(entity);
+                auto& meshSpriteComponent = registry.template get<MeshSpriteComponent>(entity);
                 meshSpriteComponent.sprite.render(transformComponent.getMatrix());
             }
         }
