@@ -183,6 +183,11 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/json)
 list(APPEND CHIRA_ENGINE_LINK_LIBRARIES nlohmann_json::nlohmann_json)
 
+# REFL-CPP
+set(BUILD_EXAMPLES OFF CACHE INTERNAL "")
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/refl-cpp)
+list(APPEND CHIRA_ENGINE_LINK_LIBRARIES refl-cpp::refl-cpp)
+
 # SOL2
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sol2)
 list(APPEND CHIRA_ENGINE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/thirdparty/sol2/include)
