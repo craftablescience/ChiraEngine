@@ -28,8 +28,8 @@ CHIRA_SETUP_GUI_TOOL(EDITOR);
 CHIRA_GET_MODULE(Discord);
 #endif
 
-int main(int argc, const char* const argv[]) {
-    Engine::preInit(argc, argv);
+int main(int argc, char* argv[]) {
+    Engine::preinit(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{"editor"});
     TranslationManager::addTranslationFile("file://i18n/editor");
     TranslationManager::addUniversalFile("file://i18n/editor");

@@ -63,8 +63,8 @@ public:
     }
 };
 
-int main(int argc, const char* const argv[]) {
-    Engine::preInit(argc, argv);
+int main(int argc, char* argv[]) {
+    Engine::preinit(argc, argv);
     Engine::init(false);
 
     auto* window = Engine::getMainWindow();

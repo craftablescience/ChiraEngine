@@ -9,18 +9,12 @@ using namespace chira;
 
 CHIRA_CREATE_LOG(COMMANDLINE);
 
-// todo(cmd): glob string values like "hello there" into one value minus quotes
+constexpr char OPTION_PREFIX = '-';
+constexpr char CONVAR_PREFIX = '+';
 
-std::vector<std::string_view> g_Arguments{""};
+std::vector<std::string_view> g_Arguments{};
 
-static inline void processFlag(int& start, int argc, const char* const argv[]) {
-    g_Arguments.emplace_back(argv[start++]);
-    if (start < argc) {
-        g_Arguments.emplace_back(argv[start++]);
-    }
-}
-
-static void processConEntry(int& i, int argc, const char* const argv[]) {
+static inline void processConEntry(int& i, int argc, const char* const argv[]) {
     std::string_view conEntry = argv[i];
     conEntry.remove_prefix(1);
     if (auto* command = ConEntryRegistry::getConCommand(conEntry)) {
@@ -53,19 +47,29 @@ static void processConEntry(int& i, int argc, const char* const argv[]) {
     }
 }
 
-void CommandLine::init(int argc, const char* const argv[]) {
+void CommandLine::init(int argc, char* argv[]) {
     if (!argc)
         return;
-    g_Arguments[0] = argv[0];
+    g_Arguments.emplace_back(argv[0]);
 
     for (int i = 1; i < argc;) {
         std::string_view arg{argv[i]};
-        if (arg.starts_with('-')) {
-            processFlag(i, argc, argv);
-        } else if (arg.starts_with('+')) {
+        if (arg.starts_with(CONVAR_PREFIX)) {
             processConEntry(i, argc, argv);
         } else {
-            i++;
+            g_Arguments.push_back(arg);
+            ++i;
+
+            // If it starts with a dash, it's looking for an argument. However, if there's a
+            // dash or plus sign prefixing the next arg there is no argument, so add a blank
+            if (i == argc) {
+                g_Arguments.emplace_back("");
+            } else if (arg.starts_with(OPTION_PREFIX)) {
+                std::string_view nextArg{argv[i]};
+                if (nextArg.starts_with(OPTION_PREFIX) || nextArg.starts_with(CONVAR_PREFIX)) {
+                    g_Arguments.emplace_back("");
+                }
+            }
         }
     }
 }
@@ -86,11 +90,27 @@ std::string_view CommandLine::get(std::string_view argument) {
     return "";
 }
 
-[[nodiscard]] std::string_view CommandLine::getOr(std::string_view argument, std::string_view default_) {
+std::string_view CommandLine::getOr(std::string_view argument, std::string_view default_) {
     auto value = get(argument);
     if (value.empty())
         return default_;
     return value;
+}
+
+bool CommandLine::hasDefaultArgument() {
+    return g_Arguments.size() >= 2 && !g_Arguments[1].starts_with(OPTION_PREFIX) && !g_Arguments[1].starts_with(CONVAR_PREFIX);
+}
+
+std::string_view CommandLine::getDefaultArgument() {
+    if (CommandLine::hasDefaultArgument())
+        return g_Arguments[1];
+    return "";
+}
+
+std::string_view CommandLine::getDefaultArgumentOr(std::string_view default_) {
+    if (CommandLine::hasDefaultArgument())
+        return g_Arguments[1];
+    return default_;
 }
 
 std::string_view CommandLine::getProgramName() {
