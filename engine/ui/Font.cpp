@@ -1,7 +1,5 @@
 #include "Font.h"
 
-#include <resource/provider/FilesystemResourceProvider.h>
-
 using namespace chira;
 
 void Font::compile(const byte buffer[], std::size_t bufferLength) {
@@ -9,7 +7,7 @@ void Font::compile(const byte buffer[], std::size_t bufferLength) {
 
     ImGuiIO& io = ImGui::GetIO();
     this->range = Font::getRangeFromString(this->rangeStr);
-    std::string path = FilesystemResourceProvider::getResourceAbsolutePath(this->fontPath);
+    std::string path = "";//FilesystemResourceProvider::getResourceAbsolutePath(this->fontPath);
     this->font = io.Fonts->AddFontFromFileTTF(path.c_str(), this->size, nullptr, this->range);
 }
 

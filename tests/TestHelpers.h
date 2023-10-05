@@ -2,16 +2,13 @@
 
 #include <core/Engine.h>
 #include <core/Logger.h>
-#include <resource/provider/FilesystemResourceProvider.h>
 
 #define PREINIT_ENGINE() \
     const char* const argv[] = {"ChiraTest"}; \
-    chira::Engine::preInit(sizeof(argv) / sizeof(argv[0]), argv); \
-    chira::Resource::addResourceProvider(new chira::FilesystemResourceProvider{"tests"})
+    chira::Engine::preInit(sizeof(argv) / sizeof(argv[0]), argv)
 
 #define PREINIT_ENGINE_WITH_ARGS(argv) \
-    chira::Engine::preInit(sizeof(argv) / sizeof((argv)[0]), argv); \
-    chira::Resource::addResourceProvider(new chira::FilesystemResourceProvider{"tests"})
+    chira::Engine::preInit(sizeof(argv) / sizeof((argv)[0]), argv)
 
 #define LOG_BEGIN() \
     std::vector<chira::LogType> logMessageTypes; \

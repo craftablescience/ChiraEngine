@@ -18,7 +18,6 @@
 #include <entity/component/SkyboxComponent.h>
 #include <entity/component/UUIDComponent.h>
 #include <entity/component/LayerComponents.h>
-#include <resource/provider/FilesystemResourceProvider.h>
 
 using namespace chira;
 
@@ -306,7 +305,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
 
         filePicker.Display();
         if (filePicker.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            std::string path = filePicker.GetSelected().string();
             if (!path.empty()) {
                 this->selectedEntity->tryRemoveComponent<AudioSfxrComponent>();
                 this->selectedEntity->addComponent<AudioSfxrComponent>(path);
@@ -347,7 +346,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
 
         filePicker.Display();
         if (filePicker.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            std::string path = filePicker.GetSelected().string();
             if (!path.empty()) {
                 this->selectedEntity->tryRemoveComponent<AudioWavComponent>();
                 this->selectedEntity->addComponent<AudioWavComponent>(path);
@@ -372,7 +371,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
 
         filePicker.Display();
         if (filePicker.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            std::string path = filePicker.GetSelected().string();
             if (!path.empty()) {
                 this->selectedEntity->tryRemoveComponent<AudioWavStreamComponent>();
                 this->selectedEntity->addComponent<AudioWavStreamComponent>(path);
@@ -468,7 +467,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
 
         filePicker.Display();
         if (filePicker.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            std::string path = filePicker.GetSelected().string();
             if (!path.empty()) {
                 this->selectedEntity->tryRemoveComponent<MeshComponent>();
                 this->selectedEntity->addComponent<MeshComponent>(path);
@@ -496,7 +495,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
 
         filePicker.Display();
         if (filePicker.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            std::string path = filePicker.GetSelected().string();
             if (!path.empty()) {
                 const auto size = component->size;
                 this->selectedEntity->tryRemoveComponent<MeshSpriteComponent>();
@@ -562,7 +561,7 @@ void InspectorPanel::renderContentsForSelectedScene() {
 
         filePicker.Display();
         if (filePicker.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            std::string path = filePicker.GetSelected().string();
             if (!path.empty()) {
                 this->selectedScene->tryRemoveComponent<SkyboxComponent>();
                 this->selectedScene->addComponent<SkyboxComponent>(path);

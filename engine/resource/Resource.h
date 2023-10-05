@@ -1,15 +1,17 @@
 #pragma once
 
+#include <fstream>
 #include <string>
 #include <string_view>
 #include <unordered_map>
 #include <vector>
+
 #include <nlohmann/json.hpp>
+
 #include <core/Logger.h>
 #include <math/Types.h>
 #include <utility/SharedPointer.h>
 #include <utility/Types.h>
-#include "provider/IResourceProvider.h"
 
 namespace chira {
 
@@ -23,7 +25,9 @@ public:
     explicit Resource(std::string identifier_)
             : identifier(std::move(identifier_)) {}
 
-    virtual ~Resource();
+    virtual ~Resource() {
+        Resource::removeResource(this->identifier);
+    }
 
     virtual void compile(const byte /*buffer*/[], std::size_t /*bufferLength*/) = 0;
 
@@ -38,12 +42,6 @@ protected:
 // Static caching functions
 //
 public:
-    static void addResourceProvider(IResourceProvider* provider);
-
-    static IResourceProvider* getLatestResourceProvider(const std::string& provider);
-
-    static IResourceProvider* getResourceProviderWithResource(const std::string& identifier);
-
     template<typename ResourceType, typename... Params>
     static SharedPointer<ResourceType> getResource(const std::string& identifier, Params... params) {
         Resource::cleanup();
@@ -64,13 +62,18 @@ public:
             return; // Already in cache
         }
 
-        for (auto i = Resource::providers[provider].rbegin(); i != Resource::providers[provider].rend(); i++) {
-            if ((*i)->hasResource(name)) {
-                Resource::resources[provider][name] = SharedPointer<Resource>(new ResourceType{identifier, std::forward<Params>(params)...});
-                (*i)->compileResource(name, Resource::resources[provider][name].get());
-                return; // Precached!
-            }
-        }
+        std::filesystem::path resourcePath;
+        resourcePath = std::filesystem::current_path().append("assets/engine").append(name);
+        std::uintmax_t fileSize = std::filesystem::file_size(resourcePath);
+        std::ifstream ifs(resourcePath.string().c_str(), std::ios::in | std::ios::binary);
+        ifs.seekg(0, std::ios::beg);
+        auto* bytes = new byte[(std::size_t) fileSize + 1];
+        ifs.read(reinterpret_cast<char*>(bytes), static_cast<std::streamsize>(fileSize));
+        bytes[fileSize] = '\0';
+        Resource::resources[provider][name] = SharedPointer<Resource>(new ResourceType{identifier, std::forward<Params>(params)...});
+        Resource::resources[provider][name]->compile(bytes, (std::size_t) fileSize + 1);
+        delete[] bytes;
+
         Resource::logResourceError("error.resource.resource_not_found", identifier);
     }
 
@@ -92,51 +95,30 @@ public:
     static SharedPointer<ResourceType> getUniqueResource(const std::string& identifier, Params... params) {
         auto id = Resource::splitResourceIdentifier(identifier);
         const std::string& provider = id.first, name = id.second;
-        for (auto i = Resource::providers[provider].rbegin(); i != Resource::providers[provider].rend(); i++) {
-            if ((*i)->hasResource(name)) {
-                Resource::resources[provider][name] = SharedPointer<Resource>(new ResourceType{identifier, std::forward<Params>(params)...});
-                (*i)->compileResource(name, Resource::resources[provider][name].get());
-                return Resource::resources[provider][name].template cast<ResourceType>();
-            }
-        }
-        Resource::logResourceError("error.resource.resource_not_found", identifier);
-        if (Resource::hasDefaultResource<ResourceType>())
-            return Resource::getDefaultResource<ResourceType>();
-        return SharedPointer<ResourceType>{};
-    }
 
-    /// You might want to use this sparingly as it defeats the entire point of a cached, shared resource system.
-    template<typename ResourceType, typename... Params>
-    static SharedPointer<ResourceType> getUniqueUncachedResource(const std::string& identifier, Params... params) {
-        auto id = Resource::splitResourceIdentifier(identifier);
-        const std::string& provider = id.first, name = id.second;
-        for (auto i = Resource::providers[provider].rbegin(); i != Resource::providers[provider].rend(); i++) {
-            if ((*i)->hasResource(name)) {
-                auto resource = SharedPointer<ResourceType>(new ResourceType{identifier, std::forward<Params>(params)...});
-                (*i)->compileResource(name, resource.get());
-                // We're not holding onto this
-                resource.setHolderAmountForDelete(0);
-                return resource;
-            }
-        }
-        Resource::logResourceError("error.resource.resource_not_found", identifier);
-        return SharedPointer<ResourceType>{};
-    }
+//        for (auto i = Resource::providers[provider].rbegin(); i != Resource::providers[provider].rend(); i++) {
+//            if ((*i)->hasResource(name)) {
+//                Resource::resources[provider][name] = SharedPointer<Resource>(new ResourceType{identifier, std::forward<Params>(params)...});
+//                (*i)->compileResource(name, Resource::resources[provider][name].get());
+//                return Resource::resources[provider][name].template cast<ResourceType>();
+//            }
+//        }
 
-    /// The only way to make a PropertiesResource without a provider is to make it unique, and not to cache it.
-    /// You might want to use this sparingly as it defeats the entire point of a cached, shared resource system.
-    template<typename ResourceType, typename... Params>
-    static std::unique_ptr<ResourceType> getUniqueUncachedPropertyResource(const std::string& identifier, const nlohmann::json& props, Params... params) {
-        auto resource = std::make_unique<ResourceType>(identifier, std::forward<Params>(params)...);
-        resource->compile(props);
-        return resource;
+        std::filesystem::path resourcePath;
+        resourcePath = std::filesystem::current_path().append("assets/engine").append(name);
+        std::uintmax_t fileSize = std::filesystem::file_size(resourcePath);
+        std::ifstream ifs(resourcePath.string().c_str(), std::ios::in | std::ios::binary);
+        ifs.seekg(0, std::ios::beg);
+        auto* bytes = new byte[(std::size_t) fileSize + 1];
+        ifs.read(reinterpret_cast<char*>(bytes), static_cast<std::streamsize>(fileSize));
+        bytes[fileSize] = '\0';
+        Resource::resources[provider][name] = SharedPointer<Resource>(new ResourceType{identifier, std::forward<Params>(params)...});
+        Resource::resources[provider][name]->compile(bytes, (std::size_t) fileSize + 1);
+        delete[] bytes;
+        return Resource::resources[provider][name].template cast<ResourceType>();
     }
 
     static std::pair<std::string, std::string> splitResourceIdentifier(const std::string& identifier);
-
-    static const std::vector<std::unique_ptr<IResourceProvider>>& getResourceProviders(const std::string& providerName);
-
-    static bool hasResource(const std::string& identifier);
 
     /// If resource is present in the cache and has a reference count less than or equal to 2, mark it for removal.
     static void removeResource(const std::string& identifier);
@@ -172,7 +154,6 @@ public:
     }
 
 protected:
-    static inline std::unordered_map<std::string, std::vector<std::unique_ptr<IResourceProvider>>> providers;
     static inline std::unordered_map<std::string, std::unordered_map<std::string, SharedPointer<Resource>>> resources;
     static inline std::unordered_map<std::type_index, SharedPointer<Resource>> defaultResources;
     static inline std::vector<std::string> garbageResources;

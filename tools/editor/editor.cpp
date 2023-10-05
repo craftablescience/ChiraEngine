@@ -1,7 +1,6 @@
 #include <config/ConEntry.h>
 #include <core/Engine.h>
 #include <i18n/TranslationManager.h>
-#include <resource/provider/FilesystemResourceProvider.h>
 
 #ifdef CHIRA_USE_DISCORD
     #include <module/discord/Discord.h>
@@ -13,10 +12,10 @@
 // Need to register phong material!
 #include <render/material/MaterialPhong.h>
 
-#include "ui/ControlsPanel.h"
-#include "ui/EntitySelectPanel.h"
+//#include "ui/ControlsPanel.h"
+//#include "ui/EntitySelectPanel.h"
 #include "ui/InspectorPanel.h"
-#include "ui/ScriptEditorPanel.h"
+//#include "ui/ScriptEditorPanel.h"
 
 #include "../ToolHelpers.h"
 
@@ -30,7 +29,7 @@ CHIRA_GET_MODULE(Discord);
 
 int main(int argc, char* argv[]) {
     Engine::preinit(argc, argv);
-    Resource::addResourceProvider(new FilesystemResourceProvider{"editor"});
+    //Resource::addResourceProvider(new FilesystemResourceProvider{"editor"});
     TranslationManager::addTranslationFile("file://i18n/editor");
     TranslationManager::addUniversalFile("file://i18n/editor");
 
@@ -54,16 +53,16 @@ int main(int argc, char* argv[]) {
     auto* viewport = Device::getWindowViewport(window);
     viewport->setBackgroundColor({0.15f});
 
-    auto controls = new ControlsPanel{viewport};
-    Device::addPanelToWindow(window, controls);
+    //auto controls = new ControlsPanel{viewport};
+    //Device::addPanelToWindow(window, controls);
 
     auto inspector = new InspectorPanel{};
     Device::addPanelToWindow(window, inspector);
 
-    auto scriptEditor = new ScriptEditorPanel{};
-    Device::addPanelToWindow(window, scriptEditor);
+    //auto scriptEditor = new ScriptEditorPanel{};
+    //Device::addPanelToWindow(window, scriptEditor);
 
-    Device::addPanelToWindow(window, new EntitySelectPanel{viewport, controls, inspector});
+    //Device::addPanelToWindow(window, new EntitySelectPanel{viewport, controls, inspector});
 
     Engine::run();
 }

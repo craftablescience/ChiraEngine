@@ -14,7 +14,6 @@
 #include <i18n/TranslationManager.h>
 #include <input/InputManager.h>
 #include <loader/image/Image.h>
-#include <resource/provider/FilesystemResourceProvider.h>
 #include <render/material/MaterialFrameBuffer.h>
 #include <render/material/MaterialTextured.h>
 #include <render/mesh/MeshDataBuilder.h>
@@ -201,6 +200,7 @@ Device::WindowHandle* Device::createWindow(int width, int height, std::string_vi
         handle.viewportIsSelfOwned = true;
     }
 
+    /*
     int iconWidth, iconHeight, bitsPerPixel;
     auto* icon = Image::getUncompressedImage(FilesystemResourceProvider::getResourceAbsolutePath("file://textures/ui/icon.png"), &iconWidth, &iconHeight, &bitsPerPixel, 4, false);
     if (icon) {
@@ -209,6 +209,7 @@ Device::WindowHandle* Device::createWindow(int width, int height, std::string_vi
         SDL_FreeSurface(sdlIcon);
         Image::deleteUncompressedImage(icon);
     }
+    */
 
     handle.imguiContext = ImGui::CreateContext();
     ImGui::SetCurrentContext(handle.imguiContext);
@@ -222,7 +223,7 @@ Device::WindowHandle* Device::createWindow(int width, int height, std::string_vi
     if (!bakedFonts) {
         bakedFonts = true;
 
-        auto defaultFont = Resource::getUniqueUncachedResource<Font>(TR("resource.font.default"));
+        auto defaultFont = Resource::getResource<Font>(TR("resource.font.default"));
         io.FontDefault = defaultFont->getFont();
         io.Fonts->Build();
     }
@@ -269,7 +270,7 @@ void Device::refreshWindows() {
 
         MeshDataBuilder surface;
         surface.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-        surface.setMaterial(Resource::getUniqueUncachedResource<MaterialFrameBuffer>("file://materials/window.json", handle.viewport->getRawHandle()).cast<IMaterial>());
+        surface.setMaterial(Resource::getResource<MaterialFrameBuffer>("file://materials/window.json", handle.viewport->getRawHandle()).cast<IMaterial>());
         surface.render(glm::identity<glm::mat4>());
 
         glEnable(GL_DEPTH_TEST);

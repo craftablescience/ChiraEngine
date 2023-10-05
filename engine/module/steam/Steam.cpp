@@ -5,7 +5,6 @@
 #include <config/ConEntry.h>
 #include <core/Logger.h>
 #include <module/Module.h>
-#include <resource/provider/FilesystemResourceProvider.h>
 #include <utility/String.h>
 
 using namespace chira;
@@ -66,7 +65,7 @@ inline std::string steamFunctionStringWrapper(const std::string& function, const
 }
 
 const library& Steam::get() {
-    static library steamBinary{FILESYSTEM_ROOT_FOLDER + "/engine/bin/steam_api" + std::to_string(ENVIRONMENT_TYPE)};
+    static library steamBinary{"assets/engine/bin/steam_api" + std::to_string(ENVIRONMENT_TYPE)};
     return steamBinary;
 }
 
@@ -366,8 +365,8 @@ bool Steam::Apps::getDLCData(int dlc, std::uint32_t* appID, bool* available, std
     if (!apps) {
         return false;
     }
-    char* cname = new char[FilesystemResourceProvider::FILEPATH_MAX_LENGTH];
-    auto isValid = Steam::get().call<bool>("SteamAPI_ISteamApps_BGetDLCDataByIndex", apps, dlc, appID, available, cname, static_cast<std::int32_t>(FilesystemResourceProvider::FILEPATH_MAX_LENGTH));
+    char* cname = new char[1024];
+    auto isValid = Steam::get().call<bool>("SteamAPI_ISteamApps_BGetDLCDataByIndex", apps, dlc, appID, available, cname, static_cast<std::int32_t>(1024));
     if (!isValid || !(*isValid)) {
         delete[] cname;
         return false;
@@ -392,8 +391,8 @@ std::string Steam::Apps::getCurrentBranch() {
     if (!apps) {
         return "";
     }
-    char* out = new char[FilesystemResourceProvider::FILEPATH_MAX_LENGTH];
-    auto isOnBeta = Steam::get().call<bool>("SteamAPI_ISteamApps_GetCurrentBetaName", apps, out, static_cast<std::int32_t>(FilesystemResourceProvider::FILEPATH_MAX_LENGTH));
+    char* out = new char[1024];
+    auto isOnBeta = Steam::get().call<bool>("SteamAPI_ISteamApps_GetCurrentBetaName", apps, out, static_cast<std::int32_t>(1024));
     if (!isOnBeta || !(*isOnBeta)) {
         delete[] out;
         return "";
@@ -430,8 +429,8 @@ std::string Steam::Apps::getAppInstallPath(std::uint32_t appID) {
     if (!apps) {
         return "";
     }
-    auto* out = new char[FilesystemResourceProvider::FILEPATH_MAX_LENGTH];
-    auto size = Steam::get().call<std::uint32_t>("SteamAPI_ISteamApps_GetAppInstallDir", apps, appID, out, static_cast<std::uint32_t>(FilesystemResourceProvider::FILEPATH_MAX_LENGTH));
+    auto* out = new char[1024];
+    auto size = Steam::get().call<std::uint32_t>("SteamAPI_ISteamApps_GetAppInstallDir", apps, appID, out, static_cast<std::uint32_t>(1024));
     if (!size) {
         return "";
     }

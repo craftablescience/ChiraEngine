@@ -7,7 +7,6 @@
 #include <loader/mesh/ChiraMeshLoader.h>
 #include <loader/mesh/OBJMeshLoader.h>
 #include <render/mesh/MeshData.h>
-#include <resource/provider/FilesystemResourceProvider.h>
 
 #include "../ToolHelpers.h"
 
@@ -73,8 +72,8 @@ int main(int argc, char* argv[]) {
     LOG_CMDLTOOL.info("Attempting to convert mesh file \"{}\"...", inputPath.filename().string());
 
     MeshData mesh{};
-    Resource::addResourceProvider(new FilesystemResourceProvider{inputPath.parent_path().string()});
-    mesh.appendMeshData(inputType, FilesystemResourceProvider::getResourceIdentifier(inputPath.string()));
+    //Resource::addResourceProvider(new FilesystemResourceProvider{inputPath.parent_path().string()});
+    //mesh.appendMeshData(inputType, FilesystemResourceProvider::getResourceIdentifier(inputPath.string()));
 
     std::ofstream file{outputPath.string(), std::ios::binary};
     std::vector<byte> meshData = mesh.getMeshData(outputType);

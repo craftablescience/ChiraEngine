@@ -1,17 +1,16 @@
 #include "Engine.h"
 
 #include <config/ConEntry.h>
+#include <filesystem/Filesystem.h>
 #include <i18n/TranslationManager.h>
 #include <input/InputManager.h>
 #include <loader/mesh/OBJMeshLoader.h>
 #include <loader/mesh/ChiraMeshLoader.h>
 #include <module/Module.h>
-#include <resource/provider/FilesystemResourceProvider.h>
 #include <script/Lua.h>
 #include <ui/debug/ConsolePanel.h>
 #include <ui/debug/ResourceUsageTrackerPanel.h>
 #include "CommandLine.h"
-#include "Platform.h"
 
 #ifdef DEBUG
     #include <render/backend/RenderBackend.h>
@@ -50,7 +49,10 @@ void Engine::preinit(int argc, char* argv[]) {
     system("chcp 65001 > nul");
 #endif
     CommandLine::init(argc, argv);
-    Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
+    if (!Filesystem::init()) [[unlikely]] {
+        LOG_ENGINE.error("Failed to initialize filesystem!");
+        exit(EXIT_FAILURE);
+    }
     TranslationManager::addTranslationFile("file://i18n/engine");
     if (!ModuleRegistry::preinitAll()) [[unlikely]] {
         LOG_ENGINE.error("Failed to initialize modules! Make sure there are no circular dependencies.");
@@ -58,10 +60,10 @@ void Engine::preinit(int argc, char* argv[]) {
     }
 }
 
-void Engine::init(bool visibleSplashScreen /*= true*/) {
+void Engine::init() {
     Engine::started = true;
 
-    if (!Device::initBackendAndCreateSplashscreen(visibleSplashScreen)) {
+    if (!Device::initBackendAndCreateSplashscreen(Filesystem::getProjectInfo().splashscreen)) {
         LOG_ENGINE.error("Failed to initialize graphics!");
         exit(EXIT_FAILURE);
     }

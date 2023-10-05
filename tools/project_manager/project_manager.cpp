@@ -1,7 +1,6 @@
 #include <core/Engine.h>
 #include <core/Logger.h>
 #include <i18n/TranslationManager.h>
-#include <render/backend/RenderBackend.h>
 #include <resource/Resource.h>
 #include <ui/IPanel.h>
 
@@ -65,11 +64,11 @@ public:
 
 int main(int argc, char* argv[]) {
     Engine::preinit(argc, argv);
-    Engine::init(false);
+    Engine::init();
 
     auto* window = Engine::getMainWindow();
-    auto* layer = Device::getWindowLayer(window);
-    layer->setBackgroundColor({0.15f});
+    auto* viewport = Device::getWindowViewport(window);
+    viewport->setBackgroundColor({0.15f});
 
     auto panel = new ProjectManagerPanel{};
     Device::addPanelToWindow(window, panel);

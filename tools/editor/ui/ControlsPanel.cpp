@@ -9,7 +9,6 @@
 #include <entity/Entity.h>
 #include <i18n/TranslationManager.h>
 #include <input/InputManager.h>
-#include <resource/provider/FilesystemResourceProvider.h>
 
 using namespace chira;
 

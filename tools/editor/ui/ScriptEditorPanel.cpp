@@ -3,7 +3,7 @@
 #include <fstream>
 #include <imfilebrowser.h>
 #include <i18n/TranslationManager.h>
-#include <resource/provider/FilesystemResourceProvider.h>
+#include <ui/Font.h>
 
 using namespace chira;
 
@@ -15,7 +15,7 @@ ScriptEditorPanel::ScriptEditorPanel()
     this->setPath("");
     this->editor.SetTabSize(4);
 
-    this->font = Resource::getResource<Font>(TR("resource.font.console"));
+    //this->font = Resource::getResource<Font>(TR("resource.font.console"));
 }
 
 void ScriptEditorPanel::save() {
@@ -127,12 +127,12 @@ void ScriptEditorPanel::renderContents() {
     ImGui::PushFont(this->font->getFont());
 
     const auto cursorPos = this->editor.GetCursorPosition();
-    const auto resourceID = FilesystemResourceProvider::getResourceIdentifier(this->path);
-    ImGui::Text("%6d/%-6d %6d lines | %s | %s | %s",
-                cursorPos.mLine + 1, cursorPos.mColumn + 1, this->editor.GetTotalLines(),
-                this->editor.GetLanguageDefinition().mName.c_str(),
-                this->editor.IsOverwrite() ? "OVERWRITE" : "INSERT",
-                resourceID.empty() ? this->path.c_str() : resourceID.c_str());
+    //const auto resourceID = FilesystemResourceProvider::getResourceIdentifier(this->path);
+    //ImGui::Text("%6d/%-6d %6d lines | %s | %s | %s",
+    //            cursorPos.mLine + 1, cursorPos.mColumn + 1, this->editor.GetTotalLines(),
+    //            this->editor.GetLanguageDefinition().mName.c_str(),
+    //            this->editor.IsOverwrite() ? "OVERWRITE" : "INSERT",
+    //            resourceID.empty() ? this->path.c_str() : resourceID.c_str());
 
     const auto subtitle = this->title + "##Editor";
     this->editor.Render(subtitle.c_str());
