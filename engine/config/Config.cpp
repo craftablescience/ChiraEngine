@@ -11,7 +11,6 @@
     #include <Windows.h>
     #include <shellapi.h>
 #else // Should work on any other platform besides Windows? macOS and Linux work at least
-    #include <sys/types.h>
     #include <unistd.h>
     #include <pwd.h>
 #endif
@@ -47,8 +46,9 @@ std::string_view Config::getConfigDirectory() {
 #ifndef CHIRA_PLATFORM_WINDOWS
     const char* homePath = getenv("HOME");
     if (!homePath) {
-        if (passwd* pwd = getpwuid(getuid()))
+        if (passwd* pwd = getpwuid(getuid())) {
             homePath = pwd->pw_dir;
+        }
     }
     pathString.append(homePath);
 #if defined(CHIRA_PLATFORM_APPLE)
