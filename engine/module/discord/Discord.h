@@ -50,6 +50,8 @@ private:
     std::int64_t startTimestamp = -1;
     std::int64_t endTimestamp = -1;
     DiscordButtonData button1, button2;
+
+    using IModule::init;
 };
 
 } // namespace chira

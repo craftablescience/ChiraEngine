@@ -7,10 +7,11 @@
 
 #include <core/Assertions.h>
 #include <utility/DependencyGraph.h>
+#include <utility/NoCopyOrMove.h>
 
 namespace chira {
 
-struct IModule {
+struct IModule : public NoCopyOrMove {
     virtual void preinit() {};
     virtual void init() {};
     virtual void update() {};
