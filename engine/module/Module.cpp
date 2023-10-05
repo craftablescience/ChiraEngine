@@ -1,5 +1,7 @@
 #include "Module.h"
 
+#include <ranges>
+
 #include <config/ConEntry.h>
 
 using namespace chira;
@@ -21,12 +23,6 @@ std::unordered_map<std::string_view, std::vector<std::string_view>>& getModuleDe
 [[nodiscard]] std::vector<IModule*>& getModuleOrder() {
     static std::vector<IModule*> moduleOrder;
     return moduleOrder;
-}
-
-void callAllFns(void(IModule::*fn)()) {
-    for (IModule* mod : getModuleOrder()) {
-        (mod->*fn)();
-    }
 }
 
 bool recalculateModuleOrder() {
@@ -76,22 +72,32 @@ bool ModuleRegistry::preinitAll() {
     if (!recalculateModuleOrder()) {
         return false;
     }
-    callAllFns(&IModule::preinit);
+    for (IModule* mod : getModuleOrder()) {
+        mod->preinit();
+    }
     return true;
 }
 
 void ModuleRegistry::initAll() {
-    callAllFns(&IModule::init);
+    for (IModule* mod : getModuleOrder()) {
+        mod->init();
+    }
 }
 
 void ModuleRegistry::updateAll() {
-    callAllFns(&IModule::update);
+    for (IModule* mod : getModuleOrder()) {
+        mod->update();
+    }
 }
 
 void ModuleRegistry::renderAll() {
-    callAllFns(&IModule::render);
+    for (IModule* mod : getModuleOrder()) {
+        mod->render();
+    }
 }
 
 void ModuleRegistry::deinitAll() {
-    callAllFns(&IModule::deinit);
+    for (IModule* mod : std::ranges::reverse_view(getModuleOrder())) {
+        mod->deinit();
+    }
 }
