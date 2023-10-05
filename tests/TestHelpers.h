@@ -5,12 +5,12 @@
 #include <resource/provider/FilesystemResourceProvider.h>
 
 #define PREINIT_ENGINE() \
-    const char* const argv[] = {"ChiraTest"}; \
-    chira::Engine::preInit(sizeof(argv) / sizeof(argv[0]), argv); \
+    const char* argv[] = {"ChiraTest"}; \
+    chira::Engine::preinit(sizeof(argv) / sizeof(argv[0]), argv); \
     chira::Resource::addResourceProvider(new chira::FilesystemResourceProvider{"tests"})
 
 #define PREINIT_ENGINE_WITH_ARGS(argv) \
-    chira::Engine::preInit(sizeof(argv) / sizeof((argv)[0]), argv); \
+    chira::Engine::preinit(sizeof(argv) / sizeof((argv)[0]), argv); \
     chira::Resource::addResourceProvider(new chira::FilesystemResourceProvider{"tests"})
 
 #define LOG_BEGIN() \

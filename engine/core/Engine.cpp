@@ -43,7 +43,7 @@ ConVar win_height{"win_height", 720, "The height of the main window.", CON_FLAG_
     }
 }};
 
-void Engine::preInit(int argc, const char* const argv[]) {
+void Engine::preinit(int argc, const char* argv[]) {
 #ifdef CHIRA_PLATFORM_WINDOWS
     // Enable colored text in Windows console by setting encoding to UTF-8
     // #define CP_UTF8 65001 in Windows.h

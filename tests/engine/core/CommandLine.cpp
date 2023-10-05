@@ -6,7 +6,7 @@
 using namespace chira;
 
 TEST(CommandLine, has) {
-    const char* const argv[] = {"ChiraTest", "-foo"};
+    const char* argv[] = {"ChiraTest", "-foo"};
     PREINIT_ENGINE_WITH_ARGS(argv);
 
     EXPECT_TRUE(CommandLine::has("-foo"));
@@ -14,7 +14,7 @@ TEST(CommandLine, has) {
 }
 
 TEST(CommandLine, get) {
-    const char* const argv[] = {"ChiraTest", "-foo", "bar"};
+    const char* argv[] = {"ChiraTest", "-foo", "bar"};
     PREINIT_ENGINE_WITH_ARGS(argv);
 
     EXPECT_TRUE(CommandLine::has("-foo"));
@@ -23,7 +23,7 @@ TEST(CommandLine, get) {
 }
 
 TEST(CommandLine, getProgramName) {
-    const char* const argv[] = {"ChiraTest"};
+    const char* argv[] = {"ChiraTest"};
     PREINIT_ENGINE_WITH_ARGS(argv);
 
     EXPECT_FALSE(CommandLine::has("ChiraTest"));

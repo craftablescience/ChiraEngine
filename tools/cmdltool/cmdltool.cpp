@@ -22,8 +22,8 @@ CHIRA_SETUP_CLI_TOOL(CMDLTOOL, "1.0",
                      "                   The default is cmdl"                       "\n"
                      "-o <output file> : Destination for the converted file"        "\n");
 
-int main(int argc, const char* const argv[]) {
-    Engine::preInit(argc, argv);
+int main(int argc, const char* argv[]) {
+    Engine::preinit(argc, argv);
 
     // make sure we actually discard resources. we don't ever call Engine::run()
     // so we never do the proper shutdown and have to manually call this
