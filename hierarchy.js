@@ -29,7 +29,6 @@ var hierarchy =
       [ "chira::ChiraMeshLoader", "d7/d5f/classchira_1_1_chira_mesh_loader.html", null ],
       [ "chira::OBJMeshLoader", "dd/d84/classchira_1_1_o_b_j_mesh_loader.html", null ]
     ] ],
-    [ "chira::IModule", "d7/d77/structchira_1_1_i_module.html", null ],
     [ "chira::Input::Event< T, U, CallbackArgs >", "d9/df5/classchira_1_1_input_1_1_event.html", null ],
     [ "chira::IPanel", "df/dde/classchira_1_1_i_panel.html", [
       [ "chira::ConsolePanel", "de/d17/classchira_1_1_console_panel.html", null ],
@@ -53,6 +52,14 @@ var hierarchy =
     [ "chira::MeshDynamicComponent", "d8/dec/structchira_1_1_mesh_dynamic_component.html", null ],
     [ "chira::MeshSpriteComponent", "da/d14/structchira_1_1_mesh_sprite_component.html", null ],
     [ "chira::NameComponent", "d9/d38/structchira_1_1_name_component.html", null ],
+    [ "chira::NoCopy", "d5/dce/structchira_1_1_no_copy.html", [
+      [ "chira::NoCopyOrMove", "d4/ddf/structchira_1_1_no_copy_or_move.html", [
+        [ "chira::IModule", "d7/d77/structchira_1_1_i_module.html", null ]
+      ] ]
+    ] ],
+    [ "chira::NoMove", "d1/d28/structchira_1_1_no_move.html", [
+      [ "chira::NoCopyOrMove", "d4/ddf/structchira_1_1_no_copy_or_move.html", null ]
+    ] ],
     [ "chira::NoRenderTagComponent", "d5/d45/structchira_1_1_no_render_tag_component.html", null ],
     [ "chira::PointLightComponent", "df/d2a/structchira_1_1_point_light_component.html", null ],
     [ "chira::Renderer::FrameBufferHandle", "dc/d29/structchira_1_1_renderer_1_1_frame_buffer_handle.html", null ],

@@ -3,6 +3,7 @@ var dir_5a4cbfacf50e7fd9e013cde666bbc704 =
     [ "AbstractFactory.h", "d9/d08/_abstract_factory_8h_source.html", null ],
     [ "Concepts.h", "d9/d22/_concepts_8h_source.html", null ],
     [ "DependencyGraph.h", "d1/d10/_dependency_graph_8h_source.html", null ],
+    [ "NoCopyOrMove.h", "dc/d0a/_no_copy_or_move_8h_source.html", null ],
     [ "Serial.h", "d7/d9a/_serial_8h_source.html", null ],
     [ "SharedPointer.h", "d6/d47/_shared_pointer_8h_source.html", null ],
     [ "String.cpp", "d9/dae/_string_8cpp_source.html", null ],

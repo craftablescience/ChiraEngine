@@ -107,105 +107,111 @@ $(document).ready(function(){initNavTree('d5/d13/_module_8cpp_source.html','../.
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;Module.h&quot;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;config/ConEntry.h&gt;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;ranges&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">using namespace </span>chira;</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;config/ConEntry.h&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;CHIRA_CREATE_LOG(MODULE);</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">using namespace </span>chira;</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">namespace </span>{</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;CHIRA_CREATE_LOG(MODULE);</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;std::unordered_map&lt;std::string_view, chira::IModule*&gt;&amp; getModules() {</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keyword">static</span> std::unordered_map&lt;std::string_view, IModule*&gt; modules;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keywordflow">return</span> modules;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;}</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;std::unordered_map&lt;std::string_view, std::vector&lt;std::string_view&gt;&gt;&amp; getModuleDeps() {</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">static</span> std::unordered_map&lt;std::string_view, std::vector&lt;std::string_view&gt;&gt; moduleDeps;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordflow">return</span> moduleDeps;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;}</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;[[nodiscard]] std::vector&lt;IModule*&gt;&amp; getModuleOrder() {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">static</span> std::vector&lt;IModule*&gt; moduleOrder;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordflow">return</span> moduleOrder;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">void</span> callAllFns(<span class="keywordtype">void</span>(<a class="code" href="../../d7/d77/structchira_1_1_i_module.html">IModule</a>::*fn)()) {</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="../../d7/d77/structchira_1_1_i_module.html">IModule</a>* mod : getModuleOrder()) {</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        (mod-&gt;*fn)();</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    }</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keywordtype">bool</span> recalculateModuleOrder() {</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="../../d2/d56/classchira_1_1_dependency_graph.html">DependencyGraph</a> graph;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    std::unordered_map&lt;std::string_view, DependencyGraph::Node*&gt; nodes;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">auto</span>&amp; modules = getModules();</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span>{</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;std::unordered_map&lt;std::string_view, chira::IModule*&gt;&amp; getModules() {</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keyword">static</span> std::unordered_map&lt;std::string_view, IModule*&gt; modules;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordflow">return</span> modules;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;}</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;std::unordered_map&lt;std::string_view, std::vector&lt;std::string_view&gt;&gt;&amp; getModuleDeps() {</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">static</span> std::unordered_map&lt;std::string_view, std::vector&lt;std::string_view&gt;&gt; moduleDeps;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordflow">return</span> moduleDeps;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;}</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;[[nodiscard]] std::vector&lt;IModule*&gt;&amp; getModuleOrder() {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">static</span> std::vector&lt;IModule*&gt; moduleOrder;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">return</span> moduleOrder;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keywordtype">bool</span> recalculateModuleOrder() {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <a class="code" href="../../d2/d56/classchira_1_1_dependency_graph.html">DependencyGraph</a> graph;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    std::unordered_map&lt;std::string_view, DependencyGraph::Node*&gt; nodes;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">auto</span>&amp; modules = getModules();</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [name, mod] : modules) {</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        nodes[name] = graph.addNode(name.data());</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    }</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">auto</span>&amp; moduleDeps = getModuleDeps();</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [name, mod] : modules) {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        nodes[name] = graph.addNode(name.data());</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    }</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">auto</span>&amp; moduleDeps = getModuleDeps();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [name, mod] : modules) {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; dep : moduleDeps.at(name)) {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            nodes[name]-&gt;addEdge(nodes[dep]);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        }</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; dep : moduleDeps.at(name)) {</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            nodes[name]-&gt;addEdge(nodes[dep]);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        }</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    }</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">auto</span> order = graph.<a class="code" href="../../d2/d56/classchira_1_1_dependency_graph.html#ab96454befc59e262f901ca196774a739">resolveDependencyOrder</a>();</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">if</span> (!order) {</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">auto</span> order = graph.<a class="code" href="../../d2/d56/classchira_1_1_dependency_graph.html#ab96454befc59e262f901ca196774a739">resolveDependencyOrder</a>();</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">if</span> (!order) {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">auto</span>&amp; moduleOrder = getModuleOrder();</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    moduleOrder.clear();</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>* node : *order) {</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        moduleOrder.push_back(modules.at(node-&gt;name));</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    }</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;} <span class="comment">// namespace</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;[[maybe_unused]]</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<a class="code" href="../../d0/d61/classchira_1_1_con_command.html">ConCommand</a> list_loaded_modules{<span class="stringliteral">&quot;list_loaded_modules&quot;</span>, <span class="stringliteral">&quot;List all loaded modules.&quot;</span>, [](ConCommand::CallbackArgs) {</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [name, mod] : getModules()) {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        LOG_MODULE.infoImportant(name);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    }</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}};</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keywordtype">void</span> ModuleRegistry::addModule(<a class="code" href="../../d7/d77/structchira_1_1_i_module.html">IModule</a>* instance, std::string_view name, <span class="keyword">const</span> std::vector&lt;std::string_view&gt;&amp; deps) {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">auto</span>&amp; modules = getModules();</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">auto</span>&amp; moduleDeps = getModuleDeps();</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    runtime_assert(!modules.contains(name), <span class="stringliteral">&quot;Module already registered!&quot;</span>);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    modules[name] = instance;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    moduleDeps[name] = deps;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keywordtype">bool</span> ModuleRegistry::preinitAll() {</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">if</span> (!recalculateModuleOrder()) {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    callAllFns(&amp;IModule::preinit);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;}</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keywordtype">void</span> ModuleRegistry::initAll() {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    callAllFns(&amp;IModule::init);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">auto</span>&amp; moduleOrder = getModuleOrder();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    moduleOrder.clear();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>* node : *order) {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        moduleOrder.push_back(modules.at(node-&gt;name));</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;} <span class="comment">// namespace</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;[[maybe_unused]]</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<a class="code" href="../../d0/d61/classchira_1_1_con_command.html">ConCommand</a> list_loaded_modules{<span class="stringliteral">&quot;list_loaded_modules&quot;</span>, <span class="stringliteral">&quot;List all loaded modules.&quot;</span>, [](ConCommand::CallbackArgs) {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [name, mod] : getModules()) {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        LOG_MODULE.infoImportant(name);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}};</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keywordtype">void</span> ModuleRegistry::addModule(<a class="code" href="../../d7/d77/structchira_1_1_i_module.html">IModule</a>* instance, std::string_view name, <span class="keyword">const</span> std::vector&lt;std::string_view&gt;&amp; deps) {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">auto</span>&amp; modules = getModules();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">auto</span>&amp; moduleDeps = getModuleDeps();</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    runtime_assert(!modules.contains(name), <span class="stringliteral">&quot;Module already registered!&quot;</span>);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    modules[name] = instance;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    moduleDeps[name] = deps;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keywordtype">bool</span> ModuleRegistry::preinitAll() {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">if</span> (!recalculateModuleOrder()) {</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    }</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="../../d7/d77/structchira_1_1_i_module.html">IModule</a>* mod : getModuleOrder()) {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        mod-&gt;preinit();</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;}</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keywordtype">void</span> ModuleRegistry::initAll() {</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="../../d7/d77/structchira_1_1_i_module.html">IModule</a>* mod : getModuleOrder()) {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        mod-&gt;init();</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    }</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keywordtype">void</span> ModuleRegistry::updateAll() {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    callAllFns(&amp;IModule::update);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keywordtype">void</span> ModuleRegistry::renderAll() {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    callAllFns(&amp;IModule::render);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="keywordtype">void</span> ModuleRegistry::deinitAll() {</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    callAllFns(&amp;IModule::deinit);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="../../d7/d77/structchira_1_1_i_module.html">IModule</a>* mod : getModuleOrder()) {</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        mod-&gt;update();</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keywordtype">void</span> ModuleRegistry::renderAll() {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="../../d7/d77/structchira_1_1_i_module.html">IModule</a>* mod : getModuleOrder()) {</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        mod-&gt;render();</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    }</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="keywordtype">void</span> ModuleRegistry::deinitAll() {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">for</span> (<a class="code" href="../../d7/d77/structchira_1_1_i_module.html">IModule</a>* mod : std::ranges::reverse_view(getModuleOrder())) {</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        mod-&gt;deinit();</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    }</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;}</div>
 <div class="ttc" id="aclasschira_1_1_con_command_html"><div class="ttname"><a href="../../d0/d61/classchira_1_1_con_command.html">chira::ConCommand</a></div><div class="ttdef"><b>Definition:</b> <a href="../../dd/df9/_con_entry_8h_source.html#l00039">ConEntry.h:39</a></div></div>
 <div class="ttc" id="aclasschira_1_1_dependency_graph_html"><div class="ttname"><a href="../../d2/d56/classchira_1_1_dependency_graph.html">chira::DependencyGraph</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d1/d10/_dependency_graph_8h_source.html#l00009">DependencyGraph.h:9</a></div></div>
 <div class="ttc" id="aclasschira_1_1_dependency_graph_html_ab96454befc59e262f901ca196774a739"><div class="ttname"><a href="../../d2/d56/classchira_1_1_dependency_graph.html#ab96454befc59e262f901ca196774a739">chira::DependencyGraph::resolveDependencyOrder</a></div><div class="ttdeci">std::optional&lt; std::vector&lt; const Node * &gt; &gt; resolveDependencyOrder() const</div><div class="ttdoc">Get the order that dependencies should be initialized in, or std::nullopt if there is a cycle.</div><div class="ttdef"><b>Definition:</b> <a href="../../d1/d10/_dependency_graph_8h_source.html#l00015">DependencyGraph.h:15</a></div></div>
-<div class="ttc" id="astructchira_1_1_i_module_html"><div class="ttname"><a href="../../d7/d77/structchira_1_1_i_module.html">chira::IModule</a></div><div class="ttdef"><b>Definition:</b> <a href="../../dd/d7a/_module_8h_source.html#l00013">Module.h:13</a></div></div>
+<div class="ttc" id="astructchira_1_1_i_module_html"><div class="ttname"><a href="../../d7/d77/structchira_1_1_i_module.html">chira::IModule</a></div><div class="ttdef"><b>Definition:</b> <a href="../../dd/d7a/_module_8h_source.html#l00014">Module.h:14</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

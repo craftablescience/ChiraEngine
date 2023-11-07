@@ -3,14 +3,13 @@ var namespaces_dup =
     [ "chira", null, [
       [ "CommandLine", null, [
         [ "get", "d3/d6b/_command_line_8h.html#ab81fc2eb2db8499fbcd3126886b190f1", null ],
+        [ "getDefaultArgument", "d3/d6b/_command_line_8h.html#ad7ce7aeae1cb36c5c7e61bb29c6a0738", null ],
+        [ "getDefaultArgumentOr", "d3/d6b/_command_line_8h.html#aa0cb68d3d52c189cae47191907870ffb", null ],
         [ "getOr", "d3/d6b/_command_line_8h.html#acc2ceb7fb8a972ff51a392920b061ef5", null ],
         [ "getProgramName", "d3/d6b/_command_line_8h.html#a899cb966f00b0e1d667a600b89956c66", null ],
         [ "has", "d3/d6b/_command_line_8h.html#af8f9a6bf7278ec46f9587308935c5d42", null ],
-        [ "init", "d3/d6b/_command_line_8h.html#a6a1f615dceb7f4229eaa40543770b8c7", null ]
-      ] ],
-      [ "Config", null, [
-        [ "getConfigDirectory", "d4/d71/_config_8h.html#a1d6a4c1e1311fe0f9211339f6d3e8e5d", null ],
-        [ "getConfigFile", "d4/d71/_config_8h.html#aabdcc66edeb368a613edb9d767d2ee50", null ]
+        [ "hasDefaultArgument", "d3/d6b/_command_line_8h.html#a14532682db474532376340f65b249002", null ],
+        [ "init", "d3/d6b/_command_line_8h.html#a80b2d864080756633803cdecef8ba1d2", null ]
       ] ],
       [ "detail", null, [
         [ "enumerateImpl", "de/d94/utility_2_types_8h.html#a8aa109791cd0c77bd8bd20b6979297bd", null ],
@@ -455,6 +454,9 @@ var namespaces_dup =
       [ "IViewportPanel", "d7/dea/classchira_1_1_i_viewport_panel.html", "d7/dea/classchira_1_1_i_viewport_panel" ],
       [ "AbstractFactory", "d6/dfd/classchira_1_1_abstract_factory.html", "d6/dfd/classchira_1_1_abstract_factory" ],
       [ "DependencyGraph", "d2/d56/classchira_1_1_dependency_graph.html", "d2/d56/classchira_1_1_dependency_graph" ],
+      [ "NoCopy", "d5/dce/structchira_1_1_no_copy.html", "d5/dce/structchira_1_1_no_copy" ],
+      [ "NoMove", "d1/d28/structchira_1_1_no_move.html", "d1/d28/structchira_1_1_no_move" ],
+      [ "NoCopyOrMove", "d4/ddf/structchira_1_1_no_copy_or_move.html", "d4/ddf/structchira_1_1_no_copy_or_move" ],
       [ "SharedPointerMetadata", "d9/d83/structchira_1_1_shared_pointer_metadata.html", "d9/d83/structchira_1_1_shared_pointer_metadata" ],
       [ "SharedPointer", "d4/d08/classchira_1_1_shared_pointer.html", "d4/d08/classchira_1_1_shared_pointer" ],
       [ "TypeStringBase", "de/d6e/structchira_1_1_type_string_base.html", "de/d6e/structchira_1_1_type_string_base" ],
