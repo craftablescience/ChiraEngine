@@ -3,6 +3,7 @@
 #include <fmt/core.h>
 #include <imfilebrowser.h>
 #include <magic_enum.hpp>
+
 #include <entity/component/AudioNoiseComponent.h>
 #include <entity/component/AudioSfxrComponent.h>
 #include <entity/component/AudioSpeechComponent.h>
@@ -18,7 +19,6 @@
 #include <entity/component/SkyboxComponent.h>
 #include <entity/component/UUIDComponent.h>
 #include <entity/component/LayerComponents.h>
-#include <resource/provider/FilesystemResourceProvider.h>
 
 using namespace chira;
 

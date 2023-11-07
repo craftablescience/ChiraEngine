@@ -1,0 +1,25 @@
+set(CHIRA_EXTERNAL_TOOLS_NAME "external_tools")
+add_custom_target(${CHIRA_EXTERNAL_TOOLS_NAME})
+
+# Helper function to handle tools
+function(add_tool_executable NAME)
+    cmake_parse_arguments(PARSE_ARGV 1 IN "GUI" "" "SOURCES;DEPS;INCLUDE_PATHS")
+    if(WIN32)
+        list(APPEND IN_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/engine/assets/platform/windows/app.rc)
+    endif()
+    if(IN_GUI AND NOT CHIRA_DEBUG_BUILD)
+        add_executable(${NAME} WIN32 ${IN_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/tools/ToolHelpers.h)
+        if(WIN32 AND MSVC)
+            target_link_options(${NAME} PRIVATE "/ENTRY:mainCRTStartup")
+        endif()
+    else()
+        add_executable(${NAME} ${IN_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/tools/ToolHelpers.h)
+    endif()
+    apply_optimizations(${NAME})
+    target_link_libraries(${NAME} PRIVATE ${CHIRA_ENGINE_NAME} ${IN_DEPS})
+    target_include_directories(${NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/tools/${NAME} ${IN_INCLUDE_PATHS})
+    add_dependencies(${CHIRA_EXTERNAL_TOOLS_NAME} ${NAME})
+endfunction()
+
+# Add tools
+include_subdirs(cmdltool editor project_manager)

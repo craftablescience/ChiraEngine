@@ -1,6 +1,7 @@
 #pragma once
 
 #include <TextEditor.h>
+
 #include <ui/Font.h>
 #include <ui/IPanel.h>
 

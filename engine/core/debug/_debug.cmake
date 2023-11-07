@@ -1,0 +1,11 @@
+list(APPEND CHIRA_ENGINE_HEADERS
+        ${CMAKE_CURRENT_LIST_DIR}/Assertions.h
+        ${CMAKE_CURRENT_LIST_DIR}/Logger.h)
+
+list(APPEND CHIRA_ENGINE_SOURCES
+        ${CMAKE_CURRENT_LIST_DIR}/Logger.cpp)
+
+if(CHIRA_BUILD_WITH_ASSERTS)
+    list(APPEND CHIRA_ENGINE_SOURCES
+            ${CMAKE_CURRENT_LIST_DIR}/Assertions.cpp)
+endif()

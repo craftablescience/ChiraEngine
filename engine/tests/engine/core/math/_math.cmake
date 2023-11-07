@@ -1,0 +1,2 @@
+list(APPEND CHIRA_TEST_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/GraphTest.cpp")

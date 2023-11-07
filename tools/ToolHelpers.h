@@ -1,8 +1,10 @@
 #pragma once
 
 #include <string>
-#include <core/Logger.h>
+
+#include <core/debug/Logger.h>
 #include <core/Platform.h>
+#include <platforms/Common.h>
 
 #define CHIRA_SETUP_CLI_TOOL(name, version, helpText) \
     CHIRA_CREATE_LOG(name);                           \

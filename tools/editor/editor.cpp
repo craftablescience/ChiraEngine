@@ -1,24 +1,17 @@
-#include <config/ConEntry.h>
-#include <core/Engine.h>
+#include <core/config/ConEntry.h>
 #include <i18n/TranslationManager.h>
-#include <resource/provider/FilesystemResourceProvider.h>
-
-#ifdef CHIRA_USE_DISCORD
-    #include <module/discord/Discord.h>
-#endif
-#ifdef CHIRA_USE_STEAMWORKS
-    #include <module/steam/Steam.h>
-#endif
-
-// Need to register phong material!
-#include <render/material/MaterialPhong.h>
-
 #include "ui/ControlsPanel.h"
 #include "ui/EntitySelectPanel.h"
 #include "ui/InspectorPanel.h"
 #include "ui/ScriptEditorPanel.h"
-
 #include "../ToolHelpers.h"
+
+#ifdef CHIRA_USE_DISCORD
+    #include <hook/discord/Discord.h>
+#endif
+#ifdef CHIRA_USE_STEAMWORKS
+    #include <hook/steam/Steam.h>
+#endif
 
 using namespace chira;
 

@@ -2,8 +2,9 @@
 
 #include <algorithm>
 #include <vector>
-#include <config/ConEntry.h>
-#include "Logger.h"
+
+#include "config/ConEntry.h"
+#include "debug/Logger.h"
 
 using namespace chira;
 

@@ -3,12 +3,9 @@
 #include <fstream>
 
 #include <core/CommandLine.h>
-#include <core/Engine.h>
 #include <loader/mesh/ChiraMeshLoader.h>
 #include <loader/mesh/OBJMeshLoader.h>
 #include <render/mesh/MeshData.h>
-#include <resource/provider/FilesystemResourceProvider.h>
-
 #include "../ToolHelpers.h"
 
 using namespace chira;

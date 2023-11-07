@@ -1,12 +1,12 @@
 <div align="center">
   <img width="400px" src="https://github.com/craftablescience/ChiraEngine/blob/main/branding/github/readme_banner.png?raw=true" alt="Chira Engine"/>
 
-  [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5c8b0a7eba614cc8bc44d7d54789cf51)](https://app.codacy.com/gh/craftablescience/ChiraEngine?utm_source=github.com&utm_medium=referral&utm_content=craftablescience/ChiraEngine&utm_campaign=Badge_Grade_Settings)
-  ![Workflow Status](https://img.shields.io/github/actions/workflow/status/craftablescience/ChiraEngine/build_engine.yml?branch=main&label=builds%20and%20tests)
-  ![License](https://img.shields.io/github/license/craftablescience/ChiraEngine?label=license)
-  ![Discord](https://img.shields.io/discord/678074864346857482?label=discord&logo=Discord&logoColor=%23FFFFFF)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5c8b0a7eba614cc8bc44d7d54789cf51)](https://app.codacy.com/gh/craftablescience/ChiraEngine?utm_source=github.com&utm_medium=referral&utm_content=craftablescience/ChiraEngine&utm_campaign=Badge_Grade_Settings)
+![Workflow Status](https://img.shields.io/github/actions/workflow/status/craftablescience/ChiraEngine/build_engine.yml?branch=main&label=builds%20and%20tests)
+![License](https://img.shields.io/github/license/craftablescience/ChiraEngine?label=license)
+![Discord](https://img.shields.io/discord/678074864346857482?label=discord&logo=Discord&logoColor=%23FFFFFF)
 
-  A fully customizable (and heavily work-in-progress) MIT-licensed game engine, written in C++20.
+A fully customizable (and heavily work-in-progress) MIT-licensed game engine, written in C++20.
 </div>
 
 ## Features
@@ -40,27 +40,29 @@ The goal of the engine is to have as much customization as possible, while still
 
 ## Supported Compilers
 
-| Platform | GCC | Clang | MSVC |
-|----------|:---:|:-----:|:----:|
-| Windows  | ✔\* |  ✔\*  |  ✔   |
-| Linux    |  ✔  |   ✔   |  -   |
-| macOS    |  ❌  | ✔\*\* |  -   |
+Compilers in bold are prioritized.
 
-(\*) Supported with MinGW. Packaging a build of the application will require you to copy a DLL
+| Platform | **GCC** | Clang | **MSVC** |
+|----------|:-------:|:-----:|:--------:|
+| Windows  |   ✔\*   |  ✔\*  |    ✔     |
+| Linux    |    ✔    |   ✔   |    -     |
+| macOS    |    ✖    | ✔\*\* |    -     |
+
+\* Supported with MinGW. Packaging a build of the application will require you to copy a DLL
 from the MinGW bin directory next to the executable. Check the GitHub Actions script to see the path to the DLL.
 
-(\*\*) Homebrew LLVM/Clang is required. Some C++ features used in this project are not supported
+\*\* Homebrew LLVM/Clang is required. Some C++ features used in this project are not supported
 by Apple's version of Clang.
 
-## Supported Rendering APIs
+## Supported Graphics APIs
 
-| Platform          | OpenGL 4.0 | OpenGL 4.1 | OpenGL 4.3 |  D3D11  | Software |
-|-------------------|:----------:|:----------:|:----------:|:-------:|:--------:|
-| Windows           |     ✔      |     ✔      |     ✔      | Planned |   ✔\*    |
-| Linux             |     ✔      |     ✔      |     ✔      |    -    |   ✔\*    |
-| macOS             |     ✔      |     ✔      |     -      |    -    |   ✔\*    |
+| Platform          | OpenGL 4.0 | OpenGL 4.1 | OpenGL 4.3 | Direct3D 11 | Software |
+|-------------------|:----------:|:----------:|:----------:|:-----------:|:--------:|
+| Windows           |     ✔      |     ✔      |     ✔      |   Planned   |   ✔\*    |
+| Linux             |     ✔      |     ✔      |     ✔      |      -      |   ✔\*    |
+| macOS             |     ✔      |     ✔      |     -      |      -      |   ✔\*    |
 
-(\*) SDL software renderer implementation is incomplete and will likely never work perfectly with 3D.
+\* SDL software renderer implementation is incomplete and not recommended for 3D.
 It exists to make it easier to port to new platforms.
 
 ## Bundled Dependencies
@@ -128,7 +130,7 @@ cmake --build build
 ```
 
 - Replace `"Unix Makefiles"` with `"Ninja"` if you installed Ninja earlier.
-- Replace `"Debug"` with `"Release"` if you want to compile a release build.
+- Replace `Debug` with `Release` if you want to compile a release build.
 
 ## Development (macOS)
 
@@ -152,4 +154,4 @@ cmake --build build
 ```
 
 - Replace `"Unix Makefiles"` with `"Ninja"` if you installed Ninja earlier.
-- Replace `"Debug"` with `"Release"` if you want to compile a release build.
+- Replace `Debug` with `Release` if you want to compile a release build.

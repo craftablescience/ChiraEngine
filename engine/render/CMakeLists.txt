@@ -1,5 +1,0 @@
-include(${CMAKE_CURRENT_LIST_DIR}/backend/CMakeLists.txt)
-include(${CMAKE_CURRENT_LIST_DIR}/material/CMakeLists.txt)
-include(${CMAKE_CURRENT_LIST_DIR}/mesh/CMakeLists.txt)
-include(${CMAKE_CURRENT_LIST_DIR}/shader/CMakeLists.txt)
-include(${CMAKE_CURRENT_LIST_DIR}/texture/CMakeLists.txt)

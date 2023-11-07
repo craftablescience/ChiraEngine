@@ -1,7 +1,7 @@
 #pragma once
 
+#include <core/utility/UUIDGenerator.h>
 #include <ui/IPanel.h>
-#include <utility/UUIDGenerator.h>
 #include <imfilebrowser.h>
 
 namespace chira {

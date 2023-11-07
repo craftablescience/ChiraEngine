@@ -1,15 +1,16 @@
 #include "ControlsPanel.h"
 
 #include <fstream>
+
 #include <ImGuizmo.h>
-#include <core/Engine.h>
+
 #include <entity/component/CameraComponent.h>
 #include <entity/component/MeshComponent.h>
 #include <entity/component/MeshDynamicComponent.h>
 #include <entity/Entity.h>
 #include <i18n/TranslationManager.h>
 #include <input/InputManager.h>
-#include <resource/provider/FilesystemResourceProvider.h>
+#include <platforms/Common.h>
 
 using namespace chira;
 

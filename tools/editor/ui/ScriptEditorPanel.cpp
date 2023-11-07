@@ -2,8 +2,8 @@
 
 #include <fstream>
 #include <imfilebrowser.h>
+
 #include <i18n/TranslationManager.h>
-#include <resource/provider/FilesystemResourceProvider.h>
 
 using namespace chira;
 

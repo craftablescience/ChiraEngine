@@ -20,5 +20,5 @@ docs/html
 .DS_Store
 
 # Generated
-!generated/*.in
-generated/
+/**/generated/*
+!/**/generated/*.in
