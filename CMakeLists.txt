@@ -16,7 +16,7 @@ endif()
 
 # Create the project
 project(Chira HOMEPAGE_URL "https://github.com/craftablescience/ChiraEngine")
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # If we're not building a debug build just assume it's release

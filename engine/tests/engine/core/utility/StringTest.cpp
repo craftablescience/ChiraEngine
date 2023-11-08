@@ -4,30 +4,6 @@
 
 using namespace chira;
 
-TEST(String, startsWith) {
-    std::string test = "StartEnd";
-    EXPECT_TRUE(String::startsWith(test, "Start"));
-    EXPECT_TRUE(String::startsWith(test, 'S'));
-    EXPECT_FALSE(String::startsWith(test, "xxx"));
-    EXPECT_FALSE(String::startsWith(test, 'x'));
-}
-
-TEST(String, endsWith) {
-    std::string test = "StartEnd";
-    EXPECT_TRUE(String::endsWith(test, "End"));
-    EXPECT_TRUE(String::endsWith(test, 'd'));
-    EXPECT_FALSE(String::endsWith(test, "xxx"));
-    EXPECT_FALSE(String::endsWith(test, 'x'));
-}
-
-TEST(String, contains) {
-    std::string test = "StartEnd";
-    EXPECT_TRUE(String::contains(test, "tEn"));
-    EXPECT_TRUE(String::contains(test, 'E'));
-    EXPECT_FALSE(String::contains(test, "txn"));
-    EXPECT_FALSE(String::contains(test, 'x'));
-}
-
 TEST(String, remove) {
     std::string test1 = "Test String", test2 = "Test String", test3 = "Test String";
     String::remove(test1, 'S');

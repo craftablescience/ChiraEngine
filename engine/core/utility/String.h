@@ -21,30 +21,6 @@ namespace chira::String {
     return in;
 }
 
-[[nodiscard]] constexpr bool startsWith(std::string_view str, char beginning) {
-    return (str.length() >= 1) && (str.at(0) == beginning);
-}
-
-[[nodiscard]] constexpr bool startsWith(std::string_view str, std::string_view beginning) {
-    return (str.length() >= beginning.length()) && (str.compare(0, beginning.length(), beginning) == 0);
-}
-
-[[nodiscard]] constexpr bool endsWith(std::string_view str, char end) {
-    return (str.length() >= 1) && (str.at(str.length() - 1) == end);
-}
-
-[[nodiscard]] constexpr bool endsWith(std::string_view str, std::string_view end) {
-    return (str.length() >= end.length()) && (str.compare(str.length() - end.length(), end.length(), end) == 0);
-}
-
-[[nodiscard]] constexpr bool contains(std::string_view str, char sub) {
-    return (str.length() >= 1) && (str.find(sub) != std::string::npos);
-}
-
-[[nodiscard]] constexpr bool contains(std::string_view str, std::string_view substr) {
-    return (str.length() >= substr.length()) && (str.find(substr) != std::string::npos);
-}
-
 void remove(std::string& input, char charToRemove);
 
 [[nodiscard]] std::vector<std::string> split(std::string_view input, char delimiter);
@@ -82,28 +58,25 @@ void replace(std::string& s, std::string_view from, std::string_view to);
 }
 
 template<typename T>
-requires requires (T t) {
-    std::begin(t);
-    std::end(t);
+requires requires (const T& t) {
+    std::cbegin(t);
+    std::cend(t);
 }
-[[nodiscard]] std::string join(T& vector, std::string_view separator, std::string_view end = "") {
-    auto first = std::begin(vector);
-    auto last = std::end(vector);
+[[nodiscard]] std::string join(const T& vector, std::string_view separator, std::string_view end = "") {
+    auto first = std::cbegin(vector);
+    auto last = std::cend(vector);
     if (first == last) {
         return end.data();
     }
-
     std::stringstream ss;
     ss << *first;
     ++first;
-
     while (first != last) {
         ss << separator;
         ss << *first;
         ++first;
     }
     ss << end;
-
     return ss.str();
 }
 
