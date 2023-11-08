@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <string>
-#include <string_view>
 
 #include <core/IModule.h>
 
@@ -15,10 +14,11 @@ struct DiscordButtonData {
     std::string url;
 };
 
-/// Discord should be initialized manually before Engine::init.
+// todo(discord): read game id from project config
+
 /// Setter functions will change the status after update().
 CHIRA_CREATE_MODULE(Discord) {
-    static inline const std::vector<std::string_view> DEPS;
+    CHIRA_CREATE_MODULE_DEPS();
 
     void init(std::string_view appId);
 
@@ -50,8 +50,6 @@ private:
     std::int64_t startTimestamp = -1;
     std::int64_t endTimestamp = -1;
     DiscordButtonData button1, button2;
-
-    using IModule::init;
 };
 
 } // namespace chira

@@ -17,8 +17,10 @@ CHIRA_CREATE_LOG(DISCORD);
 ConVar discord_enabled{"discord_enabled", true, "Allows applications to use Discord rich presence.", CON_FLAG_CACHE};
 
 void DiscordModule::init(std::string_view appId) {
-    if (this->isInitialized() || !discord_enabled.getValue<bool>())
+    static bool ran = false;
+    if (ran || !discord_enabled.getValue<bool>())
         return;
+    ran = true;
 
     DiscordEventHandlers handlers;
     memset(&handlers, 0, sizeof(handlers));
@@ -39,7 +41,6 @@ void DiscordModule::init(std::string_view appId) {
     };
 #endif
     Discord_Initialize(appId.data(), &handlers, 1, nullptr);
-    this->initialized = true;
 }
 
 void DiscordModule::update() {

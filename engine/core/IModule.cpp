@@ -1,6 +1,7 @@
 #include "IModule.h"
 
 #include <ranges>
+#include <utility>
 
 #include <core/config/ConEntry.h>
 
@@ -54,34 +55,26 @@ bool recalculateModuleOrder() {
 } // namespace
 
 [[maybe_unused]]
-ConCommand list_loaded_modules{"list_loaded_modules", "List all loaded modules.", [](ConCommand::CallbackArgs) {
+ConCommand mod_list{"mod_list", "List all loaded modules.", [](ConCommand::CallbackArgs) {
     for (const auto& [name, mod] : getModules()) {
         LOG_MODULE.infoImportant(name);
     }
 }};
 
-void ModuleRegistry::addModule(IModule* instance, std::string_view name, const std::vector<std::string_view>& deps) {
-    auto& modules = getModules();
-    auto& moduleDeps = getModuleDeps();
-    chiraAssert(!modules.contains(name), "Module already registered!");
-    modules[name] = instance;
-    moduleDeps[name] = deps;
-}
-
-bool ModuleRegistry::preinitAll() {
+bool ModuleRegistry::initAll() {
     if (!recalculateModuleOrder()) {
         return false;
     }
     for (IModule* mod : getModuleOrder()) {
-        mod->preinit();
+        if (!mod->preinit()) {
+            return false;
+        }
+        mod->initialized = true;
+    }
+    for (IModule* mod : getModuleOrder()) {
+        mod->postinit();
     }
     return true;
-}
-
-void ModuleRegistry::initAll() {
-    for (IModule* mod : getModuleOrder()) {
-        mod->init();
-    }
 }
 
 void ModuleRegistry::updateAll() {
@@ -100,4 +93,12 @@ void ModuleRegistry::deinitAll() {
     for (IModule* mod : std::ranges::reverse_view(getModuleOrder())) {
         mod->deinit();
     }
+}
+
+void ModuleRegistry::addModule(IModule* instance, std::string_view name, std::vector<std::string_view>&& deps) {
+    auto& modules = getModules();
+    auto& moduleDeps = getModuleDeps();
+    chiraAssert(!modules.contains(name), "Module already registered!");
+    modules[name] = instance;
+    moduleDeps[name] = std::move(deps);
 }

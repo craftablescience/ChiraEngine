@@ -7,24 +7,16 @@
 namespace chira {
 
 CHIRA_CREATE_MODULE(Audio) {
-    static inline const std::vector<std::string_view> DEPS;
+    CHIRA_CREATE_MODULE_DEPS();
 
-    void init() override {
-        if (this->initialized)
-            return;
-        this->soundEngine.init();
-        this->initialized = true;
-    }
+    bool preinit() override;
 
     void deinit() override {
         this->soundEngine.deinit();
     }
 
     [[nodiscard]] SoLoud::Soloud& get() {
-        if (!this->initialized) {
-            // This is bad, but whatever
-            this->init();
-        }
+        // Assume we've initialized it
         return soundEngine;
     }
 

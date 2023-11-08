@@ -51,7 +51,7 @@ void Engine::preinit(int argc, const char* argv[]) {
     CommandLine::init(argc, argv);
     Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
     TranslationManager::addTranslationFile("file://i18n/engine");
-    if (!ModuleRegistry::preinitAll()) [[unlikely]] {
+    if (!ModuleRegistry::initAll()) [[unlikely]] {
         LOG_ENGINE.error("Failed to initialize modules! Make sure there are no circular dependencies.");
         exit(EXIT_FAILURE);
     }
@@ -70,9 +70,6 @@ void Engine::init(bool visibleSplashScreen /*= true*/) {
         LOG_ENGINE.warning("Render backend \"{}\" failed to setup for debugging!", Renderer::getHumanName());
     }
 #endif
-
-    // Start up some auto-registered stuff (order is random!)
-    ModuleRegistry::initAll();
 
     IMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
     IMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});

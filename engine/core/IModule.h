@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <concepts>
 #include <string_view>
 #include <unordered_map>
@@ -7,42 +8,14 @@
 
 #include "debug/Assertions.h"
 #include "utility/DependencyGraph.h"
+#include "utility/MacroHelpers.h"
 #include "utility/NoCopyOrMove.h"
 
 namespace chira {
 
-struct IModule : public NoCopyOrMove {
-    virtual void preinit() {};
-    virtual void init() {};
-    virtual void update() {};
-    virtual void render() {};
-    virtual void deinit() {};
-
-    [[nodiscard]] bool isInitialized() const {
-        return this->initialized;
-    }
-
-protected:
-    bool initialized = false;
-};
-
-template<typename T>
-concept CModule = std::derived_from<T, IModule> && requires(T) {
-    {T::DEPS} -> std::same_as<const std::vector<std::string_view>&>;
-};
-
 namespace ModuleRegistry {
 
-void addModule(IModule* instance, std::string_view name, const std::vector<std::string_view>& deps);
-
-template<CModule M>
-inline void addModule(M* instance, std::string_view name) {
-    addModule(instance, name, M::DEPS);
-}
-
-[[nodiscard]] bool preinitAll();
-
-void initAll();
+[[nodiscard]] bool initAll();
 
 void updateAll();
 
@@ -52,10 +25,69 @@ void deinitAll();
 
 } // namespace ModuleRegistry
 
+struct IModule : public NoCopyOrMove {
+    friend bool ModuleRegistry::initAll();
+
+    /**
+     * Ran before modules are fully initialized. Module dependencies have been initialized already.
+     * @return <code>true</code> if module was successfully initialized, else <code>false</code>
+     */
+    virtual bool preinit() { return true; };
+
+    /// Ran after all modules are initialized.
+    virtual void postinit() {};
+
+    /// Ran on every update call.
+    virtual void update() {};
+
+    /// Ran on every render call.
+    virtual void render() {};
+
+    /// Called on modules in reverse order at exit. Modules can assume their dependencies still exist.
+    virtual void deinit() {};
+
+    /**
+     * Check if the module has been initialized.
+     * @return <code>true</code> if preinit has been called on the given module, else <code>false</code>
+     */
+    [[nodiscard]] bool isInitialized() const {
+        return this->initialized;
+    }
+
+protected:
+    bool initialized = false;
+};
+
+/**
+ * Determines if the given type is a module. Modules need to define a public static variable
+ * <code>std::array<std::string_view> DEPS</code>
+ * @tparam T potential module
+ */
+template<typename T>
+concept CModule = std::derived_from<T, IModule> && std::same_as<typename decltype(T::DEPS)::value_type, std::string_view> &&
+requires(T) {
+    std::begin(T::DEPS);
+    std::end(T::DEPS);
+};
+
+namespace ModuleRegistry {
+
+void addModule(IModule* instance, std::string_view name, std::vector<std::string_view>&& deps);
+
+template<CModule M>
+inline void addModule(M* instance, std::string_view name) {
+    addModule(instance, name, {std::begin(M::DEPS), std::end(M::DEPS)});
+}
+
+} // namespace ModuleRegistry
+
 } // namespace chira
 
 #define CHIRA_CREATE_MODULE(name) \
     struct name##Module final : public IModule
+
+#define CHIRA_CREATE_MODULE_DEPS(...) \
+    static constexpr std::array<std::string_view, CHIRA_ARG_COUNT(__VA_ARGS__)> DEPS {__VA_ARGS__}
 
 #define CHIRA_REGISTER_MODULE(name)                                    \
     const auto get##name##ModuleSingleton = [] {                       \

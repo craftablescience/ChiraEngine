@@ -17,16 +17,14 @@ CHIRA_CREATE_LOG(STEAM);
 ConVar steam_enabled{"steam_enabled", true, "Initialize Steam API functions.", CON_FLAG_CACHE};
 
 CHIRA_CREATE_MODULE(Steam) {
-    static inline const std::vector<std::string_view> DEPS;
+    CHIRA_CREATE_MODULE_DEPS();
 
-    void init() override {
-        if (this->initialized) {
-            return;
-        }
-        this->initialized = steam_enabled.getValue<bool>() && Steam::Client::initSteam();
-        if (!this->initialized) {
+    bool preinit() override {
+        if (!steam_enabled.getValue<bool>() || !Steam::Client::initSteam()) {
             LOG_STEAM.warning("Steam failed to initialize");
+            return false;
         }
+        return IModule::preinit();
     }
 
     void update() override {
