@@ -22,4 +22,4 @@ function(add_tool_executable NAME)
 endfunction()
 
 # Add tools
-include_subdirs(cmdltool editor project_manager)
+include_subdirs(cmdltool editor)
