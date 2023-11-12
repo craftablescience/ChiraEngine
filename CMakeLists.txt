@@ -167,21 +167,6 @@ function(apply_optimizations TARGET)
         endif()
     endif()
 
-    # Forcibly keep all unused translation units so static variables don't get culled
-    if(UNIX OR MINGW)
-        if(APPLE)
-            target_link_options(${TARGET} PRIVATE -all_load)
-        endif()
-        if(CHIRA_COMPILER_CLANG)
-            target_link_options(${TARGET} PRIVATE -force_load)
-        else()
-            # Assuming GCC
-            target_link_options(${TARGET} PRIVATE --whole-archive)
-        endif()
-    elseif(CHIRA_COMPILER_MSVC)
-        target_link_options(${TARGET} PRIVATE /WHOLEARCHIVE)
-    endif()
-
     # Enable warnings
     if(CHIRA_BUILD_WITH_WARNINGS)
         if(UNIX OR MINGW)
