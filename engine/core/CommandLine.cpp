@@ -1,6 +1,7 @@
 #include "CommandLine.h"
 
 #include <algorithm>
+#include <filesystem>
 #include <vector>
 
 #include "config/ConEntry.h"
@@ -115,5 +116,6 @@ std::string_view CommandLine::getDefaultArgumentOr(std::string_view default_) {
 }
 
 std::string_view CommandLine::getProgramName() {
-    return g_Arguments.at(0);
+	static std::string programName = std::filesystem::path{g_Arguments.at(0)}.stem().string();
+    return programName;
 }
