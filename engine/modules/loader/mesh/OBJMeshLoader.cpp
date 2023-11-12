@@ -94,7 +94,7 @@ void OBJMeshLoader::addVertex(Vertex v, Index* currentIndex, std::vector<Vertex>
     }
 }
 
-std::vector<byte> OBJMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices) const {
+std::vector<std::byte> OBJMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices) const {
     std::stringstream meshDataStream;
     meshDataStream.setf(std::stringstream::fixed);
     // The following could be modified to actually use indices and save file space...
@@ -111,9 +111,9 @@ std::vector<byte> OBJMeshLoader::createMesh(const std::vector<Vertex>& vertices,
     }
     meshDataStream >> std::noskipws;
 
-    std::vector<byte> out;
-    byte temp;
+    std::vector<std::byte> out;
+    char temp;
     while (meshDataStream >> temp)
-        out.push_back(temp);
+        out.push_back(static_cast<std::byte>(temp));
     return out;
 }

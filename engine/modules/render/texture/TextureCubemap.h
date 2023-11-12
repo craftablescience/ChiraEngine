@@ -10,7 +10,7 @@ class TextureCubemap final : public ITexture {
 public:
     explicit TextureCubemap(std::string identifier_);
     ~TextureCubemap() override;
-    void compile(const byte buffer[], std::size_t bufferLength) override;
+    void compile(const std::byte buffer[], std::size_t bufferLength) override;
     void use() const override;
     void use(TextureUnit activeTextureUnit) const override;
 

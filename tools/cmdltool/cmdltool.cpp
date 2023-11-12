@@ -74,7 +74,7 @@ int main(int argc, const char* argv[]) {
     mesh.appendMeshData(inputType, FilesystemResourceProvider::getResourceIdentifier(inputPath.string()));
 
     std::ofstream file{outputPath.string(), std::ios::binary};
-    std::vector<byte> meshData = mesh.getMeshData(outputType);
+    std::vector<std::byte> meshData = mesh.getMeshData(outputType);
     file.write(reinterpret_cast<const char*>(meshData.data()), static_cast<std::streamsize>(meshData.size()));
     file.close();
     LOG_CMDLTOOL.infoImportant("Conversion complete! File written to \"{}\"", outputPath.string());

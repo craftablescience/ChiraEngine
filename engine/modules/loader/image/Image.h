@@ -14,8 +14,8 @@ public:
     Image(Image&& other) noexcept = default;
     Image& operator=(Image&& other) noexcept = default;
 
-    void compile(const byte buffer[], std::size_t bufferLen) override;
-    [[nodiscard]] inline byte* getData() const {
+    void compile(const std::byte buffer[], std::size_t bufferLen) override;
+    [[nodiscard]] inline std::byte* getData() const {
         return this->image;
     }
     [[nodiscard]] inline int getWidth() const {
@@ -31,13 +31,13 @@ public:
         return this->verticalFlip;
     }
 
-    [[nodiscard]] static byte* getUncompressedImage(const byte buffer[], int bufferLen, int* width, int* height, int* fileChannels, int desiredChannels, bool vflip);
-    [[nodiscard]] static byte* getUncompressedImage(const byte buffer[], int bufferLen, int desiredChannels, bool vflip);
-    [[nodiscard]] static byte* getUncompressedImage(std::string_view filepath, int* width, int* height, int* fileChannels, int desiredChannels, bool vflip);
-    [[nodiscard]] static byte* getUncompressedImage(std::string_view filepath, int desiredChannels, bool vflip);
-    static void deleteUncompressedImage(byte* image);
+    [[nodiscard]] static std::byte* getUncompressedImage(const std::byte buffer[], int bufferLen, int* width, int* height, int* fileChannels, int desiredChannels, bool vflip);
+    [[nodiscard]] static std::byte* getUncompressedImage(const std::byte buffer[], int bufferLen, int desiredChannels, bool vflip);
+    [[nodiscard]] static std::byte* getUncompressedImage(std::string_view filepath, int* width, int* height, int* fileChannels, int desiredChannels, bool vflip);
+    [[nodiscard]] static std::byte* getUncompressedImage(std::string_view filepath, int desiredChannels, bool vflip);
+    static void deleteUncompressedImage(std::byte* image);
 protected:
-    byte* image = nullptr;
+    std::byte* image = nullptr;
     int width = -1;
     int height = -1;
     int bitDepth = -1;

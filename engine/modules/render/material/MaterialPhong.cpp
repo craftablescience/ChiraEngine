@@ -4,7 +4,7 @@
 
 using namespace chira;
 
-void MaterialPhong::compile(const byte buffer[], std::size_t bufferLength) {
+void MaterialPhong::compile(const std::byte buffer[], std::size_t bufferLength) {
     Serial::loadFromBuffer(this, buffer, bufferLength);
 
     this->shader = Resource::getResource<Shader>(this->shaderPath);

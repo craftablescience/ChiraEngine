@@ -8,7 +8,7 @@ namespace chira {
 class MaterialPhong final : public IMaterial {
 public:
     explicit MaterialPhong(std::string identifier_) : IMaterial(std::move(identifier_)) {}
-    void compile(const byte buffer[], std::size_t bufferLength) override;
+    void compile(const std::byte buffer[], std::size_t bufferLength) override;
     void use() const override;
     [[nodiscard]] SharedPointer<Texture> getTextureDiffuse() const;
     void setTextureDiffuse(std::string path);

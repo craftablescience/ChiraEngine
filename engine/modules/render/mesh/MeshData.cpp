@@ -8,32 +8,21 @@
 
 using namespace chira;
 
-void MeshData::setupForRendering() {
-    this->handle = Renderer::createMesh(this->vertices, this->indices, MeshDrawMode::STATIC);
-    this->initialized = true;
-}
-
-void MeshData::updateMeshData() {
-    if (!this->initialized)
-        return;
-    Renderer::updateMesh(&this->handle, this->vertices, this->indices, this->drawMode);
-}
-
-void MeshData::render(glm::mat4 model, MeshCullType cullType /*= MeshCullType::BACK*/) {
-    if (!this->initialized)
-        this->setupForRendering();
-    if (this->material) {
-        this->material->use();
-        if (this->material->getShader()->usesModelMatrix())
-            this->material->getShader()->setUniform("m", model);
-    }
-    Renderer::drawMesh(this->handle, this->depthFunction, cullType);
-}
-
 MeshData::~MeshData() {
-    if (this->initialized) {
-        Renderer::destroyMesh(this->handle);
-    }
+	if (this->initialized) {
+		Renderer::destroyMesh(this->handle);
+	}
+}
+
+void MeshData::render(glm::mat4 model, MeshCullType cullType) {
+	if (!this->initialized)
+		this->setupForRendering();
+	if (this->material) {
+		this->material->use();
+		if (this->material->getShader()->usesModelMatrix())
+			this->material->getShader()->setUniform("m", model);
+	}
+	Renderer::drawMesh(this->handle, this->depthFunction, cullType);
 }
 
 SharedPointer<IMaterial> MeshData::getMaterial() const {
@@ -52,12 +41,23 @@ void MeshData::setDepthFunction(MeshDepthFunction function) {
     this->depthFunction = function;
 }
 
-std::vector<byte> MeshData::getMeshData(const std::string& meshLoader) const {
+std::vector<std::byte> MeshData::getMeshData(const std::string& meshLoader) const {
     return IMeshLoader::getMeshLoader(meshLoader)->createMesh(this->vertices, this->indices);
 }
 
 void MeshData::appendMeshData(const std::string& loader, const std::string& identifier) {
     IMeshLoader::getMeshLoader(loader)->loadMesh(identifier, this->vertices, this->indices);
+}
+
+void MeshData::setupForRendering() {
+	this->handle = Renderer::createMesh(this->vertices, this->indices, MeshDrawMode::STATIC);
+	this->initialized = true;
+}
+
+void MeshData::updateMeshData() {
+	if (!this->initialized)
+		return;
+	Renderer::updateMesh(&this->handle, this->vertices, this->indices, this->drawMode);
 }
 
 void MeshData::clearMeshData() {

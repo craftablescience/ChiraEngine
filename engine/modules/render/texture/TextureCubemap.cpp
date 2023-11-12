@@ -1,6 +1,6 @@
 #include "TextureCubemap.h"
 
-#include <core/Logger.h>
+#include <core/debug/Logger.h>
 #include <loader/image/Image.h>
 #include <render/backend/RenderBackend.h>
 
@@ -16,7 +16,7 @@ TextureCubemap::~TextureCubemap() {
         Renderer::destroyTexture(this->handle);
 }
 
-void TextureCubemap::compile(const byte buffer[], std::size_t bufferLength) {
+void TextureCubemap::compile(const std::byte buffer[], std::size_t bufferLength) {
     Serial::loadFromBuffer(this, buffer, bufferLength);
 
     auto fileFD = Resource::getResource<Image>(this->imageFD, this->verticalFlipFD);

@@ -1,9 +1,10 @@
 #include "Shader.h"
 
 #include <regex>
-#include <core/Logger.h>
+
+#include <core/debug/Logger.h>
+#include <core/utility/String.h>
 #include <resource/StringResource.h>
-#include <utility/String.h>
 #include "UBO.h"
 
 using namespace chira;
@@ -13,7 +14,7 @@ CHIRA_CREATE_LOG(SHADER);
 Shader::Shader(std::string identifier_)
         : Resource(std::move(identifier_)) {}
 
-void Shader::compile(const byte buffer[], std::size_t bufferLength) {
+void Shader::compile(const std::byte buffer[], std::size_t bufferLength) {
     Serial::loadFromBuffer(this, buffer, bufferLength);
 
     const auto shaderModuleVertString = Resource::getUniqueUncachedResource<StringResource>(this->vertexPath);

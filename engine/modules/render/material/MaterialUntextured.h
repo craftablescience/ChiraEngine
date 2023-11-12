@@ -7,7 +7,7 @@ namespace chira {
 class MaterialUntextured final : public IMaterial {
 public:
     explicit MaterialUntextured(std::string identifier_) : IMaterial(std::move(identifier_)) {}
-    void compile(const byte buffer[], std::size_t bufferLength) override;
+    void compile(const std::byte buffer[], std::size_t bufferLength) override;
 
 public:
     template<typename Archive>

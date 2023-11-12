@@ -8,7 +8,7 @@ namespace chira {
 class MaterialCubemap final : public IMaterial {
 public:
     explicit MaterialCubemap(std::string identifier_) : IMaterial(std::move(identifier_)) {}
-    void compile(const byte buffer[], std::size_t bufferLength) override;
+    void compile(const std::byte buffer[], std::size_t bufferLength) override;
     void use() const override;
     [[nodiscard]] SharedPointer<TextureCubemap> getTextureCubemap() const;
     void setTextureCubemap(std::string path);

@@ -11,7 +11,7 @@ public:
     MaterialFrameBuffer(std::string identifier_, Renderer::FrameBufferHandle* handle_)
         : IMaterial(std::move(identifier_))
         , handle(handle_) {}
-    void compile(const byte buffer[], std::size_t bufferLength) override;
+    void compile(const std::byte buffer[], std::size_t bufferLength) override;
     void use() const override;
 
 protected:

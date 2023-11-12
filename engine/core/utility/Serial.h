@@ -11,7 +11,7 @@
 namespace chira::Serial {
 
 template<typename T>
-void loadFromBuffer(T* that, const byte buffer[], std::size_t bufferLength) {
+void loadFromBuffer(T* that, const std::byte buffer[], std::size_t bufferLength) {
     std::istringstream stream{std::string{reinterpret_cast<const char*>(buffer), bufferLength}};
     cereal::JSONInputArchive archive{stream};
     that->serialize(archive);

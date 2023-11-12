@@ -15,7 +15,7 @@ struct AudioWavStreamComponent {
 
     explicit AudioWavStreamComponent(const std::string& wavStreamId = "file://sounds/missing.wav") {
         this->wavFile = Resource::getResource<BinaryResource>(wavStreamId);
-        this->wavStream.loadMem(const_cast<unsigned char*>(this->wavFile->getBuffer()), static_cast<unsigned int>(this->wavFile->getBufferLength()), false, false);
+        this->wavStream.loadMem(const_cast<unsigned char*>(reinterpret_cast<const unsigned char*>(this->wavFile->getBuffer())), static_cast<unsigned int>(this->wavFile->getBufferLength()), false, false);
     }
 
 public:

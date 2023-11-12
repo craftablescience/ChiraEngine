@@ -16,7 +16,7 @@ constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_SUFFIX = "#";
 class Shader : public Resource {
 public:
     explicit Shader(std::string identifier_);
-    void compile(const byte buffer[], std::size_t bufferLength) override;
+    void compile(const std::byte buffer[], std::size_t bufferLength) override;
     void use() const;
     ~Shader() override;
 

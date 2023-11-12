@@ -2,7 +2,7 @@
 
 using namespace chira;
 
-void MaterialFrameBuffer::compile(const byte buffer[], std::size_t bufferLength) {
+void MaterialFrameBuffer::compile(const std::byte buffer[], std::size_t bufferLength) {
     IMaterial::compile(buffer, bufferLength);
 
     this->shader->use();

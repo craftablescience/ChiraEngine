@@ -11,7 +11,7 @@ namespace chira {
 class MeshDataResource : public Resource, public MeshData {
 public:
     explicit MeshDataResource(std::string identifier_) : Resource(std::move(identifier_)), MeshData() {}
-    void compile(const byte buffer[], std::size_t bufferLength) override;
+    void compile(const std::byte buffer[], std::size_t bufferLength) override;
 
 private:
     bool materialSetInCode = false;

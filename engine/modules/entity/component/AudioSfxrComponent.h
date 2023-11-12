@@ -52,7 +52,7 @@ struct AudioSfxrComponent {
         this->cfgFile = std::move(cfgId);
         auto config = Resource::getUniqueUncachedResource<BinaryResource>(this->cfgFile);
         this->sfxr.resetParams();
-        this->sfxr.loadParamsMem(const_cast<unsigned char*>(config->getBuffer()), static_cast<unsigned int>(config->getBufferLength()), true, true);
+        this->sfxr.loadParamsMem(const_cast<unsigned char*>(reinterpret_cast<const unsigned char*>(config->getBuffer())), static_cast<unsigned int>(config->getBufferLength()), true, true);
     }
 
 public:

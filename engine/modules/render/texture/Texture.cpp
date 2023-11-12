@@ -16,7 +16,7 @@ Texture::~Texture() {
         Renderer::destroyTexture(this->handle);
 }
 
-void Texture::compile(const byte buffer[], std::size_t bufferLength) {
+void Texture::compile(const std::byte buffer[], std::size_t bufferLength) {
     Serial::loadFromBuffer(this, buffer, bufferLength);
 
     auto imageFile = Resource::getResource<Image>(this->filePath, this->verticalFlip);

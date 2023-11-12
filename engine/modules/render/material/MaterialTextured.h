@@ -8,7 +8,7 @@ namespace chira {
 class MaterialTextured final : public IMaterial {
 public:
     explicit MaterialTextured(std::string identifier_) : IMaterial(std::move(identifier_)) {}
-    void compile(const byte buffer[], std::size_t bufferLength) override;
+    void compile(const std::byte buffer[], std::size_t bufferLength) override;
     void use() const override;
     [[nodiscard]] SharedPointer<Texture> getTexture() const;
     void setTexture(std::string path);

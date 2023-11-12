@@ -30,8 +30,8 @@ void ChiraMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex
     }
 }
 
-std::vector<byte> ChiraMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices) const {
-    std::vector<byte> bytebuffer;
+std::vector<std::byte> ChiraMeshLoader::createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices) const {
+    std::vector<std::byte> bytebuffer;
     ChiraMeshHeader header;
     header.version = 1;
     header.vertexCount = static_cast<Index>(vertices.size());

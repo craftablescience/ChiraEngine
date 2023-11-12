@@ -4,7 +4,7 @@
 
 using namespace chira;
 
-void StringResource::compile(const byte buffer[], std::size_t bufferLength) {
+void StringResource::compile(const std::byte buffer[], std::size_t bufferLength) {
     this->data = {reinterpret_cast<const char*>(buffer), bufferLength};
     String::replace(this->data, "\r\n", "\n");
 }

@@ -12,7 +12,7 @@ namespace chira {
 class Font : public Resource {
 public:
     explicit Font(const std::string& identifier_) : Resource(identifier_) {}
-    void compile(const byte buffer[], std::size_t bufferLength) override;
+    void compile(const std::byte buffer[], std::size_t bufferLength) override;
     [[nodiscard]] ImFont* getFont() const;
     [[nodiscard]] const std::string& getName() const;
     [[nodiscard]] float getSize() const;

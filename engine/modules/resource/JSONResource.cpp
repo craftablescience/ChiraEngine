@@ -7,7 +7,7 @@ using namespace chira;
 
 CHIRA_CREATE_LOG(JSONRESOURCE);
 
-void JSONResource::compile(const byte buffer[], std::size_t bufferLength) {
+void JSONResource::compile(const std::byte buffer[], std::size_t bufferLength) {
     nlohmann::json props;
     try {
         props = nlohmann::json::parse(std::string{reinterpret_cast<const char*>(buffer), bufferLength});

@@ -5,9 +5,6 @@
 #include <glm/gtx/quaternion.hpp>
 #include <nlohmann/json.hpp>
 
-// Defined outside the chira namespace so it looks better in headers
-using byte = std::uint8_t;
-
 namespace glm {
 
 using vec2b = vec<2, bool>;

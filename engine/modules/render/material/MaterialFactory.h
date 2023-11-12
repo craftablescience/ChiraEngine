@@ -13,7 +13,7 @@ namespace chira {
 class IMaterial : public Resource {
 public:
     explicit IMaterial(std::string identifier_);
-    void compile(const byte buffer[], std::size_t bufferLength) override;
+    void compile(const std::byte buffer[], std::size_t bufferLength) override;
     virtual void use() const;
     [[nodiscard]] SharedPointer<Shader> getShader() const;
 

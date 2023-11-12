@@ -4,7 +4,7 @@
 
 using namespace chira;
 
-void Font::compile(const byte buffer[], std::size_t bufferLength) {
+void Font::compile(const std::byte buffer[], std::size_t bufferLength) {
     Serial::loadFromBuffer(this, buffer, bufferLength);
 
     ImGuiIO& io = ImGui::GetIO();
