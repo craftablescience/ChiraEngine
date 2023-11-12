@@ -110,6 +110,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Compile with LTO if supported
 set(CHIRA_BUILD_WITH_LTO_INTERNAL OFF)
 if(CHIRA_BUILD_WITH_LTO)
+    set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
     include(CheckIPOSupported)
     check_ipo_supported(RESULT CHIRA_BUILD_WITH_LTO_INTERNAL)
 endif()
