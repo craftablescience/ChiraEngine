@@ -59,7 +59,7 @@ struct TypeString : TypeStringBase {
 
 template<typename T>
 std::string typeString() {
-    return {TypeString<T>()};
+    return std::string{TypeString<T>()};
 }
 
 template<typename T>
