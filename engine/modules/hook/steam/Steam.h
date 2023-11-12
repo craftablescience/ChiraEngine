@@ -14,6 +14,8 @@ class library;
 
 namespace chira::Steam {
 
+constexpr std::int32_t MAX_API_STRING_LENGTH = 1024;
+
 // -- Enums --
 enum class NotificationPosition : int {
     TOP_LEFT     = 0,
