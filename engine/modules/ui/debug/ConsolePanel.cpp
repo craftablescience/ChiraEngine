@@ -65,16 +65,16 @@ void ConsolePanel::renderContents() {
         for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++) {
             ImVec4 color;
             bool has_color = false;
-            if (String::startsWith(this->items[i], Logger::INFO_IMPORTANT_PREFIX)) {
+            if (this->items[i].starts_with(Logger::INFO_IMPORTANT_PREFIX)) {
                 color = ImVec4(0.13f, 0.77f, 0.13f, 1.0f);
                 has_color = true;
-            } else if (String::startsWith(this->items[i], Logger::OUTPUT_PREFIX)) {
+            } else if (this->items[i].starts_with(Logger::OUTPUT_PREFIX)) {
                 color = ImVec4(0.3f, 0.3f, 1.0f, 1.0f);
                 has_color = true;
-            } else if (String::startsWith(this->items[i], Logger::WARNING_PREFIX)) {
+            } else if (this->items[i].starts_with(Logger::WARNING_PREFIX)) {
                 color = ImVec4(1.0f, 0.84f, 0.0f, 1.0f);
                 has_color = true;
-            } else if (String::startsWith(this->items[i], Logger::ERROR_PREFIX)) {
+            } else if (this->items[i].starts_with(Logger::ERROR_PREFIX)) {
                 color = ImVec4(1.0f, 0.2f, 0.2f, 1.0f);
                 has_color = true;
             }
