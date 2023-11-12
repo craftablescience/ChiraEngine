@@ -136,7 +136,7 @@ public:
     }
     template<typename U>
     SharedPointer<U> castAssert() const {
-        return SharedPointer<U>(assert_cast<U*>(this->ptr), this->data);
+        return SharedPointer<U>(assertCast<U*>(this->ptr), this->data);
     }
     template<typename U>
     SharedPointer<U> castReinterpret() const {

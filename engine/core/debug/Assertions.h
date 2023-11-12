@@ -47,7 +47,7 @@ inline T assertCast(auto obj) {
         return nullptr;
     auto cast = dynamic_cast<T>(obj);
     static auto assertMsg = fmt::format(R"(Object of type "{}" could not be cast to type "{}")",
-                                        TypeString<decltype(obj)>(), TypeString<T>());
+                                        typeString<decltype(obj)>(), typeString<T>());
     chiraAssert(cast, assertMsg);
     return cast;
 #else
