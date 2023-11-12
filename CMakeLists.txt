@@ -49,13 +49,16 @@ include(CMakeDependentOption)
 option(CHIRA_BUILD_EXTERNAL_TOOLS "Build various external tool executables" ON)
 option(CHIRA_BUILD_TESTS "Run Chira Engine's built-in tests" ON)
 
-option(CHIRA_BUILD_WITH_ASSERTS "Build Chira Engine with assertions enabled" ON)
-cmake_dependent_option(CHIRA_BUILD_WITH_LTO "Build Chira Engine with Link-Time Optimizations" ON "NOT CHIRA_DEBUG_BUILD" OFF)
+option(CHIRA_BUILD_EXTERNAL_TOOLS "Build various external tool executables." ON)
+option(CHIRA_BUILD_TESTS "Run Chira Engine's built-in tests." ON)
+
+option(CHIRA_BUILD_WITH_ASSERTS "Build Chira Engine with assertions enabled." ON)
+cmake_dependent_option(CHIRA_BUILD_WITH_LTO "Build Chira Engine with Link-Time Optimizations." ON "NOT CHIRA_DEBUG_BUILD" OFF)
 # Precompiled headers seem to make compilation slower when not using MSVC
-cmake_dependent_option(CHIRA_BUILD_WITH_PCH "Build Chira Engine with precompiled headers" ON "CHIRA_COMPILER_MSVC" OFF)
+cmake_dependent_option(CHIRA_BUILD_WITH_PCH "Build Chira Engine with precompiled headers." ON "CHIRA_COMPILER_MSVC" OFF)
 # Only works with MSVC (needs to be dynamically linked for Windows Store applications)
 cmake_dependent_option(CHIRA_BUILD_WITH_STATIC_MSVC_RUNTIME_LIBRARY "Build with the static MSVC runtime library" ON "CHIRA_COMPILER_MSVC;NOT WINDOWS_STORE" OFF)
-option(CHIRA_BUILD_WITH_WARNINGS "Build Chira Engine with warnings enabled" ON)
+option(CHIRA_BUILD_WITH_WARNINGS "Build Chira Engine with warnings enabled." ON)
 
 option_enum(
         NAME "CHIRA_RENDER_BACKEND"
@@ -68,22 +71,24 @@ option_enum(
         DEFAULT "SDL2"
         OPTIONS "SDL2" "HEADLESS")
 
-option(CHIRA_USE_DISCORD "Build Chira Engine with Discord rich presence features if possible" ON)
-option(CHIRA_USE_STEAMWORKS "Build Chira Engine with Steamworks API features if possible" ON)
+option(CHIRA_USE_DISCORD "Build Chira Engine with Discord rich presence features if possible." ON)
+option(CHIRA_USE_STEAMWORKS "Build Chira Engine with Steamworks API features if possible." ON)
 
 # Print out what is enabled and what isn't
 message(STATUS "Options:")
-print_variable(CHIRA_BUILD_EXTERNAL_TOOLS)
-print_variable(CHIRA_BUILD_TESTS)
-print_variable(CHIRA_BUILD_WITH_ASSERTS)
-print_variable(CHIRA_BUILD_WITH_LTO)
-print_variable(CHIRA_BUILD_WITH_PCH)
-print_variable(CHIRA_BUILD_WITH_STATIC_MSVC_RUNTIME_LIBRARY)
-print_variable(CHIRA_BUILD_WITH_WARNINGS)
-print_variable(CHIRA_RENDER_BACKEND)
-print_variable(CHIRA_RENDER_DEVICE)
-print_variable(CHIRA_USE_DISCORD)
-print_variable(CHIRA_USE_STEAMWORKS)
+print_variables(
+        CHIRA_DEVELOPER_BUILD
+        CHIRA_BUILD_EXTERNAL_TOOLS
+        CHIRA_BUILD_TESTS
+        CHIRA_BUILD_WITH_ASSERTS
+        CHIRA_BUILD_WITH_LTO
+        CHIRA_BUILD_WITH_PCH
+        CHIRA_BUILD_WITH_STATIC_MSVC_RUNTIME_LIBRARY
+        CHIRA_BUILD_WITH_WARNINGS
+        CHIRA_RENDER_BACKEND
+        CHIRA_RENDER_DEVICE
+        CHIRA_USE_DISCORD
+        CHIRA_USE_STEAMWORKS)
 
 # Warn if libraries are not static by default
 if(BUILD_SHARED_LIBS)
