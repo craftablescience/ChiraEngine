@@ -11,11 +11,11 @@ using namespace chira;
 
 CHIRA_CREATE_LOG(CMDL);
 
-void ChiraMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<Index>& indices) const {
-    auto meshData = Resource::getResource<BinaryResource>(identifier);
+void ChiraMeshLoader::loadMesh(const std::string& path, std::vector<Vertex>& vertices, std::vector<Index>& indices) const {
+    auto meshData = Resource::getResource<BinaryResource>(path);
     if (meshData->getBufferLength() < CHIRA_MESH_HEADER_SIZE) {
         // die
-        LOG_CMDL.error(TRF("error.cmdl_loader.invalid_data", identifier));
+        LOG_CMDL.error(TRF("error.cmdl_loader.invalid_data", path));
         return;
     }
     ChiraMeshHeader header;

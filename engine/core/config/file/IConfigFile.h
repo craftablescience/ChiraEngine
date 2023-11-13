@@ -7,20 +7,30 @@ namespace chira {
 
 class IConfigFile {
 public:
-    explicit IConfigFile(std::string_view filename, std::string_view path, bool relative = false);
+	IConfigFile() = default;
+
     virtual ~IConfigFile() = default;
 
-    virtual void getValue(const std::string& name, int* value) const = 0;
-    virtual void getValue(const std::string& name, double* value) const = 0;
-    virtual void getValue(const std::string& name, std::string* value) const = 0;
-    virtual void getValue(const std::string& name, bool* value) const = 0;
+	void open(std::string_view path) {
+		this->filepath = path;
+		this->load();
+	}
 
-    virtual void setValue(const std::string& name, int value, bool overwrite, bool save) = 0;
-    virtual void setValue(const std::string& name, double value, bool overwrite, bool save) = 0;
-    virtual void setValue(const std::string& name, const std::string& value, bool overwrite, bool save) = 0;
-    virtual void setValue(const std::string& name, bool value, bool overwrite, bool save) = 0;
+	[[nodiscard]] bool isOpen() const {
+		return !this->filepath.empty();
+	}
 
-    [[nodiscard]] virtual bool hasValue(const std::string& name) const = 0;
+    virtual void getValue(std::string_view name, int* value) const = 0;
+    virtual void getValue(std::string_view name, double* value) const = 0;
+    virtual void getValue(std::string_view name, std::string* value) const = 0;
+    virtual void getValue(std::string_view name, bool* value) const = 0;
+
+    virtual void setValue(std::string_view name, int value, bool overwrite, bool save) = 0;
+    virtual void setValue(std::string_view name, double value, bool overwrite, bool save) = 0;
+    virtual void setValue(std::string_view name, std::string_view value, bool overwrite, bool save) = 0;
+    virtual void setValue(std::string_view name, bool value, bool overwrite, bool save) = 0;
+
+    [[nodiscard]] virtual bool hasValue(std::string_view name) const = 0;
 
     virtual void load() = 0;
     virtual void save() = 0;
@@ -28,6 +38,7 @@ public:
     [[nodiscard]] std::string_view getFilePath() const {
         return this->filepath;
     }
+
 private:
     std::string filepath;
 };

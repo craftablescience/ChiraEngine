@@ -7,7 +7,7 @@ namespace chira {
 
 class MaterialCubemap final : public IMaterial {
 public:
-    explicit MaterialCubemap(std::string identifier_) : IMaterial(std::move(identifier_)) {}
+    explicit MaterialCubemap(std::string path_) : IMaterial(std::move(path_)) {}
     void compile(const std::byte buffer[], std::size_t bufferLength) override;
     void use() const override;
     [[nodiscard]] SharedPointer<TextureCubemap> getTextureCubemap() const;
@@ -15,7 +15,7 @@ public:
 
 protected:
     SharedPointer<TextureCubemap> cubemap;
-    std::string cubemapPath{"file://textures/missing.json"};
+    std::string cubemapPath{"textures/missing.json"};
 
 public:
     template<typename Archive>

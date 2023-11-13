@@ -1,0 +1,7 @@
+{
+  "vertex": "shaders/ui.vsh",
+  "fragment": "shaders/ui.fsh",
+  "usesPV": false,
+  "usesM": false,
+  "lit": false
+}

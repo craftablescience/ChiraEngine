@@ -13,9 +13,8 @@ class Engine {
 public:
     Engine() = delete;
 
-    /// Ran at the very start of your program. Readies the engine for you to add features before init().
-    static void preinit(int argc, const char* argv[]);
-    static void init(bool visibleSplashScreen = true);
+    /// Ran at the very start of your program. Initializes modules and readies the engine main window.
+    static void init(int argc, const char* argv[], bool onlyInitEssentials = false);
     static void run();
 
     /// Returns a pointer to the main window of the application.

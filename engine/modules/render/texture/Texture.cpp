@@ -7,8 +7,8 @@ using namespace chira;
 
 CHIRA_CREATE_LOG(TEXTURE);
 
-Texture::Texture(std::string identifier_, bool cacheTexture /*= true*/)
-    : ITexture(std::move(identifier_))
+Texture::Texture(std::string path_, bool cacheTexture /*= true*/)
+    : ITexture(std::move(path_))
     , cache(cacheTexture) {}
 
 Texture::~Texture() {

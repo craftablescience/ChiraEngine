@@ -7,7 +7,7 @@ namespace chira {
 
 class MaterialPhong final : public IMaterial {
 public:
-    explicit MaterialPhong(std::string identifier_) : IMaterial(std::move(identifier_)) {}
+    explicit MaterialPhong(std::string path_) : IMaterial(std::move(path_)) {}
     void compile(const std::byte buffer[], std::size_t bufferLength) override;
     void use() const override;
     [[nodiscard]] SharedPointer<Texture> getTextureDiffuse() const;
@@ -21,9 +21,9 @@ public:
 
 protected:
     SharedPointer<Texture> diffuse;
-    std::string diffusePath{"file://textures/missing.json"};
+    std::string diffusePath{"textures/missing.json"};
     SharedPointer<Texture> specular;
-    std::string specularPath{"file://textures/missing.json"};
+    std::string specularPath{"textures/missing.json"};
     float shininess = 32.f;
     float lambertFactor = 1.f;
 

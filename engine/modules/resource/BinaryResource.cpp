@@ -18,6 +18,10 @@ const std::byte* BinaryResource::getBuffer() const {
     return this->buffer_;
 }
 
+std::byte* BinaryResource::getBuffer() {
+	return this->buffer_;
+}
+
 std::size_t BinaryResource::getBufferLength() const {
     return this->bufferLength_;
 }

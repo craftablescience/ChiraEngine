@@ -17,6 +17,6 @@ ConVar snd_volume{"snd_volume", 1.0, "Control the volume of the entire applicati
 
 bool AudioModule::preinit() {
     this->soundEngine.init();
-    this->soundEngine.setGlobalVolume(std::clamp(snd_volume.getValue<double>(), 0.0, 1.0));
+    this->soundEngine.setGlobalVolume(static_cast<float>(std::clamp(snd_volume.getValue<double>(), 0.0, 1.0)));
     return true;
 }

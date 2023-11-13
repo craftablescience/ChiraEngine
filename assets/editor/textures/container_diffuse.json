@@ -1,0 +1,8 @@
+{
+  "verticalFlip": true,
+  "mipmaps": true,
+  "image": "textures/container_diffuse.png",
+  "wrapModeS": "REPEAT",
+  "wrapModeT": "REPEAT",
+  "filterMode": "LINEAR"
+}

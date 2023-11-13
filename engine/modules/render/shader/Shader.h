@@ -15,7 +15,7 @@ constexpr std::string_view SHADER_PREPROCESSOR_DEFAULT_SUFFIX = "#";
 
 class Shader : public Resource {
 public:
-    explicit Shader(std::string identifier_);
+    explicit Shader(std::string path_);
     void compile(const std::byte buffer[], std::size_t bufferLength) override;
     void use() const;
     ~Shader() override;
@@ -101,8 +101,8 @@ private:
     bool usesPV = true;
     bool usesM = true;
     bool lit = true;
-    std::string vertexPath{"file://shaders/unlitTextured.vsh"};
-    std::string fragmentPath{"file://shaders/unlitTextured.fsh"};
+    std::string vertexPath{"shaders/unlitTextured.vsh"};
+    std::string fragmentPath{"shaders/unlitTextured.fsh"};
 
 public:
     template<typename Archive>

@@ -12,7 +12,7 @@ void JSONResource::compile(const std::byte buffer[], std::size_t bufferLength) {
     try {
         props = nlohmann::json::parse(std::string{reinterpret_cast<const char*>(buffer), bufferLength});
     } catch (const nlohmann::json::exception&) {
-        LOG_JSONRESOURCE.error(TRF("error.properties_resource.invalid_json", this->identifier));
+        LOG_JSONRESOURCE.error(TRF("error.properties_resource.invalid_json", this->path));
     }
     this->compile(props);
 }

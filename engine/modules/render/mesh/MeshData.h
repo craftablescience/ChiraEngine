@@ -27,7 +27,7 @@ public:
 
     [[nodiscard]] std::vector<std::byte> getMeshData(const std::string& meshLoader) const;
 
-    void appendMeshData(const std::string& loader, const std::string& identifier);
+    void appendMeshData(const std::string& loader, const std::string& path);
 
 protected:
     bool initialized = false;

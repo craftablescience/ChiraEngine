@@ -8,23 +8,23 @@ namespace chira {
 
 class JSONConfigFile : public IConfigFile {
 public:
-    explicit JSONConfigFile(std::string_view filename);
-    JSONConfigFile(std::string_view filename, std::string_view path, bool relative = false);
+	JSONConfigFile();
 
-    void getValue(const std::string& name, int* value) const override;
-    void getValue(const std::string& name, double* value) const override;
-    void getValue(const std::string& name, std::string* value) const override;
-    void getValue(const std::string& name, bool* value) const override;
+    void getValue(std::string_view name, int* value) const override;
+    void getValue(std::string_view name, double* value) const override;
+    void getValue(std::string_view name, std::string* value) const override;
+    void getValue(std::string_view name, bool* value) const override;
 
-    void setValue(const std::string& name, int value, bool overwrite, bool save) override;
-    void setValue(const std::string& name, double value, bool overwrite, bool save) override;
-    void setValue(const std::string& name, const std::string& value, bool overwrite, bool save) override;
-    void setValue(const std::string& name, bool value, bool overwrite, bool save) override;
+    void setValue(std::string_view name, int value, bool overwrite, bool save) override;
+    void setValue(std::string_view name, double value, bool overwrite, bool save) override;
+    void setValue(std::string_view name, std::string_view value, bool overwrite, bool save) override;
+    void setValue(std::string_view name, bool value, bool overwrite, bool save) override;
 
-    [[nodiscard]] bool hasValue(const std::string& name) const override;
+    bool hasValue(std::string_view name) const override;
 
-    void load() final;
-    void save() final;
+    void load() override;
+    void save() override;
+
 private:
     nlohmann::json settings{};
 };

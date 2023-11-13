@@ -7,41 +7,44 @@
 
 using namespace chira;
 
-JSONConfigFile::JSONConfigFile(std::string_view filename)
-    : IConfigFile(filename, Config::getConfigDirectory(), false) {
-    this->load();
-}
+JSONConfigFile::JSONConfigFile()
+		: IConfigFile() {}
 
-JSONConfigFile::JSONConfigFile(std::string_view filename, std::string_view path, bool relative /*= false*/)
-    : IConfigFile(filename, path, relative) {
-    this->load();
-}
-
-void JSONConfigFile::getValue(const std::string& name, int* value) const {
+void JSONConfigFile::getValue(std::string_view name, int* value) const {
     if (this->hasValue(name)) {
         *value = this->settings[name];
     }
 }
 
-void JSONConfigFile::getValue(const std::string& name, double* value) const {
+void JSONConfigFile::getValue(std::string_view name, double* value) const {
     if (this->hasValue(name)) {
         *value = this->settings[name];
     }
 }
 
-void JSONConfigFile::getValue(const std::string& name, std::string* value) const {
+void JSONConfigFile::getValue(std::string_view name, std::string* value) const {
     if (this->hasValue(name)) {
         *value = this->settings[name];
     }
 }
 
-void JSONConfigFile::getValue(const std::string& name, bool* value) const {
+void JSONConfigFile::getValue(std::string_view name, bool* value) const {
     if (this->hasValue(name)) {
         *value = this->settings[name];
     }
 }
 
-void JSONConfigFile::setValue(const std::string& name, int value, bool overwrite, bool save) {
+void JSONConfigFile::setValue(std::string_view name, bool value, bool overwrite, bool save) {
+	if (!overwrite && this->hasValue(name)) {
+		return;
+	}
+	this->settings[name] = value;
+	if (save) {
+		this->save();
+	}
+}
+
+void JSONConfigFile::setValue(std::string_view name, int value, bool overwrite, bool save) {
     if (!overwrite && this->hasValue(name)) {
         return;
     }
@@ -51,7 +54,7 @@ void JSONConfigFile::setValue(const std::string& name, int value, bool overwrite
     }
 }
 
-void JSONConfigFile::setValue(const std::string& name, double value, bool overwrite, bool save) {
+void JSONConfigFile::setValue(std::string_view name, double value, bool overwrite, bool save) {
     if (!overwrite && this->hasValue(name)) {
         return;
     }
@@ -61,31 +64,23 @@ void JSONConfigFile::setValue(const std::string& name, double value, bool overwr
     }
 }
 
-void JSONConfigFile::setValue(const std::string& name, const std::string& value, bool overwrite, bool save) {
+void JSONConfigFile::setValue(std::string_view name, std::string_view value, bool overwrite, bool save) {
     if (!overwrite && this->hasValue(name)) {
         return;
     }
-    this->settings[name] = value;
+    this->settings[name] = std::string{value};
     if (save) {
         this->save();
     }
 }
 
-void JSONConfigFile::setValue(const std::string& name, bool value, bool overwrite, bool save) {
-    if (!overwrite && this->hasValue(name)) {
-        return;
-    }
-    this->settings[name] = value;
-    if (save) {
-        this->save();
-    }
-}
-
-bool JSONConfigFile::hasValue(const std::string& name) const {
+bool JSONConfigFile::hasValue(std::string_view name) const {
     return this->settings.contains(name);
 }
 
 void JSONConfigFile::load() {
+	// todo(fs)
+
     std::ifstream fileCheck{this->getFilePath().data()};
     if (!fileCheck.good()) {
         // Make new file if it doesn't exist
@@ -103,6 +98,8 @@ void JSONConfigFile::load() {
 }
 
 void JSONConfigFile::save() {
+	// todo(fs)
+
     std::ofstream output{this->getFilePath().data()};
     output << std::setw(4) << this->settings << std::endl;
 }

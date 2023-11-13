@@ -11,8 +11,8 @@ Image::~Image() {
     }
 }
 
-Image::Image(std::string identifier_, bool vFlip)
-    : Resource(std::move(identifier_))
+Image::Image(std::string path_, bool vFlip)
+    : Resource(std::move(path_))
     , verticalFlip(vFlip) {}
 
 void Image::compile(const std::byte buffer[], std::size_t bufferLen) {

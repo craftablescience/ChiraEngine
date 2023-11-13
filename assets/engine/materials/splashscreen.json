@@ -1,0 +1,4 @@
+{
+  "shader": "shaders/ui.json",
+  "texture": "textures/ui/splashscreen.json"
+}

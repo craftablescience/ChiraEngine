@@ -8,8 +8,8 @@ class Frame;
 
 class MaterialFrameBuffer final : public IMaterial {
 public:
-    MaterialFrameBuffer(std::string identifier_, Renderer::FrameBufferHandle* handle_)
-        : IMaterial(std::move(identifier_))
+    MaterialFrameBuffer(std::string path_, Renderer::FrameBufferHandle* handle_)
+        : IMaterial(std::move(path_))
         , handle(handle_) {}
     void compile(const std::byte buffer[], std::size_t bufferLength) override;
     void use() const override;

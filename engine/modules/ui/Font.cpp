@@ -1,16 +1,18 @@
 #include "Font.h"
 
-#include <resource/provider/FilesystemResourceProvider.h>
+#include <core/debug/Logger.h>
 
 using namespace chira;
+
+CHIRA_CREATE_LOG(FONT);
 
 void Font::compile(const std::byte buffer[], std::size_t bufferLength) {
     Serial::loadFromBuffer(this, buffer, bufferLength);
 
     ImGuiIO& io = ImGui::GetIO();
     this->range = Font::getRangeFromString(this->rangeStr);
-    std::string path = FilesystemResourceProvider::getResourceAbsolutePath(this->fontPath);
-    this->font = io.Fonts->AddFontFromFileTTF(path.c_str(), this->size, nullptr, this->range);
+	this->fontData = Resource::getUniqueUncachedResource<BinaryResource>(this->fontPath);
+	this->font = io.Fonts->AddFontFromMemoryTTF(this->fontData->getBuffer(), static_cast<int>(this->fontData->getBufferLength()), this->size, nullptr, this->range);
 }
 
 ImFont* Font::getFont() const {

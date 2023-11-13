@@ -1,0 +1,10 @@
+{
+    "technicalName": "Editor",
+    "version": "0.1.0",
+    "authors": [
+        "craftablescience",
+        "ashifolfi"
+    ],
+
+    "splashscreen": true
+}

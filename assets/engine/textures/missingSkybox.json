@@ -1,0 +1,19 @@
+{
+  "verticalFlipFD": true,
+  "verticalFlipBK": true,
+  "verticalFlipUP": true,
+  "verticalFlipDN": true,
+  "verticalFlipLT": true,
+  "verticalFlipRT": true,
+  "mipmaps": true,
+  "imageFD": "textures/missing.png",
+  "imageBK": "textures/missing.png",
+  "imageUP": "textures/missing.png",
+  "imageDN": "textures/missing.png",
+  "imageLT": "textures/missing.png",
+  "imageRT": "textures/missing.png",
+  "wrapModeS": "REPEAT",
+  "wrapModeT": "REPEAT",
+  "wrapModeR": "REPEAT",
+  "filterMode": "LINEAR"
+}

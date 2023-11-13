@@ -32,7 +32,7 @@ jobs:
           spectre: true
 
       - name: Configure CMake
-        run: cmake -G "Ninja" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_BUILD_WITH_PCH=ON
+        run: cmake -G "Ninja" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_DEVELOPER_BUILD=OFF -DCHIRA_BUILD_WITH_PCH=ON
 
       - name: Build
         working-directory: ${{env.BUILD_DIR}}
@@ -45,7 +45,6 @@ jobs:
           path: |
             ${{env.BUILD_DIR}}/*.exe
             ${{env.BUILD_DIR}}/*.dll
-            ${{env.BUILD_DIR}}/resources/
           retention-days: 7
 
       - name: Test
@@ -81,7 +80,7 @@ jobs:
             ninja:p
 
       - name: Configure CMake
-        run: cmake -G "Ninja" -B '${{env.BUILD_DIR}}' -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_BUILD_WITH_PCH=ON -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
+        run: cmake -G "Ninja" -B '${{env.BUILD_DIR}}' -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_DEVELOPER_BUILD=OFF -DCHIRA_BUILD_WITH_PCH=ON -DCMAKE_C_COMPILER="/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="/mingw64/bin/g++.exe"
 
       - name: Build
         working-directory: ${{env.BUILD_DIR}}
@@ -97,7 +96,6 @@ jobs:
           path: |
             ${{env.BUILD_DIR}}/*.exe
             ${{env.BUILD_DIR}}/*.dll
-            ${{env.BUILD_DIR}}/resources/
           retention-days: 7
 
       - name: Test
@@ -133,7 +131,7 @@ jobs:
             ninja:p
 
       - name: Configure CMake
-        run: cmake -G "Ninja" -B '${{env.BUILD_DIR}}' -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_BUILD_WITH_PCH=ON -DCMAKE_C_COMPILER="/clang64/bin/clang.exe" -DCMAKE_CXX_COMPILER="/clang64/bin/clang++.exe"
+        run: cmake -G "Ninja" -B '${{env.BUILD_DIR}}' -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_DEVELOPER_BUILD=OFF -DCHIRA_BUILD_WITH_PCH=ON -DCMAKE_C_COMPILER="/clang64/bin/clang.exe" -DCMAKE_CXX_COMPILER="/clang64/bin/clang++.exe"
 
       - name: Build
         working-directory: ${{env.BUILD_DIR}}
@@ -149,7 +147,6 @@ jobs:
           path: |
             ${{env.BUILD_DIR}}/*.exe
             ${{env.BUILD_DIR}}/*.dll
-            ${{env.BUILD_DIR}}/resources/
           retention-days: 7
 
 # Clang crashes trying to link ChiraTest target, probably not my fault
@@ -189,7 +186,7 @@ jobs:
           platform: x64
 
       - name: Configure CMake
-        run: cmake -G "Ninja" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_BUILD_WITH_PCH=ON
+        run: cmake -G "Ninja" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_DEVELOPER_BUILD=OFF -DCHIRA_BUILD_WITH_PCH=ON
 
       - name: Build
         working-directory: ${{env.BUILD_DIR}}
@@ -202,7 +199,6 @@ jobs:
           path: |
             ${{env.BUILD_DIR}}/editor
             ${{env.BUILD_DIR}}/*.so*
-            ${{env.BUILD_DIR}}/resources/
           retention-days: 7
 
       - name: Test
@@ -227,7 +223,7 @@ jobs:
           brew install llvm
 
       - name: Configure CMake
-        run: cmake -G "Ninja" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_BUILD_WITH_PCH=ON -DCMAKE_C_COMPILER="/usr/local/opt/llvm/bin/clang" -DCMAKE_CXX_COMPILER="/usr/local/opt/llvm/bin/clang++"
+        run: cmake -G "Ninja" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_DEVELOPER_BUILD=OFF -DCHIRA_BUILD_WITH_PCH=ON -DCMAKE_C_COMPILER="/usr/local/opt/llvm/bin/clang" -DCMAKE_CXX_COMPILER="/usr/local/opt/llvm/bin/clang++"
 
       - name: Build
         working-directory: ${{env.BUILD_DIR}}
@@ -240,7 +236,6 @@ jobs:
           path: |
             ${{env.BUILD_DIR}}/*.app
             ${{env.BUILD_DIR}}/*.dylib*
-            ${{env.BUILD_DIR}}/resources/
           retention-days: 7
 
       - name: Test
@@ -260,7 +255,7 @@ jobs:
 #          submodules: recursive
 #
 #      - name: Configure CMake
-#        run: cmake -G "Xcode" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_BUILD_WITH_PCH=ON
+#        run: cmake -G "Xcode" -B ${{env.BUILD_DIR}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCHIRA_DEVELOPER_BUILD=OFF -DCHIRA_BUILD_WITH_PCH=ON
 #
 #      - name: Build
 #        working-directory: ${{env.BUILD_DIR}}

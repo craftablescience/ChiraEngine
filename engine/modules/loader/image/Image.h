@@ -7,7 +7,7 @@ namespace chira {
 
 class Image : public Resource {
 public:
-    explicit Image(std::string identifier_, bool vFlip = true);
+    explicit Image(std::string path_, bool vFlip = true);
     ~Image() override;
     Image(const Image& other) = delete;
     Image& operator=(const Image& other) = delete;
@@ -43,7 +43,7 @@ protected:
     int bitDepth = -1;
     bool verticalFlip = true;
 private:
-    CHIRA_REGISTER_DEFAULT_RESOURCE(Image, "file://textures/missing.png");
+    CHIRA_REGISTER_DEFAULT_RESOURCE(Image, "textures/missing.png");
 };
 
 } // namespace chira

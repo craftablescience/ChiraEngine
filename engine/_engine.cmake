@@ -1,3 +1,6 @@
+# Set asset path
+set(CHIRA_DEVELOPER_ASSET_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/assets" CACHE FILEPATH "" FORCE)
+
 # Include sources (order is important, and exclude tests)
 include_subdirs(thirdparty core modules platforms)
 

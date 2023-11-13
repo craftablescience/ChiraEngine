@@ -6,7 +6,7 @@ namespace chira {
 
 class MaterialUntextured final : public IMaterial {
 public:
-    explicit MaterialUntextured(std::string identifier_) : IMaterial(std::move(identifier_)) {}
+    explicit MaterialUntextured(std::string path_) : IMaterial(std::move(path_)) {}
     void compile(const std::byte buffer[], std::size_t bufferLength) override;
 
 public:

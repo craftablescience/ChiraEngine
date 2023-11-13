@@ -34,8 +34,9 @@ ConVar win_vsync{"win_vsync", true, "Limit the FPS to your monitor's resolution.
 ConVar input_raw_mouse_motion{"input_raw_mouse_motion", true, "Get more accurate mouse motion.", CON_FLAG_CACHE};
 
 static void setImGuiConfigPath() {
-    static std::string configPath = Config::getConfigFile("imgui.ini");
-    ImGui::GetIO().IniFilename = configPath.c_str();
+	// todo(fs)
+    //static std::string configPath = "imgui.ini";
+    //ImGui::GetIO().IniFilename = configPath.c_str();
 }
 
 Renderer::FrameBufferHandle g_WindowFramebufferHandle{};
@@ -120,7 +121,7 @@ bool Device::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
     int splashWidth, splashHeight, bitsPerPixel;
     SDL_Surface* sdlSplash;
     SDL_Texture* splashTex;
-    auto* splash = Image::getUncompressedImage(FilesystemResourceProvider::getResourceAbsolutePath("file://textures/ui/splashscreen.png"), &splashWidth, &splashHeight, &bitsPerPixel, 4, false);
+    auto* splash = Image::getUncompressedImage("textures/ui/splashscreen.png", &splashWidth, &splashHeight, &bitsPerPixel, 4, false);
     if (splash) {
         sdlSplash = SDL_CreateRGBSurfaceWithFormatFrom(splash, splashWidth, splashHeight, bitsPerPixel, 8, SDL_PIXELFORMAT_RGBA8888);
         splashTex = SDL_CreateTextureFromSurface(g_Renderer, sdlSplash);
@@ -203,7 +204,7 @@ static int findFreeWindow() {
     }
 
     int iconWidth, iconHeight, bitsPerPixel;
-    auto* icon = Image::getUncompressedImage(FilesystemResourceProvider::getResourceAbsolutePath("file://textures/ui/icon.png"), &iconWidth, &iconHeight, &bitsPerPixel, 4, false);
+    auto* icon = Image::getUncompressedImage("textures/ui/icon.png", &iconWidth, &iconHeight, &bitsPerPixel, 4, false);
     if (icon) {
         auto* sdlIcon = SDL_CreateRGBSurfaceWithFormatFrom(icon, iconWidth, iconHeight, bitsPerPixel, 8, SDL_PIXELFORMAT_RGBA8888);
         SDL_SetWindowIcon(handle.window, sdlIcon);

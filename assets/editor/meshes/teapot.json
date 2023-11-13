@@ -1,0 +1,8 @@
+{
+  "materialSetInCode": false,
+  "materialType": "MaterialPhong",
+  "material": "materials/teapot.json",
+  "model": "meshes/teapot.cmdl",
+  "modelLoader": "cmdl",
+  "depthFunction": "LESS"
+}

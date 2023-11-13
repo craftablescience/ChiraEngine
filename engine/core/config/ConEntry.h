@@ -10,6 +10,7 @@
 #include "file/JSONConfigFile.h"
 #include "../debug/Assertions.h"
 #include "../debug/Logger.h"
+#include "../utility/NoCopyOrMove.h"
 
 CHIRA_GET_LOG(CONENTRY);
 
@@ -24,13 +25,18 @@ enum ConFlags {
     CON_FLAG_DEVONLY  = 1 << 4, // Reserved for possible future use
 };
 
-class ConEntry {
+class ConEntry : public NoCopyOrMove {
 public:
     ConEntry(std::string name_, std::string description_, int flags_ = CON_FLAG_NONE);
+
     virtual ~ConEntry() = default;
+
     [[nodiscard]] std::string_view getName() const;
+
     [[nodiscard]] std::string_view getDescription() const;
+
     [[nodiscard]] bool hasFlag(ConFlags flag) const;
+
 protected:
     std::string name;
     std::string description;
@@ -45,12 +51,15 @@ public:
     ConCommand(std::string name_, std::function<void(CallbackArgs)> callback_, int flags_ = CON_FLAG_NONE);
     ConCommand(std::string name_, std::string description_, const std::function<void()>& callback_, int flags_ = CON_FLAG_NONE);
     ConCommand(std::string name_, std::string description_, std::function<void(CallbackArgs)> callback_, int flags_ = CON_FLAG_NONE);
+
     ~ConCommand() override;
 
     void fire(CallbackArgs args);
+
     [[nodiscard]] explicit inline operator std::string() const {
         return std::string{this->getName()} + " - " + this->getDescription().data();
     }
+
 private:
     std::function<void(CallbackArgs)> callback;
 };
@@ -58,27 +67,40 @@ private:
 // Registry be declared before ConVar because of the magic of templates
 class ConVar;
 
-class ConEntryRegistry {
+class ConEntryRegistry : public NoCopyOrMove {
     friend ConCommand;
     friend ConVar;
+
 public:
     ConEntryRegistry() = delete;
 
     [[nodiscard]] static bool hasConCommand(std::string_view name);
+
     [[nodiscard]] static ConCommand* getConCommand(std::string_view name);
+
     [[nodiscard]] static std::vector<std::string> getConCommandList();
 
     [[nodiscard]] static bool hasConVar(std::string_view name);
+
     [[nodiscard]] static ConVar* getConVar(std::string_view name);
+
     [[nodiscard]] static std::vector<std::string> getConVarList();
+
+	static void initializeConVarCache(ConVar* initializeOnlyMe = nullptr);
+
 private:
     static std::vector<ConCommand*>& getConCommands();
+
     static bool registerConCommand(ConCommand* concommand);
+
     static void deregisterConCommand(ConCommand* concommand);
 
     static std::vector<ConVar*>& getConVars();
-    static JSONConfigFile& getConVarCache();
+
+    static IConfigFile& getConVarCache();
+
     static bool registerConVar(ConVar* convar);
+
     static void deregisterConVar(ConVar* convar);
 };
 
@@ -140,7 +162,9 @@ public:
     }
 
     ~ConVar() override;
+
     [[nodiscard]] ConVarType getType() const;
+
     [[nodiscard]] std::string_view getTypeAsString() const;
 
     template<ConVarValidType T>
@@ -226,6 +250,7 @@ public:
 
     /// Convenience function to check the value of sv_cheats
     [[nodiscard]] static bool areCheatsEnabled();
+
 private:
     std::function<void(CallbackArg)> changedCallback;
     std::string value;
@@ -240,13 +265,19 @@ public:
             LOG_CONENTRY.error("ConCommandRef named \"{}\" refers to a nonexistent ConVar!", name);
         }
     }
+
     [[nodiscard]] inline std::string_view getName() const { return this->command->getName(); }
+
     [[nodiscard]] inline std::string_view getDescription() const { return this->command->getDescription(); }
+
     [[nodiscard]] inline bool hasFlag(ConFlags flag) const { return this->command->hasFlag(flag); }
+
     inline void fire(ConCommand::CallbackArgs args) { return this->command->fire(args); }
+
     [[nodiscard]] explicit inline operator std::string() const { return this->command->operator std::string(); }
 
     [[nodiscard]] explicit inline operator bool() const { return this->command; }
+
 private:
     ConCommand* command;
 };
@@ -259,16 +290,25 @@ public:
             LOG_CONENTRY.error("ConVarRef named \"{}\" refers to a nonexistent ConVar!", name);
         }
     }
+
     [[nodiscard]] inline std::string_view getName() const { return this->var->getName(); }
+
     [[nodiscard]] inline std::string_view getDescription() const { return this->var->getDescription(); }
+
     [[nodiscard]] inline bool hasFlag(ConFlags flag) const { return this->var->hasFlag(flag); }
+
     [[nodiscard]] inline ConVarType getType() const { return this->var->getType(); }
+
     [[nodiscard]] inline std::string_view getTypeAsString() const { return this->var->getTypeAsString(); }
+
     template<ConVarValidType T> [[nodiscard]] inline T getValue() const { return this->var->getValue<T>(); }
+
     inline void setValue(ConVarValidType auto value, bool runCallback = true) const { return this->var->setValue(value, runCallback); }
+
     [[nodiscard]] explicit inline operator std::string() const { return this->var->operator std::string(); }
 
     [[nodiscard]] explicit inline operator bool() const { return this->var; }
+
 private:
     ConVar* var;
 };

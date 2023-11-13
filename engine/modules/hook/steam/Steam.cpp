@@ -21,23 +21,27 @@ CHIRA_CREATE_MODULE(Steam) {
 
     bool preinit() override {
         if (!steam_enabled.getValue<bool>() || !Steam::Client::initSteam()) {
-            LOG_STEAM.warning("Steam failed to initialize");
-            return false;
+            LOG_STEAM.warning("Steam failed to initialize!");
+	        return IModule::preinit();
         }
+	    this->steamStarted = true;
         return IModule::preinit();
     }
 
     void update() override {
-        if (this->initialized) {
+        if (this->steamStarted) {
             Steam::Client::runCallbacks();
         }
     }
 
     void deinit() override {
-        if (this->initialized) {
+        if (this->steamStarted) {
             Steam::Client::shutdown();
         }
     }
+
+private:
+	bool steamStarted = false;
 };
 CHIRA_REGISTER_MODULE(Steam);
 

@@ -8,19 +8,19 @@ namespace chira {
 
 class TextureCubemap final : public ITexture {
 public:
-    explicit TextureCubemap(std::string identifier_);
+    explicit TextureCubemap(std::string path_);
     ~TextureCubemap() override;
     void compile(const std::byte buffer[], std::size_t bufferLength) override;
     void use() const override;
     void use(TextureUnit activeTextureUnit) const override;
 
 protected:
-    std::string imageFD{"file://textures/missing.png"};
-    std::string imageBK{"file://textures/missing.png"};
-    std::string imageUP{"file://textures/missing.png"};
-    std::string imageDN{"file://textures/missing.png"};
-    std::string imageLT{"file://textures/missing.png"};
-    std::string imageRT{"file://textures/missing.png"};
+    std::string imageFD{"textures/missing.png"};
+    std::string imageBK{"textures/missing.png"};
+    std::string imageUP{"textures/missing.png"};
+    std::string imageDN{"textures/missing.png"};
+    std::string imageLT{"textures/missing.png"};
+    std::string imageRT{"textures/missing.png"};
     bool verticalFlipFD = false;
     bool verticalFlipBK = false;
     bool verticalFlipUP = false;

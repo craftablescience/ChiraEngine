@@ -6,7 +6,7 @@
 namespace chira {
 
 struct MeshSpriteComponent {
-    explicit MeshSpriteComponent(glm::vec2 size_ = {1.f, 1.f}, const std::string& materialID = "file://materials/unlitTextured.json", const std::string& materialType = "MaterialTextured")
+    explicit MeshSpriteComponent(glm::vec2 size_ = {1.f, 1.f}, const std::string& materialID = "materials/unlitTextured.json", const std::string& materialType = "MaterialTextured")
             : size(size_) {
         this->sprite.addSquare({}, size, SignedAxis::ZP);
         this->sprite.update();

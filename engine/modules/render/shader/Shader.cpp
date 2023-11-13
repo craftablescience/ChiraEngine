@@ -11,16 +11,16 @@ using namespace chira;
 
 CHIRA_CREATE_LOG(SHADER);
 
-Shader::Shader(std::string identifier_)
-        : Resource(std::move(identifier_)) {}
+Shader::Shader(std::string path_)
+        : Resource(std::move(path_)) {}
 
 void Shader::compile(const std::byte buffer[], std::size_t bufferLength) {
     Serial::loadFromBuffer(this, buffer, bufferLength);
 
     const auto shaderModuleVertString = Resource::getUniqueUncachedResource<StringResource>(this->vertexPath);
-    const auto shaderModuleVertData = replaceMacros(shaderModuleVertString->getIdentifier().data(), shaderModuleVertString->getString());
+    const auto shaderModuleVertData = replaceMacros(shaderModuleVertString->getPath().data(), shaderModuleVertString->getString());
     const auto shaderModuleFragString = Resource::getUniqueUncachedResource<StringResource>(this->fragmentPath);
-    const auto shaderModuleFragData = replaceMacros(shaderModuleFragString->getIdentifier().data(), shaderModuleFragString->getString());
+    const auto shaderModuleFragData = replaceMacros(shaderModuleFragString->getPath().data(), shaderModuleFragString->getString());
     this->handle = Renderer::createShader(shaderModuleVertData, shaderModuleFragData);
 
     if (this->usesPV) {

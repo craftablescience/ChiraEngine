@@ -7,7 +7,7 @@ namespace chira {
 
 class MaterialTextured final : public IMaterial {
 public:
-    explicit MaterialTextured(std::string identifier_) : IMaterial(std::move(identifier_)) {}
+    explicit MaterialTextured(std::string path_) : IMaterial(std::move(path_)) {}
     void compile(const std::byte buffer[], std::size_t bufferLength) override;
     void use() const override;
     [[nodiscard]] SharedPointer<Texture> getTexture() const;
@@ -15,7 +15,7 @@ public:
 
 protected:
     SharedPointer<Texture> texture;
-    std::string texturePath{"file://textures/missing.json"};
+    std::string texturePath{"textures/missing.json"};
 
 public:
     template<typename Archive>

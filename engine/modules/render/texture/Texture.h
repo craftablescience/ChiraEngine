@@ -8,7 +8,7 @@ namespace chira {
 
 class Texture final : public ITexture {
 public:
-    explicit Texture(std::string identifier_, bool cacheTexture = true);
+    explicit Texture(std::string path_, bool cacheTexture = true);
     ~Texture() override;
     void compile(const std::byte buffer[], std::size_t bufferLength) override;
     void use() const override;
@@ -16,7 +16,7 @@ public:
 
 protected:
     SharedPointer<Image> file;
-    std::string filePath{"file://textures/missing.png"};
+    std::string filePath{"textures/missing.png"};
     WrapMode wrapModeS = WrapMode::REPEAT;
     WrapMode wrapModeT = WrapMode::REPEAT;
     FilterMode filterMode = FilterMode::LINEAR;

@@ -19,6 +19,9 @@ ScriptEditorPanel::ScriptEditorPanel()
 }
 
 void ScriptEditorPanel::save() {
+	if (this->path.empty()) {
+		return;
+	}
     this->unsaved = false;
 
     auto text = this->editor.GetText();
@@ -127,12 +130,11 @@ void ScriptEditorPanel::renderContents() {
     ImGui::PushFont(this->font->getFont());
 
     const auto cursorPos = this->editor.GetCursorPosition();
-    const auto resourceID = FilesystemResourceProvider::getResourceIdentifier(this->path);
     ImGui::Text("%6d/%-6d %6d lines | %s | %s | %s",
                 cursorPos.mLine + 1, cursorPos.mColumn + 1, this->editor.GetTotalLines(),
                 this->editor.GetLanguageDefinition().mName.c_str(),
                 this->editor.IsOverwrite() ? "OVERWRITE" : "INSERT",
-                resourceID.empty() ? this->path.c_str() : resourceID.c_str());
+                this->path.c_str());
 
     const auto subtitle = this->title + "##Editor";
     this->editor.Render(subtitle.c_str());

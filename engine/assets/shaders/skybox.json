@@ -1,7 +1,0 @@
-{
-  "vertex": "file://shaders/skybox.vsh",
-  "fragment": "file://shaders/skybox.fsh",
-  "usesPV": true,
-  "usesM": false,
-  "lit": false
-}

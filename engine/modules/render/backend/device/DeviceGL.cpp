@@ -41,8 +41,9 @@ ConVar win_vsync{"win_vsync", true, "Limit the FPS to your monitor's resolution.
 ConVar input_raw_mouse_motion{"input_raw_mouse_motion", true, "Get more accurate mouse motion.", CON_FLAG_CACHE};
 
 static void setImGuiConfigPath() {
-    static std::string configPath = Config::getConfigFile("imgui.ini");
-    ImGui::GetIO().IniFilename = configPath.c_str();
+	// todo(fs)
+    //static std::string configPath = "imgui.ini";
+    //ImGui::GetIO().IniFilename = configPath.c_str();
 }
 
 Renderer::FrameBufferHandle g_WindowFramebufferHandle{};
@@ -123,7 +124,7 @@ bool Device::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
 
     MeshDataBuilder plane;
     plane.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-    plane.setMaterial(Resource::getResource<MaterialTextured>("file://materials/splashscreen.json").cast<IMaterial>());
+    plane.setMaterial(Resource::getResource<MaterialTextured>("materials/splashscreen.json").cast<IMaterial>());
     plane.render(glm::identity<glm::mat4>());
 
     glDisable(GL_DEPTH_TEST);
@@ -131,7 +132,7 @@ bool Device::initBackendAndCreateSplashscreen(bool splashScreenVisible) {
 
     MeshDataBuilder windowSurface;
     windowSurface.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-    windowSurface.setMaterial(Resource::getResource<MaterialFrameBuffer>("file://materials/window.json", &g_WindowFramebufferHandle).cast<IMaterial>());
+    windowSurface.setMaterial(Resource::getResource<MaterialFrameBuffer>("materials/window.json", &g_WindowFramebufferHandle).cast<IMaterial>());
     windowSurface.render(glm::identity<glm::mat4>());
 
     glEnable(GL_DEPTH_TEST);
@@ -201,7 +202,7 @@ Device::WindowHandle* Device::createWindow(int width, int height, std::string_vi
     }
 
     int iconWidth, iconHeight, bitsPerPixel;
-    auto* icon = Image::getUncompressedImage(FilesystemResourceProvider::getResourceAbsolutePath("file://textures/ui/icon.png"), &iconWidth, &iconHeight, &bitsPerPixel, 4, false);
+    auto* icon = Image::getUncompressedImage("textures/ui/icon.png", &iconWidth, &iconHeight, &bitsPerPixel, 4, false);
     if (icon) {
         auto* sdlIcon = SDL_CreateRGBSurfaceWithFormatFrom(icon, iconWidth, iconHeight, bitsPerPixel, 8, SDL_PIXELFORMAT_RGBA8888);
         SDL_SetWindowIcon(handle.window, sdlIcon);
@@ -221,7 +222,8 @@ Device::WindowHandle* Device::createWindow(int width, int height, std::string_vi
     if (!bakedFonts) {
         bakedFonts = true;
 
-        auto defaultFont = Resource::getUniqueUncachedResource<Font>(TR("resource.font.default"));
+		// hack: cache font forever
+        static auto defaultFont = Resource::getUniqueUncachedResource<Font>(TR("resource.font.default"));
         io.FontDefault = defaultFont->getFont();
         io.Fonts->Build();
     }
@@ -268,7 +270,7 @@ void Device::refreshWindows() {
 
         MeshDataBuilder surface;
         surface.addSquare({}, {2, -2}, SignedAxis::ZN, 0);
-        surface.setMaterial(Resource::getUniqueUncachedResource<MaterialFrameBuffer>("file://materials/window.json", handle.viewport->getRawHandle()).cast<IMaterial>());
+        surface.setMaterial(Resource::getUniqueUncachedResource<MaterialFrameBuffer>("materials/window.json", handle.viewport->getRawHandle()).cast<IMaterial>());
         surface.render(glm::identity<glm::mat4>());
 
         glEnable(GL_DEPTH_TEST);

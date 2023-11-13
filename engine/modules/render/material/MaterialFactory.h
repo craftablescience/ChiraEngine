@@ -12,14 +12,14 @@ namespace chira {
 
 class IMaterial : public Resource {
 public:
-    explicit IMaterial(std::string identifier_);
+    explicit IMaterial(std::string path_);
     void compile(const std::byte buffer[], std::size_t bufferLength) override;
     virtual void use() const;
     [[nodiscard]] SharedPointer<Shader> getShader() const;
 
 protected:
     SharedPointer<Shader> shader;
-    std::string shaderPath{"file://shaders/unlitTextured.json"};
+    std::string shaderPath{"shaders/unlitTextured.json"};
 
 public:
     template<typename Archive>
@@ -44,5 +44,5 @@ using MaterialFactory = AbstractFactory<SharedPointer<IMaterial>>;
             }                                                                                \
         )
 
-#define CHIRA_GET_MATERIAL(type, identifier) \
-    chira::MaterialFactory::getTypeFactory(type)(identifier)
+#define CHIRA_GET_MATERIAL(type, path) \
+    chira::MaterialFactory::getTypeFactory(type)(path)

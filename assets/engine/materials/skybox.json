@@ -1,0 +1,4 @@
+{
+  "shader": "shaders/skybox.json",
+  "cubemap": "textures/missingSkybox.json"
+}

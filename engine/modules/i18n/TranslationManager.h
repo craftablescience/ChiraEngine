@@ -11,8 +11,8 @@ public:
     static const std::unordered_map<std::string,std::string>& getCodeAndNamePairs();
     static std::string_view getLanguageNameFromCode(const std::string& code);
     static bool isValidCode(const std::string& code);
-    static void addTranslationFile(const std::string& identifier);
-    static void addUniversalFile(const std::string& identifier);
+    static void addTranslationFile(const std::string& path);
+    static void addUniversalFile(const std::string& path);
     static std::string getTranslation(const std::string& identifier);
     template<typename... Params> static std::string getTranslation(const std::string& identifier, Params... params) {
         return fmt::format(fmt::runtime(TranslationManager::getTranslation(identifier)), params...);

@@ -7,6 +7,8 @@ namespace chira::CommandLine {
 /// Initialization is only meant to happen once per program instantiation.
 void init(int argc, const char* argv[]);
 
+[[nodiscard]] std::string_view at(unsigned int index);
+
 [[nodiscard]] bool has(std::string_view argument);
 
 [[nodiscard]] std::string_view get(std::string_view argument);

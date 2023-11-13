@@ -14,9 +14,6 @@ class ControlsPanel : public IPanel {
 public:
     explicit ControlsPanel(Viewport* viewport);
 
-    /// Opens a file dialog used to select a resource folder
-    void addResourceFolderSelected();
-
     void preRenderContents() override;
     void renderContents() override;
 
@@ -38,7 +35,6 @@ private:
     uuids::uuid gridID;
     uuids::uuid previewID;
     bool showGrid = true;
-    ImGui::FileBrowser folderDialog{ImGuiFileBrowserFlags_CloseOnEsc | ImGuiFileBrowserFlags_SelectDirectory};
 };
 
 } // namespace chira

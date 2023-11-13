@@ -81,8 +81,6 @@ ControlsPanel::ControlsPanel(Viewport* viewport)
         , scene(viewport->addScene("Editor"))
         , selectedEntity(nullptr)
         , selectedScene(nullptr) {
-    this->folderDialog.SetTitle("Select Folder...");
-
     auto* camera = this->scene->addEntity("Camera");
     camera->addComponent<CameraComponent>(CameraComponent::ProjectionMode::PERSPECTIVE);
 
@@ -94,7 +92,7 @@ ControlsPanel::ControlsPanel(Viewport* viewport)
     auto* grid = this->scene->addEntity("Grid");
     this->gridID = grid->getUUID();
     auto& gridMesh = grid->addComponent<MeshDynamicComponent>();
-    gridMesh.meshBuilder.setMaterial(CHIRA_GET_MATERIAL("MaterialUntextured", "file://materials/unlit.json"));
+    gridMesh.meshBuilder.setMaterial(CHIRA_GET_MATERIAL("MaterialUntextured", "materials/unlit.json"));
     for (int i = -5; i <= 5; i++) {
         gridMesh.meshBuilder.addCube(Vertex{{i, 0, 0}}, {0.025f, 0.025f, 10.025f});
         gridMesh.meshBuilder.addCube(Vertex{{0, 0, i}}, {10.025f, 0.025f, 0.025f});
@@ -106,41 +104,14 @@ ControlsPanel::ControlsPanel(Viewport* viewport)
     setupKeybinds(cameraTransform);
 }
 
-void ControlsPanel::addResourceFolderSelected() {
-    std::string resourceFolderPath = FilesystemResourceProvider::getResourceFolderPath(this->folderDialog.GetSelected().string());
-    if (resourceFolderPath.empty())
-        return Device::popupError(TR("error.modelviewer.resource_folder_not_valid"));
-
-    bool resourceExists = false;
-    for (const auto& fileProvider : Resource::getResourceProviders(FILESYSTEM_PROVIDER_NAME)) {
-        if (resourceFolderPath == assert_cast<FilesystemResourceProvider*>(fileProvider.get())->getFolder()) {
-            resourceExists = true;
-            break;
-        }
-    }
-    if (!resourceExists)
-        Resource::addResourceProvider(new FilesystemResourceProvider{resourceFolderPath});
-    else
-        Device::popupError(TR("error.modelviewer.resource_folder_already_registered"));
-}
-
 void ControlsPanel::preRenderContents() {
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu(TRC("ui.menubar.file"))) { // File
-            if (ImGui::MenuItem(TRC("ui.menubar.add_resource_folder"))) // Add Resource Folder...
-                this->folderDialog.Open();
-            ImGui::Separator();
             if (ImGui::MenuItem(TRC("ui.menubar.exit"))) // Exit
                 Device::queueDestroyWindow(Engine::getMainWindow(), true);
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
-    }
-
-    this->folderDialog.Display();
-    if (this->folderDialog.HasSelected()) {
-        this->addResourceFolderSelected();
-        this->folderDialog.ClearSelected();
     }
 }
 

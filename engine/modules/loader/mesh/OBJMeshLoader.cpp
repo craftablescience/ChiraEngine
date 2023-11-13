@@ -11,12 +11,12 @@ using namespace chira;
 
 CHIRA_CREATE_LOG(OBJ);
 
-void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<Index>& indices) const {
+void OBJMeshLoader::loadMesh(const std::string& path, std::vector<Vertex>& vertices, std::vector<Index>& indices) const {
     std::vector<glm::vec3> vertexBuffer;
     std::vector<ColorRG> uvBuffer;
     std::vector<ColorRGB> normalBuffer;
 
-    auto meshData = Resource::getResource<StringResource>(identifier);
+    auto meshData = Resource::getResource<StringResource>(path);
     std::istringstream meshDataStream{meshData->getString()};
 
     std::string line;
@@ -48,7 +48,7 @@ void OBJMeshLoader::loadMesh(const std::string& identifier, std::vector<Vertex>&
             while (iss >> objIndices[counter]) {
                 objIndices[counter] -= 1;
                 if (counter >= 9) {
-                    LOG_OBJ.warning(TRF("warn.obj_loader.not_triangulated", identifier));
+                    LOG_OBJ.warning(TRF("warn.obj_loader.not_triangulated", path));
                     break;
                 } else if (counter >= 6) {
                     includeUVs = true;

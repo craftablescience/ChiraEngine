@@ -22,26 +22,24 @@ CHIRA_GET_MODULE(Discord);
 #endif
 
 int main(int argc, const char* argv[]) {
-    Engine::preinit(argc, argv);
-    Resource::addResourceProvider(new FilesystemResourceProvider{"editor"});
-    TranslationManager::addTranslationFile("file://i18n/editor");
-    TranslationManager::addUniversalFile("file://i18n/editor");
+#if defined(CHIRA_USE_STEAMWORKS) && defined(DEBUG)
+	if (auto* steam_enabled = ConEntryRegistry::getConVar("steam_enabled"); steam_enabled && steam_enabled->getValue<bool>()) {
+		// Steam API docs say this is bad practice, I say I don't care
+		Steam::generateAppIDFile(1728950);
+	}
+#endif
+
+    Engine::init(argc, argv);
+
+    TranslationManager::addTranslationFile("i18n/editor");
+    TranslationManager::addUniversalFile("i18n/editor");
 
 #ifdef CHIRA_USE_DISCORD
-    g_Discord->init(TR("editor.discord.application_id"));
-    g_Discord->setLargeImage("main_logo");
-    g_Discord->setTopButton({"View on GitHub", "https://github.com/craftablescience/ChiraEngine"});
-    g_Discord->setBottomButton({"Join Discord", "https://discord.gg/ASgHFkX"});
+	g_Discord->init(TR("editor.discord.application_id"));
+	g_Discord->setLargeImage("main_logo");
+	g_Discord->setTopButton({"View on GitHub", "https://github.com/craftablescience/ChiraEngine"});
+	g_Discord->setBottomButton({"Join the Discord", "https://discord.gg/ASgHFkX"});
 #endif
-
-#if defined(CHIRA_USE_STEAMWORKS) && defined(DEBUG)
-    if (auto* steam_enabled = ConEntryRegistry::getConVar("steam_enabled"); steam_enabled && steam_enabled->getValue<bool>()) {
-        // Steam API docs say this is bad practice, I say I don't care
-        Steam::generateAppIDFile(1728950);
-    }
-#endif
-
-    Engine::init();
 
     auto* window = Engine::getMainWindow();
     auto* viewport = Device::getWindowViewport(window);

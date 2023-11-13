@@ -204,12 +204,12 @@ void InspectorPanel::renderContentsForSelectedEntity() {
                 filePicker.Open();
             }
 
-            ImGui::Text("%s", component->getScript()->getIdentifier().data());
+            ImGui::Text("%s", component->getScript()->getPath().data());
         }
 
         filePicker.Display();
         if (filePicker.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            std::string path = filePicker.GetSelected().string();
             if (!path.empty()) {
                 this->selectedEntity->tryRemoveComponent<AngelScriptComponent>();
                 this->selectedEntity->addComponent<AngelScriptComponent>(path);
@@ -306,7 +306,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
 
         filePicker.Display();
         if (filePicker.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            std::string path = filePicker.GetSelected().string();
             if (!path.empty()) {
                 this->selectedEntity->tryRemoveComponent<AudioSfxrComponent>();
                 this->selectedEntity->addComponent<AudioSfxrComponent>(path);
@@ -334,7 +334,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
         REMOVE_BUTTON(AudioWavComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Wav", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("%s", component->wavFile->getIdentifier().data());
+            ImGui::Text("%s", component->wavFile->getPath().data());
 
             if (ImGui::Button("Pick Audio")) {
                 filePicker.Open();
@@ -347,7 +347,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
 
         filePicker.Display();
         if (filePicker.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            std::string path = filePicker.GetSelected().string();
             if (!path.empty()) {
                 this->selectedEntity->tryRemoveComponent<AudioWavComponent>();
                 this->selectedEntity->addComponent<AudioWavComponent>(path);
@@ -359,7 +359,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
         REMOVE_BUTTON(AudioWavStreamComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Audio Wav Stream", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("%s", component->wavFile->getIdentifier().data());
+            ImGui::Text("%s", component->wavFile->getPath().data());
 
             if (ImGui::Button("Pick Audio")) {
                 filePicker.Open();
@@ -372,7 +372,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
 
         filePicker.Display();
         if (filePicker.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            std::string path = filePicker.GetSelected().string();
             if (!path.empty()) {
                 this->selectedEntity->tryRemoveComponent<AudioWavStreamComponent>();
                 this->selectedEntity->addComponent<AudioWavStreamComponent>(path);
@@ -459,7 +459,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
         REMOVE_BUTTON(MeshComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("%s", component->mesh->getIdentifier().data());
+            ImGui::Text("%s", component->mesh->getPath().data());
 
             if (ImGui::Button("Pick Mesh")) {
                 filePicker.Open();
@@ -468,7 +468,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
 
         filePicker.Display();
         if (filePicker.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            std::string path = filePicker.GetSelected().string();
             if (!path.empty()) {
                 this->selectedEntity->tryRemoveComponent<MeshComponent>();
                 this->selectedEntity->addComponent<MeshComponent>(path);
@@ -487,7 +487,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
         REMOVE_BUTTON(MeshSpriteComponent);
         ImGui::SameLine();
         if (ImGui::CollapsingHeader("Mesh Sprite", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("%s", component->sprite.getMaterial()->getIdentifier().data());
+            ImGui::Text("%s", component->sprite.getMaterial()->getPath().data());
 
             if (ImGui::Button("Pick Material")) {
                 filePicker.Open();
@@ -496,7 +496,7 @@ void InspectorPanel::renderContentsForSelectedEntity() {
 
         filePicker.Display();
         if (filePicker.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            std::string path = filePicker.GetSelected().string();
             if (!path.empty()) {
                 const auto size = component->size;
                 this->selectedEntity->tryRemoveComponent<MeshSpriteComponent>();
@@ -553,7 +553,7 @@ void InspectorPanel::renderContentsForSelectedScene() {
         ImGui::SameLine();
 
         if (ImGui::CollapsingHeader("Skybox", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Text("%s", component->skybox.getMaterial()->getIdentifier().data());
+            ImGui::Text("%s", component->skybox.getMaterial()->getPath().data());
 
             if (ImGui::Button("Pick Skybox")) {
                 filePicker.Open();
@@ -562,7 +562,7 @@ void InspectorPanel::renderContentsForSelectedScene() {
 
         filePicker.Display();
         if (filePicker.HasSelected()) {
-            std::string path = FilesystemResourceProvider::getResourceIdentifier(filePicker.GetSelected().string());
+            std::string path = filePicker.GetSelected().string();
             if (!path.empty()) {
                 this->selectedScene->tryRemoveComponent<SkyboxComponent>();
                 this->selectedScene->addComponent<SkyboxComponent>(path);

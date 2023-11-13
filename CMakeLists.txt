@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.25 FATAL_ERROR)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(CMakeDependentOption)
 include(FetchContent)
 include(IncludeSubDirs)
 include(OptionEnum)
@@ -45,9 +46,7 @@ if(CHIRA_COMPILER_ID MATCHES "clang")
 endif()
 
 # Options
-include(CMakeDependentOption)
-option(CHIRA_BUILD_EXTERNAL_TOOLS "Build various external tool executables" ON)
-option(CHIRA_BUILD_TESTS "Run Chira Engine's built-in tests" ON)
+option(CHIRA_DEVELOPER_BUILD "Build Chira Engine assuming the user is a developer building it from their IDE or terminal. DISABLE THIS IN PRODUCTION ENVIRONMENTS!" ON)
 
 option(CHIRA_BUILD_EXTERNAL_TOOLS "Build various external tool executables." ON)
 option(CHIRA_BUILD_TESTS "Run Chira Engine's built-in tests." ON)
@@ -90,10 +89,13 @@ print_variables(
         CHIRA_USE_DISCORD
         CHIRA_USE_STEAMWORKS)
 
-# Warn if libraries are not static by default
-if(BUILD_SHARED_LIBS)
-    message(WARNING "Building some libraries shared instead of static may cause weird errors. This is untested!")
+# Set developer build
+if(CHIRA_DEVELOPER_BUILD)
+    list(APPEND CHIRA_ENGINE_DEFINITIONS CHIRA_DEVELOPER_BUILD)
 endif()
+
+# Set libraries to static by default
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Building some libraries shared instead of static may cause weird errors.")
 
 # Set runpath
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
@@ -183,4 +185,9 @@ include_subdirs(engine)
 # Add tools
 if(CHIRA_BUILD_EXTERNAL_TOOLS)
     include_subdirs(tools)
+endif()
+
+# Warn user about the developer build
+if(CHIRA_DEVELOPER_BUILD)
+    message(NOTICE "CHIRA_DEVELOPER_BUILD is currently ENABLED. Remember to disable this variable when compiling production binaries!")
 endif()

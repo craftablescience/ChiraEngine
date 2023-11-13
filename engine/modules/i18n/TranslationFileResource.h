@@ -9,8 +9,8 @@ namespace chira {
 
 class TranslationFileResource : public JSONResource {
 public:
-    TranslationFileResource(std::string identifier_, std::string language_)
-        : JSONResource(std::move(identifier_))
+    TranslationFileResource(std::string path_, std::string language_)
+        : JSONResource(std::move(path_))
         , language(std::move(language_)) {}
 
     void compile(const nlohmann::json& translations) override {

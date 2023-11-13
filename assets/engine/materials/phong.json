@@ -1,0 +1,7 @@
+{
+  "shader": "shaders/phonglit.json",
+  "diffuse": "textures/missing.json",
+  "specular": "textures/black.json",
+  "shininess": 32,
+  "lambertFactor": 1
+}

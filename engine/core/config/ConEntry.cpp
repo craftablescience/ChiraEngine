@@ -3,8 +3,6 @@
 #include <algorithm>
 #include <utility>
 
-#include "Config.h"
-
 using namespace chira;
 
 CHIRA_CREATE_LOG(CONENTRY);
@@ -141,8 +139,9 @@ std::vector<ConCommand*>& ConEntryRegistry::getConCommands() {
 }
 
 bool ConEntryRegistry::registerConCommand(ConCommand* concommand) {
-    if (ConEntryRegistry::hasConCommand(concommand->getName()))
-        return false;
+    if (ConEntryRegistry::hasConCommand(concommand->getName())) {
+	    return false;
+    }
     ConEntryRegistry::getConCommands().push_back(concommand);
     return true;
 }
@@ -180,51 +179,72 @@ std::vector<std::string> ConEntryRegistry::getConVarList() {
     return out;
 }
 
+void ConEntryRegistry::initializeConVarCache(ConVar* initializeOnlyMe) {
+	const auto loadCachedValue = [](ConVar* convar) {
+		if (!convar->hasFlag(CON_FLAG_CACHE)) {
+			return;
+		}
+		// There's an entry for the convar in cache, load it
+		switch (convar->getType()) {
+			using enum ConVarType;
+			case BOOLEAN: {
+				auto value = convar->getValue<bool>();
+				ConEntryRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+				convar->setValue(value, false);
+				break;
+			}
+			case INTEGER: {
+				auto value = convar->getValue<int>();
+				ConEntryRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+				convar->setValue(value, false);
+				break;
+			}
+			case DOUBLE: {
+				auto value = convar->getValue<double>();
+				ConEntryRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+				convar->setValue(value, false);
+				break;
+			}
+			case STRING: {
+				auto value = convar->getValue<std::string>();
+				ConEntryRegistry::getConVarCache().getValue(convar->getName().data(), &value);
+				convar->setValue(value, false);
+				break;
+			}
+		}
+	};
+	if (initializeOnlyMe) {
+		// We've already initialized the main cache, initialize this convar
+		loadCachedValue(initializeOnlyMe);
+	} else {
+		if (!ConEntryRegistry::getConVarCache().isOpen()) {
+			ConEntryRegistry::getConVarCache().open("convars.json");
+		}
+		for (auto* convar : ConEntryRegistry::getConVars()) {
+			loadCachedValue(convar);
+		}
+	}
+}
+
 std::vector<ConVar*>& ConEntryRegistry::getConVars() {
     static std::vector<ConVar*> convars;
     return convars;
 }
 
-JSONConfigFile& ConEntryRegistry::getConVarCache() {
-    static JSONConfigFile convarCache{"convars.json"};
-    return convarCache;
+IConfigFile& ConEntryRegistry::getConVarCache() {
+    static JSONConfigFile conVarCache{};
+    return conVarCache;
 }
 
 bool ConEntryRegistry::registerConVar(ConVar* convar) {
-    if (ConEntryRegistry::hasConVar(convar->getName()))
-        return false;
-    ConEntryRegistry::getConVars().push_back(convar);
-
-    if (convar->hasFlag(CON_FLAG_CACHE) && ConEntryRegistry::getConVarCache().hasValue(convar->getName().data())) {
-        // There's an entry for the convar in cache, load it
-        switch (convar->getType()) {
-            using enum ConVarType;
-            case BOOLEAN: {
-                auto value = convar->getValue<bool>();
-                ConEntryRegistry::getConVarCache().getValue(convar->getName().data(), &value);
-                convar->setValue(value, false);
-                break;
-            }
-            case INTEGER: {
-                auto value = convar->getValue<int>();
-                ConEntryRegistry::getConVarCache().getValue(convar->getName().data(), &value);
-                convar->setValue(value, false);
-                break;
-            }
-            case DOUBLE: {
-                auto value = convar->getValue<double>();
-                ConEntryRegistry::getConVarCache().getValue(convar->getName().data(), &value);
-                convar->setValue(value, false);
-                break;
-            }
-            case STRING: {
-                auto value = convar->getValue<std::string>();
-                ConEntryRegistry::getConVarCache().getValue(convar->getName().data(), &value);
-                convar->setValue(value, false);
-                break;
-            }
-        }
+    if (ConEntryRegistry::hasConVar(convar->getName())) {
+	    return false;
     }
+    ConEntryRegistry::getConVars().push_back(convar);
+	if (ConEntryRegistry::getConVarCache().isOpen()) {
+		// Need to manually initialize this convar from cache, it didn't get picked up earlier
+		ConEntryRegistry::initializeConVarCache(convar);
+	}
     return true;
 }
 

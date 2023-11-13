@@ -14,7 +14,7 @@ class IMeshLoader {
 public:
     virtual ~IMeshLoader() = default;
 
-    virtual void loadMesh(const std::string& identifier, std::vector<Vertex>& vertices, std::vector<Index>& indices) const = 0;
+    virtual void loadMesh(const std::string& path, std::vector<Vertex>& vertices, std::vector<Index>& indices) const = 0;
 
     [[nodiscard]] virtual std::vector<std::byte> createMesh(const std::vector<Vertex>& vertices, const std::vector<Index>& indices) const = 0;
 

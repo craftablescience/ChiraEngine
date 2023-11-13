@@ -8,8 +8,8 @@ using namespace chira;
 
 CHIRA_CREATE_LOG(TEXTURECUBEMAP);
 
-TextureCubemap::TextureCubemap(std::string identifier_)
-    : ITexture(std::move(identifier_)) {}
+TextureCubemap::TextureCubemap(std::string path_)
+    : ITexture(std::move(path_)) {}
 
 TextureCubemap::~TextureCubemap() {
     if (this->handle)

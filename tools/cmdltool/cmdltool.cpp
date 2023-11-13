@@ -3,8 +3,6 @@
 #include <fstream>
 
 #include <core/CommandLine.h>
-#include <loader/mesh/ChiraMeshLoader.h>
-#include <loader/mesh/OBJMeshLoader.h>
 #include <render/mesh/MeshData.h>
 #include "../ToolHelpers.h"
 
@@ -20,7 +18,7 @@ CHIRA_SETUP_CLI_TOOL(CMDLTOOL, "1.0",
                      "-o <output file> : Destination for the converted file"        "\n");
 
 int main(int argc, const char* argv[]) {
-    Engine::preinit(argc, argv);
+    Engine::init(argc, argv, true);
 
     // make sure we actually discard resources. we don't ever call Engine::run()
     // so we never do the proper shutdown and have to manually call this
@@ -63,15 +61,12 @@ int main(int argc, const char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    // todo: populate these through some kind of registry
-    IMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
-    IMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
-
     LOG_CMDLTOOL.info("Attempting to convert mesh file \"{}\"...", inputPath.filename().string());
 
     MeshData mesh{};
-    Resource::addResourceProvider(new FilesystemResourceProvider{inputPath.parent_path().string()});
-    mesh.appendMeshData(inputType, FilesystemResourceProvider::getResourceIdentifier(inputPath.string()));
+	//todo: mount mesh folder
+    //Resource::addResourceProvider(new FilesystemResourceProvider{inputPath.parent_path().string()});
+    mesh.appendMeshData(inputType, inputPath.string());
 
     std::ofstream file{outputPath.string(), std::ios::binary};
     std::vector<std::byte> meshData = mesh.getMeshData(outputType);

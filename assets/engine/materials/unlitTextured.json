@@ -1,0 +1,4 @@
+{
+  "shader": "shaders/unlitTextured.json",
+  "texture": "textures/missing.json"
+}

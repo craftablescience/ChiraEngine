@@ -11,24 +11,20 @@ void ResourceUsageTrackerPanel::renderContents() {
         for (const auto& [resourceHash, resource]: Resource::defaultResources) {
             ImGui::TableNextRow();
             ImGui::TableSetColumnIndex(0);
-            ImGui::Text("%s", resource->getIdentifier().data());
+            ImGui::Text("%s", resource->getPath().data());
             ImGui::TableSetColumnIndex(1);
             ImGui::Text("%d", resource.useCount());
         }
         ImGui::EndTable();
     }
     ImGui::Separator();
-    if (ImGui::BeginTable("Resources", 3)) {
-        for (const auto& [providerName, resourceMap] : Resource::resources) {
-            for (const auto& [resourceName, resource] : resourceMap) {
-                ImGui::TableNextRow();
-                ImGui::TableSetColumnIndex(0);
-                ImGui::Text("%s", providerName.c_str());
-                ImGui::TableSetColumnIndex(1);
-                ImGui::Text("%s", resourceName.c_str());
-                ImGui::TableSetColumnIndex(2);
-                ImGui::Text("%d", resource.useCount());
-            }
+    if (ImGui::BeginTable("Resources", 2)) {
+        for (const auto& [path, resource] : Resource::resources) {
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("%s", path.c_str());
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("%d", resource.useCount());
         }
         ImGui::EndTable();
     }

@@ -1,0 +1,7 @@
+{
+  "vertex": "shaders/unlitTextured.vsh",
+  "fragment": "shaders/unlitTextured.fsh",
+  "usesPV": true,
+  "usesM": true,
+  "lit": false
+}

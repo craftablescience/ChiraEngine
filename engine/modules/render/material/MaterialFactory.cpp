@@ -2,8 +2,8 @@
 
 using namespace chira;
 
-IMaterial::IMaterial(std::string identifier_)
-        : Resource(std::move(identifier_)) {}
+IMaterial::IMaterial(std::string path_)
+        : Resource(std::move(path_)) {}
 
 void IMaterial::compile(const std::byte buffer[], std::size_t bufferLength) {
     Serial::loadFromBuffer(this, buffer, bufferLength);

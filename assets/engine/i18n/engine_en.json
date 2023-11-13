@@ -1,0 +1,40 @@
+{
+  "resource.font.default": "fonts/default_en.json",
+  "resource.font.console": "fonts/console_en.json",
+
+  "ui.window.title": "Chira Engine",
+
+  "ui.console.title": "Console",
+  "ui.resource_usage_tracker.title": "Resource Usage",
+
+  "ui.window.select_file": "Select File",
+  "ui.window.save_file": "Save File",
+
+  "ui.menubar.file": "File",
+  "ui.menubar.new": "New",
+  "ui.menubar.open": "Open",
+  "ui.menubar.save": "Save",
+  "ui.menubar.save_as": "Save As...",
+  "ui.menubar.exit": "Exit",
+  "ui.menubar.edit": "Edit",
+  "ui.menubar.undo": "Undo",
+  "ui.menubar.redo": "Redo",
+
+  "generic.operation.cancelled": "Operation cancelled",
+
+  "debug.discord.user_disconnected": "Discord user disconnected, code {}: {}",
+  "debug.discord.generic_error": "Discord error {}: {}",
+
+  "warn.obj_loader.not_triangulated": "OBJ file at {} is not triangulated, this will cause problems",
+  "warn.properties_resource.missing_property": "Resource \"{}\" missing property \"{}\", using fallback...",
+  "warn.resource.deleting_resource_at_exit": "Deleting \"{}\" (refcount {}) that was not already deleted!",
+  "error.axis.invalid_value": "Invalid axis type \"{}\" does not map to any value in the {} enum",
+  "error.cmdl_loader.invalid_data": "Mesh at \"{}\" has invalid data!",
+  "error.file_input_stream.file_inaccessible": "File at \"{}\" is not accessible: error {}",
+  "error.entity.duplicate_child_name": "Attempted to add child \"{}\", but a child with this name already exists!",
+  "error.engine.not_initialized": "Engine is not started: have you called Engine::preInit() and Engine::init()?",
+  "error.translation_manager.missing_translation": "Could not find {} translation of \"{}\"",
+  "error.resource.resource_not_found": "Resource {} was not found",
+  "error.resource.cached_resource_not_found": "Supposedly cached resource {} was not found",
+  "error.properties_resource.invalid_json": "Invalid JSON read for resource at \"{}\", resource will have no properties!"
+}

@@ -6,7 +6,7 @@ namespace chira {
 
 class JSONResource : public Resource {
 public:
-    explicit JSONResource(std::string identifier_) : Resource(std::move(identifier_)) {}
+    explicit JSONResource(std::string path_) : Resource(std::move(path_)) {}
     void compile(const std::byte buffer[], std::size_t bufferLength) final;
     virtual void compile(const nlohmann::json& properties) = 0;
 

@@ -42,65 +42,85 @@ ConVar win_height{"win_height", 720, "The height of the main window.", CON_FLAG_
     }
 }};
 
-void Engine::preinit(int argc, const char* argv[]) {
+void Engine::init(int argc, const char* argv[], bool onlyInitEssentials) {
+	if (Engine::started) {
+		return;
+	}
+	Engine::started = true;
+
 #ifdef CHIRA_PLATFORM_WINDOWS
     // Enable colored text in Windows console by setting encoding to UTF-8
     // #define CP_UTF8 65001 in Windows.h
     system("chcp 65001 > nul");
 #endif
     CommandLine::init(argc, argv);
-    Resource::addResourceProvider(new FilesystemResourceProvider{ENGINE_FILESYSTEM_PATH});
-    TranslationManager::addTranslationFile("file://i18n/engine");
-    if (!ModuleRegistry::initAll()) [[unlikely]] {
+
+    if (!FileSystem::init()) [[unlikely]] {
+		LOG_ENGINE.error("Failed to initialize filesystem!");
+	    exit(EXIT_FAILURE);
+	}
+	const auto& projectConfig = FileSystem::getProjectConfig();
+
+	// Necessary to have filesystem setup so it can read/write the config file
+	ConEntryRegistry::initializeConVarCache();
+
+	// todo: autoregister this
+	TranslationManager::addTranslationFile("i18n/engine");
+
+	if (!ModuleRegistry::initAll()) [[unlikely]] {
         LOG_ENGINE.error("Failed to initialize modules! Make sure there are no circular dependencies.");
         exit(EXIT_FAILURE);
     }
-}
 
-void Engine::init(bool visibleSplashScreen /*= true*/) {
-    Engine::started = true;
+	// todo: make a factory
+	IMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
+	IMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
 
-    if (!Device::initBackendAndCreateSplashscreen(visibleSplashScreen)) {
-        LOG_ENGINE.error("Failed to initialize graphics!");
-        exit(EXIT_FAILURE);
-    }
+	if (onlyInitEssentials) {
+		// Bail early before creating the render device/backend or scripting VM
+		// Note default resources will not be constructed either due to needing a render backend
+		return;
+	}
+
+	if (!Device::initBackendAndCreateSplashscreen(projectConfig.splashscreen)) {
+		LOG_ENGINE.error("Failed to initialize render device backend!");
+		exit(EXIT_FAILURE);
+	}
 
 #ifdef DEBUG
-    if (!Renderer::setupForDebugging()) {
-        LOG_ENGINE.warning("Render backend \"{}\" failed to setup for debugging!", Renderer::getHumanName());
-    }
+	if (!Renderer::setupForDebugging()) {
+		LOG_ENGINE.warning("Render API backend \"{}\" failed to setup for debugging!", Renderer::getHumanName());
+	}
 #endif
 
-    IMeshLoader::addMeshLoader("obj", new OBJMeshLoader{});
-    IMeshLoader::addMeshLoader("cmdl", new ChiraMeshLoader{});
-
-    // Create default resources
-    Resource::createDefaultResources();
+	// Create default resources
+	Resource::createDefaultResources();
 
     // Start scripting VM
     Lua::init();
 
-    Device::destroySplashscreen();
+	Device::destroySplashscreen();
 
-    Engine::mainWindow = Device::createWindow(win_width.getValue<int>(), win_height.getValue<int>(), TR("ui.window.title"), nullptr);
-    if (!Engine::mainWindow) {
-        LOG_ENGINE.error("Failed to create main window!");
-        exit(EXIT_FAILURE);
-    }
+	Engine::mainWindow = Device::createWindow(win_width.getValue<int>(), win_height.getValue<int>(),
+	                                          TR("ui.window.title"), nullptr);
+	if (!Engine::mainWindow) [[unlikely]] {
+		LOG_ENGINE.error("Failed to create main window!");
+		exit(EXIT_FAILURE);
+	}
 
-    // Add console UI panel
-    auto consoleID = Device::addPanelToWindow(Engine::mainWindow, new ConsolePanel{});
-    Input::KeyEvent::create(Input::Key::SDLK_BACKQUOTE, Input::KeyEventType::PRESSED, [consoleID] {
-        auto console = Device::getPanelOnWindow(Engine::mainWindow, consoleID);
-        console->setVisible(!console->isVisible());
-    });
+	// Add console UI panel
+	auto consoleID = Device::addPanelToWindow(Engine::mainWindow, new ConsolePanel{});
+	Input::KeyEvent::create(Input::Key::SDLK_BACKQUOTE, Input::KeyEventType::PRESSED, [consoleID] {
+		auto console = Device::getPanelOnWindow(Engine::mainWindow, consoleID);
+		console->setVisible(!console->isVisible());
+	});
 
-    // Add resource usage tracker UI panel
-    auto resourceUsageTrackerID = Device::addPanelToWindow(Engine::mainWindow, new ResourceUsageTrackerPanel{});
-    Input::KeyEvent::create(Input::Key::SDLK_F1, Input::KeyEventType::PRESSED, [resourceUsageTrackerID] {
-        auto resourceUsageTracker = Device::getPanelOnWindow(Engine::mainWindow, resourceUsageTrackerID);
-        resourceUsageTracker->setVisible(!resourceUsageTracker->isVisible());
-    });
+	// Add resource usage tracker UI panel
+	auto resourceUsageTrackerID = Device::addPanelToWindow(Engine::mainWindow, new ResourceUsageTrackerPanel{});
+	Input::KeyEvent::create(Input::Key::SDLK_F1, Input::KeyEventType::PRESSED, [resourceUsageTrackerID] {
+		auto resourceUsageTracker = Device::getPanelOnWindow(Engine::mainWindow, resourceUsageTrackerID);
+		resourceUsageTracker->setVisible(!resourceUsageTracker->isVisible());
+	});
 }
 
 void Engine::run() {
@@ -121,6 +141,8 @@ void Engine::run() {
     ModuleRegistry::deinitAll();
 
     Resource::discardAll();
+
+	FileSystem::deinit();
 
     exit(EXIT_SUCCESS);
 }

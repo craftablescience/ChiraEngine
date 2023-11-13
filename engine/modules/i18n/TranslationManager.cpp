@@ -27,15 +27,15 @@ bool TranslationManager::isValidCode(const std::string& code) {
     return TranslationManager::getCodeAndNamePairs().count(code) > 0;
 }
 
-void TranslationManager::addTranslationFile(const std::string& identifier) {
-    auto file = Resource::getResource<TranslationFileResource>(identifier + "_" + ui_language.getValue<std::string>() + ".json", ui_language.getValue<std::string>());
+void TranslationManager::addTranslationFile(const std::string& path) {
+    auto file = Resource::getResource<TranslationFileResource>(path + "_" + ui_language.getValue<std::string>() + ".json", ui_language.getValue<std::string>());
     for (const auto& [id, value] : file->getAllTranslations()) {
         TranslationManager::languageStrings[id] = value;
     }
 }
 
-void TranslationManager::addUniversalFile(const std::string& identifier) {
-    auto file = Resource::getResource<TranslationFileResource>(identifier + "_" + "universal.json", "universal");
+void TranslationManager::addUniversalFile(const std::string& path) {
+    auto file = Resource::getResource<TranslationFileResource>(path + "_" + "universal.json", "universal");
     for (const auto& [id, value] : file->getAllTranslations()) {
         TranslationManager::languageStrings[id] = value;
     }

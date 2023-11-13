@@ -10,8 +10,8 @@ namespace chira {
 
 class ITexture : public Resource {
 public:
-    explicit ITexture(std::string identifier_)
-            : Resource(std::move(identifier_)) {}
+    explicit ITexture(std::string path_)
+            : Resource(std::move(path_)) {}
 
     virtual void use() const = 0;
     virtual void use(TextureUnit activeTextureUnit) const = 0;

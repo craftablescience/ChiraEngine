@@ -76,6 +76,13 @@ void CommandLine::init(int argc, const char* argv[]) {
     }
 }
 
+std::string_view CommandLine::at(unsigned int index) {
+	if (g_Arguments.size() <= index) {
+		return "";
+	}
+	return g_Arguments.at(index);
+}
+
 bool CommandLine::has(std::string_view argument) {
     if (g_Arguments.size() <= 1) {
         return false;

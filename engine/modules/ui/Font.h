@@ -3,7 +3,7 @@
 #include <imgui.h>
 
 #include <core/utility/Serial.h>
-#include <resource/Resource.h>
+#include <resource/BinaryResource.h>
 
 namespace chira {
 
@@ -11,10 +11,14 @@ namespace chira {
 /// After this, the fonts will be baked, and there will be cake.
 class Font : public Resource {
 public:
-    explicit Font(const std::string& identifier_) : Resource(identifier_) {}
+    explicit Font(const std::string& path_) : Resource(path_) {}
+
     void compile(const std::byte buffer[], std::size_t bufferLength) override;
+
     [[nodiscard]] ImFont* getFont() const;
+
     [[nodiscard]] const std::string& getName() const;
+
     [[nodiscard]] float getSize() const;
 
 private:
@@ -23,7 +27,10 @@ private:
     const ImWchar* range = nullptr;
     std::string rangeStr{"english"};
     ImFont* font = nullptr;
-    std::string fontPath{"file://fonts/noto_sans_jp/NotoSansJP-Regular.otf"};
+    std::string fontPath{"fonts/noto_sans_jp/NotoSansJP-Regular.otf"};
+
+	SharedPointer<BinaryResource> fontData{};
+
     static const ImWchar* getRangeFromString(std::string_view input);
 
 public:

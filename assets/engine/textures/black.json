@@ -1,0 +1,8 @@
+{
+  "verticalFlip": true,
+  "mipmaps": false,
+  "image": "textures/black.png",
+  "wrapModeS": "REPEAT",
+  "wrapModeT": "REPEAT",
+  "filterMode": "LINEAR"
+}
